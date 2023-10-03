@@ -7,9 +7,9 @@ public class Character : MonoBehaviour
     [SerializeField] private float maxHp;
     [SerializeField] private float currentHp;
     [SerializeField] private float speed;
-    
 
-    
+
+
     public virtual void Move()
     {
 
