@@ -9,20 +9,21 @@ public class Attack : Ability
     public float velocity;
     public bool ranged;
 
-    public override void Use()
+    public override void Use(MonoBehaviour parent)
     {
-        
+       
     }
-
-
-
     private void MeleeAttack() 
     { 
         
     }
-
     private void RangedAttack() 
     { 
 
     }
+
+
+
+
+
 }

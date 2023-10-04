@@ -5,5 +5,5 @@ using UnityEngine;
 
 public abstract class Ability : ScriptableObject
 {
-    public abstract void Use();
+    public abstract void Use(MonoBehaviour parent);
 }
