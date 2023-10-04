@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum ClassCharacter
@@ -12,19 +10,23 @@ public enum ClassCharacter
 public class PlayerCharacter : Character
 {
     [SerializeField] private ClassCharacter _class;
-    [SerializeField] private SkillTree skillTree;
-
-    public Ability activeability;
 
     public override void Attack()
     {
-        
-       skillTree.GetAttackData(this);
+        Attack attackInfo = skillTree.GetAttackData(this) as Attack;
+
+
+        foreach (PowerUp p in powerPool)
+        {
+
+            //cerca i potenziamenti d'attacco
+        }
+
         //Play animazione attacco
     }
     public override void Defend()
     {
-       skillTree.GetDefendData(this);
+        skillTree.GetDefendData(this);
     }
     public override void Move()
     {
@@ -33,9 +35,9 @@ public class PlayerCharacter : Character
 
     public void UniqueAbility()
     {
-        skillTree.GetUniqueData(this);
+        skillTree.UseUniqueData(this);
     }
-  
+
 
 
 

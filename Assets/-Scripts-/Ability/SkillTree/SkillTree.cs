@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-[CreateAssetMenu(menuName ="Ability/SkillTree")]
+[CreateAssetMenu(menuName = "Ability/SkillTree")]
 public class SkillTree : ScriptableObject
 {
     public Ability attackAbility;
@@ -14,19 +11,19 @@ public class SkillTree : ScriptableObject
 
     public Ability uniqueAbility;
 
-    public virtual void GetAttackData(MonoBehaviour parent)
+    public virtual Ability GetAttackData(MonoBehaviour parent)
     {
-        attackAbility.Use(parent);
+        return attackAbility.GetData(parent);
     }
-    public virtual void GetDefendData(MonoBehaviour parent)
+    public virtual Ability GetDefendData(MonoBehaviour parent)
     {
-       defenseAbility.Use(parent);
+        return defenseAbility.GetData(parent);
     }
-    public virtual void GetMoveData(MonoBehaviour parent)
+    public virtual Ability GetMoveData(MonoBehaviour parent)
     {
-        moveAbility.Use(parent);
+        return moveAbility.GetData(parent);
     }
-    public virtual void GetUniqueData(MonoBehaviour parent)
+    public virtual void UseUniqueData(MonoBehaviour parent)
     {
         uniqueAbility.Use(parent);
     }
