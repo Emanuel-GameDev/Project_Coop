@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
+
     [SerializeField] private float maxHp;
     [SerializeField] private float currentHp;
-    [SerializeField] private float speed;
+    [SerializeField] protected float speed;
     [SerializeField] protected SkillTree skillTree;
-
-
     [HideInInspector] public List<PowerUp> powerPool;
 
     public virtual void Move()
