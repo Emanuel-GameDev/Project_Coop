@@ -4,23 +4,33 @@ using UnityEngine;
 
 public enum PowerUpType
 {
-    damage,
-    health,
-    speed,
-    cooldown,
-    stamina
+    Damage,
+    Health,
+    Speed,
+    Cooldown,
+    Stamina
 }
 
 [CreateAssetMenu(menuName = "PowerUp")]
 public class PowerUp : ScriptableObject
 {
-    protected PowerUpType powerUpType;
+    public PowerUpType powerUpType;
 
     // Damage
-    [SerializeField] private int damageUp;
+    public int damageIncrease;
 
     // Health
-    [SerializeField] private int healthUp;
+    public int healthIncrease;
+
+    // Speed
+    public float speedIncrease;
+
+    // Cooldown
+    public int cooldownDecrease;
+
+    // Stamina
+    public int staminaIncrease;
+
     public virtual void Pick(Character c)
     {
         c.powerPool.Add(this);
