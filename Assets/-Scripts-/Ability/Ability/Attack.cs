@@ -6,12 +6,23 @@ using UnityEngine;
 public class Attack : Ability
 {
     public float damage;
-    public float velocity;
+    public float cooldown;
     public bool ranged;
+    public GameObject prefabBullet;
+    public float range;
+
 
     public override void Use(MonoBehaviour parent)
     {
-       
+        if (ranged)
+        {
+            RangedAttack();
+        }
+        else
+        {
+            MeleeAttack();
+        }
+
     }
     private void MeleeAttack() 
     { 

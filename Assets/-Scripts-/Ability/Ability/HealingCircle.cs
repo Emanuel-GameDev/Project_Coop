@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Ability/HealingCircle")]
+[CreateAssetMenu(menuName = "Ability/Active/HealingCircle")]
 public class HealingCircle : Ability
 {
     public float heal;

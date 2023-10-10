@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Ability/MoreDamageFromRange")]
+[CreateAssetMenu(menuName = "Ability/Active/MoreDamageFromRange")]
 public class MoreDamageFromRange : Ability
 {
     private float range;

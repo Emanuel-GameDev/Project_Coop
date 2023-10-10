@@ -51,14 +51,13 @@ public class PlayerCharacter : Character
 
             //cerca i potenziamenti d'attacco
         }
-        Debug.Log(attackInfo.damage + " " + attackInfo.velocity + " " + attackInfo.ranged);
+        Debug.Log(attackInfo.damage + " " + attackInfo.cooldown + " " + attackInfo.ranged);
         //Play animazione attacco
     }
     protected override void Defend()
     {
         skillTree.GetDefendData(this);
     }
-
     public void UniqueAbility()
     {
         skillTree.UseUniqueData(this);
