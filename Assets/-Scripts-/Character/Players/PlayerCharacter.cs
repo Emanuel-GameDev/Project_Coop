@@ -1,7 +1,5 @@
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Windows;
 
 public enum ClassCharacter
 {
@@ -15,10 +13,10 @@ public class PlayerCharacter : Character
     [SerializeField] private ClassCharacter _class;
     [SerializeField] private PlayerInputSystem playerInputSystem;
 
-   
+
     private void OnEnable()
     {
-        rb= GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         playerInputSystem = new PlayerInputSystem();
         playerInputSystem.Player.Enable();
         playerInputSystem.Player.Attack.performed += Attack_performed;
@@ -27,13 +25,14 @@ public class PlayerCharacter : Character
     private void Update()
     {
         Move(ReadInput());
+
+       
     }
 
     private Vector2 ReadInput()
     {
         Vector2 moveInput = playerInputSystem.Player.Move.ReadValue<Vector2>();
         return moveInput;
-   
     }
 
 
@@ -41,16 +40,12 @@ public class PlayerCharacter : Character
     {
         Attack();
     }
-    
+
 
     protected override void Attack()
     {
-        Attack attackInfo = skillTree.GetAttackData(this) as Attack;
-        foreach (PowerUp p in powerPool)
-        {
+        Attack attackInfo = skillTree.GetAttackData(this);
 
-            //cerca i potenziamenti d'attacco
-        }
         Debug.Log(attackInfo.damage + " " + attackInfo.cooldown + " " + attackInfo.ranged);
         //Play animazione attacco
     }

@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Character : MonoBehaviour
@@ -9,9 +6,17 @@ public class Character : MonoBehaviour
 
     [SerializeField] protected float maxHp;
     [SerializeField] protected float currentHp;
-    [SerializeField] protected float speed;
+    [SerializeField] private float _speed;
+
+    protected float Speed 
+    {
+        get { return _speed + powerUpData.speedIncrease; } 
+        set { _speed = value; }
+    }
+
+   
     [SerializeField] protected SkillTree skillTree;
-    [HideInInspector] public List<PowerUp> powerPool;
+    [HideInInspector] protected PowerUpData powerUpData;
     protected Rigidbody rb;
 
     //Lo uso per chimare tutte le funzioni iniziali
@@ -23,9 +28,9 @@ public class Character : MonoBehaviour
     protected virtual void Attack()
     {
 
-    } 
+    }
     protected virtual void Defend()
-    { 
+    {
     }
 
     //dati x e z chiama Move col Vector2
@@ -33,7 +38,7 @@ public class Character : MonoBehaviour
     {
         Move(new Vector2(x, z));
     }
-    
+
     // Dato un vector2 chiama move col Vector3
     protected virtual void Move(Vector2 direction)
     {
@@ -48,14 +53,29 @@ public class Character : MonoBehaviour
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
 
-        rb.velocity = new Vector3(direction.x * speed, direction.y, direction.z * skillTree.GetMoveData(this).movingSpeed);
+        rb.velocity = new Vector3(direction.x * Speed, direction.y, direction.z * Speed);
     }
 
     //Tutto ciò che va fatto nello ad inizio
     protected virtual void InitialSetup()
     {
         rb = GetComponent<Rigidbody>();
+        powerUpData = new();
     }
+
+    public void AddPowerUp(PowerUp powerUp)
+    {
+        powerUpData.Add(powerUp);
+    }
+    public void RemovePowerUp(PowerUp powerUp)
+    {
+        powerUpData.Remove(powerUp);
+    }
+    public List<PowerUp> GetPowerUpList()
+    {
+        return powerUpData._powerUpData;
+    }
+
 
 
 }

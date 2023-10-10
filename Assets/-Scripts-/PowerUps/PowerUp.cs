@@ -31,8 +31,5 @@ public class PowerUp : ScriptableObject
     // Stamina
     public int staminaIncrease;
 
-    public virtual void Pick(Character c)
-    {
-        c.powerPool.Add(this);
-    }
+    
 }
