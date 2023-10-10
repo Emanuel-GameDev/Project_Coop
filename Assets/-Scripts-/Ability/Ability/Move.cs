@@ -2,17 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Move : MonoBehaviour
+[CreateAssetMenu(menuName = "Ability/Move")]
+public class Move : Ability
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]  public float movingSpeed = 5f;
+    
+    public override Ability GetData(MonoBehaviour parent)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return base.GetData(parent);
     }
 }

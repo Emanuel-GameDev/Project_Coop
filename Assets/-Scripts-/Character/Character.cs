@@ -37,7 +37,7 @@ public class Character : MonoBehaviour
     // Dato un vector2 chiama move col Vector3
     protected virtual void Move(Vector2 direction)
     {
-        Move(new Vector3(direction.x, transform.position.y, direction.y).normalized);
+        Move(new Vector3(direction.x, 0, direction.y).normalized);
     }
 
     //dato un vector 3 setta la velocità del rigidBody in quella direzione, se il vettore non è normalizzato lo normalizza
@@ -48,7 +48,7 @@ public class Character : MonoBehaviour
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
 
-        rb.velocity = new Vector3(direction.x * speed, direction.y, direction.z * speed);
+        rb.velocity = new Vector3(direction.x * speed, direction.y, direction.z * skillTree.GetMoveData(this).movingSpeed);
     }
 
     //Tutto ciò che va fatto nello ad inizio

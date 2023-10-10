@@ -3,25 +3,25 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Ability/SkillTree")]
 public class SkillTree : ScriptableObject
 {
-    public Ability attackAbility;
+    public Attack attackAbility;
 
-    public Ability defenseAbility;
+    public Defence defenseAbility;
 
-    public Ability moveAbility;
+    public Move moveAbility;
 
     public Ability uniqueAbility;
 
-    public virtual Ability GetAttackData(MonoBehaviour parent)
+    public virtual Attack GetAttackData(MonoBehaviour parent)
     {
-        return attackAbility.GetData(parent);
+        return (Attack)attackAbility.GetData(parent);
     }
-    public virtual Ability GetDefendData(MonoBehaviour parent)
+    public virtual Defence GetDefendData(MonoBehaviour parent)
     {
-        return defenseAbility.GetData(parent);
+        return (Defence)defenseAbility.GetData(parent);
     }
-    public virtual Ability GetMoveData(MonoBehaviour parent)
+    public virtual Move GetMoveData(MonoBehaviour parent)
     {
-        return moveAbility.GetData(parent);
+        return (Move)moveAbility.GetData(parent);
     }
     public virtual void UseUniqueData(MonoBehaviour parent)
     {
