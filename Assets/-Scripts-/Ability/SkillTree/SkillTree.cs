@@ -11,6 +11,8 @@ public class SkillTree : ScriptableObject
 
     public Ability uniqueAbility;
 
+    public Ability extraAbility;
+
     public virtual Attack GetAttackData(MonoBehaviour parent)
     {
         return (Attack)attackAbility.GetData(parent);
@@ -26,6 +28,13 @@ public class SkillTree : ScriptableObject
     public virtual void UseUniqueData(MonoBehaviour parent)
     {
         uniqueAbility.Use(parent);
+    }
+
+
+    //Abilità sbloccabile con upgrade
+    public virtual void UseExtraAbility(MonoBehaviour parent)
+    {
+        extraAbility.Use(parent);
     }
 
 }
