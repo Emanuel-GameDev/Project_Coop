@@ -16,7 +16,7 @@ public class Attack : Ability
     {
         if (ranged)
         {
-            RangedAttack();
+            RangedAttack(parent);
         }
         else
         {
@@ -28,9 +28,12 @@ public class Attack : Ability
     { 
         
     }
-    private void RangedAttack() 
-    { 
+    private void RangedAttack(MonoBehaviour parent) 
+    {
+        GameObject bullet = Instantiate(prefabBullet);
+        bullet.transform.position=parent.gameObject.transform.position;
 
+        
     }
 
 

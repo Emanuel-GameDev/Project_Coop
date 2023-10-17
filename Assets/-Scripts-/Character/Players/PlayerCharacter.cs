@@ -26,13 +26,15 @@ public class PlayerCharacter : Character
     {
         Move(ReadInput());
 
-       
+
     }
 
     private Vector2 ReadInput()
     {
         Vector2 moveInput = playerInputSystem.Player.Move.ReadValue<Vector2>();
         return moveInput;
+
+
     }
 
 
@@ -47,6 +49,8 @@ public class PlayerCharacter : Character
         Attack attackInfo = skillTree.GetAttackData(this);
 
         Debug.Log(attackInfo.damage + " " + attackInfo.cooldown + " " + attackInfo.ranged);
+
+        skillTree.attackAbility.Use(this);
         //Play animazione attacco
     }
     protected override void Defend()
