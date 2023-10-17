@@ -30,8 +30,14 @@ public class Attack : Ability
     }
     private void RangedAttack(MonoBehaviour parent) 
     {
+        if(parent.GetComponent<PlayerCharacter>() != null)
+        {
+            Vector2 AttackDirection = parent.GetComponent<PlayerCharacter>().GetReadLook();
+        }
         GameObject bullet = Instantiate(prefabBullet);
         bullet.transform.position=parent.gameObject.transform.position;
+
+        
 
         
     }

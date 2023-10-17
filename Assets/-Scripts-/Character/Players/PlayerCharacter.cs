@@ -34,8 +34,15 @@ public class PlayerCharacter : Character
         Vector2 moveInput = playerInputSystem.Player.Move.ReadValue<Vector2>();
         return moveInput;
 
-
     }
+
+    public Vector2 GetReadLook()
+    {
+        Vector2 LookInput = playerInputSystem.Player.Look.ReadValue<Vector2>();
+        return LookInput;
+    }
+
+    
 
 
     private void Attack_performed(InputAction.CallbackContext obj)
