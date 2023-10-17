@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Ability/SkillTree")]
@@ -12,6 +13,8 @@ public class SkillTree : ScriptableObject
     public Ability uniqueAbility;
 
     public Ability extraAbility;
+
+    public List<AbilityUpgrade> unlockableAbilityUpgrades;
 
     public virtual Attack GetAttackData(MonoBehaviour parent)
     {
@@ -36,5 +39,9 @@ public class SkillTree : ScriptableObject
     {
         extraAbility.Use(parent);
     }
+
+   
+
+
 
 }
