@@ -13,5 +13,9 @@ public class GameManager : MonoBehaviour
         {
             player.AddPowerUp(powerUpToGive);
         }
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            player.UnlockUpgrade(0);
+        }
     }
 }
