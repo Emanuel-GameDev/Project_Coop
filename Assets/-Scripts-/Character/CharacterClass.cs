@@ -18,12 +18,9 @@ public class CharacterClass : MonoBehaviour
 {
     protected CharacterData characterData;
     protected Animator animator;
+    protected Character character;
     protected PowerUpData powerUpData;
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus; 
-
-
-    //protected bool[] upgradeStatus;
-    //protected static int upgradeQuantity = 5;
 
     public float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
     public float Damage => characterData.Damage + powerUpData.damageIncrease;
@@ -42,6 +39,7 @@ public class CharacterClass : MonoBehaviour
             upgradeStatus.Add(au, false);
         }
         animator = character.GetAnimator();
+        this.character = character;
     }
 
     public virtual void Attack(Character parent)
