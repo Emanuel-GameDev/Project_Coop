@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 51671938}
   - component: {fileID: 51671937}
   - component: {fileID: 51671942}
+  - component: {fileID: 51671943}
   m_Layer: 0
   m_Name: Player/Ranged
   m_TagString: Untagged
@@ -156,11 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93cddced58d648d449d7fdf302364bde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 0
-  currentHp: 0
-  _speed: 3
-  skillTree: {fileID: 11400000, guid: 3a1871dd2aba407458b334eaba249754, type: 2}
-  _class: 2
+  characterData: {fileID: 11400000, guid: 3a1871dd2aba407458b334eaba249754, type: 2}
 --- !u!136 &51671938
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -277,6 +274,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!95 &51671943
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 51671936}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &133811439
 GameObject:
   m_ObjectHideFlags: 0
@@ -615,7 +633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 933432955afa09849aa58dec21533b65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  powerUpToGive: {fileID: 11400000, guid: 311eec67c304b0e4aab7376493aa397e, type: 2}
+  powerUpToGive: {fileID: 11400000, guid: 24d3fe36fabc43a4183c8a83a5eb15ce, type: 2}
   player: {fileID: 51671937}
 --- !u!4 &1307424673
 Transform:
