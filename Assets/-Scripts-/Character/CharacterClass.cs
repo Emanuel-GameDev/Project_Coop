@@ -17,6 +17,7 @@ public enum AbilityUpgrade
 public class CharacterClass : MonoBehaviour
 {
     protected CharacterData characterData;
+    protected Animator animator;
     protected PowerUpData powerUpData;
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus; 
 
@@ -31,7 +32,7 @@ public class CharacterClass : MonoBehaviour
     public float uniqueAbilityCooldown => characterData.UniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease;
 
 
-    public void Inizialize(CharacterData characterData)
+    public void Inizialize(CharacterData characterData, Character character)
     {
         powerUpData = new PowerUpData();
         this.characterData = characterData;
@@ -40,6 +41,7 @@ public class CharacterClass : MonoBehaviour
         {
             upgradeStatus.Add(au, false);
         }
+        animator = character.GetAnimator();
     }
 
     public virtual void Attack(Character parent)

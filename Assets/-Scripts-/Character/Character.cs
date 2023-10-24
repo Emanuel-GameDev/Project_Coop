@@ -64,5 +64,5 @@ public class Character : MonoBehaviour
 
     public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
     public void SetAnimatorController(AnimatorController controller) => animator.runtimeAnimatorController = controller;
-
+    public Animator GetAnimator() => animator;
 }
