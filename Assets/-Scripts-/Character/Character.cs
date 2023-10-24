@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
 
-public class Character : MonoBehaviour
+public class Character : MonoBehaviour, IDamageable
 {
     [SerializeField] protected CharacterData characterData;
     protected CharacterClass characterClass;
@@ -65,4 +65,9 @@ public class Character : MonoBehaviour
     public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
     public void SetAnimatorController(AnimatorController controller) => animator.runtimeAnimatorController = controller;
     public Animator GetAnimator() => animator;
+
+    public void TakeDamage(float damage, Damager dealer)
+    {
+        
+    }
 }
