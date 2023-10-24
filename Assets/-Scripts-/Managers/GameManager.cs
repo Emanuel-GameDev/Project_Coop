@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.U))
         {
-            player.UnlockUpgrade(0);
+            player.UnlockUpgrade(AbilityUpgrade.Ability1);
         }
     }
 }

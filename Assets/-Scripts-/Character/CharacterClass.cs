@@ -4,6 +4,16 @@ using UnityEditor.U2D.Animation;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
+public enum AbilityUpgrade
+{
+    Ability1,
+    Ability2,
+    Ability3,
+    Ability4,
+    Ability5
+}
+
+
 public class CharacterClass : MonoBehaviour
 {
 
@@ -12,8 +22,11 @@ public class CharacterClass : MonoBehaviour
 
     protected CharacterData characterData;
     protected PowerUpData powerUpData;
-    protected bool[] upgradeStatus;
-    protected static int upgradeQuantity = 5;
+    protected Dictionary<AbilityUpgrade, bool> upgradeStatus; 
+
+
+    //protected bool[] upgradeStatus;
+    //protected static int upgradeQuantity = 5;
 
     public float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
     public float Damage => characterData.Damage + powerUpData.damageIncrease;
@@ -26,12 +39,11 @@ public class CharacterClass : MonoBehaviour
     {
         powerUpData = new PowerUpData();
         this.characterData = characterData;
-        upgradeStatus = new bool[upgradeQuantity];
-        for (int i = 0; i < upgradeQuantity; i++)
+        upgradeStatus = new();
+        foreach(AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
         {
-            upgradeStatus[i] = false;
+            upgradeStatus.Add(au, false);
         }
-        
     }
 
     public virtual void Attack(Character parent)
@@ -54,19 +66,16 @@ public class CharacterClass : MonoBehaviour
     }
 
     #region Upgrades
-    public virtual void UnlockUpgrade(int n)
+    public virtual void UnlockUpgrade(AbilityUpgrade abilityUpgrade)
     {
-        if (0 <= n && n < upgradeQuantity)
-        {
-            upgradeStatus[n] = true;
-        }
+        if (upgradeStatus[abilityUpgrade]  == false)
+            upgradeStatus[abilityUpgrade] = true;
     }
-    public virtual void LockUpgrade(int n)
+
+    public virtual void LockUpgrade(AbilityUpgrade abilityUpgrade)
     {
-        if (0 <= n && n < upgradeQuantity)
-        {
-            upgradeStatus[n] = false;
-        }
+        if (upgradeStatus[abilityUpgrade] == true)
+            upgradeStatus[abilityUpgrade] = false;
     }
     #endregion
 

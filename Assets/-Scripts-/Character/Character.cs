@@ -57,7 +57,7 @@ public class Character : MonoBehaviour
     public void RemovePowerUp(PowerUp powerUp) => characterClass.RemovePowerUp(powerUp);
     public List<PowerUp> GetPowerUpList() => characterClass.GetPowerUpList();
 
-    public void UnlockUpgrade(int n) => characterClass.UnlockUpgrade(n);
+    public void UnlockUpgrade(AbilityUpgrade abilityUpgrade) => characterClass.UnlockUpgrade(abilityUpgrade);
 
     internal void SetCharacterClass(CharacterClass cClass)
     {
