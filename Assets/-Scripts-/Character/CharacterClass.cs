@@ -16,10 +16,6 @@ public enum AbilityUpgrade
 
 public class CharacterClass : MonoBehaviour
 {
-
-    [SerializeField] protected AnimatorOverrideController animatorOverride;
-    [SerializeField] protected SpriteLibraryAsset spriteLibrary;
-
     protected CharacterData characterData;
     protected PowerUpData powerUpData;
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus; 

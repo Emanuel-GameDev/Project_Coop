@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
-using UnityEngine.U2D.Animation;
 
 [CreateAssetMenu(menuName = "Character/Data")]
 public class CharacterData : ScriptableObject
 {
     [SerializeField] protected CharacterClass characterClass;
+    [SerializeField] protected AnimatorController animator;
     [SerializeField] protected float maxHP;
     [SerializeField] protected float damage;
     [SerializeField] protected float attackSpeed;
@@ -19,11 +18,11 @@ public class CharacterData : ScriptableObject
     public float MoveSpeed => moveSpeed;
     public float UniqueAbilityCooldown => uniqueAbilityCooldown;
 
-    internal void Inizialize(Character character)
+    public void Inizialize(Character character)
     {
         CharacterClass cClass = Instantiate(characterClass.gameObject, character.gameObject.transform).GetComponent<CharacterClass>();
         cClass.Inizialize(this);
         character.SetCharacterClass(cClass);
-        
+        character.SetAnimatorController(animator);
     }
 }

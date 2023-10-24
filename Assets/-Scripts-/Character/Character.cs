@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class Character : MonoBehaviour
@@ -11,6 +12,7 @@ public class Character : MonoBehaviour
     protected float currentHp;
     protected float Speed => characterClass.MoveSpeed;
     protected Rigidbody rb;
+    protected Animator animator;
 
     //Lo uso per chimare tutte le funzioni iniziali
     protected virtual void Start()
@@ -22,6 +24,7 @@ public class Character : MonoBehaviour
     protected virtual void InitialSetup()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
         characterData.Inizialize(this);
     }
 
@@ -59,8 +62,7 @@ public class Character : MonoBehaviour
 
     public void UnlockUpgrade(AbilityUpgrade abilityUpgrade) => characterClass.UnlockUpgrade(abilityUpgrade);
 
-    internal void SetCharacterClass(CharacterClass cClass)
-    {
-        characterClass = cClass;
-    }
+    public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
+    public void SetAnimatorController(AnimatorController controller) => animator.runtimeAnimatorController = controller;
+
 }
