@@ -1,18 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum ClassCharacter
-{
-    tank,
-    dps,
-    ranged,
-    healer
-}
+
 public class PlayerCharacter : Character
 {
-    [SerializeField] private ClassCharacter _class;
     [SerializeField] private PlayerInputSystem playerInputSystem;
-
 
     private void OnEnable()
     {
@@ -25,50 +17,18 @@ public class PlayerCharacter : Character
     private void Update()
     {
         Move(ReadInput());
-
-
     }
 
     private Vector2 ReadInput()
     {
         Vector2 moveInput = playerInputSystem.Player.Move.ReadValue<Vector2>();
         return moveInput;
-
     }
-
-    public Vector2 GetReadLook()
-    {
-        Vector2 LookInput = playerInputSystem.Player.Look.ReadValue<Vector2>();
-        return LookInput;
-    }
-
-    
 
 
     private void Attack_performed(InputAction.CallbackContext obj)
     {
         Attack();
     }
-
-
-    protected override void Attack()
-    {
-        Attack attackInfo = skillTree.GetAttackData(this);
-
-        Debug.Log(attackInfo.damage + " " + attackInfo.cooldown + " " + attackInfo.ranged);
-
-        skillTree.attackAbility.Use(this);
-        //Play animazione attacco
-    }
-    protected override void Defend()
-    {
-        skillTree.GetDefendData(this);
-    }
-    public void UniqueAbility()
-    {
-        skillTree.UseUniqueData(this);
-    }
-
-
 
 }

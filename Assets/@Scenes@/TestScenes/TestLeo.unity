@@ -183,12 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93cddced58d648d449d7fdf302364bde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 5
-  currentHp: 5
-  speed: 5
-  skillTree: {fileID: 11400000, guid: b017b230f81f3e94697a48f7683f3b1e, type: 2}
-  powerPool: []
-  _class: 0
+  characterData: {fileID: 11400000, guid: b017b230f81f3e94697a48f7683f3b1e, type: 2}
 --- !u!136 &647787447
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -272,6 +267,52 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &882247790
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 882247792}
+  - component: {fileID: 882247791}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &882247791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882247790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 933432955afa09849aa58dec21533b65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerUpToGive: {fileID: 11400000, guid: 24d3fe36fabc43a4183c8a83a5eb15ce, type: 2}
+  player: {fileID: 647787446}
+--- !u!4 &882247792
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882247790}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.5354328, y: -1.8174763, z: -0.9023099}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -686,3 +727,4 @@ SceneRoots:
   - {fileID: 1926164377}
   - {fileID: 647787450}
   - {fileID: 1558334031}
+  - {fileID: 882247792}

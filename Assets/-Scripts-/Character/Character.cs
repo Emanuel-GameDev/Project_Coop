@@ -1,23 +1,18 @@
+using System;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class Character : MonoBehaviour
 {
+    [SerializeField] protected CharacterData characterData;
+    protected CharacterClass characterClass;
 
-    [SerializeField] protected float maxHp;
-    [SerializeField] protected float currentHp;
-    [SerializeField] private float _speed;
-
-    protected float Speed 
-    {
-        get { return _speed + powerUpData.speedIncrease; } 
-        set { _speed = value; }
-    }
-
-   
-    [SerializeField] protected SkillTree skillTree;
-    [HideInInspector] protected PowerUpData powerUpData;
+    protected float MaxHp => characterClass.MaxHp;
+    protected float currentHp;
+    protected float Speed => characterClass.MoveSpeed;
     protected Rigidbody rb;
+    protected Animator animator;
 
     //Lo uso per chimare tutte le funzioni iniziali
     protected virtual void Start()
@@ -25,14 +20,20 @@ public class Character : MonoBehaviour
         InitialSetup();
     }
 
-    protected virtual void Attack()
+    //Tutto ciò che va fatto nello ad inizio
+    protected virtual void InitialSetup()
     {
-
+        rb = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
+        characterData.Inizialize(this);
     }
-    protected virtual void Defend()
-    {
-    }
 
+    protected virtual void Attack() => characterClass.Attack(this);
+    protected virtual void Defend() => characterClass.Defence(this);
+    public virtual void UseUniqueAbility() => characterClass.UseUniqueAbility(this);
+    public virtual void UseExtraAbility() => characterClass.UseExtraAbility(this);
+
+    #region Move
     //dati x e z chiama Move col Vector2
     protected virtual void Move(float x, float z)
     {
@@ -48,34 +49,20 @@ public class Character : MonoBehaviour
     //dato un vector 3 setta la velocità del rigidBody in quella direzione, se il vettore non è normalizzato lo normalizza
     protected virtual void Move(Vector3 direction)
     {
-        //skillTree.GetMoveData(this);
-
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
 
         rb.velocity = new Vector3(direction.x * Speed, direction.y, direction.z * Speed);
     }
+    #endregion
 
-    //Tutto ciò che va fatto nello ad inizio
-    protected virtual void InitialSetup()
-    {
-        rb = GetComponent<Rigidbody>();
-        powerUpData = new();
-    }
+    public void AddPowerUp(PowerUp powerUp) => characterClass.AddPowerUp(powerUp);
+    public void RemovePowerUp(PowerUp powerUp) => characterClass.RemovePowerUp(powerUp);
+    public List<PowerUp> GetPowerUpList() => characterClass.GetPowerUpList();
 
-    public void AddPowerUp(PowerUp powerUp)
-    {
-        powerUpData.Add(powerUp);
-    }
-    public void RemovePowerUp(PowerUp powerUp)
-    {
-        powerUpData.Remove(powerUp);
-    }
-    public List<PowerUp> GetPowerUpList()
-    {
-        return powerUpData._powerUpData;
-    }
+    public void UnlockUpgrade(AbilityUpgrade abilityUpgrade) => characterClass.UnlockUpgrade(abilityUpgrade);
 
-
-
+    public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
+    public void SetAnimatorController(AnimatorController controller) => animator.runtimeAnimatorController = controller;
+    public Animator GetAnimator() => animator;
 }
