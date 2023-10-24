@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6248012c527f84e4085651097fca2f6b, type: 3}
   m_Name: HealerSkillTree
   m_EditorClassIdentifier: 
-  attackAbility: {fileID: 11400000, guid: 7c13d2a3f9e1a77498689aa7c6d98cc4, type: 2}
-  defenseAbility: {fileID: 0}
-  moveAbility: {fileID: 0}
-  uniqueAbility: {fileID: 11400000, guid: f78e27c745ff3ba48b5d29aba8528bee, type: 2}
+  characterClass: {fileID: 5572221239026150360, guid: 94a13567361ad024a9fa657f56abecc1,
+    type: 3}
+  animator: {fileID: 9100000, guid: d9f4bf3c0b038624093e827fd8d177dc, type: 2}
+  maxHP: 33
+  damage: 1
+  attackSpeed: 10
+  moveSpeed: 10
+  uniqueAbilityCooldown: 32
