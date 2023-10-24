@@ -6,6 +6,7 @@ using UnityEngine;
 public class Character : MonoBehaviour, IDamageable
 {
     [SerializeField] protected CharacterData characterData;
+    [SerializeField] protected Damager attackDamager;
     protected CharacterClass characterClass;
 
     protected float MaxHp => characterClass.MaxHp;
@@ -26,6 +27,7 @@ public class Character : MonoBehaviour, IDamageable
         rb = GetComponent<Rigidbody>();
         animator = GetComponentInChildren<Animator>();
         characterData.Inizialize(this);
+        attackDamager = GetComponentInChildren<Damager>();
     }
 
     protected virtual void Attack() => characterClass.Attack(this);
