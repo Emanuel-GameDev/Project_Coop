@@ -14,7 +14,7 @@ public enum AbilityUpgrade
 }
 
 
-public class CharacterClass : MonoBehaviour
+public class CharacterClass : MonoBehaviour , IDamageable
 {
     protected CharacterData characterData;
     protected Animator animator;
@@ -62,6 +62,10 @@ public class CharacterClass : MonoBehaviour
     {
 
     }
+    public virtual void TakeDamage(float damage, Damager dealer)
+    {
+        throw new NotImplementedException();
+    }
 
     #region Upgrades
     public virtual void UnlockUpgrade(AbilityUpgrade abilityUpgrade)
@@ -83,6 +87,8 @@ public class CharacterClass : MonoBehaviour
     internal void RemovePowerUp(PowerUp powerUp) => powerUpData.Remove(powerUp);
 
     internal List<PowerUp> GetPowerUpList() => powerUpData._powerUpData;
+
+   
     #endregion
 
 

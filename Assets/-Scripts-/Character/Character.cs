@@ -66,7 +66,7 @@ public class Character : MonoBehaviour, IDamageable
     public void SetAnimatorController(AnimatorController controller) => animator.runtimeAnimatorController = controller;
     public Animator GetAnimator() => animator;
 
-    public void TakeDamage(float damage, Damager dealer)
+    public virtual void TakeDamage(float damage, Damager dealer)
     {
         
     }
