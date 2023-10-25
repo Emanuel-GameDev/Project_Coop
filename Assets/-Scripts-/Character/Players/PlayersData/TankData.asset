@@ -10,8 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6248012c527f84e4085651097fca2f6b, type: 3}
-  m_Name: DpsSkillTree
+  m_Name: TankData
   m_EditorClassIdentifier: 
-  attackAbility: {fileID: 0}
-  defenseAbility: {fileID: 0}
-  moveAbility: {fileID: 0}
+  characterClass: {fileID: 9109617523956553872, guid: ec95ba3a68ebd9e4982e021bfc39720e,
+    type: 3}
+  animator: {fileID: 9100000, guid: d9f4bf3c0b038624093e827fd8d177dc, type: 2}
+  maxHP: 2
+  damage: 3
+  attackSpeed: 5
+  moveSpeed: 10
+  uniqueAbilityCooldown: 5
