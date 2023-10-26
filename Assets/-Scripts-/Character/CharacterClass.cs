@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.U2D.Animation;
 using UnityEngine;
-using UnityEngine.U2D.Animation;
 
 public enum AbilityUpgrade
 {
@@ -14,15 +12,17 @@ public enum AbilityUpgrade
 }
 
 
-public class CharacterClass : MonoBehaviour , IDamageable
+public class CharacterClass : MonoBehaviour
 {
     protected CharacterData characterData;
     protected Animator animator;
     protected Character character;
     protected PowerUpData powerUpData;
-    protected Dictionary<AbilityUpgrade, bool> upgradeStatus; 
+    protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
+    protected bool bossfightPowerUpUnlocked;
 
     public float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
+    public float currentHp;
     public float Damage => characterData.Damage + powerUpData.damageIncrease;
     public float MoveSpeed => characterData.MoveSpeed + powerUpData.moveSpeedIncrease;
     public float AttackSpeed => characterData.AttackSpeed + powerUpData.attackSpeedIncrease;
@@ -34,12 +34,13 @@ public class CharacterClass : MonoBehaviour , IDamageable
         powerUpData = new PowerUpData();
         this.characterData = characterData;
         upgradeStatus = new();
-        foreach(AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
+        foreach (AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
         {
             upgradeStatus.Add(au, false);
         }
         animator = character.GetAnimator();
         this.character = character;
+        bossfightPowerUpUnlocked = false;
     }
 
     public virtual void Attack(Character parent)
@@ -62,13 +63,13 @@ public class CharacterClass : MonoBehaviour , IDamageable
     }
     public virtual void TakeDamage(float damage, Damager dealer)
     {
-        throw new NotImplementedException();
-    }
 
+    }
+    
     #region Upgrades
     public virtual void UnlockUpgrade(AbilityUpgrade abilityUpgrade)
     {
-        if (upgradeStatus[abilityUpgrade]  == false)
+        if (upgradeStatus[abilityUpgrade] == false)
             upgradeStatus[abilityUpgrade] = true;
     }
 
@@ -86,7 +87,7 @@ public class CharacterClass : MonoBehaviour , IDamageable
 
     internal List<PowerUp> GetPowerUpList() => powerUpData._powerUpData;
 
-   
+
     #endregion
 
 
