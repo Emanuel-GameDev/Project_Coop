@@ -21,13 +21,15 @@ public class CharacterClass : MonoBehaviour
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
     protected bool bossfightPowerUpUnlocked;
 
-    public float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
+    public virtual float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
     public float currentHp;
-    public float Damage => characterData.Damage + powerUpData.damageIncrease;
-    public float MoveSpeed => characterData.MoveSpeed + powerUpData.moveSpeedIncrease;
-    public float AttackSpeed => characterData.AttackSpeed + powerUpData.attackSpeedIncrease;
-    public float uniqueAbilityCooldown => characterData.UniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease;
 
+    public virtual float Damage => characterData.Damage + powerUpData.damageIncrease;
+    public virtual float MoveSpeed => characterData.MoveSpeed + powerUpData.moveSpeedIncrease;
+    public  virtual float AttackSpeed => characterData.AttackSpeed + powerUpData.attackSpeedIncrease;
+    public virtual float UniqueAbilityCooldown => characterData.UniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease + (characterData.UniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses);
+
+    protected float uniqueAbilityUses;
 
     public void Inizialize(CharacterData characterData, Character character)
     {
@@ -41,6 +43,7 @@ public class CharacterClass : MonoBehaviour
         animator = character.GetAnimator();
         this.character = character;
         bossfightPowerUpUnlocked = false;
+        uniqueAbilityUses = 0;
     }
 
     public virtual void Attack(Character parent)
@@ -65,7 +68,7 @@ public class CharacterClass : MonoBehaviour
     {
 
     }
-    
+
     #region Upgrades
     public virtual void UnlockUpgrade(AbilityUpgrade abilityUpgrade)
     {

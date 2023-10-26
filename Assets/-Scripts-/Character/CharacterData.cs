@@ -11,13 +11,14 @@ public class CharacterData : ScriptableObject
     [SerializeField] protected float attackSpeed;
     [SerializeField] protected float moveSpeed;
     [SerializeField] protected float uniqueAbilityCooldown;
+    [SerializeField] protected float uniqueAbilityCooldownIncreaseAtUse;
 
     public float MaxHp => maxHP;
     public float Damage => damage;
     public float AttackSpeed => attackSpeed;
     public float MoveSpeed => moveSpeed;
     public float UniqueAbilityCooldown => uniqueAbilityCooldown;
-
+    public float UniqueAbilityCooldownIncreaseAtUse => uniqueAbilityCooldownIncreaseAtUse;  
     public void Inizialize(Character character)
     {
         CharacterClass cClass = Instantiate(characterClass.gameObject, character.gameObject.transform).GetComponent<CharacterClass>();
