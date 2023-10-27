@@ -10,7 +10,7 @@ public class Character : MonoBehaviour, IDamageable
     protected CharacterClass characterClass;
 
     protected float MaxHp => characterClass.MaxHp;
-    protected float currentHp;
+    protected float currentHp => characterClass.currentHp;
     protected float Speed => characterClass.MoveSpeed;
     protected Rigidbody rb;
     protected Animator animator;
@@ -67,9 +67,7 @@ public class Character : MonoBehaviour, IDamageable
     public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
     public void SetAnimatorController(AnimatorController controller) => animator.runtimeAnimatorController = controller;
     public Animator GetAnimator() => animator;
+    public Damager GetDamager() => attackDamager;
 
-    public virtual void TakeDamage(float damage, Damager dealer)
-    {
-        
-    }
+    public virtual void TakeDamage(float damage, Damager dealer) => characterClass.TakeDamage(damage, dealer);
 }
