@@ -55,7 +55,12 @@ public class Character : MonoBehaviour, IDamageable
             direction = direction.normalized;
 
         rb.velocity = new Vector3(direction.x * Speed, direction.y, direction.z * Speed);
+
+        
     }
+
+    
+
     #endregion
 
     public void AddPowerUp(PowerUp powerUp) => characterClass.AddPowerUp(powerUp);

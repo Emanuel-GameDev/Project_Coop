@@ -12,11 +12,13 @@ public class PlayerCharacter : Character
         playerInputSystem = new PlayerInputSystem();
         playerInputSystem.Player.Enable();
         playerInputSystem.Player.Attack.performed += Attack_performed;
+
     }
 
     private void Update()
     {
         Move(ReadInput());
+        
     }
 
     private Vector2 ReadInput()
@@ -24,6 +26,15 @@ public class PlayerCharacter : Character
         Vector2 moveInput = playerInputSystem.Player.Move.ReadValue<Vector2>();
         return moveInput;
     }
+
+    //
+    public Vector2 ReadLook()
+    {
+       Vector2 lookInput=playerInputSystem.Player.Look.ReadValue<Vector2>();
+        return lookInput.normalized;       
+    }
+
+   
 
 
     private void Attack_performed(InputAction.CallbackContext obj)
