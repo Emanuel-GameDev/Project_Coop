@@ -7,7 +7,6 @@ public class Ranged : CharacterClass
     // inserire riferimento a una futura projectilePoll,
     // il prefab è solo per convenienza
 
-    [SerializeField] GameObject prefabBullet;
 
     public override void Attack(Character parent)
     {
@@ -31,6 +30,12 @@ public class Ranged : CharacterClass
 
     private void BasicFireProjectile(Vector2 direction)
     {
-        GameObject bullet= Instantiate(prefabBullet);
+        Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
+
+        newProjectile.transform.position=transform.position;
+
+        //settare futuri sprite
+
+        //settare la direzione
     }
 }
