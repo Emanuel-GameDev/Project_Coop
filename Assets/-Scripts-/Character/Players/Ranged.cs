@@ -37,5 +37,6 @@ public class Ranged : CharacterClass
         //settare futuri sprite
 
         //settare la direzione
+        newProjectile.SetTravelDirection(direction);
     }
 }

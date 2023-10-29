@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -38,6 +39,11 @@ public class Projectile : MonoBehaviour
 
     private void ProjectileFlyDirection()
     {
-        
+        transform.position += (Vector3)travelDirection * speed * Time.deltaTime;
+    }
+
+    public void SetTravelDirection(Vector2 direction)
+    {
+        travelDirection= direction;
     }
 }
