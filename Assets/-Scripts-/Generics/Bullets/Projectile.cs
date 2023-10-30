@@ -6,13 +6,18 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private Vector2 travelDirection;
+    private Vector3 travelDirection;
     [SerializeField] private float speed;
     [SerializeField] private float lifetime=5f;
     private float timer;
 
+    Rigidbody rb;
+
+
+
     private void Start()
     {
+        rb = GetComponent<Rigidbody>();
         transform.LookAt(travelDirection);
     }
 
@@ -39,11 +44,20 @@ public class Projectile : MonoBehaviour
 
     private void ProjectileFlyDirection()
     {
-        transform.position += (Vector3)travelDirection * speed * Time.deltaTime;
+        //transform.position += travelDirection.normalized * speed * Time.deltaTime;
+
+        
+        transform.position=Vector3.MoveTowards(transform.position,travelDirection,speed*Time.deltaTime);
+
     }
 
-    public void SetTravelDirection(Vector2 direction)
+    public void SetTravelDirection(Vector3 direction)
     {
-        travelDirection= direction;
+        if(direction != Vector3.zero && travelDirection== Vector3.zero)
+        {
+            travelDirection = direction*1000;
+        }
+
+        
     }
 }

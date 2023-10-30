@@ -18,7 +18,7 @@ public class PlayerCharacter : Character
     private void Update()
     {
         Move(ReadInput());
-        
+
     }
 
     private Vector2 ReadInput()
@@ -27,14 +27,14 @@ public class PlayerCharacter : Character
         return moveInput;
     }
 
-    //
-    public Vector2 ReadLook()
+    // informasi sulla look
+    public Vector3 ReadLook()
     {
-       Vector2 lookInput=playerInputSystem.Player.Look.ReadValue<Vector2>();
-        return lookInput.normalized;       
+        Vector3 lookInput = playerInputSystem.Player.Look.ReadValue<Vector2>();
+        return new Vector3(lookInput.x, 0, lookInput.y).normalized;
     }
 
-   
+
 
 
     private void Attack_performed(InputAction.CallbackContext obj)
