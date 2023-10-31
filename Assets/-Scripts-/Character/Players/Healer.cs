@@ -10,13 +10,23 @@ public class Healer : CharacterClass
     [SerializeField] float singleHealCooldown = 5f;
 
     [SerializeField] GameObject healArea;
+    //roba di cura
+    [SerializeField] float areaDuration=1;
     [SerializeField] float healAreaRadius = 1f;
-    [SerializeField] float healPerSeconds = 1f;
+    [SerializeField] float healPerTik = 1f;
+    [SerializeField] float tikPerSecond = 1;
+    //abilità danno
+    [SerializeField] float DOTPerTik = 1;
+    //abilità raggio
+    [SerializeField] float healAreaIncrementedRadious = 5;
+    //abilità slow
+    [SerializeField] float speedPenalty = -1;
+    //abilità difesa
+    [SerializeField] float damageIncrement = 1;
 
     [SerializeField] float bossPowerUpHeal = 50f;
     [SerializeField] int bossPowerUpHitToUnlock = 10;
 
-    [SerializeField] float healAreaIncrementedRadious = 5;
 
     private float lastAttackTime;
     private float lastUniqueAbilityUseTime;
@@ -37,34 +47,27 @@ public class Healer : CharacterClass
     //UniqueAbility: lancia area di cura
     public override void UseUniqueAbility(Character parent)
     {
-        bool areaDamage = false;
-        bool areaSlow = false;
-        bool areaDebilitate = false;
         float radius = 0;
 
-        ////Danno
-        //if (upgradeStatus[AbilityUpgrade.Ability1])
-        //    areaDamage = true;
-
-        ////Rallentamento
-        //if (upgradeStatus[AbilityUpgrade.Ability4])
-        //    areaSlow = true;
-
-        ////Abbassa difesa
-        //if (upgradeStatus[AbilityUpgrade.Ability5])
-        //    areaDebilitate = true;
-
         //calcolo area
-        if (true)
+        if (upgradeStatus[AbilityUpgrade.Ability2])
             radius = healAreaRadius + healAreaIncrementedRadious;
+        else
+            radius = healAreaRadius;
+        
 
         GameObject areaSpawned = Instantiate(healArea,new Vector3(parent.transform.position.x,0.1f,parent.transform.position.z),Quaternion.identity);
+       
         areaSpawned.GetComponent<HealArea>().Initialize(
-            healPerSeconds,
+            areaDuration,
+            tikPerSecond,
             radius,
             upgradeStatus[AbilityUpgrade.Ability1],
             upgradeStatus[AbilityUpgrade.Ability4],
             upgradeStatus[AbilityUpgrade.Ability5]);
+
+        
+
     }
 
     //ExtraAbility: piazza mina di cura
@@ -79,6 +82,7 @@ public class Healer : CharacterClass
     public override void TakeDamage(float damage, Damager dealer)
     {
         base.TakeDamage(damage, dealer);
+        currentHp -= damage;
         bossPowerUpHitCount = 0;
     }
 

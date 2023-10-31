@@ -1,30 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Status Effect/DOT")]
-public class DotEffect : StatusEffectData
+public class DotEffect : StatusEffectBehaviour
 {
-
-    public float DOTDamage;
+    public float DOTDamage = 1;
+    public float countdown = 1;
+    float timer = 0;
 
     Coroutine cor;
 
-    public void CharacterDOTApply(Character characterToDamage, float tik)
+
+    public void ApplyDOT(Character characterToDamage, float damagePerTik, float tikPerSecond)
     {
-        cor = characterToDamage.StartCoroutine(DOT(characterToDamage,tik));
+        DOTDamage = damagePerTik;
+        countdown = 1 / tikPerSecond;
     }
 
-    public void CharacterDOTRemove(Character characterToDamage, float tik)
+    public void RemoveDOT()
     {
-        Debug.Log("DEAPPLY");
-        characterToDamage.StopCoroutine(cor);
+        Destroy(this);
     }
 
-    IEnumerator DOT(Character characterToDamage, float tik)
+
+    private void Update()
     {
-        yield return new WaitForSeconds(tik);
-        Debug.Log($"{characterToDamage} , {DOTDamage}");
-        CharacterDOTApply( characterToDamage, tik);
+        if (timer >= countdown)
+        {
+            gameObject.GetComponent<Character>().TakeDamage(DOTDamage, null);
+            timer = 0;
+        }
+
+        timer += Time.deltaTime;
     }
+
 }
