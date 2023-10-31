@@ -45,12 +45,12 @@ public class HealArea : MonoBehaviour
     }
 
 
-
     private void OnTriggerEnter(Collider other)
     {
+        characterInArea.Add(other.gameObject.GetComponent<Character>());
+
         if (other.gameObject.GetComponent<Character>() is PlayerCharacter)
         {
-            characterInArea.Add(other.gameObject.GetComponent<PlayerCharacter>());
 
 
             //regene amici
@@ -64,10 +64,9 @@ public class HealArea : MonoBehaviour
         //EnemyCharacter al posto di character
         if (other.gameObject.GetComponent<Character>() is PlayerCharacter)
         {
-            characterInArea.Add(other.gameObject.GetComponent<PlayerCharacter>());
 
             //danneggia nemici
-            if(damage)
+            if(true)
             {
                 DotEffect dotEffect = other.gameObject.AddComponent<DotEffect>();
                 dotEffect.ApplyDOT(other.gameObject.GetComponent<PlayerCharacter>(), DOTPerTik, tikPerSecond);
@@ -104,10 +103,14 @@ public class HealArea : MonoBehaviour
 
     private void RemoveEffects(Character character)
     {
-        
+        foreach (StatusEffectBehaviour effect in character.gameObject.GetComponents<StatusEffectBehaviour>()) 
+        {
+            statusEffectApplied.Contains(effect);
+            effect.RemoveDOT();
 
-        if(character.gameObject.GetComponent<DotEffect>())
-            character.gameObject.GetComponent<DotEffect>().RemoveDOT();
+            statusEffectApplied.Remove(effect);
+        }
+
     }
 
     private void Start()

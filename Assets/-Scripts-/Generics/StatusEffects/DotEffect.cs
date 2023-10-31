@@ -9,16 +9,13 @@ public class DotEffect : StatusEffectBehaviour
     public float countdown = 1;
     float timer = 0;
 
-    Coroutine cor;
-
-
     public void ApplyDOT(Character characterToDamage, float damagePerTik, float tikPerSecond)
     {
         DOTDamage = damagePerTik;
         countdown = 1 / tikPerSecond;
     }
 
-    public void RemoveDOT()
+    public override void RemoveDOT()
     {
         Destroy(this);
     }

@@ -49,8 +49,13 @@ MonoBehaviour:
   singleHealCooldown: 5
   healArea: {fileID: 1224139591316512770, guid: e342c5ee29879d547bf5dc85861fff04,
     type: 3}
+  areaDuration: 10
   healAreaRadius: 10
-  healPerSeconds: 30
+  healPerTik: 1
+  tikPerSecond: 1
+  DOTPerTik: 1
+  healAreaIncrementedRadious: 5
+  speedPenalty: -1
+  damageIncrement: 1
   bossPowerUpHeal: 50
   bossPowerUpHitToUnlock: 10
-  healAreaIncrementedRadious: 5

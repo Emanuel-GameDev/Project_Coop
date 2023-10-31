@@ -17,8 +17,6 @@ public class PlayerCharacter : Character
     private void Update()
     {
         Move(ReadInput());
-        if (Input.GetKeyUp(KeyCode.E))
-            UseUniqueAbility();
     }
 
     private Vector2 ReadInput()

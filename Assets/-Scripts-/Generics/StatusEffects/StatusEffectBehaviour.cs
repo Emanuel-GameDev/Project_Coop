@@ -5,4 +5,9 @@ using UnityEngine;
 public class StatusEffectBehaviour : MonoBehaviour
 {
     public string statusName;
+
+    public virtual void RemoveDOT()
+    {
+        
+    }
 }
