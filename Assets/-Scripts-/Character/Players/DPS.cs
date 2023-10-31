@@ -31,46 +31,64 @@ public class DPS : CharacterClass
     private float extraSpeed => upgradeStatus[AbilityUpgrade.Ability4] && isInvulnerable ? invulnerabilitySpeedUp : 0;
     private float extraDamage => (upgradeStatus[AbilityUpgrade.Ability5] && Time.time < lastPerfectDodgeTime + perfectDodgeExtraDamageDuration ? perfectDodgeExtraDamage : 0) + (bossfightPowerUpUnlocked ? MathF.Min(bossPowerUpExtraDamagePerHit * consecutiveHitsCount, bossPowerUpExtraDamageCap) : 0);
     private float lastAttackTime;
-    private float lastDashTime;
+    private float lastDodgeTime;
     private float lastUniqueAbilityUseTime;
     private float lastPerfectDodgeTime;
     private float lastHitTime;
-    private int consecutiveHitsCount = 0;
-    private bool isInvulnerable = false;
     private float totalDamageDone = 0;
+    private int consecutiveHitsCount;
+    private bool isInvulnerable;
+    private bool isDodging;
+
+    private Vector2 lastDirection;
+
 
     public override float AttackSpeed => base.AttackSpeed + extraSpeed;
     public override float MoveSpeed => base.MoveSpeed + extraSpeed;
     public override float Damage => base.Damage + extraDamage;
 
+    public override void Inizialize(CharacterData characterData, Character character)
+    {
+        base.Inizialize(characterData, character);
+        lastDodgeTime = -dodgeCooldown;
+        lastAttackTime = -timeBetweenCombo;
+        lastUniqueAbilityUseTime = -UniqueAbilityCooldown;
+        consecutiveHitsCount = 0;
+        isInvulnerable = false;
+        isDodging = false;
+    }
+
+
     //Attack: combo rapida di tre attacchi melee, ravvicinati. 
     public override void Attack(Character parent)
     {
+        Utility.DebugTrace($"Executed: {upgradeStatus[AbilityUpgrade.Ability2] || Time.time > lastAttackTime + timeBetweenCombo}");
         if (upgradeStatus[AbilityUpgrade.Ability2] || Time.time > lastAttackTime + timeBetweenCombo)
         {
-            //DoMeleeAttacks();
-            base.Attack(parent);
+            lastAttackTime = Time.time;
         }
     }
 
     //Defense: fa una schivata, si sposta di tot distanza verso la direzione decisa dal giocatore con uno scatto
     public override void Defence(Character parent)
     {
-        if (Time.time > lastDashTime + dodgeCooldown)
+        Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
+        if (Time.time > lastDodgeTime + dodgeCooldown)
         {
-            base.Defence(parent);
+            lastDodgeTime = Time.time;
         }
     }
 
     //UniqueAbility: immortalità per tot secondi
     public override void UseUniqueAbility(Character parent)
     {
+        Utility.DebugTrace($"Executed: {!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown}");
         if (!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown)
         {
+            lastUniqueAbilityUseTime = Time.time;
             isInvulnerable = true;
             uniqueAbilityUses++;
         }
-        base.UseUniqueAbility(parent);
     }
 
     //ExtraAbility: è l'ability upgrade 1
@@ -80,8 +98,19 @@ public class DPS : CharacterClass
         {
             //Scatto in avanti più attacco
         }
-        base.UseExtraAbility(parent);
+        Utility.DebugTrace();
     }
+
+    public override void Move(Vector2 direction, Rigidbody rb)
+    {
+        if (!isDodging)
+        {
+            base.Move(direction, rb);
+            if (direction != Vector2.zero)
+                lastDirection = direction;
+        }
+    }
+
 
     public override void TakeDamage(float damage, Damager dealer)
     {
@@ -150,5 +179,7 @@ public class DPS : CharacterClass
     //3: Il personaggio può respingere certi tipi di colpi(es: proiettili) con il suo attacco
     //4: quando il personaggio usa l’abilità unica(i secondi di immortalità) i suoi movimenti diventano più rapidi(attacchi, schivate e spostamenti)
     //5: Effettuare una schivata perfetta aumenta i danni per tot tempo(cumulabile con il bonus ai danni del potenziamento).
+
+    //Debug:
 
 }
