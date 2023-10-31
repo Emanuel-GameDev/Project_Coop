@@ -5,6 +5,12 @@ using UnityEngine.InputSystem;
 public class PlayerCharacter : Character
 {
     Vector2 lookDir;
+    Vector2 moveDir;
+
+    private void Update()
+    {
+        Move(moveDir);
+    }
 
     public void Look_performed(InputAction.CallbackContext context)
     {
@@ -39,8 +45,6 @@ public class PlayerCharacter : Character
 
     public void Move_performed(InputAction.CallbackContext context)
     {
-        Vector2 vec = context.ReadValue<Vector2>();
-
-        Move(vec);
+        moveDir = context.ReadValue<Vector2>();
     }
 }
