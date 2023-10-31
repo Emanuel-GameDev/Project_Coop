@@ -48,21 +48,21 @@ public class CharacterClass : MonoBehaviour
 
     public virtual void Attack(Character parent)
     {
-        Debug.Log($"Attack from {parent.name} with {characterData.Damage} damage and {characterData.AttackSpeed} attack speed");
+        Debug.Log($"Attack from {characterData.name} with {characterData.Damage} damage and {characterData.AttackSpeed} attack speed");
         Debug.Log($"TotalAttack: {characterData.Damage + powerUpData.damageIncrease}");
         Debug.Log($"UpgradeStatus: {upgradeStatus[0]}");
     }
     public virtual void Defence(Character parent)
     {
-
+        Debug.Log($"Defence from {characterData.name}");
     }
     public virtual void UseUniqueAbility(Character parent)
     {
-
+        Debug.Log($"UniqueAbility from {characterData.name}");
     }
     public virtual void UseExtraAbility(Character parent)
     {
-
+        Debug.Log($"ExtraAbility from {characterData.GetType().Name}");
     }
     public virtual void TakeDamage(float damage, Damager dealer)
     {

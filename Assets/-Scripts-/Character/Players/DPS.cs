@@ -58,7 +58,7 @@ public class DPS : CharacterClass
     {
         if (Time.time > lastDashTime + dodgeCooldown)
         {
-            //Fai schivata
+            base.Defence(parent);
         }
     }
 
@@ -70,6 +70,7 @@ public class DPS : CharacterClass
             isInvulnerable = true;
             uniqueAbilityUses++;
         }
+        base.UseUniqueAbility(parent);
     }
 
     //ExtraAbility: è l'ability upgrade 1
@@ -79,6 +80,7 @@ public class DPS : CharacterClass
         {
             //Scatto in avanti più attacco
         }
+        base.UseExtraAbility(parent);
     }
 
     public override void TakeDamage(float damage, Damager dealer)
