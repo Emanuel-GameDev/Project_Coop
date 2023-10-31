@@ -37,28 +37,33 @@ public class PlayerCharacter : Character
        
     }
 
-    public void Attack_performed(InputAction.CallbackContext obj)
+    public void Attack_performed(InputAction.CallbackContext context)
     {
-        Attack();
+        if (context.performed)
+            Attack();
     }
 
     public void UniqueAbility_performed(InputAction.CallbackContext context)
     {
-        UseUniqueAbility();
+        if (context.performed)
+            UseUniqueAbility();
     }
 
     public void ExtraAbility_performed(InputAction.CallbackContext context)
     {
-        UseExtraAbility();
+        if (context.performed)
+            UseExtraAbility();
     }
 
     public void Defense_performed(InputAction.CallbackContext context)
     {
-        Defend();
+        if (context.performed)
+            Defend();
     }
 
     public void Move_performed(InputAction.CallbackContext context)
     {
-        moveDir = context.ReadValue<Vector2>();
+        if (context.performed)
+            moveDir = context.ReadValue<Vector2>();
     }
 }
