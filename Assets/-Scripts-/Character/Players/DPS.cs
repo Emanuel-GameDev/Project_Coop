@@ -3,18 +3,31 @@ using UnityEngine;
 
 public class DPS : CharacterClass
 {
-    [SerializeField] float timeBetweenCombo = 1f;
-    [SerializeField] float dodgeDistance = 10f;
-    [SerializeField] float dodgeSpeed = 10f;
-    [SerializeField] float dodgeCooldown = 5f;
-    [SerializeField] float perfectDodgeExtraDamageDuration = 5f;
-    [SerializeField] float perfectDodgeExtraDamage = 10;
-    [SerializeField] float invulnerabilityDuration = 5f;
-    [SerializeField] float invulnerabilitySpeedUp = 5f;
-    [SerializeField] float bossPowerUpTotalDamageToUnlock = 1000f;
-    [SerializeField] float bossPowerUpExtraDamagePerHit = 2f;
-    [SerializeField] float bossPowerUpExtraDamageCap = 16f;
-    [SerializeField] float bossPowerUpExtraDamagePermanence = 2.5f;
+    [SerializeField, Tooltip("Tempo tra una combo e l'altra.")]
+    float timeBetweenCombo = 1f;
+    [SerializeField, Tooltip("Distanza di schivata.")]
+    float dodgeDistance = 10f;
+    [SerializeField, Tooltip("Velocità di schivata.")]
+    float dodgeSpeed = 10f;
+    [SerializeField, Tooltip("Tempo di attesa prima di poter usare di nuovo la schivata.")]
+    float dodgeCooldown = 5f;
+    [SerializeField, Tooltip("Durata del danno extra dopo una schivata perfetta.")]
+    float perfectDodgeExtraDamageDuration = 5f;
+    [SerializeField, Tooltip("Danno extra dopo una schivata perfetta.")]
+    float perfectDodgeExtraDamage = 10;
+    [SerializeField, Tooltip("Durata dell'invulnerabilità.")]
+    float invulnerabilityDuration = 5f;
+    [SerializeField, Tooltip("Aumento di velocità durante l'invulnerabilità.")]
+    float invulnerabilitySpeedUp = 5f;
+    [SerializeField, Tooltip("Totale dei danni da fare al boss per sbloccare il potenziamento.")]
+    float bossPowerUpTotalDamageToUnlock = 1000f;
+    [SerializeField, Tooltip("Danno extra per colpo conferito dal potenziamento del boss.")]
+    float bossPowerUpExtraDamagePerHit = 2f;
+    [SerializeField, Tooltip("Limite massimo del danno extra conferito dal potenziamento del boss.")]
+    float bossPowerUpExtraDamageCap = 16f;
+    [SerializeField, Tooltip("Durata del danno extra conferito dal potenziamento del boss dopo l'ultimo colpo inferto.")]
+    float bossPowerUpExtraDamageDuration = 2.5f;
+
     private float extraSpeed => upgradeStatus[AbilityUpgrade.Ability4] && isInvulnerable ? invulnerabilitySpeedUp : 0;
     private float extraDamage => (upgradeStatus[AbilityUpgrade.Ability5] && Time.time < lastPerfectDodgeTime + perfectDodgeExtraDamageDuration ? perfectDodgeExtraDamage : 0) + (bossfightPowerUpUnlocked ? MathF.Min(bossPowerUpExtraDamagePerHit * consecutiveHitsCount, bossPowerUpExtraDamageCap) : 0);
     private float lastAttackTime;
@@ -36,6 +49,7 @@ public class DPS : CharacterClass
         if (upgradeStatus[AbilityUpgrade.Ability2] || Time.time > lastAttackTime + timeBetweenCombo)
         {
             //DoMeleeAttacks();
+            base.Attack(parent);
         }
     }
 
@@ -104,7 +118,7 @@ public class DPS : CharacterClass
     {
         if (bossfightPowerUpUnlocked)
         {
-            if (Time.time > lastHitTime + bossPowerUpExtraDamagePermanence)
+            if (Time.time > lastHitTime + bossPowerUpExtraDamageDuration)
                 consecutiveHitsCount = 0;
         }
         else
