@@ -770,6 +770,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   powerUpToGive: {fileID: 11400000, guid: 24d3fe36fabc43a4183c8a83a5eb15ce, type: 2}
   player: {fileID: 1881076044}
+  manager: {fileID: 2125010632}
+  canJoin: 0
 --- !u!4 &501897608
 Transform:
   m_ObjectHideFlags: 0
@@ -989,7 +991,7 @@ MonoBehaviour:
   m_NotificationBehavior: 2
   m_MaxPlayerCount: 4
   m_AllowJoining: 1
-  m_JoinBehavior: 0
+  m_JoinBehavior: 1
   m_PlayerJoinedEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -997,7 +999,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_JoinAction:
-    m_UseReference: 0
+    m_UseReference: 1
     m_Action:
       m_Name: Join
       m_Type: 0
@@ -1015,7 +1017,8 @@ MonoBehaviour:
         m_Action: Join
         m_Flags: 0
       m_Flags: 0
-    m_Reference: {fileID: 0}
+    m_Reference: {fileID: 4662646448351340726, guid: ca188dc33af58c24b803b26aab77e211,
+      type: 3}
   m_PlayerPrefab: {fileID: 7461498262193410672, guid: 34f950e3c8f98484a99f7ed9d42fd12a,
     type: 3}
   m_SplitScreen: 0
