@@ -79,7 +79,7 @@ public class DPS : CharacterClass
         if (Time.time > lastDodgeTime + dodgeCooldown)
         {
             lastDodgeTime = Time.time;
-            Dodge(Vector3.forward, parent.GetRigidBody());
+            Dodge(lastDirection, parent.GetRigidBody());
         }
     }
 
@@ -89,12 +89,16 @@ public class DPS : CharacterClass
         {
             isDodging = true;
             float startTime = Time.time;
+            float distanceCovered = 0f;
 
-            while (Time.time - startTime < dodgeDuration)
+            while (Time.time - startTime < dodgeDuration && distanceCovered < dodgeDistance)
             {
-                rb.velocity = dodgeDirection * dodgeSpeed;
+                float currentDodgeSpeed = dodgeDistance / dodgeDuration;
+                rb.velocity = dodgeDirection * currentDodgeSpeed;
+                distanceCovered += currentDodgeSpeed * Time.deltaTime;
                 yield return null;
             }
+
 
             rb.velocity = Vector3.zero;
 
