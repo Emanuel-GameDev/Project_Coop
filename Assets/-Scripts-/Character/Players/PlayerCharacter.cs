@@ -50,7 +50,6 @@ public class PlayerCharacter : Character
 
     public void Move_performed(InputAction.CallbackContext context)
     {
-        if (context.performed)
-            moveDir = context.ReadValue<Vector2>();
+        moveDir = context.ReadValue<Vector2>();
     }
 }
