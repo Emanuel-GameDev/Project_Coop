@@ -45,6 +45,7 @@ public class Character : MonoBehaviour, IDamageable
 
     public void SetCharacterData(CharacterData newCharData)
     {
+        characterData.Disable(this);
         characterData = newCharData;
         newCharData.Inizialize(this);
     }
