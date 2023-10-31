@@ -54,6 +54,12 @@ public class CharacterClass : MonoBehaviour
     {
        
     }
+
+    public virtual void Disable(Character character)
+    {
+        // Disattivo eventuali modifiche al prefab
+    }
+
     public virtual void UseUniqueAbility(Character parent)
     {
        

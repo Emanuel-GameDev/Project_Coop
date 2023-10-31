@@ -80,6 +80,15 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Join"",
+                    ""type"": ""Button"",
+                    ""id"": ""2bf89b73-9e71-4a6a-bb6e-7fea20474b85"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -300,6 +309,28 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""ExtraAbility"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f9242801-621f-4ba4-845c-ff33c45af549"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Join"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""613acbce-3f19-48d9-9b28-3d7555815f00"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Join"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -893,6 +924,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         m_Player_Defense = m_Player.FindAction("Defense", throwIfNotFound: true);
         m_Player_UniqueAbility = m_Player.FindAction("UniqueAbility", throwIfNotFound: true);
         m_Player_ExtraAbility = m_Player.FindAction("ExtraAbility", throwIfNotFound: true);
+        m_Player_Join = m_Player.FindAction("Join", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -972,6 +1004,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Defense;
     private readonly InputAction m_Player_UniqueAbility;
     private readonly InputAction m_Player_ExtraAbility;
+    private readonly InputAction m_Player_Join;
     public struct PlayerActions
     {
         private @PlayerInputSystem m_Wrapper;
@@ -982,6 +1015,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         public InputAction @Defense => m_Wrapper.m_Player_Defense;
         public InputAction @UniqueAbility => m_Wrapper.m_Player_UniqueAbility;
         public InputAction @ExtraAbility => m_Wrapper.m_Player_ExtraAbility;
+        public InputAction @Join => m_Wrapper.m_Player_Join;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1009,6 +1043,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @ExtraAbility.started += instance.OnExtraAbility;
             @ExtraAbility.performed += instance.OnExtraAbility;
             @ExtraAbility.canceled += instance.OnExtraAbility;
+            @Join.started += instance.OnJoin;
+            @Join.performed += instance.OnJoin;
+            @Join.canceled += instance.OnJoin;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1031,6 +1068,9 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
             @ExtraAbility.started -= instance.OnExtraAbility;
             @ExtraAbility.performed -= instance.OnExtraAbility;
             @ExtraAbility.canceled -= instance.OnExtraAbility;
+            @Join.started -= instance.OnJoin;
+            @Join.performed -= instance.OnJoin;
+            @Join.canceled -= instance.OnJoin;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1219,6 +1259,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         void OnDefense(InputAction.CallbackContext context);
         void OnUniqueAbility(InputAction.CallbackContext context);
         void OnExtraAbility(InputAction.CallbackContext context);
+        void OnJoin(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

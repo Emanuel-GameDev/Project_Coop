@@ -34,4 +34,8 @@ public class CharacterData : ScriptableObject
         character.SetCharacterClass(cClass);
         character.SetAnimatorController(animator);
     }
+    public void Disable(Character character)
+    {
+        characterClass.Disable(character);
+    }
 }
