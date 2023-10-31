@@ -1,62 +1,46 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 
 public class PlayerCharacter : Character
 {
-    [SerializeField] private PlayerInputSystem playerInputSystem;
+    Vector2 lookDir;
 
-    private void OnEnable()
+    public void Look_performed(InputAction.CallbackContext context)
     {
-        rb = GetComponent<Rigidbody>();
-        playerInputSystem = new PlayerInputSystem();
-        playerInputSystem.Player.Enable();
-        playerInputSystem.Player.Attack.performed += Attack_performed;
-        playerInputSystem.Player.Defense.performed += Defense_performed;
-        playerInputSystem.Player.ExtraAbility.performed += ExtraAbility_performed;
-        playerInputSystem.Player.UniqueAbility.performed += UniqueAbility_performed;
-
-    }
-
-    
-
-    private void Update()
-    {
-        Move(ReadInput());
-
-    }
-
-    private Vector2 ReadInput()
-    {
-        Vector2 moveInput = playerInputSystem.Player.Move.ReadValue<Vector2>();
-        return moveInput;
+        lookDir = context.ReadValue<Vector2>();
     }
 
     // informasi sulla look
     public Vector3 ReadLook()
     {
-        Vector3 lookInput = playerInputSystem.Player.Look.ReadValue<Vector2>();
-        return new Vector3(lookInput.x, 0, lookInput.y).normalized;
+        return new Vector3(lookDir.x, 0, lookDir.y).normalized;
     }
 
-    private void Attack_performed(InputAction.CallbackContext obj)
+    public void Attack_performed(InputAction.CallbackContext obj)
     {
         Attack();
     }
 
-    private void UniqueAbility_performed(InputAction.CallbackContext context)
+    public void UniqueAbility_performed(InputAction.CallbackContext context)
     {
         UseUniqueAbility();
     }
 
-    private void ExtraAbility_performed(InputAction.CallbackContext context)
+    public void ExtraAbility_performed(InputAction.CallbackContext context)
     {
         UseExtraAbility();
     }
 
-    private void Defense_performed(InputAction.CallbackContext context)
+    public void Defense_performed(InputAction.CallbackContext context)
     {
         Defend();
+    }
+
+    public void Move_performed(InputAction.CallbackContext context)
+    {
+        Vector2 vec = context.ReadValue<Vector2>();
+
+        Move(vec);
     }
 }

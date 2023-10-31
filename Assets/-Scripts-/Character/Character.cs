@@ -9,13 +9,14 @@ public class Character : MonoBehaviour, IDamageable
     [SerializeField] protected Damager attackDamager;
     protected CharacterClass characterClass;
 
+    public CharacterData CharacterData => characterData;
     protected float MaxHp => characterClass.MaxHp;
     protected float currentHp => characterClass.currentHp;
     protected Rigidbody rb;
     protected Animator animator;
 
     //Lo uso per chimare tutte le funzioni iniziali
-    protected virtual void Start()
+    protected void Awake()
     {
         InitialSetup();
     }
@@ -41,6 +42,12 @@ public class Character : MonoBehaviour, IDamageable
     public List<PowerUp> GetPowerUpList() => characterClass.GetPowerUpList();
 
     public void UnlockUpgrade(AbilityUpgrade abilityUpgrade) => characterClass.UnlockUpgrade(abilityUpgrade);
+
+    public void SetCharacterData(CharacterData newCharData)
+    {
+        characterData = newCharData;
+        newCharData.Inizialize(this);
+    }
 
     public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
     public void SetAnimatorController(AnimatorController controller) => animator.runtimeAnimatorController = controller;
