@@ -31,7 +31,7 @@ public class CharacterClass : MonoBehaviour
 
     protected float uniqueAbilityUses;
 
-    public void Inizialize(CharacterData characterData, Character character)
+    public virtual void Inizialize(CharacterData characterData, Character character)
     {
         powerUpData = new PowerUpData();
         this.characterData = characterData;
@@ -48,26 +48,48 @@ public class CharacterClass : MonoBehaviour
 
     public virtual void Attack(Character parent)
     {
-        Debug.Log($"Attack from {parent.name} with {characterData.Damage} damage and {characterData.AttackSpeed} attack speed");
-        Debug.Log($"TotalAttack: {characterData.Damage + powerUpData.damageIncrease}");
-        Debug.Log($"UpgradeStatus: {upgradeStatus[0]}");
+       
     }
     public virtual void Defence(Character parent)
     {
-
+       
     }
     public virtual void UseUniqueAbility(Character parent)
     {
-
+       
     }
     public virtual void UseExtraAbility(Character parent)
     {
-
+      
     }
     public virtual void TakeDamage(float damage, Damager dealer)
     {
 
     }
+
+    #region Move
+    //dati x e z chiama Move col Vector2
+    public virtual void Move(float x, float z, Rigidbody rb)
+    {
+        Move(new Vector2(x, z), rb);
+    }
+
+    // Dato un vector2 chiama move col Vector3
+    public virtual void Move(Vector2 direction, Rigidbody rb)
+    {
+        Move(new Vector3(direction.x, 0, direction.y).normalized, rb);
+    }
+
+    //dato un vector 3 setta la velocità del rigidBody in quella direzione, se il vettore non è normalizzato lo normalizza
+    public virtual void Move(Vector3 direction, Rigidbody rb)
+    {
+        if (!direction.normalized.Equals(direction))
+            direction = direction.normalized;
+
+        rb.velocity = new Vector3(direction.x * MoveSpeed, direction.y, direction.z * MoveSpeed);
+    }
+    #endregion
+
 
     #region Upgrades
     public virtual void UnlockUpgrade(AbilityUpgrade abilityUpgrade)

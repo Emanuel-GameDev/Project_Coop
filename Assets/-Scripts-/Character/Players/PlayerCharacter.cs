@@ -4,31 +4,47 @@ using UnityEngine.InputSystem;
 
 public class PlayerCharacter : Character
 {
-    [SerializeField] private PlayerInputSystem playerInputSystem;
-
-    private void OnEnable()
-    {
-        rb = GetComponent<Rigidbody>();
-        playerInputSystem = new PlayerInputSystem();
-        playerInputSystem.Player.Enable();
-        playerInputSystem.Player.Attack.performed += Attack_performed;
-    }
+    Vector2 lookDir;
+    Vector2 moveDir;
 
     private void Update()
     {
-        Move(ReadInput());
+        Move(moveDir);
     }
 
-    private Vector2 ReadInput()
+    public void Look_performed(InputAction.CallbackContext context)
     {
-        Vector2 moveInput = playerInputSystem.Player.Move.ReadValue<Vector2>();
-        return moveInput;
+        lookDir = context.ReadValue<Vector2>();
     }
 
+    // informasi sulla look
+    public Vector3 ReadLook()
+    {
+        return new Vector3(lookDir.x, 0, lookDir.y).normalized;
+    }
 
-    private void Attack_performed(InputAction.CallbackContext obj)
+    public void Attack_performed(InputAction.CallbackContext obj)
     {
         Attack();
     }
 
+    public void UniqueAbility_performed(InputAction.CallbackContext context)
+    {
+        UseUniqueAbility();
+    }
+
+    public void ExtraAbility_performed(InputAction.CallbackContext context)
+    {
+        UseExtraAbility();
+    }
+
+    public void Defense_performed(InputAction.CallbackContext context)
+    {
+        Defend();
+    }
+
+    public void Move_performed(InputAction.CallbackContext context)
+    {
+        moveDir = context.ReadValue<Vector2>();
+    }
 }

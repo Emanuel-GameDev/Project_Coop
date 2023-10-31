@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UnityEngine;
 
 public static class Utility
@@ -26,5 +27,28 @@ public static class Utility
         int layerbit = 1 << layer;
         return (targetMask & layerbit) != 0;
     }
+
+    public static void DebugTrace()
+    {
+        // Ottieni il nome dello script e della funzione
+        StackTrace stackTrace = new StackTrace();
+        string callingFunction = stackTrace.GetFrame(1).GetMethod().Name;
+        string callingScript = stackTrace.GetFrame(1).GetMethod().ReflectedType.Name;
+
+        // Scrivi nel file di log di debug
+        UnityEngine.Debug.Log($"{callingScript} {callingFunction}");
+    }
+    public static void DebugTrace(string extraText)
+    {
+        // Ottieni il nome dello script e della funzione
+        StackTrace stackTrace = new StackTrace();
+        string callingFunction = stackTrace.GetFrame(1).GetMethod().Name;
+        string callingScript = stackTrace.GetFrame(1).GetMethod().ReflectedType.Name;
+
+        // Scrivi nel file di log di debug
+        UnityEngine.Debug.Log($"{callingScript} {callingFunction} | {extraText}");
+    }
+
+
 
 }
