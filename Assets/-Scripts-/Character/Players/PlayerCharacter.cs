@@ -26,12 +26,12 @@ public class PlayerCharacter : Character
 
         if (gamepad != null)
         {
-            Debug.Log("Gamepad");
+            //perndo la look dal player.input utilizzando il gamepad
             return new Vector3(lookDir.x, 0, lookDir.y).normalized;           
         }
         else
         {
-            Debug.Log("altro");
+            //prendo la look con un raycast dal mouse
             return new Vector3(lookDir.x,0,lookDir.y).normalized;
         }
        
