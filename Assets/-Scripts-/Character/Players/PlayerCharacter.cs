@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using UnityEngine.iOS;
+using UnityEngine.Rendering;
 
 public class PlayerCharacter : Character
 {
@@ -20,7 +21,19 @@ public class PlayerCharacter : Character
     // informasi sulla look
     public Vector3 ReadLook()
     {
-        return new Vector3(lookDir.x, 0, lookDir.y).normalized;
+        var gamepad = Gamepad.current;
+
+        if (gamepad != null)
+        {
+            Debug.Log("Gamepad");
+            return new Vector3(lookDir.x, 0, lookDir.y).normalized;           
+        }
+        else
+        {
+            Debug.Log("altro");
+            return new Vector3(lookDir.x,0,lookDir.y).normalized;
+        }
+       
     }
 
     public void Attack_performed(InputAction.CallbackContext obj)
