@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class DPS : CharacterClass
@@ -9,6 +10,8 @@ public class DPS : CharacterClass
     float dodgeDistance = 10f;
     [SerializeField, Tooltip("Velocità di schivata.")]
     float dodgeSpeed = 10f;
+    [SerializeField, Tooltip("Durata della schivata.")]
+    float dodgeDuration = 0.25f;
     [SerializeField, Tooltip("Tempo di attesa prima di poter usare di nuovo la schivata.")]
     float dodgeCooldown = 5f;
     [SerializeField, Tooltip("Durata del danno extra dopo una schivata perfetta.")]
@@ -76,8 +79,30 @@ public class DPS : CharacterClass
         if (Time.time > lastDodgeTime + dodgeCooldown)
         {
             lastDodgeTime = Time.time;
+            Dodge(Vector3.forward, parent.GetRigidBody());
         }
     }
+
+    protected IEnumerator Dodge(Vector3 dodgeDirection, Rigidbody rb)
+    {
+        if (!isDodging)
+        {
+            isDodging = true;
+            float startTime = Time.time;
+
+            while (Time.time - startTime < dodgeDuration)
+            {
+                rb.velocity = dodgeDirection * dodgeSpeed;
+                yield return null;
+            }
+
+            rb.velocity = Vector3.zero;
+
+            isDodging = false;
+        }
+    }
+
+
 
     //UniqueAbility: immortalità per tot secondi
     public override void UseUniqueAbility(Character parent)
