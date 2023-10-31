@@ -15,7 +15,8 @@ public class PlayerCharacter : Character
 
     public void Look_performed(InputAction.CallbackContext context)
     {
-        lookDir = context.ReadValue<Vector2>();
+        if (context.performed)
+            lookDir = context.ReadValue<Vector2>();
     }
 
     // informasi sulla look
