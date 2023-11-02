@@ -9,12 +9,17 @@ public class Healer : CharacterClass
 
     [SerializeField] float singleHealCooldown = 5f;
 
+    [SerializeField] GameObject healMine;
+
+    [Header("Heal area base information")]
     [SerializeField] GameObject healArea;
-    //roba di cura
+    
     [SerializeField] float areaDuration=1;
     [SerializeField] float healAreaRadius = 1f;
-    [SerializeField] float healPerTik = 1f;
     [SerializeField] float tikPerSecond = 1;
+    [SerializeField] float healPerTik = 1f;
+
+    [Header("Heal area upgrade stats")]
     //abilità danno
     [SerializeField] float DOTPerTik = 1;
     //abilità raggio
@@ -24,6 +29,7 @@ public class Healer : CharacterClass
     //abilità difesa
     [SerializeField] float damageIncrement = 1;
 
+    [Header("Boss powerUp")]
     [SerializeField] float bossPowerUpHeal = 50f;
     [SerializeField] int bossPowerUpHitToUnlock = 10;
 
@@ -56,9 +62,11 @@ public class Healer : CharacterClass
             radius = healAreaRadius;
         
 
-        GameObject areaSpawned = Instantiate(healArea,new Vector3(parent.transform.position.x,0.1f,parent.transform.position.z),Quaternion.identity);
+        HealArea areaSpawned = Instantiate(healArea,new Vector3(parent.transform.position.x,0,parent.transform.position.z),Quaternion.identity).GetComponent<HealArea>();
        
-        areaSpawned.GetComponent<HealArea>().Initialize(
+
+
+        areaSpawned.Initialize(
             areaDuration,
             tikPerSecond,
             radius,
@@ -75,7 +83,7 @@ public class Healer : CharacterClass
     {
         if (upgradeStatus[AbilityUpgrade.Ability3])
         {
-            //Crea mina
+            Instantiate(healMine, new Vector3(parent.transform.position.x, 0.1f, parent.transform.position.z), Quaternion.identity);
         }
     }
 

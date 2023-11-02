@@ -17,10 +17,10 @@ public class HealArea : MonoBehaviour
 
     [SerializeField] float DOTPerTik = 1;
     
-    [SerializeField] float speedPenalty = -1;
+    [SerializeField] float speedPenalty = -5;
     
     [SerializeField] float damageIncrement = 1;
-
+    [SerializeField] PowerUp slowDown;
 
     [SerializeField] List<StatusEffectBehaviour> statusEffectApplied;
 
@@ -51,8 +51,6 @@ public class HealArea : MonoBehaviour
 
         if (other.gameObject.GetComponent<Character>() is PlayerCharacter)
         {
-
-
             //regene amici
             DotEffect regeneEffect = other.gameObject.AddComponent<DotEffect>();
             regeneEffect.ApplyDOT(other.gameObject.GetComponent<PlayerCharacter>(), -healPerTik, tikPerSecond);
@@ -61,12 +59,11 @@ public class HealArea : MonoBehaviour
         }
 
 
-        //EnemyCharacter al posto di character
+        //EnemyCharacter al posto di playerCharacter
         if (other.gameObject.GetComponent<Character>() is PlayerCharacter)
         {
-
             //danneggia nemici
-            if(true)
+            if(damage)
             {
                 DotEffect dotEffect = other.gameObject.AddComponent<DotEffect>();
                 dotEffect.ApplyDOT(other.gameObject.GetComponent<PlayerCharacter>(), DOTPerTik, tikPerSecond);
@@ -77,7 +74,7 @@ public class HealArea : MonoBehaviour
             //rallenta nemici
             if(slow)
             {
-
+                other.gameObject.GetComponent<Character>().AddPowerUp(slowDown);
             }
 
             //indebolisci nemici
@@ -105,12 +102,13 @@ public class HealArea : MonoBehaviour
     {
         foreach (StatusEffectBehaviour effect in character.gameObject.GetComponents<StatusEffectBehaviour>()) 
         {
-            statusEffectApplied.Contains(effect);
-            effect.RemoveDOT();
+            if(statusEffectApplied.Contains(effect))
+                effect.RemoveDOT();
 
             statusEffectApplied.Remove(effect);
         }
 
+        character.RemovePowerUp(slowDown);
     }
 
     private void Start()
