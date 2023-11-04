@@ -7,7 +7,7 @@ public class PlayerCharacter : Character
 {
     private Vector3 screenPosition;
     private Vector3 worldPosition;
-    Plane plane = new Plane(Vector3.down,1);
+    Plane plane = new Plane(Vector3.up,-1);
 
     Vector2 lookDir;
     Vector2 moveDir;
