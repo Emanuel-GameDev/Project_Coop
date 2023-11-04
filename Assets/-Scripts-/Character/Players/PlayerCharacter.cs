@@ -5,6 +5,10 @@ using UnityEngine.Rendering;
 
 public class PlayerCharacter : Character
 {
+    private Vector3 screenPosition;
+    private Vector3 worldPosition;
+    Plane plane = new Plane(Vector3.down,1);
+
     Vector2 lookDir;
     Vector2 moveDir;
 
@@ -32,7 +36,19 @@ public class PlayerCharacter : Character
         else
         {
             //prendo la look con un raycast dal mouse
-            return new Vector3(lookDir.x,0,lookDir.y).normalized;
+            screenPosition = Input.mousePosition;
+
+            Ray ray = Camera.main.ScreenPointToRay(screenPosition);
+
+            if (plane.Raycast(ray, out float distance))
+            {
+                worldPosition = ray.GetPoint(distance);
+
+                worldPosition = (worldPosition - transform.position).normalized;
+            }
+
+            Debug.Log(worldPosition);
+            return new Vector3(worldPosition.x, 0, worldPosition.z);
         }
        
     }
