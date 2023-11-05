@@ -18,9 +18,25 @@ public class GameManager : MonoBehaviour
         {
             player.AddPowerUp(powerUpToGive);
         }
-        if (Input.GetKeyDown(KeyCode.U))
+        if (Input.GetKeyDown(KeyCode.Keypad1))
         {
             player.UnlockUpgrade(AbilityUpgrade.Ability1);
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            player.UnlockUpgrade(AbilityUpgrade.Ability2);
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad3))
+        {
+            player.UnlockUpgrade(AbilityUpgrade.Ability3);
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            player.UnlockUpgrade(AbilityUpgrade.Ability4);
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad5))
+        {
+            player.UnlockUpgrade(AbilityUpgrade.Ability5);
         }
 
 

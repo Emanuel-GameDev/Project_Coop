@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class DPS : CharacterClass
 {
+    [Header("Attack")]
     [SerializeField, Tooltip("Tempo tra una combo e l'altra.")]
     float timeBetweenCombo = 1f;
+    [Header("Dodge")]
     [SerializeField, Tooltip("Distanza di schivata.")]
     float dodgeDistance = 10f;
-    [SerializeField, Tooltip("Velocità di schivata.")]
-    float dodgeSpeed = 10f;
     [SerializeField, Tooltip("Durata della schivata.")]
     float dodgeDuration = 0.25f;
     [SerializeField, Tooltip("Tempo di attesa prima di poter usare di nuovo la schivata.")]
@@ -18,10 +18,12 @@ public class DPS : CharacterClass
     float perfectDodgeExtraDamageDuration = 5f;
     [SerializeField, Tooltip("Danno extra dopo una schivata perfetta.")]
     float perfectDodgeExtraDamage = 10;
+    [Header("Unique Ability")]
     [SerializeField, Tooltip("Durata dell'invulnerabilità.")]
     float invulnerabilityDuration = 5f;
     [SerializeField, Tooltip("Aumento di velocità durante l'invulnerabilità.")]
     float invulnerabilitySpeedUp = 5f;
+    [Header("Boss Power Up")]
     [SerializeField, Tooltip("Totale dei danni da fare al boss per sbloccare il potenziamento.")]
     float bossPowerUpTotalDamageToUnlock = 1000f;
     [SerializeField, Tooltip("Danno extra per colpo conferito dal potenziamento del boss.")]
@@ -39,12 +41,31 @@ public class DPS : CharacterClass
     private float lastPerfectDodgeTime;
     private float lastHitTime;
     private float totalDamageDone = 0;
+
+    private int comboState;
+    private int comboStateMax = 3;
     private int consecutiveHitsCount;
+
     private bool isInvulnerable;
     private bool isDodging;
+    private bool IsAttacking
+    {
+        get => _isAttacking;
+        set { _isAttacking = value; animator.SetBool("isAttacking", _isAttacking); }
+    }
+    private bool _isAttacking;
 
     private Vector2 lastDirection;
 
+    #region Animation Variable
+    private static string ATTACK = "Attack";
+    //private static string DODGE = "Dodge";
+    //private static string HIT = "Hit";
+    //private static string UNIQUE_ABILITY = "UniqueAbility";
+    //private static string EXTRA_ABILITY = "ExtraAbility";
+    //private static string DEATH = "Death";
+    //private static string MOVING = "Moving";
+    #endregion
 
     public override float AttackSpeed => base.AttackSpeed + extraSpeed;
     public override float MoveSpeed => base.MoveSpeed + extraSpeed;
@@ -57,20 +78,69 @@ public class DPS : CharacterClass
         lastAttackTime = -timeBetweenCombo;
         lastUniqueAbilityUseTime = -UniqueAbilityCooldown;
         consecutiveHitsCount = 0;
+        comboState = 0;
         isInvulnerable = false;
         isDodging = false;
+        IsAttacking = false;
     }
 
 
     //Attack: combo rapida di tre attacchi melee, ravvicinati. 
+    #region Attack
     public override void Attack(Character parent)
     {
-        Utility.DebugTrace($"Executed: {upgradeStatus[AbilityUpgrade.Ability2] || Time.time > lastAttackTime + timeBetweenCombo}");
-        if (upgradeStatus[AbilityUpgrade.Ability2] || Time.time > lastAttackTime + timeBetweenCombo)
+        float currentTime = Time.time;
+        Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {upgradeStatus[AbilityUpgrade.Ability2]}, CooldownEnded: {currentTime > lastAttackTime + timeBetweenCombo}, ComboState: {comboState}");
+        if (!IsAttacking)
         {
-            lastAttackTime = Time.time;
+            if (CanStartCombo(currentTime))
+            {// Avvia l'animazione per il primo attacco della combo
+                StartCombo(currentTime);
+            }
+        }
+        else
+        {
+            // Avvia l'animazione per l'attacco successivo
+            if (IsCurrentAttackAnimation())
+            {
+                ContinueCombo(currentTime);
+            }
         }
     }
+    private void StartCombo(float currentTime)
+    {
+        comboState = 1;
+        DoMeleeAttack(currentTime);
+    }
+    private void ContinueCombo(float currentTime)
+    {
+        comboState++;
+        if (comboState > comboStateMax)
+            comboState = 0;
+        else
+            DoMeleeAttack(currentTime);
+    }
+    private void DoMeleeAttack(float currentTime)
+    {
+        string triggerName = ATTACK + (comboState).ToString();
+        animator.SetTrigger(triggerName);
+        IsAttacking = true;
+        lastAttackTime = currentTime;
+    }
+    private bool IsCurrentAttackAnimation()
+    {
+        return animator.GetCurrentAnimatorStateInfo(0).IsName(ATTACK + (comboState).ToString());
+    }
+    private bool CanStartCombo(float currentTime)
+    {
+        return upgradeStatus[AbilityUpgrade.Ability2] || currentTime > lastAttackTime + timeBetweenCombo;
+    }
+    private void CheckAttackStatus()
+    {
+        if (IsAttacking && !animator.GetBool("isAttacking"))
+            IsAttacking = false;
+    }
+    #endregion
 
     //Defense: fa una schivata, si sposta di tot distanza verso la direzione decisa dal giocatore con uno scatto
     public override void Defence(Character parent)
@@ -79,34 +149,28 @@ public class DPS : CharacterClass
         if (Time.time > lastDodgeTime + dodgeCooldown)
         {
             lastDodgeTime = Time.time;
-            Dodge(lastDirection, parent.GetRigidBody());
+            StartCoroutine(Dodge(lastDirection, parent.GetRigidBody()));
+            Debug.Log(lastDirection);
         }
     }
 
-    protected IEnumerator Dodge(Vector3 dodgeDirection, Rigidbody rb)
+    protected IEnumerator Dodge(Vector2 dodgeDirection, Rigidbody rb)
     {
         if (!isDodging)
         {
-            isDodging = true;
-            float startTime = Time.time;
-            float distanceCovered = 0f;
+            //isDodging = true;
+            //animator.SetBool(DODGE, isDodging);
+            Vector3 dodgeDirection3D = new Vector3(dodgeDirection.x, 0f, dodgeDirection.y).normalized;
+            rb.velocity = dodgeDirection3D * (dodgeDistance / dodgeDuration);
 
-            while (Time.time - startTime < dodgeDuration && distanceCovered < dodgeDistance)
-            {
-                float currentDodgeSpeed = dodgeDistance / dodgeDuration;
-                rb.velocity = dodgeDirection * currentDodgeSpeed;
-                distanceCovered += currentDodgeSpeed * Time.deltaTime;
-                yield return null;
-            }
-
+            yield return new WaitForSeconds(dodgeDuration);
 
             rb.velocity = Vector3.zero;
 
             isDodging = false;
+            //animator.SetBool(DODGE, isDodging);
         }
     }
-
-
 
     //UniqueAbility: immortalità per tot secondi
     public override void UseUniqueAbility(Character parent)
@@ -115,9 +179,18 @@ public class DPS : CharacterClass
         if (!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown)
         {
             lastUniqueAbilityUseTime = Time.time;
-            isInvulnerable = true;
             uniqueAbilityUses++;
+            StartCoroutine(UseUniqueAbilityCoroutine());
         }
+    }
+
+    private IEnumerator UseUniqueAbilityCoroutine()
+    {
+        isInvulnerable = true;
+
+        yield return new WaitForSeconds(invulnerabilityDuration);
+
+        isInvulnerable = false;
     }
 
     //ExtraAbility: è l'ability upgrade 1
@@ -152,6 +225,7 @@ public class DPS : CharacterClass
         base.UnlockUpgrade(abilityUpgrade);
         if (abilityUpgrade == AbilityUpgrade.Ability3)
             character.GetDamager().gameObject.AddComponent<DeflectProjectile>();
+        Debug.Log("Unlock" + abilityUpgrade.ToString());
     }
 
     public override void LockUpgrade(AbilityUpgrade abilityUpgrade)
@@ -170,8 +244,8 @@ public class DPS : CharacterClass
 
     private void Update()
     {
-        InvulnerabilityCheck();
         DamageCheck();
+        CheckAttackStatus();
     }
 
     private void DamageCheck()
@@ -188,13 +262,6 @@ public class DPS : CharacterClass
         }
     }
 
-    private void InvulnerabilityCheck()
-    {
-        if (isInvulnerable && Time.time > lastUniqueAbilityUseTime + invulnerabilityDuration)
-            isInvulnerable = false;
-    }
-
-
     //Potenziamento boss fight: gli attacchi consecutivi aumentano il danno del personaggio a ogni colpo andato a segno.
     //Dopo tot tempo (es: 1.5 secondi) senza colpire, il danno torna al valore standard.
 
@@ -208,7 +275,5 @@ public class DPS : CharacterClass
     //3: Il personaggio può respingere certi tipi di colpi(es: proiettili) con il suo attacco
     //4: quando il personaggio usa l’abilità unica(i secondi di immortalità) i suoi movimenti diventano più rapidi(attacchi, schivate e spostamenti)
     //5: Effettuare una schivata perfetta aumenta i danni per tot tempo(cumulabile con il bonus ai danni del potenziamento).
-
-    //Debug:
 
 }
