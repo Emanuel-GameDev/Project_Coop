@@ -12,6 +12,7 @@ public class Healer : CharacterClass
     [SerializeField] GameObject healMine;
 
     [Header("Small heal ability information")]
+    [SerializeField] GameObject healIcon;
     [SerializeField] float smallHeal = 5f;
     [SerializeField] float singleHealCooldown = 5f;
     [SerializeField] float smallHealAreaRadius = 1f;
@@ -39,7 +40,14 @@ public class Healer : CharacterClass
     [SerializeField] float bossPowerUpHeal = 50f;
     [SerializeField] int bossPowerUpHitToUnlock = 10;
 
+    GameObject instantiatedHealIcon;
+
     CapsuleCollider smallHealAreaCollider;
+    
+    List<PlayerCharacter> playerInArea;
+
+    PlayerCharacter nearestPlayer;
+    PlayerCharacter lastNearestPlayer;
 
     private float lastAttackTime;
     private float lastUniqueAbilityUseTime;
@@ -52,7 +60,20 @@ public class Healer : CharacterClass
         playerInArea = new List<PlayerCharacter>();
         smallHealAreaCollider = gameObject.AddComponent<CapsuleCollider>();
         smallHealAreaCollider.isTrigger = true;
+        smallHealAreaCollider.height = 1.5f;
         smallHealAreaCollider.radius = smallHealAreaRadius;
+
+
+        //provvisorio
+        instantiatedHealIcon = Instantiate(healIcon);
+        MoveIcon(transform);
+    }
+
+
+    private void MoveIcon(Transform newParent)
+    {
+        instantiatedHealIcon.transform.SetParent(newParent);
+        instantiatedHealIcon.transform.localPosition = new Vector3(0, 1, 0);
     }
 
     
@@ -62,31 +83,49 @@ public class Healer : CharacterClass
         
     }
 
-    List<PlayerCharacter> playerInArea;
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.GetComponent<PlayerCharacter>())
+        if (other.gameObject.GetComponent<PlayerCharacter>())
+        {
             playerInArea.Add(other.gameObject.GetComponent<PlayerCharacter>());
+            nearestPlayer = playerInArea.OrderBy(c => (transform.position - c.transform.position).sqrMagnitude).First();
+        }
     }
+
+    private void FixedUpdate()
+    {
+        if (lastNearestPlayer != nearestPlayer)
+        {
+            if (playerInArea.Count == 0)
+                MoveIcon(transform);
+            else
+                MoveIcon(nearestPlayer.transform);
+            
+            lastNearestPlayer = nearestPlayer;
+        }
+    }
+
 
     private void OnTriggerExit(Collider other)
     {
-        playerInArea.Remove(other.gameObject.GetComponent<PlayerCharacter>());
+        if (other.gameObject.GetComponent<PlayerCharacter>())
+        {
+            playerInArea.Remove(other.gameObject.GetComponent<PlayerCharacter>());
+            if (playerInArea.Count > 0)
+                nearestPlayer = playerInArea.OrderBy(c => (transform.position - c.transform.position).sqrMagnitude).First();
+            else
+                nearestPlayer = null;
+        }
     }
 
     //Defense: cura ridotta singola
     public override void Defence(Character parent)
     {
-        if (playerInArea.Count == 0)
-        {
+        if (nearestPlayer == null)
             TakeDamage(-smallHeal, null);
-        }
         else
-        {
-            playerInArea.OrderBy(c=> (transform.position - c.transform.position).sqrMagnitude).First();
-            playerInArea[0].TakeDamage(-smallHeal, null);
-        }
+            nearestPlayer.TakeDamage(-smallHeal, null);
     }
 
     //UniqueAbility: lancia area di cura
@@ -116,7 +155,6 @@ public class Healer : CharacterClass
         areaSpawned.DOTPerTik = DOTPerTik;
         areaSpawned.slowDown = slowDown;
         areaSpawned.damageIncrement = damageIncrement;
-
     }
 
     //ExtraAbility: piazza mina di cura
@@ -142,7 +180,6 @@ public class Healer : CharacterClass
             //Cura tutti i player
         }
     }
-
 
 
     //Potenziamento boss fight: cura istantanea in tutta la mappa
