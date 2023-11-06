@@ -13,14 +13,12 @@ public class HealArea : MonoBehaviour
     [SerializeField] float radius = 1;
     [SerializeField] float tikPerSecond = 1;
     
-    [SerializeField] float healPerTik = 1;
+    [SerializeField] public float healPerTik = 1;
 
-    [SerializeField] float DOTPerTik = 1;
+    [SerializeField] public float DOTPerTik = 1;
     
-    [SerializeField] float speedPenalty = -5;
-    
-    [SerializeField] float damageIncrement = 1;
-    [SerializeField] PowerUp slowDown;
+    [SerializeField] public float damageIncrement = 1;
+    [SerializeField] public PowerUp slowDown;
 
     [SerializeField] List<StatusEffectBehaviour> statusEffectApplied;
 
@@ -53,7 +51,7 @@ public class HealArea : MonoBehaviour
         {
             //regene amici
             DotEffect regeneEffect = other.gameObject.AddComponent<DotEffect>();
-            regeneEffect.ApplyDOT(other.gameObject.GetComponent<PlayerCharacter>(), -healPerTik, tikPerSecond);
+            regeneEffect.ApplyDOT(-healPerTik, tikPerSecond);
 
             statusEffectApplied.Add(regeneEffect);
         }
@@ -66,7 +64,7 @@ public class HealArea : MonoBehaviour
             if(damage)
             {
                 DotEffect dotEffect = other.gameObject.AddComponent<DotEffect>();
-                dotEffect.ApplyDOT(other.gameObject.GetComponent<PlayerCharacter>(), DOTPerTik, tikPerSecond);
+                dotEffect.ApplyDOT(DOTPerTik, tikPerSecond);
 
                 statusEffectApplied.Add(dotEffect);
             }

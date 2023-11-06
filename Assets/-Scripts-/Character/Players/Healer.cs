@@ -1,15 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using System.Linq;
 
 public class Healer : CharacterClass
 {
     [SerializeField] float attackDelay = 1f;
 
-    [SerializeField] float singleHealCooldown = 5f;
-
     [SerializeField] GameObject healMine;
+
+    [Header("Small heal ability information")]
+    [SerializeField] float smallHeal = 5f;
+    [SerializeField] float singleHealCooldown = 5f;
+    [SerializeField] float smallHealAreaRadius = 1f;
+
 
     [Header("Heal area base information")]
     [SerializeField] GameObject healArea;
@@ -25,7 +31,7 @@ public class Healer : CharacterClass
     //abilità raggio
     [SerializeField] float healAreaIncrementedRadious = 5;
     //abilità slow
-    [SerializeField] float speedPenalty = -1;
+    [SerializeField] PowerUp slowDown;
     //abilità difesa
     [SerializeField] float damageIncrement = 1;
 
@@ -33,21 +39,54 @@ public class Healer : CharacterClass
     [SerializeField] float bossPowerUpHeal = 50f;
     [SerializeField] int bossPowerUpHitToUnlock = 10;
 
+    CapsuleCollider smallHealAreaCollider;
 
     private float lastAttackTime;
     private float lastUniqueAbilityUseTime;
     private int bossPowerUpHitCount = 0;
 
+    public override void Inizialize(CharacterData characterData, Character character)
+    {
+        base.Inizialize(characterData, character);
+        transform.position = character.transform.position;
+        playerInArea = new List<PlayerCharacter>();
+        smallHealAreaCollider = gameObject.AddComponent<CapsuleCollider>();
+        smallHealAreaCollider.isTrigger = true;
+        smallHealAreaCollider.radius = smallHealAreaRadius;
+    }
+
+    
     //Attack: colpo singolo, incremento colpi consecutivi senza subire danni contro boss
     public override void Attack(Character parent)
     {
         
     }
 
+    List<PlayerCharacter> playerInArea;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.GetComponent<PlayerCharacter>())
+            playerInArea.Add(other.gameObject.GetComponent<PlayerCharacter>());
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        playerInArea.Remove(other.gameObject.GetComponent<PlayerCharacter>());
+    }
+
     //Defense: cura ridotta singola
     public override void Defence(Character parent)
     {
-        
+        if (playerInArea.Count == 0)
+        {
+            TakeDamage(-smallHeal, null);
+        }
+        else
+        {
+            playerInArea.OrderBy(c=> (transform.position - c.transform.position).sqrMagnitude).First();
+            playerInArea[0].TakeDamage(-smallHeal, null);
+        }
     }
 
     //UniqueAbility: lancia area di cura
@@ -65,7 +104,6 @@ public class Healer : CharacterClass
         HealArea areaSpawned = Instantiate(healArea,new Vector3(parent.transform.position.x,0,parent.transform.position.z),Quaternion.identity).GetComponent<HealArea>();
        
 
-
         areaSpawned.Initialize(
             areaDuration,
             tikPerSecond,
@@ -74,7 +112,10 @@ public class Healer : CharacterClass
             upgradeStatus[AbilityUpgrade.Ability4],
             upgradeStatus[AbilityUpgrade.Ability5]);
 
-        
+        areaSpawned.healPerTik = healPerTik;
+        areaSpawned.DOTPerTik = DOTPerTik;
+        areaSpawned.slowDown = slowDown;
+        areaSpawned.damageIncrement = damageIncrement;
 
     }
 
@@ -94,7 +135,15 @@ public class Healer : CharacterClass
         bossPowerUpHitCount = 0;
     }
 
-    
+    public void BossAbility()
+    {
+        if(bossfightPowerUpUnlocked)
+        {
+            //Cura tutti i player
+        }
+    }
+
+
 
     //Potenziamento boss fight: cura istantanea in tutta la mappa
 

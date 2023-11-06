@@ -7,13 +7,15 @@ public class DotEffect : StatusEffectBehaviour
 {
     public float DOTDamage = 1;
     public float countdown = 1;
-    float timer = 0;
+    float DOTTimer = 0;
+    
 
-    public void ApplyDOT(Character characterToDamage, float damagePerTik, float tikPerSecond)
+    public void ApplyDOT(float damagePerTik, float tikPerSecond)
     {
         DOTDamage = damagePerTik;
         countdown = 1 / tikPerSecond;
     }
+
 
     public override void RemoveDOT()
     {
@@ -23,13 +25,17 @@ public class DotEffect : StatusEffectBehaviour
 
     private void Update()
     {
-        if (timer >= countdown)
-        {
-            gameObject.GetComponent<Character>().TakeDamage(DOTDamage, null);
-            timer = 0;
-        }
-
-        timer += Time.deltaTime;
+        ElapseDOTTimer();
     }
 
+    private void ElapseDOTTimer()
+    {
+        if (DOTTimer >= countdown)
+        {
+            gameObject.GetComponent<Character>().TakeDamage(DOTDamage, null);
+            DOTTimer = 0;
+        }
+
+        DOTTimer += Time.deltaTime;
+    }
 }
