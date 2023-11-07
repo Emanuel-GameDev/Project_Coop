@@ -13,7 +13,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            character.SetCharacterData(player1);
+            character.SetCharacterData(player2);
         }
     }
 }
