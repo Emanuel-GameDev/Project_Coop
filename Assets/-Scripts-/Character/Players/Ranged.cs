@@ -41,7 +41,21 @@ public class Ranged : CharacterClass
     [SerializeField, Tooltip("distanza massima schivata")]
     float dodgeDistance=15f;
 
+    [Header("Abilità extra")]
+    [SerializeField, Tooltip("Prefab della mina")]
+    GameObject prefabLandMine;
+    [SerializeField, Tooltip("danno della mina")]
+    float landMineDamage;
+    [SerializeField, Tooltip("raggio della mina")]
+    float landMineRange;
+
+
+
+
+
     [Header("Potenziamneto Boss fight")]
+    [SerializeField, Tooltip("distanza massima per schivata perfetta ")]
+    float perfectDodgeBossDistance = 30f;
     [SerializeField, Tooltip("Schivate perfette per sbloccare l'abilità")]
     int dodgeCounterToUnlock=10;
     int dodgeCounter=0;
@@ -55,12 +69,10 @@ public class Ranged : CharacterClass
 
     private void Update()
     {
-        if (fireTimer > 0)
-        {
-            fireTimer -= Time.deltaTime;
-        }
+        CoolDownManager();
     }
 
+    
 
     public override void Attack(Character parent)
     {
@@ -79,7 +91,7 @@ public class Ranged : CharacterClass
         if(_look != Vector3.zero)
         {
             lookDirection = _look;
-        }
+        }   
 
         //in futuro inserire il colpo avanzato
         BasicFireProjectile(lookDirection);
@@ -99,9 +111,10 @@ public class Ranged : CharacterClass
 
     public override void UseUniqueAbility(Character parent)
     {
-        base.UseUniqueAbility(parent);
+        EmpowerFireProjectile(lookDirection);
     }
 
+    //Sparo normale
     private void BasicFireProjectile(Vector3 direction)
     {
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
@@ -109,12 +122,31 @@ public class Ranged : CharacterClass
         newProjectile.transform.position = transform.position;
 
         newProjectile.Inizialize(direction, projectileRange, projectileSpeed);
-
-     
+    
     }
 
-    
+    //sparo caricato (abilità unica)
+    private void EmpowerFireProjectile(Vector3 direction)
+    {
+        Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
+        newProjectile.transform.position = transform.position;
+
+        newProjectile.Inizialize(direction, projectileRange+empowerAdditionalRange, projectileSpeed);
+    }
+
+    //vari coolDown del personaggio
+    private void CoolDownManager()
+    {
+        if (fireTimer > 0)
+        {
+            fireTimer -= Time.deltaTime;
+        }
+    }
+
+
+
+   
 }
 
 
