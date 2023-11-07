@@ -52,12 +52,7 @@ public class Projectile : MonoBehaviour
     }
 
     public void SetTravelDirection(Vector3 direction)
-    {
-        if(direction != Vector3.zero && travelDirection== Vector3.zero)
-        {
-            travelDirection = direction*1000;
-        }
-
-        
+    {                
+            travelDirection = direction*1000;              
     }
 }
