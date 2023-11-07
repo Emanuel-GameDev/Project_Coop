@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6248012c527f84e4085651097fca2f6b, type: 3}
   m_Name: RangedData
   m_EditorClassIdentifier: 
-  attackAbility: {fileID: 0}
-  defenseAbility: {fileID: 0}
-  moveAbility: {fileID: 0}
+  characterClass: {fileID: 2114854076154468116, guid: 24eb50918baaeec47b86420fb940891c,
+    type: 3}
+  animator: {fileID: 9100000, guid: d9f4bf3c0b038624093e827fd8d177dc, type: 2}
+  maxHP: 100
+  damage: 10
+  attackSpeed: 5
+  moveSpeed: 10
+  uniqueAbilityCooldown: 5
+  uniqueAbilityCooldownIncreaseAtUse: 5
