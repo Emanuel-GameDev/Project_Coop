@@ -46,13 +46,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHp: 0
   attackDelay: 1
-  healMine: {fileID: 5625512617348793040, guid: 2186adaa1671c884ca63c9ed27490efb,
-    type: 3}
   healIcon: {fileID: 1667381298283499555, guid: 81008e70013cfa54fa69a382d51da323,
     type: 3}
   smallHeal: 5
   singleHealCooldown: 5
   smallHealAreaRadius: 1
+  healMine: {fileID: 5625512617348793040, guid: 2186adaa1671c884ca63c9ed27490efb,
+    type: 3}
+  mineHealQuantity: 10
+  healMineRadius: 0.5
+  healMineActivationTime: 1
   healArea: {fileID: 1224139591316512770, guid: e342c5ee29879d547bf5dc85861fff04,
     type: 3}
   areaDuration: 10

@@ -9,7 +9,6 @@ public class Healer : CharacterClass
 {
     [SerializeField] float attackDelay = 1f;
 
-    [SerializeField] GameObject healMine;
 
     [Header("Small heal ability information")]
     [SerializeField] GameObject healIcon;
@@ -17,6 +16,11 @@ public class Healer : CharacterClass
     [SerializeField] float singleHealCooldown = 5f;
     [SerializeField] float smallHealAreaRadius = 1f;
 
+    [Header("Heal mine ability information")]
+    [SerializeField] GameObject healMine;
+    [SerializeField] float mineHealQuantity = 1f;
+    [SerializeField] float healMineRadius = 1f;
+    [SerializeField] float healMineActivationTime = 1f;
 
     [Header("Heal area base information")]
     [SerializeField] GameObject healArea;
@@ -162,7 +166,9 @@ public class Healer : CharacterClass
     {
         if (upgradeStatus[AbilityUpgrade.Ability3])
         {
-            Instantiate(healMine, new Vector3(parent.transform.position.x, 0.1f, parent.transform.position.z), Quaternion.identity);
+            HealMine mine = Instantiate(healMine, new Vector3(parent.transform.position.x, 0.1f, parent.transform.position.z), Quaternion.identity).GetComponent<HealMine>();
+            mine.Initialize(mineHealQuantity, healMineRadius, healMineActivationTime);
+            
         }
     }
 
