@@ -7,10 +7,44 @@ public class Ranged : CharacterClass
     //aggiungere prefab mina (?)
     //aggiungere vari timer(arma, schivata,cd vari)
 
+    private Vector3 lookDirection = Vector3.forward;
+
+    //dati dell'attacco
+    [SerializeField] float fireCd;
+    float fireTimer;
+
+    private void Update()
+    {
+        if (fireTimer > 0)
+        {
+            fireTimer -= Time.deltaTime;
+        }
+    }
+
 
     public override void Attack(Character parent)
     {
-        BasicFireProjectile(parent.GetComponent<PlayerCharacter>().ReadLook());
+
+        if(fireTimer > 0)
+        {
+            Debug.Log("In ricarica...");
+
+            return;
+            //inserire suono (?)
+        }
+
+        Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
+
+        //controllo che la look non sia zero, possibilità solo se si una il controller
+        if(_look != Vector3.zero)
+        {
+            lookDirection = _look;
+        }
+
+        //in futuro inserire il colpo avanzato
+        BasicFireProjectile(lookDirection);
+
+        fireTimer = fireCd;
     }
 
     public override void Defence(Character parent)

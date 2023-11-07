@@ -1,9 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using UnityEngine.iOS;
+using UnityEngine.Rendering;
 
 public class PlayerCharacter : Character
 {
+    private Vector3 screenPosition;
+    private Vector3 worldPosition;
+    Plane plane = new Plane(Vector3.up,-1);
+
     Vector2 lookDir;
     Vector2 moveDir;
 
@@ -21,7 +26,31 @@ public class PlayerCharacter : Character
     // informasi sulla look
     public Vector3 ReadLook()
     {
-        return new Vector3(lookDir.x, 0, lookDir.y).normalized;
+        var gamepad = Gamepad.current;
+
+        if (gamepad != null)
+        {
+            //perndo la look dal player.input utilizzando il gamepad
+            return new Vector3(lookDir.x, 0, lookDir.y).normalized;           
+        }
+        else
+        {
+            //prendo la look con un raycast dal mouse
+            screenPosition = Input.mousePosition;
+
+            Ray ray = Camera.main.ScreenPointToRay(screenPosition);
+
+            if (plane.Raycast(ray, out float distance))
+            {
+                worldPosition = ray.GetPoint(distance);
+
+                worldPosition = (worldPosition - transform.position).normalized;
+            }
+
+            Debug.Log(worldPosition);
+            return new Vector3(worldPosition.x, 0, worldPosition.z);
+        }
+       
     }
 
     public void Attack_performed(InputAction.CallbackContext context)
