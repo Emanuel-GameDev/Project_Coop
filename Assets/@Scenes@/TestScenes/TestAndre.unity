@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 262.38358, g: 325.10843, b: 430.30963, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,6 +123,33 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &284464100 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7046500573469630641, guid: 5bd9e91f9a4c04c4994a37b346a735a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 8114433337098697246}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &284464106
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284464100}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6a0e8dd99eb3c434082709ef8097723c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &474385385
 GameObject:
   m_ObjectHideFlags: 0
@@ -2054,6 +2081,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2587191938397411888, guid: 5bd9e91f9a4c04c4994a37b346a735a4,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2587191938397411888, guid: 5bd9e91f9a4c04c4994a37b346a735a4,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6a0e8dd99eb3c434082709ef8097723c, type: 2}
     - target: {fileID: 7046500573469630641, guid: 5bd9e91f9a4c04c4994a37b346a735a4,
         type: 3}
       propertyPath: m_Name
@@ -2062,7 +2099,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7046500573469630641, guid: 5bd9e91f9a4c04c4994a37b346a735a4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 284464106}
   m_SourcePrefab: {fileID: 100100000, guid: 5bd9e91f9a4c04c4994a37b346a735a4, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
