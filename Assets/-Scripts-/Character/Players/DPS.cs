@@ -158,7 +158,7 @@ public class DPS : CharacterClass
     {
         if (!isDodging)
         {
-            //isDodging = true;
+            isDodging = true;
             //animator.SetBool(DODGE, isDodging);
             Vector3 dodgeDirection3D = new Vector3(dodgeDirection.x, 0f, dodgeDirection.y).normalized;
             rb.velocity = dodgeDirection3D * (dodgeDistance / dodgeDuration);
