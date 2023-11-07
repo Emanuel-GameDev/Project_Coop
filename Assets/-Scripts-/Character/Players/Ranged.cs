@@ -9,9 +9,49 @@ public class Ranged : CharacterClass
 
     private Vector3 lookDirection = Vector3.forward;
 
-    //dati dell'attacco
-    [SerializeField] float fireCd;
+    
+    //base Attack
+    public override float AttackSpeed => base.AttackSpeed;
     float fireTimer;
+
+    [Header("Variabili attacco")]
+    [SerializeField, Tooltip("velocità proiettile base")]
+    float projectileSpeed=30f;
+    [SerializeField, Tooltip("gittata proiettile base")]
+    float projectileRange=30f;
+    [SerializeField, Tooltip("frequenza di sparo multiplo")]
+    float consecutiveFireTimer=0.3f;
+
+    [Header("Abilità unica")]
+
+    [SerializeField, Tooltip("tempo necessario per colpo potenziato")]
+    float empowerFireCoolDown=1.5f;
+    float empowerFireTimer=0;
+    [SerializeField, Tooltip("Aumento gittata per colpo potenziato")]
+    float empowerAdditionalRange=15f;
+    [SerializeField, Tooltip("moltiplicatore danno per colpo potenziato")]
+    [Min(1)]
+    float empowerMultiplier=1.3f;
+
+    [Header("Schivata")]
+
+    [SerializeField, Tooltip("coolDown Schivata")]
+    float dodgeCoolDown=3f;
+    float dodgeTimer=0;
+    [SerializeField, Tooltip("distanza massima schivata")]
+    float dodgeDistance=15f;
+
+    [Header("Potenziamneto Boss fight")]
+    [SerializeField, Tooltip("Schivate perfette per sbloccare l'abilità")]
+    int dodgeCounterToUnlock=10;
+    int dodgeCounter=0;
+    [SerializeField, Tooltip("moltiplicatore danno per distanza del colpo")]
+    [Min(1)]
+    float maxDamageMultiplier=2.5f;
+
+
+
+
 
     private void Update()
     {
@@ -44,7 +84,7 @@ public class Ranged : CharacterClass
         //in futuro inserire il colpo avanzato
         BasicFireProjectile(lookDirection);
 
-        fireTimer = fireCd;
+        fireTimer = AttackSpeed;
     }
 
     public override void Defence(Character parent)
@@ -68,10 +108,9 @@ public class Ranged : CharacterClass
 
         newProjectile.transform.position = transform.position;
 
-        //settare futuri sprite
+        newProjectile.Inizialize(direction, projectileRange, projectileSpeed);
 
-        //settare la direzione
-        newProjectile.SetTravelDirection(direction);
+     
     }
 
     
