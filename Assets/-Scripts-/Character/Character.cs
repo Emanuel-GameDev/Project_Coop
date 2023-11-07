@@ -13,7 +13,7 @@ public class Character : MonoBehaviour, IDamageable
     protected float MaxHp => characterClass.MaxHp;
     protected float currentHp => characterClass.currentHp;
     protected Rigidbody rb;
-    protected Animator animator;
+    
 
     //Lo uso per chimare tutte le funzioni iniziali
     protected void Awake()
@@ -24,8 +24,7 @@ public class Character : MonoBehaviour, IDamageable
     //Tutto ciò che va fatto nello ad inizio
     protected virtual void InitialSetup()
     {
-        rb = GetComponent<Rigidbody>();
-        animator = GetComponentInChildren<Animator>();
+        rb = GetComponent<Rigidbody>();      
         characterData.Inizialize(this);
         attackDamager = GetComponentInChildren<Damager>();
     }
@@ -47,12 +46,10 @@ public class Character : MonoBehaviour, IDamageable
     {
         characterData.Disable(this);
         characterData = newCharData;
-        newCharData.Inizialize(this);
+        characterData.Inizialize(this);
     }
 
     public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
-    public void SetAnimatorController(AnimatorController controller) => animator.runtimeAnimatorController = controller;
-    public Animator GetAnimator() => animator;
     public Damager GetDamager() => attackDamager;
     public Rigidbody GetRigidBody() => rb;
 
