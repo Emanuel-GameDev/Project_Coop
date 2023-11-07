@@ -39,7 +39,10 @@ public class CharacterDataEditor : Editor
         bool enterChildren = true;
         while (iterator.NextVisible(enterChildren))
         {
-            EditorGUILayout.PropertyField(iterator, true);
+            if (iterator.name != "m_Script")
+            {
+                EditorGUILayout.PropertyField(iterator, true);
+            }
             enterChildren = false;
         }
 
