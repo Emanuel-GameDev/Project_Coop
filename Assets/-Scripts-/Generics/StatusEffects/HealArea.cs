@@ -45,7 +45,8 @@ public class HealArea : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        characterInArea.Add(other.gameObject.GetComponent<Character>());
+        if (other.gameObject.GetComponent<Character>())
+            characterInArea.Add(other.gameObject.GetComponent<Character>());
 
         if (other.gameObject.GetComponent<Character>() is PlayerCharacter)
         {
