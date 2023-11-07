@@ -41,7 +41,7 @@ public class CharacterClass : MonoBehaviour
         {
             upgradeStatus.Add(au, false);
         }
-        animator = character.GetAnimator();
+        animator = GetComponent<Animator>();
         this.character = character;
         bossfightPowerUpUnlocked = false;
         uniqueAbilityUses = 0;

@@ -1,15 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
     private Vector3 travelDirection;
-    [SerializeField] private float speed;
-    [SerializeField] private float lifetime=5f;
-    private float timer;
+    [SerializeField] private float projectileSpeed;
+    //[SerializeField] private float lifetime=5f;
+    private float rangeRemaining=1;
 
     Rigidbody rb;
 
@@ -21,9 +17,21 @@ public class Projectile : MonoBehaviour
         transform.LookAt(travelDirection);
     }
 
-    private void OnEnable()
+    public void Inizialize(Vector3 direction,float range,float speed)
     {
-        timer = lifetime;
+        travelDirection = direction*1000;
+        rangeRemaining = range;
+        projectileSpeed = speed;
+    }
+
+    //private void OnEnable()
+    //{
+    //    rangeRemaining = lifetime;
+    //}
+
+    private void OnDisable()
+    {
+        //effetti vari
     }
 
     private void FixedUpdate()
@@ -32,11 +40,14 @@ public class Projectile : MonoBehaviour
         ProjectileLiveTimer();
     }
 
+    //il tempo di vita del proiettile in base alla distanza
     private void ProjectileLiveTimer()
     {
-        timer -= Time.deltaTime;
+        rangeRemaining -= Time.deltaTime*projectileSpeed;
 
-        if (timer <= 0)
+        Debug.Log(rangeRemaining);
+
+        if (rangeRemaining <= 0)
         {
             ProjectilePool.Instance.ReturnProjectile(this);
         }
@@ -44,15 +55,8 @@ public class Projectile : MonoBehaviour
 
     private void ProjectileFlyDirection()
     {
-        //transform.position += travelDirection.normalized * speed * Time.deltaTime;
-
-        
-        transform.position=Vector3.MoveTowards(transform.position,travelDirection,speed*Time.deltaTime);
-
+        transform.position = Vector3.MoveTowards(transform.position, travelDirection, projectileSpeed * Time.deltaTime);
     }
 
-    public void SetTravelDirection(Vector3 direction)
-    {                
-            travelDirection = direction*1000;              
-    }
+   
 }
