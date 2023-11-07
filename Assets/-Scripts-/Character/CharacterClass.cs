@@ -22,6 +22,7 @@ public class CharacterClass : MonoBehaviour
     protected bool bossfightPowerUpUnlocked;
 
     public virtual float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
+    [HideInInspector]
     public float currentHp;
 
     public virtual float Damage => characterData.Damage + powerUpData.damageIncrease;
@@ -54,6 +55,12 @@ public class CharacterClass : MonoBehaviour
     {
        
     }
+
+    public virtual void Disable(Character character)
+    {
+        // Disattivo eventuali modifiche al prefab
+    }
+
     public virtual void UseUniqueAbility(Character parent)
     {
        

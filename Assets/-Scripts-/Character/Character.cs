@@ -45,6 +45,7 @@ public class Character : MonoBehaviour, IDamageable
 
     public void SetCharacterData(CharacterData newCharData)
     {
+        characterData.Disable(this);
         characterData = newCharData;
         newCharData.Inizialize(this);
     }
@@ -53,6 +54,9 @@ public class Character : MonoBehaviour, IDamageable
     public void SetAnimatorController(AnimatorController controller) => animator.runtimeAnimatorController = controller;
     public Animator GetAnimator() => animator;
     public Damager GetDamager() => attackDamager;
+    public Rigidbody GetRigidBody() => rb;
 
     public virtual void TakeDamage(float damage, Damager dealer) => characterClass.TakeDamage(damage, dealer);
+
+    
 }
