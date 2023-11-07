@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Tank : CharacterClass
@@ -34,9 +35,11 @@ public class Tank : CharacterClass
     private bool isAttacking = false;
     private int comboIndex = 0;
     private int comboMax = 2;
+    private float rangeAggro = math.INFINITY;
+    private bool canPressInput;
 
-
-    //se potenziamento 1 ha 2 attacchi
+   
+   
     public override void Attack(Character parent)
     {
         isAttacking = true;  
@@ -44,10 +47,15 @@ public class Tank : CharacterClass
         {
             animator.SetTrigger("Attack1");
         }
-        //se potenziamento 3 attiva hyperArmor da animazione
+        else if(canPressInput)
+        {
+            animator.SetTrigger("Attack2");
+        }       
 
+        
         //se potenziamento boss fight attacco caricato 
         //se potenziamento 5 attacco caricato (Da decidere)
+
         Debug.Log($"Attack[{comboIndex}  canDoubleAttack[{canDoubleAttack}  hasHyperArmor[{hyperArmorUnlocked}]");
     }
     public override void Defence(Character parent)
@@ -61,8 +69,7 @@ public class Tank : CharacterClass
         //se potenziamento boss attacco caricato e potenziamento 2 più stun
     }
     public override void UseUniqueAbility(Character parent)
-    {
-        base.UseUniqueAbility(parent);
+    {       
         //attacco attiro aggro
     }
     public override void TakeDamage(float damage, Damager dealer)
@@ -72,14 +79,13 @@ public class Tank : CharacterClass
             DoHitReacion();
         }
         
-        //se sta attacando e potenziamento 3 sbloccato non interrompe attacco
+        
     }
 
     private void DoHitReacion()
     {
-        throw new NotImplementedException();
+       
     }
-
     public void ActivateHyperArmor()
     {
         if(hyperArmorUnlocked)
@@ -90,5 +96,13 @@ public class Tank : CharacterClass
     public void DeactivateHyperArmor()
     { 
         hyperArmorOn = false;
+    }
+    public void IncreaseComboIndex()
+    {
+        comboIndex++;
+        if(comboIndex >1 )
+        {
+            comboIndex = 0;
+        }
     }
 }
