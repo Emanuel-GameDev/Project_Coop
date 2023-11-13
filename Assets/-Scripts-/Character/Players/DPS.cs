@@ -151,6 +151,7 @@ public class DPS : CharacterClass
     #endregion
 
     //Defense: fa una schivata, si sposta di tot distanza verso la direzione decisa dal giocatore con uno scatto
+    #region Defense
     public override void Defence(Character parent)
     {
         Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
@@ -179,8 +180,10 @@ public class DPS : CharacterClass
             //animator.SetBool(DODGE, isDodging);
         }
     }
+    #endregion
 
     //UniqueAbility: immortalità per tot secondi
+    #region UniqueAbility
     public override void UseUniqueAbility(Character parent)
     {
         Utility.DebugTrace($"Executed: {!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown}");
@@ -200,8 +203,10 @@ public class DPS : CharacterClass
 
         isInvulnerable = false;
     }
+    #endregion
 
     //ExtraAbility: è l'ability upgrade 1
+    #region ExtraAbility
     public override void UseExtraAbility(Character parent)
     {
         if (dashAttackUnlocked)
@@ -210,6 +215,7 @@ public class DPS : CharacterClass
         }
         Utility.DebugTrace();
     }
+    #endregion
 
     public override void Move(Vector2 direction, Rigidbody rb)
     {
