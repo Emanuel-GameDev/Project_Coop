@@ -42,7 +42,8 @@ public class DPS : CharacterClass
     private float lastHitTime;
     private float totalDamageDone = 0;
 
-    private int comboState;
+    private int currentComboState;
+    private int nextComboState;
     private int comboStateMax = 3;
     private int consecutiveHitsCount;
 
@@ -55,7 +56,6 @@ public class DPS : CharacterClass
     private bool isInvulnerable;
     private bool isDodging;
 
-    private bool mustContinueCombo;
     private bool IsAttacking
     {
         get => _isAttacking;
@@ -86,7 +86,8 @@ public class DPS : CharacterClass
         lastAttackTime = -timeBetweenCombo;
         lastUniqueAbilityUseTime = -UniqueAbilityCooldown;
         consecutiveHitsCount = 0;
-        comboState = 0;
+        currentComboState = 0;
+        nextComboState = 0;
         isInvulnerable = false;
         isDodging = false;
         IsAttacking = false;
@@ -97,77 +98,56 @@ public class DPS : CharacterClass
     #region Attack
     public override void Attack(Character parent)
     {
-        float currentTime = Time.time;
-        //Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {currentTime > lastAttackTime + timeBetweenCombo}, ComboState: {comboState}");
         if (!IsAttacking)
         {
-            if (CanStartCombo(currentTime))
-            {// Avvia l'animazione per il primo attacco della combo
-                StartCombo(currentTime);
-            }
+            if (CanStartCombo())
+                StartCombo();
         }
         else
+            ContinueCombo();
+        Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n CurrentComboState: {currentComboState}, NextComboState: {nextComboState}");
+    }
+    private void StartCombo()
+    {
+        currentComboState = 1;
+        nextComboState = currentComboState;
+        DoMeleeAttack();
+    }
+    private void ContinueCombo()
+    {
+        if (currentComboState == nextComboState)
         {
-            //// Avvia l'animazione per l'attacco successivo
-            //if (IsCurrentAttackAnimation())
-            //{
-            //    ContinueCombo(currentTime);
-            //}
-            mustContinueCombo = true;
+            nextComboState = ++nextComboState > comboStateMax ? 0 : nextComboState;
+            if (CanContinueCombo())
+                DoMeleeAttack();
         }
     }
-    private void StartCombo(float currentTime)
+    private void DoMeleeAttack()
     {
-        comboState = 1;
-        DoMeleeAttack(currentTime);
-    }
-    //private void ContinueCombo(float currentTime)
-    //{
-    //    comboState++;
-    //    if (comboState > comboStateMax)
-    //        comboState = 0;
-    //    else
-    //        DoMeleeAttack(currentTime);
-    //}
-    private void DoMeleeAttack(float currentTime)
-    {
-        string triggerName = ATTACK + (comboState).ToString();
+        string triggerName = ATTACK + (nextComboState).ToString();
         animator.SetTrigger(triggerName);
         IsAttacking = true;
-        lastAttackTime = currentTime;
     }
-    
-
     public void OnAttackAnimationEnd()
     {
-        lastAttackTime = Time.time;
-        comboState = comboState++ > comboStateMax ? 0 : comboState;
-        if (mustContinueCombo && CanContinueCombo())
-        {
-            mustContinueCombo = false;
-            DoMeleeAttack(Time.time);
-        }
-        else
+        AdjustLastAttackTime();
+
+        if (currentComboState == nextComboState || nextComboState == 0)
             IsAttacking = false;
-    }
-    //private bool IsCurrentAttackAnimation()
-    //{
-    //    return animator.GetCurrentAnimatorStateInfo(0).IsName(ATTACK + (comboState).ToString());
-    //}
-    private bool CanStartCombo(float currentTime)
-    {
-        return unlimitedComboUnlocked || currentTime > lastAttackTime + timeBetweenCombo;
-    }
-    private bool CanContinueCombo()
-    {
-        return ((comboState == 0 && unlimitedComboUnlocked) || comboState != 0);
+
+        currentComboState = nextComboState;
     }
 
-    //private void CheckAttackStatus()
-    //{
-    //    if (IsAttacking && !animator.GetBool("isAttacking"))
-    //        IsAttacking = false;
-    //}
+    private void AdjustLastAttackTime()
+    {
+        float comboCompletionValue = (float)currentComboState / (float)comboStateMax;
+        float reductionFactor = (1 - comboCompletionValue) * timeBetweenCombo;
+        lastAttackTime = Time.time - reductionFactor;
+    }
+
+    private bool CanStartCombo() => unlimitedComboUnlocked || Time.time > lastAttackTime + timeBetweenCombo;
+    private bool CanContinueCombo() => nextComboState != 0;
+
     #endregion
 
     //Defense: fa una schivata, si sposta di tot distanza verso la direzione decisa dal giocatore con uno scatto
@@ -273,7 +253,6 @@ public class DPS : CharacterClass
     private void Update()
     {
         DamageCheck();
-        //CheckAttackStatus();
     }
 
     private void DamageCheck()
