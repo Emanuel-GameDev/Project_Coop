@@ -69,10 +69,12 @@ public class CharacterClass : MonoBehaviour
     {
       
     }
-    public virtual void TakeDamage(float damage, Damager dealer)
+    public virtual void TakeDamage(float damage, IDamager dealer)
     {
 
     }
+
+    public virtual float GetDamage() => Damage;
 
     #region Move
     //dati x e z chiama Move col Vector2
@@ -118,6 +120,7 @@ public class CharacterClass : MonoBehaviour
     internal void RemovePowerUp(PowerUp powerUp) => powerUpData.Remove(powerUp);
 
     internal List<PowerUp> GetPowerUpList() => powerUpData._powerUpData;
+
 
 
     #endregion

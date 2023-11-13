@@ -32,6 +32,10 @@ public class DPS : CharacterClass
     float bossPowerUpExtraDamageCap = 16f;
     [SerializeField, Tooltip("Durata del danno extra conferito dal potenziamento del boss dopo l'ultimo colpo inferto.")]
     float bossPowerUpExtraDamageDuration = 2.5f;
+    [Header("Other")]
+    [SerializeField]
+    LayerMask projectileLayer;
+
 
     private float extraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
     private float extraDamage => (perfectDodgeExtraDamageUnlocked && Time.time < lastPerfectDodgeTime + perfectDodgeExtraDamageDuration ? perfectDodgeExtraDamage : 0) + (bossfightPowerUpUnlocked ? MathF.Min(bossPowerUpExtraDamagePerHit * consecutiveHitsCount, bossPowerUpExtraDamageCap) : 0);
@@ -228,7 +232,7 @@ public class DPS : CharacterClass
     }
 
 
-    public override void TakeDamage(float damage, Damager dealer)
+    public override void TakeDamage(float damage, IDamager dealer)
     {
         if (!isInvulnerable)
             base.TakeDamage(damage, dealer);
@@ -238,7 +242,8 @@ public class DPS : CharacterClass
     {
         base.UnlockUpgrade(abilityUpgrade);
         if (abilityUpgrade == AbilityUpgrade.Ability3)
-            character.GetDamager().gameObject.AddComponent<DeflectProjectile>();
+            character.GetDamager().AssignFunctionToOnTrigger(DeflectProjectile);
+                //gameObject.AddComponent<DeflectProjectile>();
         Debug.Log("Unlock" + abilityUpgrade.ToString());
     }
 
@@ -249,11 +254,21 @@ public class DPS : CharacterClass
             RemoveDeflect();
     }
 
+    public void DeflectProjectile(Collider collider)
+    {
+        if(Utility.IsInLayerMask(collider.gameObject.layer, projectileLayer))
+        {
+            //Defletti il proiettile
+        }
+           
+    }
+
     private void RemoveDeflect()
     {
-        DeflectProjectile deflect = character.GetDamager().gameObject.GetComponent<DeflectProjectile>();
-        if (deflect != null)
-            Destroy(deflect);
+        //DeflectProjectile deflect = character.GetDamager().gameObject.GetComponent<DeflectProjectile>();
+        //if (deflect != null)
+        //    Destroy(deflect);
+        character.GetDamager().RemoveFunctionFromOnTrigger(DeflectProjectile);
     }
 
     private void Update()
