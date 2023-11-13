@@ -33,8 +33,8 @@ public class DPS : CharacterClass
     [SerializeField, Tooltip("Durata del danno extra conferito dal potenziamento del boss dopo l'ultimo colpo inferto.")]
     float bossPowerUpExtraDamageDuration = 2.5f;
 
-    private float extraSpeed => upgradeStatus[AbilityUpgrade.Ability4] && isInvulnerable ? invulnerabilitySpeedUp : 0;
-    private float extraDamage => (upgradeStatus[AbilityUpgrade.Ability5] && Time.time < lastPerfectDodgeTime + perfectDodgeExtraDamageDuration ? perfectDodgeExtraDamage : 0) + (bossfightPowerUpUnlocked ? MathF.Min(bossPowerUpExtraDamagePerHit * consecutiveHitsCount, bossPowerUpExtraDamageCap) : 0);
+    private float extraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
+    private float extraDamage => (perfectDodgeExtraDamageUnlocked && Time.time < lastPerfectDodgeTime + perfectDodgeExtraDamageDuration ? perfectDodgeExtraDamage : 0) + (bossfightPowerUpUnlocked ? MathF.Min(bossPowerUpExtraDamagePerHit * consecutiveHitsCount, bossPowerUpExtraDamageCap) : 0);
     private float lastAttackTime;
     private float lastDodgeTime;
     private float lastUniqueAbilityUseTime;
@@ -46,8 +46,16 @@ public class DPS : CharacterClass
     private int comboStateMax = 3;
     private int consecutiveHitsCount;
 
+    private bool dashAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
+    private bool unlimitedComboUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
+    private bool projectileDeflectionUnlocked => upgradeStatus[AbilityUpgrade.Ability3];
+    private bool immortalitySpeedUpUnlocked => upgradeStatus[AbilityUpgrade.Ability4];
+    private bool perfectDodgeExtraDamageUnlocked => upgradeStatus[AbilityUpgrade.Ability5];
+
     private bool isInvulnerable;
     private bool isDodging;
+
+    private bool mustContinueCombo;
     private bool IsAttacking
     {
         get => _isAttacking;
@@ -90,7 +98,7 @@ public class DPS : CharacterClass
     public override void Attack(Character parent)
     {
         float currentTime = Time.time;
-        Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {upgradeStatus[AbilityUpgrade.Ability2]}, CooldownEnded: {currentTime > lastAttackTime + timeBetweenCombo}, ComboState: {comboState}");
+        //Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {currentTime > lastAttackTime + timeBetweenCombo}, ComboState: {comboState}");
         if (!IsAttacking)
         {
             if (CanStartCombo(currentTime))
@@ -100,11 +108,12 @@ public class DPS : CharacterClass
         }
         else
         {
-            // Avvia l'animazione per l'attacco successivo
-            if (IsCurrentAttackAnimation())
-            {
-                ContinueCombo(currentTime);
-            }
+            //// Avvia l'animazione per l'attacco successivo
+            //if (IsCurrentAttackAnimation())
+            //{
+            //    ContinueCombo(currentTime);
+            //}
+            mustContinueCombo = true;
         }
     }
     private void StartCombo(float currentTime)
@@ -112,14 +121,14 @@ public class DPS : CharacterClass
         comboState = 1;
         DoMeleeAttack(currentTime);
     }
-    private void ContinueCombo(float currentTime)
-    {
-        comboState++;
-        if (comboState > comboStateMax)
-            comboState = 0;
-        else
-            DoMeleeAttack(currentTime);
-    }
+    //private void ContinueCombo(float currentTime)
+    //{
+    //    comboState++;
+    //    if (comboState > comboStateMax)
+    //        comboState = 0;
+    //    else
+    //        DoMeleeAttack(currentTime);
+    //}
     private void DoMeleeAttack(float currentTime)
     {
         string triggerName = ATTACK + (comboState).ToString();
@@ -127,19 +136,38 @@ public class DPS : CharacterClass
         IsAttacking = true;
         lastAttackTime = currentTime;
     }
-    private bool IsCurrentAttackAnimation()
+    
+
+    public void OnAttackAnimationEnd()
     {
-        return animator.GetCurrentAnimatorStateInfo(0).IsName(ATTACK + (comboState).ToString());
-    }
-    private bool CanStartCombo(float currentTime)
-    {
-        return upgradeStatus[AbilityUpgrade.Ability2] || currentTime > lastAttackTime + timeBetweenCombo;
-    }
-    private void CheckAttackStatus()
-    {
-        if (IsAttacking && !animator.GetBool("isAttacking"))
+        lastAttackTime = Time.time;
+        comboState = comboState++ > comboStateMax ? 0 : comboState;
+        if (mustContinueCombo && CanContinueCombo())
+        {
+            mustContinueCombo = false;
+            DoMeleeAttack(Time.time);
+        }
+        else
             IsAttacking = false;
     }
+    //private bool IsCurrentAttackAnimation()
+    //{
+    //    return animator.GetCurrentAnimatorStateInfo(0).IsName(ATTACK + (comboState).ToString());
+    //}
+    private bool CanStartCombo(float currentTime)
+    {
+        return unlimitedComboUnlocked || currentTime > lastAttackTime + timeBetweenCombo;
+    }
+    private bool CanContinueCombo()
+    {
+        return ((comboState == 0 && unlimitedComboUnlocked) || comboState != 0);
+    }
+
+    //private void CheckAttackStatus()
+    //{
+    //    if (IsAttacking && !animator.GetBool("isAttacking"))
+    //        IsAttacking = false;
+    //}
     #endregion
 
     //Defense: fa una schivata, si sposta di tot distanza verso la direzione decisa dal giocatore con uno scatto
@@ -148,7 +176,7 @@ public class DPS : CharacterClass
         Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
         if (Time.time > lastDodgeTime + dodgeCooldown)
         {
-            lastDodgeTime = Time.time;
+            lastDodgeTime = Time.time + dodgeDuration;
             StartCoroutine(Dodge(lastDirection, parent.GetRigidBody()));
             Debug.Log(lastDirection);
         }
@@ -196,7 +224,7 @@ public class DPS : CharacterClass
     //ExtraAbility: è l'ability upgrade 1
     public override void UseExtraAbility(Character parent)
     {
-        if (upgradeStatus[AbilityUpgrade.Ability1])
+        if (dashAttackUnlocked)
         {
             //Scatto in avanti più attacco
         }
@@ -245,7 +273,7 @@ public class DPS : CharacterClass
     private void Update()
     {
         DamageCheck();
-        CheckAttackStatus();
+        //CheckAttackStatus();
     }
 
     private void DamageCheck()
@@ -261,6 +289,14 @@ public class DPS : CharacterClass
                 bossfightPowerUpUnlocked = true;
         }
     }
+
+    public override void Disable(Character character)
+    {
+        base.Disable(character);
+        if (projectileDeflectionUnlocked)
+            RemoveDeflect();
+    }
+
 
     //Potenziamento boss fight: gli attacchi consecutivi aumentano il danno del personaggio a ogni colpo andato a segno.
     //Dopo tot tempo (es: 1.5 secondi) senza colpire, il danno torna al valore standard.
