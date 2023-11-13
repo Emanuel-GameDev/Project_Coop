@@ -12,6 +12,9 @@ public class PlayerCharacter : Character
     Vector2 lookDir;
     Vector2 moveDir;
 
+    public Vector2 MoveDirection => moveDir;
+
+
     private void Update()
     {
         Move(moveDir);

@@ -146,6 +146,8 @@ public class Healer : CharacterClass
         }
     }
 
+
+
     public override void Inizialize(CharacterData characterData, Character character)
     {
         base.Inizialize(characterData, character);
@@ -158,7 +160,43 @@ public class Healer : CharacterClass
         instantiatedHealIcon.transform.SetParent(newParent);
         instantiatedHealIcon.transform.localPosition = new Vector3(0, 1, 0);
     }
-    
+
+    public override void Move(Vector2 direction, Rigidbody rb)
+    {
+        base.Move(direction, rb);
+        PlayerCharacter player = (PlayerCharacter) character;
+
+        if (player.MoveDirection != Vector2.zero)
+        {
+            float x = player.MoveDirection.x;
+            float y = player.MoveDirection.y;
+
+            if (Mathf.Abs(x) >= Mathf.Abs(y))
+            {
+                animator.SetFloat("Y", 0);
+
+                if(x < 0)
+                    animator.SetFloat("X", -1);
+                else
+                    animator.SetFloat("X", 1);
+            }
+            else
+            {
+                animator.SetFloat("X", 0);
+
+                if(y < 0)
+                    animator.SetFloat("Y", -1);
+                else
+                    animator.SetFloat("Y", 1);
+            }
+
+            animator.SetBool("IsMoving", true);
+        }
+        else
+            animator.SetBool("IsMoving", false);
+
+    }
+
     //Attack: colpo singolo, incremento colpi consecutivi senza subire danni contro boss
     public override void Attack(Character parent)
     {
