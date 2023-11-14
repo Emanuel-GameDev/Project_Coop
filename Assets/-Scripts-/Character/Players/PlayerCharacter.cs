@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.iOS;
 using UnityEngine.Rendering;
 
 public class PlayerCharacter : Character

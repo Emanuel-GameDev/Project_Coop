@@ -851,6 +851,138 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""COOP"",
+            ""id"": ""85950c94-7d2f-4c76-be8a-b8184f0e167d"",
+            ""actions"": [
+                {
+                    ""name"": ""Switch1"",
+                    ""type"": ""Button"",
+                    ""id"": ""d0601e0a-21af-4466-b311-553119fece42"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Switch2"",
+                    ""type"": ""Button"",
+                    ""id"": ""a5458125-40a6-41d7-81b7-80eb61793464"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Switch3"",
+                    ""type"": ""Button"",
+                    ""id"": ""88c80837-ba01-4865-8153-351f68ca30eb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Switch4"",
+                    ""type"": ""Button"",
+                    ""id"": ""62fdca7e-4286-4696-a3c6-79a4e26844e4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""72f58739-2543-4178-919f-8f3099af4386"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Switch1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""72aa4300-6b42-4a46-90de-d71894487ec8"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Switch1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4fbdd903-07db-4741-ab4b-b83c5f409240"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Switch2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""41df565c-8fb7-4787-bee0-cf0b63ce1c3f"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Switch2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7aff3f1e-9f02-482c-9e3e-aec1d467cdf1"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Switch3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""688157d8-6e7d-4f19-9169-a16fb6a14ca1"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Switch3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""68a1f1ce-b72d-409b-92a2-1ad7e49ffaa3"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Switch4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2621511d-d33a-408d-8aac-9162e5388fbe"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Switch4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -937,6 +1069,12 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        // COOP
+        m_COOP = asset.FindActionMap("COOP", throwIfNotFound: true);
+        m_COOP_Switch1 = m_COOP.FindAction("Switch1", throwIfNotFound: true);
+        m_COOP_Switch2 = m_COOP.FindAction("Switch2", throwIfNotFound: true);
+        m_COOP_Switch3 = m_COOP.FindAction("Switch3", throwIfNotFound: true);
+        m_COOP_Switch4 = m_COOP.FindAction("Switch4", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1206,6 +1344,76 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // COOP
+    private readonly InputActionMap m_COOP;
+    private List<ICOOPActions> m_COOPActionsCallbackInterfaces = new List<ICOOPActions>();
+    private readonly InputAction m_COOP_Switch1;
+    private readonly InputAction m_COOP_Switch2;
+    private readonly InputAction m_COOP_Switch3;
+    private readonly InputAction m_COOP_Switch4;
+    public struct COOPActions
+    {
+        private @PlayerInputSystem m_Wrapper;
+        public COOPActions(@PlayerInputSystem wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Switch1 => m_Wrapper.m_COOP_Switch1;
+        public InputAction @Switch2 => m_Wrapper.m_COOP_Switch2;
+        public InputAction @Switch3 => m_Wrapper.m_COOP_Switch3;
+        public InputAction @Switch4 => m_Wrapper.m_COOP_Switch4;
+        public InputActionMap Get() { return m_Wrapper.m_COOP; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(COOPActions set) { return set.Get(); }
+        public void AddCallbacks(ICOOPActions instance)
+        {
+            if (instance == null || m_Wrapper.m_COOPActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_COOPActionsCallbackInterfaces.Add(instance);
+            @Switch1.started += instance.OnSwitch1;
+            @Switch1.performed += instance.OnSwitch1;
+            @Switch1.canceled += instance.OnSwitch1;
+            @Switch2.started += instance.OnSwitch2;
+            @Switch2.performed += instance.OnSwitch2;
+            @Switch2.canceled += instance.OnSwitch2;
+            @Switch3.started += instance.OnSwitch3;
+            @Switch3.performed += instance.OnSwitch3;
+            @Switch3.canceled += instance.OnSwitch3;
+            @Switch4.started += instance.OnSwitch4;
+            @Switch4.performed += instance.OnSwitch4;
+            @Switch4.canceled += instance.OnSwitch4;
+        }
+
+        private void UnregisterCallbacks(ICOOPActions instance)
+        {
+            @Switch1.started -= instance.OnSwitch1;
+            @Switch1.performed -= instance.OnSwitch1;
+            @Switch1.canceled -= instance.OnSwitch1;
+            @Switch2.started -= instance.OnSwitch2;
+            @Switch2.performed -= instance.OnSwitch2;
+            @Switch2.canceled -= instance.OnSwitch2;
+            @Switch3.started -= instance.OnSwitch3;
+            @Switch3.performed -= instance.OnSwitch3;
+            @Switch3.canceled -= instance.OnSwitch3;
+            @Switch4.started -= instance.OnSwitch4;
+            @Switch4.performed -= instance.OnSwitch4;
+            @Switch4.canceled -= instance.OnSwitch4;
+        }
+
+        public void RemoveCallbacks(ICOOPActions instance)
+        {
+            if (m_Wrapper.m_COOPActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICOOPActions instance)
+        {
+            foreach (var item in m_Wrapper.m_COOPActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_COOPActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public COOPActions @COOP => new COOPActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1273,5 +1481,12 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+    }
+    public interface ICOOPActions
+    {
+        void OnSwitch1(InputAction.CallbackContext context);
+        void OnSwitch2(InputAction.CallbackContext context);
+        void OnSwitch3(InputAction.CallbackContext context);
+        void OnSwitch4(InputAction.CallbackContext context);
     }
 }
