@@ -3,6 +3,9 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+//Unique = tasto nord = Urlo
+//BossUpgrade = tasto est = attacco bossFight
 public class Tank : CharacterClass
 {
     [Header("Block")]
@@ -37,24 +40,34 @@ public class Tank : CharacterClass
     private int comboIndex = 0;
     private int comboMax = 2;
     private float rangeAggro = math.INFINITY;
+
     private bool canPressInput;
     
     //se potenziamento 1 ha 2 attacchi
-    public override void Attack(Character parent, UnityEngine.InputSystem.InputAction.CallbackContext context)
+    public override void Attack(Character parent,InputAction.CallbackContext context)
     {
-        isAttacking = true;  
-        if(comboIndex == 0)
+        if (context.performed)
         {
-            animator.SetTrigger("Attack1");
+            isAttacking = true;
+            if (comboIndex == 0)
+            {
+                animator.SetTrigger("Attack1");
+            }
+            else if (canPressInput)
+            {
+                animator.SetTrigger("Attack2");
+            }
         }
-        else if(canPressInput)
+
+        else if (context.canceled)
         {
-            animator.SetTrigger("Attack2");
-        }       
+
+        }
+       
 
         
         //se potenziamento boss fight attacco caricato 
-        //se potenziamento 5 attacco caricato (Da decidere)
+        //se potenziamento 5 attacco caricato
 
         Debug.Log($"Attack[{comboIndex}  canDoubleAttack[{canDoubleAttack}  hasHyperArmor[{hyperArmorUnlocked}]");
     }
@@ -68,7 +81,6 @@ public class Tank : CharacterClass
         base.UseExtraAbility(parent, context);
         //se potenziamento boss attacco caricato e potenziamento 2 più stun
     }
-
     public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
         base.UseUniqueAbility(parent, context);
