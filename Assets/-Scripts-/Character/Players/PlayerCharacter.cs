@@ -1,12 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 
 public class PlayerCharacter : Character
 {
     private Vector3 screenPosition;
     private Vector3 worldPosition;
-    Plane plane = new Plane(Vector3.up,-1);
+    Plane plane = new Plane(Vector3.up, -1);
 
     Vector2 lookDir;
     Vector2 moveDir;
@@ -19,13 +18,15 @@ public class PlayerCharacter : Character
         Move(moveDir);
     }
 
-    public void Look_performed(InputAction.CallbackContext context)
+    #region Input
+
+    #region Look
+    public void LookInput(InputAction.CallbackContext context)
     {
         if (context.performed)
             lookDir = context.ReadValue<Vector2>();
     }
 
-    // informasi sulla look
     public Vector3 ReadLook()
     {
         var gamepad = Gamepad.current;
@@ -33,7 +34,7 @@ public class PlayerCharacter : Character
         if (gamepad != null)
         {
             //perndo la look dal player.input utilizzando il gamepad
-            return new Vector3(lookDir.x, 0, lookDir.y).normalized;           
+            return new Vector3(lookDir.x, 0, lookDir.y).normalized;
         }
         else
         {
@@ -52,31 +53,36 @@ public class PlayerCharacter : Character
             Debug.Log(worldPosition);
             return new Vector3(worldPosition.x, 0, worldPosition.z);
         }
-       
+
     }
 
-    public void Attack_performed(InputAction.CallbackContext context)
+    #endregion
+
+    public void AttackInput(InputAction.CallbackContext context)
     {
-            Attack(context);
+        Attack(context);
     }
 
-    public void UniqueAbility_performed(InputAction.CallbackContext context)
+    public void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-            UseUniqueAbility(context);
+        UseUniqueAbility(context);
     }
 
-    public void ExtraAbility_performed(InputAction.CallbackContext context)
+    public void ExtraAbilityInput(InputAction.CallbackContext context)
     {
-            UseExtraAbility(context);
+        UseExtraAbility(context);
     }
 
-    public void Defense_performed(InputAction.CallbackContext context)
+    public void DefenseInput(InputAction.CallbackContext context)
     {
-            Defend(context);
+        Defend(context);
     }
 
-    public void Move_performed(InputAction.CallbackContext context)
+    public void MoveInput(InputAction.CallbackContext context)
     {
         moveDir = context.ReadValue<Vector2>();
     }
+
+    #endregion
+
 }

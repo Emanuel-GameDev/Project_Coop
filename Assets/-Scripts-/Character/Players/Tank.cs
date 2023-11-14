@@ -3,8 +3,15 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+//Unique = tasto nord,Q = Urlo
+//BossUpgrade = tasto est,E = attacco bossFight
 public class Tank : CharacterClass
 {
+    [Header("Attack")]
+    [SerializeField,Tooltip("Durata tempo pressione prolungata tasto attaco prima per decidere se attacco caricato o non")]
+    float timeChargedAttack = 0.2f;
+
     [Header("Block")]
     [SerializeField, Tooltip("Quantità di danno parabile prima di rottura parata")]
     float staminaBlock;
@@ -32,47 +39,50 @@ public class Tank : CharacterClass
 
     private bool canDoubleAttack => upgradeStatus[AbilityUpgrade.Ability1];
     private bool hyperArmorUnlocked => upgradeStatus[AbilityUpgrade.Ability3];
+    private bool canChargedAttack => upgradeStatus[AbilityUpgrade.Ability5];
     private bool hyperArmorOn;
     private bool isAttacking = false;
+    private bool chargedAttack = false;
+
     private int comboIndex = 0;
     private int comboMax = 2;
     private float rangeAggro = math.INFINITY;
+
     private bool canPressInput;
 
-    private bool DAELIMJINARE;
-
-
+    private float timeChecker;
+    private bool pressed;
+    
     //se potenziamento 1 ha 2 attacchi
-    public override void Attack(Character parent, UnityEngine.InputSystem.InputAction.CallbackContext context)
-
-    {
-        isAttacking = true;  
-        if(comboIndex == 0)
+    public override void Attack(Character parent,InputAction.CallbackContext context)
+    {      
+        if (context.performed)
         {
-            animator.SetTrigger("Attack1");
+            pressed = true;       
+            Invoke(nameof(CheckCharged),timeChargedAttack);
+           
         }
-        else if(canPressInput)
+
+        else if (context.canceled)
         {
-            animator.SetTrigger("Attack2");
-        }       
+            pressed = false;
+        }
+       
+    
+        //se potenziamento 5 attacco caricato
 
-        
-        //se potenziamento boss fight attacco caricato 
-        //se potenziamento 5 attacco caricato (Da decidere)
-
-        Debug.Log($"Attack[{comboIndex}  canDoubleAttack[{canDoubleAttack}  hasHyperArmor[{hyperArmorUnlocked}]");
     }
     public override void Defence(Character parent, InputAction.CallbackContext context)
     {
         base.Defence(parent,context);
         //se potenziamento 4 parata perfetta fa danno
     }
-    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
+    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context) //Tasto est
     {
         base.UseExtraAbility(parent, context);
+       
         //se potenziamento boss attacco caricato e potenziamento 2 più stun
     }
-
     public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
         base.UseUniqueAbility(parent, context);
@@ -112,4 +122,22 @@ public class Tank : CharacterClass
             comboIndex = 0;
         }
     }
+
+    public  void CheckCharged()
+    {        
+       if(pressed && canChargedAttack)
+        {
+            Debug.Log("attacco caricato");
+        }
+        else
+        {
+            if(comboIndex == 0)
+            {
+                animator.SetTrigger("Attack1");
+            }
+            Debug.Log("attacco normale");
+        }
+    }
+
+     
 }
