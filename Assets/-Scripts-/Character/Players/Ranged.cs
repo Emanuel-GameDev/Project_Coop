@@ -26,7 +26,7 @@ public class Ranged : CharacterClass
 
     [SerializeField, Tooltip("tempo necessario per colpo potenziato")]
     float empowerFireCoolDown=1.5f;
-    float empowerFireTimer=0;
+    float empowerFireTimer=0; //timer da caricare
     [SerializeField, Tooltip("Aumento gittata per colpo potenziato")]
     float empowerAdditionalRange=15f;
     [SerializeField, Tooltip("moltiplicatore danno per colpo potenziato")]
@@ -40,25 +40,25 @@ public class Ranged : CharacterClass
     float dodgeTimer=0;
     [SerializeField, Tooltip("distanza massima schivata")]
     float dodgeDistance=15f;
+    [SerializeField, Tooltip("Durata schivata")]
+    float dodgeDuration = 0.3f;
+    [SerializeField, Tooltip("Danno schivata perfetta")]
+    float dodgeDamageMultiplier = 0.75f;
 
     [Header("Abilità extra")]
     [SerializeField, Tooltip("Prefab della mina")]
     GameObject prefabLandMine;
     [SerializeField, Tooltip("danno della mina")]
-    float landMineDamage;
+    float landMineDamageMultiplier=2f;
     [SerializeField, Tooltip("raggio della mina")]
-    float landMineRange;
-
-
-
-
+    float landMineRange=5f;
 
     [Header("Potenziamneto Boss fight")]
     [SerializeField, Tooltip("distanza massima per schivata perfetta ")]
     float perfectDodgeBossDistance = 30f;
     [SerializeField, Tooltip("Schivate perfette per sbloccare l'abilità")]
     int dodgeCounterToUnlock=10;
-    int dodgeCounter=0;
+    int dodgeCounter=0; //contatore schivate perfette durante la bossfight
     [SerializeField, Tooltip("moltiplicatore danno per distanza del colpo")]
     [Min(1)]
     float maxDamageMultiplier=2.5f;
