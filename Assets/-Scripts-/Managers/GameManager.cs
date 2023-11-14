@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] PowerUp powerUpToGive;
     [SerializeField] Character player;
 
-    public PlayerInputManager manager { get; private set; }
+    [SerializeField]
+    PlayerInputManager manager;
     public CoopManager coopManager { get; private set; }
 
     public bool canJoin = false;
