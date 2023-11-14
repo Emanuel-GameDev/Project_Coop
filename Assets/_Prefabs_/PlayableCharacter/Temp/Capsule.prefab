@@ -44,6 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2de632904a0ecf48920e0fa6a2dcd65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  onTrigger:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7461498262193410672
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,7 +232,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7737284560217082375}
         m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: Move_performed
+        m_MethodName: MoveInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -242,7 +248,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7737284560217082375}
         m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: Look_performed
+        m_MethodName: LookInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -258,7 +264,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7737284560217082375}
         m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: Attack_performed
+        m_MethodName: AttackInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -274,7 +280,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7737284560217082375}
         m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: Defense_performed
+        m_MethodName: DefenseInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -290,7 +296,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7737284560217082375}
         m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: UniqueAbility_performed
+        m_MethodName: UniqueAbilityInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -305,8 +311,8 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7737284560217082375}
-        m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: ExtraAbility_performed
+        m_TargetAssemblyTypeName: Character, Assembly-CSharp
+        m_MethodName: UseExtraAbility
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
