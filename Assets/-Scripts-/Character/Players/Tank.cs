@@ -72,7 +72,7 @@ public class Tank : CharacterClass
     {       
         //attacco attiro aggro
     }
-    public override void TakeDamage(float damage, Damager dealer)
+    public override void TakeDamage(float damage, IDamager dealer)
     {
         if(hyperArmorOn == false)
         {

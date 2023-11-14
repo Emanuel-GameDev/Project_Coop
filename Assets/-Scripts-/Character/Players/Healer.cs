@@ -172,7 +172,7 @@ public class Healer : CharacterClass
         }
     }
 
-    public override void TakeDamage(float damage, Damager dealer)
+    public override void TakeDamage(float damage, IDamager dealer)
     {
         base.TakeDamage(damage, dealer);
         currentHp -= damage;
