@@ -81,6 +81,7 @@ public class Healer : CharacterClass
 
     float uniqueAbilityTimer;
     float mineAbilityTimer;
+    float smallHealTimer;
 
     public override void Inizialize(CharacterData characterData, Character character)
     {
@@ -133,6 +134,7 @@ public class Healer : CharacterClass
 
         uniqueAbilityTimer = UniqueAbilityCooldown;
         mineAbilityTimer = mineAbilityCooldown;
+        smallHealTimer = singleHealCooldown;
 
         //provvisorio
         instantiatedHealIcon = Instantiate(healIcon);
@@ -149,6 +151,11 @@ public class Healer : CharacterClass
         if (mineAbilityTimer < mineAbilityCooldown)
         {
             mineAbilityTimer += Time.deltaTime;
+        }
+
+        if (smallHealTimer < singleHealCooldown)
+        {
+            smallHealTimer += Time.deltaTime;
         }
     }
 
@@ -187,7 +194,7 @@ public class Healer : CharacterClass
     public override void Move(Vector2 direction, Rigidbody rb)
     {
         //Di prova
-        //Vector2 newDirection = Quaternion.Euler(0,0,-45)*direction;
+        Vector2 newDirection = Quaternion.Euler(0,0,-45)*direction;
 
         base.Move(direction, rb);
         PlayerCharacter player = (PlayerCharacter) character;
@@ -228,16 +235,22 @@ public class Healer : CharacterClass
     //Defense: cura ridotta singola
     public override void Defence(Character parent, InputAction.CallbackContext context)
     {
-        if (nearestPlayer == null)
-            TakeDamage(-smallHeal, null);
-        else
-            nearestPlayer.TakeDamage(-smallHeal, null);
+        if (context.performed && smallHealTimer >= singleHealCooldown)
+        {
+            if (nearestPlayer == null)
+                TakeDamage(-smallHeal, null);
+            else
+                nearestPlayer.TakeDamage(-smallHeal, null);
+
+            smallHealTimer = 0;
+        }
+           
     }
 
     //UniqueAbility: lancia area di cura
     public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
-        if (uniqueAbilityTimer < UniqueAbilityCooldown)
+        if (uniqueAbilityTimer < UniqueAbilityCooldown || !context.performed)
             return;
 
         float radius = 1;
@@ -272,7 +285,7 @@ public class Healer : CharacterClass
     //ExtraAbility: piazza mina di cura
     public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
-        if (/*upgradeStatus[AbilityUpgrade.Ability3]*/ true)
+        if (/*upgradeStatus[AbilityUpgrade.Ability3]*/ true && context.performed)
         {
             if (mineAbilityTimer < mineAbilityCooldown)
                 return;
