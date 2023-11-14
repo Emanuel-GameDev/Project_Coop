@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.InputSystem;
 
 public class Healer : CharacterClass
 {
@@ -82,7 +83,7 @@ public class Healer : CharacterClass
 
     
     //Attack: colpo singolo, incremento colpi consecutivi senza subire danni contro boss
-    public override void Attack(Character parent)
+    public override void Attack(Character parent, UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
         
     }
@@ -124,7 +125,7 @@ public class Healer : CharacterClass
     }
 
     //Defense: cura ridotta singola
-    public override void Defence(Character parent)
+    public override void Defence(Character parent, InputAction.CallbackContext context)
     {
         if (nearestPlayer == null)
             TakeDamage(-smallHeal, null);
@@ -133,7 +134,7 @@ public class Healer : CharacterClass
     }
 
     //UniqueAbility: lancia area di cura
-    public override void UseUniqueAbility(Character parent)
+    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
         float radius = 0;
 
@@ -162,7 +163,7 @@ public class Healer : CharacterClass
     }
 
     //ExtraAbility: piazza mina di cura
-    public override void UseExtraAbility(Character parent)
+    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
         if (upgradeStatus[AbilityUpgrade.Ability3])
         {
