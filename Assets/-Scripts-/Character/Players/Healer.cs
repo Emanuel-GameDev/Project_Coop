@@ -12,37 +12,57 @@ public class Healer : CharacterClass
 
 
     [Header("Small heal ability information")]
+
+    [Tooltip("Icona che appare sopra il personaggio da curare")]
     [SerializeField] GameObject healIcon;
+    [Tooltip("Quantità di vita curata dall'abilità di cura singola")]
     [SerializeField] float smallHeal = 5f;
+    [Tooltip("Tempo di ricarica dell'abilità di cura singola")]
     [SerializeField] float singleHealCooldown = 5f;
+    [Tooltip("Distanza massima a cui può essere un alleato per essere curato")]
     [SerializeField] float smallHealAreaRadius = 1f;
 
+
     [Header("Heal mine ability information")]
+
+    [Tooltip("Prefab della mina")]
     [SerializeField] GameObject healMine;
+    [Tooltip("Quantità di vita curata dalla mina")]
     [SerializeField] float mineHealQuantity = 1f;
+    [Tooltip("Raggio del trigget della mina")]
     [SerializeField] float healMineRadius = 1f;
+    [Tooltip("Tempo che la mina impiega prima di attivarsi")]
     [SerializeField] float healMineActivationTime = 1f;
+    [Tooltip("Tempo di ricarica per poter piazzare la mina")]
+    [SerializeField] float mineAbilityCooldown = 0;
+
 
     [Header("Heal area base information")]
+    [Tooltip("Prefab dell'area di cura")]
     [SerializeField] GameObject healArea;
-    
+    [Tooltip("Durata dell' area di cura")]
     [SerializeField] float areaDuration=1;
+    [Tooltip("Raggio dell'area di cura")]
     [SerializeField] float healAreaRadius = 1f;
+    [Tooltip("Numero di tik al secondo")]
     [SerializeField] float tikPerSecond = 1;
+    [Tooltip("Quantità di vita curata ogni tik")]
     [SerializeField] float healPerTik = 1f;
 
     [Header("Heal area upgrade stats")]
-    //abilità danno
+    [Tooltip("Quantità di vita tolta per tik (Abilità 1)")]
     [SerializeField] float DOTPerTik = 1;
-    //abilità raggio
+    [Tooltip("Aumento del raggio dell'area di cura (Abilità 2)")]
     [SerializeField] float healAreaIncrementedRadious = 5;
-    //abilità slow
+    [Tooltip("Rallentamento (Abilità 4)")]
     [SerializeField] PowerUp slowDown;
-    //abilità difesa
+    [Tooltip("Riduzione difesa (Abilità 5)")]
     [SerializeField] float damageIncrement = 1;
 
     [Header("Boss powerUp")]
+    [Tooltip("Quantità di vita curata dall'abilità del boss")]
     [SerializeField] float bossPowerUpHeal = 50f;
+    [Tooltip("Colpi consecutivi richiesti al boss, senza subire danni, per sbloccare l'abilità del boss")]
     [SerializeField] int bossPowerUpHitToUnlock = 10;
 
     GameObject instantiatedHealIcon;
@@ -56,7 +76,11 @@ public class Healer : CharacterClass
 
     private float lastAttackTime;
     private float lastUniqueAbilityUseTime;
-    private int bossPowerUpHitCount = 0;
+    private int bossPowerUpHitCount;
+
+
+    float uniqueAbilityTimer;
+    float mineAbilityTimer;
 
     public override void Inizialize(CharacterData characterData, Character character)
     {
@@ -89,12 +113,42 @@ public class Healer : CharacterClass
     }
 
 
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<PlayerCharacter>())
         {
             playerInArea.Add(other.gameObject.GetComponent<PlayerCharacter>());
             nearestPlayer = playerInArea.OrderBy(c => (transform.position - c.transform.position).sqrMagnitude).First();
+        }
+    }
+
+    private void Start()
+    {
+        smallHealAreaCollider = gameObject.AddComponent<CapsuleCollider>();
+        smallHealAreaCollider.isTrigger = true;
+        smallHealAreaCollider.height = 1.5f;
+        smallHealAreaCollider.radius = smallHealAreaRadius;
+
+
+        uniqueAbilityTimer = UniqueAbilityCooldown;
+        mineAbilityTimer = mineAbilityCooldown;
+
+        //provvisorio
+        instantiatedHealIcon = Instantiate(healIcon);
+        MoveIcon(transform);
+    }
+
+    private void Update()
+    {
+        if (uniqueAbilityTimer < UniqueAbilityCooldown)
+        {
+            uniqueAbilityTimer += Time.deltaTime;
+        }
+
+        if (mineAbilityTimer < mineAbilityCooldown)
+        {
+            mineAbilityTimer += Time.deltaTime;
         }
     }
 
@@ -117,12 +171,59 @@ public class Healer : CharacterClass
         if (other.gameObject.GetComponent<PlayerCharacter>())
         {
             playerInArea.Remove(other.gameObject.GetComponent<PlayerCharacter>());
+
             if (playerInArea.Count > 0)
                 nearestPlayer = playerInArea.OrderBy(c => (transform.position - c.transform.position).sqrMagnitude).First();
             else
                 nearestPlayer = null;
         }
     }
+
+
+
+ 
+    
+
+    public override void Move(Vector2 direction, Rigidbody rb)
+    {
+        //Di prova
+        //Vector2 newDirection = Quaternion.Euler(0,0,-45)*direction;
+
+        base.Move(direction, rb);
+        PlayerCharacter player = (PlayerCharacter) character;
+
+        if (player.MoveDirection != Vector2.zero)
+        {
+            float x = player.MoveDirection.x;
+            float y = player.MoveDirection.y;
+
+            if (Mathf.Abs(x) >= Mathf.Abs(y))
+            {
+                animator.SetFloat("Y", 0);
+
+                if(x < 0)
+                    animator.SetFloat("X", -1);
+                else
+                    animator.SetFloat("X", 1);
+            }
+            else
+            {
+                animator.SetFloat("X", 0);
+
+                if(y < 0)
+                    animator.SetFloat("Y", -1);
+                else
+                    animator.SetFloat("Y", 1);
+            }
+
+            animator.SetBool("IsMoving", true);
+        }
+        else
+            animator.SetBool("IsMoving", false);
+
+    }
+
+    
 
     //Defense: cura ridotta singola
     public override void Defence(Character parent, InputAction.CallbackContext context)
@@ -136,9 +237,12 @@ public class Healer : CharacterClass
     //UniqueAbility: lancia area di cura
     public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
-        float radius = 0;
+        if (uniqueAbilityTimer < UniqueAbilityCooldown)
+            return;
 
-        //calcolo area
+        float radius = 1;
+
+        //calcolo raggio area
         if (upgradeStatus[AbilityUpgrade.Ability2])
             radius = healAreaRadius + healAreaIncrementedRadious;
         else
@@ -160,16 +264,23 @@ public class Healer : CharacterClass
         areaSpawned.DOTPerTik = DOTPerTik;
         areaSpawned.slowDown = slowDown;
         areaSpawned.damageIncrement = damageIncrement;
+
+        uniqueAbilityTimer = 0;
     }
+
 
     //ExtraAbility: piazza mina di cura
     public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
-        if (upgradeStatus[AbilityUpgrade.Ability3])
+        if (/*upgradeStatus[AbilityUpgrade.Ability3]*/ true)
         {
+            if (mineAbilityTimer < mineAbilityCooldown)
+                return;
+
             HealMine mine = Instantiate(healMine, new Vector3(parent.transform.position.x, 0.1f, parent.transform.position.z), Quaternion.identity).GetComponent<HealMine>();
             mine.Initialize(mineHealQuantity, healMineRadius, healMineActivationTime);
-            
+
+            mineAbilityTimer = 0;
         }
     }
 
@@ -180,11 +291,13 @@ public class Healer : CharacterClass
         bossPowerUpHitCount = 0;
     }
 
+
+    //Cura tutti i player
     public void BossAbility()
     {
         if(bossfightPowerUpUnlocked)
         {
-            //Cura tutti i player
+
         }
     }
 

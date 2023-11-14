@@ -28,7 +28,7 @@ public class Ranged : CharacterClass
 
     [SerializeField, Tooltip("tempo necessario per colpo potenziato")]
     float empowerFireCoolDown=1.5f;
-    float empowerFireTimer=0;
+    float empowerFireTimer=0; //timer da caricare
     [SerializeField, Tooltip("Aumento gittata per colpo potenziato")]
     float empowerAdditionalRange=15f;
     [SerializeField, Tooltip("moltiplicatore danno per colpo potenziato")]
@@ -42,11 +42,25 @@ public class Ranged : CharacterClass
     float dodgeTimer=0;
     [SerializeField, Tooltip("distanza massima schivata")]
     float dodgeDistance=15f;
+    [SerializeField, Tooltip("Durata schivata")]
+    float dodgeDuration = 0.3f;
+    [SerializeField, Tooltip("Danno schivata perfetta")]
+    float dodgeDamageMultiplier = 0.75f;
+
+    [Header("Abilità extra")]
+    [SerializeField, Tooltip("Prefab della mina")]
+    GameObject prefabLandMine;
+    [SerializeField, Tooltip("danno della mina")]
+    float landMineDamageMultiplier=2f;
+    [SerializeField, Tooltip("raggio della mina")]
+    float landMineRange=5f;
 
     [Header("Potenziamneto Boss fight")]
+    [SerializeField, Tooltip("distanza massima per schivata perfetta ")]
+    float perfectDodgeBossDistance = 30f;
     [SerializeField, Tooltip("Schivate perfette per sbloccare l'abilità")]
     int dodgeCounterToUnlock=10;
-    int dodgeCounter=0;
+    int dodgeCounter=0; //contatore schivate perfette durante la bossfight
     [SerializeField, Tooltip("moltiplicatore danno per distanza del colpo")]
     [Min(1)]
     float maxDamageMultiplier=2.5f;
@@ -57,14 +71,12 @@ public class Ranged : CharacterClass
 
     private void Update()
     {
-        if (fireTimer > 0)
-        {
-            fireTimer -= Time.deltaTime;
-        }
+        CoolDownManager();
     }
 
+    
 
-    public override void Attack(Character parent, UnityEngine.InputSystem.InputAction.CallbackContext context)
+    public override void Attack(Character parent,InputAction.CallbackContext context)
     {
 
         if(fireTimer > 0)
@@ -81,7 +93,7 @@ public class Ranged : CharacterClass
         if(_look != Vector3.zero)
         {
             lookDirection = _look;
-        }
+        }   
 
         //in futuro inserire il colpo avanzato
         BasicFireProjectile(lookDirection);
@@ -101,9 +113,12 @@ public class Ranged : CharacterClass
 
     public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
-        base.UseUniqueAbility(parent, context);
+
+        EmpowerFireProjectile(lookDirection);
+
     }
 
+    //Sparo normale
     private void BasicFireProjectile(Vector3 direction)
     {
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
@@ -111,12 +126,31 @@ public class Ranged : CharacterClass
         newProjectile.transform.position = transform.position;
 
         newProjectile.Inizialize(direction, projectileRange, projectileSpeed);
-
-     
+    
     }
 
-    
+    //sparo caricato (abilità unica)
+    private void EmpowerFireProjectile(Vector3 direction)
+    {
+        Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
+        newProjectile.transform.position = transform.position;
+
+        newProjectile.Inizialize(direction, projectileRange+empowerAdditionalRange, projectileSpeed);
+    }
+
+    //vari coolDown del personaggio
+    private void CoolDownManager()
+    {
+        if (fireTimer > 0)
+        {
+            fireTimer -= Time.deltaTime;
+        }
+    }
+
+
+
+   
 }
 
 

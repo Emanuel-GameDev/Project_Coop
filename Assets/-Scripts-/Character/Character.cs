@@ -47,6 +47,7 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     public void SetCharacterData(CharacterData newCharData)
     {
         characterData.Disable(this);
+        Destroy(characterClass.gameObject);
         characterData = newCharData;
         characterData.Inizialize(this);
     }
