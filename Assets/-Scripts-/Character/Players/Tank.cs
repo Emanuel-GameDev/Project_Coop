@@ -49,8 +49,6 @@ public class Tank : CharacterClass
     private float rangeAggro = math.INFINITY;
 
     private bool canPressInput;
-
-    private float timeChecker;
     private bool pressed;
     
     //se potenziamento 1 ha 2 attacchi
@@ -66,6 +64,7 @@ public class Tank : CharacterClass
         else if (context.canceled)
         {
             pressed = false;
+            animator.SetBool("chargedAttack", false);
         }
        
     
@@ -127,7 +126,7 @@ public class Tank : CharacterClass
     {        
        if(pressed && canChargedAttack)
         {
-            Debug.Log("attacco caricato");
+            animator.SetBool("ChargedAttack", pressed);
         }
         else
         {
@@ -135,7 +134,12 @@ public class Tank : CharacterClass
             {
                 animator.SetTrigger("Attack1");
             }
-            Debug.Log("attacco normale");
+            else if(comboIndex == 1)
+            {
+                animator.SetTrigger("Attack2");
+            }
+
+            Debug.Log($"combo index:[{comboIndex}]   can Double Attack[{canDoubleAttack}]");
         }
     }
 
