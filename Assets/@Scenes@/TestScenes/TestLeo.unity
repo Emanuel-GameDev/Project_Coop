@@ -123,6 +123,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &1039675443 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3605962510235015332, guid: 5e4e7b014c3a19945af8275465d7addf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1419827497}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1292782584 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7737284560217082375, guid: 34f950e3c8f98484a99f7ed9d42fd12a,
@@ -171,6 +177,30 @@ PrefabInstance:
       propertyPath: character
       value: 
       objectReference: {fileID: 1292782584}
+    - target: {fileID: 3661803240820020965, guid: 5e4e7b014c3a19945af8275465d7addf,
+        type: 3}
+      propertyPath: switchPlayerUp
+      value: 
+      objectReference: {fileID: 11400000, guid: 80e35bc4125873b45b0a1321251987d9,
+        type: 2}
+    - target: {fileID: 3661803240820020965, guid: 5e4e7b014c3a19945af8275465d7addf,
+        type: 3}
+      propertyPath: switchPlayerDown
+      value: 
+      objectReference: {fileID: 11400000, guid: 3a1871dd2aba407458b334eaba249754,
+        type: 2}
+    - target: {fileID: 3661803240820020965, guid: 5e4e7b014c3a19945af8275465d7addf,
+        type: 3}
+      propertyPath: switchPlayerLeft
+      value: 
+      objectReference: {fileID: 11400000, guid: b017b230f81f3e94697a48f7683f3b1e,
+        type: 2}
+    - target: {fileID: 3661803240820020965, guid: 5e4e7b014c3a19945af8275465d7addf,
+        type: 3}
+      propertyPath: switchPlayerRight
+      value: 
+      objectReference: {fileID: 11400000, guid: 1a573e06df62dfd4396e71e6ae830f9c,
+        type: 2}
     - target: {fileID: 9130741212122425162, guid: 5e4e7b014c3a19945af8275465d7addf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -232,7 +262,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1419827497}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1039675443}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
@@ -575,6 +605,11 @@ PrefabInstance:
       propertyPath: manager
       value: 
       objectReference: {fileID: 1419827498}
+    - target: {fileID: 726525942643775275, guid: 64a37e0cc339faf4b9a28466184282b9,
+        type: 3}
+      propertyPath: playerManager
+      value: 
+      objectReference: {fileID: 1039675443}
     - target: {fileID: 726525942643775275, guid: 64a37e0cc339faf4b9a28466184282b9,
         type: 3}
       propertyPath: powerUpToGive
