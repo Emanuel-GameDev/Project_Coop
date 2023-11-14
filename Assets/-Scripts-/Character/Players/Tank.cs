@@ -38,13 +38,9 @@ public class Tank : CharacterClass
     private int comboMax = 2;
     private float rangeAggro = math.INFINITY;
     private bool canPressInput;
-
-    private bool DAELIMJINARE;
-
-
+    
     //se potenziamento 1 ha 2 attacchi
     public override void Attack(Character parent, UnityEngine.InputSystem.InputAction.CallbackContext context)
-
     {
         isAttacking = true;  
         if(comboIndex == 0)
