@@ -39,6 +39,8 @@ public class Tank : CharacterClass
     private float rangeAggro = math.INFINITY;
     private bool canPressInput;
 
+    private bool DAELIMJINARE;
+
 
     //se potenziamento 1 ha 2 attacchi
     public override void Attack(Character parent, UnityEngine.InputSystem.InputAction.CallbackContext context)
