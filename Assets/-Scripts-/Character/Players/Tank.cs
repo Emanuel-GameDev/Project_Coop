@@ -46,6 +46,7 @@ public class Tank : CharacterClass
     //se potenziamento 1 ha 2 attacchi
     public override void Attack(Character parent,InputAction.CallbackContext context)
     {
+        Debug.Log("non entro");
         if (context.performed)
         {
             isAttacking = true;
@@ -119,5 +120,10 @@ public class Tank : CharacterClass
         {
             comboIndex = 0;
         }
+    }
+
+    public void DebugAttacco()
+    {
+        Debug.Log(isAttacking + "Attaccoooo");
     }
 }
