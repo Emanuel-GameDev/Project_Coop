@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.TextCore.Text;
 
-public class HealArea : MonoBehaviour
+public class HealArea : MonoBehaviour,IDamager
 {
     [SerializeField] float expireTime = 10;
 
@@ -30,6 +31,11 @@ public class HealArea : MonoBehaviour
     private bool slow = false;
     private bool debilitate = false;
 
+    IDamager source;
+
+    [SerializeField]
+    UnityEvent<Collider> onTrigger = new();
+
     public void Initialize(float expireTime,float tikPerSecond, float radius, bool damage, bool slow, bool debilitate)
     {
         this.expireTime = expireTime;
@@ -42,6 +48,13 @@ public class HealArea : MonoBehaviour
         characterInArea = new List<Character>();
     }
 
+    private void Awake()
+    {
+        source ??= GetComponentInParent<IDamager>();
+        source ??= GetComponent<IDamager>();
+        source ??= GetComponentInChildren<IDamager>();
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -51,6 +64,10 @@ public class HealArea : MonoBehaviour
         if (other.gameObject.GetComponent<Character>() is PlayerCharacter)
         {
             //regene amici
+
+
+
+
             DotEffect regeneEffect = other.gameObject.AddComponent<DotEffect>();
             regeneEffect.ApplyDOT(-healPerTik, tikPerSecond);
 
@@ -136,5 +153,10 @@ public class HealArea : MonoBehaviour
         }
 
         timer += Time.deltaTime;
+    }
+
+    public float GetDamage()
+    {
+        throw new NotImplementedException();
     }
 }

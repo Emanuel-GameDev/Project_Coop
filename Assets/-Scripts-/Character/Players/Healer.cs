@@ -196,7 +196,7 @@ public class Healer : CharacterClass
         //Di prova
         Vector2 newDirection = Quaternion.Euler(0,0,-45)*direction;
 
-        base.Move(direction, rb);
+        base.Move(newDirection, rb);
         PlayerCharacter player = (PlayerCharacter) character;
 
         if (player.MoveDirection != Vector2.zero)
