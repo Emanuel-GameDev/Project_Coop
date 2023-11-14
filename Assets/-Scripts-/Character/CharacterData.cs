@@ -4,7 +4,7 @@ using UnityEngine;
 public class CharacterData : ScriptableObject
 {
     [SerializeField, Tooltip("La classe del personaggio.")]
-    protected CharacterClass characterClass;  
+    protected CharacterClass characterClass;
     [SerializeField, Tooltip("La salute massima del personaggio.")]
     protected float maxHP;
     [SerializeField, Tooltip("Il danno inflitto dal personaggio.")]
@@ -23,12 +23,12 @@ public class CharacterData : ScriptableObject
     public float AttackSpeed => attackSpeed;
     public float MoveSpeed => moveSpeed;
     public float UniqueAbilityCooldown => uniqueAbilityCooldown;
-    public float UniqueAbilityCooldownIncreaseAtUse => uniqueAbilityCooldownIncreaseAtUse;  
+    public float UniqueAbilityCooldownIncreaseAtUse => uniqueAbilityCooldownIncreaseAtUse;
     public void Inizialize(Character character)
     {
         CharacterClass cClass = Instantiate(characterClass.gameObject, character.gameObject.transform).GetComponent<CharacterClass>();
         cClass.Inizialize(this, character);
-        character.SetCharacterClass(cClass);        
+        character.SetCharacterClass(cClass);
     }
     public void Disable(Character character)
     {
