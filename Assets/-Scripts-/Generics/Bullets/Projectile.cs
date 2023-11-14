@@ -6,6 +6,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float projectileSpeed;
     //[SerializeField] private float lifetime=5f;
     private float rangeRemaining=1;
+    private Vector3 projectileSize=Vector3.one;
 
     Rigidbody rb;
 
@@ -13,15 +14,18 @@ public class Projectile : MonoBehaviour
 
     private void Start()
     {
+        
         rb = GetComponent<Rigidbody>();
         transform.LookAt(travelDirection);
+        
     }
 
-    public void Inizialize(Vector3 direction,float range,float speed)
+    public void Inizialize(Vector3 direction,float range,float speed,float sizeMultiplier)
     {
         travelDirection = direction*1000;
         rangeRemaining = range;
         projectileSpeed = speed;
+        transform.localScale = projectileSize*sizeMultiplier;
     }
 
     //private void OnEnable()
@@ -45,7 +49,7 @@ public class Projectile : MonoBehaviour
     {
         rangeRemaining -= Time.deltaTime*projectileSpeed;
 
-        Debug.Log(rangeRemaining);
+        //Debug.Log(rangeRemaining);
 
         if (rangeRemaining <= 0)
         {
