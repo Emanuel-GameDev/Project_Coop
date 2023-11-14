@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using UnityEngine.InputSystem;
+
 public class Ranged : CharacterClass
 {
     //ci deve essere il riferimento alla look qua, non al proiettile
@@ -74,7 +76,7 @@ public class Ranged : CharacterClass
 
     
 
-    public override void Attack(Character parent)
+    public override void Attack(Character parent,InputAction.CallbackContext context)
     {
 
         if(fireTimer > 0)
@@ -99,19 +101,21 @@ public class Ranged : CharacterClass
         fireTimer = AttackSpeed;
     }
 
-    public override void Defence(Character parent)
+    public override void Defence(Character parent, InputAction.CallbackContext context)
     {
-        base.Defence(parent);
+        base.Defence(parent, context);
     }
 
-    public override void UseExtraAbility(Character parent)
+    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
-        base.UseExtraAbility(parent);
+        base.UseExtraAbility(parent, context);
     }
 
-    public override void UseUniqueAbility(Character parent)
+    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
+
         EmpowerFireProjectile(lookDirection);
+
     }
 
     //Sparo normale
