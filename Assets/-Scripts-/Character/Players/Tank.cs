@@ -1,6 +1,7 @@
 using System;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Tank : CharacterClass
 {
@@ -38,9 +39,10 @@ public class Tank : CharacterClass
     private float rangeAggro = math.INFINITY;
     private bool canPressInput;
 
-   
-   
-    public override void Attack(Character parent)
+
+    //se potenziamento 1 ha 2 attacchi
+    public override void Attack(Character parent, UnityEngine.InputSystem.InputAction.CallbackContext context)
+
     {
         isAttacking = true;  
         if(comboIndex == 0)
@@ -58,18 +60,21 @@ public class Tank : CharacterClass
 
         Debug.Log($"Attack[{comboIndex}  canDoubleAttack[{canDoubleAttack}  hasHyperArmor[{hyperArmorUnlocked}]");
     }
-    public override void Defence(Character parent)
+    public override void Defence(Character parent, InputAction.CallbackContext context)
     {
-        base.Defence(parent);
+        base.Defence(parent,context);
         //se potenziamento 4 parata perfetta fa danno
     }
-    public override void UseExtraAbility(Character parent)
+    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
-        base.UseExtraAbility(parent);
+        base.UseExtraAbility(parent, context);
         //se potenziamento boss attacco caricato e potenziamento 2 più stun
     }
-    public override void UseUniqueAbility(Character parent)
-    {       
+
+    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
+    {
+        base.UseUniqueAbility(parent, context);
+
         //attacco attiro aggro
     }
     public override void TakeDamage(float damage, IDamager dealer)

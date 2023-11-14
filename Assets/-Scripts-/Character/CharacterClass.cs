@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum AbilityUpgrade
 {
@@ -47,11 +48,11 @@ public class CharacterClass : MonoBehaviour
         uniqueAbilityUses = 0;
     }
 
-    public virtual void Attack(Character parent)
+    public virtual void Attack(Character parent, InputAction.CallbackContext context)
     {
        
     }
-    public virtual void Defence(Character parent)
+    public virtual void Defence(Character parent, InputAction.CallbackContext context)
     {
        
     }
@@ -61,11 +62,11 @@ public class CharacterClass : MonoBehaviour
         // Disattivo eventuali modifiche al prefab
     }
 
-    public virtual void UseUniqueAbility(Character parent)
+    public virtual void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
        
     }
-    public virtual void UseExtraAbility(Character parent)
+    public virtual void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
       
     }

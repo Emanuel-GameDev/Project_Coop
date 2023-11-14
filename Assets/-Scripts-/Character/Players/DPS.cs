@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DPS : CharacterClass
 {
@@ -100,7 +101,7 @@ public class DPS : CharacterClass
 
     //Attack: combo rapida di tre attacchi melee, ravvicinati. 
     #region Attack
-    public override void Attack(Character parent)
+    public override void Attack(Character parent, InputAction.CallbackContext context)
     {
         if (!IsAttacking)
         {
@@ -156,7 +157,7 @@ public class DPS : CharacterClass
 
     //Defense: fa una schivata, si sposta di tot distanza verso la direzione decisa dal giocatore con uno scatto
     #region Defense
-    public override void Defence(Character parent)
+    public override void Defence(Character parent, InputAction.CallbackContext context)
     {
         Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
         if (Time.time > lastDodgeTime + dodgeCooldown)
@@ -188,7 +189,7 @@ public class DPS : CharacterClass
 
     //UniqueAbility: immortalità per tot secondi
     #region UniqueAbility
-    public override void UseUniqueAbility(Character parent)
+    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
         Utility.DebugTrace($"Executed: {!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown}");
         if (!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown)
@@ -211,7 +212,7 @@ public class DPS : CharacterClass
 
     //ExtraAbility: è l'ability upgrade 1
     #region ExtraAbility
-    public override void UseExtraAbility(Character parent)
+    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
         if (dashAttackUnlocked)
         {
