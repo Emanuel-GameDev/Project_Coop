@@ -62,21 +62,25 @@ public class PlayerCharacter : Character
 
     public void SwitchUp(InputAction.CallbackContext context)
     {
-        GameManager.Instance.coopManager.SwitchCharacter(this, 0);
+        if (context.performed)
+            GameManager.Instance.coopManager.SwitchCharacter(this, 0);
     }
 
     public void SwitchRight(InputAction.CallbackContext context)
     {
-        GameManager.Instance.coopManager.SwitchCharacter(this, 1);
+        if(context.performed)
+            GameManager.Instance.coopManager.SwitchCharacter(this, 1);
     }
 
     public void SwitchDown(InputAction.CallbackContext context)
     {
-        GameManager.Instance.coopManager.SwitchCharacter(this, 2);
+        if (context.performed)
+            GameManager.Instance.coopManager.SwitchCharacter(this, 2);
     }
     public void SwitchLeft(InputAction.CallbackContext context)
     {
-        GameManager.Instance.coopManager.SwitchCharacter(this, 3);
+        if (context.performed)
+            GameManager.Instance.coopManager.SwitchCharacter(this, 3);
     }
 
     #endregion

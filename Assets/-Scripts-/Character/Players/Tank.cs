@@ -112,4 +112,11 @@ public class Tank : CharacterClass
             comboIndex = 0;
         }
     }
+
+    public override void Disable(Character character)
+    {
+        base.Disable(character);
+
+        Debug.Log(hyperArmorUnlocked);
+    }
 }

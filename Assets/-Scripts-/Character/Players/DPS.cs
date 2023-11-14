@@ -311,7 +311,7 @@ public class DPS : CharacterClass
 
     public override void Disable(Character character)
     {
-        base.Disable(character);
+        //base.Disable(character);
         if (projectileDeflectionUnlocked)
             RemoveDeflect();
     }
