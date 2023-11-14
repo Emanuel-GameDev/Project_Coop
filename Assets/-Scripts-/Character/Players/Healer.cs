@@ -163,6 +163,9 @@ public class Healer : CharacterClass
 
     public override void Move(Vector2 direction, Rigidbody rb)
     {
+        //Di prova
+        //Vector2 newDirection = Quaternion.Euler(0,0,-45)*direction;
+
         base.Move(direction, rb);
         PlayerCharacter player = (PlayerCharacter) character;
 
@@ -220,7 +223,7 @@ public class Healer : CharacterClass
 
         float radius = 1;
 
-        //calcolo area
+        //calcolo raggio area
         if (upgradeStatus[AbilityUpgrade.Ability2])
             radius = healAreaRadius + healAreaIncrementedRadious;
         else
