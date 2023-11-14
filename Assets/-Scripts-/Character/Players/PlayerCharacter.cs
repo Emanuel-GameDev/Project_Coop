@@ -58,6 +58,29 @@ public class PlayerCharacter : Character
 
     #endregion
 
+    #region SwitchCharacters
+
+    public void SwitchUp(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.coopManager.SwitchCharacter(this, 0);
+    }
+
+    public void SwitchRight(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.coopManager.SwitchCharacter(this, 1);
+    }
+
+    public void SwitchDown(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.coopManager.SwitchCharacter(this, 2);
+    }
+    public void SwitchLeft(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.coopManager.SwitchCharacter(this, 3);
+    }
+
+    #endregion
+
     public void AttackInput(InputAction.CallbackContext context)
     {
         Attack(context);
