@@ -1,5 +1,7 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Tank : CharacterClass
 {
@@ -34,52 +36,63 @@ public class Tank : CharacterClass
     private bool isAttacking = false;
     private int comboIndex = 0;
     private int comboMax = 2;
+    private float rangeAggro = math.INFINITY;
+    private bool canPressInput;
+
+    private bool DAELIMJINARE;
 
 
     //se potenziamento 1 ha 2 attacchi
-    public override void Attack(Character parent)
+    public override void Attack(Character parent, UnityEngine.InputSystem.InputAction.CallbackContext context)
+
     {
         isAttacking = true;  
         if(comboIndex == 0)
         {
             animator.SetTrigger("Attack1");
         }
-        //se potenziamento 3 attiva hyperArmor da animazione
+        else if(canPressInput)
+        {
+            animator.SetTrigger("Attack2");
+        }       
 
+        
         //se potenziamento boss fight attacco caricato 
         //se potenziamento 5 attacco caricato (Da decidere)
+
         Debug.Log($"Attack[{comboIndex}  canDoubleAttack[{canDoubleAttack}  hasHyperArmor[{hyperArmorUnlocked}]");
     }
-    public override void Defence(Character parent)
+    public override void Defence(Character parent, InputAction.CallbackContext context)
     {
-        base.Defence(parent);
+        base.Defence(parent,context);
         //se potenziamento 4 parata perfetta fa danno
     }
-    public override void UseExtraAbility(Character parent)
+    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
-        base.UseExtraAbility(parent);
+        base.UseExtraAbility(parent, context);
         //se potenziamento boss attacco caricato e potenziamento 2 più stun
     }
-    public override void UseUniqueAbility(Character parent)
+
+    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
-        base.UseUniqueAbility(parent);
+        base.UseUniqueAbility(parent, context);
+
         //attacco attiro aggro
     }
-    public override void TakeDamage(float damage, Damager dealer)
+    public override void TakeDamage(float damage, IDamager dealer)
     {
         if(hyperArmorOn == false)
         {
             DoHitReacion();
         }
         
-        //se sta attacando e potenziamento 3 sbloccato non interrompe attacco
+        
     }
 
     private void DoHitReacion()
     {
-        throw new NotImplementedException();
+       
     }
-
     public void ActivateHyperArmor()
     {
         if(hyperArmorUnlocked)
@@ -90,5 +103,13 @@ public class Tank : CharacterClass
     public void DeactivateHyperArmor()
     { 
         hyperArmorOn = false;
+    }
+    public void IncreaseComboIndex()
+    {
+        comboIndex++;
+        if(comboIndex >1 )
+        {
+            comboIndex = 0;
+        }
     }
 }

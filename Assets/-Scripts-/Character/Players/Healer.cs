@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.InputSystem;
 
 public class Healer : CharacterClass
 {
@@ -77,8 +78,40 @@ public class Healer : CharacterClass
     private float lastUniqueAbilityUseTime;
     private int bossPowerUpHitCount;
 
+
     float uniqueAbilityTimer;
     float mineAbilityTimer;
+
+    public override void Inizialize(CharacterData characterData, Character character)
+    {
+        base.Inizialize(characterData, character);
+        transform.position = character.transform.position;
+        playerInArea = new List<PlayerCharacter>();
+        smallHealAreaCollider = gameObject.AddComponent<CapsuleCollider>();
+        smallHealAreaCollider.isTrigger = true;
+        smallHealAreaCollider.height = 1.5f;
+        smallHealAreaCollider.radius = smallHealAreaRadius;
+
+
+        //provvisorio
+        instantiatedHealIcon = Instantiate(healIcon);
+        MoveIcon(transform);
+    }
+
+
+    private void MoveIcon(Transform newParent)
+    {
+        instantiatedHealIcon.transform.SetParent(newParent);
+        instantiatedHealIcon.transform.localPosition = new Vector3(0, 1, 0);
+    }
+
+    
+    //Attack: colpo singolo, incremento colpi consecutivi senza subire danni contro boss
+    public override void Attack(Character parent, UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        
+    }
+
 
 
     private void OnTriggerEnter(Collider other)
@@ -148,18 +181,8 @@ public class Healer : CharacterClass
 
 
 
-    public override void Inizialize(CharacterData characterData, Character character)
-    {
-        base.Inizialize(characterData, character);
-        transform.position = character.transform.position;
-        playerInArea = new List<PlayerCharacter>();
-    }
-
-    private void MoveIcon(Transform newParent)
-    {
-        instantiatedHealIcon.transform.SetParent(newParent);
-        instantiatedHealIcon.transform.localPosition = new Vector3(0, 1, 0);
-    }
+ 
+    
 
     public override void Move(Vector2 direction, Rigidbody rb)
     {
@@ -200,14 +223,10 @@ public class Healer : CharacterClass
 
     }
 
-    //Attack: colpo singolo, incremento colpi consecutivi senza subire danni contro boss
-    public override void Attack(Character parent)
-    {
-        
-    }
+    
 
     //Defense: cura ridotta singola
-    public override void Defence(Character parent)
+    public override void Defence(Character parent, InputAction.CallbackContext context)
     {
         if (nearestPlayer == null)
             TakeDamage(-smallHeal, null);
@@ -216,7 +235,7 @@ public class Healer : CharacterClass
     }
 
     //UniqueAbility: lancia area di cura
-    public override void UseUniqueAbility(Character parent)
+    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
         if (uniqueAbilityTimer < UniqueAbilityCooldown)
             return;
@@ -251,7 +270,7 @@ public class Healer : CharacterClass
 
 
     //ExtraAbility: piazza mina di cura
-    public override void UseExtraAbility(Character parent)
+    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
         if (/*upgradeStatus[AbilityUpgrade.Ability3]*/ true)
         {
@@ -265,7 +284,7 @@ public class Healer : CharacterClass
         }
     }
 
-    public override void TakeDamage(float damage, Damager dealer)
+    public override void TakeDamage(float damage, IDamager dealer)
     {
         base.TakeDamage(damage, dealer);
         currentHp -= damage;

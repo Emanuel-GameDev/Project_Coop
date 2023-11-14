@@ -58,26 +58,22 @@ public class PlayerCharacter : Character
 
     public void Attack_performed(InputAction.CallbackContext context)
     {
-        if (context.performed)
-            Attack();
+            Attack(context);
     }
 
     public void UniqueAbility_performed(InputAction.CallbackContext context)
     {
-        if (context.performed)
-            UseUniqueAbility();
+            UseUniqueAbility(context);
     }
 
     public void ExtraAbility_performed(InputAction.CallbackContext context)
     {
-        if (context.performed)
-            UseExtraAbility();
+            UseExtraAbility(context);
     }
 
     public void Defense_performed(InputAction.CallbackContext context)
     {
-        if (context.performed)
-            Defend();
+            Defend(context);
     }
 
     public void Move_performed(InputAction.CallbackContext context)

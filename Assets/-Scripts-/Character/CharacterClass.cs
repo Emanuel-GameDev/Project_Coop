@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum AbilityUpgrade
 {
@@ -47,11 +48,11 @@ public class CharacterClass : MonoBehaviour
         uniqueAbilityUses = 0;
     }
 
-    public virtual void Attack(Character parent)
+    public virtual void Attack(Character parent, InputAction.CallbackContext context)
     {
        
     }
-    public virtual void Defence(Character parent)
+    public virtual void Defence(Character parent, InputAction.CallbackContext context)
     {
        
     }
@@ -61,18 +62,20 @@ public class CharacterClass : MonoBehaviour
         // Disattivo eventuali modifiche al prefab
     }
 
-    public virtual void UseUniqueAbility(Character parent)
+    public virtual void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
        
     }
-    public virtual void UseExtraAbility(Character parent)
+    public virtual void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
       
     }
-    public virtual void TakeDamage(float damage, Damager dealer)
+    public virtual void TakeDamage(float damage, IDamager dealer)
     {
 
     }
+
+    public virtual float GetDamage() => Damage;
 
     #region Move
     //dati x e z chiama Move col Vector2
@@ -118,6 +121,7 @@ public class CharacterClass : MonoBehaviour
     internal void RemovePowerUp(PowerUp powerUp) => powerUpData.Remove(powerUp);
 
     internal List<PowerUp> GetPowerUpList() => powerUpData._powerUpData;
+
 
 
     #endregion

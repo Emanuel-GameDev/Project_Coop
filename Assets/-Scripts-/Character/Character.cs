@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class Character : MonoBehaviour, IDamageable
+public class Character : MonoBehaviour, IDamageable, IDamager
 {
     [SerializeField] protected CharacterData characterData;
     [SerializeField] protected Damager attackDamager;
@@ -27,12 +28,13 @@ public class Character : MonoBehaviour, IDamageable
         rb = GetComponent<Rigidbody>();      
         characterData.Inizialize(this);
         attackDamager = GetComponentInChildren<Damager>();
+        attackDamager.SetSource(this);
     }
 
-    protected virtual void Attack() => characterClass.Attack(this);
-    protected virtual void Defend() => characterClass.Defence(this);
-    public virtual void UseUniqueAbility() => characterClass.UseUniqueAbility(this);
-    public virtual void UseExtraAbility() => characterClass.UseExtraAbility(this);
+    protected virtual void Attack(InputAction.CallbackContext context) => characterClass.Attack(this, context);
+    protected virtual void Defend(InputAction.CallbackContext context) => characterClass.Defence(this, context);
+    public virtual void UseUniqueAbility(InputAction.CallbackContext context) => characterClass.UseUniqueAbility(this, context);
+    public virtual void UseExtraAbility(InputAction.CallbackContext context) => characterClass.UseExtraAbility(this, context);
     protected virtual void Move(Vector2 direction) => characterClass.Move(direction, rb);
 
 
@@ -53,7 +55,6 @@ public class Character : MonoBehaviour, IDamageable
     public Damager GetDamager() => attackDamager;
     public Rigidbody GetRigidBody() => rb;
 
-    public virtual void TakeDamage(float damage, Damager dealer) => characterClass.TakeDamage(damage, dealer);
-
-    
+    public virtual void TakeDamage(float damage, IDamager dealer) => characterClass.TakeDamage(damage, dealer);
+    public float GetDamage() => characterClass.GetDamage();
 }
