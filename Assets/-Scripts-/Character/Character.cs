@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Character : MonoBehaviour, IDamageable, IDamager
 {
@@ -30,10 +31,10 @@ public class Character : MonoBehaviour, IDamageable, IDamager
         attackDamager.SetSource(this);
     }
 
-    protected virtual void Attack() => characterClass.Attack(this);
-    protected virtual void Defend() => characterClass.Defence(this);
-    public virtual void UseUniqueAbility() => characterClass.UseUniqueAbility(this);
-    public virtual void UseExtraAbility() => characterClass.UseExtraAbility(this);
+    protected virtual void Attack(InputAction.CallbackContext context) => characterClass.Attack(this, context);
+    protected virtual void Defend(InputAction.CallbackContext context) => characterClass.Defence(this, context);
+    public virtual void UseUniqueAbility(InputAction.CallbackContext context) => characterClass.UseUniqueAbility(this, context);
+    public virtual void UseExtraAbility(InputAction.CallbackContext context) => characterClass.UseExtraAbility(this, context);
     protected virtual void Move(Vector2 direction) => characterClass.Move(direction, rb);
 
 
@@ -46,6 +47,7 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     public void SetCharacterData(CharacterData newCharData)
     {
         characterData.Disable(this);
+        Destroy(characterClass.gameObject);
         characterData = newCharData;
         characterData.Inizialize(this);
     }

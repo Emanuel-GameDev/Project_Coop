@@ -44,6 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2de632904a0ecf48920e0fa6a2dcd65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  onTrigger:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7461498262193410672
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,7 +232,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7737284560217082375}
         m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: Move_performed
+        m_MethodName: MoveInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -242,7 +248,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7737284560217082375}
         m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: Look_performed
+        m_MethodName: LookInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -258,7 +264,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7737284560217082375}
         m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: Attack_performed
+        m_MethodName: AttackInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -274,7 +280,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7737284560217082375}
         m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: Defense_performed
+        m_MethodName: DefenseInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -290,7 +296,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7737284560217082375}
         m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: UniqueAbility_performed
+        m_MethodName: UniqueAbilityInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -305,8 +311,8 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7737284560217082375}
-        m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: ExtraAbility_performed
+        m_TargetAssemblyTypeName: Character, Assembly-CSharp
+        m_MethodName: UseExtraAbility
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -362,8 +368,24 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 2bf89b73-9e71-4a6a-bb6e-7fea20474b85
     m_ActionName: Player/Join[/Keyboard/p]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2551a348-2e2a-4d67-82bf-a72fcfa12c1d
+    m_ActionName: Player/Switch1[/XInputControllerWindows/dpad/up,/XInputControllerWindows1/dpad/up,/Keyboard/1]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 444cf371-e82f-4147-90ff-5a3d1652be96
+    m_ActionName: Player/Switch2[/XInputControllerWindows/dpad/right,/XInputControllerWindows1/dpad/right,/Keyboard/2]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d698456d-4c82-4fb3-9796-619c7bc8aa5a
+    m_ActionName: Player/Switch3[/XInputControllerWindows/dpad/down,/XInputControllerWindows1/dpad/down,/Keyboard/3]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 42e63258-31a6-4d7d-b6cc-02d8b80cc69f
+    m_ActionName: Player/Switch4[/XInputControllerWindows/dpad/left,/XInputControllerWindows1/dpad/left,/Keyboard/4]
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Gamepad
+  m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
