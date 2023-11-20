@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.TextCore.Text;
 
-public class HealArea : MonoBehaviour,IDamager
+public class HealArea : MonoBehaviour
 {
     [SerializeField] float expireTime = 10;
 
@@ -26,17 +26,15 @@ public class HealArea : MonoBehaviour,IDamager
     private List<Character> characterInArea;
     
     float timer=0;
+    float DOTTimer = 0;
+    float countdown = 1;
 
     private bool damage = false;
     private bool slow = false;
     private bool debilitate = false;
 
-    IDamager source;
 
-    [SerializeField]
-    UnityEvent<Collider> onTrigger = new();
-
-    public void Initialize(float expireTime,float tikPerSecond, float radius, bool damage, bool slow, bool debilitate)
+    public void Initialize(GameObject spawner, float expireTime,float tikPerSecond, float radius, bool damage, bool slow, bool debilitate)
     {
         this.expireTime = expireTime;
         this.tikPerSecond = tikPerSecond;
@@ -46,107 +44,99 @@ public class HealArea : MonoBehaviour,IDamager
         this.debilitate = debilitate;
 
         characterInArea = new List<Character>();
+
+        if(spawner != null && spawner.GetComponentInParent<PlayerCharacter>()!=null)
+        {
+            transform.SetParent(spawner.transform);
+            characterInArea.Add(spawner.GetComponentInParent<PlayerCharacter>());
+        }
+
+        countdown = 1 / tikPerSecond;
+        transform.localScale = new Vector3(radius, radius, radius);
+        DOTTimer = countdown;
     }
 
-    private void Awake()
-    {
-        source ??= GetComponentInParent<IDamager>();
-        source ??= GetComponent<IDamager>();
-        source ??= GetComponentInChildren<IDamager>();
-    }
+    //private void Awake()
+    //{
+    //    source ??= GetComponentInParent<IDamager>();
+    //    source ??= GetComponent<IDamager>();
+    //    source ??= GetComponentInChildren<IDamager>();
+    //}
 
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<Character>())
             characterInArea.Add(other.gameObject.GetComponent<Character>());
-
-        if (other.gameObject.GetComponent<Character>() is PlayerCharacter)
-        {
-            //regene amici
-
-
-
-
-            DotEffect regeneEffect = other.gameObject.AddComponent<DotEffect>();
-            regeneEffect.ApplyDOT(-healPerTik, tikPerSecond);
-
-            statusEffectApplied.Add(regeneEffect);
-        }
-
-
-        //EnemyCharacter al posto di playerCharacter
-        if (other.gameObject.GetComponent<Character>() is PlayerCharacter)
-        {
-            //danneggia nemici
-            if(damage)
-            {
-                DotEffect dotEffect = other.gameObject.AddComponent<DotEffect>();
-                dotEffect.ApplyDOT(DOTPerTik, tikPerSecond);
-
-                statusEffectApplied.Add(dotEffect);
-            }
-
-            //rallenta nemici
-            if(slow)
-            {
-                other.gameObject.GetComponent<Character>().AddPowerUp(slowDown);
-            }
-
-            //indebolisci nemici
-            if (debilitate)
-            {
-
-            }
-
-        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (characterInArea.Contains(other.gameObject.GetComponent<Character>()))
         {
-            if (other.gameObject.GetComponent<DotEffect>())
-                RemoveEffects(other.gameObject.GetComponent<Character>());
-
             characterInArea.Remove(other.gameObject.GetComponent<Character>());
         }
         //Deregistrati a lista character
     }
 
-    private void RemoveEffects(Character character)
+    public void ApplyDOT()
     {
-        foreach (StatusEffectBehaviour effect in character.gameObject.GetComponents<StatusEffectBehaviour>()) 
+        foreach (Character c in characterInArea)
         {
-            if(statusEffectApplied.Contains(effect))
-                effect.RemoveDOT();
+            if (c is PlayerCharacter)
+            {
+                //regene amici
+                c.TakeDamage(healPerTik, null);
+            }
 
-            statusEffectApplied.Remove(effect);
+
+            //EnemyCharacter al posto di playerCharacter
+            if (c is PlayerCharacter)
+            {
+                //danneggia nemici
+                if (damage)
+                {
+                    c.TakeDamage(DOTPerTik, null);
+                }
+
+                //rallenta nemici
+                if (slow)
+                {
+                    c.AddPowerUp(slowDown);
+                }
+
+                //indebolisci nemici
+                if (debilitate)
+                {
+
+                }
+            }
         }
-
-        character.RemovePowerUp(slowDown);
     }
 
-    private void Start()
-    {
-        transform.localScale=new Vector3(radius,radius,radius);
-    }
 
 
     private void Update()
     {
+        ElapseDOTTimer();
         ExpireCountdown();
+    }
+
+    private void ElapseDOTTimer()
+    {
+        if (DOTTimer >= countdown)
+        {
+            ApplyDOT();
+            DOTTimer = 0;
+        }
+
+        DOTTimer += Time.deltaTime;
     }
 
     private void ExpireCountdown()
     {
         if (timer >= expireTime)
         {
-            foreach (Character character in characterInArea)
-            {
-                RemoveEffects(character);
-            }
-
             Destroy(gameObject);
 
             timer = 0;
@@ -155,8 +145,5 @@ public class HealArea : MonoBehaviour,IDamager
         timer += Time.deltaTime;
     }
 
-    public float GetDamage()
-    {
-        throw new NotImplementedException();
-    }
+    
 }

@@ -217,14 +217,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7046500573469630641}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 17, y: 0.318, z: 1.86}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 17.024868, y: 0.3722012, z: 1.7208842}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4599015545499789007}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &3689885701685639481
 Animator:
   serializedVersion: 5
@@ -264,7 +264,7 @@ MonoBehaviour:
     type: 3}
   smallHeal: 5
   singleHealCooldown: 5
-  smallHealAreaRadius: 1
+  smallHealAreaRadius: 2
   healMine: {fileID: 5625512617348793040, guid: 2186adaa1671c884ca63c9ed27490efb,
     type: 3}
   mineHealQuantity: 10
@@ -275,8 +275,8 @@ MonoBehaviour:
     type: 3}
   areaDuration: 3
   healAreaRadius: 5
-  tikPerSecond: 10
-  healPerTik: 3
+  tikPerSecond: 1
+  healPerTik: 5
   DOTPerTik: 1
   healAreaIncrementedRadious: 5
   slowDown: {fileID: 11400000, guid: 02dd0b24375e42649a232ae5881994d6, type: 2}
