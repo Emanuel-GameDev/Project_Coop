@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DPS : CharacterClass
 {
@@ -33,7 +34,7 @@ public class DPS : CharacterClass
     [SerializeField, Tooltip("Durata del danno extra conferito dal potenziamento del boss dopo l'ultimo colpo inferto.")]
     float bossPowerUpExtraDamageDuration = 2.5f;
     [Header("Other")]
-    [SerializeField]
+    [SerializeField, Tooltip("I Layer da guardare quando ha sbloccato il power up per deflettere i proiettili")]
     LayerMask projectileLayer;
 
 
@@ -71,7 +72,7 @@ public class DPS : CharacterClass
 
     #region Animation Variable
     private static string ATTACK = "Attack";
-    //private static string DODGE = "Dodge";
+    private static string DODGE = "Dodge";
     //private static string HIT = "Hit";
     //private static string UNIQUE_ABILITY = "UniqueAbility";
     //private static string EXTRA_ABILITY = "ExtraAbility";
@@ -95,21 +96,28 @@ public class DPS : CharacterClass
         isInvulnerable = false;
         isDodging = false;
         IsAttacking = false;
+
+        Debug.Log(projectileDeflectionUnlocked);
     }
 
 
     //Attack: combo rapida di tre attacchi melee, ravvicinati. 
     #region Attack
-    public override void Attack(Character parent)
+    public override void Attack(Character parent, InputAction.CallbackContext context)
     {
-        if (!IsAttacking)
+        if (context.performed)
         {
-            if (CanStartCombo())
-                StartCombo();
+            if (!IsAttacking)
+            {
+                if (CanStartCombo())
+                    StartCombo();
+            }
+            else
+                ContinueCombo();
+            Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n CurrentComboState: {currentComboState}, NextComboState: {nextComboState}");
+
         }
-        else
-            ContinueCombo();
-        Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n CurrentComboState: {currentComboState}, NextComboState: {nextComboState}");
+
     }
     private void StartCombo()
     {
@@ -156,14 +164,17 @@ public class DPS : CharacterClass
 
     //Defense: fa una schivata, si sposta di tot distanza verso la direzione decisa dal giocatore con uno scatto
     #region Defense
-    public override void Defence(Character parent)
+    public override void Defence(Character parent, InputAction.CallbackContext context)
     {
-        Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
-        if (Time.time > lastDodgeTime + dodgeCooldown)
+        if (context.performed)
         {
-            lastDodgeTime = Time.time + dodgeDuration;
-            StartCoroutine(Dodge(lastDirection, parent.GetRigidBody()));
-            Debug.Log(lastDirection);
+            Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
+            if (Time.time > lastDodgeTime + dodgeCooldown)
+            {
+                lastDodgeTime = Time.time + dodgeDuration;
+                StartCoroutine(Dodge(lastDirection, parent.GetRigidBody()));
+                Debug.Log(lastDirection);
+            }
         }
     }
 
@@ -172,7 +183,7 @@ public class DPS : CharacterClass
         if (!isDodging)
         {
             isDodging = true;
-            //animator.SetBool(DODGE, isDodging);
+            animator.SetBool(DODGE, isDodging);
             Vector3 dodgeDirection3D = new Vector3(dodgeDirection.x, 0f, dodgeDirection.y).normalized;
             rb.velocity = dodgeDirection3D * (dodgeDistance / dodgeDuration);
 
@@ -181,21 +192,25 @@ public class DPS : CharacterClass
             rb.velocity = Vector3.zero;
 
             isDodging = false;
-            //animator.SetBool(DODGE, isDodging);
+            animator.SetBool(DODGE, isDodging);
         }
     }
     #endregion
 
     //UniqueAbility: immortalità per tot secondi
     #region UniqueAbility
-    public override void UseUniqueAbility(Character parent)
+    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
-        Utility.DebugTrace($"Executed: {!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown}");
-        if (!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown)
+        if (context.performed)
         {
-            lastUniqueAbilityUseTime = Time.time;
-            uniqueAbilityUses++;
-            StartCoroutine(UseUniqueAbilityCoroutine());
+
+            Utility.DebugTrace($"Executed: {!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown}");
+            if (!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown)
+            {
+                lastUniqueAbilityUseTime = Time.time;
+                uniqueAbilityUses++;
+                StartCoroutine(UseUniqueAbilityCoroutine());
+            }
         }
     }
 
@@ -211,13 +226,17 @@ public class DPS : CharacterClass
 
     //ExtraAbility: è l'ability upgrade 1
     #region ExtraAbility
-    public override void UseExtraAbility(Character parent)
+    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
-        if (dashAttackUnlocked)
+        if (context.performed)
         {
-            //Scatto in avanti più attacco
+
+            if (dashAttackUnlocked)
+            {
+                //Scatto in avanti più attacco
+            }
+            Utility.DebugTrace();
         }
-        Utility.DebugTrace();
     }
     #endregion
 
@@ -243,7 +262,6 @@ public class DPS : CharacterClass
         base.UnlockUpgrade(abilityUpgrade);
         if (abilityUpgrade == AbilityUpgrade.Ability3)
             character.GetDamager().AssignFunctionToOnTrigger(DeflectProjectile);
-                //gameObject.AddComponent<DeflectProjectile>();
         Debug.Log("Unlock" + abilityUpgrade.ToString());
     }
 
@@ -256,18 +274,15 @@ public class DPS : CharacterClass
 
     public void DeflectProjectile(Collider collider)
     {
-        if(Utility.IsInLayerMask(collider.gameObject.layer, projectileLayer))
+        if (Utility.IsInLayerMask(collider.gameObject.layer, projectileLayer))
         {
             //Defletti il proiettile
         }
-           
+
     }
 
     private void RemoveDeflect()
     {
-        //DeflectProjectile deflect = character.GetDamager().gameObject.GetComponent<DeflectProjectile>();
-        //if (deflect != null)
-        //    Destroy(deflect);
         character.GetDamager().RemoveFunctionFromOnTrigger(DeflectProjectile);
     }
 

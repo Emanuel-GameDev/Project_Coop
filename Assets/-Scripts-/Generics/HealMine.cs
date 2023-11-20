@@ -35,7 +35,7 @@ public class HealMine : MonoBehaviour
     {
         GetComponent<CapsuleCollider>().radius = radius;
     }
-
+    
     private void Update()
     {
         if (timer >= activationTime)
