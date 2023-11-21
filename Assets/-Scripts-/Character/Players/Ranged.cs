@@ -1,4 +1,5 @@
 
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -15,6 +16,8 @@ public class Ranged : CharacterClass
 
     //base Attack
     public override float AttackSpeed => base.AttackSpeed;
+    public override float UniqueAbilityCooldown => base.UniqueAbilityCooldown;
+
     float fireTimer;
 
     [Header("Variabili attacco")]
@@ -28,8 +31,10 @@ public class Ranged : CharacterClass
     [Header("Abilità unica")]
 
     [SerializeField, Tooltip("tempo necessario per colpo potenziato")]
-    float empowerFireCoolDown = 1.5f;
-    float empowerFireTimer = 0; //timer da caricare
+    float empowerFireChargeTime = 1.5f;
+    float empowerStartTimer = 0; //timer da caricare
+    float empowerCoolDownTimer=0;
+    bool canUseUniqueAbility => empowerCoolDownTimer <= 0;
     [SerializeField, Tooltip("Aumento gittata per colpo potenziato")]
     float empowerAdditionalRange = 15f;
     [SerializeField, Tooltip("moltiplicatore danno per colpo potenziato")]
@@ -70,6 +75,13 @@ public class Ranged : CharacterClass
 
     private Vector2 lastDirection;
 
+    private bool reduceFireCoolDownUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
+    private bool multiBaseAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
+    private bool dodgeTeleportBossUnlocked=> upgradeStatus[AbilityUpgrade.Ability3];
+    private bool dodgeDamageUnlocked => upgradeStatus[AbilityUpgrade.Ability4];
+    private bool landMineUnlocked=> upgradeStatus[AbilityUpgrade.Ability5];
+
+
 
 
 
@@ -82,25 +94,67 @@ public class Ranged : CharacterClass
 
 
     public override void Attack(Character parent, InputAction.CallbackContext context)
-    {
-        if (context.performed ) // premuto
+    {              
+        if (context.performed)
         {
-            
-        }
-
-        if(context.canceled) 
-        {
-            if (context.duration >= empowerFireCoolDown) // durata
+            if (fireTimer > 0)
             {
+                Debug.Log("In ricarica...");
 
-                if (fireTimer > 0)
-                {
-                    Debug.Log("In ricarica...");
+                return;
+                //inserire suono (?)
+            }
 
-                    return;
-                    //inserire suono (?)
-                }
+            Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
 
+            //controllo che la look non sia zero, possibilità solo se si una il controller
+            if (_look != Vector3.zero)
+            {
+                lookDirection = _look;
+            }
+
+            //in futuro inserire il colpo avanzato
+            BasicFireProjectile(lookDirection);
+
+            fireTimer = AttackSpeed;
+
+            Debug.Log("colpo normale");
+        }       
+    }
+
+    public override void Defence(Character parent, InputAction.CallbackContext context)
+    {
+        base.Defence(parent, context);
+    }
+
+    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context) //E
+    {
+        base.UseExtraAbility(parent, context);
+    }
+
+    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context) //Q
+    {
+
+        if (context.performed)
+        {
+            if (empowerCoolDownTimer > 0)
+            {
+                Debug.Log("In ricarica...(abilità unica)");
+
+                return;
+                //inserire suono (?)
+            }
+
+            empowerStartTimer = Time.time;
+           
+        }
+        else if (context.canceled && canUseUniqueAbility)
+        {
+            float endTimer = Time.time;
+
+            if(endTimer - empowerStartTimer > empowerFireChargeTime)
+            {
+                
                 Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
 
                 //controllo che la look non sia zero, possibilità solo se si una il controller
@@ -112,72 +166,20 @@ public class Ranged : CharacterClass
                 //in futuro inserire il colpo avanzato
                 EmpowerFireProjectile(lookDirection);
 
-                fireTimer = AttackSpeed;
+                empowerCoolDownTimer = UniqueAbilityCooldown;
 
-                Debug.Log("colpo caricato");
+                Debug.Log("colpo potenziato");
             }
-
-            Debug.Log(context.duration);
         }
 
         
-
-       
-        
-        //{
-        //    if (fireTimer > 0)
-        //    {
-        //        Debug.Log("In ricarica...");
-
-        //        return;
-        //        //inserire suono (?)
-        //    }
-
-        //    Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
-
-        //    //controllo che la look non sia zero, possibilità solo se si una il controller
-        //    if (_look != Vector3.zero)
-        //    {
-        //        lookDirection = _look;
-        //    }
-
-        //    //in futuro inserire il colpo avanzato
-        //    BasicFireProjectile(lookDirection);
-
-        //    fireTimer = AttackSpeed;
-
-        //    Debug.Log("colpo normale");
-        //}
-
-        //if (context.canceled) // lascio
-        //{
-           
-        //}
-
-        
-        
-    }
-
-    public override void Defence(Character parent, InputAction.CallbackContext context)
-    {
-        base.Defence(parent, context);
-    }
-
-    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
-    {
-        base.UseExtraAbility(parent, context);
-    }
-
-    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
-    {
-
-        EmpowerFireProjectile(lookDirection);
 
     }
 
     //Sparo normale
     private void BasicFireProjectile(Vector3 direction)
     {
+
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
         newProjectile.transform.position = transform.position;
@@ -199,9 +201,16 @@ public class Ranged : CharacterClass
     //vari coolDown del personaggio
     private void CoolDownManager()
     {
+        //sparo normale
         if (fireTimer > 0)
         {
             fireTimer -= Time.deltaTime;
+        }
+
+        //abilità unica (colpo caricato)
+        if(empowerCoolDownTimer > 0)
+        {
+            empowerCoolDownTimer -= Time.deltaTime;
         }
     }
 
