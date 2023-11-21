@@ -32,6 +32,8 @@ public class Ranged : CharacterClass
 
     [SerializeField, Tooltip("tempo necessario per colpo potenziato")]
     float empowerFireChargeTime = 1.5f;
+    [SerializeField, Tooltip("tempo ridotto caricamento con potenziamento")]
+    float chargeTimeReduction = 0.5f;
     float empowerStartTimer = 0; //timer da caricare
     float empowerCoolDownTimer=0;
     bool canUseUniqueAbility => empowerCoolDownTimer <= 0;
@@ -75,11 +77,13 @@ public class Ranged : CharacterClass
 
     private Vector2 lastDirection;
 
-    private bool reduceFireCoolDownUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
+    private bool reduceEmpowerFireCoolDownUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
     private bool multiBaseAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
     private bool dodgeTeleportBossUnlocked=> upgradeStatus[AbilityUpgrade.Ability3];
     private bool dodgeDamageUnlocked => upgradeStatus[AbilityUpgrade.Ability4];
     private bool landMineUnlocked=> upgradeStatus[AbilityUpgrade.Ability5];
+
+    private float empowerCoolDownDecrease => reduceEmpowerFireCoolDownUnlocked ? chargeTimeReduction : 0;
 
 
 
@@ -92,7 +96,7 @@ public class Ranged : CharacterClass
     }
 
 
-
+    #region Attack
     public override void Attack(Character parent, InputAction.CallbackContext context)
     {              
         if (context.performed)
@@ -114,14 +118,38 @@ public class Ranged : CharacterClass
             }
 
             //in futuro inserire il colpo avanzato
-            BasicFireProjectile(lookDirection);
+            if (multiBaseAttackUnlocked)
+            {
 
-            fireTimer = AttackSpeed;
+                Debug.Log("colpo triplo");
+            }
+            else
+            {
+                BasicFireProjectile(lookDirection);
 
-            Debug.Log("colpo normale");
+                fireTimer = AttackSpeed;
+
+                Debug.Log("colpo normale");
+            }
+            
         }       
     }
 
+    //Sparo normale
+    private void BasicFireProjectile(Vector3 direction)
+    {
+
+        Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
+
+        newProjectile.transform.position = transform.position;
+
+        newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1);
+
+    }
+
+   
+
+    #endregion
     public override void Defence(Character parent, InputAction.CallbackContext context)
     {
         base.Defence(parent, context);
@@ -129,9 +157,13 @@ public class Ranged : CharacterClass
 
     public override void UseExtraAbility(Character parent, InputAction.CallbackContext context) //E
     {
-        base.UseExtraAbility(parent, context);
+        if(landMineUnlocked)
+        {
+            //lascio mina
+        }
     }
 
+    #region Unique ability
     public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context) //Q
     {
 
@@ -152,7 +184,7 @@ public class Ranged : CharacterClass
         {
             float endTimer = Time.time;
 
-            if(endTimer - empowerStartTimer > empowerFireChargeTime)
+            if(endTimer - empowerStartTimer > empowerFireChargeTime-empowerCoolDownDecrease)
             {
                 
                 Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
@@ -170,21 +202,7 @@ public class Ranged : CharacterClass
 
                 Debug.Log("colpo potenziato");
             }
-        }
-
-        
-
-    }
-
-    //Sparo normale
-    private void BasicFireProjectile(Vector3 direction)
-    {
-
-        Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
-
-        newProjectile.transform.position = transform.position;
-
-        newProjectile.Inizialize(direction, projectileRange, projectileSpeed,1);
+        }     
 
     }
 
@@ -195,8 +213,10 @@ public class Ranged : CharacterClass
 
         newProjectile.transform.position = transform.position;
 
-        newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed,empowerSizeMultiplier);
+        newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier);
     }
+
+    #endregion
 
     //vari coolDown del personaggio
     private void CoolDownManager()
