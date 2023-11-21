@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public enum AbilityUpgrade
@@ -21,6 +22,8 @@ public class CharacterClass : MonoBehaviour
     protected PowerUpData powerUpData;
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
     protected bool bossfightPowerUpUnlocked;
+    protected List<Condition> conditions;
+    protected UnityAction unityAction;
 
     public virtual float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
     //[HideInInspector]
@@ -28,7 +31,7 @@ public class CharacterClass : MonoBehaviour
 
     public virtual float Damage => characterData.Damage + powerUpData.damageIncrease;
     public virtual float MoveSpeed => characterData.MoveSpeed + powerUpData.moveSpeedIncrease;
-    public  virtual float AttackSpeed => characterData.AttackSpeed + powerUpData.attackSpeedIncrease;
+    public virtual float AttackSpeed => characterData.AttackSpeed + powerUpData.attackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => characterData.UniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease + (characterData.UniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses);
 
     protected float uniqueAbilityUses;
@@ -50,11 +53,11 @@ public class CharacterClass : MonoBehaviour
 
     public virtual void Attack(Character parent, InputAction.CallbackContext context)
     {
-       
+
     }
     public virtual void Defence(Character parent, InputAction.CallbackContext context)
     {
-       
+
     }
 
     public virtual void Disable(Character character)
@@ -64,14 +67,16 @@ public class CharacterClass : MonoBehaviour
 
     public virtual void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
-       
+
     }
     public virtual void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
-      
+
     }
-    public virtual void TakeDamage(float damage, IDamager dealer)
+    public virtual void TakeDamage(float damage, IDamager dealer, Condition condition)
     {
+        if (condition != null)
+            conditions.Add((Condition)gameObject.AddComponent(condition.GetType()));
 
     }
 
@@ -125,6 +130,5 @@ public class CharacterClass : MonoBehaviour
 
 
     #endregion
-
 
 }
