@@ -45,7 +45,7 @@ public class HealArea : MonoBehaviour
 
         characterInArea = new List<Character>();
 
-        if(spawner != null && spawner.GetComponentInParent<PlayerCharacter>()!=null)
+        if (spawner != null && spawner.GetComponentInParent<PlayerCharacter>() != null)
         {
             transform.SetParent(spawner.transform);
             characterInArea.Add(spawner.GetComponentInParent<PlayerCharacter>());
@@ -67,7 +67,15 @@ public class HealArea : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<Character>())
+        {
             characterInArea.Add(other.gameObject.GetComponent<Character>());
+
+            //Sostituire playercharacter con enemycharacter
+            if (/*slow && */other.gameObject.GetComponent<Character>() is PlayerCharacter)
+            {
+                other.gameObject.GetComponent<PlayerCharacter>().AddPowerUp(slowDown);
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -75,6 +83,8 @@ public class HealArea : MonoBehaviour
         if (characterInArea.Contains(other.gameObject.GetComponent<Character>()))
         {
             characterInArea.Remove(other.gameObject.GetComponent<Character>());
+
+            other.gameObject.GetComponent<Character>().RemovePowerUp(slowDown);
         }
         //Deregistrati a lista character
     }
@@ -99,17 +109,17 @@ public class HealArea : MonoBehaviour
                     c.TakeDamage(DOTPerTik, null);
                 }
 
-                //rallenta nemici
-                if (slow)
-                {
-                    c.AddPowerUp(slowDown);
-                }
+                ////rallenta nemici
+                //if (slow)
+                //{
+                //    c.AddPowerUp(slowDown);
+                //}
 
-                //indebolisci nemici
-                if (debilitate)
-                {
+                ////indebolisci nemici
+                //if (debilitate)
+                //{
 
-                }
+                //}
             }
         }
     }
