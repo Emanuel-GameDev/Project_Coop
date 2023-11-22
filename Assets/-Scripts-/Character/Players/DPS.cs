@@ -96,8 +96,6 @@ public class DPS : CharacterClass
         isInvulnerable = false;
         isDodging = false;
         IsAttacking = false;
-
-        Debug.Log(projectileDeflectionUnlocked);
     }
 
 
