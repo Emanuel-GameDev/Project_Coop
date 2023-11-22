@@ -194,7 +194,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 641824374}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38268346, y: -3e-45, z: 1e-45, w: 0.92387956}
+  m_LocalRotation: {x: 0.38268346, y: 1e-45, z: 0, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 16, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -334,7 +334,7 @@ PrefabInstance:
     - target: {fileID: 8346729712529157359, guid: 34f950e3c8f98484a99f7ed9d42fd12a,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -387,7 +387,7 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 257
+  m_RenderingLayerMask: 2
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
@@ -528,7 +528,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1419827497}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1838635677}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
@@ -621,7 +621,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1522672578}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38268346, y: -3e-45, z: 1e-45, w: 0.92387956}
+  m_LocalRotation: {x: 0.38268346, y: 1e-45, z: 0, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 16, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
@@ -889,6 +889,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 972996801}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1838635677 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3605962510235015332, guid: 5e4e7b014c3a19945af8275465d7addf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1419827497}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1860853801
 GameObject:
   m_ObjectHideFlags: 3
@@ -1016,6 +1022,11 @@ PrefabInstance:
       objectReference: {fileID: 1419827498}
     - target: {fileID: 726525942643775275, guid: 64a37e0cc339faf4b9a28466184282b9,
         type: 3}
+      propertyPath: playerManager
+      value: 
+      objectReference: {fileID: 1838635677}
+    - target: {fileID: 726525942643775275, guid: 64a37e0cc339faf4b9a28466184282b9,
+        type: 3}
       propertyPath: powerUpToGive
       value: 
       objectReference: {fileID: 11400000, guid: 24d3fe36fabc43a4183c8a83a5eb15ce,
@@ -1110,7 +1121,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 100000
+  m_Intensity: 8543.91
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1151,11 +1162,11 @@ Light:
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 1, y: 1}
+  m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 1
-  m_BoundingSphereOverride: {x: 0, y: 6e-44, z: 6e-45, w: 1.5802e-41}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 10}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -1187,7 +1198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Intensity: 100000
+  m_Intensity: 8543.91
   m_EnableSpotReflector: 1
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
