@@ -25,25 +25,25 @@ public class Dummy : CharacterClass
     private List<DummyData> dummyData;
 
 
-    public override void TakeDamage(float damage, IDamager dealer)
+    public override void TakeDamage(DamageData data)
     {
-        DummyData existingData = dummyData.Find(data => data.dealer == dealer);
+        DummyData existingData = dummyData.Find(dataToFind => dataToFind.dealer == data.dealer);
 
         if (existingData.dealer != null)
         {
-            existingData.damageReceived += damage;
+            existingData.damageReceived += data.damage;
         }
         else
         {
             DummyData newData = new DummyData
             {
-                damageReceived = damage,
-                dealer = dealer
+                damageReceived = data.damage,
+                dealer = data.dealer
             };
             dummyData.Add(newData);
         }
 
-        TotalDamageReceived += damage;
+        TotalDamageReceived += data.damage;
     }
 
     public override void Inizialize(CharacterData characterData, Character character)

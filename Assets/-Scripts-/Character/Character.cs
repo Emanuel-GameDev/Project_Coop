@@ -59,6 +59,6 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     public Damager GetDamager() => attackDamager;
     public Rigidbody GetRigidBody() => rb;
 
-    public virtual void TakeDamage(float damage, IDamager dealer) => characterClass.TakeDamage(damage, dealer);
+    public virtual void TakeDamage(DamageData data) => characterClass.TakeDamage(data);
     public float GetDamage() => characterClass.GetDamage();
 }

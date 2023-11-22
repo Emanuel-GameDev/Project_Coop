@@ -73,11 +73,11 @@ public class CharacterClass : MonoBehaviour
     {
 
     }
-    public virtual void TakeDamage(float damage, IDamager dealer, Condition condition)
-    {
-        if (condition != null)
-            conditions.Add((Condition)gameObject.AddComponent(condition.GetType()));
 
+    public virtual void TakeDamage(DamageData data)
+    {
+        if (data.condition != null)
+            conditions.Add((Condition)gameObject.AddComponent(data.condition.GetType()));
     }
 
     public virtual float GetDamage() => Damage;

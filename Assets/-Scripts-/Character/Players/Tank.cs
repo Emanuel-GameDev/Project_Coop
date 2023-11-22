@@ -199,7 +199,7 @@ public class Tank : CharacterClass
     #endregion
 
     #region onHit
-    public override void TakeDamage(float damage, IDamager dealer)
+    public override void TakeDamage(DamageData data)
     {
         if (hyperArmorOn == false)
         {

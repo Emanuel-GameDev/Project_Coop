@@ -10,6 +10,7 @@ public class Damager : MonoBehaviour
     LayerMask targetLayers;
 
     IDamager source;
+    Condition conditionToApply=null;
 
     [SerializeField]
     UnityEvent<Collider> onTrigger = new();
@@ -23,7 +24,7 @@ public class Damager : MonoBehaviour
             IDamageable damageable = other.GetComponent<IDamageable>();
             if (damageable != null)
             {
-                damageable.TakeDamage(source.GetDamage(), source);
+                damageable.TakeDamage(new DamageData(source.GetDamage(), source, conditionToApply));
             }
         }
     }
@@ -48,5 +49,15 @@ public class Damager : MonoBehaviour
     public void SetSource(IDamager character)
     {
         source = character;
+    }
+
+    public void SetCondition(Condition condition)
+    {
+        conditionToApply = condition;
+    }
+
+    public void RemoveCondition()
+    {
+        conditionToApply = null;
     }
 }

@@ -45,7 +45,7 @@ public class HealMine : MonoBehaviour
             {
                 foreach (PlayerCharacter character in characterInArea)
                 {
-                    character.TakeDamage(-heal, null);
+                    character.TakeDamage(new DamageData(-heal, null));
                 }
 
                 Destroy(gameObject);

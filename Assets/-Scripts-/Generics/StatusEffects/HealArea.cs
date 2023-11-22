@@ -96,7 +96,7 @@ public class HealArea : MonoBehaviour
             if (c is PlayerCharacter)
             {
                 //regene amici
-                c.TakeDamage(healPerTik, null);
+                c.TakeDamage(new DamageData(healPerTik, null));
             }
 
 
@@ -106,7 +106,7 @@ public class HealArea : MonoBehaviour
                 //danneggia nemici
                 if (damage)
                 {
-                    c.TakeDamage(DOTPerTik, null);
+                    c.TakeDamage(new DamageData(DOTPerTik, null));
                 }
 
                 ////rallenta nemici

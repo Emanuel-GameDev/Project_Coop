@@ -263,11 +263,11 @@ public class Healer : CharacterClass
             {
                 if (smallHealTimer >= singleHealCooldown)
                 {
-                    TakeDamage(-smallHeal, null);
+                    TakeDamage(new DamageData(Damage, null));
 
                     foreach (PlayerCharacter pc in playerInArea)
                     {
-                        pc.TakeDamage(-smallHeal, null);
+                        pc.TakeDamage(new DamageData(-smallHeal, null));
                     }
                     Debug.Log("smallheal");
                     smallHealTimer = 0;
@@ -332,10 +332,10 @@ public class Healer : CharacterClass
         }
     }
 
-    public override void TakeDamage(float damage, IDamager dealer)
+    public override void TakeDamage(DamageData data)
     {
-        base.TakeDamage(damage, dealer);
-        currentHp -= damage;
+        base.TakeDamage(data);
+        currentHp -= data.damage;
         bossPowerUpHitCount = 0;
     }
 

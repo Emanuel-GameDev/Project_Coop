@@ -251,10 +251,10 @@ public class DPS : CharacterClass
     }
 
 
-    public override void TakeDamage(float damage, IDamager dealer)
+    public override void TakeDamage(DamageData data)
     {
         if (!isInvulnerable)
-            base.TakeDamage(damage, dealer);
+            base.TakeDamage(data);
     }
 
     public override void UnlockUpgrade(AbilityUpgrade abilityUpgrade)
