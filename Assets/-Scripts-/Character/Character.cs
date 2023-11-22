@@ -25,9 +25,13 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     protected virtual void InitialSetup()
     {
         rb = GetComponent<Rigidbody>();      
-        characterData.Inizialize(this);
+        characterData.Inizialize(this);       
         attackDamager = GetComponentInChildren<Damager>();
-        attackDamager.SetSource(this);
+        
+        if (attackDamager != null)
+        {
+            attackDamager.SetSource(this);
+        }
     }
 
     protected virtual void Attack(InputAction.CallbackContext context) => characterClass.Attack(this, context);
