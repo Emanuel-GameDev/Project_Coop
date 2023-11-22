@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        
         if (Input.GetKeyDown(KeyCode.Space))
         {
             player.AddPowerUp(powerUpToGive);

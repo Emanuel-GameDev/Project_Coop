@@ -80,6 +80,8 @@ public class Healer : CharacterClass
     float mineAbilityTimer;
     float smallHealTimer;
 
+    public bool boolDiProva=false;
+
     public override void Inizialize(CharacterData characterData, Character character)
     {
         base.Inizialize(characterData, character);
@@ -156,7 +158,28 @@ public class Healer : CharacterClass
         {
             smallHealTimer += Time.deltaTime;
         }
+
+        if (count)
+        {
+            if (bossAbilityChargeTimer < bossAbilityCharge)
+            {
+                bossAbilityChargeTimer += Time.deltaTime;
+                //Debug.Log("Chargeing");
+            }
+            Debug.Log(bossAbilityChargeTimer);
+
+        }
+        else
+            bossAbilityChargeTimer = 0;
+
+        if (bossAbilityChargeTimer >= bossAbilityCharge)
+            bossAbilityReady=true;
+
     }
+
+    float bossAbilityChargeTimer = 0;
+    float bossAbilityCharge = 3;
+
 
     private void OnTriggerExit(Collider other)
     {
@@ -213,21 +236,46 @@ public class Healer : CharacterClass
 
     }
 
-
+    bool lastFramePressed = false;
+    bool count=false;
+    bool bossAbilityReady = false;
 
     //Defense: cura ridotta singola
     public override void Defence(Character parent, InputAction.CallbackContext context)
     {
-        if (context.performed && smallHealTimer >= singleHealCooldown)
+        if (context.performed)
         {
-            TakeDamage(-smallHeal, null);
+            count = true;
 
-            foreach (PlayerCharacter pc in playerInArea)
+            
+        }
+
+        if (context.canceled)
+        {
+
+            if (bossAbilityReady)
             {
-                pc.TakeDamage(-smallHeal, null);
+                BossAbility();
+                bossAbilityReady = false;
             }
 
-            smallHealTimer = 0;
+            if (bossAbilityChargeTimer < 0.5)
+            {
+                if (smallHealTimer >= singleHealCooldown)
+                {
+                    TakeDamage(-smallHeal, null);
+
+                    foreach (PlayerCharacter pc in playerInArea)
+                    {
+                        pc.TakeDamage(-smallHeal, null);
+                    }
+                    Debug.Log("smallheal");
+                    smallHealTimer = 0;
+                }
+            }
+
+            count = false;
+            bossAbilityChargeTimer = 0;
         }
 
     }
@@ -295,10 +343,7 @@ public class Healer : CharacterClass
     //Cura tutti i player
     public void BossAbility()
     {
-        if (bossfightPowerUpUnlocked)
-        {
-
-        }
+        Debug.Log("Cura tutti");
     }
 
 
