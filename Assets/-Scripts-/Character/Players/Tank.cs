@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class Tank : CharacterClass
     [SerializeField, Tooltip("Prefab barra stamina da applicare sopra player")]
     GameObject staminaBar;
     [SerializeField, Tooltip("Quantità di danno parabile prima di rottura parata")]
-    float maxStamina;
+    float staminaMax;
     [SerializeField, Tooltip("Danno parata perfetta")]
     float perfectBlockDamage;
 
@@ -28,9 +29,9 @@ public class Tank : CharacterClass
     [SerializeField, Tooltip("Durata buff difesa")]
     float defenceBuffDuration;
     [SerializeField, Tooltip("Moltiplicatore buff difesa")]
-    float defenceMultyplier;
+    float defenceMultiplier;
     [SerializeField, Tooltip("Moltiplicatore buff stamina")]
-    float staminaMultyplier;
+    float staminamultiplier;
 
     [Header("Bossfight Upgrade")]
     [SerializeField, Tooltip("Numero attacchi da parare perfettamente per ottenimento potenziamento bossfight")]
@@ -40,7 +41,7 @@ public class Tank : CharacterClass
     [SerializeField, Tooltip("Durata stun attacco potenziamento boss fight")]
     float chargedAttackStunDuration = 5;
     [SerializeField, Tooltip("Moltiplicatore durata stun")]
-    float stunDurationMultyplier;
+    float stunDurationMultiplier;
 
 
     private bool doubleAttack => upgradeStatus[AbilityUpgrade.Ability1];
@@ -210,6 +211,7 @@ public class Tank : CharacterClass
     {
         if (context.performed && isAttacking == false)
         {
+            ResetStamina();
             isBlocking = true;
             ShowStaminaBar(true);
             Debug.Log($"is blocking [{isBlocking}]");
@@ -225,6 +227,12 @@ public class Tank : CharacterClass
 
         //se potenziamento 4 parata perfetta fa danno
     }
+
+    private void ResetStamina()
+    {
+        currentStamina = staminaMax;
+    }
+
     public void ShowStaminaBar(bool toShow)
     {
         staminaBar.SetActive(toShow);
@@ -233,16 +241,27 @@ public class Tank : CharacterClass
 
     #region onHit
 
-    public override void TakeDamage(float damage, IDamager dealer)
-    {       
-
-   
-    }
-
-    private void DoHitReacion()
+    public override void TakeDamage(DamageData data)
     {
-
+       if(hyperArmorOn == false)
+        {
+            //Hit Reaction
+        }
+       if(isBlocking)
+        {
+            currentStamina -= data.damage;
+            if(currentStamina <= 0)
+            {
+                //Stun per 2 secondi
+            }
+        }
+        else
+        {
+            currentHp -= data.damage;
+        }
     }
+
+    
     #endregion
 
     #region UniqueAbility(Shout)
@@ -270,7 +289,7 @@ public class Tank : CharacterClass
             {
                 animator.SetTrigger("UniqueAbility");
 
-                float stunDamageDuration = maximizedStun ? (chargedAttackStunDuration * stunDurationMultyplier) : chargedAttackStunDuration;
+                float stunDamageDuration = maximizedStun ? (chargedAttackStunDuration * stunDurationMultiplier) : chargedAttackStunDuration;
                 Debug.Log($"BossFight Upgrade Attack Executed, stun duration:[{stunDamageDuration}]");
             }
         }
