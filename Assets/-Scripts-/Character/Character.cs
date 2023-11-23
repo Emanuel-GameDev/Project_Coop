@@ -10,6 +10,8 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     protected CharacterClass characterClass;
 
     public CharacterData CharacterData => characterData;
+    public CharacterClass CharacterClass => characterClass; 
+
     protected float MaxHp => characterClass.MaxHp;
     protected float currentHp => characterClass.currentHp;
     protected Rigidbody rb;
@@ -49,7 +51,7 @@ public class Character : MonoBehaviour, IDamageable, IDamager
 
     public void SetCharacterData(CharacterData newCharData)
     {
-        characterData.Disable(this);
+        characterClass.Disable(this);
         Destroy(characterClass.gameObject);
         characterData = newCharData;
         characterData.Inizialize(this);

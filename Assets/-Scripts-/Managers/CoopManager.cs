@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CoopManager : MonoBehaviour
 {
@@ -7,22 +9,60 @@ public class CoopManager : MonoBehaviour
     [SerializeField] private CharacterData switchPlayerDown;
     [SerializeField] private CharacterData switchPlayerLeft;
 
+    private List<PlayerCharacter> activePlayers = new List<PlayerCharacter>();
+    private List<CharacterData> internalSwitchList;
+
+    public InputActionMap playerActionMap { get; private set; }
+    public InputActionMap uiActionMap { get; private set; }
+
+    private void Start()
+    {
+        internalSwitchList = new List<CharacterData>()
+        {
+            switchPlayerUp,
+            switchPlayerRight,
+            switchPlayerDown,
+            switchPlayerLeft
+        };
+
+        foreach (CharacterData ch in internalSwitchList)
+        {
+            if (ch == null)
+            {
+                Debug.LogError("Missing player to switch Reference. PlayerManager/CoopManager");
+                return;
+            }
+        }
+
+        PlayerInputManager manager = GetComponent<PlayerInputManager>();
+        playerActionMap = manager.playerPrefab.GetComponent<PlayerInput>().actions.FindActionMap("Player");
+        uiActionMap = manager.playerPrefab.GetComponent<PlayerInput>().actions.FindActionMap("UI");
+
+    }
+
+
+
     public void SwitchCharacter(Character characterToSwitch, int switchInto)
     {
-        switch (switchInto)
+        foreach (PlayerCharacter player in activePlayers)
         {
-            case 0:
-                characterToSwitch.SetCharacterData(switchPlayerUp);
-                break;
-            case 1:
-                characterToSwitch.SetCharacterData(switchPlayerRight);
-                break;
-            case 2:
-                characterToSwitch.SetCharacterData(switchPlayerDown);
-                break;
-            case 3:
-                characterToSwitch.SetCharacterData(switchPlayerLeft);
-                break;
+            if (player.CharacterData == internalSwitchList[switchInto])
+                return;
         }
+
+        characterToSwitch.SetCharacterData(internalSwitchList[switchInto]);
     }
+
+    public void AddPlayer()
+    {
+        PlayerCharacter[] foundPlayersComponents = FindObjectsOfType<PlayerCharacter>();
+
+        foreach (PlayerCharacter p in foundPlayersComponents)
+        {
+            if (!activePlayers.Contains(p))
+                activePlayers.Add(p);
+        }
+        
+    }
+
 }

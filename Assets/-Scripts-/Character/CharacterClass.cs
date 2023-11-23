@@ -62,6 +62,12 @@ public class CharacterClass : MonoBehaviour
 
     public virtual void Disable(Character character)
     {
+        //foreach (KeyValuePair<AbilityUpgrade, bool> entry in upgradeStatus)
+        //{
+        //    // do something with entry.Value or entry.Key
+        //    Debug.Log(entry.Key);
+        //}
+
         // Disattivo eventuali modifiche al prefab
     }
 

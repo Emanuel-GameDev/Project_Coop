@@ -30,8 +30,4 @@ public class CharacterData : ScriptableObject
         cClass.Inizialize(this, character);
         character.SetCharacterClass(cClass);
     }
-    public void Disable(Character character)
-    {
-        characterClass.Disable(character);
-    }
 }
