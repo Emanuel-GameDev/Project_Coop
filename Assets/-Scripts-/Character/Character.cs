@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -26,9 +25,13 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     protected virtual void InitialSetup()
     {
         rb = GetComponent<Rigidbody>();      
-        characterData.Inizialize(this);
+        characterData.Inizialize(this);       
         attackDamager = GetComponentInChildren<Damager>();
-        attackDamager.SetSource(this);
+        
+        if (attackDamager != null)
+        {
+            attackDamager.SetSource(this);
+        }
     }
 
     protected virtual void Attack(InputAction.CallbackContext context) => characterClass.Attack(this, context);
@@ -56,6 +59,6 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     public Damager GetDamager() => attackDamager;
     public Rigidbody GetRigidBody() => rb;
 
-    public virtual void TakeDamage(float damage, IDamager dealer) => characterClass.TakeDamage(damage, dealer);
+    public virtual void TakeDamage(DamageData data) => characterClass.TakeDamage(data);
     public float GetDamage() => characterClass.GetDamage();
 }

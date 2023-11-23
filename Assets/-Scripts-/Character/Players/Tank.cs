@@ -232,17 +232,11 @@ public class Tank : CharacterClass
     #endregion
 
     #region onHit
+
     public override void TakeDamage(float damage, IDamager dealer)
     {       
-        if (hyperArmorOn == false)
-        {
-            DoHitReacion();
-        }
-        if (isBlocking)
-        {
-           
-        }
 
+   
     }
 
     private void DoHitReacion()

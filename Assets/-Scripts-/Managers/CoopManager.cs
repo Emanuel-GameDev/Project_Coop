@@ -1,43 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class CoopManager : MonoBehaviour
 {
-    [SerializeField] Character character;
-
     [SerializeField] private CharacterData switchPlayerUp;
     [SerializeField] private CharacterData switchPlayerRight;
     [SerializeField] private CharacterData switchPlayerDown;
     [SerializeField] private CharacterData switchPlayerLeft;
 
-
-    public void Switch1_performed(InputAction.CallbackContext context)
+    public void SwitchCharacter(Character characterToSwitch, int switchInto)
     {
-        Debug.Log(context.action);
-        if(context.performed)
-            character.SetCharacterData(switchPlayerUp);
+        switch (switchInto)
+        {
+            case 0:
+                characterToSwitch.SetCharacterData(switchPlayerUp);
+                break;
+            case 1:
+                characterToSwitch.SetCharacterData(switchPlayerRight);
+                break;
+            case 2:
+                characterToSwitch.SetCharacterData(switchPlayerDown);
+                break;
+            case 3:
+                characterToSwitch.SetCharacterData(switchPlayerLeft);
+                break;
+        }
     }
-
-    public void Switch2_performed(InputAction.CallbackContext context)
-    {
-        Debug.Log(context.action);
-        if (context.performed)
-            character.SetCharacterData(switchPlayerRight);
-    }
-
-    public void Switch3_performed(InputAction.CallbackContext context)
-    {
-        Debug.Log(context.action);
-        if (context.performed)
-            character.SetCharacterData(switchPlayerDown);
-    }
-    public void Switch4_performed(InputAction.CallbackContext context)
-    {
-        Debug.Log(context.action);
-        if (context.performed)
-            character.SetCharacterData(switchPlayerLeft);
-    }
-
 }
