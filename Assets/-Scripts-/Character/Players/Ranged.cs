@@ -28,6 +28,8 @@ public class Ranged : CharacterClass
     float projectileRange = 30f;
     [SerializeField, Tooltip("frequenza di sparo multiplo")]
     float consecutiveFireTimer = 0.3f;
+    [SerializeField, Tooltip("numero di spari con sparo multiplo")]
+    float numberProjectile = 3;
 
     [Header("Abilità unica")]
 
@@ -86,7 +88,9 @@ public class Ranged : CharacterClass
 
     private float empowerCoolDownDecrease => reduceEmpowerFireCoolDownUnlocked ? chargeTimeReduction : 0;
 
-    bool isShooting;
+    bool isAttacking;
+    bool isDodging;
+    bool isInvunerable;
 
 
 
@@ -102,7 +106,7 @@ public class Ranged : CharacterClass
     #region Attack
     public override void Attack(Character parent, InputAction.CallbackContext context)
     {              
-        if (context.performed && !isShooting)
+        if (context.performed && !isAttacking)
         {           
             if (fireTimer > 0)
             {
@@ -112,7 +116,7 @@ public class Ranged : CharacterClass
                 //inserire suono (?)
             }
 
-            isShooting = true;
+            isAttacking = true;
 
             Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
 
@@ -136,7 +140,7 @@ public class Ranged : CharacterClass
 
                 Debug.Log("colpo normale");
 
-                isShooting=false;
+                isAttacking=false;
             }
             
         }       
@@ -157,7 +161,7 @@ public class Ranged : CharacterClass
     //Sparo triplo
     private IEnumerator MultipleFireProjectile(Vector3 direction)
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < numberProjectile; i++)
         {
             BasicFireProjectile(direction);
 
@@ -168,7 +172,7 @@ public class Ranged : CharacterClass
 
         Debug.Log("colpo triplo");
 
-        isShooting = false;
+        isAttacking = false;
     }
 
    
