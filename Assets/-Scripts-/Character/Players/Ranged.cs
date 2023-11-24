@@ -1,4 +1,5 @@
 
+using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -85,6 +86,8 @@ public class Ranged : CharacterClass
 
     private float empowerCoolDownDecrease => reduceEmpowerFireCoolDownUnlocked ? chargeTimeReduction : 0;
 
+    bool isShooting;
+
 
 
 
@@ -99,8 +102,8 @@ public class Ranged : CharacterClass
     #region Attack
     public override void Attack(Character parent, InputAction.CallbackContext context)
     {              
-        if (context.performed)
-        {
+        if (context.performed && !isShooting)
+        {           
             if (fireTimer > 0)
             {
                 Debug.Log("In ricarica...");
@@ -108,6 +111,8 @@ public class Ranged : CharacterClass
                 return;
                 //inserire suono (?)
             }
+
+            isShooting = true;
 
             Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
 
@@ -119,17 +124,19 @@ public class Ranged : CharacterClass
 
             //in futuro inserire il colpo avanzato
             if (multiBaseAttackUnlocked)
-            {
-
-                Debug.Log("colpo triplo");
+            {               
+                StartCoroutine(MultipleFireProjectile(lookDirection));                           
             }
             else
             {
+
                 BasicFireProjectile(lookDirection);
 
                 fireTimer = AttackSpeed;
 
                 Debug.Log("colpo normale");
+
+                isShooting=false;
             }
             
         }       
@@ -145,6 +152,23 @@ public class Ranged : CharacterClass
 
         newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1);
 
+    }
+
+    //Sparo triplo
+    private IEnumerator MultipleFireProjectile(Vector3 direction)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            BasicFireProjectile(direction);
+
+            yield return new WaitForSeconds(consecutiveFireTimer);
+        }
+
+        fireTimer = AttackSpeed;
+
+        Debug.Log("colpo triplo");
+
+        isShooting = false;
     }
 
    
