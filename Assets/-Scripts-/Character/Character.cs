@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class Character : MonoBehaviour, IDamageable, IDamager
 {
     [SerializeField] protected CharacterData characterData;
-    [SerializeField] protected Damager attackDamager;
     protected CharacterClass characterClass;
 
     public CharacterData CharacterData => characterData;
@@ -28,12 +27,7 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     {
         rb = GetComponent<Rigidbody>();      
         characterData.Inizialize(this);       
-        attackDamager = GetComponentInChildren<Damager>();
         
-        if (attackDamager != null)
-        {
-            attackDamager.SetSource(this);
-        }
     }
 
     protected virtual void Attack(InputAction.CallbackContext context) => characterClass.Attack(this, context);
@@ -58,7 +52,6 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     }
 
     public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
-    public Damager GetDamager() => attackDamager;
     public Rigidbody GetRigidBody() => rb;
 
     public virtual void TakeDamage(DamageData data) => characterClass.TakeDamage(data);
