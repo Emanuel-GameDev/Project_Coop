@@ -1,4 +1,5 @@
 
+using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -27,6 +28,8 @@ public class Ranged : CharacterClass
     float projectileRange = 30f;
     [SerializeField, Tooltip("frequenza di sparo multiplo")]
     float consecutiveFireTimer = 0.3f;
+    [SerializeField, Tooltip("numero di spari con sparo multiplo")]
+    float numberProjectile = 3;
 
     [Header("Abilità unica")]
 
@@ -85,6 +88,10 @@ public class Ranged : CharacterClass
 
     private float empowerCoolDownDecrease => reduceEmpowerFireCoolDownUnlocked ? chargeTimeReduction : 0;
 
+    bool isAttacking;
+    bool isDodging;
+    bool isInvunerable;
+
 
 
 
@@ -99,8 +106,8 @@ public class Ranged : CharacterClass
     #region Attack
     public override void Attack(Character parent, InputAction.CallbackContext context)
     {              
-        if (context.performed)
-        {
+        if (context.performed && !isAttacking)
+        {           
             if (fireTimer > 0)
             {
                 Debug.Log("In ricarica...");
@@ -108,6 +115,8 @@ public class Ranged : CharacterClass
                 return;
                 //inserire suono (?)
             }
+
+            isAttacking = true;
 
             Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
 
@@ -119,17 +128,19 @@ public class Ranged : CharacterClass
 
             //in futuro inserire il colpo avanzato
             if (multiBaseAttackUnlocked)
-            {
-
-                Debug.Log("colpo triplo");
+            {               
+                StartCoroutine(MultipleFireProjectile(lookDirection));                           
             }
             else
             {
+
                 BasicFireProjectile(lookDirection);
 
                 fireTimer = AttackSpeed;
 
                 Debug.Log("colpo normale");
+
+                isAttacking=false;
             }
             
         }       
@@ -145,6 +156,23 @@ public class Ranged : CharacterClass
 
         newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1);
 
+    }
+
+    //Sparo triplo
+    private IEnumerator MultipleFireProjectile(Vector3 direction)
+    {
+        for (int i = 0; i < numberProjectile; i++)
+        {
+            BasicFireProjectile(direction);
+
+            yield return new WaitForSeconds(consecutiveFireTimer);
+        }
+
+        fireTimer = AttackSpeed;
+
+        Debug.Log("colpo triplo");
+
+        isAttacking = false;
     }
 
    
