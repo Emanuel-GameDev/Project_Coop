@@ -60,8 +60,10 @@ public class Ranged : CharacterClass
     float dodgeDamageMultiplier = 0.75f;
 
     [Header("Abilità extra")]
+    [SerializeField, Tooltip("coolDown recupero mina esplosa")]
+    float landMineCoolDown = 10f;
     [SerializeField, Tooltip("Numero massimo delle mine")]
-    int maxNumberLandMine = 3;
+    int maxNumberLandMine = 1;
     [SerializeField, Tooltip("Prefab della mina")]
     GameObject prefabLandMine;
     [SerializeField, Tooltip("danno della mina")]
@@ -108,7 +110,22 @@ public class Ranged : CharacterClass
         CoolDownManager();
     }
 
+    public override void Move(Vector3 direction, Rigidbody rb)
+    {
+        base.Move(direction, rb);
+        
+        
+        if (rb.velocity.magnitude > 0.1f)
+        {
+            animator.SetBool("isMoving", true);
+        }
+        else
+        {
+            animator.SetBool("isMoving", false);
+        }
+    }
 
+    //sparo
     #region Attack
     public override void Attack(Character parent, InputAction.CallbackContext context)
     {
@@ -185,19 +202,30 @@ public class Ranged : CharacterClass
 
     #endregion
 
+    //schivata
+    #region Defence
     public override void Defence(Character parent, InputAction.CallbackContext context)
     {
         base.Defence(parent, context);
     }
 
+    #endregion
+
+    //mina
+    #region ExtraAbility
     public override void UseExtraAbility(Character parent, InputAction.CallbackContext context) //E
     {
         if (context.performed)
         {
             if (landMineUnlocked)
             {
-                //lascio mina
+                //animazione droppaggio mina
+
+                //animator.settrigger("Droplandmine"); => da aggiungere
+
+                //momentaneo
                 CreateLandMine();
+                //
 
                 Debug.Log("lascio mina");
             }
@@ -212,7 +240,7 @@ public class Ranged : CharacterClass
         {
             GameObject newLandMine = Instantiate(prefabLandMine);
 
-            newLandMine.transform.position = transform.position;
+            newLandMine.transform.position = new Vector3(transform.position.x, 0 , transform.position.z);
 
             //funzione di inizializzazione mine
 
@@ -220,7 +248,7 @@ public class Ranged : CharacterClass
         }
         else
         {
-            //momentaneo
+            //momentaneo -- eliminare
 
             Destroy(_landMines[0]);
             _landMines.RemoveAt(0);
@@ -228,14 +256,16 @@ public class Ranged : CharacterClass
 
             GameObject newLandMine = Instantiate(prefabLandMine);
 
-            newLandMine.transform.position = transform.position;
+            newLandMine.transform.position = new Vector3(transform.position.x, 0, transform.position.z);
 
             //funzione di inizializzazione mine
 
             _landMines.Add(newLandMine);
         }
     }
+    #endregion
 
+    //sparo caricato
     #region Unique ability
     public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context) //Q
     {
@@ -330,4 +360,4 @@ public class Ranged : CharacterClass
 //2: L’attacco base spara una raffica di 3 proiettili
 //3: Schivare perfettamente un colpo teletrasporta il personaggio in una parte dell’arena lontana dal boss
 //4: Schivare perfettamente un colpo danneggia il nemico attaccante
-//5: Il personaggio può lasciare a terra una mina che esplode al contatto con un nemico
+//5: Il personaggio può lasciare a terra una mina che esplode al contatto con un nemico -- unica che va ripresa, se esplode applicare cd
