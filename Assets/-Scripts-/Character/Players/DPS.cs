@@ -24,6 +24,15 @@ public class DPS : CharacterClass
     float invulnerabilityDuration = 5f;
     [SerializeField, Tooltip("Aumento di velocità durante l'invulnerabilità.")]
     float invulnerabilitySpeedUp = 5f;
+    [Header("Extra Ability")]
+    [SerializeField, Tooltip("Distanza minima dell'attacco con il dash.")]
+    float minDashAttackDistance = 5f;
+    [SerializeField, Tooltip("Distanza massima dell'attacco con il dash.")]
+    float maxDashAttackDistance = 15f;
+    [SerializeField, Tooltip("Durata dell'attaccon don il dash.")]
+    float dashAttackDuration = 5f;
+    [SerializeField, Tooltip("Massimo tempo di caricamento dell'attacco con il dash.")]
+    float dashAttackMaxLoadUpTime = 5f;
     [Header("Boss Power Up")]
     [SerializeField, Tooltip("Totale dei danni da fare al boss per sbloccare il potenziamento.")]
     float bossPowerUpTotalDamageToUnlock = 1000f;
@@ -46,6 +55,9 @@ public class DPS : CharacterClass
     private float lastPerfectDodgeTime;
     private float lastHitTime;
     private float totalDamageDone = 0;
+    private float dashAttackStartTime;
+    private Vector3 dashAttackStartPostion;
+    
 
     private int currentComboState;
     private int nextComboState;
@@ -60,6 +72,8 @@ public class DPS : CharacterClass
 
     private bool isInvulnerable;
     private bool isDodging;
+    private bool isDashingAttack;
+    private bool canMove => !isDodging && !IsAttacking && !isDashingAttack;
 
     private bool IsAttacking
     {
@@ -75,7 +89,8 @@ public class DPS : CharacterClass
     private static string DODGE = "Dodge";
     //private static string HIT = "Hit";
     //private static string UNIQUE_ABILITY = "UniqueAbility";
-    //private static string EXTRA_ABILITY = "ExtraAbility";
+    private static string STARTDASHATTACK = "StartDashAttack";
+    private static string DASHMOVING = "DashMoving";
     //private static string DEATH = "Death";
     private static string ISMOVING = "IsMoving";
     #endregion
@@ -96,6 +111,7 @@ public class DPS : CharacterClass
         isInvulnerable = false;
         isDodging = false;
         IsAttacking = false;
+        isDashingAttack = false;
     }
 
 
@@ -226,21 +242,45 @@ public class DPS : CharacterClass
     #region ExtraAbility
     public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
 
-            if (dashAttackUnlocked)
-            {
-                //Scatto in avanti più attacco
-            }
+        if (context.performed && dashAttackUnlocked && canMove)
+        {
             Utility.DebugTrace();
+            isDashingAttack = true;
+            dashAttackStartTime = Time.time;
+            dashAttackStartPostion = character.transform.position;
+            animator.SetTrigger(STARTDASHATTACK);
         }
+
+        if(context.canceled && dashAttackUnlocked && isDashingAttack)
+        {
+            StartCoroutine(DashAttack(lastNonZeroDirection, parent.GetRigidBody()));
+        }
+
     }
+
+    protected IEnumerator DashAttack(Vector2 attackDirection, Rigidbody rb)
+    {
+        animator.SetTrigger(DASHMOVING);
+        Vector3 attackDirection3D = new Vector3(attackDirection.x, 0f, attackDirection.y).normalized;
+        float pressDuration = Time.time - dashAttackStartTime;
+        float dashAttackDistance = Mathf.Lerp(minDashAttackDistance, maxDashAttackDistance,  pressDuration / dashAttackMaxLoadUpTime);
+        rb.velocity = attackDirection3D * ( dashAttackDistance / dashAttackDuration);
+
+        yield return new WaitForSeconds(dashAttackDuration);
+
+        animator.SetTrigger("DashAttack");
+        rb.velocity = Vector3.zero;
+        //funzione in animazione endaatack
+    }
+
+
+
     #endregion
 
     public override void Move(Vector2 direction, Rigidbody rb)
     {
-        if (!isDodging)
+        if (canMove)
         {
             base.Move(direction, rb);
         }
