@@ -77,7 +77,7 @@ public class DPS : CharacterClass
     //private static string UNIQUE_ABILITY = "UniqueAbility";
     //private static string EXTRA_ABILITY = "ExtraAbility";
     //private static string DEATH = "Death";
-    //private static string MOVING = "Moving";
+    private static string ISMOVING = "IsMoving";
     #endregion
 
     public override float AttackSpeed => base.AttackSpeed + extraSpeed;
@@ -244,6 +244,7 @@ public class DPS : CharacterClass
         {
             base.Move(direction, rb);
         }
+        animator.SetBool(ISMOVING, isMoving);
     }
 
 
