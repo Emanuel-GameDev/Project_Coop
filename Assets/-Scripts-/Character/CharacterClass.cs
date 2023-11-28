@@ -26,6 +26,7 @@ public class CharacterClass : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     protected Pivot pivot;
     protected Damager damager;
+    protected bool isMoving;
     protected bool bossfightPowerUpUnlocked;
     protected float uniqueAbilityUses;
     protected Vector2 lastNonZeroDirection;
@@ -124,6 +125,8 @@ public class CharacterClass : MonoBehaviour
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
         rb.velocity = new Vector3(direction.x * MoveSpeed, direction.y, direction.z * MoveSpeed);
+
+        isMoving = rb.velocity.magnitude > 0.2f;
 
         Vector2 direction2D = new Vector2(direction.x, direction.z);
 
