@@ -194,24 +194,24 @@ public class Healer : CharacterClass
 
         if (direction != Vector2.zero)
         {
-            x = direction.x;
-            y = direction.y;
+            //x = direction.x;
+            //y = direction.y;
 
-            if (y < 0) y = -1;
-            else if (y > 1) y = 1;
+            //if (y < 0) y = -1;
+            //else if (y > 1) y = 1;
 
-            animator.SetFloat("Y", y);
+            //animator.SetFloat("Y", y);
 
-            if (x < 0)
-            {
-                if (visual.transform.localScale.x > 0)
-                    visual.transform.localScale = new Vector3(-visual.transform.localScale.x, visual.transform.localScale.y, visual.transform.localScale.z);
-            }
-            else if (x > 0)
-            {
-                if (visual.transform.localScale.x < 0)
-                    visual.transform.localScale = new Vector3(-visual.transform.localScale.x, visual.transform.localScale.y, visual.transform.localScale.z);
-            }
+            //if (x < 0)
+            //{
+            //    if (visual.transform.localScale.x > 0)
+            //        visual.transform.localScale = new Vector3(-visual.transform.localScale.x, visual.transform.localScale.y, visual.transform.localScale.z);
+            //}
+            //else if (x > 0)
+            //{
+            //    if (visual.transform.localScale.x < 0)
+            //        visual.transform.localScale = new Vector3(-visual.transform.localScale.x, visual.transform.localScale.y, visual.transform.localScale.z);
+            //}
 
             animator.SetBool("IsMoving", true);
         }
