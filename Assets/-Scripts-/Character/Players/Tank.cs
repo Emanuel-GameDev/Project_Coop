@@ -73,6 +73,10 @@ public class Tank : CharacterClass
         {
             bossfightPowerUpUnlocked = true;
         }
+        if(Input.GetKeyDown(KeyCode.T))
+        {
+            TakeDamage(new DamageData(10,null));
+        }
        
     }
 
@@ -124,7 +128,7 @@ public class Tank : CharacterClass
     }
     public void CheckAttackToDo()
     {
-        SetCanMove(false, rb);
+        SetCanMove(false,character.GetRigidBody());
 
         if (pressed && chargedAttack)
         {
@@ -191,7 +195,7 @@ public class Tank : CharacterClass
             comboIndex = 0;
             isAttacking = false;
             Debug.Log("Reset Variables");
-            SetCanMove(true, rb);
+            SetCanMove(true, character.GetRigidBody());
         }
         else if (comboIndex == 2)
         {
@@ -212,8 +216,11 @@ public class Tank : CharacterClass
     {
         if (context.performed && isAttacking == false)
         {
-            SetCanMove(false, rb);
-            ResetStamina();
+            if(currentStamina != staminaMax)
+            {
+                ResetStamina();
+            }          
+            SetCanMove(false, character.GetRigidBody());           
             isBlocking = true;
             ShowStaminaBar(true);
             Debug.Log($"is blocking [{isBlocking}]");
@@ -221,9 +228,10 @@ public class Tank : CharacterClass
 
         else if (context.canceled && isBlocking == true)
         {
-            SetCanMove(true, rb);
+            SetCanMove(true, character.GetRigidBody());
             isBlocking= false;
             ShowStaminaBar(false);
+            ResetStamina();
             Debug.Log($"is blocking [{isBlocking}]");
         }
 
@@ -234,11 +242,12 @@ public class Tank : CharacterClass
     private void ResetStamina()
     {
         currentStamina = staminaMax;
+        staminaBar.GetComponent<GenericBarScript>().Setvalue(staminaMax);
     }
 
     public void ShowStaminaBar(bool toShow)
     {
-        staminaBar.SetActive(toShow);
+        staminaBar.SetActive(toShow);       
     }
     #endregion
 
@@ -252,15 +261,19 @@ public class Tank : CharacterClass
         }
        if(isBlocking)
         {
+            staminaBar.GetComponent<GenericBarScript>().DecreaseValue(data.damage);
             currentStamina -= data.damage;
+            Debug.Log($"{currentStamina}");
             if(currentStamina <= 0)
             {
+                Debug.Log("Parata Rotta");
                 //Stun per 2 secondi
             }
         }
         else
         {
             currentHp -= data.damage;
+            Debug.Log($"{currentHp}");
         }
     }
 
@@ -286,7 +299,7 @@ public class Tank : CharacterClass
     {
         if (context.performed)
         {
-            SetCanMove(false, rb);
+            SetCanMove(false, character.GetRigidBody());
 
             if (bossfightPowerUpUnlocked && isAttacking == false)
             {
@@ -321,7 +334,6 @@ public class Tank : CharacterClass
         {
             rigidbody.velocity = Vector3.zero;
         }
-
 
     }
     #endregion

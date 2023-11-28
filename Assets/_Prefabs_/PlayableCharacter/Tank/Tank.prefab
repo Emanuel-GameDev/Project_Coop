@@ -130,7 +130,7 @@ RectTransform:
   m_Father: {fileID: 6881438036376319908}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.637, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -546,7 +546,7 @@ MonoBehaviour:
   timeCheckAttackType: 0.2
   chargedAttackTimer: 2.5
   staminaBar: {fileID: 7157156145395740971}
-  staminaMax: 0
+  staminaMax: 200
   perfectBlockDamage: 0
   aggroDuration: 0
   defenceBuffDuration: 0
@@ -612,6 +612,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4105457712847685252}
   - component: {fileID: 7504197498009630953}
+  - component: {fileID: 8080869563879724190}
   m_Layer: 5
   m_Name: staminaBar
   m_TagString: Untagged
@@ -686,7 +687,19 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.637
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8080869563879724190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7157156145395740971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8648f37fef0eeac419a43aa776597f91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
