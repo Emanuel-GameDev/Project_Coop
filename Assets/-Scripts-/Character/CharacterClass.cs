@@ -26,9 +26,11 @@ public class CharacterClass : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     protected Pivot pivot;
     protected Damager damager;
+    protected Rigidbody rb;
     protected bool bossfightPowerUpUnlocked;
     protected float uniqueAbilityUses;
     protected Vector2 lastNonZeroDirection;
+    protected bool isMoving;
 
     public virtual float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
     //[HideInInspector]
@@ -59,6 +61,7 @@ public class CharacterClass : MonoBehaviour
         uniqueAbilityUses = 0;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         pivot = GetComponentInChildren<Pivot>();
+        rb = GetComponentInChildren<Rigidbody>();
         lastNonZeroDirection = Vector2.down;
         damager = GetComponentInChildren<Damager>();
         if (damager != null)
@@ -129,6 +132,8 @@ public class CharacterClass : MonoBehaviour
         if (direction2D != Vector2.zero)
             lastNonZeroDirection = direction2D;
         SetSpriteDirection(lastNonZeroDirection);
+
+       
     }
 
     private void SetSpriteDirection(Vector2 direction)

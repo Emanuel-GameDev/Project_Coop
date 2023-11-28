@@ -73,6 +73,7 @@ public class Tank : CharacterClass
         {
             bossfightPowerUpUnlocked = true;
         }
+       
     }
 
 
@@ -123,7 +124,7 @@ public class Tank : CharacterClass
     }
     public void CheckAttackToDo()
     {
-        SetCanMove(false, GetComponentInParent<Rigidbody>());
+        SetCanMove(false, rb);
 
         if (pressed && chargedAttack)
         {
@@ -190,7 +191,7 @@ public class Tank : CharacterClass
             comboIndex = 0;
             isAttacking = false;
             Debug.Log("Reset Variables");
-            SetCanMove(true, GetComponentInParent<Rigidbody>());
+            SetCanMove(true, rb);
         }
         else if (comboIndex == 2)
         {
@@ -211,6 +212,7 @@ public class Tank : CharacterClass
     {
         if (context.performed && isAttacking == false)
         {
+            SetCanMove(false, rb);
             ResetStamina();
             isBlocking = true;
             ShowStaminaBar(true);
@@ -219,6 +221,7 @@ public class Tank : CharacterClass
 
         else if (context.canceled && isBlocking == true)
         {
+            SetCanMove(true, rb);
             isBlocking= false;
             ShowStaminaBar(false);
             Debug.Log($"is blocking [{isBlocking}]");
@@ -283,7 +286,7 @@ public class Tank : CharacterClass
     {
         if (context.performed)
         {
-            SetCanMove(false, GetComponentInParent<Rigidbody>());
+            SetCanMove(false, rb);
 
             if (bossfightPowerUpUnlocked && isAttacking == false)
             {
@@ -299,12 +302,13 @@ public class Tank : CharacterClass
     #endregion
 
     #region Move
-
+    
     public override void Move(Vector2 direction, Rigidbody rb)
     {
         if (canMove)
         {
             base.Move(direction, rb);
+            animator.SetBool("IsMoving", true);
         }
 
     }
