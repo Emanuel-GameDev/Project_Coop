@@ -34,7 +34,7 @@ public class DPS : CharacterClass
     [SerializeField, Tooltip("Durata del danno extra conferito dal potenziamento del boss dopo l'ultimo colpo inferto.")]
     float bossPowerUpExtraDamageDuration = 2.5f;
     [Header("Other")]
-    [SerializeField]
+    [SerializeField, Tooltip("I Layer da guardare quando ha sbloccato il power up per deflettere i proiettili")]
     LayerMask projectileLayer;
 
 
@@ -68,11 +68,11 @@ public class DPS : CharacterClass
     }
     private bool _isAttacking;
 
-    private Vector2 lastDirection;
+    
 
     #region Animation Variable
     private static string ATTACK = "Attack";
-    //private static string DODGE = "Dodge";
+    private static string DODGE = "Dodge";
     //private static string HIT = "Hit";
     //private static string UNIQUE_ABILITY = "UniqueAbility";
     //private static string EXTRA_ABILITY = "ExtraAbility";
@@ -170,8 +170,8 @@ public class DPS : CharacterClass
             if (Time.time > lastDodgeTime + dodgeCooldown)
             {
                 lastDodgeTime = Time.time + dodgeDuration;
-                StartCoroutine(Dodge(lastDirection, parent.GetRigidBody()));
-                Debug.Log(lastDirection);
+                StartCoroutine(Dodge(lastNonZeroDirection, parent.GetRigidBody()));
+                Debug.Log(lastNonZeroDirection);
             }
         }
     }
@@ -181,7 +181,7 @@ public class DPS : CharacterClass
         if (!isDodging)
         {
             isDodging = true;
-            //animator.SetBool(DODGE, isDodging);
+            animator.SetBool(DODGE, isDodging);
             Vector3 dodgeDirection3D = new Vector3(dodgeDirection.x, 0f, dodgeDirection.y).normalized;
             rb.velocity = dodgeDirection3D * (dodgeDistance / dodgeDuration);
 
@@ -190,7 +190,7 @@ public class DPS : CharacterClass
             rb.velocity = Vector3.zero;
 
             isDodging = false;
-            //animator.SetBool(DODGE, isDodging);
+            animator.SetBool(DODGE, isDodging);
         }
     }
     #endregion
@@ -243,24 +243,21 @@ public class DPS : CharacterClass
         if (!isDodging)
         {
             base.Move(direction, rb);
-            if (direction != Vector2.zero)
-                lastDirection = direction;
         }
     }
 
 
-    public override void TakeDamage(float damage, IDamager dealer)
+    public override void TakeDamage(DamageData data)
     {
         if (!isInvulnerable)
-            base.TakeDamage(damage, dealer);
+            base.TakeDamage(data);
     }
 
     public override void UnlockUpgrade(AbilityUpgrade abilityUpgrade)
     {
         base.UnlockUpgrade(abilityUpgrade);
         if (abilityUpgrade == AbilityUpgrade.Ability3)
-            character.GetDamager().AssignFunctionToOnTrigger(DeflectProjectile);
-        //gameObject.AddComponent<DeflectProjectile>();
+            damager.AssignFunctionToOnTrigger(DeflectProjectile);
         Debug.Log("Unlock" + abilityUpgrade.ToString());
     }
 
@@ -282,10 +279,7 @@ public class DPS : CharacterClass
 
     private void RemoveDeflect()
     {
-        //DeflectProjectile deflect = character.GetDamager().gameObject.GetComponent<DeflectProjectile>();
-        //if (deflect != null)
-        //    Destroy(deflect);
-        character.GetDamager().RemoveFunctionFromOnTrigger(DeflectProjectile);
+        damager.RemoveFunctionFromOnTrigger(DeflectProjectile);
     }
 
     private void Update()
@@ -309,7 +303,7 @@ public class DPS : CharacterClass
 
     public override void Disable(Character character)
     {
-        base.Disable(character);
+        //base.Disable(character);
         if (projectileDeflectionUnlocked)
             RemoveDeflect();
     }

@@ -32,7 +32,7 @@ public class DotEffect : StatusEffectBehaviour
     {
         if (DOTTimer >= countdown)
         {
-            gameObject.GetComponent<Character>().TakeDamage(DOTDamage, null);
+            gameObject.GetComponent<Character>().TakeDamage(new DamageData(DOTDamage, null));
             DOTTimer = 0;
         }
 

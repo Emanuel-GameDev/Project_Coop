@@ -12,6 +12,7 @@ public class HealMine : MonoBehaviour
 
     private List<PlayerCharacter> characterInArea;
 
+
     private void Awake()
     {
         characterInArea = new List<PlayerCharacter>();
@@ -42,7 +43,11 @@ public class HealMine : MonoBehaviour
         {
             if (characterInArea.Count >= 1)
             {
-                characterInArea[0].TakeDamage(-heal, null);
+                foreach (PlayerCharacter character in characterInArea)
+                {
+                    character.TakeDamage(new DamageData(-heal, null));
+                }
+
                 Destroy(gameObject);
             }
         }
@@ -56,7 +61,5 @@ public class HealMine : MonoBehaviour
         this.heal= heal;
         this.radius= radius;
         this.activationTime= activationTime;
-
-
     }
 }
