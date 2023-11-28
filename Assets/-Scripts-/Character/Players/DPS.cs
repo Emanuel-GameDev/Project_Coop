@@ -68,7 +68,7 @@ public class DPS : CharacterClass
     }
     private bool _isAttacking;
 
-    private Vector2 lastDirection;
+    
 
     #region Animation Variable
     private static string ATTACK = "Attack";
@@ -96,8 +96,6 @@ public class DPS : CharacterClass
         isInvulnerable = false;
         isDodging = false;
         IsAttacking = false;
-
-        Debug.Log(projectileDeflectionUnlocked);
     }
 
 
@@ -172,8 +170,8 @@ public class DPS : CharacterClass
             if (Time.time > lastDodgeTime + dodgeCooldown)
             {
                 lastDodgeTime = Time.time + dodgeDuration;
-                StartCoroutine(Dodge(lastDirection, parent.GetRigidBody()));
-                Debug.Log(lastDirection);
+                StartCoroutine(Dodge(lastNonZeroDirection, parent.GetRigidBody()));
+                Debug.Log(lastNonZeroDirection);
             }
         }
     }
@@ -245,8 +243,6 @@ public class DPS : CharacterClass
         if (!isDodging)
         {
             base.Move(direction, rb);
-            if (direction != Vector2.zero)
-                lastDirection = direction;
         }
     }
 
@@ -261,7 +257,7 @@ public class DPS : CharacterClass
     {
         base.UnlockUpgrade(abilityUpgrade);
         if (abilityUpgrade == AbilityUpgrade.Ability3)
-            character.GetDamager().AssignFunctionToOnTrigger(DeflectProjectile);
+            damager.AssignFunctionToOnTrigger(DeflectProjectile);
         Debug.Log("Unlock" + abilityUpgrade.ToString());
     }
 
@@ -283,7 +279,7 @@ public class DPS : CharacterClass
 
     private void RemoveDeflect()
     {
-        character.GetDamager().RemoveFunctionFromOnTrigger(DeflectProjectile);
+        damager.RemoveFunctionFromOnTrigger(DeflectProjectile);
     }
 
     private void Update()
@@ -307,7 +303,7 @@ public class DPS : CharacterClass
 
     public override void Disable(Character character)
     {
-        base.Disable(character);
+        //base.Disable(character);
         if (projectileDeflectionUnlocked)
             RemoveDeflect();
     }

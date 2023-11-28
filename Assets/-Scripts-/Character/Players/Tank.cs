@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
@@ -15,8 +16,10 @@ public class Tank : CharacterClass
     float chargedAttackTimer = 2.5f;
 
     [Header("Block")]
+    [SerializeField, Tooltip("Prefab barra stamina da applicare sopra player")]
+    GameObject staminaBar;
     [SerializeField, Tooltip("Quantità di danno parabile prima di rottura parata")]
-    float staminaBlock;
+    float staminaMax;
     [SerializeField, Tooltip("Danno parata perfetta")]
     float perfectBlockDamage;
 
@@ -26,9 +29,9 @@ public class Tank : CharacterClass
     [SerializeField, Tooltip("Durata buff difesa")]
     float defenceBuffDuration;
     [SerializeField, Tooltip("Moltiplicatore buff difesa")]
-    float defenceMultyplier;
+    float defenceMultiplier;
     [SerializeField, Tooltip("Moltiplicatore buff stamina")]
-    float staminaMultyplier;
+    float staminamultiplier;
 
     [Header("Bossfight Upgrade")]
     [SerializeField, Tooltip("Numero attacchi da parare perfettamente per ottenimento potenziamento bossfight")]
@@ -38,7 +41,7 @@ public class Tank : CharacterClass
     [SerializeField, Tooltip("Durata stun attacco potenziamento boss fight")]
     float chargedAttackStunDuration = 5;
     [SerializeField, Tooltip("Moltiplicatore durata stun")]
-    float stunDurationMultyplier;
+    float stunDurationMultiplier;
 
 
     private bool doubleAttack => upgradeStatus[AbilityUpgrade.Ability1];
@@ -55,11 +58,14 @@ public class Tank : CharacterClass
     private bool pressed;
     private bool chargedAttackReady;
     private bool canCancelChargedAttck;
+    private bool canMove = true;
+    private bool isBlocking;
 
     private int comboIndex = 0;
     private int comboMax = 2;
     private int perfectBlockCount;
     private float rangeAggro = math.INFINITY;
+    private float currentStamina;
 
     private void Update()
     {
@@ -69,12 +75,12 @@ public class Tank : CharacterClass
         }
     }
 
-    //Da Vedere Combo
+
     #region Attack
 
     public override void Attack(Character parent, InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && isBlocking == false)
         {
             ActivateHyperArmor();
             pressed = true;
@@ -84,20 +90,25 @@ public class Tank : CharacterClass
 
         else if (context.canceled)
         {
-
             pressed = false;
+          
             if (chargedAttackReady)
             {
-
-                animator.SetBool("ChargedAttack", false);
+                animator.SetTrigger("ChargedAttackEnd");
                 Debug.Log("Charged Attack executed");
+                return;
             }
+
             else if (!chargedAttackReady && canCancelChargedAttck)
             {
-
+                isAttacking = true;
                 animator.SetTrigger("Attack1");
-                Debug.Log($"combo index:[{comboIndex}]   can Double Attack[{doubleAttack}]");
+                IncreaseComboIndex();
+                return;
             }
+
+            isAttacking = false;
+
 
         }
 
@@ -112,10 +123,12 @@ public class Tank : CharacterClass
     }
     public void CheckAttackToDo()
     {
+        SetCanMove(false, GetComponentInParent<Rigidbody>());
+
         if (pressed && chargedAttack)
         {
             isAttacking = true;
-            animator.SetBool("ChargedAttack", pressed);
+            animator.SetTrigger("ChargedAttack");
             Debug.Log($"Started Charged Attack");
             StartCoroutine(StartChargedAttackTimer());
 
@@ -129,14 +142,15 @@ public class Tank : CharacterClass
                 animator.SetTrigger("Attack1");
                 IncreaseComboIndex();
             }
-            else if (doubleAttack && isAttacking)
+
+            else if (doubleAttack && comboIndex == 1)
             {
-                if(comboIndex != 2) 
+                if (comboIndex != 2)
                 {
                     animator.SetTrigger("Attack2");
                     IncreaseComboIndex();
                 }
-                
+
             }
 
         }
@@ -169,23 +183,25 @@ public class Tank : CharacterClass
     {
         hyperArmorOn = false;
     }
-    public void ResetAttackCombo(int endCombo)
+    public void ResetAttackCombo()
     {
-        if (comboIndex != 2 || endCombo == 1) 
+        if (comboIndex == 0 || comboIndex == 1)
         {
             comboIndex = 0;
             isAttacking = false;
             Debug.Log("Reset Variables");
+            SetCanMove(true, GetComponentInParent<Rigidbody>());
+        }
+        else if (comboIndex == 2)
+        {
+            IncreaseComboIndex();
         }
 
-        
     }
     public void aaaaaaaaaaaaaaaaaaaaaa()
     {
         Debug.Log($"combo index:[{comboIndex}] can Double Attack[{doubleAttack}]");
     }
-
-
 
     #endregion
 
@@ -193,49 +209,118 @@ public class Tank : CharacterClass
 
     public override void Defence(Character parent, InputAction.CallbackContext context)
     {
-        base.Defence(parent, context);
+        if (context.performed && isAttacking == false)
+        {
+            ResetStamina();
+            isBlocking = true;
+            ShowStaminaBar(true);
+            Debug.Log($"is blocking [{isBlocking}]");
+        }
+
+        else if (context.canceled && isBlocking == true)
+        {
+            isBlocking= false;
+            ShowStaminaBar(false);
+            Debug.Log($"is blocking [{isBlocking}]");
+        }
+
+
         //se potenziamento 4 parata perfetta fa danno
+    }
+
+    private void ResetStamina()
+    {
+        currentStamina = staminaMax;
+    }
+
+    public void ShowStaminaBar(bool toShow)
+    {
+        staminaBar.SetActive(toShow);
     }
     #endregion
 
     #region onHit
+
     public override void TakeDamage(DamageData data)
     {
-        if (hyperArmorOn == false)
+       if(hyperArmorOn == false)
         {
-            DoHitReacion();
+            //Hit Reaction
+        }
+       if(isBlocking)
+        {
+            currentStamina -= data.damage;
+            if(currentStamina <= 0)
+            {
+                //Stun per 2 secondi
+            }
+        }
+        else
+        {
+            currentHp -= data.damage;
         }
     }
 
-    private void DoHitReacion()
-    {
-
-    }
+    
     #endregion
+
+    #region UniqueAbility(Shout)
+
+    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+
+        }
+        //attacco attiro aggro
+    }
+
+    #endregion
+
+    #region ExtraAbility(BossAttack)
 
     public override void UseExtraAbility(Character parent, InputAction.CallbackContext context) //Tasto est
     {
         if (context.performed)
         {
+            SetCanMove(false, GetComponentInParent<Rigidbody>());
+
             if (bossfightPowerUpUnlocked && isAttacking == false)
             {
-                float stunDamageDuration = maximizedStun ? (chargedAttackStunDuration * stunDurationMultyplier) : chargedAttackStunDuration;
+                animator.SetTrigger("UniqueAbility");
+
+                float stunDamageDuration = maximizedStun ? (chargedAttackStunDuration * stunDurationMultiplier) : chargedAttackStunDuration;
                 Debug.Log($"BossFight Upgrade Attack Executed, stun duration:[{stunDamageDuration}]");
             }
         }
 
     }
-    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
+
+    #endregion
+
+    #region Move
+
+    public override void Move(Vector2 direction, Rigidbody rb)
     {
-        base.UseUniqueAbility(parent, context);
-        //attacco attiro aggro
+        if (canMove)
+        {
+            base.Move(direction, rb);
+        }
 
     }
 
 
+    private void SetCanMove(bool move, Rigidbody rigidbody)
+    {
+        canMove = move;
+        if (move == false)
+        {
+            rigidbody.velocity = Vector3.zero;
+        }
 
 
-
+    }
+    #endregion
 
 
 }
