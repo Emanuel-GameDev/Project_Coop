@@ -76,6 +76,12 @@ public class HealArea : MonoBehaviour
             {
                 other.gameObject.GetComponent<PlayerCharacter>().AddPowerUp(slowDown);
             }
+
+            //indebolisci nemici
+            if (debilitate)
+            {
+
+            }
         }
     }
 
@@ -97,7 +103,7 @@ public class HealArea : MonoBehaviour
             if (c is PlayerCharacter)
             {
                 //regene amici
-                c.TakeDamage(new DamageData(healPerTik, null));
+                c.TakeDamage(new DamageData(-healPerTik, null));
             }
 
 
@@ -116,11 +122,7 @@ public class HealArea : MonoBehaviour
                 //    c.AddPowerUp(slowDown);
                 //}
 
-                ////indebolisci nemici
-                //if (debilitate)
-                //{
-
-                //}
+                
             }
         }
     }

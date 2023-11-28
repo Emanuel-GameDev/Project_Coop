@@ -160,10 +160,7 @@ public class Healer : CharacterClass
             if (bossAbilityChargeTimer < bossAbilityCharge)
             {
                 bossAbilityChargeTimer += Time.deltaTime;
-                //Debug.Log("Chargeing");
             }
-            Debug.Log(bossAbilityChargeTimer);
-
         }
         else
             bossAbilityChargeTimer = 0;
@@ -194,12 +191,11 @@ public class Healer : CharacterClass
     public override void Move(Vector2 direction, Rigidbody rb)
     {
         base.Move(direction, rb);
-        PlayerCharacter player = (PlayerCharacter)character;
 
-        if (player.MoveDirection != Vector2.zero)
+        if (direction != Vector2.zero)
         {
-            x = player.MoveDirection.x;
-            y = player.MoveDirection.y;
+            x = direction.x;
+            y = direction.y;
 
             if (y < 0) y = -1;
             else if (y > 1) y = 1;
@@ -343,6 +339,7 @@ public class Healer : CharacterClass
     public void BossAbility()
     {
         Debug.Log("Cura tutti");
+
     }
 
 
