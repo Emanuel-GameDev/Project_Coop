@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class HealMine : MonoBehaviour
 {
+
     [SerializeField] float heal = 10;
     [SerializeField] public  float radius = 2;
     [SerializeField] public float activationTime = 1;
 
     float timer = 0;
+
+    GameObject spawner;
 
     private List<PlayerCharacter> characterInArea;
 
@@ -48,6 +51,9 @@ public class HealMine : MonoBehaviour
                     character.TakeDamage(new DamageData(-heal, null));
                 }
 
+                if (spawner.GetComponentInChildren<Healer>() != null)
+                    spawner.GetComponentInChildren<Healer>().SetMineIcon(false, null);
+
                 Destroy(gameObject);
             }
         }
@@ -56,8 +62,9 @@ public class HealMine : MonoBehaviour
         
     }
 
-    public void Initialize(float heal,float radius,float activationTime)
+    public void Initialize(GameObject spawner, float heal,float radius,float activationTime)
     {
+        this.spawner = spawner;
         this.heal= heal;
         this.radius= radius;
         this.activationTime= activationTime;

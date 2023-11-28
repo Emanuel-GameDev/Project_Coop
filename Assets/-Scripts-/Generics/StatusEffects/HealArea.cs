@@ -21,11 +21,10 @@ public class HealArea : MonoBehaviour
     [SerializeField] public float damageIncrement = 1;
     [SerializeField] public PowerUp slowDown;
 
-    [SerializeField] List<StatusEffectBehaviour> statusEffectApplied;
 
     private List<Character> characterInArea;
     
-    float timer=0;
+    float timer = 0;
     float DOTTimer = 0;
     float countdown = 1;
 
@@ -57,13 +56,6 @@ public class HealArea : MonoBehaviour
         DOTTimer = countdown;
     }
 
-    //private void Awake()
-    //{
-    //    source ??= GetComponentInParent<IDamager>();
-    //    source ??= GetComponent<IDamager>();
-    //    source ??= GetComponentInChildren<IDamager>();
-    //}
-
 
     private void OnTriggerEnter(Collider other)
     {
@@ -78,10 +70,10 @@ public class HealArea : MonoBehaviour
             }
 
             //indebolisci nemici
-            if (debilitate)
-            {
-
-            }
+            //if (debilitate && other.gameObject.GetComponent<CharacterClass>().damager != null)
+            //{
+            //    other.gameObject.GetComponent<CharacterClass>().damager.SetCondition()
+            //}
         }
     }
 
@@ -106,7 +98,6 @@ public class HealArea : MonoBehaviour
                 c.TakeDamage(new DamageData(-healPerTik, null));
             }
 
-
             //EnemyCharacter al posto di playerCharacter
             if (c is PlayerCharacter)
             {
@@ -115,14 +106,6 @@ public class HealArea : MonoBehaviour
                 {
                     c.TakeDamage(new DamageData(DOTPerTik, null));
                 }
-
-                ////rallenta nemici
-                //if (slow)
-                //{
-                //    c.AddPowerUp(slowDown);
-                //}
-
-                
             }
         }
     }
