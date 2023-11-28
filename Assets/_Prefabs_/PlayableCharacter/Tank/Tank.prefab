@@ -130,7 +130,7 @@ RectTransform:
   m_Father: {fileID: 6881438036376319908}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -545,8 +545,7 @@ MonoBehaviour:
   currentHp: 0
   timeCheckAttackType: 0.2
   chargedAttackTimer: 2.5
-  staminaBar: {fileID: 7157156145395740971}
-  staminaMax: 200
+  maxStamina: 200
   perfectBlockDamage: 0
   aggroDuration: 0
   defenceBuffDuration: 0
@@ -619,7 +618,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4105457712847685252
 RectTransform:
   m_ObjectHideFlags: 0

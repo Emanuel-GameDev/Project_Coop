@@ -32,7 +32,7 @@ public class CharacterClass : MonoBehaviour
     protected Vector2 lastNonZeroDirection;
    
 
-    public virtual float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
+    public virtual float maxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
 

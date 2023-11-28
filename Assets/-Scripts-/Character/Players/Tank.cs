@@ -16,10 +16,9 @@ public class Tank : CharacterClass
     float chargedAttackTimer = 2.5f;
 
     [Header("Block")]
-    [SerializeField, Tooltip("Prefab barra stamina da applicare sopra player")]
-    GameObject staminaBar;
+    
     [SerializeField, Tooltip("Quantità di danno parabile prima di rottura parata")]
-    float staminaMax;
+    float maxStamina;
     [SerializeField, Tooltip("Danno parata perfetta")]
     float perfectBlockDamage;
 
@@ -57,7 +56,6 @@ public class Tank : CharacterClass
     private bool canPressInput;
     private bool pressed;
     private bool chargedAttackReady;
-    private bool canCancelChargedAttck;
     private bool canMove = true;
     private bool isBlocking;
 
@@ -66,7 +64,21 @@ public class Tank : CharacterClass
     private int perfectBlockCount;
     private float rangeAggro = math.INFINITY;
     private float currentStamina;
+    private GenericBarScript staminaBar;
 
+    bool canCancelAttack;
+
+    public override void Inizialize(CharacterData characterData, Character character)
+    {
+        base.Inizialize(characterData, character);
+        currentStamina = maxStamina;
+        currentHp = maxHp;
+
+        staminaBar = GetComponentInChildren<GenericBarScript>();
+        
+        staminaBar.Setvalue(maxStamina);
+        staminaBar.gameObject.SetActive(false);
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Keypad6))
@@ -89,32 +101,33 @@ public class Tank : CharacterClass
         {
             ActivateHyperArmor();
             pressed = true;
+            canCancelAttack = false;
             Invoke(nameof(CheckAttackToDo), timeCheckAttackType);
 
         }
 
-        else if (context.canceled)
+        if (context.canceled)
         {
             pressed = false;
-          
-            if (chargedAttackReady)
+
+
+            if (chargedAttackReady && !canCancelAttack)
             {
                 animator.SetTrigger("ChargedAttackEnd");
                 Debug.Log("Charged Attack executed");
-                return;
+               
             }
 
-            else if (!chargedAttackReady && canCancelChargedAttck)
+            else if (!chargedAttackReady && canCancelAttack)
             {
-                isAttacking = true;
                 animator.SetTrigger("Attack1");
                 IncreaseComboIndex();
-                return;
+
             }
 
+
             isAttacking = false;
-
-
+            chargedAttackReady = false;
         }
 
     }
@@ -132,6 +145,7 @@ public class Tank : CharacterClass
 
         if (pressed && chargedAttack)
         {
+            canCancelAttack = true;
             isAttacking = true;
             animator.SetTrigger("ChargedAttack");
             Debug.Log($"Started Charged Attack");
@@ -141,6 +155,8 @@ public class Tank : CharacterClass
 
         else if (!pressed)
         {
+            canCancelAttack = false;
+
             if (comboIndex == 0 && !isAttacking)
             {
                 isAttacking = true;
@@ -163,15 +179,17 @@ public class Tank : CharacterClass
     IEnumerator StartChargedAttackTimer()
     {
         chargedAttackReady = false;
-        canCancelChargedAttck = true;
+      
         yield return new WaitForSeconds(chargedAttackTimer);
+
         if (pressed)
-        {
-            canCancelChargedAttck = false;
+        {         
             chargedAttackReady = true;
+            canCancelAttack = false;
+            
             Debug.Log("Charged Attack Ready");
             //Segnale Visivo
-        }
+        }       
 
     }
     public void ActivateHyperArmor()
@@ -216,10 +234,7 @@ public class Tank : CharacterClass
     {
         if (context.performed && isAttacking == false)
         {
-            if(currentStamina != staminaMax)
-            {
-                ResetStamina();
-            }          
+                   
             SetCanMove(false, character.GetRigidBody());           
             isBlocking = true;
             ShowStaminaBar(true);
@@ -241,13 +256,13 @@ public class Tank : CharacterClass
 
     private void ResetStamina()
     {
-        currentStamina = staminaMax;
-        staminaBar.GetComponent<GenericBarScript>().Setvalue(staminaMax);
+        currentStamina = maxStamina;
+        staminaBar.ResetValue();
     }
 
     public void ShowStaminaBar(bool toShow)
     {
-        staminaBar.SetActive(toShow);       
+        staminaBar.gameObject.SetActive(toShow);       
     }
     #endregion
 
@@ -259,15 +274,19 @@ public class Tank : CharacterClass
         {
             //Hit Reaction
         }
+
        if(isBlocking)
         {
-            staminaBar.GetComponent<GenericBarScript>().DecreaseValue(data.damage);
+            staminaBar.DecreaseValue(data.damage);
             currentStamina -= data.damage;
             Debug.Log($"{currentStamina}");
             if(currentStamina <= 0)
             {
+                SetCanMove(true, character.GetRigidBody());               
+                isBlocking = false;
+                ShowStaminaBar(false );
                 Debug.Log("Parata Rotta");
-                //Stun per 2 secondi
+                //Stun per 2 secondi dopo reset stamina
             }
         }
         else
@@ -321,8 +340,9 @@ public class Tank : CharacterClass
         if (canMove)
         {
             base.Move(direction, rb);
-            animator.SetBool("IsMoving", true);
+            
         }
+        animator.SetBool("IsMoving", isMoving);
 
     }
 

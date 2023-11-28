@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Dependencies.Sqlite;
@@ -6,34 +7,38 @@ using UnityEngine.UI;
 
 public class GenericBarScript : MonoBehaviour
 {
-    private float sliderValue;
+    private Slider slider;
     private float maxValue;
-    private void Awake()
-    {
-        sliderValue = GetComponent<Slider>().value;
+    private void OnEnable()
+    {       
+        slider = GetComponent<Slider>();
     }
 
     public void Setvalue(float value)
-    {
-        sliderValue=value;      
+    {                   
+        slider.maxValue = value;
         maxValue = value;
-        
-       
+        slider.value = value;
     }
     public float AddValue(float value)
     {
-        sliderValue += value;
-        if(sliderValue > maxValue)
-            sliderValue = maxValue;
+        slider.value += value;
+        if(slider.value > maxValue)
+            slider.value = maxValue;
 
-        return sliderValue;
+        return slider.value;
     }
     public float DecreaseValue(float value) 
     { 
-        sliderValue -= value;
-        if(sliderValue <= 0)
-            sliderValue = 0;
+        slider.value -= value;
+        if(slider.value <= 0)
+            slider.value = 0;
 
-        return sliderValue;
+        return slider.value;
+    }
+
+    public void ResetValue()
+    {
+        slider.value = maxValue; 
     }
 }
