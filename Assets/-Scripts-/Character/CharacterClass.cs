@@ -33,7 +33,7 @@ public class CharacterClass : MonoBehaviour
     protected bool isMoving;
 
     public virtual float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
-    //[HideInInspector]
+    [HideInInspector]
     public float currentHp;
 
     public virtual float Damage => characterData.Damage + powerUpData.damageIncrease;

@@ -132,7 +132,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6098909531595916222}
@@ -155,7 +155,7 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 257
+  m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
@@ -179,8 +179,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224,
-    type: 3}
+  m_Sprite: {fileID: -818425704, guid: 3c251eb7b43d2aa418a35e184254e321, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -260,11 +259,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHp: 0
   attackDelay: 1
-  healIcon: {fileID: 1667381298283499555, guid: 81008e70013cfa54fa69a382d51da323,
-    type: 3}
+  visual: {fileID: 3501642758352954326}
   smallHeal: 5
   singleHealCooldown: 5
-  smallHealAreaRadius: 2
+  smallHealAreaRadius: 3
   healMine: {fileID: 5625512617348793040, guid: 2186adaa1671c884ca63c9ed27490efb,
     type: 3}
   mineHealQuantity: 10
@@ -283,3 +281,4 @@ MonoBehaviour:
   damageIncrement: 1
   bossPowerUpHeal: 50
   bossPowerUpHitToUnlock: 10
+  boolDiProva: 0
