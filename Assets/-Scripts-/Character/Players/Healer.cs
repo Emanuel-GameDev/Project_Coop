@@ -31,6 +31,10 @@ public class Healer : CharacterClass
     [SerializeField] float healMineActivationTime = 1f;
     [Tooltip("Tempo di ricarica per poter piazzare la mina")]
     [SerializeField] float mineAbilityCooldown = 0;
+    [Tooltip("Sprite che appare sopra al personaggio se può raccogliere la mina")]
+    [SerializeField] Sprite healMineIcon;
+    [Tooltip("Mine icon gameObject")]
+    [SerializeField] GameObject gameObjectMineIcon;
 
     GameObject instantiatedHealMine;
 
@@ -47,6 +51,7 @@ public class Healer : CharacterClass
     [Tooltip("Quantità di vita curata ogni tik")]
     [SerializeField] float healPerTik = 1f;
 
+
     [Header("Heal area upgrade stats")]
     [Tooltip("Quantità di vita tolta per tik (Abilità 1)")]
     [SerializeField] float DOTPerTik = 1;
@@ -57,14 +62,14 @@ public class Healer : CharacterClass
     [Tooltip("Riduzione difesa (Abilità 5)")]
     [SerializeField] float damageIncrement = 1;
 
+
     [Header("Boss powerUp")]
-    [Tooltip("Quantità di vita curata dall'abilità del boss")]
-    [SerializeField] float bossPowerUpHeal = 50f;
+    //[Tooltip("Quantità di vita curata dall'abilità del boss")]
+    //[SerializeField] float bossPowerUpHeal = 50f;
     [Tooltip("Colpi consecutivi richiesti al boss, senza subire danni, per sbloccare l'abilità del boss")]
     [SerializeField] int bossPowerUpHitToUnlock = 10;
-
-    GameObject instantiatedHealIcon;
-    
+    [Tooltip("Rallentamento durante l'abilità del boss")]
+    [SerializeField] PowerUp bossAbilitySlowdown;
 
     CapsuleCollider smallHealAreaCollider;
 
@@ -75,14 +80,18 @@ public class Healer : CharacterClass
     private float lastUniqueAbilityUseTime;
     private int bossPowerUpHitCount;
 
-    float x = 1;
-    float y = -1;
 
     float uniqueAbilityTimer;
     float mineAbilityTimer;
     float smallHealTimer;
 
-    public bool boolDiProva = false;
+    bool defenceButtonPressed = false;
+    bool bossAbilityReady = false;
+    bool bossAbilityPerformed = false;
+
+    bool mineInReach = false;
+
+    bool inputState = true;
 
     public override void Inizialize(CharacterData characterData, Character character)
     {
@@ -99,26 +108,39 @@ public class Healer : CharacterClass
         //instantiatedHealIcon = Instantiate(healIcon);
         //MoveIcon(transform);
 
-        animator.SetFloat("X", 1);
+
         animator.SetFloat("Y", -1);
     }
 
 
-    private void MoveIcon(Transform newParent)
-    {
-        instantiatedHealIcon.transform.SetParent(newParent);
-        instantiatedHealIcon.transform.localPosition = new Vector3(0, 1, 0);
-    }
+    //private void MoveIcon(Transform newParent)
+    //{
+    //    instantiatedHealIcon.transform.SetParent(newParent);
+    //    instantiatedHealIcon.transform.localPosition = new Vector3(0, 1, 0);
+    //}
 
 
     //Attack: colpo singolo, incremento colpi consecutivi senza subire danni contro boss
     public override void Attack(Character parent, UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
+        if (context.performed)
+        {
+            animator.SetTrigger("IsAttacking");
+            
+        }
 
     }
 
+    public void DeactivateInput()
+    {
+        inputState = false;
+    }
 
-    bool mineInReach = false;
+    public void ActivateInput()
+    {
+        inputState = true;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<PlayerCharacter>() && !playerInArea.Contains(other.gameObject.GetComponent<PlayerCharacter>()))
@@ -126,13 +148,15 @@ public class Healer : CharacterClass
             playerInArea.Add(other.gameObject.GetComponent<PlayerCharacter>());
         }
 
-        if(other.gameObject.GetComponent<HealMine>())
+        if (other.gameObject.GetComponent<HealMine>())
+        {
+            SetMineIcon(true, healMineIcon);
             mineInReach = true;
+        }
     }
 
     private void Start()
     {
-
         uniqueAbilityTimer = UniqueAbilityCooldown;
         mineAbilityTimer = mineAbilityCooldown;
         smallHealTimer = singleHealCooldown;
@@ -155,18 +179,21 @@ public class Healer : CharacterClass
             smallHealTimer += Time.deltaTime;
         }
 
-        if (count)
+        if (defenceButtonPressed)
         {
             if (bossAbilityChargeTimer < bossAbilityCharge)
             {
                 bossAbilityChargeTimer += Time.deltaTime;
-                //Debug.Log("Chargeing");
+                if(!character.GetPowerUpList().Contains(bossAbilitySlowdown))
+                    character.AddPowerUp(bossAbilitySlowdown);
             }
-            Debug.Log(bossAbilityChargeTimer);
-
         }
         else
+        {
+            if (character.GetPowerUpList().Contains(bossAbilitySlowdown))
+                character.RemovePowerUp(bossAbilitySlowdown);
             bossAbilityChargeTimer = 0;
+        }
 
         if (bossAbilityChargeTimer >= bossAbilityCharge)
             bossAbilityReady = true;
@@ -180,75 +207,60 @@ public class Healer : CharacterClass
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.GetComponent<PlayerCharacter>())
-        {
             playerInArea.Remove(other.gameObject.GetComponent<PlayerCharacter>());
-        }
 
 
         if (other.gameObject.GetComponent<HealMine>())
+        {
+            SetMineIcon(false, null);
             mineInReach = false;
+        }
     }
 
 
 
     public override void Move(Vector2 direction, Rigidbody rb)
     {
-        base.Move(direction, rb);
-        PlayerCharacter player = (PlayerCharacter)character;
-
-        if (player.MoveDirection != Vector2.zero)
+        if (!inputState)
         {
-            x = player.MoveDirection.x;
-            y = player.MoveDirection.y;
-
-            if (y < 0) y = -1;
-            else if (y > 1) y = 1;
-
-            animator.SetFloat("Y", y);
-
-            if (x < 0)
-            {
-                if (visual.transform.localScale.x > 0)
-                    visual.transform.localScale = new Vector3(-visual.transform.localScale.x, visual.transform.localScale.y, visual.transform.localScale.z);
-            }
-            else if (x > 0)
-            {
-                if (visual.transform.localScale.x < 0)
-                    visual.transform.localScale = new Vector3(-visual.transform.localScale.x, visual.transform.localScale.y, visual.transform.localScale.z);
-            }
-
-            animator.SetBool("IsMoving", true);
+            base.Move(Vector2.zero, rb);
+            return;
         }
+
+        base.Move(direction, rb);
+
+        if (direction != Vector2.zero)
+            animator.SetBool("IsMoving", true);
         else
             animator.SetBool("IsMoving", false);
-
     }
 
-    bool count = false;
-    bool bossAbilityReady = false;
+
 
     //Defense: cura ridotta singola
     public override void Defence(Character parent, InputAction.CallbackContext context)
     {
+        if (!inputState)
+            return;
+
         if (context.performed)
         {
-            count = true;
+            defenceButtonPressed = true;
         }
 
         if (context.canceled)
         {
 
-            if (bossAbilityReady)
+            if (bossAbilityReady && !bossAbilityPerformed)
             {
                 BossAbility();
                 bossAbilityReady = false;
             }
-
-            if (bossAbilityChargeTimer < 0.5)
+            else
             {
                 if (smallHealTimer >= singleHealCooldown)
                 {
-                    TakeDamage(new DamageData(Damage, null));
+                    TakeDamage(new DamageData(-smallHeal, null));
 
                     foreach (PlayerCharacter pc in playerInArea)
                     {
@@ -259,19 +271,21 @@ public class Healer : CharacterClass
                 }
             }
 
-            count = false;
+            defenceButtonPressed = false;
             bossAbilityChargeTimer = 0;
         }
-
     }
 
     //UniqueAbility: lancia area di cura
     public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
+        if (!inputState)
+            return;
+
         if (uniqueAbilityTimer < UniqueAbilityCooldown || !context.performed)
             return;
 
-        float radius = 1;
+        float radius;
 
         //calcolo raggio area
         if (upgradeStatus[AbilityUpgrade.Ability2])
@@ -305,7 +319,11 @@ public class Healer : CharacterClass
     //ExtraAbility: piazza mina di cura
     public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
-        if(instantiatedHealMine == null)
+
+        if (!inputState)
+            return;
+
+        if (instantiatedHealMine == null)
         {
             if (/*upgradeStatus[AbilityUpgrade.Ability3]*/ true && context.performed)
             {
@@ -313,7 +331,7 @@ public class Healer : CharacterClass
                     return;
 
                 instantiatedHealMine = Instantiate(healMine, new Vector3(parent.transform.position.x, 0.1f, parent.transform.position.z), Quaternion.identity);
-                instantiatedHealMine.GetComponent<HealMine>().Initialize(mineHealQuantity, healMineRadius, healMineActivationTime);
+                instantiatedHealMine.GetComponent<HealMine>().Initialize(gameObject, mineHealQuantity, healMineRadius, healMineActivationTime);
 
                 mineAbilityTimer = 0;
                 mineInReach = false;
@@ -326,6 +344,7 @@ public class Healer : CharacterClass
                 Destroy(instantiatedHealMine);
                 instantiatedHealMine = null;
                 mineInReach = false;
+                SetMineIcon(false, null);
                 mineAbilityTimer = mineAbilityCooldown;
             }
         }
@@ -343,6 +362,15 @@ public class Healer : CharacterClass
     public void BossAbility()
     {
         Debug.Log("Cura tutti");
+        bossAbilityPerformed = true;
+    }
+
+    public void SetMineIcon(bool state, Sprite spriteIcon)
+    {
+        gameObjectMineIcon.SetActive(state);
+
+        if (spriteIcon != null)
+            gameObjectMineIcon.GetComponent<SpriteRenderer>().sprite = spriteIcon;
     }
 
 
