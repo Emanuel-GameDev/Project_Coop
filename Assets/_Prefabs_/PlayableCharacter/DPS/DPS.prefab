@@ -29,7 +29,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3092766138524625209}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -276,6 +276,11 @@ MonoBehaviour:
   perfectDodgeExtraDamage: 10
   invulnerabilityDuration: 5
   invulnerabilitySpeedUp: 5
+  minDashAttackDistance: 10
+  maxDashAttackDistance: 20
+  dashAttackDuration: 5
+  dashAttackMaxLoadUpTime: 5
+  dashAttackCooldown: 5
   bossPowerUpTotalDamageToUnlock: 1000
   bossPowerUpExtraDamagePerHit: 2
   bossPowerUpExtraDamageCap: 16
