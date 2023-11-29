@@ -8,7 +8,9 @@ public class DotEffect : StatusEffectBehaviour
     public float DOTDamage = 1;
     public float countdown = 1;
     float DOTTimer = 0;
-    
+
+
+
 
     public void ApplyDOT(float damagePerTik, float tikPerSecond)
     {
@@ -25,7 +27,7 @@ public class DotEffect : StatusEffectBehaviour
 
     private void Update()
     {
-        ElapseDOTTimer();
+        //ElapseDOTTimer();
     }
 
     private void ElapseDOTTimer()

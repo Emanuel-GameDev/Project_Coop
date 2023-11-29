@@ -11,7 +11,7 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     public CharacterData CharacterData => characterData;
     public CharacterClass CharacterClass => characterClass; 
 
-    protected float MaxHp => characterClass.MaxHp;
+    protected float MaxHp => characterClass.maxHp;
     protected float currentHp => characterClass.currentHp;
     protected Rigidbody rb;
     

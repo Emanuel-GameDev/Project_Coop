@@ -49,6 +49,7 @@ public class HealArea : MonoBehaviour
         {
             transform.SetParent(spawner.transform);
             characterInArea.Add(spawner.GetComponentInParent<PlayerCharacter>());
+
         }
 
         countdown = 1 / tikPerSecond;

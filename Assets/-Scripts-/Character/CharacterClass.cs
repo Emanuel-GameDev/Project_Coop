@@ -30,9 +30,10 @@ public class CharacterClass : MonoBehaviour
     protected bool bossfightPowerUpUnlocked;
     protected float uniqueAbilityUses;
     protected Vector2 lastNonZeroDirection;
+   
 
-    public virtual float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
-    //[HideInInspector]
+    public virtual float maxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
+    [HideInInspector]
     public float currentHp;
 
     public virtual float Damage => characterData.Damage + powerUpData.damageIncrease;
@@ -59,7 +60,7 @@ public class CharacterClass : MonoBehaviour
         bossfightPowerUpUnlocked = false;
         uniqueAbilityUses = 0;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        pivot = GetComponentInChildren<Pivot>();
+        pivot = GetComponentInChildren<Pivot>();        
         lastNonZeroDirection = Vector2.down;
         damager = GetComponentInChildren<Damager>();
         if (damager != null)
@@ -132,6 +133,8 @@ public class CharacterClass : MonoBehaviour
         if (direction2D != Vector2.zero)
             lastNonZeroDirection = direction2D;
         SetSpriteDirection(lastNonZeroDirection);
+
+       
     }
 
     private void SetSpriteDirection(Vector2 direction)

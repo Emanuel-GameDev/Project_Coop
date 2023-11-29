@@ -340,6 +340,12 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
+--- !u!1 &329531023 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3605962510235015332, guid: 5e4e7b014c3a19945af8275465d7addf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1668384896}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &371867641
 GameObject:
   m_ObjectHideFlags: 0
@@ -452,13 +458,13 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1668384896}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 329531023}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &1059605933
+--- !u!1001 &726468915
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -469,17 +475,17 @@ PrefabInstance:
     - target: {fileID: 2294395373234744904, guid: 34f950e3c8f98484a99f7ed9d42fd12a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -3.23783
       objectReference: {fileID: 0}
     - target: {fileID: 2294395373234744904, guid: 34f950e3c8f98484a99f7ed9d42fd12a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.7
+      value: -4.05
       objectReference: {fileID: 0}
     - target: {fileID: 2294395373234744904, guid: 34f950e3c8f98484a99f7ed9d42fd12a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -2.5415955
       objectReference: {fileID: 0}
     - target: {fileID: 2294395373234744904, guid: 34f950e3c8f98484a99f7ed9d42fd12a,
         type: 3}
@@ -527,6 +533,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: b017b230f81f3e94697a48f7683f3b1e,
         type: 2}
+    - target: {fileID: 8346729712529157359, guid: 34f950e3c8f98484a99f7ed9d42fd12a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -544,7 +555,7 @@ PrefabInstance:
         type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1552406382}
+      objectReference: {fileID: 1803351269}
     - target: {fileID: 726525942643775275, guid: 64a37e0cc339faf4b9a28466184282b9,
         type: 3}
       propertyPath: canJoin
@@ -555,6 +566,11 @@ PrefabInstance:
       propertyPath: manager
       value: 
       objectReference: {fileID: 625846840}
+    - target: {fileID: 726525942643775275, guid: 64a37e0cc339faf4b9a28466184282b9,
+        type: 3}
+      propertyPath: playerManager
+      value: 
+      objectReference: {fileID: 329531023}
     - target: {fileID: 1360045889991776551, guid: 64a37e0cc339faf4b9a28466184282b9,
         type: 3}
       propertyPath: m_Name
@@ -837,18 +853,6 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
---- !u!114 &1552406382 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7737284560217082375, guid: 34f950e3c8f98484a99f7ed9d42fd12a,
-    type: 3}
-  m_PrefabInstance: {fileID: 1059605933}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93cddced58d648d449d7fdf302364bde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1668384896
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -922,6 +926,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e4e7b014c3a19945af8275465d7addf, type: 3}
+--- !u!114 &1803351269 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7737284560217082375, guid: 34f950e3c8f98484a99f7ed9d42fd12a,
+    type: 3}
+  m_PrefabInstance: {fileID: 726468915}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93cddced58d648d449d7fdf302364bde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -931,4 +947,4 @@ SceneRoots:
   - {fileID: 371867645}
   - {fileID: 1108747152}
   - {fileID: 1668384896}
-  - {fileID: 1059605933}
+  - {fileID: 726468915}
