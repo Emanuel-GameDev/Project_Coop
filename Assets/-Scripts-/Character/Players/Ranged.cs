@@ -1,9 +1,8 @@
 
 using System.Collections;
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
 
 public class Ranged : CharacterClass
 {
@@ -38,7 +37,7 @@ public class Ranged : CharacterClass
     [SerializeField, Tooltip("tempo ridotto caricamento con potenziamento")]
     float chargeTimeReduction = 0.5f;
     float empowerStartTimer = 0; //timer da caricare
-    float empowerCoolDownTimer=0;
+    float empowerCoolDownTimer = 0;
     bool canUseUniqueAbility => empowerCoolDownTimer <= 0;
     [SerializeField, Tooltip("Aumento gittata per colpo potenziato")]
     float empowerAdditionalRange = 15f;
@@ -61,12 +60,18 @@ public class Ranged : CharacterClass
     float dodgeDamageMultiplier = 0.75f;
 
     [Header("Abilità extra")]
+    [SerializeField, Tooltip("coolDown recupero mina esplosa")]
+    float landMineCoolDown = 10f;
+    [SerializeField, Tooltip("Numero massimo delle mine")]
+    int maxNumberLandMine = 1;
     [SerializeField, Tooltip("Prefab della mina")]
     GameObject prefabLandMine;
     [SerializeField, Tooltip("danno della mina")]
     float landMineDamageMultiplier = 2f;
     [SerializeField, Tooltip("raggio della mina")]
     float landMineRange = 5f;
+
+    [SerializeField] List<GameObject> _landMines;
 
     [Header("Potenziamneto Boss fight")]
     [SerializeField, Tooltip("distanza massima per schivata perfetta ")]
@@ -82,9 +87,9 @@ public class Ranged : CharacterClass
 
     private bool reduceEmpowerFireCoolDownUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
     private bool multiBaseAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
-    private bool dodgeTeleportBossUnlocked=> upgradeStatus[AbilityUpgrade.Ability3];
+    private bool dodgeTeleportBossUnlocked => upgradeStatus[AbilityUpgrade.Ability3];
     private bool dodgeDamageUnlocked => upgradeStatus[AbilityUpgrade.Ability4];
-    private bool landMineUnlocked=> upgradeStatus[AbilityUpgrade.Ability5];
+    private bool landMineUnlocked => upgradeStatus[AbilityUpgrade.Ability5];
 
     private float empowerCoolDownDecrease => reduceEmpowerFireCoolDownUnlocked ? chargeTimeReduction : 0;
 
@@ -94,7 +99,10 @@ public class Ranged : CharacterClass
 
 
 
-
+    private void Start()
+    {
+        _landMines = new List<GameObject>();
+    }
 
 
     private void Update()
@@ -102,12 +110,27 @@ public class Ranged : CharacterClass
         CoolDownManager();
     }
 
+    public override void Move(Vector3 direction, Rigidbody rb)
+    {
+        base.Move(direction, rb);
+        
+        
+        if (rb.velocity.magnitude > 0.1f)
+        {
+            animator.SetBool("isMoving", true);
+        }
+        else
+        {
+            animator.SetBool("isMoving", false);
+        }
+    }
 
+    //sparo
     #region Attack
     public override void Attack(Character parent, InputAction.CallbackContext context)
-    {              
+    {
         if (context.performed && !isAttacking)
-        {           
+        {
             if (fireTimer > 0)
             {
                 Debug.Log("In ricarica...");
@@ -128,8 +151,8 @@ public class Ranged : CharacterClass
 
             //in futuro inserire il colpo avanzato
             if (multiBaseAttackUnlocked)
-            {               
-                StartCoroutine(MultipleFireProjectile(lookDirection));                           
+            {
+                StartCoroutine(MultipleFireProjectile(lookDirection));
             }
             else
             {
@@ -140,10 +163,10 @@ public class Ranged : CharacterClass
 
                 Debug.Log("colpo normale");
 
-                isAttacking=false;
+                isAttacking = false;
             }
-            
-        }       
+
+        }
     }
 
     //Sparo normale
@@ -175,22 +198,74 @@ public class Ranged : CharacterClass
         isAttacking = false;
     }
 
-   
+
 
     #endregion
+
+    //schivata
+    #region Defence
     public override void Defence(Character parent, InputAction.CallbackContext context)
     {
         base.Defence(parent, context);
     }
 
+    #endregion
+
+    //mina
+    #region ExtraAbility
     public override void UseExtraAbility(Character parent, InputAction.CallbackContext context) //E
     {
-        if(landMineUnlocked)
+        if (context.performed)
         {
-            //lascio mina
+            if (landMineUnlocked)
+            {
+                //animazione droppaggio mina
+
+                //animator.settrigger("Droplandmine"); => da aggiungere
+
+                //momentaneo
+                CreateLandMine();
+                //
+
+                Debug.Log("lascio mina");
+            }
         }
+       
     }
 
+    //probabile funzione da mettere in una animazione
+    public void CreateLandMine()
+    {
+        if (_landMines.Count < maxNumberLandMine)
+        {
+            GameObject newLandMine = Instantiate(prefabLandMine);
+
+            newLandMine.transform.position = new Vector3(transform.position.x, 0 , transform.position.z);
+
+            //funzione di inizializzazione mine
+
+            _landMines.Add(newLandMine);
+        }
+        else
+        {
+            //momentaneo -- eliminare
+
+            Destroy(_landMines[0]);
+            _landMines.RemoveAt(0);
+            //
+
+            GameObject newLandMine = Instantiate(prefabLandMine);
+
+            newLandMine.transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+
+            //funzione di inizializzazione mine
+
+            _landMines.Add(newLandMine);
+        }
+    }
+    #endregion
+
+    //sparo caricato
     #region Unique ability
     public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context) //Q
     {
@@ -206,15 +281,15 @@ public class Ranged : CharacterClass
             }
 
             empowerStartTimer = Time.time;
-           
+
         }
         else if (context.canceled && canUseUniqueAbility)
         {
             float endTimer = Time.time;
 
-            if(endTimer - empowerStartTimer > empowerFireChargeTime-empowerCoolDownDecrease)
+            if (endTimer - empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
             {
-                
+
                 Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
 
                 //controllo che la look non sia zero, possibilità solo se si una il controller
@@ -230,7 +305,7 @@ public class Ranged : CharacterClass
 
                 Debug.Log("colpo potenziato");
             }
-        }     
+        }
 
     }
 
@@ -256,7 +331,7 @@ public class Ranged : CharacterClass
         }
 
         //abilità unica (colpo caricato)
-        if(empowerCoolDownTimer > 0)
+        if (empowerCoolDownTimer > 0)
         {
             empowerCoolDownTimer -= Time.deltaTime;
         }
@@ -285,4 +360,4 @@ public class Ranged : CharacterClass
 //2: L’attacco base spara una raffica di 3 proiettili
 //3: Schivare perfettamente un colpo teletrasporta il personaggio in una parte dell’arena lontana dal boss
 //4: Schivare perfettamente un colpo danneggia il nemico attaccante
-//5: Il personaggio può lasciare a terra una mina che esplode al contatto con un nemico
+//5: Il personaggio può lasciare a terra una mina che esplode al contatto con un nemico -- unica che va ripresa, se esplode applicare cd

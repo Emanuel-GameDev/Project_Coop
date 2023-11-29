@@ -44,7 +44,7 @@ public class Projectile : MonoBehaviour
         //effetti vari
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         ProjectileFlyDirection();
         ProjectileLiveTimer();
@@ -67,6 +67,8 @@ public class Projectile : MonoBehaviour
     {
         transform.position = Vector3.MoveTowards(transform.position, travelDirection, projectileSpeed * Time.deltaTime);
     }
+
+    
 
    
 }
