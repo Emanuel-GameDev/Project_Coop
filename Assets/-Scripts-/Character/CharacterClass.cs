@@ -30,6 +30,7 @@ public class CharacterClass : MonoBehaviour
     protected bool bossfightPowerUpUnlocked;
     protected float uniqueAbilityUses;
     protected Vector2 lastNonZeroDirection;
+    protected bool isInBossfight;
    
 
     public virtual float maxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
@@ -67,7 +68,10 @@ public class CharacterClass : MonoBehaviour
         {
             damager.SetSource(character);
         }
+        SetIsInBossfight(false);
     }
+
+    
 
     public virtual void Attack(Character parent, InputAction.CallbackContext context)
     {
@@ -105,6 +109,7 @@ public class CharacterClass : MonoBehaviour
     }
 
     public virtual float GetDamage() => Damage;
+    public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
 
     #region Move
     //dati x e z chiama Move col Vector2
