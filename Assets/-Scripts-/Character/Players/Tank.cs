@@ -10,10 +10,15 @@ using UnityEngine.InputSystem;
 public class Tank : CharacterClass
 {
     [Header("Attack")]
-    [SerializeField, Tooltip("Durata tempo pressione prolungata tasto attaco prima per decidere se attacco caricato o non")]
+    [SerializeField, Tooltip("Durata tempo pressione tasto attacco prima per decidere se attacco caricato o no")]
     float timeCheckAttackType = 0.2f;
     [SerializeField, Tooltip("Tempo minimo attacco caricato per essere eseguito")]
     float chargedAttackTimer = 2.5f;
+    [SerializeField, Tooltip("Range danno ad area intorno al player")]
+    float chargedAttackRadius = 5f;
+    [SerializeField, Tooltip("Durata attacco ad area di attacco caricato")]
+    float chargedAttackAreaDuration = 0.2f;
+
 
     [Header("Block")]
     
@@ -65,6 +70,7 @@ public class Tank : CharacterClass
     private float rangeAggro = math.INFINITY;
     private float currentStamina;
     private GenericBarScript staminaBar;
+    private GameObject chargedAttackAreaObject = null;
 
     bool canCancelAttack;
 
@@ -202,7 +208,7 @@ public class Tank : CharacterClass
         }
 
     }
-    public void DeactivateHyperArmor()
+    private void DeactivateHyperArmor()
     {
         hyperArmorOn = false;
     }
@@ -224,6 +230,30 @@ public class Tank : CharacterClass
     public void aaaaaaaaaaaaaaaaaaaaaa()
     {
         Debug.Log($"combo index:[{comboIndex}] can Double Attack[{doubleAttack}]");
+    }
+    public void ChargedAttackAreaDamage()
+    {
+        if(chargedAttackAreaObject == null)
+        {
+            chargedAttackAreaObject = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform);
+            chargedAttackAreaObject.name = "ChargedAttackArea";
+            chargedAttackAreaObject.GetComponent<Renderer>().enabled = false;
+            chargedAttackAreaObject.GetComponent<SphereCollider>().radius = chargedAttackRadius;
+            Damager dama = chargedAttackAreaObject.AddComponent<Damager>();
+            dama.targetLayers = LayerMask.GetMask("Enemy");
+            Invoke(nameof(DeactivateAreaDamage), chargedAttackAreaDuration);
+        }
+        else
+        {
+            chargedAttackAreaObject.SetActive(true);
+            Invoke(nameof(DeactivateAreaDamage), chargedAttackAreaDuration);
+        }
+
+    }
+
+    private void DeactivateAreaDamage()
+    {
+        chargedAttackAreaObject.SetActive(false);
     }
 
     #endregion

@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class Damager : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField] public
     LayerMask targetLayers;
 
     IDamager source;
