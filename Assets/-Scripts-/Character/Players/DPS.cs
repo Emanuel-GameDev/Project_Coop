@@ -53,8 +53,18 @@ public class DPS : CharacterClass
     LayerMask projectileLayer;
 
 
-    private float extraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
-    private float extraDamage => (perfectDodgeExtraDamageUnlocked && Time.time < lastPerfectDodgeTime + perfectDodgeExtraDamageDuration ? perfectDodgeExtraDamage : 0) + (bossfightPowerUpUnlocked ? MathF.Min(bossPowerUpExtraDamagePerHit * (consecutiveHitsCount > 1 ? consecutiveHitsCount - 1 : 0), bossPowerUpExtraDamageCap) : 0);
+    private float ExtraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
+
+    private float ExtraDamage()
+    {
+        float perfectDodgeDamage = perfectDodgeExtraDamageUnlocked && Time.time < lastPerfectDodgeTime + perfectDodgeExtraDamageDuration ? perfectDodgeExtraDamage : 0;
+        float bossPowerUpDamage = bossfightPowerUpUnlocked ? MathF.Min(bossPowerUpExtraDamagePerHit * (consecutiveHitsCount > 1 ? consecutiveHitsCount - 1 : 0), bossPowerUpExtraDamageCap) : 0;
+
+        Debug.Log($"ExtraDamage Multi: {perfectDodgeDamage + bossPowerUpDamage + 1}");
+
+        return perfectDodgeDamage + bossPowerUpDamage + 1;
+    }
+
     private float lastAttackTime;
     private float lastDodgeTime;
     private float lastUniqueAbilityUseTime;
@@ -106,9 +116,9 @@ public class DPS : CharacterClass
     private static string ISMOVING = "IsMoving";
     #endregion
 
-    public override float AttackSpeed => base.AttackSpeed + extraSpeed;
-    public override float MoveSpeed => base.MoveSpeed + extraSpeed;
-    public override float Damage => base.Damage * extraDamage;
+    public override float AttackSpeed => base.AttackSpeed + ExtraSpeed;
+    public override float MoveSpeed => base.MoveSpeed + ExtraSpeed;
+    public override float Damage => base.Damage * ExtraDamage();
 
     public override void Inizialize(CharacterData characterData, Character character)
     {
@@ -134,7 +144,7 @@ public class DPS : CharacterClass
     {
         if (context.performed)
         {
-            if (!IsAttacking)
+            if (canMove)
             {
                 if (CanStartCombo())
                     StartCombo();
@@ -164,9 +174,9 @@ public class DPS : CharacterClass
     }
     private void DoMeleeAttack()
     {
+        IsAttacking = true;
         string triggerName = ATTACK + (nextComboState).ToString();
         animator.SetTrigger(triggerName);
-        IsAttacking = true;
     }
     public void OnAttackAnimationEnd()
     {
@@ -185,8 +195,13 @@ public class DPS : CharacterClass
         lastAttackTime = Time.time - reductionFactor;
     }
 
-    private bool CanStartCombo() => unlimitedComboUnlocked || Time.time > lastAttackTime + timeBetweenCombo;
+    private bool CanStartCombo() => (unlimitedComboUnlocked || Time.time > lastAttackTime + timeBetweenCombo) && currentComboState != 1;
     private bool CanContinueCombo() => nextComboState != 0;
+    private void ResetAttack()
+    {
+        IsAttacking = false;
+        currentComboState = 0;
+    }
 
     #endregion
 
@@ -197,8 +212,9 @@ public class DPS : CharacterClass
         if (context.performed)
         {
             Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
-            if (Time.time > lastDodgeTime + dodgeCooldown && !isDodging)
+            if (Time.time > lastDodgeTime + dodgeCooldown && !isDodging && !isDashingAttack)
             {
+                ResetAttack();
                 lastDodgeTime = Time.time + dodgeDuration;
                 StartCoroutine(Dodge(lastNonZeroDirection, parent.GetRigidBody()));
             }
@@ -233,6 +249,7 @@ public class DPS : CharacterClass
 
         rb.velocity = Vector3.zero;
     }
+
 
     #endregion
 
@@ -360,47 +377,45 @@ public class DPS : CharacterClass
         damager.RemoveFunctionFromOnTrigger(DeflectProjectile);
     }
 
-    private void DamageCheck(float damage)
+    public override void Disable(Character character)
     {
-        if (bossfightPowerUpUnlocked)
+        if (projectileDeflectionUnlocked)
+            RemoveDeflect();
+    }
+
+    #region Damage
+    public override float GetDamage()
+    {
+        BossDamageCheck();
+
+        float damage = isDashingAttack ? base.Damage * dashAttackDamageMultiplier : Damage;
+
+        TotalDamageUpdate(damage);
+
+        Debug.Log($"Damage Done: {damage}");
+        return damage;
+    }
+
+    private void BossDamageCheck()
+    {
+        if (isInBossfight && bossfightPowerUpUnlocked)
         {
             if (Time.time > lastHitTime + bossPowerUpExtraDamageDuration)
                 consecutiveHitsCount = 0;
 
             consecutiveHitsCount++;
             lastHitTime = Time.time;
-
-        }
-        else
-        {
-            totalDamageDone += damage;
-            if (totalDamageDone > bossPowerUpTotalDamageToUnlock)
-                bossfightPowerUpUnlocked = true;
         }
     }
 
-    public override void Disable(Character character)
+    private void TotalDamageUpdate(float damage)
     {
-        //base.Disable(character);
-        if (projectileDeflectionUnlocked)
-            RemoveDeflect();
+        totalDamageDone += damage;
+        if (totalDamageDone > bossPowerUpTotalDamageToUnlock)
+            bossfightPowerUpUnlocked = true;
     }
 
-    public override float GetDamage()
-    {
-        float damage;
-
-        if (isDashingAttack)
-            damage = base.Damage * dashAttackDamageMultiplier;
-        else
-            damage =  base.GetDamage();
-
-        if (isInBossfight)
-            DamageCheck(damage);
-
-        return damage;
-    }
-
+    #endregion
     //Potenziamento boss fight: gli attacchi consecutivi aumentano il danno del personaggio a ogni colpo andato a segno.
     //Dopo tot tempo (es: 1.5 secondi) senza colpire, il danno torna al valore standard.
 

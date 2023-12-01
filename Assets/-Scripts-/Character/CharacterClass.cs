@@ -28,10 +28,11 @@ public class CharacterClass : MonoBehaviour
     protected Damager damager;
     protected bool isMoving;
     protected bool bossfightPowerUpUnlocked;
-    protected float uniqueAbilityUses;
-    protected Vector2 lastNonZeroDirection;
     protected bool isInBossfight;
-   
+    protected float uniqueAbilityUses;
+    protected float damageReceivedMultiplier = 1;
+    protected Vector2 lastNonZeroDirection;
+
 
     public virtual float maxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
@@ -59,9 +60,10 @@ public class CharacterClass : MonoBehaviour
         animator = GetComponent<Animator>();
         this.character = character;
         bossfightPowerUpUnlocked = false;
+        damageReceivedMultiplier = 1;
         uniqueAbilityUses = 0;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        pivot = GetComponentInChildren<Pivot>();        
+        pivot = GetComponentInChildren<Pivot>();
         lastNonZeroDirection = Vector2.down;
         damager = GetComponentInChildren<Damager>();
         if (damager != null)
@@ -71,7 +73,7 @@ public class CharacterClass : MonoBehaviour
         SetIsInBossfight(false);
     }
 
-    
+
 
     public virtual void Attack(Character parent, InputAction.CallbackContext context)
     {
@@ -84,13 +86,7 @@ public class CharacterClass : MonoBehaviour
 
     public virtual void Disable(Character character)
     {
-        //foreach (KeyValuePair<AbilityUpgrade, bool> entry in upgradeStatus)
-        //{
-        //    // do something with entry.Value or entry.Key
-        //    Debug.Log(entry.Key);
-        //}
 
-        // Disattivo eventuali modifiche al prefab
     }
 
     public virtual void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
@@ -106,6 +102,8 @@ public class CharacterClass : MonoBehaviour
     {
         if (data.condition != null)
             conditions.Add((Condition)gameObject.AddComponent(data.condition.GetType()));
+
+        currentHp -= data.damage * damageReceivedMultiplier;
     }
 
     public virtual float GetDamage() => Damage;
@@ -139,7 +137,7 @@ public class CharacterClass : MonoBehaviour
             lastNonZeroDirection = direction2D;
         SetSpriteDirection(lastNonZeroDirection);
 
-       
+
     }
 
     private void SetSpriteDirection(Vector2 direction)
