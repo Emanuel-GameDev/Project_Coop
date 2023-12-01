@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
@@ -14,14 +13,13 @@ public class Tank : CharacterClass
     float timeCheckAttackType = 0.2f;
     [SerializeField, Tooltip("Tempo minimo attacco caricato per essere eseguito")]
     float chargedAttackTimer = 2.5f;
+    [SerializeField, Tooltip("danno ad area intorno al player")]
+    float chargedAttackDamage = 50f;
     [SerializeField, Tooltip("Range danno ad area intorno al player")]
     float chargedAttackRadius = 5f;
-    [SerializeField, Tooltip("Durata attacco ad area di attacco caricato")]
-    float chargedAttackAreaDuration = 0.2f;
-
 
     [Header("Block")]
-    
+
     [SerializeField, Tooltip("Quantità di danno parabile prima di rottura parata")]
     float maxStamina;
     [SerializeField, Tooltip("Danno parata perfetta")]
@@ -81,7 +79,7 @@ public class Tank : CharacterClass
         currentHp = maxHp;
 
         staminaBar = GetComponentInChildren<GenericBarScript>();
-        
+
         staminaBar.Setvalue(maxStamina);
         staminaBar.gameObject.SetActive(false);
     }
@@ -91,11 +89,11 @@ public class Tank : CharacterClass
         {
             bossfightPowerUpUnlocked = true;
         }
-        if(Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.T))
         {
-            TakeDamage(new DamageData(10,null));
+            TakeDamage(new DamageData(10, null));
         }
-       
+
     }
 
 
@@ -121,7 +119,7 @@ public class Tank : CharacterClass
             {
                 animator.SetTrigger("ChargedAttackEnd");
                 Debug.Log("Charged Attack executed");
-               
+
             }
 
             else if (!chargedAttackReady && canCancelAttack)
@@ -147,7 +145,7 @@ public class Tank : CharacterClass
     }
     public void CheckAttackToDo()
     {
-        SetCanMove(false,character.GetRigidBody());
+        SetCanMove(false, character.GetRigidBody());
 
         if (pressed && chargedAttack)
         {
@@ -185,17 +183,17 @@ public class Tank : CharacterClass
     IEnumerator StartChargedAttackTimer()
     {
         chargedAttackReady = false;
-      
+
         yield return new WaitForSeconds(chargedAttackTimer);
 
         if (pressed)
-        {         
+        {
             chargedAttackReady = true;
             canCancelAttack = false;
-            
+
             Debug.Log("Charged Attack Ready");
             //Segnale Visivo
-        }       
+        }
 
     }
     public void ActivateHyperArmor()
@@ -231,30 +229,24 @@ public class Tank : CharacterClass
     {
         Debug.Log($"combo index:[{comboIndex}] can Double Attack[{doubleAttack}]");
     }
+
     public void ChargedAttackAreaDamage()
     {
-        if(chargedAttackAreaObject == null)
+        RaycastHit[] hitted = Physics.SphereCastAll(transform.position, chargedAttackRadius, Vector3.zero,chargedAttackRadius);
+        
+        if (hitted != null)
         {
-            chargedAttackAreaObject = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), transform);
-            chargedAttackAreaObject.name = "ChargedAttackArea";
-            chargedAttackAreaObject.GetComponent<Renderer>().enabled = false;
-            chargedAttackAreaObject.GetComponent<SphereCollider>().radius = chargedAttackRadius;
-            Damager dama = chargedAttackAreaObject.AddComponent<Damager>();
-            dama.targetLayers = LayerMask.GetMask("Enemy");
-            Invoke(nameof(DeactivateAreaDamage), chargedAttackAreaDuration);
+            //foreach ()
+            //{
+                
+            //        c.GetComponent<IDamageable>().TakeDamage(new DamageData(chargedAttackDamage, character, null));
+            //        Debug.Log(c.gameObject.name + " colpito");
+                
+            //}
         }
-        else
-        {
-            chargedAttackAreaObject.SetActive(true);
-            Invoke(nameof(DeactivateAreaDamage), chargedAttackAreaDuration);
-        }
-
     }
 
-    private void DeactivateAreaDamage()
-    {
-        chargedAttackAreaObject.SetActive(false);
-    }
+
 
     #endregion
 
@@ -264,8 +256,8 @@ public class Tank : CharacterClass
     {
         if (context.performed && isAttacking == false)
         {
-                   
-            SetCanMove(false, character.GetRigidBody());           
+
+            SetCanMove(false, character.GetRigidBody());
             isBlocking = true;
             ShowStaminaBar(true);
             Debug.Log($"is blocking [{isBlocking}]");
@@ -274,7 +266,7 @@ public class Tank : CharacterClass
         else if (context.canceled && isBlocking == true)
         {
             SetCanMove(true, character.GetRigidBody());
-            isBlocking= false;
+            isBlocking = false;
             ShowStaminaBar(false);
             ResetStamina();
             Debug.Log($"is blocking [{isBlocking}]");
@@ -292,7 +284,7 @@ public class Tank : CharacterClass
 
     public void ShowStaminaBar(bool toShow)
     {
-        staminaBar.gameObject.SetActive(toShow);       
+        staminaBar.gameObject.SetActive(toShow);
     }
     #endregion
 
@@ -300,21 +292,21 @@ public class Tank : CharacterClass
 
     public override void TakeDamage(DamageData data)
     {
-       if(hyperArmorOn == false)
+        if (hyperArmorOn == false)
         {
             //Hit Reaction
         }
 
-       if(isBlocking)
+        if (isBlocking)
         {
             staminaBar.DecreaseValue(data.damage);
             currentStamina -= data.damage;
             Debug.Log($"{currentStamina}");
-            if(currentStamina <= 0)
+            if (currentStamina <= 0)
             {
-                SetCanMove(true, character.GetRigidBody());               
+                SetCanMove(true, character.GetRigidBody());
                 isBlocking = false;
-                ShowStaminaBar(false );
+                ShowStaminaBar(false);
                 Debug.Log("Parata Rotta");
                 //Stun per 2 secondi dopo reset stamina
             }
@@ -326,7 +318,7 @@ public class Tank : CharacterClass
         }
     }
 
-    
+
     #endregion
 
     #region UniqueAbility(Shout)
@@ -364,13 +356,13 @@ public class Tank : CharacterClass
     #endregion
 
     #region Move
-    
+
     public override void Move(Vector2 direction, Rigidbody rb)
     {
         if (canMove)
         {
             base.Move(direction, rb);
-            
+
         }
         animator.SetBool("IsMoving", isMoving);
 
