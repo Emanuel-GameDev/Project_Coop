@@ -29,7 +29,7 @@ public class Dummy : CharacterClass
 
     public override void TakeDamage(DamageData data)
     {
-        Debug.Log("danno subito");
+
         DummyData existingData = dummyData.Find(dataToFind => dataToFind.dealer == data.dealer);
 
         if (existingData.dealer != null)
@@ -47,7 +47,7 @@ public class Dummy : CharacterClass
         }
 
         TotalDamageReceived += data.damage;
-        Debug.Log(totalDamageReceived);
+        Debug.Log("Dummy subito " + totalDamageReceived + " danni");
         
     }
 

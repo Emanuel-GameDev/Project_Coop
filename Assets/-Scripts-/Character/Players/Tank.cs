@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -26,6 +25,9 @@ public class Tank : CharacterClass
     float perfectBlockDamage;
 
     [Header("Unique Ability")]
+
+    [SerializeField, Tooltip("Range aggro")]
+    float aggroRange;
     [SerializeField, Tooltip("Durata aggro")]
     float aggroDuration;
     [SerializeField, Tooltip("Durata buff difesa")]
@@ -61,16 +63,20 @@ public class Tank : CharacterClass
     private bool chargedAttackReady;
     private bool canMove = true;
     private bool isBlocking;
+    private bool canCancelAttack;
 
     private int comboIndex = 0;
     private int comboMax = 2;
     private int perfectBlockCount;
-    private float rangeAggro = math.INFINITY;
+
     private float currentStamina;
     private GenericBarScript staminaBar;
     private GameObject chargedAttackAreaObject = null;
 
-    bool canCancelAttack;
+    //Da eliminare
+    private bool mostraGizmoAttaccoCaricato;
+    private bool mostraGizmoAbilitaUnica;
+
 
     public override void Inizialize(CharacterData characterData, Character character)
     {
@@ -188,6 +194,10 @@ public class Tank : CharacterClass
 
         if (pressed)
         {
+            //da eliminare 
+            mostraGizmoAttaccoCaricato = true;
+
+
             chargedAttackReady = true;
             canCancelAttack = false;
 
@@ -218,6 +228,9 @@ public class Tank : CharacterClass
             isAttacking = false;
             Debug.Log("Reset Variables");
             SetCanMove(true, character.GetRigidBody());
+
+            //da eliminare
+            mostraGizmoAttaccoCaricato = false;
         }
         else if (comboIndex == 2)
         {
@@ -232,17 +245,19 @@ public class Tank : CharacterClass
 
     public void ChargedAttackAreaDamage()
     {
-        RaycastHit[] hitted = Physics.SphereCastAll(transform.position, chargedAttackRadius, Vector3.zero,chargedAttackRadius);
-        
+        RaycastHit[] hitted = Physics.SphereCastAll(transform.position, chargedAttackRadius, Vector3.up, chargedAttackRadius);
         if (hitted != null)
         {
-            //foreach ()
-            //{
-                
-            //        c.GetComponent<IDamageable>().TakeDamage(new DamageData(chargedAttackDamage, character, null));
-            //        Debug.Log(c.gameObject.name + " colpito");
-                
-            //}
+            foreach (RaycastHit r in hitted)
+            {
+                if (Utility.IsInLayerMask(r.transform.gameObject, LayerMask.GetMask("Enemy")))
+                {
+                    IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
+                    hittedDama.TakeDamage(new DamageData(chargedAttackDamage, character, null));
+                    Debug.Log(r.transform.gameObject.name + " colpito con " + chargedAttackDamage + " damage");
+
+                }
+            }
         }
     }
 
@@ -314,7 +329,7 @@ public class Tank : CharacterClass
         else
         {
             currentHp -= data.damage;
-            Debug.Log($"{currentHp}");
+            Debug.Log($" Tank current hp : {currentHp}");
         }
     }
 
@@ -327,9 +342,33 @@ public class Tank : CharacterClass
     {
         if (context.performed)
         {
+            //Da eliminare
+            mostraGizmoAbilitaUnica = true;
 
+
+            animator.SetTrigger("UniqueAbility");
+            Debug.Log("UniqueAbility Used");
         }
-        //attacco attiro aggro
+        
+    }
+
+    public void PerformUniqueAbility()
+    {
+        RaycastHit[] hitted = Physics.SphereCastAll(transform.position, aggroRange, Vector3.up, aggroRange);
+        if (hitted != null)
+        {
+            foreach (RaycastHit r in hitted)
+            {
+                if (Utility.IsInLayerMask(r.transform.gameObject, LayerMask.GetMask("Enemy")))
+                {
+                    IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
+
+                   //hittedDama.TakeDamage(new DamageData(0, character,hittedDama);
+
+                    
+                }
+            }
+        }
     }
 
     #endregion
@@ -379,6 +418,22 @@ public class Tank : CharacterClass
 
     }
     #endregion
+
+    public void OnDrawGizmos()
+    {
+       
+        if (mostraGizmoAttaccoCaricato)
+        {
+            Gizmos.color = new Color(1f, 0f, 1f, 0.1f);
+            Gizmos.DrawSphere(transform.position, chargedAttackRadius);
+        }
+        if (mostraGizmoAbilitaUnica)
+        {
+            Gizmos.color = new Color(0f, 1f, 1f, 0.1f);
+            Gizmos.DrawSphere(transform.position, aggroRange);
+        }
+
+    }
 
 
 }
