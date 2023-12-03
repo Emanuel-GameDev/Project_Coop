@@ -1,6 +1,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -64,6 +65,7 @@ public class Ranged : CharacterClass
     float landMineCoolDown = 10f;
     [SerializeField, Tooltip("Numero massimo delle mine")]
     int maxNumberLandMine = 1;
+    [SerializeField] int landMineInInventory;
     [SerializeField, Tooltip("Prefab della mina")]
     GameObject prefabLandMine;
     [SerializeField, Tooltip("danno della mina")]
@@ -71,7 +73,7 @@ public class Ranged : CharacterClass
     [SerializeField, Tooltip("raggio della mina")]
     float landMineRange = 5f;
 
-    [SerializeField] List<GameObject> _landMines;
+    public List<LandMine> nearbyLandmine;
 
     [Header("Potenziamneto Boss fight")]
     [SerializeField, Tooltip("distanza massima per schivata perfetta ")]
@@ -82,6 +84,8 @@ public class Ranged : CharacterClass
     [SerializeField, Tooltip("moltiplicatore danno per distanza del colpo")]
     [Min(1)]
     float maxDamageMultiplier = 2.5f;
+
+    
 
     private Vector2 lastDirection;
 
@@ -101,7 +105,8 @@ public class Ranged : CharacterClass
 
     private void Start()
     {
-        _landMines = new List<GameObject>();
+        nearbyLandmine = new List<LandMine>();
+        landMineInInventory = maxNumberLandMine;
     }
 
 
@@ -219,15 +224,24 @@ public class Ranged : CharacterClass
         {
             if (landMineUnlocked)
             {
-                //animazione droppaggio mina
+                if (nearbyLandmine.Count==0)
+                {
+                    //animazione droppaggio mina
 
-                //animator.settrigger("Droplandmine"); => da aggiungere
+                    //animator.settrigger("Droplandmine"); => da aggiungere
 
-                //momentaneo
-                CreateLandMine();
-                //
+                    //momentaneo
+                    CreateLandMine();
+                    //
 
-                Debug.Log("lascio mina");
+                    Debug.Log("lascio mina");
+                }
+                else
+                {
+                    //prendo mina
+                    nearbyLandmine[nearbyLandmine.Count - 1].PickUpLandmine();
+                }
+                
             }
         }
        
@@ -236,35 +250,36 @@ public class Ranged : CharacterClass
     //probabile funzione da mettere in una animazione
     public void CreateLandMine()
     {
-        if (_landMines.Count < maxNumberLandMine)
+        if (landMineInInventory > 0)
         {
             GameObject newLandMine = Instantiate(prefabLandMine);
 
             newLandMine.transform.position = new Vector3(transform.position.x, 0 , transform.position.z);
 
-            //funzione di inizializzazione mine
+            newLandMine.GetComponent<LandMine>().Initialize(gameObject);
 
-            _landMines.Add(newLandMine);
+            landMineInInventory--;
         }
         else
         {
-            //momentaneo -- eliminare
-
-            Destroy(_landMines[0]);
-            _landMines.RemoveAt(0);
-            //
-
-            GameObject newLandMine = Instantiate(prefabLandMine);
-
-            newLandMine.transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-
-            //funzione di inizializzazione mine
-
-            _landMines.Add(newLandMine);
+            Debug.Log("mina già piazzata");
         }
     }
-    #endregion
 
+    public void RecoverLandMine()
+    {
+        landMineInInventory++;
+    }
+
+    public IEnumerator RegenerateLandMine()
+    {
+        yield return new WaitForSeconds(landMineCoolDown);
+
+        landMineInInventory++;
+    }
+
+    #endregion
+      
     //sparo caricato
     #region Unique ability
     public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context) //Q
