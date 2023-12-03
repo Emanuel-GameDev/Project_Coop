@@ -47,7 +47,16 @@ public class Dummy : CharacterClass
         }
 
         TotalDamageReceived += data.damage;
-        Debug.Log("Dummy subito " + totalDamageReceived + " danni");
+
+
+        //guardo la condition
+
+        if(data.condition != null)
+        {
+            data.condition.AddCondition(this);
+        }
+
+        Debug.Log($"Dummy subito [{totalDamageReceived}] danni con condition [{data.condition}]");
         
     }
 

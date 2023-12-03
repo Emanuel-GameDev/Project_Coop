@@ -30,8 +30,6 @@ public class Tank : CharacterClass
     float aggroRange;
     [SerializeField, Tooltip("Durata aggro")]
     float aggroDuration;
-    [SerializeField, Tooltip("Durata buff difesa")]
-    float defenceBuffDuration;
     [SerializeField, Tooltip("Moltiplicatore buff difesa")]
     float defenceMultiplier;
     [SerializeField, Tooltip("Moltiplicatore buff stamina")]
@@ -310,6 +308,7 @@ public class Tank : CharacterClass
         if (hyperArmorOn == false)
         {
             //Hit Reaction
+            //annulla attacco
         }
 
         if (isBlocking)
@@ -344,6 +343,7 @@ public class Tank : CharacterClass
         {
             //Da eliminare
             mostraGizmoAbilitaUnica = true;
+            Invoke(nameof(SetGizmoAbilitaUnica), 1.2f);
 
 
             animator.SetTrigger("UniqueAbility");
@@ -363,12 +363,14 @@ public class Tank : CharacterClass
                 {
                     IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
 
-                   //hittedDama.TakeDamage(new DamageData(0, character,hittedDama);
+                    AggroCondition newAggroCondition = new AggroCondition(this, aggroDuration);
+                   hittedDama.TakeDamage(new DamageData(0, character,newAggroCondition));
 
                     
                 }
             }
         }
+        //Incremento difesa e buff stamina
     }
 
     #endregion
@@ -377,7 +379,7 @@ public class Tank : CharacterClass
 
     public override void UseExtraAbility(Character parent, InputAction.CallbackContext context) //Tasto est
     {
-        if (context.performed)
+        if (context.performed && !isAttacking && !isBlocking)
         {
             SetCanMove(false, character.GetRigidBody());
 
@@ -419,20 +421,26 @@ public class Tank : CharacterClass
     }
     #endregion
 
+    //Eliminare
     public void OnDrawGizmos()
     {
        
         if (mostraGizmoAttaccoCaricato)
         {
-            Gizmos.color = new Color(1f, 0f, 1f, 0.1f);
+            Gizmos.color = new Color(1f, 0f, 1f, 0.2f);
             Gizmos.DrawSphere(transform.position, chargedAttackRadius);
         }
         if (mostraGizmoAbilitaUnica)
         {
-            Gizmos.color = new Color(0f, 1f, 1f, 0.1f);
+            Gizmos.color = new Color(0f, 1f, 1f, 0.2f);
             Gizmos.DrawSphere(transform.position, aggroRange);
         }
 
+    }
+
+    private void SetGizmoAbilitaUnica()
+    {
+        mostraGizmoAbilitaUnica = false;
     }
 
 
