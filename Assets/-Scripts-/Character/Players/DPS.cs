@@ -107,7 +107,7 @@ public class DPS : CharacterClass
     private static string ATTACK = "Attack";
     private static string DODGESTART = "DodgeStart";
     private static string DODGEEND = "DodgeEnd";
-    //private static string HIT = "Hit";
+    private static string HIT = "Hit";
     //private static string UNIQUE_ABILITY = "UniqueAbility";
     private static string STARTDASHATTACK = "StartDashAttack";
     private static string MOVEDASHATTACK = "MoveDashAttack";
@@ -290,6 +290,7 @@ public class DPS : CharacterClass
             Utility.DebugTrace("Performed");
             isDashingAttack = true;
             dashAttackStartTime = Time.time;
+            parent.GetRigidBody().velocity = Vector3.zero;
             animator.SetTrigger(STARTDASHATTACK);
         }
 
@@ -338,14 +339,25 @@ public class DPS : CharacterClass
         {
             base.Move(direction, rb);
         }
+        else if (isDashingAttack)
+        {
+            if (direction != Vector2.zero)
+                lastNonZeroDirection = direction;
+            SetSpriteDirection(lastNonZeroDirection);
+        }
         animator.SetBool(ISMOVING, isMoving);
     }
 
 
     public override void TakeDamage(DamageData data)
     {
-        if (!isInvulnerable)
+        if (!isInvulnerable || !isDodging)
+        {
             base.TakeDamage(data);
+            if(!isDashingAttack)
+                animator.SetTrigger(HIT);
+        }
+            
     }
 
     public override void UnlockUpgrade(AbilityUpgrade abilityUpgrade)
@@ -414,6 +426,7 @@ public class DPS : CharacterClass
         if (totalDamageDone > bossPowerUpTotalDamageToUnlock)
             bossfightPowerUpUnlocked = true;
     }
+
 
     #endregion
     //Potenziamento boss fight: gli attacchi consecutivi aumentano il danno del personaggio a ogni colpo andato a segno.

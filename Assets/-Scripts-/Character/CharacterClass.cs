@@ -108,6 +108,7 @@ public class CharacterClass : MonoBehaviour
 
     public virtual float GetDamage() => Damage;
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
+    public Vector2 GetLastNonZeroDirection() => lastNonZeroDirection;
 
     #region Move
     //dati x e z chiama Move col Vector2
@@ -136,11 +137,9 @@ public class CharacterClass : MonoBehaviour
         if (direction2D != Vector2.zero)
             lastNonZeroDirection = direction2D;
         SetSpriteDirection(lastNonZeroDirection);
-
-
     }
 
-    private void SetSpriteDirection(Vector2 direction)
+    protected void SetSpriteDirection(Vector2 direction)
     {
         if (direction.y != 0)
             animator.SetFloat(Y, direction.y);
