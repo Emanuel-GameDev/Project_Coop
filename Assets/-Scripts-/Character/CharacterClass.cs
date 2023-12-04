@@ -31,7 +31,7 @@ public class CharacterClass : MonoBehaviour
     protected Vector2 lastNonZeroDirection;
 
     public virtual float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
-    [HideInInspector]
+    //[HideInInspector]
     public float currentHp;
 
     public virtual float Damage => characterData.Damage + powerUpData.damageIncrease;
