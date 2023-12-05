@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.TextCore.Text;
 
 public class HealArea : MonoBehaviour
@@ -20,17 +21,19 @@ public class HealArea : MonoBehaviour
     [SerializeField] public float damageIncrement = 1;
     [SerializeField] public PowerUp slowDown;
 
-    [SerializeField] List<StatusEffectBehaviour> statusEffectApplied;
 
     private List<Character> characterInArea;
     
-    float timer=0;
+    float timer = 0;
+    float DOTTimer = 0;
+    float countdown = 1;
 
     private bool damage = false;
     private bool slow = false;
     private bool debilitate = false;
 
-    public void Initialize(float expireTime,float tikPerSecond, float radius, bool damage, bool slow, bool debilitate)
+
+    public void Initialize(GameObject spawner, float expireTime,float tikPerSecond, float radius, bool damage, bool slow, bool debilitate)
     {
         this.expireTime = expireTime;
         this.tikPerSecond = tikPerSecond;
@@ -40,48 +43,37 @@ public class HealArea : MonoBehaviour
         this.debilitate = debilitate;
 
         characterInArea = new List<Character>();
+
+        if (spawner != null && spawner.GetComponentInParent<PlayerCharacter>() != null)
+        {
+            transform.SetParent(spawner.transform);
+            characterInArea.Add(spawner.GetComponentInParent<PlayerCharacter>());
+
+        }
+
+        countdown = 1 / tikPerSecond;
+        transform.localScale = new Vector3(radius, radius, radius);
+        DOTTimer = countdown;
     }
 
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<Character>())
+        {
             characterInArea.Add(other.gameObject.GetComponent<Character>());
 
-        if (other.gameObject.GetComponent<Character>() is PlayerCharacter)
-        {
-            //regene amici
-            DotEffect regeneEffect = other.gameObject.AddComponent<DotEffect>();
-            regeneEffect.ApplyDOT(-healPerTik, tikPerSecond);
-
-            statusEffectApplied.Add(regeneEffect);
-        }
-
-
-        //EnemyCharacter al posto di playerCharacter
-        if (other.gameObject.GetComponent<Character>() is PlayerCharacter)
-        {
-            //danneggia nemici
-            if(damage)
+            //Sostituire playercharacter con enemycharacter
+            if (/*slow && */other.gameObject.GetComponent<Character>() is PlayerCharacter)
             {
-                DotEffect dotEffect = other.gameObject.AddComponent<DotEffect>();
-                dotEffect.ApplyDOT(DOTPerTik, tikPerSecond);
-
-                statusEffectApplied.Add(dotEffect);
-            }
-
-            //rallenta nemici
-            if(slow)
-            {
-                other.gameObject.GetComponent<Character>().AddPowerUp(slowDown);
+                other.gameObject.GetComponent<PlayerCharacter>().AddPowerUp(slowDown);
             }
 
             //indebolisci nemici
-            if (debilitate)
-            {
-
-            }
-
+            //if (debilitate && other.gameObject.GetComponent<CharacterClass>().damager != null)
+            //{
+            //    other.gameObject.GetComponent<CharacterClass>().damager.SetCondition()
+            //}
         }
     }
 
@@ -89,47 +81,58 @@ public class HealArea : MonoBehaviour
     {
         if (characterInArea.Contains(other.gameObject.GetComponent<Character>()))
         {
-            if (other.gameObject.GetComponent<DotEffect>())
-                RemoveEffects(other.gameObject.GetComponent<Character>());
-
             characterInArea.Remove(other.gameObject.GetComponent<Character>());
+
+            other.gameObject.GetComponent<Character>().RemovePowerUp(slowDown);
         }
         //Deregistrati a lista character
     }
 
-    private void RemoveEffects(Character character)
+    public void ApplyDOT()
     {
-        foreach (StatusEffectBehaviour effect in character.gameObject.GetComponents<StatusEffectBehaviour>()) 
+        foreach (Character c in characterInArea)
         {
-            if(statusEffectApplied.Contains(effect))
-                effect.RemoveDOT();
+            if (c is PlayerCharacter)
+            {
+                //regene amici
+                c.TakeDamage(new DamageData(-healPerTik, null));
+            }
 
-            statusEffectApplied.Remove(effect);
+            //EnemyCharacter al posto di playerCharacter
+            if (c is PlayerCharacter)
+            {
+                //danneggia nemici
+                if (damage)
+                {
+                    c.TakeDamage(new DamageData(DOTPerTik, null));
+                }
+            }
         }
-
-        character.RemovePowerUp(slowDown);
     }
 
-    private void Start()
-    {
-        transform.localScale=new Vector3(radius,radius,radius);
-    }
 
 
     private void Update()
     {
+        ElapseDOTTimer();
         ExpireCountdown();
+    }
+
+    private void ElapseDOTTimer()
+    {
+        if (DOTTimer >= countdown)
+        {
+            ApplyDOT();
+            DOTTimer = 0;
+        }
+
+        DOTTimer += Time.deltaTime;
     }
 
     private void ExpireCountdown()
     {
         if (timer >= expireTime)
         {
-            foreach (Character character in characterInArea)
-            {
-                RemoveEffects(character);
-            }
-
             Destroy(gameObject);
 
             timer = 0;
@@ -137,4 +140,6 @@ public class HealArea : MonoBehaviour
 
         timer += Time.deltaTime;
     }
+
+    
 }

@@ -6,13 +6,12 @@ using UnityEngine.InputSystem;
 public class Character : MonoBehaviour, IDamageable, IDamager
 {
     [SerializeField] protected CharacterData characterData;
-    [SerializeField] protected Damager attackDamager;
     protected CharacterClass characterClass;
 
     public CharacterData CharacterData => characterData;
     public CharacterClass CharacterClass => characterClass; 
 
-    protected float MaxHp => characterClass.MaxHp;
+    protected float MaxHp => characterClass.maxHp;
     protected float currentHp => characterClass.currentHp;
     protected Rigidbody rb;
     
@@ -27,9 +26,8 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     protected virtual void InitialSetup()
     {
         rb = GetComponent<Rigidbody>();      
-        characterData.Inizialize(this);
-        attackDamager = GetComponentInChildren<Damager>();
-        attackDamager.SetSource(this);
+        characterData.Inizialize(this);       
+        
     }
 
     protected virtual void Attack(InputAction.CallbackContext context) => characterClass.Attack(this, context);
@@ -54,9 +52,8 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     }
 
     public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
-    public Damager GetDamager() => attackDamager;
     public Rigidbody GetRigidBody() => rb;
 
-    public virtual void TakeDamage(float damage, IDamager dealer) => characterClass.TakeDamage(damage, dealer);
+    public virtual void TakeDamage(DamageData data) => characterClass.TakeDamage(data);
     public float GetDamage() => characterClass.GetDamage();
 }

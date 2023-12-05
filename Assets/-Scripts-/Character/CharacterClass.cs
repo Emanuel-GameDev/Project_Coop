@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public enum AbilityUpgrade
@@ -20,18 +21,30 @@ public class CharacterClass : MonoBehaviour
     protected Character character;
     protected PowerUpData powerUpData;
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
+    protected List<Condition> conditions;
+    protected UnityAction unityAction;
+    protected SpriteRenderer spriteRenderer;
+    protected Pivot pivot;
+    protected Damager damager;
+    protected bool isMoving;
     protected bool bossfightPowerUpUnlocked;
+    protected float uniqueAbilityUses;
+    protected Vector2 lastNonZeroDirection;
+   
 
-    public virtual float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
+    public virtual float maxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
 
     public virtual float Damage => characterData.Damage + powerUpData.damageIncrease;
     public virtual float MoveSpeed => characterData.MoveSpeed + powerUpData.moveSpeedIncrease;
-    public  virtual float AttackSpeed => characterData.AttackSpeed + powerUpData.attackSpeedIncrease;
+    public virtual float AttackSpeed => characterData.AttackSpeed + powerUpData.attackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => characterData.UniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease + (characterData.UniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses);
 
-    protected float uniqueAbilityUses;
+
+    #region Animation Variable
+    private static string Y = "Y";
+    #endregion
 
     public virtual void Inizialize(CharacterData characterData, Character character)
     {
@@ -46,15 +59,23 @@ public class CharacterClass : MonoBehaviour
         this.character = character;
         bossfightPowerUpUnlocked = false;
         uniqueAbilityUses = 0;
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        pivot = GetComponentInChildren<Pivot>();        
+        lastNonZeroDirection = Vector2.down;
+        damager = GetComponentInChildren<Damager>();
+        if (damager != null)
+        {
+            damager.SetSource(character);
+        }
     }
 
     public virtual void Attack(Character parent, InputAction.CallbackContext context)
     {
-       
+
     }
     public virtual void Defence(Character parent, InputAction.CallbackContext context)
     {
-       
+
     }
 
     public virtual void Disable(Character character)
@@ -70,15 +91,17 @@ public class CharacterClass : MonoBehaviour
 
     public virtual void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
-       
+
     }
     public virtual void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
-      
-    }
-    public virtual void TakeDamage(float damage, IDamager dealer)
-    {
 
+    }
+
+    public virtual void TakeDamage(DamageData data)
+    {
+        if (data.condition != null)
+            conditions.Add((Condition)gameObject.AddComponent(data.condition.GetType()));
     }
 
     public virtual float GetDamage() => Damage;
@@ -101,8 +124,28 @@ public class CharacterClass : MonoBehaviour
     {
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
-
         rb.velocity = new Vector3(direction.x * MoveSpeed, direction.y, direction.z * MoveSpeed);
+
+        isMoving = rb.velocity.magnitude > 0.2f;
+
+        Vector2 direction2D = new Vector2(direction.x, direction.z);
+
+        if (direction2D != Vector2.zero)
+            lastNonZeroDirection = direction2D;
+        SetSpriteDirection(lastNonZeroDirection);
+
+       
+    }
+
+    private void SetSpriteDirection(Vector2 direction)
+    {
+        if (direction.y != 0)
+            animator.SetFloat(Y, direction.y);
+        Vector3 scale = pivot.gameObject.transform.localScale;
+        if ((direction.x > 0.5 && scale.x > 0) || (direction.x < -0.5 && scale.x < 0))
+            scale.x *= -1;
+
+        pivot.gameObject.transform.localScale = scale;
     }
     #endregion
 
@@ -131,6 +174,5 @@ public class CharacterClass : MonoBehaviour
 
 
     #endregion
-
 
 }
