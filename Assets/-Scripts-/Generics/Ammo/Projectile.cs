@@ -1,12 +1,14 @@
 using UnityEngine;
 
-public class Projectile : MonoBehaviour,IDamager
+public class Projectile : MonoBehaviour, IDamager
 {
     [SerializeField] private Vector3 travelDirection;
     [SerializeField] private float projectileSpeed;
-    [SerializeField] private float rangeRemaining=1;
+    [SerializeField] private float rangeRemaining = 1;
     [SerializeField] private Vector3 projectileSize;
     [SerializeField] private float projectileDamage;
+
+    private Damager damager;
 
     Rigidbody rb;
 
@@ -17,21 +19,18 @@ public class Projectile : MonoBehaviour,IDamager
 
     private void Start()
     {
-        
         rb = GetComponent<Rigidbody>();
         transform.LookAt(travelDirection);
-        
-
-        
     }
 
-    public void Inizialize(Vector3 direction,float range,float speed,float sizeMultiplier)
+    public void Inizialize(Vector3 direction, float range, float speed, float sizeMultiplier,float damage)
     {
-        
-        travelDirection = direction*1000;
+
+        travelDirection = direction * 1000;
         rangeRemaining = range;
         projectileSpeed = speed;
-        transform.localScale = projectileSize*sizeMultiplier;
+        transform.localScale = projectileSize * sizeMultiplier;
+        projectileDamage = damage;
     }
 
     private void OnEnable()
@@ -53,14 +52,19 @@ public class Projectile : MonoBehaviour,IDamager
     //il tempo di vita del proiettile in base alla distanza
     private void ProjectileLiveTimer()
     {
-        rangeRemaining -= Time.deltaTime*projectileSpeed;
+        rangeRemaining -= Time.deltaTime * projectileSpeed;
 
         //Debug.Log(rangeRemaining);
 
         if (rangeRemaining <= 0)
         {
-            ProjectilePool.Instance.ReturnProjectile(this);
+            DismissProjectile();
         }
+    }
+
+    public void DismissProjectile()
+    {
+        ProjectilePool.Instance.ReturnProjectile(this);
     }
 
     private void ProjectileFlyDirection()
@@ -70,6 +74,6 @@ public class Projectile : MonoBehaviour,IDamager
 
     public float GetDamage()
     {
-        return damage;
+        return projectileDamage;
     }
 }
