@@ -30,7 +30,7 @@ public class CharacterClass : MonoBehaviour
     protected bool bossfightPowerUpUnlocked;
     protected bool isInBossfight;
     protected float uniqueAbilityUses;
-    protected float damageReceivedMultiplier = 1;
+    public float damageReceivedMultiplier = 1;
     protected Vector2 lastNonZeroDirection;
 
     public virtual float maxHp => characterData.MaxHp + powerUpData.maxHpIncrease;

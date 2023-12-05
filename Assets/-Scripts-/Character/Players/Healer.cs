@@ -60,12 +60,10 @@ public class Healer : CharacterClass
     [Tooltip("Rallentamento (Abilità 4)")]
     [SerializeField] PowerUp slowDown;
     [Tooltip("Riduzione difesa (Abilità 5)")]
-    [SerializeField] float damageIncrement = 1;
+    [SerializeField] float damageIncrementPercentage = 1;
 
 
     [Header("Boss powerUp")]
-    //[Tooltip("Quantità di vita curata dall'abilità del boss")]
-    //[SerializeField] float bossPowerUpHeal = 50f;
     [Tooltip("Colpi consecutivi richiesti al boss, senza subire danni, per sbloccare l'abilità del boss")]
     [SerializeField] int bossPowerUpHitToUnlock = 10;
     [Tooltip("Rallentamento durante l'abilità del boss")]
@@ -74,7 +72,6 @@ public class Healer : CharacterClass
     CapsuleCollider smallHealAreaCollider;
 
     List<PlayerCharacter> playerInArea;
-
 
     private float lastAttackTime;
     private float lastUniqueAbilityUseTime;
@@ -265,6 +262,7 @@ public class Healer : CharacterClass
             {
                 if (smallHealTimer >= singleHealCooldown)
                 {
+                    animator.SetTrigger("CastSmallHeal");
                     TakeDamage(new DamageData(-smallHeal, null));
 
                     foreach (PlayerCharacter pc in playerInArea)
@@ -290,7 +288,7 @@ public class Healer : CharacterClass
         if (uniqueAbilityTimer < UniqueAbilityCooldown || !context.performed)
             return;
 
-        animator.SetTrigger("CastHeal");
+        animator.SetTrigger("CastHealArea");
 
         uniqueAbilityTimer = 0;
     }
@@ -322,7 +320,7 @@ public class Healer : CharacterClass
         areaSpawned.healPerTik = healPerTik;
         areaSpawned.DOTPerTik = DOTPerTik;
         areaSpawned.slowDown = slowDown;
-        areaSpawned.damageIncrement = damageIncrement;
+        areaSpawned.damageIncrementPercentage = damageIncrementPercentage;
     }
 
 
@@ -365,7 +363,6 @@ public class Healer : CharacterClass
     public override void TakeDamage(DamageData data)
     {
         base.TakeDamage(data);
-        currentHp -= data.damage;
         bossPowerUpHitCount = 0;
     }
 

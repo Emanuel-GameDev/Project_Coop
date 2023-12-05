@@ -43,7 +43,7 @@ public class Dummy : CharacterClass
             dummyData.Add(newData);
         }
 
-        TotalDamageReceived += data.damage;
+        TotalDamageReceived += data.damage * damageReceivedMultiplier;
     }
 
     public override void Inizialize(CharacterData characterData, Character character)

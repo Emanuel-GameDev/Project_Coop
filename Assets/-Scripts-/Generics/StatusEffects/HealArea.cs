@@ -18,7 +18,7 @@ public class HealArea : MonoBehaviour
 
     [SerializeField] public float DOTPerTik = 1;
     
-    [SerializeField] public float damageIncrement = 1;
+    [SerializeField] public float damageIncrementPercentage = 1;
     [SerializeField] public PowerUp slowDown;
 
 
@@ -63,17 +63,17 @@ public class HealArea : MonoBehaviour
         {
             characterInArea.Add(other.gameObject.GetComponent<Character>());
 
-            //Sostituire playercharacter con enemycharacter
-            if (slow && other.gameObject.GetComponent<Character>() is PlayerCharacter)
+            //Sostituire character con enemycharacter
+            if (/*slow*/true && other.gameObject.GetComponent<Character>().CharacterClass is Dummy)
             {
-                other.gameObject.GetComponent<PlayerCharacter>().AddPowerUp(slowDown);
+                other.gameObject.GetComponent<Character>().AddPowerUp(slowDown);
             }
 
             //indebolisci nemici
-            //if (debilitate && other.gameObject.GetComponent<CharacterClass>().damager != null)
-            //{
-            //    other.gameObject.GetComponent<CharacterClass>().damager.SetCondition()
-            //}
+            if (true && other.gameObject.GetComponent<Character>().CharacterClass is Dummy)
+            {
+                other.gameObject.GetComponent<Character>().CharacterClass.damageReceivedMultiplier = 1.25f;
+            }
         }
     }
 
@@ -82,7 +82,7 @@ public class HealArea : MonoBehaviour
         if (characterInArea.Contains(other.gameObject.GetComponent<Character>()))
         {
             characterInArea.Remove(other.gameObject.GetComponent<Character>());
-
+            other.gameObject.GetComponent<Character>().CharacterClass.damageReceivedMultiplier = 1f;
             other.gameObject.GetComponent<Character>().RemovePowerUp(slowDown);
         }
         //Deregistrati a lista character
@@ -95,14 +95,14 @@ public class HealArea : MonoBehaviour
             if (c is PlayerCharacter)
             {
                 //regene amici
-                c.TakeDamage(new DamageData(-healPerTik, null));
+                c.CharacterClass.currentHp += healPerTik;
             }
 
-            //EnemyCharacter al posto di playerCharacter
-            if (c is PlayerCharacter)
+            //EnemyCharacter al posto di dummy
+            if (c.CharacterClass is Dummy)
             {
                 //danneggia nemici
-                if (damage)
+                if (true)
                 {
                     c.TakeDamage(new DamageData(DOTPerTik, null));
                 }
@@ -133,6 +133,11 @@ public class HealArea : MonoBehaviour
     {
         if (timer >= expireTime)
         {
+            foreach(Character c in characterInArea)
+            {
+                c.CharacterClass.damageReceivedMultiplier = 1f;
+                c.RemovePowerUp(slowDown);
+            }
             Destroy(gameObject);
 
             timer = 0;
