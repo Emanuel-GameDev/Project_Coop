@@ -33,7 +33,6 @@ public class CharacterClass : MonoBehaviour
     protected float damageReceivedMultiplier = 1;
     protected Vector2 lastNonZeroDirection;
 
-
     public virtual float maxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
@@ -123,7 +122,7 @@ public class CharacterClass : MonoBehaviour
         Move(new Vector3(direction.x, 0, direction.y).normalized, rb);
     }
 
-    //dato un vector 3 setta la velocità del rigidBody in quella direzione, se il vettore non è normalizzato lo normalizza
+    //dato un vector 3 setta la velocitï¿½ del rigidBody in quella direzione, se il vettore non ï¿½ normalizzato lo normalizza
     public virtual void Move(Vector3 direction, Rigidbody rb)
     {
         if (!direction.normalized.Equals(direction))
