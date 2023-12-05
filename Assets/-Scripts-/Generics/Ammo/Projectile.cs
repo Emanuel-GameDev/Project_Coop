@@ -2,13 +2,11 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour,IDamager
 {
-    private Vector3 travelDirection;
+    [SerializeField] private Vector3 travelDirection;
     [SerializeField] private float projectileSpeed;
-    //[SerializeField] private float lifetime=5f;
-    private float rangeRemaining=1;
-    private Vector3 projectileSize;
-
-    float damage = 300;
+    [SerializeField] private float rangeRemaining=1;
+    [SerializeField] private Vector3 projectileSize;
+    [SerializeField] private float projectileDamage;
 
     Rigidbody rb;
 
