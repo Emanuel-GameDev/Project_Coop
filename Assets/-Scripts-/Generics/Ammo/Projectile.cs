@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : MonoBehaviour,IDamager
 {
-    private Vector3 travelDirection;
+    [SerializeField] private Vector3 travelDirection;
     [SerializeField] private float projectileSpeed;
-    //[SerializeField] private float lifetime=5f;
-    private float rangeRemaining=1;
-    private Vector3 projectileSize;
+    [SerializeField] private float rangeRemaining=1;
+    [SerializeField] private Vector3 projectileSize;
+    [SerializeField] private float projectileDamage;
 
     Rigidbody rb;
 
@@ -68,7 +68,8 @@ public class Projectile : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, travelDirection, projectileSpeed * Time.deltaTime);
     }
 
-    
-
-   
+    public float GetDamage()
+    {
+        return damage;
+    }
 }
