@@ -1,19 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LandMine : MonoBehaviour,IDamager
 {
     [SerializeField] GameObject owner;
+
+    public UnityEvent OnEsplosion;
 
     private void Update()
     {
         DebugManualExplosion();
     }
 
-    public void Initialize(GameObject owner)
+    public void Initialize(GameObject owner,float radius)
     {
         this.owner = owner;
+        GetComponent<SphereCollider>().radius = radius;
     }
 
     public void PickUpLandmine()
@@ -34,7 +38,9 @@ public class LandMine : MonoBehaviour,IDamager
             {
                 if (owner.GetComponentInChildren<Ranged>() != null)
                 {
-                    owner.GetComponentInChildren<Ranged>().RegenerateLandMine();
+                    owner.GetComponentInChildren<Ranged>().nearbyLandmine.Remove(this);
+
+                    owner.GetComponentInChildren<Ranged>().StartLandmineGeneration();
                 }
             }
             

@@ -117,17 +117,19 @@ public class Ranged : CharacterClass
 
     public override void Move(Vector3 direction, Rigidbody rb)
     {
-        base.Move(direction, rb);
-        
-        
-        if (rb.velocity.magnitude > 0.1f)
+        if(!isDodging)
         {
-            animator.SetBool("isMoving", true);
-        }
-        else
-        {
-            animator.SetBool("isMoving", false);
-        }
+            base.Move(direction, rb);
+
+            if (rb.velocity.magnitude > 0.1f)
+            {
+                animator.SetBool("isMoving", true);
+            }
+            else
+            {
+                animator.SetBool("isMoving", false);
+            }
+        }      
     }
 
     //sparo
@@ -200,6 +202,8 @@ public class Ranged : CharacterClass
 
         Debug.Log("colpo triplo");
 
+        dodgeTimer = dodgeCoolDown;
+
         isAttacking = false;
     }
 
@@ -211,7 +215,39 @@ public class Ranged : CharacterClass
     #region Defence
     public override void Defence(Character parent, InputAction.CallbackContext context)
     {
-        base.Defence(parent, context);
+        if (context.performed)
+        {
+            if (dodgeTimer > 0)
+            {
+                Debug.Log("schivata effettuata di recente");
+                return;
+            }
+
+            StartCoroutine(Dodge(lastNonZeroDirection, parent.GetRigidBody()));
+
+            Debug.Log(lastNonZeroDirection);
+        }
+    }
+
+    protected IEnumerator Dodge(Vector2 direction,Rigidbody rb)
+    {
+        if (!isDodging)
+        {
+            isDodging = true;
+
+            //animazione
+
+            Vector3 dodgeDirection = new Vector3(direction.x, 0f, direction.y).normalized;
+
+            rb.velocity = dodgeDirection * (dodgeDistance / dodgeDuration);
+
+            yield return new WaitForSeconds(dodgeDuration);
+
+            rb.velocity = Vector3.zero;
+
+            isDodging = false;
+        }
+        
     }
 
     #endregion
@@ -256,7 +292,7 @@ public class Ranged : CharacterClass
 
             newLandMine.transform.position = new Vector3(transform.position.x, 0 , transform.position.z);
 
-            newLandMine.GetComponent<LandMine>().Initialize(gameObject);
+            newLandMine.GetComponent<LandMine>().Initialize(gameObject,landMineRange);
 
             landMineInInventory--;
         }
@@ -271,7 +307,11 @@ public class Ranged : CharacterClass
         landMineInInventory++;
     }
 
-    public IEnumerator RegenerateLandMine()
+    public void StartLandmineGeneration()
+    {
+        StartCoroutine(RegenerateLandMine());
+    }
+    private IEnumerator RegenerateLandMine()
     {
         yield return new WaitForSeconds(landMineCoolDown);
 
@@ -349,6 +389,12 @@ public class Ranged : CharacterClass
         if (empowerCoolDownTimer > 0)
         {
             empowerCoolDownTimer -= Time.deltaTime;
+        }
+
+        //schivata
+        if(dodgeTimer > 0)
+        {
+            dodgeTimer -= Time.deltaTime;
         }
     }
 
