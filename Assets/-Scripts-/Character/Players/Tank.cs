@@ -363,7 +363,8 @@ public class Tank : CharacterClass
                 {
                     IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
 
-                    AggroCondition newAggroCondition = new AggroCondition(this, aggroDuration);
+                   AggroCondition newAggroCondition = new AggroCondition(this, aggroDuration);
+
                    hittedDama.TakeDamage(new DamageData(0, character,newAggroCondition));
 
                     

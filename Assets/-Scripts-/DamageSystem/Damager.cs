@@ -10,7 +10,7 @@ public class Damager : MonoBehaviour
     LayerMask targetLayers;
 
     IDamager source;
-    Condition conditionToApply=null;
+    ICondition conditionToApply=null;
 
     [SerializeField]
     UnityEvent<Collider> onTrigger = new();
@@ -51,7 +51,7 @@ public class Damager : MonoBehaviour
         source = character;
     }
 
-    public void SetCondition(Condition condition)
+    public void SetCondition(ICondition condition)
     {
         conditionToApply = condition;
     }

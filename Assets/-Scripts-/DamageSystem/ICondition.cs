@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public abstract class Condition : MonoBehaviour
+public interface ICondition
 {
-    CharacterClass characterClass;
+   
     public abstract void AddCondition(CharacterClass parent);
     public abstract void RemoveCondition(CharacterClass parent);
 

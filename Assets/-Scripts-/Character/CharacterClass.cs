@@ -21,7 +21,7 @@ public class CharacterClass : MonoBehaviour
     protected Character character;
     protected PowerUpData powerUpData;
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
-    protected List<Condition> conditions;
+    protected List<ICondition> conditions;
     protected UnityAction unityAction;
     protected SpriteRenderer spriteRenderer;
     protected Pivot pivot;
@@ -101,7 +101,7 @@ public class CharacterClass : MonoBehaviour
     public virtual void TakeDamage(DamageData data)
     {
         if (data.condition != null)
-            conditions.Add((Condition)gameObject.AddComponent(data.condition.GetType()));
+            conditions.Add((ICondition)gameObject.AddComponent(data.condition.GetType()));
     }
 
     public virtual float GetDamage() => Damage;
