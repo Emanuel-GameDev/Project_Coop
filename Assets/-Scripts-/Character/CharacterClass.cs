@@ -62,7 +62,7 @@ public class CharacterClass : MonoBehaviour
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         pivot = GetComponentInChildren<Pivot>();        
         lastNonZeroDirection = Vector2.down;
-        damager = GetComponentInChildren<Damager>();
+        damager = GetComponentInChildren<Damager>(true);
         if (damager != null)
         {
             damager.SetSource(character);

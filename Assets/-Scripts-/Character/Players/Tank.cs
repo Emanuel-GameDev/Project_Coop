@@ -363,11 +363,16 @@ public class Tank : CharacterClass
                 {
                     IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
 
+                    //Guardare se meglio come prefab
+
                     GameObject aggroGO = new GameObject();
+                    aggroGO.name = nameof(AggroCondition);
                     AggroCondition aggroCondition = aggroGO.AddComponent<AggroCondition>();
                     aggroCondition.SetVariable(this, aggroDuration);
+                    //damager.SetCondition(aggroCondition);
 
                     hittedDama.TakeDamage(new DamageData(0, character, aggroCondition));
+                    
                    
                 }
             }

@@ -53,6 +53,7 @@ public class Damager : MonoBehaviour
 
     public void SetCondition(Condition condition)
     {
+        condition.transform.parent = transform;
         conditionToApply = condition;
     }
 
