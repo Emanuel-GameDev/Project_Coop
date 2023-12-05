@@ -40,29 +40,51 @@ public class CoopManager : MonoBehaviour
 
     }
 
+    public void JoinPlayer(int numPlayers)
+    {
+        for (int i = 0; i < numPlayers; i++)
+        {
+            GameManager.Instance.manager.JoinPlayer();
+        }
+    }
 
-
-    public void SwitchCharacter(Character characterToSwitch, int switchInto)
+    public bool SwitchCharacter(Character characterToSwitch, int switchInto)
     {
         foreach (PlayerCharacter player in activePlayers)
         {
             if (player.CharacterData == internalSwitchList[switchInto])
-                return;
+                return false;
         }
 
         characterToSwitch.SetCharacterData(internalSwitchList[switchInto]);
+
+        return true;
+    }
+
+    private void InitializeCharacterData(PlayerCharacter newCharacter)
+    {
+        for (int i = 0; i < internalSwitchList.Count; i++)
+        {
+            if (SwitchCharacter(newCharacter, i))
+                return;
+        }
     }
 
     public void AddPlayer()
     {
         PlayerCharacter[] foundPlayersComponents = FindObjectsOfType<PlayerCharacter>();
 
-        foreach (PlayerCharacter p in foundPlayersComponents)
+        for (int i = 0; i < foundPlayersComponents.Length; i++)
         {
-            if (!activePlayers.Contains(p))
-                activePlayers.Add(p);
+            if (!activePlayers.Contains(foundPlayersComponents[i]))
+            {
+                activePlayers.Add(foundPlayersComponents[i]);
+
+                if (i > 1)
+                    InitializeCharacterData(foundPlayersComponents[i]);
+            }
         }
-        
+
     }
 
 }
