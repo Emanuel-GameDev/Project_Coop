@@ -48,26 +48,15 @@ public class CoopManager : MonoBehaviour
         }
     }
 
-    public bool SwitchCharacter(Character characterToSwitch, int switchInto)
+    public void SwitchCharacter(Character characterToSwitch, int switchInto)
     {
         foreach (PlayerCharacter player in activePlayers)
         {
             if (player.CharacterData == internalSwitchList[switchInto])
-                return false;
+                return;
         }
 
         characterToSwitch.SetCharacterData(internalSwitchList[switchInto]);
-
-        return true;
-    }
-
-    private void InitializeCharacterData(PlayerCharacter newCharacter)
-    {
-        for (int i = 0; i < internalSwitchList.Count; i++)
-        {
-            if (SwitchCharacter(newCharacter, i))
-                return;
-        }
     }
 
     public void AddPlayer()
@@ -79,9 +68,6 @@ public class CoopManager : MonoBehaviour
             if (!activePlayers.Contains(foundPlayersComponents[i]))
             {
                 activePlayers.Add(foundPlayersComponents[i]);
-
-                if (i > 1)
-                    InitializeCharacterData(foundPlayersComponents[i]);
             }
         }
 
