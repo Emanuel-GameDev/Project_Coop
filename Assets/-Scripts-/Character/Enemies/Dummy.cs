@@ -1,5 +1,7 @@
 using System;
+using UnityEngine;
 using System.Collections.Generic;
+
 
 public class Dummy : CharacterClass
 {
@@ -27,6 +29,7 @@ public class Dummy : CharacterClass
 
     public override void TakeDamage(DamageData data)
     {
+
         DummyData existingData = dummyData.Find(dataToFind => dataToFind.dealer == data.dealer);
 
         if (existingData.dealer != null)
@@ -44,6 +47,18 @@ public class Dummy : CharacterClass
         }
 
         TotalDamageReceived += data.damage;
+
+
+        //guardo la condition
+
+        if(data.condition != null)
+        {
+            data.condition.AddCondition(this);
+            
+        }
+
+        Debug.Log($"Dummy subito [{totalDamageReceived}] danni con condition [{data.condition}]");
+        
     }
 
     public override void Inizialize(CharacterData characterData, Character character)

@@ -67,6 +67,7 @@ public class CharacterClass : MonoBehaviour
         {
             damager.SetSource(character);
         }
+        conditions = new();
     }
 
     public virtual void Attack(Character parent, InputAction.CallbackContext context)
@@ -102,6 +103,7 @@ public class CharacterClass : MonoBehaviour
     {
         if (data.condition != null)
             conditions.Add((Condition)gameObject.AddComponent(data.condition.GetType()));
+
     }
 
     public virtual float GetDamage() => Damage;
@@ -173,6 +175,15 @@ public class CharacterClass : MonoBehaviour
 
 
 
-    #endregion
 
+    #endregion
+    public void AddCondition(Condition condition)
+    {
+        conditions.Add(condition);
+    }
+
+    internal void RemoveCondition(Condition condition)
+    {
+        conditions.Remove(condition);
+    }
 }

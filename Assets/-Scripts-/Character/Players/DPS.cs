@@ -33,6 +33,8 @@ public class DPS : CharacterClass
     float dashAttackDuration = 5f;
     [SerializeField, Tooltip("Massimo tempo di caricamento dell'attacco con il dash.")]
     float dashAttackMaxLoadUpTime = 5f;
+    [SerializeField, Tooltip("Tempo di ricarica dell'attacco con il dash.")]
+    float dashAttackCooldown = 5f;
     [Header("Boss Power Up")]
     [SerializeField, Tooltip("Totale dei danni da fare al boss per sbloccare il potenziamento.")]
     float bossPowerUpTotalDamageToUnlock = 1000f;
@@ -53,11 +55,12 @@ public class DPS : CharacterClass
     private float lastDodgeTime;
     private float lastUniqueAbilityUseTime;
     private float lastPerfectDodgeTime;
+    private float lastDashAttackTime;
     private float lastHitTime;
     private float totalDamageDone = 0;
     private float dashAttackStartTime;
-    private Vector3 dashAttackStartPostion;
-    
+    private Vector3 startPosition;
+
 
     private int currentComboState;
     private int nextComboState;
@@ -73,6 +76,7 @@ public class DPS : CharacterClass
     private bool isInvulnerable;
     private bool isDodging;
     private bool isDashingAttack;
+    private bool isDashingAttackStarted;
     private bool canMove => !isDodging && !IsAttacking && !isDashingAttack;
 
     private bool IsAttacking
@@ -82,15 +86,17 @@ public class DPS : CharacterClass
     }
     private bool _isAttacking;
 
-    
+
 
     #region Animation Variable
     private static string ATTACK = "Attack";
-    private static string DODGE = "Dodge";
+    private static string DODGESTART = "DodgeStart";
+    private static string DODGEEND = "DodgeEnd";
     //private static string HIT = "Hit";
     //private static string UNIQUE_ABILITY = "UniqueAbility";
     private static string STARTDASHATTACK = "StartDashAttack";
-    private static string DASHMOVING = "DashMoving";
+    private static string MOVEDASHATTACK = "MoveDashAttack";
+    private static string ENDDASHATTACK = "EndDashAttack";
     //private static string DEATH = "Death";
     private static string ISMOVING = "IsMoving";
     #endregion
@@ -105,6 +111,7 @@ public class DPS : CharacterClass
         lastDodgeTime = -dodgeCooldown;
         lastAttackTime = -timeBetweenCombo;
         lastUniqueAbilityUseTime = -UniqueAbilityCooldown;
+        lastDashAttackTime = -dashAttackCooldown;
         consecutiveHitsCount = 0;
         currentComboState = 0;
         nextComboState = 0;
@@ -112,6 +119,7 @@ public class DPS : CharacterClass
         isDodging = false;
         IsAttacking = false;
         isDashingAttack = false;
+        isDashingAttackStarted = false;
     }
 
 
@@ -138,6 +146,7 @@ public class DPS : CharacterClass
         currentComboState = 1;
         nextComboState = currentComboState;
         DoMeleeAttack();
+        character.GetRigidBody().velocity = Vector3.zero;
     }
     private void ContinueCombo()
     {
@@ -183,32 +192,43 @@ public class DPS : CharacterClass
         if (context.performed)
         {
             Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
-            if (Time.time > lastDodgeTime + dodgeCooldown)
+            if (Time.time > lastDodgeTime + dodgeCooldown && !isDodging)
             {
                 lastDodgeTime = Time.time + dodgeDuration;
                 StartCoroutine(Dodge(lastNonZeroDirection, parent.GetRigidBody()));
-                Debug.Log(lastNonZeroDirection);
             }
         }
     }
-
+    
     protected IEnumerator Dodge(Vector2 dodgeDirection, Rigidbody rb)
     {
-        if (!isDodging)
-        {
-            isDodging = true;
-            animator.SetBool(DODGE, isDodging);
-            Vector3 dodgeDirection3D = new Vector3(dodgeDirection.x, 0f, dodgeDirection.y).normalized;
-            rb.velocity = dodgeDirection3D * (dodgeDistance / dodgeDuration);
+        isDodging = true;
+        animator.SetTrigger(DODGESTART);
 
-            yield return new WaitForSeconds(dodgeDuration);
+        yield return StartCoroutine(Move(dodgeDirection, rb, dodgeDuration, dodgeDistance));
 
-            rb.velocity = Vector3.zero;
-
-            isDodging = false;
-            animator.SetBool(DODGE, isDodging);
-        }
+        isDodging = false;
+        animator.SetTrigger(DODGEEND);
     }
+
+    private IEnumerator Move(Vector2 direction, Rigidbody rb, float duration, float distance)
+    {
+        startPosition = character.transform.position;
+        rb.velocity = Vector3.zero;
+
+        Vector3 destination = startPosition + new Vector3(direction.x, 0f, direction.y).normalized * distance;
+
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            rb.MovePosition(Vector3.Lerp(startPosition, destination, elapsedTime / duration));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        rb.velocity = Vector3.zero;
+    }
+
     #endregion
 
     //UniqueAbility: immortalità per tot secondi
@@ -243,17 +263,18 @@ public class DPS : CharacterClass
     public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
     {
 
-        if (context.performed && dashAttackUnlocked && canMove)
+        if (context.performed && dashAttackUnlocked && canMove && (Time.time - lastDashAttackTime > dashAttackCooldown))
         {
-            Utility.DebugTrace();
+            Utility.DebugTrace("Performed");
             isDashingAttack = true;
             dashAttackStartTime = Time.time;
-            dashAttackStartPostion = character.transform.position;
             animator.SetTrigger(STARTDASHATTACK);
         }
 
-        if(context.canceled && dashAttackUnlocked && isDashingAttack)
+        if (context.canceled && dashAttackUnlocked && isDashingAttack && !isDashingAttackStarted)
         {
+            isDashingAttackStarted = true;
+            Utility.DebugTrace("Canceled");
             StartCoroutine(DashAttack(lastNonZeroDirection, parent.GetRigidBody()));
         }
 
@@ -261,19 +282,27 @@ public class DPS : CharacterClass
 
     protected IEnumerator DashAttack(Vector2 attackDirection, Rigidbody rb)
     {
-        animator.SetTrigger(DASHMOVING);
-        Vector3 attackDirection3D = new Vector3(attackDirection.x, 0f, attackDirection.y).normalized;
+        animator.SetTrigger(MOVEDASHATTACK);
         float pressDuration = Time.time - dashAttackStartTime;
-        float dashAttackDistance = Mathf.Lerp(minDashAttackDistance, maxDashAttackDistance,  pressDuration / dashAttackMaxLoadUpTime);
-        rb.velocity = attackDirection3D * ( dashAttackDistance / dashAttackDuration);
-
-        yield return new WaitForSeconds(dashAttackDuration);
-
-        animator.SetTrigger("DashAttack");
-        rb.velocity = Vector3.zero;
-        //funzione in animazione endaatack
+        float dashAttackDistance = Mathf.Lerp(minDashAttackDistance, maxDashAttackDistance, pressDuration / dashAttackMaxLoadUpTime);
+        
+        yield return StartCoroutine(Move(attackDirection, rb, dashAttackDuration, dashAttackDistance));
+        
+        animator.SetTrigger(ENDDASHATTACK);
     }
 
+    public void DashAttackTeleport()
+    {
+        character.GetRigidBody().MovePosition(startPosition);
+        Debug.Log($"Teleport at: {startPosition}, current position: {character.transform.position}");
+    }
+
+    public void EndDashAttack()
+    {
+        isDashingAttack = false;
+        isDashingAttackStarted = false;
+        lastDashAttackTime = Time.time;
+    }
 
 
     #endregion

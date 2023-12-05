@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class Damager : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField] public
     LayerMask targetLayers;
 
     IDamager source;
@@ -24,6 +24,9 @@ public class Damager : MonoBehaviour
             IDamageable damageable = other.GetComponent<IDamageable>();
             if (damageable != null)
             {
+                
+                GameObject conditionGO= Instantiate(new GameObject());
+               
                 damageable.TakeDamage(new DamageData(source.GetDamage(), source, conditionToApply));
             }
         }
