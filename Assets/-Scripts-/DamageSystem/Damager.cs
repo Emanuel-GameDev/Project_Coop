@@ -24,9 +24,6 @@ public class Damager : MonoBehaviour
             IDamageable damageable = other.GetComponent<IDamageable>();
             if (damageable != null)
             {
-                
-                GameObject conditionGO= Instantiate(new GameObject());
-               
                 damageable.TakeDamage(new DamageData(source.GetDamage(), source, conditionToApply));
             }
         }

@@ -177,6 +177,7 @@ public class CharacterClass : MonoBehaviour
 
 
     #endregion
+
     public void AddCondition(Condition condition)
     {
         conditions.Add(condition);
