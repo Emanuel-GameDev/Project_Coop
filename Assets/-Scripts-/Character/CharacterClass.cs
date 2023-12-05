@@ -21,7 +21,7 @@ public class CharacterClass : MonoBehaviour
     protected Character character;
     protected PowerUpData powerUpData;
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
-    protected List<ICondition> conditions;
+    protected List<Condition> conditions;
     protected UnityAction unityAction;
     protected SpriteRenderer spriteRenderer;
     protected Pivot pivot;
@@ -67,6 +67,7 @@ public class CharacterClass : MonoBehaviour
         {
             damager.SetSource(character);
         }
+        conditions = new();
     }
 
     public virtual void Attack(Character parent, InputAction.CallbackContext context)
@@ -101,7 +102,8 @@ public class CharacterClass : MonoBehaviour
     public virtual void TakeDamage(DamageData data)
     {
         if (data.condition != null)
-            conditions.Add((ICondition)gameObject.AddComponent(data.condition.GetType()));
+            conditions.Add((Condition)gameObject.AddComponent(data.condition.GetType()));
+
     }
 
     public virtual float GetDamage() => Damage;
@@ -173,6 +175,15 @@ public class CharacterClass : MonoBehaviour
 
 
 
-    #endregion
 
+    #endregion
+    public void AddCondition(Condition condition)
+    {
+        conditions.Add(condition);
+    }
+
+    internal void RemoveCondition(Condition condition)
+    {
+        conditions.Remove(condition);
+    }
 }

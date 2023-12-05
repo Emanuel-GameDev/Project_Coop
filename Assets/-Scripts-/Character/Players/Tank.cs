@@ -349,7 +349,7 @@ public class Tank : CharacterClass
             animator.SetTrigger("UniqueAbility");
             Debug.Log("UniqueAbility Used");
         }
-        
+
     }
 
     public void PerformUniqueAbility()
@@ -363,11 +363,13 @@ public class Tank : CharacterClass
                 {
                     IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
 
-                   AggroCondition newAggroCondition = new AggroCondition(this, aggroDuration);
+                    GameObject aggroGO = new GameObject();
+                    AggroCondition aggroCondition = aggroGO.AddComponent<AggroCondition>();
+                    aggroCondition.SetVariable(this, aggroDuration);
 
-                   hittedDama.TakeDamage(new DamageData(0, character,newAggroCondition));
 
-                    
+                    hittedDama.TakeDamage(new DamageData(0, character, aggroCondition));
+                   
                 }
             }
         }
@@ -425,7 +427,7 @@ public class Tank : CharacterClass
     //Eliminare
     public void OnDrawGizmos()
     {
-       
+
         if (mostraGizmoAttaccoCaricato)
         {
             Gizmos.color = new Color(1f, 0f, 1f, 0.2f);

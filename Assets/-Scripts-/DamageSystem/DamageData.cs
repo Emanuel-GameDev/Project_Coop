@@ -2,7 +2,7 @@ public class DamageData
 {
     public float damage;
     public IDamager dealer;
-    public ICondition condition;
+    public Condition condition;
 
     public DamageData(float damage, IDamager dealer)
     {
@@ -11,7 +11,7 @@ public class DamageData
         this.condition = null;
     }
 
-    public DamageData(float damage, IDamager dealer, ICondition condition)
+    public DamageData(float damage, IDamager dealer, Condition condition)
     {
         this.damage = damage;
         this.dealer = dealer;

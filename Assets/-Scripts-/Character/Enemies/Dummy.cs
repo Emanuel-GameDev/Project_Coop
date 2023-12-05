@@ -54,6 +54,7 @@ public class Dummy : CharacterClass
         if(data.condition != null)
         {
             data.condition.AddCondition(this);
+            
         }
 
         Debug.Log($"Dummy subito [{totalDamageReceived}] danni con condition [{data.condition}]");
