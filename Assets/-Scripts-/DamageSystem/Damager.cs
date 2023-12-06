@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class Damager : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField] public
     LayerMask targetLayers;
 
     IDamager source;
@@ -53,6 +53,7 @@ public class Damager : MonoBehaviour
 
     public void SetCondition(Condition condition)
     {
+        condition.transform.parent = transform;
         conditionToApply = condition;
     }
 

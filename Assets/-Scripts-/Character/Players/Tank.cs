@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,23 +8,28 @@ using UnityEngine.InputSystem;
 public class Tank : CharacterClass
 {
     [Header("Attack")]
-    [SerializeField, Tooltip("Durata tempo pressione prolungata tasto attaco prima per decidere se attacco caricato o non")]
+    [SerializeField, Tooltip("Durata tempo pressione tasto attacco prima per decidere se attacco caricato o no")]
     float timeCheckAttackType = 0.2f;
     [SerializeField, Tooltip("Tempo minimo attacco caricato per essere eseguito")]
     float chargedAttackTimer = 2.5f;
+    [SerializeField, Tooltip("danno ad area intorno al player")]
+    float chargedAttackDamage = 50f;
+    [SerializeField, Tooltip("Range danno ad area intorno al player")]
+    float chargedAttackRadius = 5f;
 
     [Header("Block")]
-    
+
     [SerializeField, Tooltip("Quantità di danno parabile prima di rottura parata")]
     float maxStamina;
     [SerializeField, Tooltip("Danno parata perfetta")]
     float perfectBlockDamage;
 
     [Header("Unique Ability")]
+
+    [SerializeField, Tooltip("Range aggro")]
+    float aggroRange;
     [SerializeField, Tooltip("Durata aggro")]
     float aggroDuration;
-    [SerializeField, Tooltip("Durata buff difesa")]
-    float defenceBuffDuration;
     [SerializeField, Tooltip("Moltiplicatore buff difesa")]
     float defenceMultiplier;
     [SerializeField, Tooltip("Moltiplicatore buff stamina")]
@@ -58,15 +61,20 @@ public class Tank : CharacterClass
     private bool chargedAttackReady;
     private bool canMove = true;
     private bool isBlocking;
+    private bool canCancelAttack;
 
     private int comboIndex = 0;
     private int comboMax = 2;
     private int perfectBlockCount;
-    private float rangeAggro = math.INFINITY;
+
     private float currentStamina;
     private GenericBarScript staminaBar;
+    private GameObject chargedAttackAreaObject = null;
 
-    bool canCancelAttack;
+    //Da eliminare
+    private bool mostraGizmoAttaccoCaricato;
+    private bool mostraGizmoAbilitaUnica;
+
 
     public override void Inizialize(CharacterData characterData, Character character)
     {
@@ -75,7 +83,7 @@ public class Tank : CharacterClass
         currentHp = maxHp;
 
         staminaBar = GetComponentInChildren<GenericBarScript>();
-        
+
         staminaBar.Setvalue(maxStamina);
         staminaBar.gameObject.SetActive(false);
     }
@@ -85,11 +93,11 @@ public class Tank : CharacterClass
         {
             bossfightPowerUpUnlocked = true;
         }
-        if(Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.T))
         {
-            TakeDamage(new DamageData(10,null));
+            TakeDamage(new DamageData(10, null));
         }
-       
+
     }
 
 
@@ -115,7 +123,7 @@ public class Tank : CharacterClass
             {
                 animator.SetTrigger("ChargedAttackEnd");
                 Debug.Log("Charged Attack executed");
-               
+
             }
 
             else if (!chargedAttackReady && canCancelAttack)
@@ -141,7 +149,7 @@ public class Tank : CharacterClass
     }
     public void CheckAttackToDo()
     {
-        SetCanMove(false,character.GetRigidBody());
+        SetCanMove(false, character.GetRigidBody());
 
         if (pressed && chargedAttack)
         {
@@ -179,17 +187,21 @@ public class Tank : CharacterClass
     IEnumerator StartChargedAttackTimer()
     {
         chargedAttackReady = false;
-      
+
         yield return new WaitForSeconds(chargedAttackTimer);
 
         if (pressed)
-        {         
+        {
+            //da eliminare 
+            mostraGizmoAttaccoCaricato = true;
+
+
             chargedAttackReady = true;
             canCancelAttack = false;
-            
+
             Debug.Log("Charged Attack Ready");
             //Segnale Visivo
-        }       
+        }
 
     }
     public void ActivateHyperArmor()
@@ -202,7 +214,7 @@ public class Tank : CharacterClass
         }
 
     }
-    public void DeactivateHyperArmor()
+    private void DeactivateHyperArmor()
     {
         hyperArmorOn = false;
     }
@@ -214,6 +226,9 @@ public class Tank : CharacterClass
             isAttacking = false;
             Debug.Log("Reset Variables");
             SetCanMove(true, character.GetRigidBody());
+
+            //da eliminare
+            mostraGizmoAttaccoCaricato = false;
         }
         else if (comboIndex == 2)
         {
@@ -226,6 +241,26 @@ public class Tank : CharacterClass
         Debug.Log($"combo index:[{comboIndex}] can Double Attack[{doubleAttack}]");
     }
 
+    public void ChargedAttackAreaDamage()
+    {
+        RaycastHit[] hitted = Physics.SphereCastAll(transform.position, chargedAttackRadius, Vector3.up, chargedAttackRadius);
+        if (hitted != null)
+        {
+            foreach (RaycastHit r in hitted)
+            {
+                if (Utility.IsInLayerMask(r.transform.gameObject, LayerMask.GetMask("Enemy")))
+                {
+                    IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
+                    hittedDama.TakeDamage(new DamageData(chargedAttackDamage, character, null));
+                    Debug.Log(r.transform.gameObject.name + " colpito con " + chargedAttackDamage + " damage");
+
+                }
+            }
+        }
+    }
+
+
+
     #endregion
 
     #region Block
@@ -234,8 +269,8 @@ public class Tank : CharacterClass
     {
         if (context.performed && isAttacking == false)
         {
-                   
-            SetCanMove(false, character.GetRigidBody());           
+
+            SetCanMove(false, character.GetRigidBody());
             isBlocking = true;
             ShowStaminaBar(true);
             Debug.Log($"is blocking [{isBlocking}]");
@@ -244,7 +279,7 @@ public class Tank : CharacterClass
         else if (context.canceled && isBlocking == true)
         {
             SetCanMove(true, character.GetRigidBody());
-            isBlocking= false;
+            isBlocking = false;
             ShowStaminaBar(false);
             ResetStamina();
             Debug.Log($"is blocking [{isBlocking}]");
@@ -262,7 +297,7 @@ public class Tank : CharacterClass
 
     public void ShowStaminaBar(bool toShow)
     {
-        staminaBar.gameObject.SetActive(toShow);       
+        staminaBar.gameObject.SetActive(toShow);
     }
     #endregion
 
@@ -270,21 +305,22 @@ public class Tank : CharacterClass
 
     public override void TakeDamage(DamageData data)
     {
-       if(hyperArmorOn == false)
+        if (hyperArmorOn == false)
         {
             //Hit Reaction
+            //annulla attacco
         }
 
-       if(isBlocking)
+        if (isBlocking)
         {
             staminaBar.DecreaseValue(data.damage);
             currentStamina -= data.damage;
             Debug.Log($"{currentStamina}");
-            if(currentStamina <= 0)
+            if (currentStamina <= 0)
             {
-                SetCanMove(true, character.GetRigidBody());               
+                SetCanMove(true, character.GetRigidBody());
                 isBlocking = false;
-                ShowStaminaBar(false );
+                ShowStaminaBar(false);
                 Debug.Log("Parata Rotta");
                 //Stun per 2 secondi dopo reset stamina
             }
@@ -292,11 +328,11 @@ public class Tank : CharacterClass
         else
         {
             currentHp -= data.damage;
-            Debug.Log($"{currentHp}");
+            Debug.Log($" Tank current hp : {currentHp}");
         }
     }
 
-    
+
     #endregion
 
     #region UniqueAbility(Shout)
@@ -305,9 +341,43 @@ public class Tank : CharacterClass
     {
         if (context.performed)
         {
+            //Da eliminare
+            mostraGizmoAbilitaUnica = true;
+            Invoke(nameof(SetGizmoAbilitaUnica), 1.2f);
 
+
+            animator.SetTrigger("UniqueAbility");
+            Debug.Log("UniqueAbility Used");
         }
-        //attacco attiro aggro
+
+    }
+
+    public void PerformUniqueAbility()
+    {
+        RaycastHit[] hitted = Physics.SphereCastAll(transform.position, aggroRange, Vector3.up, aggroRange);
+        if (hitted != null)
+        {
+            foreach (RaycastHit r in hitted)
+            {
+                if (Utility.IsInLayerMask(r.transform.gameObject, LayerMask.GetMask("Enemy")))
+                {
+                    IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
+
+                    //Guardare se meglio come prefab
+
+                    GameObject aggroGO = new GameObject();
+                    aggroGO.name = nameof(AggroCondition);
+                    AggroCondition aggroCondition = aggroGO.AddComponent<AggroCondition>();
+                    aggroCondition.SetVariable(this, aggroDuration);
+                    //damager.SetCondition(aggroCondition);
+
+                    hittedDama.TakeDamage(new DamageData(0, character, aggroCondition));
+                    
+                   
+                }
+            }
+        }
+        //Incremento difesa e buff stamina
     }
 
     #endregion
@@ -316,7 +386,7 @@ public class Tank : CharacterClass
 
     public override void UseExtraAbility(Character parent, InputAction.CallbackContext context) //Tasto est
     {
-        if (context.performed)
+        if (context.performed && !isAttacking && !isBlocking)
         {
             SetCanMove(false, character.GetRigidBody());
 
@@ -334,13 +404,13 @@ public class Tank : CharacterClass
     #endregion
 
     #region Move
-    
+
     public override void Move(Vector2 direction, Rigidbody rb)
     {
         if (canMove)
         {
             base.Move(direction, rb);
-            
+
         }
         animator.SetBool("IsMoving", isMoving);
 
@@ -357,6 +427,28 @@ public class Tank : CharacterClass
 
     }
     #endregion
+
+    //Eliminare
+    public void OnDrawGizmos()
+    {
+
+        if (mostraGizmoAttaccoCaricato)
+        {
+            Gizmos.color = new Color(1f, 0f, 1f, 0.2f);
+            Gizmos.DrawSphere(transform.position, chargedAttackRadius);
+        }
+        if (mostraGizmoAbilitaUnica)
+        {
+            Gizmos.color = new Color(0f, 1f, 1f, 0.2f);
+            Gizmos.DrawSphere(transform.position, aggroRange);
+        }
+
+    }
+
+    private void SetGizmoAbilitaUnica()
+    {
+        mostraGizmoAbilitaUnica = false;
+    }
 
 
 }

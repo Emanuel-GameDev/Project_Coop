@@ -64,12 +64,13 @@ public class CharacterClass : MonoBehaviour
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         pivot = GetComponentInChildren<Pivot>();
         lastNonZeroDirection = Vector2.down;
-        damager = GetComponentInChildren<Damager>();
+        damager = GetComponentInChildren<Damager>(true);
         if (damager != null)
         {
             damager.SetSource(character);
         }
         SetIsInBossfight(false);
+        conditions = new();
     }
 
 
@@ -103,6 +104,7 @@ public class CharacterClass : MonoBehaviour
             conditions.Add((Condition)gameObject.AddComponent(data.condition.GetType()));
 
         currentHp -= data.damage * damageReceivedMultiplier;
+
     }
 
     public virtual float GetDamage() => Damage;
@@ -174,6 +176,16 @@ public class CharacterClass : MonoBehaviour
 
 
 
+
     #endregion
 
+    public void AddCondition(Condition condition)
+    {
+        conditions.Add(condition);
+    }
+
+    internal void RemoveCondition(Condition condition)
+    {
+        conditions.Remove(condition);
+    }
 }

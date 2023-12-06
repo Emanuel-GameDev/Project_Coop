@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : MonoBehaviour, IDamager
 {
-    private Vector3 travelDirection;
+    [SerializeField] private Vector3 travelDirection;
     [SerializeField] private float projectileSpeed;
-    //[SerializeField] private float lifetime=5f;
-    private float rangeRemaining=1;
-    private Vector3 projectileSize;
+    [SerializeField] private float rangeRemaining = 1;
+    [SerializeField] private Vector3 projectileSize;
+    [SerializeField] private float projectileDamage;
 
     Rigidbody rb;
 
@@ -17,21 +17,21 @@ public class Projectile : MonoBehaviour
 
     private void Start()
     {
-        
+
         rb = GetComponent<Rigidbody>();
         transform.LookAt(travelDirection);
-        
 
-        
+
+
     }
 
-    public void Inizialize(Vector3 direction,float range,float speed,float sizeMultiplier)
+    public void Inizialize(Vector3 direction, float range, float speed, float sizeMultiplier)
     {
-        
-        travelDirection = direction*1000;
+
+        travelDirection = direction * 1000;
         rangeRemaining = range;
         projectileSpeed = speed;
-        transform.localScale = projectileSize*sizeMultiplier;
+        transform.localScale = projectileSize * sizeMultiplier;
     }
 
     private void OnEnable()
@@ -53,7 +53,7 @@ public class Projectile : MonoBehaviour
     //il tempo di vita del proiettile in base alla distanza
     private void ProjectileLiveTimer()
     {
-        rangeRemaining -= Time.deltaTime*projectileSpeed;
+        rangeRemaining -= Time.deltaTime * projectileSpeed;
 
         //Debug.Log(rangeRemaining);
 
@@ -68,7 +68,9 @@ public class Projectile : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, travelDirection, projectileSpeed * Time.deltaTime);
     }
 
-    
+    public float GetDamage()
+    {
+        return projectileDamage;
+    }
 
-   
 }
