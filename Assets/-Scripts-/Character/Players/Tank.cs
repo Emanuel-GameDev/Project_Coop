@@ -327,7 +327,7 @@ public class Tank : CharacterClass
         }
         else
         {
-            currentHp -= data.damage;
+            base.TakeDamage(data);
             Debug.Log($" Tank current hp : {currentHp}");
         }
     }
@@ -365,9 +365,10 @@ public class Tank : CharacterClass
 
                     //Guardare se meglio come prefab
 
-                    GameObject aggroGO = new GameObject();
-                    aggroGO.name = nameof(AggroCondition);
-                    AggroCondition aggroCondition = aggroGO.AddComponent<AggroCondition>();
+                    //GameObject aggroGO = new GameObject();
+                    //aggroGO.name = nameof(AggroCondition);
+                    //AggroCondition aggroCondition = aggroGO.AddComponent<AggroCondition>();
+                    AggroCondition aggroCondition = Utility.InstantiateCondition<AggroCondition>();
                     aggroCondition.SetVariable(this, aggroDuration);
                     //damager.SetCondition(aggroCondition);
 
@@ -392,6 +393,7 @@ public class Tank : CharacterClass
 
             if (bossfightPowerUpUnlocked && isAttacking == false)
             {
+                damager.SetCondition(Utility.InstantiateCondition<AggroCondition>(),true);
                 animator.SetTrigger("UniqueAbility");
 
                 float stunDamageDuration = maximizedStun ? (chargedAttackStunDuration * stunDurationMultiplier) : chargedAttackStunDuration;
@@ -449,6 +451,5 @@ public class Tank : CharacterClass
     {
         mostraGizmoAbilitaUnica = false;
     }
-
 
 }

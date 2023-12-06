@@ -6,12 +6,14 @@ public class Condition : MonoBehaviour
     public virtual void AddCondition(CharacterClass parent)
     {
         this.parent = parent;
-        parent.AddCondition(this);
+        transform.parent = parent.transform;
     }
     public virtual void RemoveCondition(CharacterClass parent)
     {
-        this.parent = null;
-        parent.RemoveCondition(this);
+        parent.RemoveFromConditions(this);
+        parent = null; 
+        transform.parent = null;
+        Destroy(this.gameObject);
     }
 
 }

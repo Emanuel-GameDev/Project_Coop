@@ -101,10 +101,10 @@ public class CharacterClass : MonoBehaviour
     public virtual void TakeDamage(DamageData data)
     {
         if (data.condition != null)
-            conditions.Add((Condition)gameObject.AddComponent(data.condition.GetType()));
+            AddToConditions(data.condition);
 
         currentHp -= data.damage * damageReceivedMultiplier;
-
+        damager.RemoveCondition();
     }
 
     public virtual float GetDamage() => Damage;
@@ -179,13 +179,15 @@ public class CharacterClass : MonoBehaviour
 
     #endregion
 
-    public void AddCondition(Condition condition)
+    public void AddToConditions(Condition condition)
     {
         conditions.Add(condition);
+        condition.AddCondition(this);
     }
 
-    internal void RemoveCondition(Condition condition)
+    public void RemoveFromConditions(Condition condition)
     {
         conditions.Remove(condition);
+
     }
 }
