@@ -97,10 +97,20 @@ public class DPS : CharacterClass
     private bool IsAttacking
     {
         get => _isAttacking;
-        set { _isAttacking = value; animator.SetBool("isAttacking", _isAttacking); }
+        set
+        {
+            _isAttacking = value;
+            animator.SetBool("isAttacking", _isAttacking);
+            if (!value)
+            {
+                nextComboState = 0;
+                currentComboState = 0;
+            }
+        }
     }
     private bool _isAttacking;
 
+    private ChargeVisualHandler chargeHandler;
 
 
     #region Animation Variable
@@ -135,6 +145,8 @@ public class DPS : CharacterClass
         IsAttacking = false;
         isDashingAttack = false;
         isDashingAttackStarted = false;
+        chargeHandler = GetComponentInChildren<ChargeVisualHandler>();
+        chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
     }
 
 
@@ -144,17 +156,14 @@ public class DPS : CharacterClass
     {
         if (context.performed)
         {
-            if (canMove)
+            if (canMove && CanStartCombo())
             {
-                if (CanStartCombo())
-                    StartCombo();
+                StartCombo();
             }
-            else
+            else if (IsAttacking)
                 ContinueCombo();
             Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n CurrentComboState: {currentComboState}, NextComboState: {nextComboState}");
-
         }
-
     }
     private void StartCombo()
     {
@@ -292,12 +301,14 @@ public class DPS : CharacterClass
             dashAttackStartTime = Time.time;
             parent.GetRigidBody().velocity = Vector3.zero;
             animator.SetTrigger(STARTDASHATTACK);
+            chargeHandler.StartCharging(dashAttackStartTime);
         }
 
         if (context.canceled && dashAttackUnlocked && isDashingAttack && !isDashingAttackStarted)
         {
             isDashingAttackStarted = true;
             Utility.DebugTrace("Canceled");
+            chargeHandler.StopCharging();
             StartCoroutine(DashAttack(lastNonZeroDirection, parent.GetRigidBody()));
         }
 
@@ -329,7 +340,6 @@ public class DPS : CharacterClass
         lastDashAttackTime = Time.time;
     }
 
-
     #endregion
 
 
@@ -354,10 +364,10 @@ public class DPS : CharacterClass
         if (!isInvulnerable || !isDodging)
         {
             base.TakeDamage(data);
-            if(!isDashingAttack)
+            if (!isDashingAttack)
                 animator.SetTrigger(HIT);
         }
-            
+
     }
 
     public override void UnlockUpgrade(AbilityUpgrade abilityUpgrade)

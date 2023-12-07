@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -109,6 +110,13 @@ public class PlayerCharacter : Character
     {
         moveDir = context.ReadValue<Vector2>();
     }
+
+    public void InteractInput(InputAction.CallbackContext context)
+    {
+        Interact(context);
+    }
+
+
 
     #endregion
 

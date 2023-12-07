@@ -10,20 +10,23 @@ public class ChargeVisualHandler : MonoBehaviour
     [SerializeField]
     RectTransform barTransform;
     private CharacterClass characterClass;
-    Vector2 direction => characterClass.GetLastNonZeroDirection();
+    Vector2 Direction => characterClass.GetLastNonZeroDirection();
 
     float maxValue;
     float minValue;
-    float currentValue;
+    float maxTime;
     float startTime;
     bool mustEnd;
 
-    public void Inizialize(float min, float max)
+    public void Inizialize(float min, float max, float time, CharacterClass character)
     {
         maxValue = max;
         minValue = min;
+        maxTime = time;
         mustEnd = false;
+        characterClass = character;
         SetBar();
+        chargeVisual.gameObject.SetActive(false);
     }
 
     public void StartCharging(float startTime)
@@ -31,6 +34,7 @@ public class ChargeVisualHandler : MonoBehaviour
         this.startTime = startTime;
         chargeVisual.gameObject.SetActive(true);
         mustEnd = false;
+        StartCoroutine(Charging());
     }
 
     private void SetBar()
@@ -47,12 +51,18 @@ public class ChargeVisualHandler : MonoBehaviour
 
     IEnumerator Charging()
     {
-        while (!mustEnd)
+        while (!mustEnd) //da non usare il while
         {
-            float duration = Time.time - startTime;//Darivedere
-            float topDistance = maxValue - minValue;
-            barTransform.anchoredPosition = new Vector2(barTransform.anchoredPosition.x, topDistance);
+            float duration = Time.time - startTime;
+            float barLenght = Mathf.Lerp(minValue, maxValue, duration/maxTime);
+            float topDistance = Mathf.Max(0, maxValue - barLenght);
+            barTransform.offsetMin = new Vector2(barTransform.offsetMin.x, topDistance);
+            Debug.Log($"top: {topDistance}");
+            float angle = Mathf.Atan2(Direction.x, Direction.y) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, angle, 0);
+
+            yield return null;
         }
-        yield return null;    
+        chargeVisual.gameObject.SetActive(false);
     }
 }
