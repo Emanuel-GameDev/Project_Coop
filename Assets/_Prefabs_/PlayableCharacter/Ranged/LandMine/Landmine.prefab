@@ -120,6 +120,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
+  OnEsplosion:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &7914808724226337859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,7 +137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   onTrigger:
     m_PersistentCalls:
       m_Calls: []

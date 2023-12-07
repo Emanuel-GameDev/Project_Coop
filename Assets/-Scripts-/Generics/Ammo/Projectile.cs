@@ -23,7 +23,7 @@ public class Projectile : MonoBehaviour, IDamager
         transform.LookAt(travelDirection);
     }
 
-    public void Inizialize(Vector3 direction, float range, float speed, float sizeMultiplier,float damage)
+    public void Inizialize(Vector3 direction, float range, float speed, float sizeMultiplier,float damage,LayerMask layer)
     {
 
         travelDirection = direction * 1000;
@@ -31,6 +31,7 @@ public class Projectile : MonoBehaviour, IDamager
         projectileSpeed = speed;
         transform.localScale = projectileSize * sizeMultiplier;
         projectileDamage = damage;
+        gameObject.layer = layer;
     }
 
     private void OnEnable()
@@ -74,6 +75,7 @@ public class Projectile : MonoBehaviour, IDamager
 
     public float GetDamage()
     {
+        DismissProjectile();
         return projectileDamage;
     }
 }

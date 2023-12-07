@@ -182,7 +182,7 @@ public class Ranged : CharacterClass
 
         newProjectile.transform.position = transform.position;
 
-        newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage);
+        newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer);
 
     }
 
@@ -290,7 +290,7 @@ public class Ranged : CharacterClass
 
             newLandMine.transform.position = new Vector3(transform.position.x, 0 , transform.position.z);
 
-            newLandMine.GetComponent<LandMine>().Initialize(gameObject,landMineRange);
+            newLandMine.GetComponent<LandMine>().Initialize(gameObject,landMineRange,Damage * landMineDamageMultiplier,gameObject.layer);
 
             landMineInInventory--;
         }
@@ -369,7 +369,7 @@ public class Ranged : CharacterClass
 
         newProjectile.transform.position = transform.position;
 
-        newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier);
+        newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier,gameObject.layer);
     }
 
     #endregion
