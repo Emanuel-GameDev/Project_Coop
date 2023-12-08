@@ -105,6 +105,7 @@ public class CharacterClass : MonoBehaviour
 
         currentHp -= data.damage * damageReceivedMultiplier;
         damager.RemoveCondition();
+        Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
     }
 
     public virtual float GetDamage() => Damage;

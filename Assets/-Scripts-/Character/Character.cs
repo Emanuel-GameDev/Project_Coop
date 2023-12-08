@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Character : MonoBehaviour, IDamageable, IDamager
+public class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
 {
     [SerializeField] protected CharacterData characterData;
     protected CharacterClass characterClass;
@@ -14,7 +14,8 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     protected float MaxHp => characterClass.maxHp;
     protected float currentHp => characterClass.currentHp;
     protected Rigidbody rb;
-    
+    private bool canInteract;
+    private IInteractable activeInteractable;
 
     //Lo uso per chimare tutte le funzioni iniziali
     protected void Awake()
@@ -26,8 +27,8 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     protected virtual void InitialSetup()
     {
         rb = GetComponent<Rigidbody>();      
-        characterData.Inizialize(this);       
-        
+        characterData.Inizialize(this);
+        canInteract = false;
     }
 
     protected virtual void Attack(InputAction.CallbackContext context) => characterClass.Attack(this, context);
@@ -36,6 +37,14 @@ public class Character : MonoBehaviour, IDamageable, IDamager
     public virtual void UseExtraAbility(InputAction.CallbackContext context) => characterClass.UseExtraAbility(this, context);
     protected virtual void Move(Vector2 direction) => characterClass.Move(direction, rb);
 
+    protected void Interact(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if(canInteract)
+                InteractWith(activeInteractable);
+        }
+    }
 
     public void AddPowerUp(PowerUp powerUp) => characterClass.AddPowerUp(powerUp);
     public void RemovePowerUp(PowerUp powerUp) => characterClass.RemovePowerUp(powerUp);
@@ -56,4 +65,23 @@ public class Character : MonoBehaviour, IDamageable, IDamager
 
     public virtual void TakeDamage(DamageData data) => characterClass.TakeDamage(data);
     public float GetDamage() => characterClass.GetDamage();
+
+    #region InteractionSystem
+    public void InteractWith(IInteractable interactable)
+    {
+        activeInteractable.Interact(this);
+    }
+
+    public void EnableInteraction(IInteractable interactable)
+    {
+        activeInteractable = interactable;
+        canInteract = true;
+    }
+
+    public void DisableInteraction(IInteractable interactable)
+    {
+        activeInteractable = interactable;
+        canInteract = false;
+    }
+    #endregion
 }
