@@ -72,6 +72,7 @@ public class DPS : CharacterClass
     private float lastDashAttackTime;
     private float lastHitTime;
     private float totalDamageDone = 0;
+    private float perfectDodgeCounter = 0;
     private float dashAttackStartTime;
     private float dashAttackDamageMultiplier;
     private Vector3 startPosition;
@@ -111,6 +112,7 @@ public class DPS : CharacterClass
     private bool _isAttacking;
 
     private ChargeVisualHandler chargeHandler;
+    private PerfectTimingHandler perfectTimingHandler;
 
 
     #region Animation Variable
@@ -147,6 +149,8 @@ public class DPS : CharacterClass
         isDashingAttackStarted = false;
         chargeHandler = GetComponentInChildren<ChargeVisualHandler>();
         chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
+        perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
+        perfectTimingHandler.gameObject.SetActive(false);
     }
 
 
@@ -259,6 +263,25 @@ public class DPS : CharacterClass
         rb.velocity = Vector3.zero;
     }
 
+    protected IEnumerator PerfectDodgeHandler(DamageData data)
+    {
+        perfectTimingHandler.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.2f);
+        if (isDodging)
+        {
+            perfectDodgeCounter++;
+            lastPerfectDodgeTime = Time.time;
+        }
+        else
+        {
+            base.TakeDamage(data);
+            if (!isDashingAttack)
+                animator.SetTrigger(HIT);
+        }
+        perfectTimingHandler.gameObject.SetActive(false);
+        Debug.Log($"PerfectDodge: {isDodging}, Count: {perfectDodgeCounter}");
+    }
+
 
     #endregion
 
@@ -363,12 +386,10 @@ public class DPS : CharacterClass
     {
         if (!isInvulnerable || !isDodging)
         {
-            base.TakeDamage(data);
-            if (!isDashingAttack)
-                animator.SetTrigger(HIT);
+            StartCoroutine(PerfectDodgeHandler(data));
         }
-
     }
+
 
     public override void UnlockUpgrade(AbilityUpgrade abilityUpgrade)
     {
