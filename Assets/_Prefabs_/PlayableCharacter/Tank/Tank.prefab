@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5010088789243547342}
   - component: {fileID: 3677896974153611461}
-  - component: {fileID: 1414187362575845532}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -85,18 +84,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1414187362575845532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 28993225159450299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35b2ddf7b708cb84cab5a3f51b163aab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &959217379144515008
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,8 +638,10 @@ MonoBehaviour:
   chargedAttackDamage: 50
   chargedAttackRadius: 5
   chargedAttackSprite: {fileID: 6584751586460598899}
-  maxStamina: 200
+  maxStamina: 100
   perfectBlockDamage: 0
+  blockAngle: 90
+  blockRange: 3
   aggroRange: 10
   aggroDuration: 5
   defenceMultiplier: 0
@@ -661,6 +650,7 @@ MonoBehaviour:
   cooldownExtraAbility: 0
   chargedAttackStunDuration: 5
   stunDurationMultiplier: 0
+  mostraGizmoRangeParata: 0
 --- !u!1 &6448158649070872344
 GameObject:
   m_ObjectHideFlags: 0

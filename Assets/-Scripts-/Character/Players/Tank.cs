@@ -267,13 +267,27 @@ public class Tank : CharacterClass
     #region Block
     private bool AttackInBlockAngle(DamageData data)
     {
-        MonoBehaviour dealerMB = (MonoBehaviour)data.dealer;
-        Vector3 dealerDirection = (dealerMB.transform.position - transform.position);
+        Character dealerMB = (Character)data.dealer;
 
-        Vector3 lastDirection = GetLastNonZeroDirection();
+        Vector2 lastNonZeroDirection = GetLastNonZeroDirection();
 
-        return Vector3.Dot(lastDirection, dealerDirection) < blockAngleThreshold ? true : false;
+        Vector3 lastDirection = new Vector3(lastNonZeroDirection.x, 0f, lastNonZeroDirection.y);
+        Vector3 dealerDirection = dealerMB.gameObject.transform.position - transform.position;
+        dealerPosition = dealerMB.gameObject.transform.position;
 
+        
+        float crossProduct = Vector3.Cross(lastDirection, dealerDirection).y;
+
+      
+        float angle = Vector3.Angle(dealerDirection, lastDirection);
+
+        
+        angle = crossProduct < 0 ? -angle : angle;
+
+        Debug.Log($"{angle} cacca {blockAngle}");
+
+      
+        return Mathf.Abs(angle) <= blockAngle/2;
     }
 
     Vector3 RotateVectorAroundPivot(Vector3 vector, Vector3 pivot, float angle)
@@ -296,6 +310,7 @@ public class Tank : CharacterClass
             ShowStaminaBar(true);
             Debug.Log($"is blocking [{isBlocking}]");
 
+            //eliminare
             mostraGizmoRangeParata = true;
 
         }
@@ -307,6 +322,8 @@ public class Tank : CharacterClass
             ShowStaminaBar(false);
             ResetStamina();
             Debug.Log($"is blocking [{isBlocking}]");
+
+            //eliminare
             mostraGizmoRangeParata = false;
         }
 
@@ -336,7 +353,7 @@ public class Tank : CharacterClass
             //annulla attacco
         }
 
-        if (isBlocking)
+        if (isBlocking && AttackInBlockAngle(data))
         {
 
             staminaBar.DecreaseValue(data.damage);
@@ -354,7 +371,7 @@ public class Tank : CharacterClass
         else
         {
             base.TakeDamage(data);
-            Debug.Log($" Tank current hp : {currentHp}");
+            Debug.Log($" Tank  hp : {currentHp}  stamina: {currentStamina}");
         }
     }
 
@@ -456,13 +473,20 @@ public class Tank : CharacterClass
     public bool mostraGizmoRangeParata;
     int segments = 50;
     float startAngle => blockAngle / 2;
+    Vector3 dealerPosition;
+
+
 
 
 
     public void OnDrawGizmos()
     {
+        if (dealerPosition != Vector3.zero)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, dealerPosition);
 
-
+        }
         if (mostraGizmoAbilitaUnica)
         {
             Gizmos.color = Color.red;
