@@ -64,15 +64,15 @@ public class HealArea : MonoBehaviour
             characterInArea.Add(other.gameObject.GetComponent<Character>());
 
             //Sostituire character con enemycharacter
-            if (/*slow*/true && other.gameObject.GetComponent<Character>().CharacterClass is Dummy)
+            if (slow && other.gameObject.GetComponent<Character>().CharacterClass is Dummy)
             {
                 other.gameObject.GetComponent<Character>().AddPowerUp(slowDown);
             }
 
             //indebolisci nemici
-            if (true && other.gameObject.GetComponent<Character>().CharacterClass is Dummy)
+            if (debilitate && other.gameObject.GetComponent<Character>().CharacterClass is Dummy)
             {
-                other.gameObject.GetComponent<Character>().CharacterClass.damageReceivedMultiplier = 1.25f;
+                other.gameObject.GetComponent<Character>().CharacterClass.damageReceivedMultiplier = damageIncrementPercentage;
             }
         }
     }
@@ -102,7 +102,7 @@ public class HealArea : MonoBehaviour
             if (c.CharacterClass is Dummy)
             {
                 //danneggia nemici
-                if (true)
+                if (damage)
                 {
                     c.TakeDamage(new DamageData(DOTPerTik, null));
                 }

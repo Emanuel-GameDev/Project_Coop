@@ -48,7 +48,7 @@ public class HealMine : MonoBehaviour
             {
                 foreach (PlayerCharacter character in characterInArea)
                 {
-                    character.TakeDamage(new DamageData(-heal, null));
+                    character.CharacterClass.currentHp += heal;
                 }
 
                 if (spawner.GetComponentInChildren<Healer>() != null)

@@ -30,6 +30,7 @@ public class CharacterClass : MonoBehaviour
     protected bool bossfightPowerUpUnlocked;
     protected bool isInBossfight;
     protected float uniqueAbilityUses;
+    [HideInInspector]
     public float damageReceivedMultiplier = 1;
     protected Vector2 lastNonZeroDirection;
 
