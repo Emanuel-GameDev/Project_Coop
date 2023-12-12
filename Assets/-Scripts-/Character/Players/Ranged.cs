@@ -258,7 +258,7 @@ public class Ranged : CharacterClass
         {
             if (landMineUnlocked)
             {
-                if (nearbyLandmine.Count==0)
+                if (nearbyLandmine.Count<=0)
                 {
                     //animazione droppaggio mina
 
@@ -268,7 +268,7 @@ public class Ranged : CharacterClass
                     CreateLandMine();
                     //
 
-                    Debug.Log("lascio mina");
+                    
                 }
                 else
                 {
@@ -293,6 +293,8 @@ public class Ranged : CharacterClass
             newLandMine.GetComponent<LandMine>().Initialize(gameObject.GetComponentInParent<PlayerCharacter>(),landMineRange,Damage * landMineDamageMultiplier,gameObject.layer);
 
             landMineInInventory--;
+
+            Debug.Log("lascio mina");
         }
         else
         {

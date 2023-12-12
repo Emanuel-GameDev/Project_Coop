@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class LandMine : MonoBehaviour, IDamager
 {
@@ -9,19 +6,26 @@ public class LandMine : MonoBehaviour, IDamager
 
     [SerializeField] float landMineDamage = 0;
 
-    
+    [SerializeField] Pickable pickable;
+
+    private void Awake()
+    {
+        pickable=GetComponentInChildren<Pickable>();
+    }
 
     private void Update()
     {
-        
+
     }
 
-    public void Initialize(Character owner,float radius,float damage,LayerMask layer)
+    public void Initialize(Character owner, float radius, float damage, LayerMask layer)
     {
         this.owner = owner;
         GetComponent<SphereCollider>().radius = radius;
         this.landMineDamage = damage;
         gameObject.layer = layer;
+
+        pickable.SetCharacter(owner);
     }
 
     public void PickUpLandmine()
@@ -30,7 +34,7 @@ public class LandMine : MonoBehaviour, IDamager
         owner.gameObject.GetComponentInChildren<Ranged>().nearbyLandmine.Remove(this);
 
         owner.gameObject.GetComponentInChildren<Ranged>().RecoverLandMine();
-       
+
         Destroy(gameObject);
     }
     /*
@@ -55,24 +59,15 @@ public class LandMine : MonoBehaviour, IDamager
 
     private void OnTriggerEnter(Collider other)
     {
-        Ranged sniper = other.gameObject.GetComponentInChildren<Ranged>();
+        Ranged sniper = other.gameObject.GetComponentInChildren<Ranged>();       
 
-        if (sniper != null)
-        {
-            if (sniper.gameObject.GetComponentInParent<Character>() == owner)
-            {
-                sniper.nearbyLandmine.Add(this);
-            }
-        }
-
-        if(other.gameObject.GetComponent<Character>() != null && other.gameObject.layer!=gameObject.layer)
+        if (other.gameObject.GetComponent<Character>() != null && other.gameObject.layer != gameObject.layer)
         {
             if (other.gameObject.layer != gameObject.layer)
             {
                 //other.gameObject.GetComponent<Character>().TakeDamage(new DamageData(landMineDamage,this));
                 if (owner != null)
                 {
-                    
 
                     if (sniper != null)
                     {
@@ -85,24 +80,24 @@ public class LandMine : MonoBehaviour, IDamager
                 Destroy(gameObject);
             }
         }
-        
 
-       
-               
     }
+
+
 
     private void OnTriggerExit(Collider other)
     {
-        Ranged sniper = other.gameObject.GetComponentInChildren<Ranged>();
+        
+    }
 
-        if (sniper != null)
-        {
-            if (sniper.gameObject.GetComponentInParent<Character>() == owner )
-            {
-                owner.GetComponentInChildren<Ranged>().nearbyLandmine.Remove(this);
-            }
-        }
-       
+    public void RemoveInRange()
+    {
+        owner.GetComponentInChildren<Ranged>().nearbyLandmine.Remove(this);
+    }
+
+    public void AddInRange()
+    {
+        owner.GetComponentInChildren<Ranged>().nearbyLandmine.Add(this);
     }
 
     public float GetDamage()
