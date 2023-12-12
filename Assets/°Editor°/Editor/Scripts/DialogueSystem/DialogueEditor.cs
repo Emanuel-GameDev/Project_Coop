@@ -147,52 +147,58 @@ public class DialogueEditor : EditorWindow
                     characterEditor.ShowUtility();
                 }
 
-                    EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndHorizontal();
 
                 line.Content = EditorGUILayout.TextField("Text content", line.Content);
 
 
 
-                line.CharacterPerSecond = EditorGUILayout.FloatField("Text speed",line.CharacterPerSecond);
-
-                if(line.CharacterPerSecond < 0.1f)
-                {
-                    line.CharacterPerSecond = 0.1f;
-                }
-
-
                 GUILayout.Space(10);
 
                 line.overrideOptionsOpenInEditor = EditorGUILayout.Foldout(line.overrideOptionsOpenInEditor, "Custom functions");
-
-                if(line.overrideOptionsOpenInEditor)
+                EditorGUIUtility.fieldWidth = 50;
+                EditorGUIUtility.labelWidth = 200;
+                if (line.overrideOptionsOpenInEditor)
                 {
                     EditorGUI.indentLevel++;
 
                     EditorGUILayout.BeginHorizontal();
-                    if (line.overrideNameColor = EditorGUILayout.Toggle("Override name color", line.overrideNameColor, GUILayout.Width(200)))
-                        line.NameColor = EditorGUILayout.ColorField("Name color", line.NameColor);
+                    if (line.overrideNameColor = EditorGUILayout.Toggle("Override name color", line.overrideNameColor, GUILayout.ExpandWidth(true)))
+                        line.NameColor = EditorGUILayout.ColorField(line.NameColor);
                     EditorGUILayout.EndHorizontal();
 
                     EditorGUILayout.BeginHorizontal();
-                    if (line.overrideNameFont = EditorGUILayout.Toggle("Override name font", line.overrideNameFont, GUILayout.Width(200)))
-                        line.NameFont = EditorGUILayout.ObjectField("Name font", line.NameFont, typeof(TMP_FontAsset), false) as TMP_FontAsset;
+                    if (line.overrideNameFont = EditorGUILayout.Toggle("Override name font", line.overrideNameFont))
+                        line.NameFont = EditorGUILayout.ObjectField(line.NameFont, typeof(TMP_FontAsset), false) as TMP_FontAsset;
                     EditorGUILayout.EndHorizontal();
 
                     EditorGUILayout.BeginHorizontal();
-                    if (line.overrideDialogueColor = EditorGUILayout.Toggle("Override dialogue color", line.overrideDialogueColor, GUILayout.Width(200)))
-                        line.DialogueColor = EditorGUILayout.ColorField("Dialogue color", line.DialogueColor);
+                    if (line.overrideDialogueColor = EditorGUILayout.Toggle("Override dialogue color", line.overrideDialogueColor))
+                        line.DialogueColor = EditorGUILayout.ColorField(line.DialogueColor);
                     EditorGUILayout.EndHorizontal();
 
                     EditorGUILayout.BeginHorizontal();
-                    if (line.overrideDialogueFont = EditorGUILayout.Toggle("Override dialogue font", line.overrideDialogueFont, GUILayout.Width(200)))
-                        line.DialogueFont = EditorGUILayout.ObjectField("Dialogue font", line.DialogueFont, typeof(TMP_FontAsset), false) as TMP_FontAsset;
+                    if (line.overrideDialogueFont = EditorGUILayout.Toggle("Override dialogue font", line.overrideDialogueFont))
+                        line.DialogueFont = EditorGUILayout.ObjectField(line.DialogueFont, typeof(TMP_FontAsset), false) as TMP_FontAsset;
+                    EditorGUILayout.EndHorizontal();
+
+                    EditorGUILayout.BeginHorizontal();
+                    if (line.overrideDialogueVoice = EditorGUILayout.Toggle("Override dialogue voice", line.overrideDialogueVoice))
+                        line.DialogueLineVoice = EditorGUILayout.ObjectField(line.DialogueLineVoice, typeof(AudioClip), false) as AudioClip;
+                    EditorGUILayout.EndHorizontal();
+
+                    EditorGUILayout.BeginHorizontal();
+                    if (line.overrideDialogueSpeed = EditorGUILayout.Toggle("Override dialogue speed", line.overrideDialogueSpeed, GUILayout.Width(150)))
+                        line.CharacterPerSecond = EditorGUILayout.FloatField(line.CharacterPerSecond);
                     EditorGUILayout.EndHorizontal();
 
                     EditorGUI.indentLevel--;
                 }
 
-
+                if (line.CharacterPerSecond < 0.1f)
+                {
+                    line.CharacterPerSecond = 0.1f;
+                }
 
 
                 GUILayout.Space(10);

@@ -16,10 +16,12 @@ public class DialogueCharacter : ScriptableObject
     [Header("Dialogue info")]
     [SerializeField] private Color characterDialogueDefaultColor = Color.white;
     [SerializeField] private TMP_FontAsset characterDefaultDialogueFont;
+    [SerializeField,Min(0.1f)] private float dialogueCharacterPerSecond = 30;
 
     [Header("Other info")]
     [SerializeField] private Sprite characterImage;
     [SerializeField] private Color characterFrameColor = Color.white;
+    [SerializeField] private AudioClip characterVoice;
 
 
     public string Name
@@ -75,6 +77,22 @@ public class DialogueCharacter : ScriptableObject
         get { return characterDefaultDialogueFont; }
 #if UNITY_EDITOR
         set { characterDefaultDialogueFont = value; }
+#endif
+    }
+
+    public AudioClip CharacterVoice
+    {
+        get { return characterVoice; }
+#if UNITY_EDITOR
+        set { characterVoice = value; }
+#endif
+    }
+
+    public float DialogueCharacterPerSecond
+    {
+        get { return dialogueCharacterPerSecond; }
+#if UNITY_EDITOR
+        set { dialogueCharacterPerSecond = value; }
 #endif
     }
 }

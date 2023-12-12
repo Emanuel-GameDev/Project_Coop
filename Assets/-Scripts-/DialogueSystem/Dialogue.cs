@@ -25,7 +25,11 @@ public class Dialogue : ScriptableObject
         public bool overrideDialogueFont;
         [SerializeField] private TMP_FontAsset dialogueFont;
 
-        [SerializeField] private float characterPerSecond = 20;
+        public bool overrideDialogueVoice;
+        [SerializeField] private AudioClip dialogueLineVoice;
+
+        public bool overrideDialogueSpeed;
+        [SerializeField,Min(0.1f)] private float characterPerSecond;
 
 #if UNITY_EDITOR
         public bool openInEditor = false;
@@ -66,6 +70,12 @@ public class Dialogue : ScriptableObject
         {
             get { return dialogueFont; }
             set { dialogueFont = value; }
+        }
+
+        public AudioClip DialogueLineVoice
+        {
+            get { return dialogueLineVoice; }
+            set { dialogueLineVoice = value; }
         }
 
         public float CharacterPerSecond

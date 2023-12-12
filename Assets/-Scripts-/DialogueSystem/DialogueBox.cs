@@ -15,7 +15,7 @@ public class DialogueBox : MonoBehaviour
     [SerializeField] private Image speakerFrame;
     [SerializeField] private Image dialogueFrame;
 
-    [SerializeField] private AudioSource audioSource;
+    private AudioSource audioSource;
     
 
     [SpaceArea(30)]
@@ -80,6 +80,15 @@ public class DialogueBox : MonoBehaviour
         else if (nextLine.Character.CharacterDialogueFont != null)
             contentText.font = nextLine.Character.CharacterDialogueFont;
 
+        if (nextLine.overrideDialogueSpeed)
+            characterPerSecond = nextLine.CharacterPerSecond;
+        else
+            characterPerSecond = nextLine.Character.DialogueCharacterPerSecond;
+
+        if (nextLine.overrideDialogueVoice)
+            audioSource.clip = nextLine.DialogueLineVoice;
+        else
+            audioSource.clip = nextLine.Character.CharacterVoice;
 
         characterImage.sprite = nextLine.Character.CharacterImage;
 
@@ -104,6 +113,9 @@ public class DialogueBox : MonoBehaviour
 
     IEnumerator TypeLine()
     {
+        if (audioSource.clip != null)
+            audioSource.Play();
+
         foreach(char c in nextLine.Content.ToCharArray())
         {
             contentText.text += c;
