@@ -49,6 +49,13 @@ public static class Utility
         UnityEngine.Debug.Log($"{callingScript} {callingFunction} | {extraText}");
     }
 
+    public static T InstantiateCondition<T>() where T : Condition
+    {
+        GameObject conditionGO = new GameObject();
+        conditionGO.name = typeof(T).Name;
+        T newCondition = conditionGO.AddComponent<T>();
+        return newCondition;
+    }
 
 
 }

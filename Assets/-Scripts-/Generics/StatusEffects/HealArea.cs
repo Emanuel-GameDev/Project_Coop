@@ -64,7 +64,7 @@ public class HealArea : MonoBehaviour
             characterInArea.Add(other.gameObject.GetComponent<Character>());
 
             //Sostituire playercharacter con enemycharacter
-            if (/*slow && */other.gameObject.GetComponent<Character>() is PlayerCharacter)
+            if (slow && other.gameObject.GetComponent<Character>() is PlayerCharacter)
             {
                 other.gameObject.GetComponent<PlayerCharacter>().AddPowerUp(slowDown);
             }

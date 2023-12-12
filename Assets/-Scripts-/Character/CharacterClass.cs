@@ -28,9 +28,10 @@ public class CharacterClass : MonoBehaviour
     protected Damager damager;
     protected bool isMoving;
     protected bool bossfightPowerUpUnlocked;
+    protected bool isInBossfight;
     protected float uniqueAbilityUses;
+    protected float damageReceivedMultiplier = 1;
     protected Vector2 lastNonZeroDirection;
-   
 
     public virtual float maxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
@@ -58,17 +59,21 @@ public class CharacterClass : MonoBehaviour
         animator = GetComponent<Animator>();
         this.character = character;
         bossfightPowerUpUnlocked = false;
+        damageReceivedMultiplier = 1;
         uniqueAbilityUses = 0;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        pivot = GetComponentInChildren<Pivot>();        
+        pivot = GetComponentInChildren<Pivot>();
         lastNonZeroDirection = Vector2.down;
-        damager = GetComponentInChildren<Damager>();
+        damager = GetComponentInChildren<Damager>(true);
         if (damager != null)
         {
             damager.SetSource(character);
         }
+        SetIsInBossfight(false);
         conditions = new();
     }
+
+
 
     public virtual void Attack(Character parent, InputAction.CallbackContext context)
     {
@@ -81,13 +86,7 @@ public class CharacterClass : MonoBehaviour
 
     public virtual void Disable(Character character)
     {
-        //foreach (KeyValuePair<AbilityUpgrade, bool> entry in upgradeStatus)
-        //{
-        //    // do something with entry.Value or entry.Key
-        //    Debug.Log(entry.Key);
-        //}
 
-        // Disattivo eventuali modifiche al prefab
     }
 
     public virtual void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
@@ -102,11 +101,16 @@ public class CharacterClass : MonoBehaviour
     public virtual void TakeDamage(DamageData data)
     {
         if (data.condition != null)
-            conditions.Add((Condition)gameObject.AddComponent(data.condition.GetType()));
+            AddToConditions(data.condition);
 
+        currentHp -= data.damage * damageReceivedMultiplier;
+        damager.RemoveCondition();
+        Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
     }
 
     public virtual float GetDamage() => Damage;
+    public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
+    public Vector2 GetLastNonZeroDirection() => lastNonZeroDirection;
 
     #region Move
     //dati x e z chiama Move col Vector2
@@ -121,7 +125,7 @@ public class CharacterClass : MonoBehaviour
         Move(new Vector3(direction.x, 0, direction.y).normalized, rb);
     }
 
-    //dato un vector 3 setta la velocità del rigidBody in quella direzione, se il vettore non è normalizzato lo normalizza
+    //dato un vector 3 setta la velocitï¿½ del rigidBody in quella direzione, se il vettore non ï¿½ normalizzato lo normalizza
     public virtual void Move(Vector3 direction, Rigidbody rb)
     {
         if (!direction.normalized.Equals(direction))
@@ -135,11 +139,9 @@ public class CharacterClass : MonoBehaviour
         if (direction2D != Vector2.zero)
             lastNonZeroDirection = direction2D;
         SetSpriteDirection(lastNonZeroDirection);
-
-       
     }
 
-    private void SetSpriteDirection(Vector2 direction)
+    protected void SetSpriteDirection(Vector2 direction)
     {
         if (direction.y != 0)
             animator.SetFloat(Y, direction.y);
@@ -177,13 +179,16 @@ public class CharacterClass : MonoBehaviour
 
 
     #endregion
-    public void AddCondition(Condition condition)
+
+    public void AddToConditions(Condition condition)
     {
         conditions.Add(condition);
+        condition.AddCondition(this);
     }
 
-    internal void RemoveCondition(Condition condition)
+    public void RemoveFromConditions(Condition condition)
     {
         conditions.Remove(condition);
+
     }
 }

@@ -4,10 +4,13 @@ public class AggroCondition : Condition
 {
     private CharacterClass player;
     private float duration;
+    private bool started;
+    private float timer;
 
     public override void AddCondition(CharacterClass parent)
     {       
-        transform.parent = parent.transform;        
+        transform.parent = parent.transform;
+        base.AddCondition(parent);
         Debug.Log(transform.parent.name + " sono sotto aggro per " + duration + " secondi");
     }
 
@@ -27,7 +30,16 @@ public class AggroCondition : Condition
 
     private void Update()
     {
-       
+       if(player != null)
+        {
+            if (!started)
+            {
+                started = true;
+                timer = duration;
+                
+            }
+                
+        }
     }
 
 }
