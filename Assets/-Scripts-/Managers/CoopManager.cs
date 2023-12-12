@@ -9,7 +9,7 @@ public class CoopManager : MonoBehaviour
     [SerializeField] private CharacterData switchPlayerDown;
     [SerializeField] private CharacterData switchPlayerLeft;
 
-    private List<PlayerCharacter> activePlayers = new List<PlayerCharacter>();
+    public List<PlayerCharacter> activePlayers = new List<PlayerCharacter>();
     private List<CharacterData> internalSwitchList;
 
     public InputActionMap playerActionMap { get; private set; }

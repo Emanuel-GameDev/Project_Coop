@@ -1,12 +1,19 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 
 public class Dummy : CharacterClass
 {
     public float totalDamageReceived;
     private float _totalDamageReceived;
+    private bool attackMode = false;
+    private bool AttackMode
+    {
+        get => attackMode;
+        set { attackMode = value; animator.SetBool("Attack", value); }
+    }
     public float TotalDamageReceived
     {
         get => _totalDamageReceived;
@@ -25,6 +32,11 @@ public class Dummy : CharacterClass
     }
 
     private List<DummyData> dummyData;
+
+    public void ChangeBehaviour()
+    {
+        AttackMode = !AttackMode;
+    }
 
 
     public override void TakeDamage(DamageData data)
@@ -54,6 +66,7 @@ public class Dummy : CharacterClass
         if(data.condition != null)
         {
             data.condition.AddCondition(this);
+            
         }
 
         Debug.Log($"Dummy subito [{totalDamageReceived}] danni con condition [{data.condition}]");

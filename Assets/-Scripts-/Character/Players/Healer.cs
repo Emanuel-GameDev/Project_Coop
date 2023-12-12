@@ -126,7 +126,11 @@ public class Healer : CharacterClass
         if (context.performed)
         {
             animator.SetTrigger("IsAttacking");
-            
+        }
+
+        if (context.canceled)
+        {
+            animator.ResetTrigger("IsAttacking");
         }
 
     }
@@ -219,6 +223,7 @@ public class Healer : CharacterClass
 
 
 
+
     public override void Move(Vector2 direction, Rigidbody rb)
     {
         if (!inputState)
@@ -285,6 +290,13 @@ public class Healer : CharacterClass
         if (uniqueAbilityTimer < UniqueAbilityCooldown || !context.performed)
             return;
 
+        animator.SetTrigger("CastHeal");
+
+        uniqueAbilityTimer = 0;
+    }
+
+    public void SpawnHealArea()
+    {
         float radius;
 
         //calcolo raggio area
@@ -294,7 +306,7 @@ public class Healer : CharacterClass
             radius = healAreaRadius;
 
 
-        HealArea areaSpawned = Instantiate(healArea, new Vector3(parent.transform.position.x, 0, parent.transform.position.z), Quaternion.identity).GetComponent<HealArea>();
+        HealArea areaSpawned = Instantiate(healArea, new Vector3(character.transform.position.x, 0, character.transform.position.z), Quaternion.identity).GetComponent<HealArea>();
 
 
         areaSpawned.Initialize(
@@ -311,8 +323,6 @@ public class Healer : CharacterClass
         areaSpawned.DOTPerTik = DOTPerTik;
         areaSpawned.slowDown = slowDown;
         areaSpawned.damageIncrement = damageIncrement;
-
-        uniqueAbilityTimer = 0;
     }
 
 
@@ -325,10 +335,12 @@ public class Healer : CharacterClass
 
         if (instantiatedHealMine == null)
         {
-            if (/*upgradeStatus[AbilityUpgrade.Ability3]*/ true && context.performed)
+            if (upgradeStatus[AbilityUpgrade.Ability3]  && context.performed)
             {
                 if (mineAbilityTimer < mineAbilityCooldown)
                     return;
+
+                animator.SetTrigger("PlaceMine");
 
                 instantiatedHealMine = Instantiate(healMine, new Vector3(parent.transform.position.x, 0.1f, parent.transform.position.z), Quaternion.identity);
                 instantiatedHealMine.GetComponent<HealMine>().Initialize(gameObject, mineHealQuantity, healMineRadius, healMineActivationTime);
@@ -362,6 +374,11 @@ public class Healer : CharacterClass
     public void BossAbility()
     {
         Debug.Log("Cura tutti");
+        //foreach(PlayerCharacter player in GameManager.Instance.coopManager.activePlayers)
+        //{
+        //    player.CharacterClass.currentHp = player.CharacterClass.MaxHp;
+        //}
+
         bossAbilityPerformed = true;
     }
 

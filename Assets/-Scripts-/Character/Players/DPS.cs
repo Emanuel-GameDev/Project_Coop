@@ -17,13 +17,15 @@ public class DPS : CharacterClass
     float dodgeCooldown = 5f;
     [SerializeField, Tooltip("Durata del danno extra dopo una schivata perfetta.")]
     float perfectDodgeExtraDamageDuration = 5f;
-    [SerializeField, Tooltip("Danno extra dopo una schivata perfetta.")]
-    float perfectDodgeExtraDamage = 10;
+    [SerializeField, Tooltip("Danno extra in % dopo una schivata perfetta."), Range(0, 1)]
+    float perfectDodgeExtraDamage = 0.15f;
+    [SerializeField, Tooltip("Durata del tempo utile per poter fare la schivata perfetta")]
+    float perfectDodgeDurarion = 0.5f;
     [Header("Unique Ability")]
     [SerializeField, Tooltip("Durata dell'invulnerabilità.")]
     float invulnerabilityDuration = 5f;
-    [SerializeField, Tooltip("Aumento di velocità durante l'invulnerabilità.")]
-    float invulnerabilitySpeedUp = 5f;
+    [SerializeField, Tooltip("Aumento di velocità in % durante l'invulnerabilità."), Range(0, 1)]
+    float invulnerabilitySpeedUp = 0.25f;
     [Header("Extra Ability")]
     [SerializeField, Tooltip("Distanza minima dell'attacco con il dash.")]
     float minDashAttackDistance = 5f;
@@ -35,13 +37,17 @@ public class DPS : CharacterClass
     float dashAttackMaxLoadUpTime = 5f;
     [SerializeField, Tooltip("Tempo di ricarica dell'attacco con il dash.")]
     float dashAttackCooldown = 5f;
+    [SerializeField, Tooltip("Moltiplicatore al danno base dell'attacco con il dash durante il movovimento.")]
+    float dashAttackRushDamageMultiplier = 0.5f;
+    [SerializeField, Tooltip("Moltiplicatore al danno base dell'attacco con il dash nell'attacco.")]
+    float dashAttackSlashDamageMultiplier = 1.5f;
     [Header("Boss Power Up")]
     [SerializeField, Tooltip("Totale dei danni da fare al boss per sbloccare il potenziamento.")]
     float bossPowerUpTotalDamageToUnlock = 1000f;
-    [SerializeField, Tooltip("Danno extra per colpo conferito dal potenziamento del boss.")]
-    float bossPowerUpExtraDamagePerHit = 2f;
-    [SerializeField, Tooltip("Limite massimo del danno extra conferito dal potenziamento del boss.")]
-    float bossPowerUpExtraDamageCap = 16f;
+    [SerializeField, Tooltip("Danno extra in % per colpo conferito dal potenziamento del boss."), Range(0, 1)]
+    float bossPowerUpExtraDamagePerHit = 0.02f;
+    [SerializeField, Tooltip("Limite massimo in % del danno extra conferito dal potenziamento del boss."), Range(0, 1)]
+    float bossPowerUpExtraDamageCap = 0.16f;
     [SerializeField, Tooltip("Durata del danno extra conferito dal potenziamento del boss dopo l'ultimo colpo inferto.")]
     float bossPowerUpExtraDamageDuration = 2.5f;
     [Header("Other")]
@@ -49,8 +55,18 @@ public class DPS : CharacterClass
     LayerMask projectileLayer;
 
 
-    private float extraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
-    private float extraDamage => (perfectDodgeExtraDamageUnlocked && Time.time < lastPerfectDodgeTime + perfectDodgeExtraDamageDuration ? perfectDodgeExtraDamage : 0) + (bossfightPowerUpUnlocked ? MathF.Min(bossPowerUpExtraDamagePerHit * consecutiveHitsCount, bossPowerUpExtraDamageCap) : 0);
+    private float ExtraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
+
+    private float ExtraDamage()
+    {
+        float perfectDodgeDamage = perfectDodgeExtraDamageUnlocked && Time.time < lastPerfectDodgeTime + perfectDodgeExtraDamageDuration ? perfectDodgeExtraDamage : 0;
+        float bossPowerUpDamage = bossfightPowerUpUnlocked ? MathF.Min(bossPowerUpExtraDamagePerHit * (consecutiveHitsCount > 1 ? consecutiveHitsCount - 1 : 0), bossPowerUpExtraDamageCap) : 0;
+
+        Debug.Log($"ExtraDamage Multi TOT: {perfectDodgeDamage + bossPowerUpDamage + 1}, dodge: {perfectDodgeDamage}, boss: {bossPowerUpDamage}");
+
+        return perfectDodgeDamage + bossPowerUpDamage + 1;
+    }
+
     private float lastAttackTime;
     private float lastDodgeTime;
     private float lastUniqueAbilityUseTime;
@@ -58,7 +74,9 @@ public class DPS : CharacterClass
     private float lastDashAttackTime;
     private float lastHitTime;
     private float totalDamageDone = 0;
+    private float perfectDodgeCounter = 0;
     private float dashAttackStartTime;
+    private float dashAttackDamageMultiplier;
     private Vector3 startPosition;
 
 
@@ -82,17 +100,28 @@ public class DPS : CharacterClass
     private bool IsAttacking
     {
         get => _isAttacking;
-        set { _isAttacking = value; animator.SetBool("isAttacking", _isAttacking); }
+        set
+        {
+            _isAttacking = value;
+            animator.SetBool("isAttacking", _isAttacking);
+            if (!value)
+            {
+                nextComboState = 0;
+                currentComboState = 0;
+            }
+        }
     }
     private bool _isAttacking;
 
+    private ChargeVisualHandler chargeHandler;
+    private PerfectTimingHandler perfectTimingHandler;
 
 
     #region Animation Variable
     private static string ATTACK = "Attack";
     private static string DODGESTART = "DodgeStart";
     private static string DODGEEND = "DodgeEnd";
-    //private static string HIT = "Hit";
+    private static string HIT = "Hit";
     //private static string UNIQUE_ABILITY = "UniqueAbility";
     private static string STARTDASHATTACK = "StartDashAttack";
     private static string MOVEDASHATTACK = "MoveDashAttack";
@@ -101,9 +130,9 @@ public class DPS : CharacterClass
     private static string ISMOVING = "IsMoving";
     #endregion
 
-    public override float AttackSpeed => base.AttackSpeed + extraSpeed;
-    public override float MoveSpeed => base.MoveSpeed + extraSpeed;
-    public override float Damage => base.Damage + extraDamage;
+    public override float AttackSpeed => base.AttackSpeed + ExtraSpeed;
+    public override float MoveSpeed => base.MoveSpeed + ExtraSpeed;
+    public override float Damage => base.Damage * ExtraDamage();
 
     public override void Inizialize(CharacterData characterData, Character character)
     {
@@ -120,6 +149,10 @@ public class DPS : CharacterClass
         IsAttacking = false;
         isDashingAttack = false;
         isDashingAttackStarted = false;
+        chargeHandler = GetComponentInChildren<ChargeVisualHandler>();
+        chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
+        perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
+        perfectTimingHandler.gameObject.SetActive(false);
     }
 
 
@@ -129,17 +162,14 @@ public class DPS : CharacterClass
     {
         if (context.performed)
         {
-            if (!IsAttacking)
+            if (canMove && CanStartCombo())
             {
-                if (CanStartCombo())
-                    StartCombo();
+                StartCombo();
             }
-            else
+            else if (IsAttacking)
                 ContinueCombo();
             Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n CurrentComboState: {currentComboState}, NextComboState: {nextComboState}");
-
         }
-
     }
     private void StartCombo()
     {
@@ -159,9 +189,9 @@ public class DPS : CharacterClass
     }
     private void DoMeleeAttack()
     {
+        IsAttacking = true;
         string triggerName = ATTACK + (nextComboState).ToString();
         animator.SetTrigger(triggerName);
-        IsAttacking = true;
     }
     public void OnAttackAnimationEnd()
     {
@@ -180,8 +210,13 @@ public class DPS : CharacterClass
         lastAttackTime = Time.time - reductionFactor;
     }
 
-    private bool CanStartCombo() => unlimitedComboUnlocked || Time.time > lastAttackTime + timeBetweenCombo;
+    private bool CanStartCombo() => (unlimitedComboUnlocked || Time.time > lastAttackTime + timeBetweenCombo) && currentComboState != 1;
     private bool CanContinueCombo() => nextComboState != 0;
+    private void ResetAttack()
+    {
+        IsAttacking = false;
+        currentComboState = 0;
+    }
 
     #endregion
 
@@ -192,14 +227,15 @@ public class DPS : CharacterClass
         if (context.performed)
         {
             Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
-            if (Time.time > lastDodgeTime + dodgeCooldown && !isDodging)
+            if (Time.time > lastDodgeTime + dodgeCooldown && !isDodging && !isDashingAttack)
             {
+                ResetAttack();
                 lastDodgeTime = Time.time + dodgeDuration;
                 StartCoroutine(Dodge(lastNonZeroDirection, parent.GetRigidBody()));
             }
         }
     }
-    
+
     protected IEnumerator Dodge(Vector2 dodgeDirection, Rigidbody rb)
     {
         isDodging = true;
@@ -228,6 +264,26 @@ public class DPS : CharacterClass
 
         rb.velocity = Vector3.zero;
     }
+
+    protected IEnumerator PerfectDodgeHandler(DamageData data)
+    {
+        perfectTimingHandler.gameObject.SetActive(true);
+        yield return new WaitForSeconds(perfectDodgeDurarion);
+        if (isDodging)
+        {
+            perfectDodgeCounter++;
+            lastPerfectDodgeTime = Time.time;
+        }
+        else
+        {
+            base.TakeDamage(data);
+            if (!isDashingAttack)
+                animator.SetTrigger(HIT);
+        }
+        perfectTimingHandler.gameObject.SetActive(false);
+        Debug.Log($"PerfectDodge: {isDodging}, Count: {perfectDodgeCounter}");
+    }
+
 
     #endregion
 
@@ -268,13 +324,16 @@ public class DPS : CharacterClass
             Utility.DebugTrace("Performed");
             isDashingAttack = true;
             dashAttackStartTime = Time.time;
+            parent.GetRigidBody().velocity = Vector3.zero;
             animator.SetTrigger(STARTDASHATTACK);
+            chargeHandler.StartCharging(dashAttackStartTime);
         }
 
         if (context.canceled && dashAttackUnlocked && isDashingAttack && !isDashingAttackStarted)
         {
             isDashingAttackStarted = true;
             Utility.DebugTrace("Canceled");
+            chargeHandler.StopCharging();
             StartCoroutine(DashAttack(lastNonZeroDirection, parent.GetRigidBody()));
         }
 
@@ -283,11 +342,13 @@ public class DPS : CharacterClass
     protected IEnumerator DashAttack(Vector2 attackDirection, Rigidbody rb)
     {
         animator.SetTrigger(MOVEDASHATTACK);
+        dashAttackDamageMultiplier = dashAttackRushDamageMultiplier;
         float pressDuration = Time.time - dashAttackStartTime;
         float dashAttackDistance = Mathf.Lerp(minDashAttackDistance, maxDashAttackDistance, pressDuration / dashAttackMaxLoadUpTime);
-        
+
         yield return StartCoroutine(Move(attackDirection, rb, dashAttackDuration, dashAttackDistance));
-        
+
+        dashAttackDamageMultiplier = dashAttackSlashDamageMultiplier;
         animator.SetTrigger(ENDDASHATTACK);
     }
 
@@ -304,8 +365,8 @@ public class DPS : CharacterClass
         lastDashAttackTime = Time.time;
     }
 
-
     #endregion
+
 
     public override void Move(Vector2 direction, Rigidbody rb)
     {
@@ -313,15 +374,24 @@ public class DPS : CharacterClass
         {
             base.Move(direction, rb);
         }
+        else if (isDashingAttack)
+        {
+            if (direction != Vector2.zero)
+                lastNonZeroDirection = direction;
+            SetSpriteDirection(lastNonZeroDirection);
+        }
         animator.SetBool(ISMOVING, isMoving);
     }
 
 
     public override void TakeDamage(DamageData data)
     {
-        if (!isInvulnerable)
-            base.TakeDamage(data);
+        if (!isInvulnerable || !isDodging)
+        {
+            StartCoroutine(PerfectDodgeHandler(data));
+        }
     }
+
 
     public override void UnlockUpgrade(AbilityUpgrade abilityUpgrade)
     {
@@ -352,33 +422,46 @@ public class DPS : CharacterClass
         damager.RemoveFunctionFromOnTrigger(DeflectProjectile);
     }
 
-    private void Update()
-    {
-        DamageCheck();
-    }
-
-    private void DamageCheck()
-    {
-        if (bossfightPowerUpUnlocked)
-        {
-            if (Time.time > lastHitTime + bossPowerUpExtraDamageDuration)
-                consecutiveHitsCount = 0;
-        }
-        else
-        {
-            if (totalDamageDone > bossPowerUpTotalDamageToUnlock)
-                bossfightPowerUpUnlocked = true;
-        }
-    }
-
     public override void Disable(Character character)
     {
-        //base.Disable(character);
         if (projectileDeflectionUnlocked)
             RemoveDeflect();
     }
 
+    #region Damage
+    public override float GetDamage()
+    {
+        BossDamageCheck();
 
+        float damage = isDashingAttack ? base.Damage * dashAttackDamageMultiplier : Damage;
+
+        TotalDamageUpdate(damage);
+
+        Debug.Log($"Damage Done: {damage}");
+        return damage;
+    }
+
+    private void BossDamageCheck()
+    {
+        if (isInBossfight && bossfightPowerUpUnlocked)
+        {
+            if (Time.time > lastHitTime + bossPowerUpExtraDamageDuration)
+                consecutiveHitsCount = 0;
+
+            consecutiveHitsCount++;
+            lastHitTime = Time.time;
+        }
+    }
+
+    private void TotalDamageUpdate(float damage)
+    {
+        totalDamageDone += damage;
+        if (totalDamageDone > bossPowerUpTotalDamageToUnlock)
+            bossfightPowerUpUnlocked = true;
+    }
+
+
+    #endregion
     //Potenziamento boss fight: gli attacchi consecutivi aumentano il danno del personaggio a ogni colpo andato a segno.
     //Dopo tot tempo (es: 1.5 secondi) senza colpire, il danno torna al valore standard.
 

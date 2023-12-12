@@ -16,6 +16,8 @@ public class Tank : CharacterClass
     float chargedAttackDamage = 50f;
     [SerializeField, Tooltip("Range danno ad area intorno al player")]
     float chargedAttackRadius = 5f;
+    [SerializeField, Tooltip("Sprite del segnale visivo se attacco caricato pronto")]
+    GameObject chargedAttackSprite;
 
     [Header("Block")]
 
@@ -23,6 +25,10 @@ public class Tank : CharacterClass
     float maxStamina;
     [SerializeField, Tooltip("Danno parata perfetta")]
     float perfectBlockDamage;
+    [SerializeField, Tooltip("Angolo parata frontale al tank")]
+    float blockAngle = 90;
+    [SerializeField, Tooltip("distanza parata frontale al tank")]
+    float blockRange = 3f;
 
     [Header("Unique Ability")]
 
@@ -68,12 +74,9 @@ public class Tank : CharacterClass
     private int perfectBlockCount;
 
     private float currentStamina;
+    private float blockAngleThreshold => (blockAngle - 180) / 180;
     private GenericBarScript staminaBar;
     private GameObject chargedAttackAreaObject = null;
-
-    //Da eliminare
-    private bool mostraGizmoAttaccoCaricato;
-    private bool mostraGizmoAbilitaUnica;
 
 
     public override void Inizialize(CharacterData characterData, Character character)
@@ -97,6 +100,8 @@ public class Tank : CharacterClass
         {
             TakeDamage(new DamageData(10, null));
         }
+
+
 
     }
 
@@ -123,6 +128,7 @@ public class Tank : CharacterClass
             {
                 animator.SetTrigger("ChargedAttackEnd");
                 Debug.Log("Charged Attack executed");
+                chargedAttackSprite.gameObject.SetActive(false);
 
             }
 
@@ -192,15 +198,12 @@ public class Tank : CharacterClass
 
         if (pressed)
         {
-            //da eliminare 
-            mostraGizmoAttaccoCaricato = true;
-
 
             chargedAttackReady = true;
             canCancelAttack = false;
 
             Debug.Log("Charged Attack Ready");
-            //Segnale Visivo
+            chargedAttackSprite.SetActive(true);
         }
 
     }
@@ -227,8 +230,6 @@ public class Tank : CharacterClass
             Debug.Log("Reset Variables");
             SetCanMove(true, character.GetRigidBody());
 
-            //da eliminare
-            mostraGizmoAttaccoCaricato = false;
         }
         else if (comboIndex == 2)
         {
@@ -264,16 +265,54 @@ public class Tank : CharacterClass
     #endregion
 
     #region Block
+    private bool AttackInBlockAngle(DamageData data)
+    {
+        Character dealerMB = (Character)data.dealer;
+
+        Vector2 lastNonZeroDirection = GetLastNonZeroDirection();
+
+        Vector3 lastDirection = new Vector3(lastNonZeroDirection.x, 0f, lastNonZeroDirection.y);
+        Vector3 dealerDirection = dealerMB.gameObject.transform.position - transform.position;
+        dealerPosition = dealerMB.gameObject.transform.position;
+
+        
+        float crossProduct = Vector3.Cross(lastDirection, dealerDirection).y;
+
+      
+        float angle = Vector3.Angle(dealerDirection, lastDirection);
+
+        
+        angle = crossProduct < 0 ? -angle : angle;
+
+        Debug.Log($"{angle} cacca {blockAngle}");
+
+      
+        return Mathf.Abs(angle) <= blockAngle/2;
+    }
+
+    Vector3 RotateVectorAroundPivot(Vector3 vector, Vector3 pivot, float angle)
+    {
+        Quaternion rotation = Quaternion.Euler(0, angle, 0);
+        vector -= pivot;
+        vector = rotation * vector;
+        vector += pivot;
+        return vector;
+    }
+
+
 
     public override void Defence(Character parent, InputAction.CallbackContext context)
     {
-        if (context.performed && isAttacking == false)
+        if (context.performed && isAttacking == false && canCancelAttack == false)
         {
-
             SetCanMove(false, character.GetRigidBody());
             isBlocking = true;
             ShowStaminaBar(true);
             Debug.Log($"is blocking [{isBlocking}]");
+
+            //eliminare
+            mostraGizmoRangeParata = true;
+
         }
 
         else if (context.canceled && isBlocking == true)
@@ -283,6 +322,9 @@ public class Tank : CharacterClass
             ShowStaminaBar(false);
             ResetStamina();
             Debug.Log($"is blocking [{isBlocking}]");
+
+            //eliminare
+            mostraGizmoRangeParata = false;
         }
 
 
@@ -311,8 +353,9 @@ public class Tank : CharacterClass
             //annulla attacco
         }
 
-        if (isBlocking)
+        if (isBlocking && AttackInBlockAngle(data))
         {
+
             staminaBar.DecreaseValue(data.damage);
             currentStamina -= data.damage;
             Debug.Log($"{currentStamina}");
@@ -327,8 +370,8 @@ public class Tank : CharacterClass
         }
         else
         {
-            currentHp -= data.damage;
-            Debug.Log($" Tank current hp : {currentHp}");
+            base.TakeDamage(data);
+            Debug.Log($" Tank  hp : {currentHp}  stamina: {currentStamina}");
         }
     }
 
@@ -349,7 +392,7 @@ public class Tank : CharacterClass
             animator.SetTrigger("UniqueAbility");
             Debug.Log("UniqueAbility Used");
         }
-        
+
     }
 
     public void PerformUniqueAbility()
@@ -363,10 +406,12 @@ public class Tank : CharacterClass
                 {
                     IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
 
-                    AggroCondition newAggroCondition = new AggroCondition(this, aggroDuration);
-                   hittedDama.TakeDamage(new DamageData(0, character,newAggroCondition));
+                    AggroCondition aggroCondition = Utility.InstantiateCondition<AggroCondition>();
+                    aggroCondition.SetVariable(this, aggroDuration);
 
-                    
+                    hittedDama.TakeDamage(new DamageData(0, character, aggroCondition));
+
+
                 }
             }
         }
@@ -385,6 +430,7 @@ public class Tank : CharacterClass
 
             if (bossfightPowerUpUnlocked && isAttacking == false)
             {
+                damager.SetCondition(Utility.InstantiateCondition<AggroCondition>(), true);
                 animator.SetTrigger("UniqueAbility");
 
                 float stunDamageDuration = maximizedStun ? (chargedAttackStunDuration * stunDurationMultiplier) : chargedAttackStunDuration;
@@ -422,18 +468,43 @@ public class Tank : CharacterClass
     #endregion
 
     //Eliminare
+
+    private bool mostraGizmoAbilitaUnica;
+    public bool mostraGizmoRangeParata;
+    int segments = 50;
+    float startAngle => blockAngle / 2;
+    Vector3 dealerPosition;
+
+
+
+
+
     public void OnDrawGizmos()
     {
-       
-        if (mostraGizmoAttaccoCaricato)
+        if (dealerPosition != Vector3.zero)
         {
-            Gizmos.color = new Color(1f, 0f, 1f, 0.2f);
-            Gizmos.DrawSphere(transform.position, chargedAttackRadius);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, dealerPosition);
+
         }
         if (mostraGizmoAbilitaUnica)
         {
-            Gizmos.color = new Color(0f, 1f, 1f, 0.2f);
+            Gizmos.color = Color.red;
             Gizmos.DrawSphere(transform.position, aggroRange);
+        }
+        if (mostraGizmoRangeParata)
+        {
+            Vector3 temp = new Vector3((GetLastNonZeroDirection().x + transform.position.x), transform.position.y, GetLastNonZeroDirection().y + transform.position.z);
+
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position, temp);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
+
+
         }
 
     }
@@ -443,5 +514,21 @@ public class Tank : CharacterClass
         mostraGizmoAbilitaUnica = false;
     }
 
+
+    void DrawArc(Vector3 center, float radius, float angle, int segments)
+    {
+        Gizmos.color = Color.blue;
+
+    }
+
+
+    Vector3 GetPointOnCircle(float radius, float angle)
+    {
+        float radianAngle = Mathf.Deg2Rad * angle;
+        float x = transform.position.x + radius * Mathf.Cos(radianAngle);
+        float y = transform.position.y + radius * Mathf.Sin(radianAngle);
+
+        return new Vector3(x, y, transform.position.z);
+    }
 
 }

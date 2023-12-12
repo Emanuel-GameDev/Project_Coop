@@ -55,6 +55,10 @@ public class GameManager : MonoBehaviour
         {
             player.UnlockUpgrade(AbilityUpgrade.Ability5);
         }
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            player.CharacterClass.SetIsInBossfight(true);
+        }
 
 
         if (canJoin)

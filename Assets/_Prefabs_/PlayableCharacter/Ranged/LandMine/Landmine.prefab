@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 383694819658353424}
   - component: {fileID: 4830608485999345620}
   - component: {fileID: 220598116933837098}
+  - component: {fileID: 7914808724226337859}
   m_Layer: 0
   m_Name: Landmine
   m_TagString: Untagged
@@ -63,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: a9ab0c833d748b3468b9c0620e8f1cc2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -118,3 +119,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9e3dbface3dfd1419fd3ae89f0a7b6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 0}
+--- !u!114 &7914808724226337859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5262975984665244697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2de632904a0ecf48920e0fa6a2dcd65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  onTrigger:
+    m_PersistentCalls:
+      m_Calls: []
