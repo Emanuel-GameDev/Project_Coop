@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
 
-public class Dummy : CharacterClass
+public class Dummy : EnemyCharacterClass
 {
     public float totalDamageReceived;
     private float _totalDamageReceived;

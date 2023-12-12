@@ -38,6 +38,8 @@ public class CharacterClass : MonoBehaviour
     public float currentHp;
 
     public virtual float Damage => characterData.Damage + powerUpData.damageIncrease;
+    
+
     public virtual float MoveSpeed => characterData.MoveSpeed + powerUpData.moveSpeedIncrease;
     public virtual float AttackSpeed => characterData.AttackSpeed + powerUpData.attackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => characterData.UniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease + (characterData.UniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses);
@@ -109,6 +111,7 @@ public class CharacterClass : MonoBehaviour
     }
 
     public virtual float GetDamage() => Damage;
+    
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
     public Vector2 GetLastNonZeroDirection() => lastNonZeroDirection;
 

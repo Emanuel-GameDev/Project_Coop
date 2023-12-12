@@ -25,7 +25,7 @@ public class Damager : MonoBehaviour
             IDamageable damageable = other.GetComponent<IDamageable>();
             if (damageable != null)
             {
-                damageable.TakeDamage(new DamageData(source.GetDamage(), source, conditionToApply));
+                damageable.TakeDamage(new DamageData(source.GetDamage(),source, conditionToApply));
                 if (oneTimeCondition)
                     conditionToApply = null;
             }

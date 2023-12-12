@@ -348,36 +348,55 @@ public class Tank : CharacterClass
         staminaBar.gameObject.SetActive(toShow);
     }
 
-    private void StartPerfectBlockTimer()
+    private IEnumerator StartPerfectBlockTimer(DamageData data)
     {
         canPerfectBlock = true;
         perfectBlockHandler.gameObject.SetActive(true);
-        Invoke(nameof(EndPerfectBlockTimer), perfectBlockTimeWindow);
-    }
-    private void EndPerfectBlockTimer()
-    {
-        perfectBlockHandler.gameObject.SetActive(false);
-        canPerfectBlock = false;
+        Character dealerMB = (Character)data.dealer;
+
+        yield return new WaitForSeconds(perfectBlockTimeWindow);
+
+        //parata perfetta
+        if (isBlocking && AttackInBlockAngle(data))
+        {
+
+            Debug.Log("Perfect Block");
+            if (damageOnParry)
+            {
+                dealerMB.TakeDamage(new DamageData(perfectBlockDamage, character));
+            }
+        }
         
+        else
+        {
+            base.TakeDamage(data);
+            Debug.Log($" Tank  hp : {currentHp}  stamina: {currentStamina}");
+        }
+        canPerfectBlock = false;
+        perfectBlockHandler.gameObject.SetActive(false);
+
+
     }
+   
     #endregion
 
     #region onHit
 
     public override void TakeDamage(DamageData data)
     {
-       StartPerfectBlockTimer();
-
+       
         if (hyperArmorOn == false)
         {
             //Hit Reaction
+            animator.SetTrigger("Hit");
             //annulla attacco
-        }
+        }     
         if (isBlocking && AttackInBlockAngle(data))
         {
 
-            staminaBar.DecreaseValue(data.damage);
-            currentStamina -= data.damage;
+            staminaBar.DecreaseValue(data.staminaDamage);
+            currentStamina -= data.staminaDamage;
+
             Debug.Log($"{currentStamina}");
             if (currentStamina <= 0)
             {
@@ -388,17 +407,15 @@ public class Tank : CharacterClass
                 //Stun per 2 secondi dopo reset stamina
             }
         }
-        if (isBlocking && canPerfectBlock && AttackInBlockAngle(data))
+
+        else 
         {
-            Debug.Log("PARATA PERFETTA");
+            StartCoroutine(StartPerfectBlockTimer(data));
         }
-       
+
+
         //sennò prende danno normalmente
-        else
-        {
-            base.TakeDamage(data);
-            Debug.Log($" Tank  hp : {currentHp}  stamina: {currentStamina}");
-        }
+       
     }
 
 
