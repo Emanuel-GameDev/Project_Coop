@@ -87,8 +87,6 @@ public class Ranged : CharacterClass
 
     
 
-    private Vector2 lastDirection;
-
     private bool reduceEmpowerFireCoolDownUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
     private bool multiBaseAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
     private bool dodgeTeleportBossUnlocked => upgradeStatus[AbilityUpgrade.Ability3];
@@ -184,7 +182,7 @@ public class Ranged : CharacterClass
 
         newProjectile.transform.position = transform.position;
 
-        newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1);
+        newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer);
 
     }
 
@@ -292,7 +290,7 @@ public class Ranged : CharacterClass
 
             newLandMine.transform.position = new Vector3(transform.position.x, 0 , transform.position.z);
 
-            newLandMine.GetComponent<LandMine>().Initialize(gameObject,landMineRange);
+            newLandMine.GetComponent<LandMine>().Initialize(gameObject.GetComponentInParent<PlayerCharacter>(),landMineRange,Damage * landMineDamageMultiplier,gameObject.layer);
 
             landMineInInventory--;
         }
@@ -371,7 +369,7 @@ public class Ranged : CharacterClass
 
         newProjectile.transform.position = transform.position;
 
-        newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier);
+        newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier,gameObject.layer);
     }
 
     #endregion

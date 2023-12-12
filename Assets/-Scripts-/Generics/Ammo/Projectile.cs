@@ -8,6 +8,8 @@ public class Projectile : MonoBehaviour, IDamager
     [SerializeField] private Vector3 projectileSize;
     [SerializeField] private float projectileDamage;
 
+    private Damager damager;
+
     Rigidbody rb;
 
     private void Awake()
@@ -17,21 +19,19 @@ public class Projectile : MonoBehaviour, IDamager
 
     private void Start()
     {
-
         rb = GetComponent<Rigidbody>();
         transform.LookAt(travelDirection);
-
-
-
     }
 
-    public void Inizialize(Vector3 direction, float range, float speed, float sizeMultiplier)
+    public void Inizialize(Vector3 direction, float range, float speed, float sizeMultiplier,float damage,LayerMask layer)
     {
 
         travelDirection = direction * 1000;
         rangeRemaining = range;
         projectileSpeed = speed;
         transform.localScale = projectileSize * sizeMultiplier;
+        projectileDamage = damage;
+        gameObject.layer = layer;
     }
 
     private void OnEnable()
@@ -59,8 +59,13 @@ public class Projectile : MonoBehaviour, IDamager
 
         if (rangeRemaining <= 0)
         {
-            ProjectilePool.Instance.ReturnProjectile(this);
+            DismissProjectile();
         }
+    }
+
+    public void DismissProjectile()
+    {
+        ProjectilePool.Instance.ReturnProjectile(this);
     }
 
     private void ProjectileFlyDirection()
@@ -70,7 +75,8 @@ public class Projectile : MonoBehaviour, IDamager
 
     public float GetDamage()
     {
+        DismissProjectile();
+
         return projectileDamage;
     }
-
 }
