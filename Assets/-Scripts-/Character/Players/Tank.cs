@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 
 //Unique = tasto nord,Q = Urlo
@@ -27,8 +29,8 @@ public class Tank : CharacterClass
     float perfectBlockDamage;
     [SerializeField, Tooltip("Angolo parata frontale al tank")]
     float blockAngle = 90;
-    [SerializeField, Tooltip("distanza parata frontale al tank")]
-    float blockRange = 3f;
+    [SerializeField, Tooltip("finestra di tempo nella quale appena viene colpito può parare per fare parata perfetta")]
+    float perfectBlockTimeWindow = 0.4f;
 
     [Header("Unique Ability")]
 
@@ -68,6 +70,7 @@ public class Tank : CharacterClass
     private bool canMove = true;
     private bool isBlocking;
     private bool canCancelAttack;
+    private bool canPerfectBlock;
 
     private int comboIndex = 0;
     private int comboMax = 2;
@@ -77,6 +80,7 @@ public class Tank : CharacterClass
     private float blockAngleThreshold => (blockAngle - 180) / 180;
     private GenericBarScript staminaBar;
     private GameObject chargedAttackAreaObject = null;
+    private PerfectTimingHandler perfectBlockHandler;
 
 
     public override void Inizialize(CharacterData characterData, Character character)
@@ -89,6 +93,9 @@ public class Tank : CharacterClass
 
         staminaBar.Setvalue(maxStamina);
         staminaBar.gameObject.SetActive(false);
+
+        perfectBlockHandler = GetComponentInChildren<PerfectTimingHandler>(true);
+        
     }
     private void Update()
     {
@@ -272,24 +279,25 @@ public class Tank : CharacterClass
         Vector2 lastNonZeroDirection = GetLastNonZeroDirection();
 
         Vector3 lastDirection = new Vector3(lastNonZeroDirection.x, 0f, lastNonZeroDirection.y);
+
         Vector3 dealerDirection = dealerMB.gameObject.transform.position - transform.position;
+        //se proiettlie
+        //
+
+        //Da eliminare
         dealerPosition = dealerMB.gameObject.transform.position;
 
-        
+
         float crossProduct = Vector3.Cross(lastDirection, dealerDirection).y;
 
-      
+
         float angle = Vector3.Angle(dealerDirection, lastDirection);
 
-        
+
         angle = crossProduct < 0 ? -angle : angle;
 
-        Debug.Log($"{angle} cacca {blockAngle}");
-
-      
-        return Mathf.Abs(angle) <= blockAngle/2;
+        return Mathf.Abs(angle) <= blockAngle / 2;
     }
-
     Vector3 RotateVectorAroundPivot(Vector3 vector, Vector3 pivot, float angle)
     {
         Quaternion rotation = Quaternion.Euler(0, angle, 0);
@@ -298,8 +306,6 @@ public class Tank : CharacterClass
         vector += pivot;
         return vector;
     }
-
-
 
     public override void Defence(Character parent, InputAction.CallbackContext context)
     {
@@ -341,18 +347,32 @@ public class Tank : CharacterClass
     {
         staminaBar.gameObject.SetActive(toShow);
     }
+
+    private void StartPerfectBlockTimer()
+    {
+        canPerfectBlock = true;
+        perfectBlockHandler.gameObject.SetActive(true);
+        Invoke(nameof(EndPerfectBlockTimer), perfectBlockTimeWindow);
+    }
+    private void EndPerfectBlockTimer()
+    {
+        perfectBlockHandler.gameObject.SetActive(false);
+        canPerfectBlock = false;
+        
+    }
     #endregion
 
     #region onHit
 
     public override void TakeDamage(DamageData data)
     {
+       StartPerfectBlockTimer();
+
         if (hyperArmorOn == false)
         {
             //Hit Reaction
             //annulla attacco
         }
-
         if (isBlocking && AttackInBlockAngle(data))
         {
 
@@ -368,12 +388,19 @@ public class Tank : CharacterClass
                 //Stun per 2 secondi dopo reset stamina
             }
         }
+        if (isBlocking && canPerfectBlock && AttackInBlockAngle(data))
+        {
+            Debug.Log("PARATA PERFETTA");
+        }
+       
+        //sennò prende danno normalmente
         else
         {
             base.TakeDamage(data);
             Debug.Log($" Tank  hp : {currentHp}  stamina: {currentStamina}");
         }
     }
+
 
 
     #endregion
