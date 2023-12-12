@@ -34,9 +34,11 @@ public class DialogueEditor : EditorWindow
         AssetDatabase.SaveAssets();
     }
 
+    bool refresh = false;
+
     private void OnGUI()
     {
-
+        
         string[] dialoguesIds = AssetDatabase.FindAssets("t:Dialogue");
         string[] dialogues = new string[dialoguesIds.Length];
         string[] dialogueNames = new string[dialoguesIds.Length];
@@ -158,6 +160,7 @@ public class DialogueEditor : EditorWindow
                 line.overrideOptionsOpenInEditor = EditorGUILayout.Foldout(line.overrideOptionsOpenInEditor, "Custom functions");
                 EditorGUIUtility.fieldWidth = 50;
                 EditorGUIUtility.labelWidth = 200;
+
                 if (line.overrideOptionsOpenInEditor)
                 {
                     EditorGUI.indentLevel++;
@@ -188,7 +191,7 @@ public class DialogueEditor : EditorWindow
                     EditorGUILayout.EndHorizontal();
 
                     EditorGUILayout.BeginHorizontal();
-                    if (line.overrideDialogueSpeed = EditorGUILayout.Toggle("Override dialogue speed", line.overrideDialogueSpeed, GUILayout.Width(150)))
+                    if (line.overrideDialogueSpeed = EditorGUILayout.Toggle("Override dialogue speed", line.overrideDialogueSpeed))
                         line.CharacterPerSecond = EditorGUILayout.FloatField(line.CharacterPerSecond);
                     EditorGUILayout.EndHorizontal();
 
