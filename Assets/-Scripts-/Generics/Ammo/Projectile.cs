@@ -76,6 +76,7 @@ public class Projectile : MonoBehaviour, IDamager
     public float GetDamage()
     {
         DismissProjectile();
+
         return projectileDamage;
     }
 }

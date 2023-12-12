@@ -290,7 +290,7 @@ public class Ranged : CharacterClass
 
             newLandMine.transform.position = new Vector3(transform.position.x, 0 , transform.position.z);
 
-            newLandMine.GetComponent<LandMine>().Initialize(gameObject,landMineRange,Damage * landMineDamageMultiplier,gameObject.layer);
+            newLandMine.GetComponent<LandMine>().Initialize(gameObject.GetComponentInParent<PlayerCharacter>(),landMineRange,Damage * landMineDamageMultiplier,gameObject.layer);
 
             landMineInInventory--;
         }
