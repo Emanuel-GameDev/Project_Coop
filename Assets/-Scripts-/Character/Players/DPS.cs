@@ -19,6 +19,8 @@ public class DPS : CharacterClass
     float perfectDodgeExtraDamageDuration = 5f;
     [SerializeField, Tooltip("Danno extra in % dopo una schivata perfetta."), Range(0, 1)]
     float perfectDodgeExtraDamage = 0.15f;
+    [SerializeField, Tooltip("Durata del tempo utile per poter fare la schivata perfetta")]
+    float perfectDodgeDurarion = 0.5f;
     [Header("Unique Ability")]
     [SerializeField, Tooltip("Durata dell'invulnerabilità.")]
     float invulnerabilityDuration = 5f;
@@ -60,7 +62,7 @@ public class DPS : CharacterClass
         float perfectDodgeDamage = perfectDodgeExtraDamageUnlocked && Time.time < lastPerfectDodgeTime + perfectDodgeExtraDamageDuration ? perfectDodgeExtraDamage : 0;
         float bossPowerUpDamage = bossfightPowerUpUnlocked ? MathF.Min(bossPowerUpExtraDamagePerHit * (consecutiveHitsCount > 1 ? consecutiveHitsCount - 1 : 0), bossPowerUpExtraDamageCap) : 0;
 
-        Debug.Log($"ExtraDamage Multi: {perfectDodgeDamage + bossPowerUpDamage + 1}");
+        Debug.Log($"ExtraDamage Multi TOT: {perfectDodgeDamage + bossPowerUpDamage + 1}, dodge: {perfectDodgeDamage}, boss: {bossPowerUpDamage}");
 
         return perfectDodgeDamage + bossPowerUpDamage + 1;
     }
@@ -266,7 +268,7 @@ public class DPS : CharacterClass
     protected IEnumerator PerfectDodgeHandler(DamageData data)
     {
         perfectTimingHandler.gameObject.SetActive(true);
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(perfectDodgeDurarion);
         if (isDodging)
         {
             perfectDodgeCounter++;
