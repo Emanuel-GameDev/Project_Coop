@@ -80,4 +80,10 @@ public class LandMine : MonoBehaviour,IDamager
     {
         throw new System.NotImplementedException();
     }
+
+    //modifica
+    public DamageData GetDamageData()
+    {
+        throw new System.NotImplementedException();
+    }
 }

@@ -69,7 +69,7 @@ public class Dummy : EnemyCharacterClass
             
         }
 
-        Debug.Log($"Dummy subito [{totalDamageReceived}] danni con condition [{data.condition}]");
+        Debug.Log($"Dummy subito [{totalDamageReceived}] danni con condition [{data.condition}] da [{nameof(data.dealer.GetType)}]");
         
     }
 

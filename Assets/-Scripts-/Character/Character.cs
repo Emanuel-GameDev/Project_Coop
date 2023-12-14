@@ -17,6 +17,8 @@ public class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
     private bool canInteract;
     private IInteractable activeInteractable;
 
+
+
     //Lo uso per chimare tutte le funzioni iniziali
     protected void Awake()
     {
@@ -64,7 +66,7 @@ public class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
     public Rigidbody GetRigidBody() => rb;
 
     public virtual void TakeDamage(DamageData data) => characterClass.TakeDamage(data);
-    public float GetDamage() => characterClass.GetDamage();
+    
 
     #region InteractionSystem
     public void InteractWith(IInteractable interactable)
@@ -83,5 +85,15 @@ public class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
         activeInteractable = interactable;
         canInteract = false;
     }
+
+    //modifiche
+
+    //public float GetDamage() => characterClass.GetDamage();
+
+    public DamageData GetDamageData() => characterClass.GetDamageData();
+
+    //fine modifiche
+
+
     #endregion
 }

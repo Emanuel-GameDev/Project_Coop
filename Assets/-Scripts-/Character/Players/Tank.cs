@@ -117,6 +117,9 @@ public class Tank : CharacterClass
 
     public override void Attack(Character parent, InputAction.CallbackContext context)
     {
+        //Cercar soluzione forse
+        if (stunned) return;
+
         if (context.performed && isBlocking == false)
         {
             ActivateHyperArmor();
@@ -244,11 +247,7 @@ public class Tank : CharacterClass
         }
 
     }
-    public void aaaaaaaaaaaaaaaaaaaaaa()
-    {
-        Debug.Log($"combo index:[{comboIndex}] can Double Attack[{doubleAttack}]");
-    }
-
+   
     public void ChargedAttackAreaDamage()
     {
         RaycastHit[] hitted = Physics.SphereCastAll(transform.position, chargedAttackRadius, Vector3.up, chargedAttackRadius);
@@ -260,15 +259,14 @@ public class Tank : CharacterClass
                 {
                     IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
                     hittedDama.TakeDamage(new DamageData(chargedAttackDamage, character, null));
-                    Debug.Log(r.transform.gameObject.name + " colpito con " + chargedAttackDamage + " damage");
+                    Debug.Log(r.transform.gameObject.name + " colpito con " + chargedAttackDamage + " damage di attacco ad area");
 
                 }
             }
         }
     }
 
-
-
+    
     #endregion
 
     #region Block
@@ -514,9 +512,7 @@ public class Tank : CharacterClass
     //Eliminare
 
     private bool mostraGizmoAbilitaUnica;
-    public bool mostraGizmoRangeParata;
-    int segments = 50;
-    float startAngle => blockAngle / 2;
+    private bool mostraGizmoRangeParata;
     Vector3 dealerPosition;
 
 

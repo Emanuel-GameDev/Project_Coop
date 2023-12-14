@@ -16,6 +16,8 @@ public class Damager : MonoBehaviour
     [SerializeField]
     UnityEvent<Collider> onTrigger = new();
 
+    //decidere se tenere ConditionToApply
+
     private void OnTriggerEnter(Collider other)
     {
         onTrigger.Invoke(other);
@@ -25,7 +27,19 @@ public class Damager : MonoBehaviour
             IDamageable damageable = other.GetComponent<IDamageable>();
             if (damageable != null)
             {
-                damageable.TakeDamage(new DamageData(source.GetDamage(),source, conditionToApply));
+               
+                //modifiche
+
+                // damageable.TakeDamage(new DamageData(source.GetDamage(),source, conditionToApply));
+                DamageData newData = source.GetDamageData();
+
+                if(newData.condition==null && conditionToApply != null)
+                    newData.condition = conditionToApply;
+
+                damageable.TakeDamage(newData);
+
+                //fine modifica
+
                 if (oneTimeCondition)
                     conditionToApply = null;
             }
@@ -54,6 +68,7 @@ public class Damager : MonoBehaviour
         source = character;
     }
 
+  
     public void SetCondition(Condition condition, bool oneTime)
     {
         condition.transform.parent = transform;
