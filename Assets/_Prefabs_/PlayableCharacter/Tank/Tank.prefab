@@ -630,6 +630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b18d651622bf64438b65fd1593eb40c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stunned: 0
   currentHp: 0
   timeCheckAttackType: 0.2
   chargedAttackTimer: 2.5
@@ -640,15 +641,15 @@ MonoBehaviour:
   perfectBlockDamage: 10
   blockAngle: 90
   perfectBlockTimeWindow: 0.4
-  aggroRange: 10
-  aggroDuration: 5
-  defenceMultiplier: 0
-  staminamultiplier: 0
+  cooldownUniqueAbility: 15
+  aggroRange: 100
+  aggroDuration: 10
+  HealthDamageReduction: 50
+  staminaDamageReduction: 50
   attacksToBlockForUpgrade: 10
   cooldownExtraAbility: 0
   chargedAttackStunDuration: 5
   stunDurationMultiplier: 0
-  mostraGizmoRangeParata: 0
 --- !u!1 &6448158649070872344
 GameObject:
   m_ObjectHideFlags: 0

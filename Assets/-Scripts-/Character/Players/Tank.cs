@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 
 //Unique = tasto nord,Q = Urlo
@@ -34,24 +32,27 @@ public class Tank : CharacterClass
 
     [Header("Unique Ability")]
 
+    [SerializeField, Tooltip("cooldown abilità unica")]
+    float cooldownUniqueAbility;
     [SerializeField, Tooltip("Range aggro")]
     float aggroRange;
     [SerializeField, Tooltip("Durata aggro")]
     float aggroDuration;
     [SerializeField, Tooltip("Moltiplicatore buff difesa")]
-    float defenceMultiplier;
+    float HealthDamageReduction;
     [SerializeField, Tooltip("Moltiplicatore buff stamina")]
-    float staminamultiplier;
+    float StaminaDamageReduction;
 
     [Header("Bossfight Upgrade")]
+
     [SerializeField, Tooltip("Numero attacchi da parare perfettamente per ottenimento potenziamento bossfight")]
     int attacksToBlockForUpgrade = 10;
     [SerializeField, Tooltip("Cooldown attacco potenziamento bossfight")]
     float cooldownExtraAbility;
     [SerializeField, Tooltip("Durata stun attacco potenziamento boss fight")]
     float chargedAttackStunDuration = 5;
-    [SerializeField, Tooltip("Moltiplicatore durata stun")]
-    float stunDurationMultiplier;
+    [SerializeField, Tooltip("aggiunta in secondi alla durata dello stun")]
+    float additionalStunDuration = 5;
 
 
     private bool doubleAttack => upgradeStatus[AbilityUpgrade.Ability1];
@@ -71,6 +72,8 @@ public class Tank : CharacterClass
     private bool isBlocking;
     private bool canCancelAttack;
     private bool canPerfectBlock;
+    private bool uniqueAbilityReady = true;
+    private bool statBoosted;
 
     private int comboIndex = 0;
     private int comboMax = 2;
@@ -78,6 +81,10 @@ public class Tank : CharacterClass
 
     private float currentStamina;
     private float blockAngleThreshold => (blockAngle - 180) / 180;
+    private float staminaDamageReductionMulty;
+    private float healthDamageReductionMulty;
+
+
     private GenericBarScript staminaBar;
     private GameObject chargedAttackAreaObject = null;
     private PerfectTimingHandler perfectBlockHandler;
@@ -95,7 +102,10 @@ public class Tank : CharacterClass
         staminaBar.gameObject.SetActive(false);
 
         perfectBlockHandler = GetComponentInChildren<PerfectTimingHandler>(true);
-        
+
+        staminaDamageReductionMulty = (1 - (StaminaDamageReduction / 100));
+        healthDamageReductionMulty = (1 - HealthDamageReduction / 100);
+
     }
     private void Update()
     {
@@ -247,7 +257,7 @@ public class Tank : CharacterClass
         }
 
     }
-   
+
     public void ChargedAttackAreaDamage()
     {
         RaycastHit[] hitted = Physics.SphereCastAll(transform.position, chargedAttackRadius, Vector3.up, chargedAttackRadius);
@@ -266,7 +276,7 @@ public class Tank : CharacterClass
         }
     }
 
-    
+
     #endregion
 
     #region Block
@@ -304,7 +314,6 @@ public class Tank : CharacterClass
         vector += pivot;
         return vector;
     }
-
     public override void Defence(Character parent, InputAction.CallbackContext context)
     {
         if (context.performed && isAttacking == false && canCancelAttack == false)
@@ -324,7 +333,10 @@ public class Tank : CharacterClass
             SetCanMove(true, character.GetRigidBody());
             isBlocking = false;
             ShowStaminaBar(false);
+
+            //Da mettere reset in animazione alzata scudo
             ResetStamina();
+
             Debug.Log($"is blocking [{isBlocking}]");
 
             //eliminare
@@ -357,14 +369,20 @@ public class Tank : CharacterClass
         //parata perfetta
         if (isBlocking && AttackInBlockAngle(data))
         {
+            perfectBlockCount++;
+            if (perfectBlockCount >= attacksToBlockForUpgrade)
+            {
+                //Sblocco parry che fa danno
+                UnlockUpgrade(AbilityUpgrade.Ability4);
+            }
 
-            Debug.Log("Perfect Block");
+            Debug.Log("parata perfetta eseguita, rimanenti per potenziamento boss = " + (attacksToBlockForUpgrade - perfectBlockCount));
             if (damageOnParry)
             {
                 dealerMB.TakeDamage(new DamageData(perfectBlockDamage, character));
             }
         }
-        
+
         else
         {
             base.TakeDamage(data);
@@ -375,27 +393,40 @@ public class Tank : CharacterClass
 
 
     }
-   
+
     #endregion
 
     #region onHit
 
     public override void TakeDamage(DamageData data)
     {
-       
-        if (hyperArmorOn == false)
+
+        if (hyperArmorOn == false && !isBlocking)
         {
             //Hit Reaction
             animator.SetTrigger("Hit");
-            //annulla attacco
-        }     
+
+        }
         if (isBlocking && AttackInBlockAngle(data))
         {
 
-            staminaBar.DecreaseValue(data.staminaDamage);
-            currentStamina -= data.staminaDamage;
+            if (statBoosted)
+            {
+                staminaBar.DecreaseValue(data.staminaDamage * staminaDamageReductionMulty);
+                currentStamina -= (data.staminaDamage * staminaDamageReductionMulty);
 
-            Debug.Log($"{currentStamina}");
+            }
+            else
+            {
+                staminaBar.DecreaseValue(data.staminaDamage);
+                currentStamina -= data.staminaDamage;
+
+            }
+
+
+
+
+            Debug.Log($"current stamina : {currentStamina}");
             if (currentStamina <= 0)
             {
                 SetCanMove(true, character.GetRigidBody());
@@ -406,14 +437,10 @@ public class Tank : CharacterClass
             }
         }
 
-        else 
+        else
         {
             StartCoroutine(StartPerfectBlockTimer(data));
         }
-
-
-        //sennò prende danno normalmente
-       
     }
 
 
@@ -424,18 +451,22 @@ public class Tank : CharacterClass
 
     public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
     {
-        if (context.performed)
+
+        if (context.performed && uniqueAbilityReady)
         {
+
             //Da eliminare
             mostraGizmoAbilitaUnica = true;
             Invoke(nameof(SetGizmoAbilitaUnica), 1.2f);
 
-
+            uniqueAbilityReady = false;
+            Invoke(nameof(StartCooldownUniqueAbility), cooldownUniqueAbility);
             animator.SetTrigger("UniqueAbility");
             Debug.Log("UniqueAbility Used");
         }
 
     }
+
 
     public void PerformUniqueAbility()
     {
@@ -457,8 +488,24 @@ public class Tank : CharacterClass
                 }
             }
         }
-        //Incremento difesa e buff stamina
+        //Incremento statistiche difesa e stamina
+        statBoosted = true;
+        damageReceivedMultiplier = healthDamageReductionMulty;
+        Invoke(nameof(SetStatToNormal), aggroDuration);
+
+
     }
+    private void StartCooldownUniqueAbility()
+    {
+        uniqueAbilityReady = true;
+        Debug.Log("abilita unica pronta");
+    }
+    private void SetStatToNormal()
+    {
+        statBoosted = false;
+        damageReceivedMultiplier = 1;
+    }
+
 
     #endregion
 
@@ -472,15 +519,16 @@ public class Tank : CharacterClass
 
             if (bossfightPowerUpUnlocked && isAttacking == false)
             {
-                damager.SetCondition(Utility.InstantiateCondition<AggroCondition>(), true);
-                animator.SetTrigger("UniqueAbility");
+                damager.SetCondition(Utility.InstantiateCondition<StunCondition>(), true);
+                animator.SetTrigger("extraAbility");
 
-                float stunDamageDuration = maximizedStun ? (chargedAttackStunDuration * stunDurationMultiplier) : chargedAttackStunDuration;
+                float stunDamageDuration = maximizedStun ? (chargedAttackStunDuration + additionalStunDuration) : chargedAttackStunDuration;
                 Debug.Log($"BossFight Upgrade Attack Executed, stun duration:[{stunDamageDuration}]");
             }
         }
 
     }
+
 
     #endregion
 
