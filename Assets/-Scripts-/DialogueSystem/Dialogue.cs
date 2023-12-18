@@ -3,10 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+
+    public enum dialogueType
+    {
+        dialogue,
+        tutorial
+    }
+
 
 [CreateAssetMenu(menuName ="Dialogue/Dialogue")]
 public class Dialogue : ScriptableObject
 {
+    
     [Serializable]
     public class DialogueLine
     {
@@ -30,6 +39,8 @@ public class Dialogue : ScriptableObject
 
         public bool overrideDialogueSpeed;
         [SerializeField,Min(0.1f)] private float characterPerSecond;
+
+        [SerializeField] public dialogueType dialogueType;
 
 #if UNITY_EDITOR
         public bool openInEditor = false;

@@ -3,20 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class DialogueBox : MonoBehaviour
 {
     [Header("Set Up")]
-    [SerializeField] private Image characterImage;
-    [SerializeField] private TextMeshProUGUI nameText;
-    [SerializeField] private TextMeshProUGUI contentText;
-
-    [SerializeField] private Image speakerFrame;
-    [SerializeField] private Image dialogueFrame;
-
-    private AudioSource audioSource;
     
+
+    [SerializeField] private List<BoxType> boxTypes = new();
+
 
     [SpaceArea(30)]
     [SerializeField] private Dialogue[] dialogues;
@@ -28,16 +24,37 @@ public class DialogueBox : MonoBehaviour
 
     Dialogue.DialogueLine nextLine;
 
+    [SerializeField] List<UnityEvent> OnDialogueEnd;
+
+    private AudioSource audioSource;
+
+    Coroutine  typeCoroutine;
+
+    [Serializable]
+    public class BoxType
+    {
+        [SerializeField] public dialogueType boxType;
+        [SerializeField] public Image characterImage;
+        [SerializeField] public GameObject box;
+
+        [SerializeField] public TextMeshProUGUI nameText;
+        [SerializeField] public TextMeshProUGUI contentText;
+
+        [SerializeField] public Image speakerFrame;
+        [SerializeField] public Image dialogueFrame;
+    }
+
     private void NextLine()
     {
         if (dialogueLineIndex < dialogues[dialogueIndex].Lines.Count - 1)
         {
             dialogueLineIndex++;
             SetUpNextLine();
-            StartCoroutine(TypeLine());
+            typeCoroutine = StartCoroutine(TypeLine());
         }
         else
         {
+            OnDialogueEnd[dialogueIndex].Invoke();
             dialogueIndex++;
 
             if (dialogueIndex == dialogues.Length)
@@ -49,36 +66,43 @@ public class DialogueBox : MonoBehaviour
         }
 
     }
-
+    BoxType nextBox;
     private void SetUpNextLine()
     {
         nextLine = dialogues[dialogueIndex].GetLine(dialogueLineIndex);
 
-        nameText.text = nextLine.Character.Name;
+        if(nextBox != null)
+            nextBox.box.gameObject.SetActive(false);
+
+        nextBox = boxTypes.Find(t => t.boxType == nextLine.dialogueType);
+
+        nextBox.box.gameObject.SetActive(true);
+
+        nextBox.nameText.text = nextLine.Character.Name;
 
 
         if (nextLine.overrideNameColor)
-            nameText.color = nextLine.NameColor;
+            nextBox.nameText.color = nextLine.NameColor;
         else
-            nameText.color = nextLine.Character.CharacterNameColor;
+            nextBox.nameText.color = nextLine.Character.CharacterNameColor;
 
 
         if (nextLine.overrideNameFont)
-            nameText.font = nextLine.NameFont;
+            nextBox.nameText.font = nextLine.NameFont;
         else if (nextLine.Character.CharacterNameFont != null)
-            nameText.font = nextLine.Character.CharacterNameFont;
+            nextBox.nameText.font = nextLine.Character.CharacterNameFont;
 
 
         if (nextLine.overrideDialogueColor)
-            contentText.color = nextLine.DialogueColor;
+            nextBox.contentText.color = nextLine.DialogueColor;
         else
-            contentText.color = nextLine.Character.CharacterDialogueColor;
+            nextBox.contentText.color = nextLine.Character.CharacterDialogueColor;
 
 
         if (nextLine.overrideDialogueFont)
-            contentText.font = nextLine.DialogueFont;
+            nextBox.contentText.font = nextLine.DialogueFont;
         else if (nextLine.Character.CharacterDialogueFont != null)
-            contentText.font = nextLine.Character.CharacterDialogueFont;
+            nextBox.contentText.font = nextLine.Character.CharacterDialogueFont;
 
         if (nextLine.overrideDialogueSpeed)
             characterPerSecond = nextLine.CharacterPerSecond;
@@ -90,25 +114,28 @@ public class DialogueBox : MonoBehaviour
         else
             audioSource.clip = nextLine.Character.CharacterVoice;
 
-        characterImage.sprite = nextLine.Character.CharacterImage;
+        nextBox.characterImage.sprite = nextLine.Character.CharacterImage;
+
+        if(nextBox.speakerFrame != null)
+            nextBox.speakerFrame.color = nextLine.Character.CharacterColor;
+
+        if(nextBox.dialogueFrame != null)
+            nextBox.dialogueFrame.color = nextLine.Character.CharacterColor;
 
 
-        speakerFrame.color = nextLine.Character.CharacterColor;
-        dialogueFrame.color = nextLine.Character.CharacterColor;
-
-        characterPerSecond = nextLine.CharacterPerSecond;
 
 
 
-        contentText.text = string.Empty;
+        nextBox.contentText.text = string.Empty;
 
     }
 
-    private void StartDialogue() 
+    public void StartDialogue() 
     {
+        gameObject.SetActive(true);
         dialogueLineIndex = 0;
         SetUpNextLine();
-        StartCoroutine(TypeLine());
+        typeCoroutine = StartCoroutine(TypeLine());
     }
 
     IEnumerator TypeLine()
@@ -118,7 +145,7 @@ public class DialogueBox : MonoBehaviour
 
         foreach(char c in nextLine.Content.ToCharArray())
         {
-            contentText.text += c;
+            nextBox.contentText.text += c;
             yield return new WaitForSeconds(1/characterPerSecond);
         }
     }
@@ -126,7 +153,7 @@ public class DialogueBox : MonoBehaviour
     private void OnEnable()
     {
         audioSource = GetComponent<AudioSource>();
-
+        
         //prova
         StartDialogue();
     }
@@ -137,12 +164,12 @@ public class DialogueBox : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if(contentText.text == dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content)
+            if(nextBox.contentText.text == dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content)
                 NextLine();
             else
             {
-                StopAllCoroutines();
-                contentText.text = dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content;
+                StopCoroutine(typeCoroutine);
+                nextBox.contentText.text = dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content;
             }
         }
     }

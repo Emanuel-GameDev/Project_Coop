@@ -20,6 +20,12 @@ public class DialogueEditor : EditorWindow
     private int newLineIndex;
     private string _newDialogueName;
 
+    bool refreshDialogues = true;
+
+    string[] dialoguesIds;
+    string[] dialogues;
+    string[] dialogueNames;
+
 
     private void CreateNewDialogue()
     {
@@ -32,23 +38,26 @@ public class DialogueEditor : EditorWindow
         Dialogue asset = ScriptableObject.CreateInstance<Dialogue>();
         AssetDatabase.CreateAsset(asset, $"Assets/_Prefabs_/DialogueSystem/Data/Dialogues/{_newDialogueName}.asset");
         AssetDatabase.SaveAssets();
+        refreshDialogues = true;
     }
-
-    bool refresh = false;
 
     private void OnGUI()
     {
-        
-        string[] dialoguesIds = AssetDatabase.FindAssets("t:Dialogue");
-        string[] dialogues = new string[dialoguesIds.Length];
-        string[] dialogueNames = new string[dialoguesIds.Length];
-
-
-        for (int i = 0; i < dialoguesIds.Length; i++)
+        if (refreshDialogues)
         {
-            dialogues[i] = AssetDatabase.GUIDToAssetPath(dialoguesIds[i]);
+            dialoguesIds = AssetDatabase.FindAssets("t:Dialogue");
+            dialogues = new string[dialoguesIds.Length];
+            dialogueNames = new string[dialoguesIds.Length];
 
-            dialogueNames[i] = Path.GetFileNameWithoutExtension(dialogues[i]);
+
+            for (int i = 0; i < dialoguesIds.Length; i++)
+            {
+                dialogues[i] = AssetDatabase.GUIDToAssetPath(dialoguesIds[i]);
+
+                dialogueNames[i] = Path.GetFileNameWithoutExtension(dialogues[i]);
+            }
+
+            refreshDialogues = false;
         }
 
 
@@ -64,6 +73,15 @@ public class DialogueEditor : EditorWindow
 
         GUILayout.Space(10);
 
+        if (GUILayout.Button("Refresh"))
+        {
+            refreshDialogues=true;
+        }
+
+        GUILayout.Space(10);
+
+        if (dialogues == null)
+            return;
 
         if (dialogues.Length <= 0)
             return;
