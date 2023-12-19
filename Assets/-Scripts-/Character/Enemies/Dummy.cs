@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
 
-public class Dummy : CharacterClass
+public class Dummy : EnemyCharacterClass
 {
     public float totalDamageReceived;
     private float _totalDamageReceived;
@@ -69,7 +69,7 @@ public class Dummy : CharacterClass
             
         }
 
-        Debug.Log($"Dummy subito [{totalDamageReceived}] danni con condition [{data.condition}]");
+        Debug.Log($"Dummy subito [{totalDamageReceived}] danni con condition [{data.condition}] da [{nameof(data.dealer.GetType)}]");
         
     }
 

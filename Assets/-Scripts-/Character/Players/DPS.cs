@@ -433,7 +433,21 @@ public class DPS : CharacterClass
     }
 
     #region Damage
-    public override float GetDamage()
+    //Modifiche
+
+    //public override float GetDamage()
+    //{
+    //    BossDamageCheck();
+
+    //    float damage = isDashingAttack ? base.Damage * dashAttackDamageMultiplier : Damage;
+
+    //    TotalDamageUpdate(damage);
+
+    //    Debug.Log($"Damage Done: {damage}");
+    //    return damage;
+    //}
+
+    public override DamageData GetDamageData()
     {
         BossDamageCheck();
 
@@ -442,8 +456,12 @@ public class DPS : CharacterClass
         TotalDamageUpdate(damage);
 
         Debug.Log($"Damage Done: {damage}");
-        return damage;
+
+        return new DamageData(damage, character);
+
     }
+
+    //fine modifiche
 
     private void BossDamageCheck()
     {

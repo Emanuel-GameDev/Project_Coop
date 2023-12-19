@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -34,11 +35,16 @@ public class CharacterClass : MonoBehaviour
     public float damageReceivedMultiplier = 1;
     protected Vector2 lastNonZeroDirection;
 
+    //Conditions??
+    public bool stunned = false;
+
     public virtual float maxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
 
     public virtual float Damage => characterData.Damage + powerUpData.damageIncrease;
+    
+
     public virtual float MoveSpeed => characterData.MoveSpeed + powerUpData.moveSpeedIncrease;
     public virtual float AttackSpeed => characterData.AttackSpeed + powerUpData.attackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => characterData.UniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease + (characterData.UniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses);
@@ -78,7 +84,11 @@ public class CharacterClass : MonoBehaviour
 
     public virtual void Attack(Character parent, InputAction.CallbackContext context)
     {
-
+        if(stunned)
+        {
+            return;
+            
+        }
     }
     public virtual void Defence(Character parent, InputAction.CallbackContext context)
     {
@@ -109,7 +119,18 @@ public class CharacterClass : MonoBehaviour
         Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
     }
 
-    public virtual float GetDamage() => Damage;
+    //modifiche
+
+    //public virtual float GetDamage() => Damage;
+
+    public virtual DamageData GetDamageData()
+    {
+        DamageData data = new DamageData(Damage, character);
+        return data;
+    }
+
+    //fine modifiche
+    
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
     public Vector2 GetLastNonZeroDirection() => lastNonZeroDirection;
 
