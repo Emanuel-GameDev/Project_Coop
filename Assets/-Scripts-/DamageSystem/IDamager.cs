@@ -4,5 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 public interface IDamager
 {
-    public float GetDamage();
+    //modifiche
+
+    //float GetDamage();
+    DamageData GetDamageData();
+    
+    //fine modifiche
 }
