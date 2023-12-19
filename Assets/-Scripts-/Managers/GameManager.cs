@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] PowerUp powerUpToGive;
-    [SerializeField] Character player;
+    [SerializeField] PlayerCharacter player;
 
     [SerializeField] GameObject playerManager;
 

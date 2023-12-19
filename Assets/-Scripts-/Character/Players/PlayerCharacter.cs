@@ -1,9 +1,19 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerCharacter : Character
 {
+    [SerializeField] protected CharacterData characterData;
+    protected CharacterClass characterClass;
+
+    public CharacterData CharacterData => characterData;
+    public CharacterClass CharacterClass => characterClass; 
+    
+    protected float MaxHp => characterClass.maxHp;
+    protected float currentHp => characterClass.currentHp;
+
     private Vector3 screenPosition;
     private Vector3 worldPosition;
     Plane plane = new Plane(Vector3.up, -1);
@@ -12,12 +22,40 @@ public class PlayerCharacter : Character
     Vector2 moveDir;
 
     public Vector2 MoveDirection => moveDir;
-
+    protected override void InitialSetup()
+    {
+        base.InitialSetup();
+        characterData.Inizialize(this);
+    }
 
     private void Update()
     {
         Move(moveDir);
     }
+
+    protected virtual void Attack(InputAction.CallbackContext context) => characterClass.Attack(this, context);
+    protected virtual void Defend(InputAction.CallbackContext context) => characterClass.Defence(this, context);
+    public virtual void UseUniqueAbility(InputAction.CallbackContext context) => characterClass.UseUniqueAbility(this, context);
+    public virtual void UseExtraAbility(InputAction.CallbackContext context) => characterClass.UseExtraAbility(this, context);
+    protected virtual void Move(Vector2 direction) => characterClass.Move(direction, rb);
+
+    public override void AddPowerUp(PowerUp powerUp) => characterClass.AddPowerUp(powerUp);
+    public override void RemovePowerUp(PowerUp powerUp) => characterClass.RemovePowerUp(powerUp);
+    public override List<PowerUp> GetPowerUpList() => characterClass.GetPowerUpList();
+
+    public void UnlockUpgrade(AbilityUpgrade abilityUpgrade) => characterClass.UnlockUpgrade(abilityUpgrade);
+
+    public void SetCharacterData(CharacterData newCharData)
+    {
+        characterClass.Disable(this);
+        Destroy(characterClass.gameObject);
+        characterData = newCharData;
+        characterData.Inizialize(this);
+    }
+
+    public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
+    public override void TakeDamage(DamageData data) => characterClass.TakeDamage(data);
+    public override DamageData GetDamageData() => characterClass.GetDamageData();
 
     #region Input
 

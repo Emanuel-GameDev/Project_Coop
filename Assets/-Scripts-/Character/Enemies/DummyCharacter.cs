@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class DummyCharacter : Character
 {
+    Dummy characterClass;
     public void ChangeBehaviour()
     {
-        Dummy dummy = (Dummy)CharacterClass;
+        Dummy dummy = characterClass;
         dummy.ChangeBehaviour();
     }
 }

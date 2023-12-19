@@ -19,10 +19,9 @@ public class CharacterClass : MonoBehaviour
 {
     protected CharacterData characterData;
     protected Animator animator;
-    protected Character character;
+    protected PlayerCharacter character;
     protected PowerUpData powerUpData;
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
-    protected List<Condition> conditions;
     protected UnityAction unityAction;
     protected SpriteRenderer spriteRenderer;
     protected Pivot pivot;
@@ -35,7 +34,7 @@ public class CharacterClass : MonoBehaviour
     protected Vector2 lastNonZeroDirection;
 
     //Conditions??
-    public bool stunned = false;
+    public bool stunned => character.stunned;
 
     public virtual float maxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
@@ -53,7 +52,7 @@ public class CharacterClass : MonoBehaviour
     private static string Y = "Y";
     #endregion
 
-    public virtual void Inizialize(CharacterData characterData, Character character)
+    public virtual void Inizialize(CharacterData characterData, PlayerCharacter character)
     {
         powerUpData = new PowerUpData();
         this.characterData = characterData;
@@ -76,7 +75,6 @@ public class CharacterClass : MonoBehaviour
             damager.SetSource(character);
         }
         SetIsInBossfight(false);
-        conditions = new();
     }
 
 
@@ -111,7 +109,7 @@ public class CharacterClass : MonoBehaviour
     public virtual void TakeDamage(DamageData data)
     {
         if (data.condition != null)
-            AddToConditions(data.condition);
+            character.AddToConditions(data.condition);
 
         currentHp -= data.damage * damageReceivedMultiplier;
         damager.RemoveCondition();
@@ -201,15 +199,5 @@ public class CharacterClass : MonoBehaviour
 
     #endregion
 
-    public void AddToConditions(Condition condition)
-    {
-        conditions.Add(condition);
-        condition.AddCondition(this);
-    }
-
-    public void RemoveFromConditions(Condition condition)
-    {
-        conditions.Remove(condition);
-
-    }
+    
 }

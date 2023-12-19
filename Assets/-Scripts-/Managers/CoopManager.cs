@@ -42,7 +42,7 @@ public class CoopManager : MonoBehaviour
 
 
 
-    public void SwitchCharacter(Character characterToSwitch, int switchInto)
+    public void SwitchCharacter(PlayerCharacter characterToSwitch, int switchInto)
     {
         foreach (PlayerCharacter player in activePlayers)
         {

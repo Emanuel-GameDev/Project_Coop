@@ -65,7 +65,7 @@ public class Dummy : EnemyCharacterClass
 
         if(data.condition != null)
         {
-            data.condition.AddCondition(this);
+            data.condition.AddCondition(character);
             
         }
 
@@ -73,7 +73,7 @@ public class Dummy : EnemyCharacterClass
         
     }
 
-    public override void Inizialize(CharacterData characterData, Character character)
+    public override void Inizialize(CharacterData characterData, PlayerCharacter character)
     {
         base.Inizialize(characterData, character);
         dummyData = new List<DummyData>();

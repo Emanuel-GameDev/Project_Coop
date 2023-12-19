@@ -134,7 +134,7 @@ public class DPS : CharacterClass
     public override float MoveSpeed => base.MoveSpeed + ExtraSpeed;
     public override float Damage => base.Damage * ExtraDamage();
 
-    public override void Inizialize(CharacterData characterData, Character character)
+    public override void Inizialize(CharacterData characterData, PlayerCharacter character)
     {
         base.Inizialize(characterData, character);
         lastDodgeTime = -dodgeCooldown;

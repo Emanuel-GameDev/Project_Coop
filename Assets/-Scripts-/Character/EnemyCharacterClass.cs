@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class EnemyCharacterClass : CharacterClass
 {
-    //danno stamina
+    
     public float staminaDamage;
-
-    //Conditions??
-    bool underAggro;
 
     public override DamageData GetDamageData()
     {

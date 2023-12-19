@@ -24,7 +24,7 @@ public class CharacterData : ScriptableObject
     public float MoveSpeed => moveSpeed;
     public float UniqueAbilityCooldown => uniqueAbilityCooldown;
     public float UniqueAbilityCooldownIncreaseAtUse => uniqueAbilityCooldownIncreaseAtUse;
-    public void Inizialize(Character character)
+    public void Inizialize(PlayerCharacter character)
     {
         CharacterClass cClass = Instantiate(characterClass.gameObject, character.gameObject.transform).GetComponent<CharacterClass>();
         cClass.Inizialize(this, character);
