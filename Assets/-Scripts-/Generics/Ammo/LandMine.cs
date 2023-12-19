@@ -100,14 +100,14 @@ public class LandMine : MonoBehaviour, IDamager
         owner.GetComponentInChildren<Ranged>().nearbyLandmine.Add(this);
     }
 
-    public float GetDamage()
-    {
-        return landMineDamage;
-    }
+    //public float GetDamage()
+    //{
+    //    return landMineDamage;
+    //}
 
     //modifica
     public DamageData GetDamageData()
     {
-        throw new System.NotImplementedException();
+        return new DamageData(landMineDamage, this);
     }
 }
