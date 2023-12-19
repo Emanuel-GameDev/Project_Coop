@@ -104,4 +104,10 @@ public class LandMine : MonoBehaviour, IDamager
     {
         return landMineDamage;
     }
+
+    //modifica
+    public DamageData GetDamageData()
+    {
+        throw new System.NotImplementedException();
+    }
 }

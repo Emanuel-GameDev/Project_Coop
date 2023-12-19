@@ -79,4 +79,12 @@ public class Projectile : MonoBehaviour, IDamager
 
         return projectileDamage;
     }
+
+
+    //Modifica
+    public DamageData GetDamageData()
+    {
+        throw new System.NotImplementedException();
+    }
+
 }
