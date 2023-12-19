@@ -155,14 +155,14 @@ public class DialogueBox : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         
         //prova
-        StartDialogue();
+        //StartDialogue();
     }
 
 
     //input di prova
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1))
         {
             if(nextBox.contentText.text == dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content)
                 NextLine();
@@ -172,5 +172,11 @@ public class DialogueBox : MonoBehaviour
                 nextBox.contentText.text = dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content;
             }
         }
+    }
+
+    public void SetDialogue(Dialogue newDialogues)
+    {
+        dialogues = new Dialogue[1];
+        dialogues[0] = newDialogues;
     }
 }

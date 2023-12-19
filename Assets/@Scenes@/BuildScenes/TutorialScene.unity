@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 262.38358, g: 325.10843, b: 430.30963, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -200,6 +200,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cacf10778b74e384b8dfefa86ddf1414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnFaseStart:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1869027638}
+        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
+        m_MethodName: SetDialogue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: d1bf1fd769dce00448f528f30a5e75b6,
+            type: 2}
+          m_ObjectArgumentAssemblyTypeName: Dialogue, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1869027638}
+        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
+        m_MethodName: StartDialogue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  - m_PersistentCalls:
+      m_Calls: []
+  - m_PersistentCalls:
+      m_Calls: []
+  - m_PersistentCalls:
+      m_Calls: []
+  - m_PersistentCalls:
+      m_Calls: []
+  OnFaseEnd:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1869027638}
+        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
+        m_MethodName: SetDialogue
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: 0878a2bdd99387b47bf0ea78b7bdeb94,
+            type: 2}
+          m_ObjectArgumentAssemblyTypeName: Dialogue, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  - m_PersistentCalls:
+      m_Calls: []
+  - m_PersistentCalls:
+      m_Calls: []
+  - m_PersistentCalls:
+      m_Calls: []
+  - m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &566038581
 Transform:
   m_ObjectHideFlags: 0
@@ -1409,7 +1469,7 @@ PrefabInstance:
     - target: {fileID: 5610372107202128257, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: dialogues.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5610372107202128257, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
@@ -1421,13 +1481,31 @@ PrefabInstance:
         type: 3}
       propertyPath: dialogues.Array.data[1]
       value: 
-      objectReference: {fileID: 11400000, guid: a439ac46e4d2ae44890eb5a282426799,
+      objectReference: {fileID: 11400000, guid: d1bf1fd769dce00448f528f30a5e75b6,
         type: 2}
     - target: {fileID: 5610372107202128257, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: dialogues.Array.data[2]
       value: 
-      objectReference: {fileID: 11400000, guid: eabe89fa19d14114e993b994e4e26094,
+      objectReference: {fileID: 11400000, guid: d1bf1fd769dce00448f528f30a5e75b6,
+        type: 2}
+    - target: {fileID: 5610372107202128257, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
+        type: 3}
+      propertyPath: dialogues.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: d1bf1fd769dce00448f528f30a5e75b6,
+        type: 2}
+    - target: {fileID: 5610372107202128257, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
+        type: 3}
+      propertyPath: dialogues.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: d1bf1fd769dce00448f528f30a5e75b6,
+        type: 2}
+    - target: {fileID: 5610372107202128257, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
+        type: 3}
+      propertyPath: dialogues.Array.data[5]
+      value: 
+      objectReference: {fileID: 11400000, guid: d1bf1fd769dce00448f528f30a5e75b6,
         type: 2}
     - target: {fileID: 5610372107202128257, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
@@ -1666,6 +1744,18 @@ MonoBehaviour:
   onTrigger:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1869027638 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5610372107202128257, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
+    type: 3}
+  m_PrefabInstance: {fileID: 1354157459}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cc345195a02a90439cdd7ea2421e88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
