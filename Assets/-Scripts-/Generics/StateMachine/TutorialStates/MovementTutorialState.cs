@@ -1,10 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MovementTutorialState : State
 {
     TutorialManager tutorialManager;
+    [SerializeField] Dialogue dialogo;
+    [SerializeField] public UnityEvent OnFaseStart;
+     public UnityEvent OnFaseEnd;
 
     public MovementTutorialState(TutorialManager tutorialManager)
     {
@@ -14,7 +19,7 @@ public class MovementTutorialState : State
     public override void Enter()
     {
         base.Enter();
-        tutorialManager.OnFaseStart[0].Invoke();
+        OnFaseStart.Invoke();
 
     }
 
@@ -30,7 +35,7 @@ public class MovementTutorialState : State
     public override void Exit()
     {
         base.Enter();
-        tutorialManager.OnFaseEnd[0].Invoke();
+        OnFaseEnd.Invoke();
     }
 
     IEnumerator Count()

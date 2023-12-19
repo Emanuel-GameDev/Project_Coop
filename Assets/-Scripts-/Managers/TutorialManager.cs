@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 public enum TutorialFase
 {
+    Intermediate,
     Movement,
     Attack,
     Dodge,
@@ -18,10 +19,16 @@ public class TutorialManager : MonoBehaviour
     public StateMachine<TutorialFase> stateMachine { get; } = new();
 
     
+    //public class Fase
+    //{
+    //    [SerializeField] public UnityEvent OnFaseStart;
+    //    [SerializeField] public UnityEvent OnFaseEnd;
+    //}
 
+    //[SerializeField] Fase[] fases = new Fase[Enum.GetValues(typeof(TutorialFase)).Length];
 
-    [SerializeField] public UnityEvent[] OnFaseStart = new UnityEvent[Enum.GetValues(typeof(TutorialFase)).Length];
-    [SerializeField] public UnityEvent[] OnFaseEnd = new UnityEvent[Enum.GetValues(typeof(TutorialFase)).Length];
+    //[SerializeField] public UnityEvent[] OnFaseStart = new UnityEvent[Enum.GetValues(typeof(TutorialFase)).Length];
+    //[SerializeField] public UnityEvent[] OnFaseEnd = new UnityEvent[Enum.GetValues(typeof(TutorialFase)).Length];
 
     
 
