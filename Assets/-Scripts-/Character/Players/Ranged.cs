@@ -72,6 +72,9 @@ public class Ranged : CharacterClass
     float landMineDamageMultiplier = 2f;
     [SerializeField, Tooltip("raggio della mina")]
     float landMineRange = 5f;
+    [SerializeField, Tooltip("Sprite di raccolta mina")]
+    GameObject minePickUpVisualizer;
+    
 
     public List<LandMine> nearbyLandmine;
 
@@ -93,24 +96,37 @@ public class Ranged : CharacterClass
     private bool dodgeDamageUnlocked => upgradeStatus[AbilityUpgrade.Ability4];
     private bool landMineUnlocked => upgradeStatus[AbilityUpgrade.Ability5];
 
+    private PerfectTimingHandler perfectTimingHandler;
+
     private float empowerCoolDownDecrease => reduceEmpowerFireCoolDownUnlocked ? chargeTimeReduction : 0;
 
     bool isAttacking;
     bool isDodging;
     bool isInvunerable;
 
+    public override void Inizialize(CharacterData characterData, Character character)
+    {
+        base.Inizialize(characterData, character);
+        nearbyLandmine = new List<LandMine>();
+        landMineInInventory = maxNumberLandMine;
+        //perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>();
+        //perfectTimingHandler.gameObject.SetActive(false);
+    }
 
 
     private void Start()
     {
-        nearbyLandmine = new List<LandMine>();
-        landMineInInventory = maxNumberLandMine;
+        
     }
 
 
     private void Update()
     {
         CoolDownManager();
+
+       
+
+
     }
 
     public override void Move(Vector3 direction, Rigidbody rb)
@@ -258,7 +274,7 @@ public class Ranged : CharacterClass
         {
             if (landMineUnlocked)
             {
-                if (nearbyLandmine.Count==0)
+                if (nearbyLandmine.Count<=0)
                 {
                     //animazione droppaggio mina
 
@@ -268,7 +284,7 @@ public class Ranged : CharacterClass
                     CreateLandMine();
                     //
 
-                    Debug.Log("lascio mina");
+                    
                 }
                 else
                 {
@@ -293,6 +309,8 @@ public class Ranged : CharacterClass
             newLandMine.GetComponent<LandMine>().Initialize(gameObject.GetComponentInParent<PlayerCharacter>(),landMineRange,Damage * landMineDamageMultiplier,gameObject.layer);
 
             landMineInInventory--;
+
+            Debug.Log("lascio mina");
         }
         else
         {
