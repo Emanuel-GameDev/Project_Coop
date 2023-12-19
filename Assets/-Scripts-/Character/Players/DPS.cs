@@ -278,7 +278,11 @@ public class DPS : CharacterClass
         {
             base.TakeDamage(data);
             if (!isDashingAttack)
+            {
                 animator.SetTrigger(HIT);
+
+            }
+                
         }
         perfectTimingHandler.gameObject.SetActive(false);
         Debug.Log($"PerfectDodge: {isDodging}, Count: {perfectDodgeCounter}");
