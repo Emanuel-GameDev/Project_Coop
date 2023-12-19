@@ -72,6 +72,9 @@ public class Ranged : CharacterClass
     float landMineDamageMultiplier = 2f;
     [SerializeField, Tooltip("raggio della mina")]
     float landMineRange = 5f;
+    [SerializeField, Tooltip("Sprite di raccolta mina")]
+    GameObject minePickUpVisualizer;
+    
 
     public List<LandMine> nearbyLandmine;
 
@@ -93,24 +96,37 @@ public class Ranged : CharacterClass
     private bool dodgeDamageUnlocked => upgradeStatus[AbilityUpgrade.Ability4];
     private bool landMineUnlocked => upgradeStatus[AbilityUpgrade.Ability5];
 
+    private PerfectTimingHandler perfectTimingHandler;
+
     private float empowerCoolDownDecrease => reduceEmpowerFireCoolDownUnlocked ? chargeTimeReduction : 0;
 
     bool isAttacking;
     bool isDodging;
     bool isInvunerable;
 
+    public override void Inizialize(CharacterData characterData, Character character)
+    {
+        base.Inizialize(characterData, character);
+        nearbyLandmine = new List<LandMine>();
+        landMineInInventory = maxNumberLandMine;
+        //perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>();
+        //perfectTimingHandler.gameObject.SetActive(false);
+    }
 
 
     private void Start()
     {
-        nearbyLandmine = new List<LandMine>();
-        landMineInInventory = maxNumberLandMine;
+        
     }
 
 
     private void Update()
     {
         CoolDownManager();
+
+       
+
+
     }
 
     public override void Move(Vector3 direction, Rigidbody rb)

@@ -73,18 +73,20 @@ public class Projectile : MonoBehaviour, IDamager
         transform.position = Vector3.MoveTowards(transform.position, travelDirection, projectileSpeed * Time.deltaTime);
     }
 
-    public float GetDamage()
-    {
-        DismissProjectile();
+    //public float GetDamage()
+    //{
+    //    DismissProjectile();
 
-        return projectileDamage;
-    }
+    //    return projectileDamage;
+    //}
 
 
     //Modifica
     public DamageData GetDamageData()
     {
-        throw new System.NotImplementedException();
+        DismissProjectile();
+
+        return new DamageData(projectileDamage,this);
     }
 
 }
