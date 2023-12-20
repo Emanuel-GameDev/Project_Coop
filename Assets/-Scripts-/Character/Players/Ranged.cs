@@ -51,12 +51,17 @@ public class Ranged : CharacterClass
     [Header("Schivata")]
 
     [SerializeField, Tooltip("coolDown Schivata")]
+    [Min(0)]
     float dodgeCoolDown = 3f;
     float dodgeTimer = 0;
     [SerializeField, Tooltip("distanza massima schivata")]
     float dodgeDistance = 15f;
     [SerializeField, Tooltip("Durata schivata")]
+    [Min(0)]
     float dodgeDuration = 0.3f;
+    [SerializeField, Tooltip("Durata schivata perfetta")]
+    [Min(0)]
+    float perfectDodgeDuration = 0.15f;
     [SerializeField, Tooltip("Danno schivata perfetta")]
     float dodgeDamageMultiplier = 0.75f;
 
@@ -74,6 +79,7 @@ public class Ranged : CharacterClass
     float landMineRange = 5f;
     [SerializeField, Tooltip("Sprite di raccolta mina")]
     GameObject minePickUpVisualizer;
+    bool mineNearby => nearbyLandmine.Count > 0;
     
 
     public List<LandMine> nearbyLandmine;
@@ -109,8 +115,8 @@ public class Ranged : CharacterClass
         base.Inizialize(characterData, character);
         nearbyLandmine = new List<LandMine>();
         landMineInInventory = maxNumberLandMine;
-        //perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>();
-        //perfectTimingHandler.gameObject.SetActive(false);
+        perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>();
+        perfectTimingHandler.gameObject.SetActive(false);
     }
 
 
@@ -124,7 +130,7 @@ public class Ranged : CharacterClass
     {
         CoolDownManager();
 
-       
+        minePickUpVisualizer.SetActive(mineNearby);
 
 
     }
@@ -262,6 +268,29 @@ public class Ranged : CharacterClass
             isDodging = false;
         }
         
+    }
+
+    protected IEnumerator PerfectDodgeHandler(DamageData data)
+    {
+        perfectTimingHandler.gameObject.SetActive(true);
+        yield return new WaitForSeconds(perfectDodgeDuration);
+        if(isDodging)
+        {
+            //se potenziamento sbloccato => damage
+            if (dodgeDamageUnlocked)
+            {
+               
+            }
+            
+            //se c'è il boss + potenziamento sbloccato => tp
+            
+        }
+        else
+        {
+            base.TakeDamage(data);
+        }
+
+        Debug.Log($"PerfectDodge: {isDodging}");
     }
 
     #endregion
