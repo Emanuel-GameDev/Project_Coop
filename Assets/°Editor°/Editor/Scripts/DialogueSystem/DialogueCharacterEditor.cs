@@ -28,20 +28,19 @@ public class DialogueCharacterEditor : EditorWindow
         _character.Name = EditorGUILayout.TextField("Character name", _character.Name);
         _character.CharacterImage = (Sprite) EditorGUILayout.ObjectField("Character image", _character.CharacterImage, typeof(Sprite), false);
         _character.CharacterColor = EditorGUILayout.ColorField("Character frame color",_character.CharacterColor);
+        _character.CharacterVoice = EditorGUILayout.ObjectField("Character voice audio", _character.CharacterVoice, typeof(AudioClip), false) as AudioClip;
 
-        GUILayout.Space(10);
+        GUILayout.Space(20);
 
         EditorGUILayout.LabelField("NAME INFO", EditorStyles.boldLabel);
         _character.CharacterNameColor = EditorGUILayout.ColorField("Character name color", _character.CharacterNameColor);
         _character.CharacterNameFont = EditorGUILayout.ObjectField("Character name font", _character.CharacterNameFont, typeof(TMP_FontAsset), false) as TMP_FontAsset;
 
-        GUILayout.Space(10);
+        GUILayout.Space(20);
 
-        EditorGUILayout.LabelField("DIALOGUE INFO", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("DIALOGUES INFO", EditorStyles.boldLabel);
         _character.CharacterDialogueColor = EditorGUILayout.ColorField("Character dialogue color", _character.CharacterDialogueColor);
         _character.CharacterDialogueFont = EditorGUILayout.ObjectField("Character dialogue font", _character.CharacterDialogueFont, typeof(TMP_FontAsset), false) as TMP_FontAsset;
-
-        _character.CharacterVoice = EditorGUILayout.ObjectField("Character voice audio", _character.CharacterVoice, typeof(AudioClip), false) as AudioClip;
         _character.DialogueCharacterPerSecond = EditorGUILayout.FloatField("Dialogue speed in characters per second", _character.DialogueCharacterPerSecond);
 
         if (_character.DialogueCharacterPerSecond < 0.1f)

@@ -9,8 +9,8 @@ public class Healer : CharacterClass
 
     [Header("Small heal ability information")]
 
-    //[Tooltip("Icona che appare sopra il personaggio da curare")]
-    //[SerializeField] GameObject healIcon;
+    [Tooltip("Icona che appare sopra il personaggio da curare")]
+    [SerializeField] GameObject healIcon;
     [Tooltip("Quantità di vita curata dall'abilità di cura singola")]
     [SerializeField] float smallHeal = 5f;
     [Tooltip("Tempo di ricarica dell'abilità di cura singola")]
@@ -72,12 +72,15 @@ public class Healer : CharacterClass
     CapsuleCollider smallHealAreaCollider;
 
     List<PlayerCharacter> playerInArea;
+    Dictionary<PlayerCharacter,GameObject> healIcons;
 
     private float lastAttackTime;
     private float lastUniqueAbilityUseTime;
     private int bossPowerUpHitCount;
 
 
+    float bossAbilityChargeTimer = 0;
+    float bossAbilityCharge = 3;
     float uniqueAbilityTimer;
     float mineAbilityTimer;
     float smallHealTimer;
@@ -100,21 +103,10 @@ public class Healer : CharacterClass
         smallHealAreaCollider.height = 1.5f;
         smallHealAreaCollider.radius = smallHealAreaRadius;
 
-
-        ////provvisorio
-        //instantiatedHealIcon = Instantiate(healIcon);
-        //MoveIcon(transform);
-
+        healIcons = new Dictionary<PlayerCharacter, GameObject>();
 
         animator.SetFloat("Y", -1);
     }
-
-
-    //private void MoveIcon(Transform newParent)
-    //{
-    //    instantiatedHealIcon.transform.SetParent(newParent);
-    //    instantiatedHealIcon.transform.localPosition = new Vector3(0, 1, 0);
-    //}
 
 
     //Attack: colpo singolo, incremento colpi consecutivi senza subire danni contro boss
@@ -147,12 +139,38 @@ public class Healer : CharacterClass
         if (other.gameObject.GetComponent<PlayerCharacter>() && !playerInArea.Contains(other.gameObject.GetComponent<PlayerCharacter>()))
         {
             playerInArea.Add(other.gameObject.GetComponent<PlayerCharacter>());
+            GameObject instantiatedIcon = Instantiate(healIcon);
+
+            healIcons.Add(other.gameObject.GetComponent<PlayerCharacter>(), instantiatedIcon);
+            instantiatedIcon.transform.SetParent(other.transform);
+            instantiatedIcon.transform.localPosition = new Vector3(0, 1.5f, 0);
+            
         }
 
         if (other.gameObject.GetComponent<HealMine>())
         {
             SetMineIcon(true, healMineIcon);
             mineInReach = true;
+        }
+    }
+
+
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.GetComponent<PlayerCharacter>())
+        {
+            playerInArea.Remove(other.gameObject.GetComponent<PlayerCharacter>());
+
+            Destroy(healIcons[other.gameObject.GetComponent<PlayerCharacter>()]);
+            healIcons.Remove(other.gameObject.GetComponent<PlayerCharacter>());
+        }
+
+
+        if (other.gameObject.GetComponent<HealMine>())
+        {
+            SetMineIcon(false, null);
+            mineInReach = false;
         }
     }
 
@@ -201,22 +219,6 @@ public class Healer : CharacterClass
 
     }
 
-    float bossAbilityChargeTimer = 0;
-    float bossAbilityCharge = 3;
-
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.GetComponent<PlayerCharacter>())
-            playerInArea.Remove(other.gameObject.GetComponent<PlayerCharacter>());
-
-
-        if (other.gameObject.GetComponent<HealMine>())
-        {
-            SetMineIcon(false, null);
-            mineInReach = false;
-        }
-    }
 
 
 
