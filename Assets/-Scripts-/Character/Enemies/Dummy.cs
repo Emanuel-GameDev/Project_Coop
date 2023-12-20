@@ -73,11 +73,11 @@ public class Dummy : EnemyCharacterClass
         
     }
 
-    public override void Inizialize(CharacterData characterData, PlayerCharacter character)
-    {
-        base.Inizialize(characterData, character);
-        dummyData = new List<DummyData>();
-        TotalDamageReceived = 0;
-    }
+    //public override void Inizialize(CharacterData characterData, PlayerCharacter character)
+    //{
+    //    base.Inizialize(characterData, character);
+    //    dummyData = new List<DummyData>();
+    //    TotalDamageReceived = 0;
+    //}
 
 }

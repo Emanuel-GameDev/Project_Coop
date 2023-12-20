@@ -4,20 +4,20 @@ using UnityEngine.InputSystem;
 
 public class CoopManager : MonoBehaviour
 {
-    [SerializeField] private CharacterData switchPlayerUp;
-    [SerializeField] private CharacterData switchPlayerRight;
-    [SerializeField] private CharacterData switchPlayerDown;
-    [SerializeField] private CharacterData switchPlayerLeft;
+    [SerializeField] private CharacterClass switchPlayerUp;
+    [SerializeField] private CharacterClass switchPlayerRight;
+    [SerializeField] private CharacterClass switchPlayerDown;
+    [SerializeField] private CharacterClass switchPlayerLeft;
 
     public List<PlayerCharacter> activePlayers = new List<PlayerCharacter>();
-    private List<CharacterData> internalSwitchList;
+    private List<CharacterClass> internalSwitchList;
 
     public InputActionMap playerActionMap { get; private set; }
     public InputActionMap uiActionMap { get; private set; }
 
     private void Start()
     {
-        internalSwitchList = new List<CharacterData>()
+        internalSwitchList = new List<CharacterClass>()
         {
             switchPlayerUp,
             switchPlayerRight,
@@ -25,7 +25,7 @@ public class CoopManager : MonoBehaviour
             switchPlayerLeft
         };
 
-        foreach (CharacterData ch in internalSwitchList)
+        foreach (CharacterClass ch in internalSwitchList)
         {
             if (ch == null)
             {
@@ -46,11 +46,11 @@ public class CoopManager : MonoBehaviour
     {
         foreach (PlayerCharacter player in activePlayers)
         {
-            if (player.CharacterData == internalSwitchList[switchInto])
+            if (player.CharacterClass == internalSwitchList[switchInto])
                 return;
         }
 
-        characterToSwitch.SetCharacterData(internalSwitchList[switchInto]);
+        characterToSwitch.SwitchCharacterClass(internalSwitchList[switchInto]);
     }
 
     public void AddPlayer()

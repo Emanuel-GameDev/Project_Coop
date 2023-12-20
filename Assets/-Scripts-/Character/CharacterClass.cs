@@ -33,24 +33,37 @@ public class CharacterClass : MonoBehaviour
     protected float damageReceivedMultiplier = 1;
     protected Vector2 lastNonZeroDirection;
 
+    [SerializeField, Tooltip("La salute massima del personaggio.")]
+    protected float maxHp;
+    [SerializeField, Tooltip("Il danno inflitto dal personaggio.")]
+    protected float damage;
+    [SerializeField, Tooltip("La velocità di attacco del personaggio.")]
+    protected float attackSpeed;
+    [SerializeField, Tooltip("La velocità di movimento del personaggio.")]
+    protected float moveSpeed;
+    [SerializeField, Tooltip("Il tempo di attesa per l'abilità unica.")]
+    protected float uniqueAbilityCooldown;
+    [SerializeField, Tooltip("L'incremento del tempo di attesa dell'abilità unica dopo ogni uso.")]
+    protected float uniqueAbilityCooldownIncreaseAtUse;
+
     public bool Stunned => character.stunned;
-    public virtual float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
+    public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
 
-    public virtual float Damage => characterData.Damage + powerUpData.damageIncrease;
-    public virtual float MoveSpeed => characterData.MoveSpeed + powerUpData.moveSpeedIncrease;
-    public virtual float AttackSpeed => characterData.AttackSpeed + powerUpData.attackSpeedIncrease;
-    public virtual float UniqueAbilityCooldown => characterData.UniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease + (characterData.UniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses);
+    public virtual float Damage => damage + powerUpData.damageIncrease;
+    public virtual float MoveSpeed => moveSpeed + powerUpData.moveSpeedIncrease;
+    public virtual float AttackSpeed => attackSpeed + powerUpData.attackSpeedIncrease;
+    public virtual float UniqueAbilityCooldown => uniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses);
 
     #region Animation Variable
     private static string Y = "Y";
     #endregion
 
-    public virtual void Inizialize(CharacterData characterData, PlayerCharacter character)
+    public virtual void Inizialize(/* CharacterData characterData,*/ PlayerCharacter character)
     {
         powerUpData = new PowerUpData();
-        this.characterData = characterData;
+        //this.characterData = characterData;
         upgradeStatus = new();
         foreach (AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
         {

@@ -27,7 +27,7 @@ public class CharacterData : ScriptableObject
     public void Inizialize(PlayerCharacter character)
     {
         CharacterClass cClass = Instantiate(characterClass.gameObject, character.gameObject.transform).GetComponent<CharacterClass>();
-        cClass.Inizialize(this, character);
+        cClass.Inizialize(/*this,*/ character);
         character.SetCharacterClass(cClass);
     }
 }

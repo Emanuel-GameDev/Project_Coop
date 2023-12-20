@@ -90,9 +90,9 @@ public class Tank : CharacterClass
     private PerfectTimingHandler perfectBlockHandler;
 
 
-    public override void Inizialize(CharacterData characterData, PlayerCharacter character)
+    public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
     {
-        base.Inizialize(characterData, character);
+        base.Inizialize(/*characterData,*/ character);
         currentStamina = maxStamina;
         currentHp = MaxHp;
 

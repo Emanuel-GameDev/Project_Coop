@@ -5,10 +5,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerCharacter : Character
 {
-    [SerializeField] protected CharacterData characterData;
+    [SerializeField] //protected CharacterData characterData;
     protected CharacterClass characterClass;
 
-    public CharacterData CharacterData => characterData;
+   // public CharacterData CharacterData => characterData;
     public CharacterClass CharacterClass => characterClass; 
     
     public float MaxHp => characterClass.MaxHp;
@@ -25,13 +25,22 @@ public class PlayerCharacter : Character
     protected override void InitialSetup()
     {
         base.InitialSetup();
-        characterData.Inizialize(this);
+        //characterData.Inizialize(this);
+        InizializeClass();
     }
 
     private void Update()
     {
         Move(moveDir);
     }
+
+    public void InizializeClass()
+    {
+        CharacterClass cClass = Instantiate(characterClass.gameObject, gameObject.transform).GetComponent<CharacterClass>();
+        cClass.Inizialize(/*this,*/ this);
+        SetCharacterClass(cClass);
+    }
+
 
     //protected virtual void Attack(InputAction.CallbackContext context) => characterClass.Attack(this, context);
     //protected virtual void Defend(InputAction.CallbackContext context) => characterClass.Defence(this, context);
@@ -45,12 +54,14 @@ public class PlayerCharacter : Character
 
     public void UnlockUpgrade(AbilityUpgrade abilityUpgrade) => characterClass.UnlockUpgrade(abilityUpgrade);
 
-    public void SetCharacterData(CharacterData newCharData)
+    public void SwitchCharacterClass(CharacterClass newCharClass)
     {
         characterClass.Disable(this);
         Destroy(characterClass.gameObject);
-        characterData = newCharData;
-        characterData.Inizialize(this);
+        //characterData = newCharData;
+        //characterData.Inizialize(this);
+        characterClass = newCharClass;
+        InizializeClass();
     }
 
     public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;

@@ -1,31 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class EnemyCharacter : Character
 {
-    public override void AddPowerUp(PowerUp powerUp)
+    [SerializeField, Tooltip("La salute massima del nemico.")]
+    protected float maxHp;
+    [SerializeField, Tooltip("Il danno inflitto dal nemico.")]
+    protected float damage;
+    [SerializeField, Tooltip("Il danno inflitto alla stamina dal nemico.")]
+    protected float staminaDamage;
+    [SerializeField, Tooltip("La velocità di attacco del nemico.")]
+    protected float attackSpeed;
+    [SerializeField, Tooltip("La velocità di movimento del nemico.")]
+    protected float moveSpeed;
+
+    protected Animator animator;
+    protected PowerUpData powerUpData;
+
+    public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
+    [HideInInspector]
+    public float currentHp;
+
+    protected override void InitialSetup()
     {
-        throw new System.NotImplementedException();
+        base.InitialSetup();
+        animator = GetComponent<Animator>();
     }
 
+    #region PowerUp
+    public override void AddPowerUp(PowerUp powerUp) => powerUpData.Add(powerUp);
+    public override List<PowerUp> GetPowerUpList() => powerUpData._powerUpData;
+    public override void RemovePowerUp(PowerUp powerUp) => powerUpData.Remove(powerUp);
+    #endregion
     public override DamageData GetDamageData()
     {
-        throw new System.NotImplementedException();
+        return new DamageData(damage, staminaDamage, this, false);
     }
-
-    public override List<PowerUp> GetPowerUpList()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public override void RemovePowerUp(PowerUp powerUp)
-    {
-        throw new System.NotImplementedException();
-    }
-
     public override void TakeDamage(DamageData data)
     {
-        throw new System.NotImplementedException();
+        currentHp -= data.damage;
+
+        if (data.condition != null)
+            data.condition.AddCondition(this);
     }
 }
