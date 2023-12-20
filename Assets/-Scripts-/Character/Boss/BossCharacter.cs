@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossCharacter : Character
+public class BossCharacter : EnemyCharacter
 {
     BossCharacterClass bossCharacterClass;
     public void Attack1() => bossCharacterClass.Attack1();

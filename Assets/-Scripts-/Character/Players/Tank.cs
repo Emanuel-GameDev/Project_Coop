@@ -94,7 +94,7 @@ public class Tank : CharacterClass
     {
         base.Inizialize(characterData, character);
         currentStamina = maxStamina;
-        currentHp = maxHp;
+        currentHp = MaxHp;
 
         staminaBar = GetComponentInChildren<GenericBarScript>();
 
@@ -128,7 +128,7 @@ public class Tank : CharacterClass
     public override void Attack(Character parent, InputAction.CallbackContext context)
     {
         //Cercar soluzione forse
-        if (stunned) return;
+        if (Stunned) return;
 
         if (context.performed && isBlocking == false)
         {

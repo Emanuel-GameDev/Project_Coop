@@ -11,8 +11,8 @@ public class PlayerCharacter : Character
     public CharacterData CharacterData => characterData;
     public CharacterClass CharacterClass => characterClass; 
     
-    protected float MaxHp => characterClass.maxHp;
-    protected float currentHp => characterClass.currentHp;
+    public float MaxHp => characterClass.MaxHp;
+    public float CurrentHp => characterClass.currentHp;
 
     private Vector3 screenPosition;
     private Vector3 worldPosition;
@@ -33,10 +33,10 @@ public class PlayerCharacter : Character
         Move(moveDir);
     }
 
-    protected virtual void Attack(InputAction.CallbackContext context) => characterClass.Attack(this, context);
-    protected virtual void Defend(InputAction.CallbackContext context) => characterClass.Defence(this, context);
-    public virtual void UseUniqueAbility(InputAction.CallbackContext context) => characterClass.UseUniqueAbility(this, context);
-    public virtual void UseExtraAbility(InputAction.CallbackContext context) => characterClass.UseExtraAbility(this, context);
+    //protected virtual void Attack(InputAction.CallbackContext context) => characterClass.Attack(this, context);
+    //protected virtual void Defend(InputAction.CallbackContext context) => characterClass.Defence(this, context);
+    //public virtual void UseUniqueAbility(InputAction.CallbackContext context) => characterClass.UseUniqueAbility(this, context);
+    //public virtual void UseExtraAbility(InputAction.CallbackContext context) => characterClass.UseExtraAbility(this, context);
     protected virtual void Move(Vector2 direction) => characterClass.Move(direction, rb);
 
     public override void AddPowerUp(PowerUp powerUp) => characterClass.AddPowerUp(powerUp);
@@ -124,24 +124,24 @@ public class PlayerCharacter : Character
 
     #endregion
 
+    #region MainActions
     public void AttackInput(InputAction.CallbackContext context)
     {
-        Attack(context);
+        characterClass.Attack(this, context);
+    }
+    public void DefenseInput(InputAction.CallbackContext context)
+    {
+        characterClass.Defence(this, context);
     }
 
     public void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-        UseUniqueAbility(context);
+        characterClass.UseUniqueAbility(this, context);
     }
 
     public void ExtraAbilityInput(InputAction.CallbackContext context)
     {
-        UseExtraAbility(context);
-    }
-
-    public void DefenseInput(InputAction.CallbackContext context)
-    {
-        Defend(context);
+        characterClass.UseExtraAbility(this, context);
     }
 
     public void MoveInput(InputAction.CallbackContext context)
@@ -153,9 +153,7 @@ public class PlayerCharacter : Character
     {
         Interact(context);
     }
-
-
-
     #endregion
 
+    #endregion
 }

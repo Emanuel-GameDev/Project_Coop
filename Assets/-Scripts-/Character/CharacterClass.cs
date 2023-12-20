@@ -33,20 +33,15 @@ public class CharacterClass : MonoBehaviour
     protected float damageReceivedMultiplier = 1;
     protected Vector2 lastNonZeroDirection;
 
-    //Conditions??
-    public bool stunned => character.stunned;
-
-    public virtual float maxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
+    public bool Stunned => character.stunned;
+    public virtual float MaxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
 
     public virtual float Damage => characterData.Damage + powerUpData.damageIncrease;
-    
-
     public virtual float MoveSpeed => characterData.MoveSpeed + powerUpData.moveSpeedIncrease;
     public virtual float AttackSpeed => characterData.AttackSpeed + powerUpData.attackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => characterData.UniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease + (characterData.UniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses);
-
 
     #region Animation Variable
     private static string Y = "Y";
@@ -77,11 +72,9 @@ public class CharacterClass : MonoBehaviour
         SetIsInBossfight(false);
     }
 
-
-
     public virtual void Attack(Character parent, InputAction.CallbackContext context)
     {
-        if(stunned)
+        if(Stunned)
         {
             return;
             
@@ -116,17 +109,11 @@ public class CharacterClass : MonoBehaviour
         Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
     }
 
-    //modifiche
-
-    //public virtual float GetDamage() => Damage;
-
     public virtual DamageData GetDamageData()
     {
         DamageData data = new DamageData(Damage, character);
         return data;
     }
-
-    //fine modifiche
     
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
     public Vector2 GetLastNonZeroDirection() => lastNonZeroDirection;
@@ -171,7 +158,6 @@ public class CharacterClass : MonoBehaviour
         pivot.gameObject.transform.localScale = scale;
     }
     #endregion
-
 
     #region Upgrades
     public virtual void UnlockUpgrade(AbilityUpgrade abilityUpgrade)

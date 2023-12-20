@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DummyCharacter : Character
+public class DummyCharacter : EnemyCharacter
 {
     Dummy characterClass;
     public void ChangeBehaviour()
