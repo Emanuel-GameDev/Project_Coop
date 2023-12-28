@@ -110,9 +110,9 @@ public class Ranged : CharacterClass
     bool isDodging;
     bool isInvunerable;
 
-    public override void Inizialize(CharacterData characterData, Character character)
+    public override void Inizialize(PlayerCharacter character)
     {
-        base.Inizialize(characterData, character);
+        base.Inizialize(character);
         nearbyLandmine = new List<LandMine>();
         landMineInInventory = maxNumberLandMine;
         perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>();
