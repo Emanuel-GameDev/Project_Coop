@@ -17,7 +17,6 @@ public enum AbilityUpgrade
 
 public class CharacterClass : MonoBehaviour
 {
-    protected CharacterData characterData;
     protected Animator animator;
     protected PlayerCharacter character;
     protected PowerUpData powerUpData;
@@ -30,8 +29,7 @@ public class CharacterClass : MonoBehaviour
     protected bool bossfightPowerUpUnlocked;
     protected bool isInBossfight;
     protected float uniqueAbilityUses;
-    [HideInInspector]
-    public float damageReceivedMultiplier = 1;
+    
     protected Vector2 lastNonZeroDirection;
 
     [SerializeField, Tooltip("La salute massima del personaggio.")]
@@ -56,12 +54,14 @@ public class CharacterClass : MonoBehaviour
     public virtual float MoveSpeed => moveSpeed + powerUpData.moveSpeedIncrease;
     public virtual float AttackSpeed => attackSpeed + powerUpData.attackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => uniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses);
+    public float DamageReceivedMultiplier => character.damageReceivedMultiplier;
+
 
     #region Animation Variable
     private static string Y = "Y";
     #endregion
 
-    public virtual void Inizialize(/* CharacterData characterData,*/ PlayerCharacter character)
+    public virtual void Inizialize(PlayerCharacter character)
     {
         powerUpData = new PowerUpData();
         //this.characterData = characterData;
@@ -73,7 +73,6 @@ public class CharacterClass : MonoBehaviour
         animator = GetComponent<Animator>();
         this.character = character;
         bossfightPowerUpUnlocked = false;
-        damageReceivedMultiplier = 1;
         uniqueAbilityUses = 0;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         pivot = GetComponentInChildren<Pivot>();
@@ -118,7 +117,7 @@ public class CharacterClass : MonoBehaviour
         if (data.condition != null)
             character.AddToConditions(data.condition);
 
-        currentHp -= data.damage * damageReceivedMultiplier;
+        currentHp -= data.damage * DamageReceivedMultiplier;
         damager.RemoveCondition();
         Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
     }

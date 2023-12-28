@@ -14,6 +14,9 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     private bool canInteract;
     private IInteractable activeInteractable;
 
+    [HideInInspector]
+    public float damageReceivedMultiplier = 1;
+
     //Lo uso per chimare tutte le funzioni iniziali
     protected void Awake()
     {
@@ -26,6 +29,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         rb = GetComponent<Rigidbody>();
         conditions = new();
         canInteract = false;
+        damageReceivedMultiplier = 1;
     }
 
     public Rigidbody GetRigidBody() => rb;

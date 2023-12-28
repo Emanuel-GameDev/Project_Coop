@@ -490,7 +490,7 @@ public class Tank : CharacterClass
         }
         //Incremento statistiche difesa e stamina
         statBoosted = true;
-        damageReceivedMultiplier = healthDamageReductionMulty;
+        character.damageReceivedMultiplier = healthDamageReductionMulty;
         Invoke(nameof(SetStatToNormal), aggroDuration);
 
 
@@ -503,7 +503,7 @@ public class Tank : CharacterClass
     private void SetStatToNormal()
     {
         statBoosted = false;
-        damageReceivedMultiplier = 1;
+        character.damageReceivedMultiplier = 1;
     }
 
 

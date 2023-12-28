@@ -22,7 +22,8 @@ public class EnemyCharacter : Character
     public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
-
+    [HideInInspector]
+    public float damageReceivedMultiplier = 1;
     protected override void InitialSetup()
     {
         base.InitialSetup();
@@ -40,7 +41,7 @@ public class EnemyCharacter : Character
     }
     public override void TakeDamage(DamageData data)
     {
-        currentHp -= data.damage;
+        currentHp -= data.damage * damageReceivedMultiplier;
 
         if (data.condition != null)
             data.condition.AddCondition(this);
