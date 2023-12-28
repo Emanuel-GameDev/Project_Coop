@@ -4,8 +4,5 @@ using UnityEngine;
 
 public class TutorialBossCharacter : BossCharacter
 {
-    public void AttaccoSchianto()
-    {
-        Attack3();
-    }
+    
 }
