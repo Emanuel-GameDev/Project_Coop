@@ -5,10 +5,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerCharacter : Character
 {
-    [SerializeField] //protected CharacterData characterData;
+    [SerializeField]
     protected CharacterClass characterClass;
-
-   // public CharacterData CharacterData => characterData;
     public CharacterClass CharacterClass => characterClass; 
     
     public float MaxHp => characterClass.MaxHp;
@@ -25,7 +23,6 @@ public class PlayerCharacter : Character
     protected override void InitialSetup()
     {
         base.InitialSetup();
-        //characterData.Inizialize(this);
         InizializeClass();
     }
 
@@ -37,15 +34,11 @@ public class PlayerCharacter : Character
     public void InizializeClass()
     {
         CharacterClass cClass = Instantiate(characterClass.gameObject, gameObject.transform).GetComponent<CharacterClass>();
-        cClass.Inizialize(/*this,*/ this);
+        cClass.Inizialize(this);
         SetCharacterClass(cClass);
     }
 
 
-    //protected virtual void Attack(InputAction.CallbackContext context) => characterClass.Attack(this, context);
-    //protected virtual void Defend(InputAction.CallbackContext context) => characterClass.Defence(this, context);
-    //public virtual void UseUniqueAbility(InputAction.CallbackContext context) => characterClass.UseUniqueAbility(this, context);
-    //public virtual void UseExtraAbility(InputAction.CallbackContext context) => characterClass.UseExtraAbility(this, context);
     protected virtual void Move(Vector2 direction) => characterClass.Move(direction, rb);
 
     public override void AddPowerUp(PowerUp powerUp) => characterClass.AddPowerUp(powerUp);
@@ -58,8 +51,6 @@ public class PlayerCharacter : Character
     {
         characterClass.Disable(this);
         Destroy(characterClass.gameObject);
-        //characterData = newCharData;
-        //characterData.Inizialize(this);
         characterClass = newCharClass;
         InizializeClass();
     }

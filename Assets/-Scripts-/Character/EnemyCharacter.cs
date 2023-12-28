@@ -22,8 +22,7 @@ public class EnemyCharacter : Character
     public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
-    [HideInInspector]
-    public float damageReceivedMultiplier = 1;
+    
     protected override void InitialSetup()
     {
         base.InitialSetup();
