@@ -90,11 +90,11 @@ public class Tank : CharacterClass
     private PerfectTimingHandler perfectBlockHandler;
 
 
-    public override void Inizialize(CharacterData characterData, Character character)
+    public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
     {
-        base.Inizialize(characterData, character);
+        base.Inizialize(/*characterData,*/ character);
         currentStamina = maxStamina;
-        currentHp = maxHp;
+        currentHp = MaxHp;
 
         staminaBar = GetComponentInChildren<GenericBarScript>();
 
@@ -128,7 +128,7 @@ public class Tank : CharacterClass
     public override void Attack(Character parent, InputAction.CallbackContext context)
     {
         //Cercar soluzione forse
-        if (stunned) return;
+        if (Stunned) return;
 
         if (context.performed && isBlocking == false)
         {

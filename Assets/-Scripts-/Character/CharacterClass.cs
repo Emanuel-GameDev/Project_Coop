@@ -19,10 +19,9 @@ public class CharacterClass : MonoBehaviour
 {
     protected CharacterData characterData;
     protected Animator animator;
-    protected Character character;
+    protected PlayerCharacter character;
     protected PowerUpData powerUpData;
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
-    protected List<Condition> conditions;
     protected UnityAction unityAction;
     protected SpriteRenderer spriteRenderer;
     protected Pivot pivot;
@@ -35,29 +34,37 @@ public class CharacterClass : MonoBehaviour
     public float damageReceivedMultiplier = 1;
     protected Vector2 lastNonZeroDirection;
 
-    //Conditions??
-    public bool stunned = false;
+    [SerializeField, Tooltip("La salute massima del personaggio.")]
+    protected float maxHp;
+    [SerializeField, Tooltip("Il danno inflitto dal personaggio.")]
+    protected float damage;
+    [SerializeField, Tooltip("La velocità di attacco del personaggio.")]
+    protected float attackSpeed;
+    [SerializeField, Tooltip("La velocità di movimento del personaggio.")]
+    protected float moveSpeed;
+    [SerializeField, Tooltip("Il tempo di attesa per l'abilità unica.")]
+    protected float uniqueAbilityCooldown;
+    [SerializeField, Tooltip("L'incremento del tempo di attesa dell'abilità unica dopo ogni uso.")]
+    protected float uniqueAbilityCooldownIncreaseAtUse;
 
-    public virtual float maxHp => characterData.MaxHp + powerUpData.maxHpIncrease;
+    public bool Stunned => character.stunned;
+    public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
 
-    public virtual float Damage => characterData.Damage + powerUpData.damageIncrease;
-    
-
-    public virtual float MoveSpeed => characterData.MoveSpeed + powerUpData.moveSpeedIncrease;
-    public virtual float AttackSpeed => characterData.AttackSpeed + powerUpData.attackSpeedIncrease;
-    public virtual float UniqueAbilityCooldown => characterData.UniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease + (characterData.UniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses);
-
+    public virtual float Damage => damage + powerUpData.damageIncrease;
+    public virtual float MoveSpeed => moveSpeed + powerUpData.moveSpeedIncrease;
+    public virtual float AttackSpeed => attackSpeed + powerUpData.attackSpeedIncrease;
+    public virtual float UniqueAbilityCooldown => uniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses);
 
     #region Animation Variable
     private static string Y = "Y";
     #endregion
 
-    public virtual void Inizialize(CharacterData characterData, Character character)
+    public virtual void Inizialize(/* CharacterData characterData,*/ PlayerCharacter character)
     {
         powerUpData = new PowerUpData();
-        this.characterData = characterData;
+        //this.characterData = characterData;
         upgradeStatus = new();
         foreach (AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
         {
@@ -77,14 +84,11 @@ public class CharacterClass : MonoBehaviour
             damager.SetSource(character);
         }
         SetIsInBossfight(false);
-        conditions = new();
     }
-
-
 
     public virtual void Attack(Character parent, InputAction.CallbackContext context)
     {
-        if(stunned)
+        if(Stunned)
         {
             return;
             
@@ -112,24 +116,18 @@ public class CharacterClass : MonoBehaviour
     public virtual void TakeDamage(DamageData data)
     {
         if (data.condition != null)
-            AddToConditions(data.condition);
+            character.AddToConditions(data.condition);
 
         currentHp -= data.damage * damageReceivedMultiplier;
         damager.RemoveCondition();
         Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
     }
 
-    //modifiche
-
-    //public virtual float GetDamage() => Damage;
-
     public virtual DamageData GetDamageData()
     {
         DamageData data = new DamageData(Damage, character);
         return data;
     }
-
-    //fine modifiche
     
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
     public Vector2 GetLastNonZeroDirection() => lastNonZeroDirection;
@@ -175,7 +173,6 @@ public class CharacterClass : MonoBehaviour
     }
     #endregion
 
-
     #region Upgrades
     public virtual void UnlockUpgrade(AbilityUpgrade abilityUpgrade)
     {
@@ -202,15 +199,5 @@ public class CharacterClass : MonoBehaviour
 
     #endregion
 
-    public void AddToConditions(Condition condition)
-    {
-        conditions.Add(condition);
-        condition.AddCondition(this);
-    }
-
-    public void RemoveFromConditions(Condition condition)
-    {
-        conditions.Remove(condition);
-
-    }
+    
 }
