@@ -19,7 +19,7 @@ public class Ranged : CharacterClass
     public override float AttackSpeed => base.AttackSpeed;
     public override float UniqueAbilityCooldown => base.UniqueAbilityCooldown;
 
-    float fireTimer;
+    float fireTimer=0;
 
     [Header("Variabili attacco")]
     [SerializeField, Tooltip("velocità proiettile base")]
@@ -152,6 +152,14 @@ public class Ranged : CharacterClass
         }      
     }
 
+    public override void TakeDamage(DamageData data)
+    {
+        if (!isDodging)
+        {
+            StartCoroutine(PerfectDodgeHandler(data));
+        }
+    }
+
     //sparo
     #region Attack
     public override void Attack(Character parent, InputAction.CallbackContext context)
@@ -204,7 +212,7 @@ public class Ranged : CharacterClass
 
         newProjectile.transform.position = transform.position;
 
-        //newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer);
+        newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer);
 
     }
 
@@ -255,6 +263,7 @@ public class Ranged : CharacterClass
         {
             isDodging = true;
 
+            
             //animazione
 
             Vector3 dodgeDirection = new Vector3(direction.x, 0f, direction.y).normalized;
@@ -290,6 +299,7 @@ public class Ranged : CharacterClass
             base.TakeDamage(data);
         }
 
+        perfectTimingHandler.gameObject.SetActive(false);
         Debug.Log($"PerfectDodge: {isDodging}");
     }
 
@@ -416,7 +426,7 @@ public class Ranged : CharacterClass
 
         newProjectile.transform.position = transform.position;
 
-        //newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier,gameObject.layer);
+        newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier,gameObject.layer);
     }
 
     #endregion
