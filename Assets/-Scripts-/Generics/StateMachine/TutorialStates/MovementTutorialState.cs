@@ -19,29 +19,40 @@ public class MovementTutorialState : State
     public override void Enter()
     {
         base.Enter();
-        OnFaseStart.Invoke();
+        tutorialManager.OnMovementFaseStart.Invoke();
 
     }
-
+    bool check = false;
 
     public override void Update()
     {
         base.Enter();
-
         tutorialManager.StartCoroutine(Count());
+
+        if (!check)
+        {
+            foreach (PlayerCharacter p in GameManager.Instance.coopManager.activePlayers)
+            {
+                if(p.MoveDirection!=Vector2.zero)
+                {
+                    Debug.Log(check);
+                    check=true;
+                }
+            }
+
+        }
     }
 
 
     public override void Exit()
     {
         base.Enter();
-        OnFaseEnd.Invoke();
+        tutorialManager.OnMovementFaseEnd.Invoke();
     }
 
     IEnumerator Count()
     {
-        Debug.Log("waiting");
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(tutorialManager.faseLenght);
         tutorialManager.stateMachine.SetState(TutorialFase.Attack);
     }
 }
