@@ -122,7 +122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93cddced58d648d449d7fdf302364bde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterData: {fileID: 11400000, guid: 80e35bc4125873b45b0a1321251987d9, type: 2}
+  stunned: 0
+  characterClass: {fileID: 0}
 --- !u!54 &6851799198813683004
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -259,8 +260,8 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7737284560217082375}
-        m_TargetAssemblyTypeName: Character, Assembly-CSharp
-        m_MethodName: UseExtraAbility
+        m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
+        m_MethodName: ExtraAbilityInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

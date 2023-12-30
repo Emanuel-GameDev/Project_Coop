@@ -1,9 +1,17 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerCharacter : Character
 {
+    [SerializeField]
+    protected CharacterClass characterClass;
+    public CharacterClass CharacterClass => characterClass; 
+    
+    public float MaxHp => characterClass.MaxHp;
+    public float CurrentHp => characterClass.currentHp;
+
     private Vector3 screenPosition;
     private Vector3 worldPosition;
     Plane plane = new Plane(Vector3.up, -1);
@@ -12,12 +20,44 @@ public class PlayerCharacter : Character
     Vector2 moveDir;
 
     public Vector2 MoveDirection => moveDir;
-
+    protected override void InitialSetup()
+    {
+        base.InitialSetup();
+        InizializeClass();
+    }
 
     private void Update()
     {
         Move(moveDir);
     }
+
+    public void InizializeClass()
+    {
+        CharacterClass cClass = Instantiate(characterClass.gameObject, gameObject.transform).GetComponent<CharacterClass>();
+        cClass.Inizialize(this);
+        SetCharacterClass(cClass);
+    }
+
+
+    protected virtual void Move(Vector2 direction) => characterClass.Move(direction, rb);
+
+    public override void AddPowerUp(PowerUp powerUp) => characterClass.AddPowerUp(powerUp);
+    public override void RemovePowerUp(PowerUp powerUp) => characterClass.RemovePowerUp(powerUp);
+    public override List<PowerUp> GetPowerUpList() => characterClass.GetPowerUpList();
+
+    public void UnlockUpgrade(AbilityUpgrade abilityUpgrade) => characterClass.UnlockUpgrade(abilityUpgrade);
+
+    public void SwitchCharacterClass(CharacterClass newCharClass)
+    {
+        characterClass.Disable(this);
+        Destroy(characterClass.gameObject);
+        characterClass = newCharClass;
+        InizializeClass();
+    }
+
+    public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
+    public override void TakeDamage(DamageData data) => characterClass.TakeDamage(data);
+    public override DamageData GetDamageData() => characterClass.GetDamageData();
 
     #region Input
 
@@ -86,24 +126,24 @@ public class PlayerCharacter : Character
 
     #endregion
 
+    #region MainActions
     public void AttackInput(InputAction.CallbackContext context)
     {
-        Attack(context);
+        characterClass.Attack(this, context);
+    }
+    public void DefenseInput(InputAction.CallbackContext context)
+    {
+        characterClass.Defence(this, context);
     }
 
     public void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-        UseUniqueAbility(context);
+        characterClass.UseUniqueAbility(this, context);
     }
 
     public void ExtraAbilityInput(InputAction.CallbackContext context)
     {
-        UseExtraAbility(context);
-    }
-
-    public void DefenseInput(InputAction.CallbackContext context)
-    {
-        Defend(context);
+        characterClass.UseExtraAbility(this, context);
     }
 
     public void MoveInput(InputAction.CallbackContext context)
@@ -115,9 +155,7 @@ public class PlayerCharacter : Character
     {
         Interact(context);
     }
-
-
-
     #endregion
 
+    #endregion
 }

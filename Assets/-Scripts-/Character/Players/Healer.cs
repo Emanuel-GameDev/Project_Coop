@@ -93,9 +93,9 @@ public class Healer : CharacterClass
 
     bool inputState = true;
 
-    public override void Inizialize(CharacterData characterData, Character character)
+    public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
     {
-        base.Inizialize(characterData, character);
+        base.Inizialize(/*characterData,*/ character);
         transform.position = character.transform.position;
         playerInArea = new List<PlayerCharacter>();
         smallHealAreaCollider = gameObject.AddComponent<CapsuleCollider>();

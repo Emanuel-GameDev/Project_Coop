@@ -1,23 +1,21 @@
+using MBT;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
+public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
 {
-    [SerializeField] protected CharacterData characterData;
-    protected CharacterClass characterClass;
+    public bool stunned = false;
 
-    public CharacterData CharacterData => characterData;
-    public CharacterClass CharacterClass => characterClass; 
-
-    protected float MaxHp => characterClass.maxHp;
-    protected float currentHp => characterClass.currentHp;
     protected Rigidbody rb;
+    protected List<Condition> conditions;
+
     private bool canInteract;
     private IInteractable activeInteractable;
 
-
+    [HideInInspector]
+    public float damageReceivedMultiplier = 1;
 
     //Lo uso per chimare tutte le funzioni iniziali
     protected void Awake()
@@ -28,47 +26,44 @@ public class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
     //Tutto ciò che va fatto nello ad inizio
     protected virtual void InitialSetup()
     {
-        rb = GetComponent<Rigidbody>();      
-        characterData.Inizialize(this);
+        rb = GetComponent<Rigidbody>();
+        conditions = new();
         canInteract = false;
+        damageReceivedMultiplier = 1;
     }
 
-    protected virtual void Attack(InputAction.CallbackContext context) => characterClass.Attack(this, context);
-    protected virtual void Defend(InputAction.CallbackContext context) => characterClass.Defence(this, context);
-    public virtual void UseUniqueAbility(InputAction.CallbackContext context) => characterClass.UseUniqueAbility(this, context);
-    public virtual void UseExtraAbility(InputAction.CallbackContext context) => characterClass.UseExtraAbility(this, context);
-    protected virtual void Move(Vector2 direction) => characterClass.Move(direction, rb);
+    public Rigidbody GetRigidBody() => rb;
 
+    public abstract void TakeDamage(DamageData data);
+
+    public abstract DamageData GetDamageData();
+
+    #region PowerUp & Conditions
+    public abstract void AddPowerUp(PowerUp powerUp);
+    public abstract void RemovePowerUp(PowerUp powerUp);
+    public abstract List<PowerUp> GetPowerUpList();
+
+    public virtual void AddToConditions(Condition condition)
+    {
+        conditions.Add(condition);
+        condition.AddCondition(this);
+    }
+    public virtual void RemoveFromConditions(Condition condition)
+    {
+        conditions.Remove(condition);
+    }
+    #endregion
+
+    #region InteractionSystem
     protected void Interact(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            if(canInteract)
+            if (canInteract)
                 InteractWith(activeInteractable);
         }
     }
 
-    public void AddPowerUp(PowerUp powerUp) => characterClass.AddPowerUp(powerUp);
-    public void RemovePowerUp(PowerUp powerUp) => characterClass.RemovePowerUp(powerUp);
-    public List<PowerUp> GetPowerUpList() => characterClass.GetPowerUpList();
-
-    public void UnlockUpgrade(AbilityUpgrade abilityUpgrade) => characterClass.UnlockUpgrade(abilityUpgrade);
-
-    public void SetCharacterData(CharacterData newCharData)
-    {
-        characterClass.Disable(this);
-        Destroy(characterClass.gameObject);
-        characterData = newCharData;
-        characterData.Inizialize(this);
-    }
-
-    public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
-    public Rigidbody GetRigidBody() => rb;
-
-    public virtual void TakeDamage(DamageData data) => characterClass.TakeDamage(data);
-    
-
-    #region InteractionSystem
     public void InteractWith(IInteractable interactable)
     {
         activeInteractable.Interact(this);
@@ -85,15 +80,5 @@ public class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
         activeInteractable = interactable;
         canInteract = false;
     }
-
-    //modifiche
-
-    //public float GetDamage() => characterClass.GetDamage();
-
-    public DamageData GetDamageData() => characterClass.GetDamageData();
-
-    //fine modifiche
-
-
     #endregion
 }

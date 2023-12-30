@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class StunCondition : Condition
 {
-    private CharacterClass characterClass;
+    private Character characterClass;
     private float duration;
     private bool started;
     private float timer;
 
-    public override void AddCondition(CharacterClass parent)
+    public override void AddCondition(Character parent)
     {
         transform.parent = parent.transform;
         base.AddCondition(parent);
-        characterClass = GetComponentInParent<CharacterClass>();    
+        characterClass = GetComponentInParent<Character>();    
         Debug.Log(transform.parent.name + " sono sotto STUN per " + duration + " secondi");
     }
 
-    public override void RemoveCondition(CharacterClass parent)
+    public override void RemoveCondition(Character parent)
     {
         characterClass.stunned = false;
         Debug.Log(parent.name + " non sono più sotto STUN");

@@ -630,7 +630,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b18d651622bf64438b65fd1593eb40c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stunned: 0
+  maxHp: 200
+  damage: 10
+  attackSpeed: 1
+  moveSpeed: 10
+  uniqueAbilityCooldown: 5
+  uniqueAbilityCooldownIncreaseAtUse: 2
   currentHp: 0
   timeCheckAttackType: 0.2
   chargedAttackTimer: 2.5
@@ -645,11 +650,11 @@ MonoBehaviour:
   aggroRange: 100
   aggroDuration: 10
   HealthDamageReduction: 50
-  staminaDamageReduction: 50
+  StaminaDamageReduction: 0
   attacksToBlockForUpgrade: 10
   cooldownExtraAbility: 0
   chargedAttackStunDuration: 5
-  stunDurationMultiplier: 0
+  additionalStunDuration: 5
 --- !u!1 &6448158649070872344
 GameObject:
   m_ObjectHideFlags: 0

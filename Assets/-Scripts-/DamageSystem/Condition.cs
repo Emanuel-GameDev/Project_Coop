@@ -2,13 +2,13 @@
 
 public class Condition : MonoBehaviour
 {
-    CharacterClass parent;
-    public virtual void AddCondition(CharacterClass parent)
+    Character parent;
+    public virtual void AddCondition(Character parent)
     {
         this.parent = parent;
         transform.parent = parent.transform;
     }
-    public virtual void RemoveCondition(CharacterClass parent)
+    public virtual void RemoveCondition(Character parent)
     {
         parent.RemoveFromConditions(this);
         parent = null; 
