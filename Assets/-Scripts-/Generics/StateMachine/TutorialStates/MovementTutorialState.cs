@@ -19,15 +19,15 @@ public class MovementTutorialState : State
     public override void Enter()
     {
         base.Enter();
-        tutorialManager.OnMovementFaseStart.Invoke();
+        //tutorialManager.OnMovementFaseStart.Invoke();
 
     }
     bool check = false;
 
     public override void Update()
     {
-        base.Enter();
-        tutorialManager.StartCoroutine(Count());
+        base.Update();
+        //tutorialManager.StartCoroutine(Count());
 
         if (!check)
         {
@@ -46,13 +46,13 @@ public class MovementTutorialState : State
 
     public override void Exit()
     {
-        base.Enter();
-        tutorialManager.OnMovementFaseEnd.Invoke();
+        base.Exit();
+        //tutorialManager.OnMovementFaseEnd.Invoke();
     }
 
-    IEnumerator Count()
-    {
-        yield return new WaitForSeconds(tutorialManager.faseLenght);
-        tutorialManager.stateMachine.SetState(TutorialFase.Attack);
-    }
+    //IEnumerator Count()
+    //{
+    //    //yield return new WaitForSeconds(tutorialManager.faseLenght);
+    //    tutorialManager.stateMachine.SetState(TutorialFase.Attack);
+    //}
 }

@@ -21,7 +21,7 @@ public class DodgeTutorialState : State
 
     public override void Update()
     {
-        base.Enter();
+        base.Update();
 
 
     }
@@ -29,6 +29,6 @@ public class DodgeTutorialState : State
 
     public override void Exit()
     {
-        base.Enter();
+        base.Exit();
     }
 }

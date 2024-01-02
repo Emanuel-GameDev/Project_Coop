@@ -19,13 +19,14 @@ public class IntermediateTutorialFase : State
 
     public override void Update()
     {
-        base.Enter();
+        base.Update();
         
     }
 
 
     public override void Exit()
     {
-        base.Enter();
+        base.Exit();
+
     }
 }
