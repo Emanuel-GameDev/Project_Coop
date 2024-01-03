@@ -21,7 +21,9 @@ public class SlotRow : MonoBehaviour
             GameObject slot = new GameObject($"slot #{i}");
             slot.transform.SetParent(gameObject.transform, true);
 
-            slot.AddComponent<Slot>().Sprite=mouseSprite;
+            slot.AddComponent<Slot>();
+            slot.GetComponent<Slot>().Sprite=mouseSprite;
+            
   
             
             
