@@ -20,6 +20,7 @@ public class EnemyCharacter : Character
     protected PowerUpData powerUpData;
 
     public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
+    public float MoveSpeed => moveSpeed;
     [HideInInspector]
     public float currentHp;
     

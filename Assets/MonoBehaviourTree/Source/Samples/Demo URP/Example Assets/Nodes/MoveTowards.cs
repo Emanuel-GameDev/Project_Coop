@@ -18,6 +18,7 @@ namespace MBTExample
         {
             Vector3 target = targetPosition.Value;
             Transform obj = transformToMove.Value;
+
             // Move as long as distance is greater than min. distance
             float dist = Vector3.Distance(target, obj.position);
             if (dist > minDistance)
