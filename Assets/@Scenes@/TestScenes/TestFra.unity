@@ -1363,7 +1363,6 @@ GameObject:
   - component: {fileID: 1668820703}
   - component: {fileID: 1668820706}
   - component: {fileID: 1668820705}
-  - component: {fileID: 1668820704}
   m_Layer: 7
   m_Name: BehaviorTree
   m_TagString: Untagged
@@ -1427,7 +1426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25af8627659c6949b60949c3aa8d91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedEditorNode: {fileID: 0}
+  selectedEditorNode: {fileID: 1668820697}
   repeatOnFinish: 0
   maxExecutionsPerTick: 1000
   parent: {fileID: 0}
@@ -1474,7 +1473,7 @@ MonoBehaviour:
   rect:
     serializedVersion: 2
     x: 280
-    y: 100
+    y: 120
     width: 160
     height: 45
   parent: {fileID: 0}
@@ -1540,7 +1539,7 @@ MonoBehaviour:
   title: Wait
   rect:
     serializedVersion: 2
-    x: 0
+    x: 20
     y: 480
     width: 160
     height: 45
@@ -1600,7 +1599,7 @@ MonoBehaviour:
   title: 'Attacco Carica '
   rect:
     serializedVersion: 2
-    x: -160
+    x: -180
     y: 480
     width: 160
     height: 45
@@ -1693,44 +1692,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: targetTransform
   val: {fileID: 1953718719}
---- !u!114 &1668820704
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1668820673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea825aa2e7214af419a5aa40843b9dbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: Move Towards
-  rect:
-    serializedVersion: 2
-    x: 280
-    y: 480
-    width: 160
-    height: 45
-  parent: {fileID: 1668820705}
-  children: []
-  behaviourTree: {fileID: 0}
-  runtimePriority: 0
-  breakpoint: 0
-  targetPosition:
-    useConstant: 0
-    mode: 0
-    blackboard: {fileID: 0}
-    key: 
-    constantValue: {x: 0, y: 0, z: 0}
-  transformToMove:
-    useConstant: 0
-    mode: 0
-    blackboard: {fileID: 0}
-    key: 
-    constantValue: {fileID: 0}
-  speed: 0.1
-  minDistance: 0
 --- !u!114 &1668820705
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -1751,8 +1712,7 @@ MonoBehaviour:
     width: 160
     height: 45
   parent: {fileID: 1668820681}
-  children:
-  - {fileID: 1668820704}
+  children: []
   behaviourTree: {fileID: 0}
   runtimePriority: 0
   breakpoint: 0
