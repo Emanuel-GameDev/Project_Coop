@@ -15,47 +15,59 @@ namespace MBTExample
         public float chargeTimer = 2;        
         public float minDistance = 0.1f;
 
-        private BossCharacter character;
-        private bool canCharge;
-        private float speed;
+        private TutorialBossCharacter bossCharacter;
+        private bool started = false;
+        private bool mustStop = false;
+        private float tempTimer;        
+        private Vector3 targetPosition;
 
         public override void OnEnter()
         {
-          character = parentGameObject.Value.GetComponent<BossCharacter>();
+            bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
+            targetPosition = targetTransform.Value.position;
+
+            started = false;
+            mustStop = false;
+
+            Vector3 direction = (targetPosition-bossCharacter.transform.position).normalized;
+            targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), 0,(direction.z * bossCharacter.chargeDistance)) + bossCharacter.transform.position; 
+
             Debug.Log("Start Charge Timer");
-            Invoke(nameof(SetChargeTrue),chargeTimer);
+            tempTimer = 0;
+            
         }
-
-        private void SetChargeTrue()
-        {
-            Debug.Log("StartCharge");
-           canCharge = true;
-        }
-
+      
         public override NodeResult Execute()
-        {
-            Vector3 target = targetTransform.Value.position;
-            GameObject obj = parentGameObject.Value;
-            speed = character.MoveSpeed;
-
-            if (canCharge)
+        {           
+                  
+            if(tempTimer > chargeTimer)
             {
-
-                float dist = Vector3.Distance(target, obj.transform.position);
-
-                if (dist > minDistance)
+                if (!started)
                 {
-                    // Move towards target
-                    obj.transform.position = Vector3.MoveTowards(obj.transform.position, target,
-                        (speed > dist) ? dist : speed
-                    );
+                    Debug.Log("partito");
+                    bossCharacter.Agent.isStopped = false;
+                    bossCharacter.Agent.speed = bossCharacter.chargeSpeed;
+                    bossCharacter.Agent.SetDestination(targetPosition);
+                    started = true;
 
-                    return NodeResult.running;
                 }
-                else
+
+                float dist = Vector3.Distance(targetPosition, bossCharacter.transform.position);
+                Debug.Log(dist);
+
+               
+                
+                if(mustStop || dist <= minDistance)
                 {
+                    
+                    bossCharacter.Agent.isStopped = true;
                     return NodeResult.success;
                 }
+            }
+
+            else
+            {
+                tempTimer += Time.deltaTime;               
             }
 
             return NodeResult.running;

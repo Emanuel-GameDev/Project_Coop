@@ -358,6 +358,7 @@ GameObject:
   - component: {fileID: 371867644}
   - component: {fileID: 371867643}
   - component: {fileID: 371867642}
+  - component: {fileID: 371867646}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -447,11 +448,42 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1.17, z: 0}
-  m_LocalScale: {x: 9.07631, y: 9.07631, z: 9.07631}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &371867646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371867641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: cf1e20e3291fcdd43a407763f4317f5b, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &460124071
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,6 +498,7 @@ GameObject:
   - component: {fileID: 460124074}
   - component: {fileID: 460124073}
   - component: {fileID: 460124079}
+  - component: {fileID: 460124080}
   m_Layer: 7
   m_Name: prova boss
   m_TagString: Untagged
@@ -607,8 +640,34 @@ MonoBehaviour:
   damage: 0
   staminaDamage: 0
   attackSpeed: 0
-  moveSpeed: 0
+  moveSpeed: 2
   currentHp: 0
+  chargeTimer: 2
+  chargeDuration: 0
+  chargeSpeed: 3
+  chargeDistance: 5
+--- !u!195 &460124080
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 460124071}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5000001
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!114 &625846840 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1288784341824941607, guid: 5e4e7b014c3a19945af8275465d7addf,
@@ -1080,12 +1139,6 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!4 &1440639579 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2294395373234744904, guid: 34f950e3c8f98484a99f7ed9d42fd12a,
-    type: 3}
-  m_PrefabInstance: {fileID: 726468915}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1668384896
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1296,16 +1349,21 @@ GameObject:
   - component: {fileID: 1668820675}
   - component: {fileID: 1668820677}
   - component: {fileID: 1668820683}
-  - component: {fileID: 1668820682}
   - component: {fileID: 1668820681}
-  - component: {fileID: 1668820689}
   - component: {fileID: 1668820688}
   - component: {fileID: 1668820684}
   - component: {fileID: 1668820690}
-  - component: {fileID: 1668820691}
-  - component: {fileID: 1668820692}
   - component: {fileID: 1668820694}
-  - component: {fileID: 1668820693}
+  - component: {fileID: 1668820695}
+  - component: {fileID: 1668820698}
+  - component: {fileID: 1668820697}
+  - component: {fileID: 1668820696}
+  - component: {fileID: 1668820702}
+  - component: {fileID: 1668820699}
+  - component: {fileID: 1668820703}
+  - component: {fileID: 1668820706}
+  - component: {fileID: 1668820705}
+  - component: {fileID: 1668820704}
   m_Layer: 7
   m_Name: BehaviorTree
   m_TagString: Untagged
@@ -1341,10 +1399,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   variables:
-  - {fileID: 1668820688}
-  - {fileID: 1668820684}
-  - {fileID: 1668820690}
-  - {fileID: 1668820692}
+  - {fileID: 1668820699}
+  - {fileID: 1668820703}
   masterBlackboard: {fileID: 0}
 --- !u!114 &1668820676
 MonoBehaviour:
@@ -1371,7 +1427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25af8627659c6949b60949c3aa8d91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedEditorNode: {fileID: 1668820694}
+  selectedEditorNode: {fileID: 0}
   repeatOnFinish: 0
   maxExecutionsPerTick: 1000
   parent: {fileID: 0}
@@ -1391,44 +1447,17 @@ MonoBehaviour:
   rect:
     serializedVersion: 2
     x: 280
-    y: 320
+    y: 280
     width: 160
     height: 45
-  parent: {fileID: 1668820682}
+  parent: {fileID: 1668820698}
   children:
-  - {fileID: 1668820689}
+  - {fileID: 1668820706}
+  - {fileID: 1668820705}
   behaviourTree: {fileID: 0}
   runtimePriority: 0
   breakpoint: 0
   random: 0
---- !u!114 &1668820682
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1668820673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 056841afaed742d4e909e76361b5173f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: Repeater
-  rect:
-    serializedVersion: 2
-    x: 280
-    y: 240
-    width: 160
-    height: 45
-  parent: {fileID: 1668820683}
-  children:
-  - {fileID: 1668820681}
-  behaviourTree: {fileID: 0}
-  runtimePriority: 0
-  breakpoint: 0
-  loops: 0
-  infinite: 1
-  breakOnFailure: 0
 --- !u!114 &1668820683
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -1444,13 +1473,13 @@ MonoBehaviour:
   title: Root
   rect:
     serializedVersion: 2
-    x: 279
-    y: 168
+    x: 280
+    y: 100
     width: 160
     height: 45
   parent: {fileID: 0}
   children:
-  - {fileID: 1668820682}
+  - {fileID: 1668820698}
   behaviourTree: {fileID: 0}
   runtimePriority: 0
   breakpoint: 0
@@ -1482,52 +1511,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: underAggro
   val: 0
---- !u!114 &1668820689
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1668820673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 534e3ec7de6cd444e984c2e7f68e42e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: IsUnderAggro
-  rect:
-    serializedVersion: 2
-    x: 140
-    y: 400
-    width: 160
-    height: 45
-  parent: {fileID: 1668820681}
-  children:
-  - {fileID: 1668820693}
-  behaviourTree: {fileID: 0}
-  runtimePriority: 0
-  breakpoint: 0
-  abort: 0
-  invert: 0
-  type: 0
-  boolReference:
-    useConstant: 0
-    mode: 1
-    blackboard: {fileID: 1668820675}
-    key: underAggro
-    constantValue: 0
-  objectReference:
-    useConstant: 0
-    mode: 1
-    blackboard: {fileID: 0}
-    key: 
-    constantValue: {fileID: 0}
-  transformReference:
-    useConstant: 0
-    mode: 1
-    blackboard: {fileID: 0}
-    key: 
-    constantValue: {fileID: 0}
 --- !u!114 &1668820690
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -1541,86 +1524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: targetPlayerTransform
-  val: {fileID: 1440639579}
---- !u!114 &1668820691
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1668820673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea825aa2e7214af419a5aa40843b9dbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: Move Towards
-  rect:
-    serializedVersion: 2
-    x: 140
-    y: 580
-    width: 160
-    height: 45
-  parent: {fileID: 1668820693}
-  children: []
-  behaviourTree: {fileID: 0}
-  runtimePriority: 0
-  breakpoint: 0
-  targetPosition:
-    useConstant: 0
-    mode: 0
-    blackboard: {fileID: 1668820675}
-    key: sgdesgf
-    constantValue: {x: 0, y: 0, z: 0}
-  transformToMove:
-    useConstant: 0
-    mode: 0
-    blackboard: {fileID: 1668820675}
-    key: targetPlayerTransform
-    constantValue: {fileID: 0}
-  speed: 0.1
-  minDistance: 0.1
---- !u!114 &1668820692
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1668820673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51272808e3662eb4286c82f38f91fae9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  key: sgdesgf
-  val: {x: 0, y: 0, z: 0}
---- !u!114 &1668820693
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1668820673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c78c7da6b00e1b46bad07949050f82f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: Sequence
-  rect:
-    serializedVersion: 2
-    x: 152
-    y: 493
-    width: 160
-    height: 45
-  parent: {fileID: 1668820689}
-  children:
-  - {fileID: 1668820691}
-  - {fileID: 1668820694}
-  behaviourTree: {fileID: 0}
-  runtimePriority: 0
-  breakpoint: 0
-  random: 0
+  val: {fileID: 1953718719}
 --- !u!114 &1668820694
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -1636,11 +1540,11 @@ MonoBehaviour:
   title: Wait
   rect:
     serializedVersion: 2
-    x: 380
-    y: 560
+    x: 0
+    y: 480
     width: 160
     height: 45
-  parent: {fileID: 1668820693}
+  parent: {fileID: 1668820706}
   children: []
   behaviourTree: {fileID: 0}
   runtimePriority: 0
@@ -1653,6 +1557,235 @@ MonoBehaviour:
     constantValue: 3
   randomDeviation: 0
   continueOnRestart: 0
+--- !u!114 &1668820695
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51272808e3662eb4286c82f38f91fae9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: targetPlayerPosition
+  val: {x: 0, y: 0, z: 0}
+--- !u!114 &1668820696
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbc98ff6538275b4c9a8383882546ee9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: cacca
+  val: {fileID: 0}
+--- !u!114 &1668820697
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad65a1b017a15e64abcbb2c4045514d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 'Attacco Carica '
+  rect:
+    serializedVersion: 2
+    x: -160
+    y: 480
+    width: 160
+    height: 45
+  parent: {fileID: 1668820706}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  targetTransform:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: targetTransform
+    constantValue: {fileID: 0}
+  parentGameObject:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: BossParent
+    constantValue: {fileID: 0}
+  chargeTimer: 1.5
+  minDistance: 0.2
+--- !u!114 &1668820698
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 056841afaed742d4e909e76361b5173f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Repeater
+  rect:
+    serializedVersion: 2
+    x: 280
+    y: 200
+    width: 160
+    height: 45
+  parent: {fileID: 1668820683}
+  children:
+  - {fileID: 1668820681}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  loops: 0
+  infinite: 1
+  breakOnFailure: 0
+--- !u!114 &1668820699
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cdb61a66fcb1c549a844f093811f6c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: BossParent
+  val: {fileID: 460124071}
+--- !u!114 &1668820702
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae15c5e6bcb1714080f2e8296c3d17a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: c
+  val: 0
+--- !u!114 &1668820703
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbc98ff6538275b4c9a8383882546ee9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: targetTransform
+  val: {fileID: 1953718719}
+--- !u!114 &1668820704
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea825aa2e7214af419a5aa40843b9dbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Move Towards
+  rect:
+    serializedVersion: 2
+    x: 280
+    y: 480
+    width: 160
+    height: 45
+  parent: {fileID: 1668820705}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  targetPosition:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: {x: 0, y: 0, z: 0}
+  transformToMove:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: {fileID: 0}
+  speed: 0.1
+  minDistance: 0
+--- !u!114 &1668820705
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 056841afaed742d4e909e76361b5173f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Repeater
+  rect:
+    serializedVersion: 2
+    x: 280
+    y: 380
+    width: 160
+    height: 45
+  parent: {fileID: 1668820681}
+  children:
+  - {fileID: 1668820704}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  loops: 3
+  infinite: 0
+  breakOnFailure: 0
+--- !u!114 &1668820706
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c78c7da6b00e1b46bad07949050f82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Sequence
+  rect:
+    serializedVersion: 2
+    x: -80
+    y: 380
+    width: 160
+    height: 45
+  parent: {fileID: 1668820681}
+  children:
+  - {fileID: 1668820697}
+  - {fileID: 1668820694}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  random: 0
 --- !u!1 &1953718714
 GameObject:
   m_ObjectHideFlags: 0
@@ -1780,7 +1913,7 @@ Transform:
   m_GameObject: {fileID: 1953718714}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.34, y: 0, z: -2.75}
+  m_LocalPosition: {x: 1.34, y: 6.81, z: -2.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
