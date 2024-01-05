@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DodgeTutorialState : State
+public class DodgeTutorialState : TutorialFase
 {
     TutorialManager tutorialManager;
 

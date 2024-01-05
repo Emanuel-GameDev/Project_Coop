@@ -9,5 +9,14 @@ public class TutorialBossCharacter : BossCharacter
     public float chargeDuration;
     public float chargeSpeed;
     public float chargeDistance;
-  
+
+    StateMachine<TutorialBossState> stateMachine = new();
+
+
+    private void Start()
+    {
+        stateMachine.SetState(new FlurryOfBlows(this));
+        TargetSection();
+    }
+
 }

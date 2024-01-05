@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class MovementTutorialState : State
+public class MovementTutorialState : TutorialFase
 {
     TutorialManager tutorialManager;
     [SerializeField] Dialogue dialogo;
@@ -42,6 +42,6 @@ public class MovementTutorialState : State
     {
         Debug.Log("waiting");
         yield return new WaitForSeconds(10);
-        tutorialManager.stateMachine.SetState(TutorialFase.Attack);
+        tutorialManager.stateMachine.SetState(new AttackTutorialState(tutorialManager));
     }
 }
