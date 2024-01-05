@@ -20,7 +20,7 @@ public class EnemyCharacter : Character
     protected Animator animator;
     protected NavMeshAgent agent;
     protected PowerUpData powerUpData;
-    protected Transform target;
+    public Transform target;
 
     public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
     public float MoveSpeed => moveSpeed;
