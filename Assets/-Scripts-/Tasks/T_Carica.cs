@@ -8,7 +8,7 @@ namespace MBTExample
 {
     [AddComponentMenu("")]
     [MBTNode("Custom Taks/Attacco Carica ")]
-    public class T_Attack : Leaf
+    public class T_Carica : Leaf
     {
         public TransformReference targetTransform;
         public GameObjectReference parentGameObject;
@@ -53,10 +53,7 @@ namespace MBTExample
                 }
 
                 float dist = Vector3.Distance(targetPosition, bossCharacter.transform.position);
-                Debug.Log(dist);
-
                
-                
                 if(mustStop || dist <= minDistance)
                 {
                     
