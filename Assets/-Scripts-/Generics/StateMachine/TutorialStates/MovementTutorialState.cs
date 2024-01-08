@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class MovementTutorialState : State
 {
@@ -19,7 +20,18 @@ public class MovementTutorialState : State
     public override void Enter()
     {
         base.Enter();
-        //tutorialManager.OnMovementFaseStart.Invoke();
+
+        tutorialManager.DeactivatePlayerInput(tutorialManager.dps);
+        tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
+        tutorialManager.DeactivatePlayerInput(tutorialManager.ranged);
+        tutorialManager.DeactivatePlayerInput(tutorialManager.tank);
+
+        tutorialManager.OnMovementFaseStart.Invoke();
+
+        tutorialManager.dps.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.healer.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.ranged.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
 
     }
     bool check = false;
@@ -29,13 +41,14 @@ public class MovementTutorialState : State
         base.Update();
         //tutorialManager.StartCoroutine(Count());
 
+        
+
         if (!check)
         {
             foreach (PlayerCharacter p in GameManager.Instance.coopManager.activePlayers)
             {
                 if(p.MoveDirection!=Vector2.zero)
                 {
-                    Debug.Log(check);
                     check=true;
                 }
             }
@@ -50,9 +63,4 @@ public class MovementTutorialState : State
         //tutorialManager.OnMovementFaseEnd.Invoke();
     }
 
-    //IEnumerator Count()
-    //{
-    //    //yield return new WaitForSeconds(tutorialManager.faseLenght);
-    //    tutorialManager.stateMachine.SetState(TutorialFase.Attack);
-    //}
 }

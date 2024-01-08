@@ -15,6 +15,27 @@ public class AttackTutorialState : State
     {
         base.Enter();
 
+        PubSub.Instance.RegisterFunction(EMessageType.dpsCombo, AttackCount);
+
+        if (tutorialManager.current is DPS) 
+        {
+            PubSub.Instance.RegisterFunction(EMessageType.dpsCombo, AttackCount);
+        }
+
+        if(tutorialManager.current is Healer)
+        {
+            PubSub.Instance.RegisterFunction(EMessageType.healerCombo, AttackCount);
+        }
+
+        if (tutorialManager.current is Healer)
+        {
+            PubSub.Instance.RegisterFunction(EMessageType.healerCombo, AttackCount);
+        }
+
+        if (tutorialManager.current is Healer)
+        {
+            PubSub.Instance.RegisterFunction(EMessageType.healerCombo, AttackCount);
+        }
 
     }
 
@@ -30,5 +51,11 @@ public class AttackTutorialState : State
     public override void Exit()
     {
         base.Exit();
+    }
+    int i = 0;
+    private void AttackCount(object obj)
+    {
+        i++;
+        Debug.Log(i);
     }
 }
