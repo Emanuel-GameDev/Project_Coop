@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class MovementTutorialState : State
+public class MovementTutorialState : TutorialFase
 {
     TutorialManager tutorialManager;
     [SerializeField] Dialogue dialogo;
@@ -62,5 +62,12 @@ public class MovementTutorialState : State
         base.Exit();
         //tutorialManager.OnMovementFaseEnd.Invoke();
     }
+
+    //IEnumerator Count()
+    //{
+    //    Debug.Log("waiting");
+    //    yield return new WaitForSeconds(10);
+    //    tutorialManager.stateMachine.SetState(new AttackTutorialState(tutorialManager));
+    //}
 
 }

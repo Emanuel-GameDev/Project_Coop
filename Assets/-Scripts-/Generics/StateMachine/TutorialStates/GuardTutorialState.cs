@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuardTutorialState : State
+public class GuardTutorialState : TutorialFase
 {
     TutorialManager tutorialManager;
 

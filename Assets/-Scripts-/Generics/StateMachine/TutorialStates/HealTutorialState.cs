@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealTutorialState : State
+public class HealTutorialState : TutorialFase
 {
     TutorialManager tutorialManager;
 

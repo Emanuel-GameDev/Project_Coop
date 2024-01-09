@@ -6,15 +6,15 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 
-public enum TutorialFase
-{
-    Intermediate,
-    Movement,
-    Attack,
-    Dodge,
-    Guard,
-    Heal
-}
+//public enum TutorialFase
+//{
+//    Intermediate,
+//    Movement,
+//    Attack,
+//    Dodge,
+//    Guard,
+//    Heal
+//}
 
 public class TutorialManager : MonoBehaviour
 {
@@ -78,17 +78,18 @@ public class TutorialManager : MonoBehaviour
 
     private void Start()
     {
-        stateMachine.RegisterState(TutorialFase.Intermediate, new IntermediateTutorialFase(this));
+        //stateMachine.RegisterState(TutorialFase.Intermediate, new IntermediateTutorialFase(this));
 
-        stateMachine.RegisterState(TutorialFase.Movement, new MovementTutorialState(this));
+        //stateMachine.RegisterState(TutorialFase.Movement, new MovementTutorialState(this));
 
-        stateMachine.RegisterState(TutorialFase.Attack, new AttackTutorialState(this));
+        //stateMachine.RegisterState(TutorialFase.Attack, new AttackTutorialState(this));
 
-        stateMachine.RegisterState(TutorialFase.Dodge, new DodgeTutorialState(this));
+        //stateMachine.RegisterState(TutorialFase.Dodge, new DodgeTutorialState(this));
 
-        stateMachine.RegisterState(TutorialFase.Guard, new GuardTutorialState(this));
+        //stateMachine.RegisterState(TutorialFase.Guard, new GuardTutorialState(this));
 
-        stateMachine.RegisterState(TutorialFase.Heal, new HealTutorialState(this));
+        //stateMachine.RegisterState(TutorialFase.Heal, new HealTutorialState(this));
+
 
         ResetScene(null);
 
@@ -96,8 +97,9 @@ public class TutorialManager : MonoBehaviour
         //dps.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
         //OnMovementFaseStart.Invoke();
 
-        stateMachine.SetState(TutorialFase.Movement);
-        
+
+        stateMachine.SetState(new MovementTutorialState(this));
+
     }
 
     private void Update()

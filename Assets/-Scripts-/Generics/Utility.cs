@@ -57,5 +57,14 @@ public static class Utility
         return newCondition;
     }
 
+    public static Vector2 ZtoY(Vector3 vector)
+    {
+        return new Vector2(vector.x, vector.z);
+    }
+
+    public static Vector3 YtoZ(Vector2 vector)
+    {
+        return new Vector3(vector.x, 0 ,vector.y);
+    }
 
 }

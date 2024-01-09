@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class BossCharacter : EnemyCharacter
 {
-   
+    public override void TargetSelection()
+    {
+        base.TargetSelection();
+    }
 }
