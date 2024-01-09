@@ -5,13 +5,11 @@ namespace MBTExample
 {
     [AddComponentMenu("")]
     [MBTNode("Custom Taks/Raffica Di Colpi ")]
-    public class T_RafficaDiColpi : Leaf
+    public class T_FlurryOfBlows : Leaf
     {
         public TransformReference targetTransform;
         public GameObjectReference parentGameObject;
-        public float minDistance = 0.1f;
-        public int attacksNumber;
-
+        
         private TutorialBossCharacter bossCharacter;
         private Vector3 targetPosition;
         private bool mustStop = false;
@@ -29,12 +27,12 @@ namespace MBTExample
         public override NodeResult Execute()
         {
             float dist = Vector3.Distance(targetPosition, bossCharacter.transform.position);
-            if (mustStop || dist <= minDistance)
+            if (mustStop || dist <= bossCharacter.minDistance)
             {
                 bossCharacter.Agent.isStopped = true;
                 attackCount++;
 
-                if (attackCount >= attacksNumber)
+                if (attackCount >= bossCharacter.punchQuantity)
                 {
                     return NodeResult.success;
                 }

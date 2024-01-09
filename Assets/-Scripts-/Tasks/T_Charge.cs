@@ -8,13 +8,12 @@ namespace MBTExample
 {
     [AddComponentMenu("")]
     [MBTNode("Custom Taks/Attacco Carica ")]
-    public class T_Carica : Leaf
+    public class T_Charge : Leaf
     {
         public TransformReference targetTransform;
         public GameObjectReference parentGameObject;
-        public float chargeTimer = 2;        
-        public float minDistance = 0.1f;
 
+        
         private TutorialBossCharacter bossCharacter;
         private bool started = false;
         private bool mustStop = false;
@@ -40,7 +39,7 @@ namespace MBTExample
         public override NodeResult Execute()
         {           
                   
-            if(tempTimer > chargeTimer)
+            if(tempTimer > bossCharacter.chargeTimer)
             {
                 if (!started)
                 {
@@ -54,7 +53,7 @@ namespace MBTExample
 
                 float dist = Vector3.Distance(targetPosition, bossCharacter.transform.position);
                
-                if(mustStop || dist <= minDistance)
+                if(mustStop || dist <= bossCharacter.minDistance)
                 {
                     
                     bossCharacter.Agent.isStopped = true;

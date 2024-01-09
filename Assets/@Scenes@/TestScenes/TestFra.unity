@@ -641,13 +641,16 @@ MonoBehaviour:
   staminaDamage: 0
   attackSpeed: 0
   moveSpeed: 2
+  target: {fileID: 0}
   currentHp: 0
+  minDistance: 0
+  flurryDistance: 0
+  flurrySpeed: 0
+  punchQuantity: 0
   chargeTimer: 2
   chargeDuration: 0
   chargeSpeed: 3
   chargeDistance: 5
-  flurryDistance: 0
-  flurrySpeed: 0
 --- !u!195 &460124080
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1432,7 +1435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25af8627659c6949b60949c3aa8d91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedEditorNode: {fileID: 1668820708}
+  selectedEditorNode: {fileID: 0}
   repeatOnFinish: 0
   maxExecutionsPerTick: 1000
   parent: {fileID: 0}
@@ -1602,7 +1605,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad65a1b017a15e64abcbb2c4045514d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: 'Attacco Carica '
+  title: Charge
   rect:
     serializedVersion: 2
     x: -300
@@ -1626,8 +1629,6 @@ MonoBehaviour:
     blackboard: {fileID: 1668820675}
     key: BossParent
     constantValue: {fileID: 0}
-  chargeTimer: 1.5
-  minDistance: 0.2
 --- !u!114 &1668820698
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -1710,7 +1711,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c78c7da6b00e1b46bad07949050f82f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: Sequence Attacco Carica
+  title: Charge Sequence
   rect:
     serializedVersion: 2
     x: -300
@@ -1770,7 +1771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8b18f16ae1920c40819e3b4510b81eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: 'Raffica Di Colpi '
+  title: Flurry Of Blows
   rect:
     serializedVersion: 2
     x: 280
@@ -1794,8 +1795,6 @@ MonoBehaviour:
     blackboard: {fileID: 1668820675}
     key: BossParent
     constantValue: {fileID: 0}
-  minDistance: 0.1
-  attacksNumber: 2
 --- !u!114 &1668820709
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -1808,7 +1807,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c78c7da6b00e1b46bad07949050f82f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: Sequence Raffica Di Colpi
+  title: Flurry Of Blows Sequence
   rect:
     serializedVersion: 2
     x: 280
@@ -2134,6 +2133,7 @@ MonoBehaviour:
   staminaDamage: 0
   attackSpeed: 0
   moveSpeed: 0
+  target: {fileID: 0}
   currentHp: 0
   totalDamageReceived: 0
 --- !u!136 &8346729711784139038
