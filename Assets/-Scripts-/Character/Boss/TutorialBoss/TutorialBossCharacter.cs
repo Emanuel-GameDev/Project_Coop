@@ -6,7 +6,7 @@ using UnityEngine;
 public class TutorialBossCharacter : BossCharacter
 {
     [Header("Generics")]
-    public float minDistance;
+    public float minDistance = 0.1f;
     [Header("Raffica Di Pugni")]
     public float flurryDistance;
     public float flurrySpeed;
@@ -23,8 +23,13 @@ public class TutorialBossCharacter : BossCharacter
 
     private void Start()
     {
-        stateMachine.SetState(new FlurryOfBlows(this));
+        stateMachine.SetState(new TBCharge(this));
         
+    }
+
+    private void Update()
+    {
+        stateMachine.StateUpdate();
     }
 
 }
