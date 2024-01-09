@@ -8,10 +8,11 @@ public class SlotRow : MonoBehaviour
     [SerializeField] int numberWinSlots;
     [SerializeField] float slotDistance = 0.25f;
 
+    //inserire giocatore scelto
     [SerializeField] private Sprite playerSprite;
     [SerializeField] private Sprite mouseSprite;
 
-    [SerializeField] private List<GameObject> slots;
+    [SerializeField] private List<GameObject> reorderSlots;
 
     [SerializeField] bool stopped;
 
@@ -23,7 +24,7 @@ public class SlotRow : MonoBehaviour
     private void Start()
     {
         stopped = true;
-        slots = new List<GameObject>();
+        reorderSlots = new List<GameObject>();
         InitializeRow();
     }
 
@@ -34,37 +35,65 @@ public class SlotRow : MonoBehaviour
 
     private void InitializeRow()
     {
+        List<GameObject> generatedSlots = new List<GameObject>();
+        int winGenerate = 0;
+
         for (int i = 0; i < numberOfSlots; i++)
         {
             GameObject slot = new GameObject($"slot #{i}");
             slot.transform.SetParent(gameObject.transform, true);
 
             slot.AddComponent<Slot>();
-            slot.GetComponent<Slot>().Sprite = mouseSprite;
 
+            if (winGenerate < numberWinSlots)
+            {
+                slot.GetComponent<Slot>().Sprite = playerSprite;
+                slot.GetComponent<Slot>().Type = slotType.Player;
 
+                winGenerate++;
+            }
+            else
+            {
+                slot.GetComponent<Slot>().Sprite = mouseSprite;
+                slot.GetComponent<Slot>().Type = slotType.Mouse;
+            }
 
+            generatedSlots.Add(slot);
 
-            if (slots.Count == 0)
+            
+
+            
+        }
+
+        for(int i=0; i< numberOfSlots; i++)
+        {
+            int random= Random.Range(0, generatedSlots.Count);
+
+            GameObject slot = generatedSlots[random];
+            generatedSlots.Remove(slot);
+
+            if (reorderSlots.Count == 0)
             {
                 slot.transform.position = gameObject.transform.position;
-                slots.Add(slot);
+                reorderSlots.Add(slot);
                 //inserire varianti
             }
             else
             {
-                GameObject previousSlot = slots[slots.Count - 1];
+                GameObject previousSlot = reorderSlots[reorderSlots.Count - 1];
                 slot.transform.position = new Vector2(previousSlot.transform.position.x, previousSlot.transform.position.y - slotDistance);
-                slots.Add(slot);
+                reorderSlots.Add(slot);
                 //inserire varianti
             }
         }
-        Vector3 firstSlot = slots[0].transform.localPosition;
+
+
+        Vector3 firstSlot = reorderSlots[0].transform.localPosition;
         startRowRotation = new Vector3(firstSlot.x, firstSlot.y-(slotDistance/2) + firstSlot.z);
 
         Debug.Log(startRowRotation.y);
 
-        Vector3 lastSlot = slots[slots.Count - 1].transform.localPosition;
+        Vector3 lastSlot = reorderSlots[reorderSlots.Count - 1].transform.localPosition;
         finalRowRotation=new Vector3(lastSlot.x, lastSlot.y-(slotDistance/2), lastSlot.z);
 
         Debug.Log(finalRowRotation.y);
