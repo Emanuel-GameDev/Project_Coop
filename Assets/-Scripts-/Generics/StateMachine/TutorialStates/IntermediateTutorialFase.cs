@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IntermediateTutorialFase : State
+public class IntermediateTutorialFase : TutorialFase
 {
     TutorialManager tutorialManager;
 
