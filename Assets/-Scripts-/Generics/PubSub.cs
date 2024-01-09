@@ -7,18 +7,6 @@ public enum EMessageType
 {
     comboPerformed,
 
-    dpsCombo,
-    tankCombo,
-    rangedCombo,
-    healerCombo,
-
-    dpsDodge,
-    rangedDodge,
-
-    dpsPerfectDodge,
-    rangedPerfectDodge,
-
-    tankGuard,
 
 }
 
