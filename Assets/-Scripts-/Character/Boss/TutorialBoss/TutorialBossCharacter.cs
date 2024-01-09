@@ -11,6 +11,7 @@ public class TutorialBossCharacter : BossCharacter
     public float chargeDistance;
     public float flurryDistance;
     public float flurrySpeed;
+    public int punchQuantity;
 
     StateMachine<TutorialBossState> stateMachine = new();
 
