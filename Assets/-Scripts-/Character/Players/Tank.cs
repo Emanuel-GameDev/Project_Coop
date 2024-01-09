@@ -74,6 +74,7 @@ public class Tank : CharacterClass
     private bool canPerfectBlock;
     private bool uniqueAbilityReady = true;
     private bool statBoosted;
+    private bool canProtectOther;
 
     private int comboIndex = 0;
     private int comboMax = 2;
@@ -88,6 +89,7 @@ public class Tank : CharacterClass
     private GenericBarScript staminaBar;
     private GameObject chargedAttackAreaObject = null;
     private PerfectTimingHandler perfectBlockHandler;
+    private ProtectPlayers triggerProtectPlayer;
 
 
     public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
@@ -100,7 +102,7 @@ public class Tank : CharacterClass
 
         staminaBar.Setvalue(maxStamina);
         staminaBar.gameObject.SetActive(false);
-
+        triggerProtectPlayer = GetComponentInChildren<ProtectPlayers>();
         perfectBlockHandler = GetComponentInChildren<PerfectTimingHandler>(true);
 
         staminaDamageReductionMulty = (1 - (StaminaDamageReduction / 100));
@@ -323,6 +325,10 @@ public class Tank : CharacterClass
             ShowStaminaBar(true);
             Debug.Log($"is blocking [{isBlocking}]");
 
+            //Trigger che setta ai player protectedByTank a true;
+            triggerProtectPlayer.SetPlayersProtected(true);
+
+
             //eliminare
             mostraGizmoRangeParata = true;
 
@@ -338,6 +344,10 @@ public class Tank : CharacterClass
             ResetStamina();
 
             Debug.Log($"is blocking [{isBlocking}]");
+
+            //Trigger che setta ai player protectedByTank a true;
+            triggerProtectPlayer.SetPlayersProtected(false);
+
 
             //eliminare
             mostraGizmoRangeParata = false;

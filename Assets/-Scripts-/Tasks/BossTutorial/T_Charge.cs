@@ -23,12 +23,11 @@ namespace MBTExample
         public override void OnEnter()
         {
             bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
-            targetPosition = targetTransform.Value.position;
-
+           
             started = false;
             mustStop = false;
 
-            Vector3 direction = (targetPosition-bossCharacter.transform.position).normalized;
+            Vector3 direction = (targetTransform.Value.position -bossCharacter.transform.position).normalized;
             targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), 0,(direction.z * bossCharacter.chargeDistance)) + bossCharacter.transform.position; 
 
             Debug.Log("Start Charge Timer");

@@ -18,12 +18,12 @@ public class TutorialBossCharacter : BossCharacter
     public float chargeDistance;
    
 
-    StateMachine<TutorialBossState> stateMachine = new();
+    //StateMachine<TutorialBossState> stateMachine = new();
 
 
     private void Start()
     {
-        stateMachine.SetState(new FlurryOfBlows(this));
+        //stateMachine.SetState(new FlurryOfBlows(this));
         
     }
 
