@@ -15,17 +15,24 @@ public class SlotRow : MonoBehaviour
     [SerializeField] private List<GameObject> reorderSlots;
 
     [SerializeField] bool stopped;
+    [SerializeField] bool isSlowDown;
 
     [SerializeField] float rotationSpeed;
+    [SerializeField] float stabilitationTime;
 
     private Vector3 finalRowRotation;
     private Vector3 startRowRotation;
+
+    private Vector3 targetPosition;
 
     private void Start()
     {
         stopped = true;
         reorderSlots = new List<GameObject>();
         InitializeRow();
+
+        //momentaneo
+        stopped = false;
     }
 
     private void Update()
@@ -101,7 +108,7 @@ public class SlotRow : MonoBehaviour
 
     public void RotateRow()
     {
-        stopped = false;
+        
 
         if (!stopped)
         {
@@ -113,6 +120,60 @@ public class SlotRow : MonoBehaviour
                 
             }
         }
+        else if (isSlowDown)
+        {
+            isSlowDown = false;
+            StartCoroutine(StabilizateRow(targetPosition));
+        }
         
+
+        if(Input.GetMouseButtonDown(0) && !stopped)
+        {
+            stopped = true;
+
+            StopRow();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            stopped = false;
+        }
+        
+    }
+
+    public void StopRow()
+    {
+        Debug.Log(transform.localPosition.y % slotDistance);
+
+        Vector3 targetDistance=Vector3.zero;
+        isSlowDown = true;
+
+        if(transform.localPosition.y % slotDistance > (slotDistance/2))
+        {
+            targetDistance = new Vector3(transform.localPosition.x, transform.localPosition.y + (slotDistance- (transform.localPosition.y % slotDistance)));  //non ok
+        }
+
+        if(transform.localPosition.y % slotDistance <= (slotDistance/2))
+        {
+            targetDistance = new Vector3(transform.localPosition.x, transform.localPosition.y - (transform.localPosition.y % slotDistance)); //ok
+        }
+
+        targetPosition = targetDistance;
+
+        Debug.LogFormat("Target Position : {0} , Posizione iniziale : {1}",targetPosition,transform.localPosition);
+    }
+
+    IEnumerator StabilizateRow(Vector3 target)
+    {
+        float elapsedTime = 0;
+
+        while (elapsedTime < stabilitationTime)
+        {
+            transform.localPosition = Vector3.Lerp(transform.localPosition, target, (elapsedTime/stabilitationTime));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localPosition = targetPosition;
     }
 }
