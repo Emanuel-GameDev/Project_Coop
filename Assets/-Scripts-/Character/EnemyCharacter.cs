@@ -25,6 +25,7 @@ public class EnemyCharacter : Character
     public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
     public float MoveSpeed => moveSpeed;
     public NavMeshAgent Agent => agent;
+    public Transform Target => target;
 
     [HideInInspector]
     public float currentHp;
