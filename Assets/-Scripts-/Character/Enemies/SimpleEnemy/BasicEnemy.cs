@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BasicEnemy : EnemyCharacter
 {
@@ -13,11 +14,27 @@ public class BasicEnemy : EnemyCharacter
     //di prova
     [SerializeField] Transform tryTarget;
 
+    [SerializeField] NavMeshAgent agent1;
+    NavMeshPath path;
 
+
+    private void Start()
+    {
+        path = new NavMeshPath();
+    }
     private void Update()
     {
+        if (agent1.CalculatePath(tryTarget.position, path))
+        {
+            for(int i = 0; i < path.corners.Length;i++)
+            {
+                Debug.Log(path.corners[i]);
+            }
+            Move(path.corners[1] - path.corners[0], rb);
 
-        Move(FindDirection(), rb);
+        }
+        else
+            rb.velocity = Vector3.zero;
     }
 
     public virtual void Move(Vector3 direction, Rigidbody rb)
@@ -67,5 +84,13 @@ public class BasicEnemy : EnemyCharacter
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, stoppingDistance);
+        if(path != null)
+        {
+            if (path.corners.Length > 0)
+            {
+                Gizmos.DrawLineList(path.corners);
+            }
+
+        }
     }
 }
