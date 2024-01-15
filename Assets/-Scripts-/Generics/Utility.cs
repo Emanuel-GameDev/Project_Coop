@@ -64,7 +64,14 @@ public static class Utility
 
     public static Vector3 YtoZ(Vector2 vector)
     {
-        return new Vector3(vector.x, 0 ,vector.y);
+        return new Vector3(vector.x, 0, vector.y);
+    }
+
+    public static float DistanceV3toV2(Vector3 v1, Vector3 v2)
+    {
+        Vector2 first = ZtoY(v1);
+        Vector2 second = ZtoY(v2);
+        return Vector2.Distance(first, second);
     }
 
 }

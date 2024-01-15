@@ -26,4 +26,9 @@ public abstract class TutorialBossState : State<TutorialBossState>
         bossCharacter.Agent.speed = speed;
         bossCharacter.Agent.SetDestination(destination);
     }
+
+    public override void Exit()
+    {
+        bossCharacter.Agent.isStopped = true;
+    }
 }

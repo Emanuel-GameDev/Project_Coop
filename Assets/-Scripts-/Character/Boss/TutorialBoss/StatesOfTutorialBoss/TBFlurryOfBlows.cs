@@ -17,11 +17,6 @@ public class TBFlurryOfBlows : TutorialBossState
         punchCount = 0;
     }
 
-    public override void Exit()
-    {
-        base.Exit();
-    }
-
     public override void Update()
     {
         float dist = Vector2.Distance(Utility.ZtoY(destination), Utility.ZtoY(bossCharacter.transform.position));
@@ -41,7 +36,4 @@ public class TBFlurryOfBlows : TutorialBossState
             }
         }
     }
-
-   
-
 }
