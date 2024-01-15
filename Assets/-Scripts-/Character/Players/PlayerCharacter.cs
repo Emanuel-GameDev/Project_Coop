@@ -12,6 +12,7 @@ public class PlayerCharacter : Character
     public float MaxHp => characterClass.MaxHp;
     public float CurrentHp => characterClass.currentHp;
     public bool protectedByTank;
+    public bool blockedByTank;
 
     private Vector3 screenPosition;
     private Vector3 worldPosition;
@@ -59,7 +60,7 @@ public class PlayerCharacter : Character
     public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
     public override void TakeDamage(DamageData data)
     {
-        if (protectedByTank)
+        if (protectedByTank && data.blockedByTank)
         {
             Debug.Log("Protetto da tank");
         }

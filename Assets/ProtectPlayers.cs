@@ -14,17 +14,17 @@ public class ProtectPlayers : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.GetComponent<PlayerCharacter>())
+        if(other.TryGetComponent<PlayerCharacter>(out var playerToProtect))
         {
-            characterList.Add(other.GetComponent<PlayerCharacter>());
+            characterList.Add(playerToProtect);
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<PlayerCharacter>())
+        if (other.TryGetComponent<PlayerCharacter>(out var playerToProtect))
         {
-            other.GetComponent<PlayerCharacter>().protectedByTank = false;
-            characterList.Remove(other.GetComponent<PlayerCharacter>());
+            playerToProtect.protectedByTank = false;
+            characterList.Remove(playerToProtect);
         }
     }
 
