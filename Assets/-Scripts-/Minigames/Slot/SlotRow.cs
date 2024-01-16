@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class SlotRow : MonoBehaviour
 {
@@ -26,9 +27,11 @@ public class SlotRow : MonoBehaviour
     private Vector3 targetPosition;
 
     [SerializeField] private Slot selectedSlot;
+    private Slotmachine mainMachine;
 
     private void Start()
     {
+        mainMachine = GetComponentInParent<Slotmachine>();
         stopped = true;
         selectedSlot = null; //reset della slot presa
         reorderSlots = new List<GameObject>();
@@ -196,8 +199,16 @@ public class SlotRow : MonoBehaviour
         int stoppedPosition = (int)(transform.localPosition.y / slotDistance);
 
         selectedSlot = reorderSlots[stoppedPosition].GetComponent<Slot>();
+
+        
+        if (GameObject.ReferenceEquals(mainMachine.GetLastRow(), gameObject))
+        {
+            Debug.Log(gameObject);
+            //mainMachine.CheckForWin();  //non gli va bene quando si fermano tutte e 4 contemporeamente
+        }
     }
 
+    
     public Slot GetSelectedSlot()
     {
         return selectedSlot;

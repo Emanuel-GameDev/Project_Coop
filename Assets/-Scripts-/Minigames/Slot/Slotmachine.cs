@@ -38,7 +38,7 @@ public class Slotmachine : MonoBehaviour
         }
     }
 
-    private void CheckForWin()
+    public void CheckForWin()
     {
         win = true;
 
@@ -59,5 +59,10 @@ public class Slotmachine : MonoBehaviour
         {
             Debug.Log("avete perso");
         }
+    }
+
+    public GameObject GetLastRow()
+    {
+        return rows[rows.Count - 1].gameObject;
     }
 }
