@@ -14,7 +14,6 @@ public enum AbilityUpgrade
     Ability5
 }
 
-
 public class CharacterClass : MonoBehaviour
 {
     protected Animator animator;
