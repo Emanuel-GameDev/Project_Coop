@@ -15,6 +15,7 @@ namespace MBTExample
         public GameObjectReference parentGameObject;
 
         private TutorialBossCharacter bossCharacter;
+        private Vector3 targetPosition;
         private float tempTimer;
         public override void OnEnter()
         {
@@ -44,4 +45,3 @@ namespace MBTExample
 
     }
     }
-}
