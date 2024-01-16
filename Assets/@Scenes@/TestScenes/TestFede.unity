@@ -243,19 +243,19 @@ PrefabInstance:
         type: 3}
       propertyPath: switchPlayerDown
       value: 
-      objectReference: {fileID: 11400000, guid: 3a1871dd2aba407458b334eaba249754,
+      objectReference: {fileID: 11400000, guid: 1a573e06df62dfd4396e71e6ae830f9c,
         type: 2}
     - target: {fileID: 3661803240820020965, guid: 5e4e7b014c3a19945af8275465d7addf,
         type: 3}
       propertyPath: switchPlayerLeft
       value: 
-      objectReference: {fileID: 11400000, guid: 3a1871dd2aba407458b334eaba249754,
+      objectReference: {fileID: 11400000, guid: b017b230f81f3e94697a48f7683f3b1e,
         type: 2}
     - target: {fileID: 3661803240820020965, guid: 5e4e7b014c3a19945af8275465d7addf,
         type: 3}
       propertyPath: switchPlayerRight
       value: 
-      objectReference: {fileID: 11400000, guid: 3a1871dd2aba407458b334eaba249754,
+      objectReference: {fileID: 11400000, guid: 80e35bc4125873b45b0a1321251987d9,
         type: 2}
     - target: {fileID: 9130741212122425162, guid: 5e4e7b014c3a19945af8275465d7addf,
         type: 3}
@@ -863,7 +863,7 @@ GameObject:
   - component: {fileID: 1576236099}
   - component: {fileID: 1576236098}
   - component: {fileID: 1576236101}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -1099,7 +1099,7 @@ GameObject:
   - component: {fileID: 1407005798687121722}
   - component: {fileID: 2877958561758696961}
   - component: {fileID: 5732020842592271402}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ranged
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1386,6 +1386,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 42e63258-31a6-4d7d-b6cc-02d8b80cc69f
     m_ActionName: Player/Switch4[/XInputControllerWindows/dpad/left,/XInputControllerWindows1/dpad/left,/Keyboard/4]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 85efb363-392f-4bbc-aff9-19e731dd404c
+    m_ActionName: Player/Interact[/Keyboard/f]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
@@ -1468,7 +1472,7 @@ Transform:
   m_GameObject: {fileID: 2263756053185837389}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.94, y: 1.2, z: 2.79}
+  m_LocalPosition: {x: 1.42, y: 1.2, z: 2.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

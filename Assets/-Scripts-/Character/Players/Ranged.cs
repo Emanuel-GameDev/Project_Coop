@@ -51,12 +51,17 @@ public class Ranged : CharacterClass
     [Header("Schivata")]
 
     [SerializeField, Tooltip("coolDown Schivata")]
+    [Min(0)]
     float dodgeCoolDown = 3f;
     float dodgeTimer = 0;
     [SerializeField, Tooltip("distanza massima schivata")]
     float dodgeDistance = 15f;
     [SerializeField, Tooltip("Durata schivata")]
+    [Min(0)]
     float dodgeDuration = 0.3f;
+    [SerializeField, Tooltip("Durata schivata perfetta")]
+    [Min(0)]
+    float perfectDodgeDuration = 0.15f;
     [SerializeField, Tooltip("Danno schivata perfetta")]
     float dodgeDamageMultiplier = 0.75f;
 
@@ -72,6 +77,10 @@ public class Ranged : CharacterClass
     float landMineDamageMultiplier = 2f;
     [SerializeField, Tooltip("raggio della mina")]
     float landMineRange = 5f;
+    [SerializeField, Tooltip("Sprite di raccolta mina")]
+    GameObject minePickUpVisualizer;
+    bool mineNearby => nearbyLandmine.Count > 0;
+    
 
     public List<LandMine> nearbyLandmine;
 
@@ -87,13 +96,13 @@ public class Ranged : CharacterClass
 
     
 
-    private Vector2 lastDirection;
-
     private bool reduceEmpowerFireCoolDownUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
     private bool multiBaseAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
     private bool dodgeTeleportBossUnlocked => upgradeStatus[AbilityUpgrade.Ability3];
     private bool dodgeDamageUnlocked => upgradeStatus[AbilityUpgrade.Ability4];
     private bool landMineUnlocked => upgradeStatus[AbilityUpgrade.Ability5];
+
+    private PerfectTimingHandler perfectTimingHandler;
 
     private float empowerCoolDownDecrease => reduceEmpowerFireCoolDownUnlocked ? chargeTimeReduction : 0;
 
@@ -101,18 +110,29 @@ public class Ranged : CharacterClass
     bool isDodging;
     bool isInvunerable;
 
+    public override void Inizialize(PlayerCharacter character)
+    {
+        base.Inizialize(character);
+        nearbyLandmine = new List<LandMine>();
+        landMineInInventory = maxNumberLandMine;
+        perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>();
+        perfectTimingHandler.gameObject.SetActive(false);
+    }
 
 
     private void Start()
     {
-        nearbyLandmine = new List<LandMine>();
-        landMineInInventory = maxNumberLandMine;
+        
     }
 
 
     private void Update()
     {
         CoolDownManager();
+
+        minePickUpVisualizer.SetActive(mineNearby);
+
+
     }
 
     public override void Move(Vector3 direction, Rigidbody rb)
@@ -184,7 +204,7 @@ public class Ranged : CharacterClass
 
         newProjectile.transform.position = transform.position;
 
-        newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1);
+        //newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer);
 
     }
 
@@ -250,6 +270,29 @@ public class Ranged : CharacterClass
         
     }
 
+    protected IEnumerator PerfectDodgeHandler(DamageData data)
+    {
+        perfectTimingHandler.gameObject.SetActive(true);
+        yield return new WaitForSeconds(perfectDodgeDuration);
+        if(isDodging)
+        {
+            //se potenziamento sbloccato => damage
+            if (dodgeDamageUnlocked)
+            {
+               
+            }
+            
+            //se c'è il boss + potenziamento sbloccato => tp
+            
+        }
+        else
+        {
+            base.TakeDamage(data);
+        }
+
+        Debug.Log($"PerfectDodge: {isDodging}");
+    }
+
     #endregion
 
     //mina
@@ -260,7 +303,7 @@ public class Ranged : CharacterClass
         {
             if (landMineUnlocked)
             {
-                if (nearbyLandmine.Count==0)
+                if (nearbyLandmine.Count<=0)
                 {
                     //animazione droppaggio mina
 
@@ -270,7 +313,7 @@ public class Ranged : CharacterClass
                     CreateLandMine();
                     //
 
-                    Debug.Log("lascio mina");
+                    
                 }
                 else
                 {
@@ -292,9 +335,11 @@ public class Ranged : CharacterClass
 
             newLandMine.transform.position = new Vector3(transform.position.x, 0 , transform.position.z);
 
-            newLandMine.GetComponent<LandMine>().Initialize(gameObject,landMineRange);
+            newLandMine.GetComponent<LandMine>().Initialize(gameObject.GetComponentInParent<PlayerCharacter>(),landMineRange,Damage * landMineDamageMultiplier,gameObject.layer);
 
             landMineInInventory--;
+
+            Debug.Log("lascio mina");
         }
         else
         {
@@ -371,7 +416,7 @@ public class Ranged : CharacterClass
 
         newProjectile.transform.position = transform.position;
 
-        newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier);
+        //newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier,gameObject.layer);
     }
 
     #endregion

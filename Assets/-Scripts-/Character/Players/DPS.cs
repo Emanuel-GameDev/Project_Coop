@@ -134,9 +134,9 @@ public class DPS : CharacterClass
     public override float MoveSpeed => base.MoveSpeed + ExtraSpeed;
     public override float Damage => base.Damage * ExtraDamage();
 
-    public override void Inizialize(CharacterData characterData, Character character)
+    public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
     {
-        base.Inizialize(characterData, character);
+        base.Inizialize(/*characterData,*/ character);
         lastDodgeTime = -dodgeCooldown;
         lastAttackTime = -timeBetweenCombo;
         lastUniqueAbilityUseTime = -UniqueAbilityCooldown;
@@ -278,7 +278,11 @@ public class DPS : CharacterClass
         {
             base.TakeDamage(data);
             if (!isDashingAttack)
+            {
                 animator.SetTrigger(HIT);
+
+            }
+                
         }
         perfectTimingHandler.gameObject.SetActive(false);
         Debug.Log($"PerfectDodge: {isDodging}, Count: {perfectDodgeCounter}");
@@ -429,7 +433,21 @@ public class DPS : CharacterClass
     }
 
     #region Damage
-    public override float GetDamage()
+    //Modifiche
+
+    //public override float GetDamage()
+    //{
+    //    BossDamageCheck();
+
+    //    float damage = isDashingAttack ? base.Damage * dashAttackDamageMultiplier : Damage;
+
+    //    TotalDamageUpdate(damage);
+
+    //    Debug.Log($"Damage Done: {damage}");
+    //    return damage;
+    //}
+
+    public override DamageData GetDamageData()
     {
         BossDamageCheck();
 
@@ -438,8 +456,12 @@ public class DPS : CharacterClass
         TotalDamageUpdate(damage);
 
         Debug.Log($"Damage Done: {damage}");
-        return damage;
+
+        return new DamageData(damage, character);
+
     }
+
+    //fine modifiche
 
     private void BossDamageCheck()
     {

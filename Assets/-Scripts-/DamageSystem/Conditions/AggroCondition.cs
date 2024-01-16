@@ -7,16 +7,16 @@ public class AggroCondition : Condition
     private bool started;
     private float timer;
 
-    public override void AddCondition(CharacterClass parent)
+    public override void AddCondition(Character parent)
     {       
         transform.parent = parent.transform;
         base.AddCondition(parent);
-        Debug.Log(transform.parent.name + " sono sotto aggro per " + duration + " secondi");
+        Debug.Log(transform.parent.name + " sono sotto AGGRO per " + duration + " secondi");
     }
 
-    public override void RemoveCondition(CharacterClass parent)
+    public override void RemoveCondition(Character parent)
     {
-        Debug.Log(parent.name + " non sono più sotto aggro");
+        Debug.Log(parent.name + " non sono più sotto AGGRO");
         Destroy(this.gameObject);
         
     }
