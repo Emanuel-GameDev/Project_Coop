@@ -7,6 +7,7 @@ public class TutorialBossCharacter : BossCharacter
 {
     [Header("Generics")]
     public float minDistance;
+    public float followDuration;
 
     [Header("Raffica Di Pugni")]
     public float flurryDistance;
