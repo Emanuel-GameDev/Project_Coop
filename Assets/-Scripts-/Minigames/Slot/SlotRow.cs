@@ -4,30 +4,33 @@ using UnityEngine;
 
 public class SlotRow : MonoBehaviour
 {
-    [SerializeField] int numberOfSlots;
-    [SerializeField] int numberWinSlots;
-    [SerializeField] float slotDistance = 0.25f;
+     int numberOfSlots;
+     int numberWinSlots;
+     float slotDistance = 0.25f;
 
     //inserire giocatore scelto
-    [SerializeField] private Sprite playerSprite;
-    [SerializeField] private Sprite mouseSprite;
+     private Sprite playerSprite;
+     private Sprite mouseSprite;
 
-    [SerializeField] private List<GameObject> reorderSlots;
+     private List<GameObject> reorderSlots;
 
-    [SerializeField] bool stopped;
-    [SerializeField] bool isSlowDown;
+     bool stopped;
+     bool isSlowDown;
 
-    [SerializeField] float rotationSpeed;
-    [SerializeField] float stabilitationTime;
+    float rotationSpeed;
+    float stabilitationTime;
 
     private Vector3 finalRowRotation;
     private Vector3 startRowRotation;
 
     private Vector3 targetPosition;
 
+    [SerializeField] private Slot selectedSlot;
+
     private void Start()
     {
         stopped = true;
+        selectedSlot = null; //reset della slot presa
         reorderSlots = new List<GameObject>();
         InitializeRow();
 
@@ -38,6 +41,18 @@ public class SlotRow : MonoBehaviour
     private void Update()
     {
         RotateRow();
+    }
+
+    public void SetRow(int slotNumber, int winNumber, float distance, Sprite playerSprite,Sprite enemySprite,float rotationSpeed,float stabilizationSpeed)
+    {
+        numberOfSlots = slotNumber;
+        numberWinSlots = winNumber;
+        slotDistance = distance;
+        this.playerSprite = playerSprite;
+        mouseSprite = enemySprite;
+        this.rotationSpeed = rotationSpeed;
+        stabilitationTime = stabilizationSpeed;
+        
     }
 
     private void InitializeRow()
@@ -137,6 +152,8 @@ public class SlotRow : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             stopped = false;
+
+            selectedSlot = null;
         }
         
     }
@@ -175,5 +192,16 @@ public class SlotRow : MonoBehaviour
         }
 
         transform.localPosition = targetPosition;
+
+        int stoppedPosition = (int)(transform.localPosition.y / slotDistance);
+
+        selectedSlot = reorderSlots[stoppedPosition].GetComponent<Slot>();
     }
+
+    public Slot GetSelectedSlot()
+    {
+        return selectedSlot;
+    }
+
+   
 }
