@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class MovementTutorialState : TutorialFase
 {
@@ -19,29 +20,54 @@ public class MovementTutorialState : TutorialFase
     public override void Enter()
     {
         base.Enter();
-        OnFaseStart.Invoke();
+
+        tutorialManager.DeactivatePlayerInput(tutorialManager.dps);
+        tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
+        tutorialManager.DeactivatePlayerInput(tutorialManager.ranged);
+        tutorialManager.DeactivatePlayerInput(tutorialManager.tank);
+
+        tutorialManager.OnMovementFaseStart.Invoke();
+
+        tutorialManager.dps.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.healer.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.ranged.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
 
     }
-
+    bool check = false;
 
     public override void Update()
     {
-        base.Enter();
+        base.Update();
+        //tutorialManager.StartCoroutine(Count());
 
-        tutorialManager.StartCoroutine(Count());
+        
+
+        if (!check)
+        {
+            foreach (PlayerCharacter p in GameManager.Instance.coopManager.activePlayers)
+            {
+                if(p.MoveDirection!=Vector2.zero)
+                {
+                    check=true;
+                }
+            }
+
+        }
     }
 
 
     public override void Exit()
     {
-        base.Enter();
-        OnFaseEnd.Invoke();
+        base.Exit();
+        //tutorialManager.OnMovementFaseEnd.Invoke();
     }
 
-    IEnumerator Count()
-    {
-        Debug.Log("waiting");
-        yield return new WaitForSeconds(10);
-        tutorialManager.stateMachine.SetState(new AttackTutorialState(tutorialManager));
-    }
+    //IEnumerator Count()
+    //{
+    //    Debug.Log("waiting");
+    //    yield return new WaitForSeconds(10);
+    //    tutorialManager.stateMachine.SetState(new AttackTutorialState(tutorialManager));
+    //}
+
 }

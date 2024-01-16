@@ -21,7 +21,7 @@ public class GuardTutorialState : TutorialFase
 
     public override void Update()
     {
-        base.Enter();
+        base.Update();
 
 
     }
@@ -29,6 +29,6 @@ public class GuardTutorialState : TutorialFase
 
     public override void Exit()
     {
-        base.Enter();
+        base.Exit();
     }
 }

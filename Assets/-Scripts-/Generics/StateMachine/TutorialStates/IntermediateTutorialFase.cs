@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealTutorialState : TutorialFase
+public class IntermediateTutorialFase : TutorialFase
 {
     TutorialManager tutorialManager;
 
-    public HealTutorialState(TutorialManager tutorialManager)
+    public IntermediateTutorialFase(TutorialManager tutorialManager)
     {
         this.tutorialManager = tutorialManager;
     }
@@ -15,20 +15,18 @@ public class HealTutorialState : TutorialFase
     {
         base.Enter();
 
-
     }
-
 
     public override void Update()
     {
         base.Update();
-
-
+        
     }
 
 
     public override void Exit()
     {
         base.Exit();
+
     }
 }
