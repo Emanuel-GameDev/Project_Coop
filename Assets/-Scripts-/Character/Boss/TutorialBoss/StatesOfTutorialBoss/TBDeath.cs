@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TBDeath : TutorialBossState
 {
-    public TBDeath(TutorialBossCharacter bossCharacter) : base(bossCharacter)
+    public TBDeath(TBCharacterSM bossCharacter) : base(bossCharacter)
     {
     }
 }

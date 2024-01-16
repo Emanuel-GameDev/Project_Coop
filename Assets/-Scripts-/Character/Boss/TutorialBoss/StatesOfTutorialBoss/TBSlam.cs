@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TBSlam : TutorialBossState
 {
-    public TBSlam(TutorialBossCharacter bossCharacter) : base(bossCharacter)
+    public TBSlam(TBCharacterSM bossCharacter) : base(bossCharacter)
     {
     }
 
@@ -13,13 +13,8 @@ public class TBSlam : TutorialBossState
         base.Enter();
     }
 
-    public override void Exit()
-    {
-        base.Exit();
-    }
-
     public override void Update()
     {
-        base.Update();
+        bossCharacter.ChangeState();
     }
 }

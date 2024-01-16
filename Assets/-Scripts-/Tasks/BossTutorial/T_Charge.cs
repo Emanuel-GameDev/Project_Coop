@@ -13,23 +13,26 @@ namespace MBTExample
         public TransformReference targetTransform;
         public GameObjectReference parentGameObject;
 
-        
         private TutorialBossCharacter bossCharacter;
         private bool started = false;
         private bool mustStop = false;
         private float tempTimer;        
         private Vector3 targetPosition;
+        private IDamager bossDamager;
 
         public override void OnEnter()
         {
             bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
-            targetPosition = targetTransform.Value.position;
-
+           
             started = false;
             mustStop = false;
 
-            Vector3 direction = (targetPosition-bossCharacter.transform.position).normalized;
+            Vector3 direction = (targetTransform.Value.position -bossCharacter.transform.position).normalized;
             targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), 0,(direction.z * bossCharacter.chargeDistance)) + bossCharacter.transform.position; 
+
+            bossDamager = bossCharacter.GetComponent<IDamager>();
+            //Setto il danno
+            bossCharacter.SetChargeDamageData();
 
             Debug.Log("Start Charge Timer");
             tempTimer = 0;
@@ -38,7 +41,8 @@ namespace MBTExample
       
         public override NodeResult Execute()
         {           
-                  
+            
+            
             if(tempTimer > bossCharacter.chargeTimer)
             {
                 if (!started)
@@ -68,5 +72,6 @@ namespace MBTExample
 
             return NodeResult.running;
         }
+       
     }
 }

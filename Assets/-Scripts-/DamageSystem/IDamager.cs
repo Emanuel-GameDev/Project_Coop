@@ -8,6 +8,10 @@ public interface IDamager
 
     //float GetDamage();
     DamageData GetDamageData();
-    
+
+
+    //aaaaaa non so
+    virtual void OnParryNotify() { }
+
     //fine modifiche
 }

@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class TBFlurryOfBlows : TutorialBossState
 {
-    public TBFlurryOfBlows(TutorialBossCharacter bossCharacter) : base(bossCharacter)
+    public TBFlurryOfBlows(TBCharacterSM bossCharacter) : base(bossCharacter)
     {
     }
     
@@ -17,11 +18,6 @@ public class TBFlurryOfBlows : TutorialBossState
         punchCount = 0;
     }
 
-    public override void Exit()
-    {
-        base.Exit();
-    }
-
     public override void Update()
     {
         float dist = Vector2.Distance(Utility.ZtoY(destination), Utility.ZtoY(bossCharacter.transform.position));
@@ -31,8 +27,7 @@ public class TBFlurryOfBlows : TutorialBossState
             punchCount++;
             if (punchCount >= 3)
             {
-                stateMachine.SetState(new TBStart(bossCharacter));
-                Debug.Log("Flurry of blows done");
+                bossCharacter.ChangeState();
             }
             else 
             {
@@ -41,7 +36,4 @@ public class TBFlurryOfBlows : TutorialBossState
             }
         }
     }
-
-   
-
 }

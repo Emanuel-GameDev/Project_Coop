@@ -4,12 +4,12 @@ using UnityEngine;
 
 public abstract class TutorialBossState : State<TutorialBossState>
 {
-    protected TutorialBossCharacter bossCharacter;
+    protected TBCharacterSM bossCharacter;
     protected bool mustStop;
     protected float MinDistance => bossCharacter.minDistance;
     protected Vector3 destination;
 
-    protected TutorialBossState(TutorialBossCharacter bossCharacter)
+    protected TutorialBossState(TBCharacterSM bossCharacter)
     {
         this.bossCharacter = bossCharacter;
     }
@@ -25,5 +25,10 @@ public abstract class TutorialBossState : State<TutorialBossState>
         bossCharacter.Agent.isStopped = false;
         bossCharacter.Agent.speed = speed;
         bossCharacter.Agent.SetDestination(destination);
+    }
+
+    public override void Exit()
+    {
+        bossCharacter.Agent.isStopped = true;
     }
 }
