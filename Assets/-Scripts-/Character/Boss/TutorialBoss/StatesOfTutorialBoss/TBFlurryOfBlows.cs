@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class TBFlurryOfBlows : TutorialBossState
 {
-    public TBFlurryOfBlows(TutorialBossCharacter bossCharacter) : base(bossCharacter)
+    public TBFlurryOfBlows(TBCharacterSM bossCharacter) : base(bossCharacter)
     {
     }
     
@@ -26,8 +27,7 @@ public class TBFlurryOfBlows : TutorialBossState
             punchCount++;
             if (punchCount >= 3)
             {
-                stateMachine.SetState(new TBStart(bossCharacter));
-                Debug.Log("Flurry of blows done");
+                bossCharacter.ChangeState();
             }
             else 
             {

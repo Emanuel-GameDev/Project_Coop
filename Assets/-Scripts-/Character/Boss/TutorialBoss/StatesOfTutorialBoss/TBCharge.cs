@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TBCharge : TutorialBossState
 {
-    public TBCharge(TutorialBossCharacter bossCharacter) : base(bossCharacter)
+    public TBCharge(TBCharacterSM bossCharacter) : base(bossCharacter)
     {
     }
 
@@ -15,17 +15,12 @@ public class TBCharge : TutorialBossState
         StartAgent(bossCharacter.chargeSpeed);
     }
 
-    public override void Exit()
-    {
-        base.Exit();
-    }
-
     public override void Update()
     {
         float dist = Vector2.Distance(Utility.ZtoY(destination), Utility.ZtoY(bossCharacter.transform.position));
         if (mustStop || dist <= MinDistance)
         {
-            stateMachine.SetState(new TBStart(bossCharacter));
+            bossCharacter.ChangeState();
         }
     }
 }

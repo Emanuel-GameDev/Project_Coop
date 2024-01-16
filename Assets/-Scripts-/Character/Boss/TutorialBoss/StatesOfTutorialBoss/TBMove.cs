@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class TBMove : TutorialBossState
 {
-    public TBMove(TutorialBossCharacter bossCharacter) : base(bossCharacter)
+    public TBMove(TBCharacterSM bossCharacter) : base(bossCharacter)
     {
     }
     float duration;
+    List<PlayerCharacter> activePlayers;
     public override void Enter()
     {
         destination = bossCharacter.target.position;
         StartAgent(bossCharacter.MoveSpeed);
         duration = bossCharacter.moveDuration;
+        activePlayers = GameManager.Instance.coopManager.activePlayers;
     }
 
     public override void Update()
@@ -32,7 +34,6 @@ public class TBMove : TutorialBossState
 
     private void CheckPlayersDistances()
     {
-        List<PlayerCharacter> activePlayers = GameManager.Instance.coopManager.activePlayers;
         foreach (PlayerCharacter player in activePlayers)
         {
             bool isNear = Utility.DistanceV3toV2(player.transform.position, bossCharacter.transform.position) < bossCharacter.shortDistanceRange;

@@ -4,12 +4,12 @@ using UnityEngine;
 
 public abstract class TutorialBossState : State<TutorialBossState>
 {
-    protected TutorialBossCharacter bossCharacter;
+    protected TBCharacterSM bossCharacter;
     protected bool mustStop;
     protected float MinDistance => bossCharacter.minDistance;
     protected Vector3 destination;
 
-    protected TutorialBossState(TutorialBossCharacter bossCharacter)
+    protected TutorialBossState(TBCharacterSM bossCharacter)
     {
         this.bossCharacter = bossCharacter;
     }
