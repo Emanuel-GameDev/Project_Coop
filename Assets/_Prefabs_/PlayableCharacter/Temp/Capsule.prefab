@@ -21,7 +21,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2294395373234744904
 Transform:
   m_ObjectHideFlags: 0
@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93cddced58d648d449d7fdf302364bde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterData: {fileID: 11400000, guid: 80e35bc4125873b45b0a1321251987d9, type: 2}
+  characterData: {fileID: 11400000, guid: 1a573e06df62dfd4396e71e6ae830f9c, type: 2}
 --- !u!54 &6851799198813683004
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -165,7 +165,8 @@ MonoBehaviour:
   m_Actions: {fileID: -944628639613478452, guid: ca188dc33af58c24b803b26aab77e211,
     type: 3}
   m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
+  m_UIInputModule: {fileID: 2303557927303499069, guid: c7ad204aa4453d7488935516b67593e3,
+    type: 3}
   m_DeviceLostEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -274,8 +275,7 @@ MonoBehaviour:
     m_ActionName: Player/ExtraAbility[/Keyboard/e]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8824866592892929917, guid: 69199da5a5cdff14ab7e422e11338c38,
-          type: 3}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CharacterSelectionMenu, Assembly-CSharp
         m_MethodName: Navigate
         m_Mode: 0
@@ -409,8 +409,8 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 85efb363-392f-4bbc-aff9-19e731dd404c
     m_ActionName: Player/Interact[/Keyboard/f]
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Gamepad
+  m_NeverAutoSwitchControlSchemes: 1
+  m_DefaultControlScheme: 
   m_DefaultActionMap: UI
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
