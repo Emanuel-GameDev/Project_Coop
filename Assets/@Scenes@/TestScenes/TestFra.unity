@@ -695,7 +695,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460124071}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 100
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -825,6 +825,8 @@ MonoBehaviour:
   target: {fileID: 0}
   currentHp: 0
   minDistance: 0.2
+  followDuration: 10
+  walkSpeed: 1
   flurryDistance: 5
   flurrySpeed: 2
   punchQuantity: 3
@@ -1561,7 +1563,6 @@ GameObject:
   - component: {fileID: 1668820715}
   - component: {fileID: 1668820714}
   - component: {fileID: 1668820737}
-  - component: {fileID: 1668820736}
   - component: {fileID: 1668820735}
   - component: {fileID: 1668820734}
   - component: {fileID: 1668820733}
@@ -1573,7 +1574,6 @@ GameObject:
   - component: {fileID: 1668820727}
   - component: {fileID: 1668820726}
   - component: {fileID: 1668820725}
-  - component: {fileID: 1668820724}
   - component: {fileID: 1668820723}
   - component: {fileID: 1668820722}
   - component: {fileID: 1668820721}
@@ -1583,10 +1583,25 @@ GameObject:
   - component: {fileID: 1668820717}
   - component: {fileID: 1668820716}
   - component: {fileID: 1668820738}
-  - component: {fileID: 1668820739}
   - component: {fileID: 1668820741}
   - component: {fileID: 1668820740}
   - component: {fileID: 1668820742}
+  - component: {fileID: 1668820747}
+  - component: {fileID: 1668820746}
+  - component: {fileID: 1668820745}
+  - component: {fileID: 1668820744}
+  - component: {fileID: 1668820743}
+  - component: {fileID: 1668820750}
+  - component: {fileID: 1668820749}
+  - component: {fileID: 1668820748}
+  - component: {fileID: 1668820751}
+  - component: {fileID: 1668820758}
+  - component: {fileID: 1668820757}
+  - component: {fileID: 1668820756}
+  - component: {fileID: 1668820755}
+  - component: {fileID: 1668820754}
+  - component: {fileID: 1668820753}
+  - component: {fileID: 1668820752}
   m_Layer: 7
   m_Name: BehaviorTree
   m_TagString: Untagged
@@ -1627,6 +1642,8 @@ MonoBehaviour:
   - {fileID: 1668820712}
   - {fileID: 1668820714}
   - {fileID: 1668820734}
+  - {fileID: 1668820743}
+  - {fileID: 1668820749}
   masterBlackboard: {fileID: 0}
 --- !u!114 &1668820676
 MonoBehaviour:
@@ -1653,7 +1670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25af8627659c6949b60949c3aa8d91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedEditorNode: {fileID: 1668820739}
+  selectedEditorNode: {fileID: 1668820750}
   repeatOnFinish: 0
   maxExecutionsPerTick: 1000
   parent: {fileID: 0}
@@ -1864,8 +1881,8 @@ MonoBehaviour:
   title: 'Target Selection '
   rect:
     serializedVersion: 2
-    x: -80
-    y: 100
+    x: -100
+    y: 120
     width: 160
     height: 45
   parent: {fileID: 1668820715}
@@ -1925,7 +1942,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 534e3ec7de6cd444e984c2e7f68e42e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: Is Set Condition
+  title: Is Not Under Aggro
   rect:
     serializedVersion: 2
     x: 20
@@ -2042,8 +2059,8 @@ MonoBehaviour:
   title: Wait
   rect:
     serializedVersion: 2
-    x: 860
-    y: 720
+    x: 900
+    y: 680
     width: 160
     height: 45
   parent: {fileID: 1668820721}
@@ -2056,7 +2073,7 @@ MonoBehaviour:
     mode: 0
     blackboard: {fileID: 0}
     key: 
-    constantValue: 1
+    constantValue: 3
   randomDeviation: 0
   continueOnRestart: 0
 --- !u!114 &1668820719
@@ -2074,8 +2091,8 @@ MonoBehaviour:
   title: 'Attacco Schianto '
   rect:
     serializedVersion: 2
-    x: 700
-    y: 720
+    x: 740
+    y: 680
     width: 160
     height: 45
   parent: {fileID: 1668820721}
@@ -2104,7 +2121,7 @@ MonoBehaviour:
   title: Sequence
   rect:
     serializedVersion: 2
-    x: 1000
+    x: 1020
     y: 560
     width: 160
     height: 45
@@ -2132,7 +2149,7 @@ MonoBehaviour:
   rect:
     serializedVersion: 2
     x: 820
-    y: 560
+    y: 580
     width: 160
     height: 45
   parent: {fileID: 1668820730}
@@ -2186,50 +2203,19 @@ MonoBehaviour:
   title: Sequence
   rect:
     serializedVersion: 2
-    x: 580
-    y: 500
+    x: 500
+    y: 540
     width: 160
     height: 45
   parent: {fileID: 1668820733}
   children:
   - {fileID: 1668820725}
-  - {fileID: 1668820724}
+  - {fileID: 1668820751}
+  - {fileID: 1668820747}
   behaviourTree: {fileID: 0}
   runtimePriority: 0
   breakpoint: 0
   random: 0
---- !u!114 &1668820724
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1668820673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58fe7bc6a9b18e148b82820c7c1c0a90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: Wait
-  rect:
-    serializedVersion: 2
-    x: 580
-    y: 660
-    width: 160
-    height: 45
-  parent: {fileID: 1668820723}
-  children: []
-  behaviourTree: {fileID: 0}
-  runtimePriority: 0
-  breakpoint: 0
-  time:
-    useConstant: 1
-    mode: 0
-    blackboard: {fileID: 0}
-    key: 
-    constantValue: 1
-  randomDeviation: 0
-  continueOnRestart: 0
 --- !u!114 &1668820725
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -2245,8 +2231,8 @@ MonoBehaviour:
   title: 'Muovi '
   rect:
     serializedVersion: 2
-    x: 400
-    y: 660
+    x: -140
+    y: 620
     width: 160
     height: 45
   parent: {fileID: 1668820723}
@@ -2254,6 +2240,30 @@ MonoBehaviour:
   behaviourTree: {fileID: 0}
   runtimePriority: 0
   breakpoint: 0
+  targetTransform:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: targetTransform
+    constantValue: {fileID: 0}
+  parentGameObject:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: BossParent
+    constantValue: {fileID: 0}
+  distanceToCheckforPlayer:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: shortDistanceRange
+    constantValue: 0
+  playerFound:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 1668820675}
+    key: playerFound
+    constantValue: 0
 --- !u!114 &1668820726
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -2283,7 +2293,7 @@ MonoBehaviour:
     mode: 0
     blackboard: {fileID: 0}
     key: 
-    constantValue: 1
+    constantValue: 3
   randomDeviation: 0
   continueOnRestart: 0
 --- !u!114 &1668820727
@@ -2451,7 +2461,7 @@ MonoBehaviour:
   title: 25% Carica
   rect:
     serializedVersion: 2
-    x: 1000
+    x: 1020
     y: 440
     width: 160
     height: 45
@@ -2648,50 +2658,6 @@ MonoBehaviour:
     blackboard: {fileID: 1668820675}
     key: randomInt
     constantValue: 0
---- !u!114 &1668820736
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1668820673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb0b7cfe3e9cfba47a378c725cf5d0b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: Short Distance Condition
-  rect:
-    serializedVersion: 2
-    x: 280
-    y: 160
-    width: 160
-    height: 45
-  parent: {fileID: 1668820740}
-  children:
-  - {fileID: 1668820738}
-  behaviourTree: {fileID: 0}
-  runtimePriority: 0
-  breakpoint: 0
-  comparator: 1
-  distance:
-    useConstant: 1
-    mode: 0
-    blackboard: {fileID: 0}
-    key: 
-    constantValue: 5
-  transform1:
-    useConstant: 0
-    mode: 0
-    blackboard: {fileID: 1668820675}
-    key: BossParentTransform
-    constantValue: {fileID: 0}
-  transform2:
-    useConstant: 0
-    mode: 0
-    blackboard: {fileID: 1668820675}
-    key: targetTransform
-    constantValue: {fileID: 0}
 --- !u!114 &1668820737
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -2734,11 +2700,11 @@ MonoBehaviour:
   title: Selector
   rect:
     serializedVersion: 2
-    x: 280
-    y: 220
+    x: 140
+    y: 240
     width: 160
     height: 45
-  parent: {fileID: 1668820736}
+  parent: {fileID: 1668820750}
   children:
   - {fileID: 1668820709}
   - {fileID: 1668820737}
@@ -2746,50 +2712,6 @@ MonoBehaviour:
   runtimePriority: 0
   breakpoint: 0
   random: 1
---- !u!114 &1668820739
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1668820673}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb0b7cfe3e9cfba47a378c725cf5d0b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: bigger Distance Condition
-  rect:
-    serializedVersion: 2
-    x: 500
-    y: 120
-    width: 160
-    height: 45
-  parent: {fileID: 1668820740}
-  children:
-  - {fileID: 1668820742}
-  behaviourTree: {fileID: 0}
-  runtimePriority: 0
-  breakpoint: 0
-  comparator: 0
-  distance:
-    useConstant: 1
-    mode: 0
-    blackboard: {fileID: 0}
-    key: 
-    constantValue: 5
-  transform1:
-    useConstant: 0
-    mode: 0
-    blackboard: {fileID: 1668820675}
-    key: BossParentTransform
-    constantValue: {fileID: 0}
-  transform2:
-    useConstant: 0
-    mode: 0
-    blackboard: {fileID: 1668820675}
-    key: targetTransform
-    constantValue: {fileID: 0}
 --- !u!114 &1668820740
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -2811,8 +2733,8 @@ MonoBehaviour:
     height: 45
   parent: {fileID: 1668820741}
   children:
-  - {fileID: 1668820736}
-  - {fileID: 1668820739}
+  - {fileID: 1668820750}
+  - {fileID: 1668820748}
   behaviourTree: {fileID: 0}
   runtimePriority: 0
   breakpoint: 0
@@ -2833,7 +2755,7 @@ MonoBehaviour:
   rect:
     serializedVersion: 2
     x: 280
-    y: -0
+    y: 0
     width: 160
     height: 45
   parent: {fileID: 1668820698}
@@ -2863,10 +2785,524 @@ MonoBehaviour:
     y: 180
     width: 160
     height: 45
-  parent: {fileID: 1668820739}
+  parent: {fileID: 1668820748}
   children:
   - {fileID: 1668820735}
   - {fileID: 1668820722}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  random: 0
+--- !u!114 &1668820743
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ae15c5e6bcb1714080f2e8296c3d17a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: playerFound
+  val: 0
+--- !u!114 &1668820744
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58fe7bc6a9b18e148b82820c7c1c0a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Wait
+  rect:
+    serializedVersion: 2
+    x: 580
+    y: 760
+    width: 160
+    height: 45
+  parent: {fileID: 1668820746}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  time:
+    useConstant: 1
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 3
+  randomDeviation: 0
+  continueOnRestart: 0
+--- !u!114 &1668820745
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad65a1b017a15e64abcbb2c4045514d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 'Attacco Carica '
+  rect:
+    serializedVersion: 2
+    x: 420
+    y: 760
+    width: 160
+    height: 45
+  parent: {fileID: 1668820746}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  targetTransform:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: targetTransform
+    constantValue: {fileID: 0}
+  parentGameObject:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: BossParent
+    constantValue: {fileID: 0}
+--- !u!114 &1668820746
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c78c7da6b00e1b46bad07949050f82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Sequence
+  rect:
+    serializedVersion: 2
+    x: 500
+    y: 700
+    width: 160
+    height: 45
+  parent: {fileID: 1668820747}
+  children:
+  - {fileID: 1668820745}
+  - {fileID: 1668820744}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  random: 0
+--- !u!114 &1668820747
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534e3ec7de6cd444e984c2e7f68e42e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: no Player Found
+  rect:
+    serializedVersion: 2
+    x: 500
+    y: 620
+    width: 160
+    height: 45
+  parent: {fileID: 1668820723}
+  children:
+  - {fileID: 1668820746}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  abort: 0
+  invert: 1
+  type: 0
+  boolReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 1668820675}
+    key: playerFound
+    constantValue: 0
+  objectReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: {fileID: 0}
+  transformReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: {fileID: 0}
+--- !u!114 &1668820748
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0b7cfe3e9cfba47a378c725cf5d0b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Distance Condition
+  rect:
+    serializedVersion: 2
+    x: 460
+    y: 120
+    width: 160
+    height: 45
+  parent: {fileID: 1668820740}
+  children:
+  - {fileID: 1668820742}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  comparator: 0
+  distance:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 1668820675}
+    key: shortDistanceRange
+    constantValue: 0
+  transform1:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: BossParentTransform
+    constantValue: {fileID: 0}
+  transform2:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: targetTransform
+    constantValue: {fileID: 0}
+--- !u!114 &1668820749
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4e5f4db414f0ab4c82c187a7653e99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: shortDistanceRange
+  val: 5
+--- !u!114 &1668820750
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0b7cfe3e9cfba47a378c725cf5d0b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Distance Condition
+  rect:
+    serializedVersion: 2
+    x: 280
+    y: 140
+    width: 160
+    height: 45
+  parent: {fileID: 1668820740}
+  children:
+  - {fileID: 1668820738}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  comparator: 1
+  distance:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 1668820675}
+    key: shortDistanceRange
+    constantValue: 0
+  transform1:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: BossParentTransform
+    constantValue: {fileID: 0}
+  transform2:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: targetTransform
+    constantValue: {fileID: 0}
+--- !u!114 &1668820751
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534e3ec7de6cd444e984c2e7f68e42e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Player Found
+  rect:
+    serializedVersion: 2
+    x: 220
+    y: 660
+    width: 160
+    height: 45
+  parent: {fileID: 1668820723}
+  children:
+  - {fileID: 1668820754}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  abort: 0
+  invert: 0
+  type: 0
+  boolReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 1668820675}
+    key: playerFound
+    constantValue: 0
+  objectReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: {fileID: 0}
+  transformReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: {fileID: 0}
+--- !u!114 &1668820752
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58fe7bc6a9b18e148b82820c7c1c0a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Wait
+  rect:
+    serializedVersion: 2
+    x: 360
+    y: 900
+    width: 160
+    height: 45
+  parent: {fileID: 1668820755}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  time:
+    useConstant: 1
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 3
+  randomDeviation: 0
+  continueOnRestart: 0
+--- !u!114 &1668820753
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b34b0865153e8454687b75d8a3ff2ee5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 'Attacco Schianto '
+  rect:
+    serializedVersion: 2
+    x: 200
+    y: 900
+    width: 160
+    height: 45
+  parent: {fileID: 1668820755}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  parentGameObject:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: BossParent
+    constantValue: {fileID: 0}
+--- !u!114 &1668820754
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08540605df275034fafc8e05c6704214, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Selector
+  rect:
+    serializedVersion: 2
+    x: 120
+    y: 760
+    width: 160
+    height: 45
+  parent: {fileID: 1668820751}
+  children:
+  - {fileID: 1668820758}
+  - {fileID: 1668820755}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  random: 0
+--- !u!114 &1668820755
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c78c7da6b00e1b46bad07949050f82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Crash Sequence
+  rect:
+    serializedVersion: 2
+    x: 280
+    y: 840
+    width: 160
+    height: 45
+  parent: {fileID: 1668820754}
+  children:
+  - {fileID: 1668820753}
+  - {fileID: 1668820752}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  random: 0
+--- !u!114 &1668820756
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58fe7bc6a9b18e148b82820c7c1c0a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Wait
+  rect:
+    serializedVersion: 2
+    x: -0
+    y: 900
+    width: 160
+    height: 45
+  parent: {fileID: 1668820758}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  time:
+    useConstant: 1
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 3
+  randomDeviation: 0
+  continueOnRestart: 0
+--- !u!114 &1668820757
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8b18f16ae1920c40819e3b4510b81eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 'Raffica Di Colpi '
+  rect:
+    serializedVersion: 2
+    x: -160
+    y: 900
+    width: 160
+    height: 45
+  parent: {fileID: 1668820758}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  targetTransform:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: targetTransform
+    constantValue: {fileID: 0}
+  parentGameObject:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 1668820675}
+    key: BossParent
+    constantValue: {fileID: 0}
+--- !u!114 &1668820758
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668820673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c78c7da6b00e1b46bad07949050f82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Flurry Of Blows Sequence
+  rect:
+    serializedVersion: 2
+    x: -80
+    y: 840
+    width: 160
+    height: 45
+  parent: {fileID: 1668820754}
+  children:
+  - {fileID: 1668820757}
+  - {fileID: 1668820756}
   behaviourTree: {fileID: 0}
   runtimePriority: 0
   breakpoint: 0
