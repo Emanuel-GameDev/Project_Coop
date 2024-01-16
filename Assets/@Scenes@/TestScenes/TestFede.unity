@@ -228,6 +228,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayersManager
       objectReference: {fileID: 0}
+    - target: {fileID: 3605962510235015332, guid: 5e4e7b014c3a19945af8275465d7addf,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3661803240820020965, guid: 5e4e7b014c3a19945af8275465d7addf,
         type: 3}
       propertyPath: character
@@ -235,28 +240,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3661803240820020965, guid: 5e4e7b014c3a19945af8275465d7addf,
         type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3661803240820020965, guid: 5e4e7b014c3a19945af8275465d7addf,
+        type: 3}
       propertyPath: switchPlayerUp
       value: 
-      objectReference: {fileID: 11400000, guid: 3a1871dd2aba407458b334eaba249754,
-        type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 3661803240820020965, guid: 5e4e7b014c3a19945af8275465d7addf,
         type: 3}
       propertyPath: switchPlayerDown
       value: 
-      objectReference: {fileID: 11400000, guid: 1a573e06df62dfd4396e71e6ae830f9c,
-        type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 3661803240820020965, guid: 5e4e7b014c3a19945af8275465d7addf,
         type: 3}
       propertyPath: switchPlayerLeft
       value: 
-      objectReference: {fileID: 11400000, guid: b017b230f81f3e94697a48f7683f3b1e,
-        type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 3661803240820020965, guid: 5e4e7b014c3a19945af8275465d7addf,
         type: 3}
       propertyPath: switchPlayerRight
       value: 
-      objectReference: {fileID: 11400000, guid: 80e35bc4125873b45b0a1321251987d9,
-        type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 9130741212122425162, guid: 5e4e7b014c3a19945af8275465d7addf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -735,6 +741,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterData: {fileID: 11400000, guid: 32e5984d0db2ee44ab39d59c870ce488, type: 2}
+  characterClass: {fileID: 0}
+  rb: {fileID: 0}
+  canInteract: 0
 --- !u!54 &1353368656
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1085,7 +1094,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93cddced58d648d449d7fdf302364bde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterData: {fileID: 11400000, guid: 3a1871dd2aba407458b334eaba249754, type: 2}
+  stunned: 0
+  damageReceivedMultiplier: 1
+  characterClass: {fileID: 2114854076154468116, guid: 24eb50918baaeec47b86420fb940891c,
+    type: 3}
 --- !u!1 &2263756053185837389
 GameObject:
   m_ObjectHideFlags: 0
