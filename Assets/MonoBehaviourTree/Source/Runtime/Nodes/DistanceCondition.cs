@@ -9,7 +9,7 @@ namespace MBT
     public class DistanceCondition : Condition
     {
         public Comparator comparator = Comparator.GreaterThan;
-        public FloatReference distance = new FloatReference(10f);
+        public FloatReference distance = new FloatReference(VarRefMode.DisableConstant);
         [Space]
         public TransformReference transform1;
         public TransformReference transform2;

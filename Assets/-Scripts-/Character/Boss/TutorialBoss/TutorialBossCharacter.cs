@@ -8,6 +8,7 @@ public class TutorialBossCharacter : BossCharacter
     [Header("Generics")]
     public float minDistance;
     public float followDuration;
+    public float walkSpeed;
 
     [Header("Raffica Di Pugni")]
     public float flurryDistance;
@@ -35,16 +36,6 @@ public class TutorialBossCharacter : BossCharacter
     public float crashTimer;
 
     public DamageData damageData;
-
-    //StateMachine<TutorialBossState> stateMachine = new();
-
-
-    private void Start()
-    {
-        //stateMachine.SetState(new FlurryOfBlows(this));
-        
-    }
-
 
     public void SetChargeDamageData()
     {
