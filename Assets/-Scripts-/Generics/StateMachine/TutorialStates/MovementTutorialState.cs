@@ -9,8 +9,7 @@ public class MovementTutorialState : TutorialFase
 {
     TutorialManager tutorialManager;
     [SerializeField] Dialogue dialogo;
-    [SerializeField] public UnityEvent OnFaseStart;
-     public UnityEvent OnFaseEnd;
+
 
     public MovementTutorialState(TutorialManager tutorialManager)
     {
@@ -20,6 +19,7 @@ public class MovementTutorialState : TutorialFase
     public override void Enter()
     {
         base.Enter();
+        
 
         tutorialManager.DeactivatePlayerInput(tutorialManager.dps);
         tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
@@ -33,13 +33,13 @@ public class MovementTutorialState : TutorialFase
         tutorialManager.ranged.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
 
+        tutorialManager.StartCoroutine(Count());
     }
     bool check = false;
 
     public override void Update()
     {
         base.Update();
-        //tutorialManager.StartCoroutine(Count());
 
         
 

@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -71,7 +69,42 @@ public class TutorialManager : MonoBehaviour
 
     private void Awake()
     {
+        SetUpCharacters();
+
         playableDirector = gameObject.GetComponent<PlayableDirector>();
+
+
+    }
+
+    private void SetUpCharacters()
+    {
+        PlayerCharacter searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is DPS);
+
+        if (searched != null)
+        {
+            dps = searched;
+        }
+
+        searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Healer);
+
+        if (searched != null)
+        {
+            healer = searched;
+        }
+
+        searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Ranged);
+
+        if (searched != null)
+        {
+            ranged = searched;
+        }
+
+        searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Tank);
+
+        if (searched != null)
+        {
+            tank = searched;
+        }
     }
 
     public CharacterClass current;
@@ -98,7 +131,7 @@ public class TutorialManager : MonoBehaviour
         //OnMovementFaseStart.Invoke();
 
 
-        stateMachine.SetState(new MovementTutorialState(this));
+        stateMachine.SetState(new IntermediateTutorialFase(this));
 
     }
 
@@ -130,6 +163,7 @@ public class TutorialManager : MonoBehaviour
 
     private void ResetPosition()
     {
+
         dps.gameObject.SetActive(false);
         healer.gameObject.SetActive(false);
         ranged.gameObject.SetActive(false);
