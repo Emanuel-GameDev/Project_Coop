@@ -37,6 +37,10 @@ public class Slotmachine : MonoBehaviour
             row.SetRow(numberOfSlots,numberWinSlots,slotDistance,dpsSprite,enemySprite,rotationSpeed,stabilizationSpeed);
         }
     }
+    private void Update()
+    {
+        //TODO: inserire input manuali per debug
+    }
 
     public void CheckForWin()
     {

@@ -145,12 +145,12 @@ public class SlotRow : MonoBehaviour
         }
         
 
-        if(Input.GetMouseButtonDown(0) && !stopped)
-        {
-            stopped = true;
+        //if(Input.GetMouseButtonDown(0) && !stopped)
+        //{
+            
 
-            StopRow();
-        }
+        //    StopRow();
+        //}
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -163,6 +163,8 @@ public class SlotRow : MonoBehaviour
 
     public void StopRow()
     {
+        stopped = true;
+
         Debug.Log(transform.localPosition.y % slotDistance);
 
         Vector3 targetDistance=Vector3.zero;
@@ -204,7 +206,7 @@ public class SlotRow : MonoBehaviour
         if (GameObject.ReferenceEquals(mainMachine.GetLastRow(), gameObject))
         {
             Debug.Log(gameObject);
-            //mainMachine.CheckForWin();  //non gli va bene quando si fermano tutte e 4 contemporeamente
+            mainMachine.CheckForWin();  //non gli va bene quando si fermano tutte e 4 contemporeamente
         }
     }
 
