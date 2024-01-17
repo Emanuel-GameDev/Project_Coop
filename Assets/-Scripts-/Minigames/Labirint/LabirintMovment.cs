@@ -1,31 +1,68 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class LabirintMovment : MonoBehaviour
 {
-    public float velocitaMovimento = 5f; // Velocità di movimento dell'oggetto
-    public Grid grid; // Riferimento al componente Grid
+    public float velocitaMovimento = 5f;
+    public Grid grid;
+    Vector2 moveDir;
+    Vector2 destination;
 
     void Update()
     {
-        // Esempio di movimento orizzontale
-        float inputOrizzontale = Input.GetAxis("Horizontal");
-        float inputVerticale = Input.GetAxis("Vertical");
+        Move();
+    }
 
-        // Calcola la direzione del movimento
-        Vector3 direzioneMovimento = new Vector3(inputOrizzontale, inputVerticale, 0f);
-
-        // Normalizza la direzione per evitare movimenti diagonali più veloci
+    private void Move()
+    {
+        Vector3 direzioneMovimento = moveDir;
         direzioneMovimento.Normalize();
 
-        // Calcola la posizione desiderata sulla griglia
-        Vector3 posizioneDesiderata = transform.position + direzioneMovimento * grid.cellSize.x;
+        if (moveDir != Vector2.zero && CheckDirection())
+        {
+            destination = grid.GetCellCenterWorld(grid.WorldToCell(transform.position + direzioneMovimento * grid.cellSize.x));
+            Debug.Log($"Destination: {destination}");
+        }
+            
 
-        // Quantizza la posizione alla griglia utilizzando il componente Grid
-        posizioneDesiderata = grid.GetCellCenterWorld(grid.WorldToCell(posizioneDesiderata));
-
-        // Sposta l'oggetto sulla posizione quantizzata
-        transform.position = Vector3.MoveTowards(transform.position, posizioneDesiderata, velocitaMovimento * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, destination, velocitaMovimento * Time.deltaTime);
     }
+
+    private bool CheckDirection()
+    {
+        bool hasReachCenter = Vector3.Distance(transform.position, destination) < 0.01f;
+        Vector2 directionToDestination = (destination - (Vector2)transform.position).normalized;
+        bool isSameAxis = false;//DaCompletare
+        Debug.Log($"MoveDir: {moveDir}");
+        Debug.Log($"has reac Center: {hasReachCenter}, Is Same Axis: {isSameAxis}");
+        return hasReachCenter || isSameAxis;
+    }
+
+    public void MoveInput(InputAction.CallbackContext context)
+    {
+        moveDir = context.ReadValue<Vector2>().normalized;
+        if (Mathf.Abs(moveDir.x) > Mathf.Abs(moveDir.y))
+        {
+            moveDir.y = 0;
+            moveDir.x =  moveDir.x > 0 ? 1 : -1;
+        }
+        else
+        {
+            moveDir.x = 0;
+            moveDir.y = moveDir.y > 0 ? 1 : -1;
+        }
+    }
+
+    public void StartInput(InputAction.CallbackContext context)
+    {
+        
+    }
+
+    public void SelectInput(InputAction.CallbackContext context)
+    {
+       
+    }
+
 }
+
