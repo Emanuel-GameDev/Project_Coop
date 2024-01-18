@@ -1,67 +1,85 @@
-using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class LabirintMovment : MonoBehaviour
 {
-    public float velocitaMovimento = 5f;
+    public float moveSpeed = 10f;
     public Grid grid;
-    Vector2 moveDir;
-    Vector2 destination;
+    protected Vector3 moveDir;
+    protected Vector3 destination;
 
-    void Update()
+    protected virtual void Start()
+    {
+        destination = transform.position;
+    }
+
+    protected virtual void Update()
     {
         Move();
     }
 
-    private void Move()
+    protected void Move()
     {
         Vector3 direzioneMovimento = moveDir;
         direzioneMovimento.Normalize();
 
-        if (moveDir != Vector2.zero && CheckDirection())
+        if (moveDir != Vector3.zero && CheckDirection())
         {
-            destination = grid.GetCellCenterWorld(grid.WorldToCell(transform.position + direzioneMovimento * grid.cellSize.x));
-            Debug.Log($"Destination: {destination}");
-        }
-            
+            Vector3 nextCellPosition = grid.GetCellCenterWorld(grid.WorldToCell(transform.position + direzioneMovimento * grid.cellSize.x));
+            if (!IsCellOccupied(nextCellPosition))
+                destination = nextCellPosition;
 
-        transform.position = Vector3.MoveTowards(transform.position, destination, velocitaMovimento * Time.deltaTime);
+            Debug.Log($"Destination: {destination}, MoveDir: {moveDir}");
+        }
+
+
+        transform.position = Vector3.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
     }
 
-    private bool CheckDirection()
+    protected bool CheckDirection()
     {
         bool hasReachCenter = Vector3.Distance(transform.position, destination) < 0.01f;
-        Vector2 directionToDestination = (destination - (Vector2)transform.position).normalized;
-        bool isSameAxis = false;//DaCompletare
+        Vector3 directionToDestination = (destination - (Vector3)transform.position).normalized;
+        bool isSameAxis = false;
+        if ((directionToDestination.x == 0 && moveDir.x == 0) || (directionToDestination.z == 0 && moveDir.z == 0))
+            isSameAxis = true;
         Debug.Log($"MoveDir: {moveDir}");
         Debug.Log($"has reac Center: {hasReachCenter}, Is Same Axis: {isSameAxis}");
         return hasReachCenter || isSameAxis;
     }
 
-    public void MoveInput(InputAction.CallbackContext context)
+    protected Vector2 SetVector01(Vector2 vector)
     {
-        moveDir = context.ReadValue<Vector2>().normalized;
-        if (Mathf.Abs(moveDir.x) > Mathf.Abs(moveDir.y))
+        vector.Normalize();
+        if (Mathf.Abs(vector.x) > Mathf.Abs(vector.y))
         {
-            moveDir.y = 0;
-            moveDir.x =  moveDir.x > 0 ? 1 : -1;
+            vector.y = 0;
+            if (vector.x != 0)
+                vector.x = vector.x > 0 ? 1 : -1;
         }
         else
         {
-            moveDir.x = 0;
-            moveDir.y = moveDir.y > 0 ? 1 : -1;
+            vector.x = 0;
+            if (vector.y != 0)
+                vector.y = vector.y > 0 ? 1 : -1;
         }
+
+        return vector;
+
     }
 
-    public void StartInput(InputAction.CallbackContext context)
+    protected bool IsCellOccupied(Vector3 cellPosition)
     {
-        
-    }
+        Collider[] colliders = Physics.OverlapBox(cellPosition, grid.cellSize / 2.1f);
 
-    public void SelectInput(InputAction.CallbackContext context)
-    {
-       
+        foreach (Collider collider in colliders)
+        {
+            if (!collider.isTrigger)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
