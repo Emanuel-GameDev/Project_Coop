@@ -1,23 +1,22 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class CursorBehaviour : MonoBehaviour
 {
     private Vector2 movement;
-    
+
     [HideInInspector] public List<RectTransform> objectsToOver = new List<RectTransform>();
-    private int currentIndex = -1;
+    private int currentIndex = 0;
 
     public bool objectSelected = false;
-    private GameObject playerSelection;
 
-    public void Initialize(CharacterSelectionMenu menu)
+    public void Initialize(List<PlayerSelection> selections)
     {
-        objectsToOver = menu.characterIcons;
+        foreach (PlayerSelection selection in selections)
+        {
+            objectsToOver.Add(selection.data._icon);
+        }
     }
 
     public void OnCursorMove(InputAction.CallbackContext context)
@@ -48,21 +47,30 @@ public class CursorBehaviour : MonoBehaviour
     {
         if (context.started)
         {
-            GameObject parentIcon = transform.parent.gameObject;
-            
-            if (!objectSelected)
-            {
-                objectSelected = true;
-                playerSelection = parentIcon;
-                Debug.Log("selected");
-            }
-            else
-            {
-                objectSelected = false;
-                playerSelection = null;
-                Debug.Log("Deselected");
-            }
-
+            TriggerSelection();
         }
+    }
+
+    private void TriggerSelection()
+    {
+        RectTransform parentRect = transform.parent.gameObject.GetComponent<RectTransform>();
+
+        // Se un'altro personaggio ha già selezionato un'oggetto return
+        if (CharacterSelectionMenu.Instance.AlreadySelected(parentRect)) return;
+
+        // Se non ho selezionato niente, seleziono
+        if (!objectSelected)
+        {
+            objectSelected = true;
+            Debug.Log("selected");
+        }
+        // Se ho già selezionato, deseleziono
+        else
+        {
+            objectSelected = false;
+            Debug.Log("Deselected");
+        }
+
+        CharacterSelectionMenu.Instance.UpdateSelection(parentRect, objectSelected);
     }
 }
