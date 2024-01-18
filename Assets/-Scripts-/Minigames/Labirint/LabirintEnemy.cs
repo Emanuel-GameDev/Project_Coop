@@ -21,9 +21,11 @@ public class LabirintEnemy : MonoBehaviour
     
     public float MaxDistance => maxRandomDestinationDistance * grid.cellSize.x;
     public float MinDistance => minRandomDestinationDistance * grid.cellSize.x;
+    public float MaxFollowDistance => maxFollowDistance * grid.cellSize.x;
 
     protected void Start()
     {
+        grid = LabirintManager.Instance.Grid;
         destination = transform.position;
         InizializeAgent();
     }
@@ -37,7 +39,7 @@ public class LabirintEnemy : MonoBehaviour
             agent = gameObject.AddComponent<NavMeshAgent>();
         }
 
-        
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
         agent.updateRotation = false;
         SetRandomDestination();
         Navigate();
@@ -51,15 +53,20 @@ public class LabirintEnemy : MonoBehaviour
 
     private void CheckTarget()
     {
-        if(target != null)
-            agentDestination = target.position;
-        if (Vector3.Distance(transform.position, agentDestination) > maxFollowDistance)
+        if (target != null)
+        {
+            if (NavMesh.SamplePosition(target.position, out NavMeshHit hit, 5.0f, NavMesh.AllAreas))
+            {
+                agentDestination = hit.position;
+            }
+        }
+        if (Vector3.Distance(transform.position, agentDestination) > MaxFollowDistance)
         {
             target = null;
             SetRandomDestination();
         }
         
-        //Debug.Log($"Target: {target}");
+        Debug.Log($"Target: {target}");
     }
 
     private void SetRandomDestination()
@@ -97,6 +104,8 @@ public class LabirintEnemy : MonoBehaviour
         {
             Navigate();
         }
+
+        Debug.Log($"Has Reach Destination: {hasReachDestination}, Has Reach Center: {hasReachCenter}, count: {debugCount}");
     }
 
     private void Navigate()
@@ -122,11 +131,9 @@ public class LabirintEnemy : MonoBehaviour
     {
         if (Utility.IsInLayerMask(other.gameObject, TargetLayer))
         {
-            target = other.transform;
+            if(target == null)
+                target = other.transform;
         }
-
-        Debug.Log($"Collider Target: {target}, Value: {Utility.IsInLayerMask(other.gameObject, TargetLayer)}");
-
     }
 
 
