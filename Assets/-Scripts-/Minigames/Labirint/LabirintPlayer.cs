@@ -7,7 +7,7 @@ public class LabirintPlayer : LabirintMovment
     {
         Vector2 inputDirection = context.ReadValue<Vector2>();
         moveDir = Utility.YtoZ(SetVector01(inputDirection));
-        Debug.Log($"inputDir: {inputDirection}, MoveDir: {moveDir}");
+        //Debug.Log($"inputDir: {inputDirection}, MoveDir: {moveDir}");
     }
     public void StartInput(InputAction.CallbackContext context)
     {

@@ -28,7 +28,7 @@ public class LabirintMovment : MonoBehaviour
             if (!IsCellOccupied(nextCellPosition))
                 destination = nextCellPosition;
 
-            Debug.Log($"Destination: {destination}, MoveDir: {moveDir}");
+            //Debug.Log($"Destination: {destination}, MoveDir: {moveDir}");
         }
 
 
@@ -42,8 +42,8 @@ public class LabirintMovment : MonoBehaviour
         bool isSameAxis = false;
         if ((directionToDestination.x == 0 && moveDir.x == 0) || (directionToDestination.z == 0 && moveDir.z == 0))
             isSameAxis = true;
-        Debug.Log($"MoveDir: {moveDir}");
-        Debug.Log($"has reac Center: {hasReachCenter}, Is Same Axis: {isSameAxis}");
+        //Debug.Log($"MoveDir: {moveDir}");
+        //Debug.Log($"has reac Center: {hasReachCenter}, Is Same Axis: {isSameAxis}");
         return hasReachCenter || isSameAxis;
     }
 
