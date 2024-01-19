@@ -116,7 +116,7 @@ public class Ranged : CharacterClass
         nearbyLandmine = new List<LandMine>();
         landMineInInventory = maxNumberLandMine;
         perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>();
-        //perfectTimingHandler.gameObject.SetActive(false);
+        perfectTimingHandler.gameObject.SetActive(false);
     }
 
 

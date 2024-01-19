@@ -26,8 +26,6 @@ public class GameManager : MonoBehaviour
     {
         manager = playerManager.GetComponent<PlayerInputManager>();
         coopManager = playerManager.GetComponent<CoopManager>();
-
-        PlayerInputManager.instance.JoinPlayer(0, -1, null);
     }
 
     private void Update()

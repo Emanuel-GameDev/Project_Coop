@@ -12,7 +12,8 @@ public class CoopManager : MonoBehaviour
     public List<PlayerCharacter> activePlayers = new List<PlayerCharacter>();
     private List<CharacterClass> internalSwitchList;
 
-    private List<PlayerInput> playerList = new List<PlayerInput>();
+    public InputActionMap playerActionMap { get; private set; }
+    public InputActionMap uiActionMap { get; private set; }
 
     private void Start()
     {
@@ -33,15 +34,13 @@ public class CoopManager : MonoBehaviour
             }
         }
 
+        PlayerInputManager manager = GetComponent<PlayerInputManager>();
+        playerActionMap = manager.playerPrefab.GetComponent<PlayerInput>().actions.FindActionMap("Player");
+        uiActionMap = manager.playerPrefab.GetComponent<PlayerInput>().actions.FindActionMap("UI");
+
     }
 
-    public void JoinPlayer(int numPlayers)
-    {
-        for (int i = 0; i < numPlayers; i++)
-        {
-            GameManager.Instance.manager.JoinPlayer();
-        }
-    }
+
 
     public void SwitchCharacter(PlayerCharacter characterToSwitch, int switchInto)
     {
@@ -54,14 +53,16 @@ public class CoopManager : MonoBehaviour
         characterToSwitch.SwitchCharacterClass(internalSwitchList[switchInto]);
     }
 
-    public void OnPlayerJoined(PlayerInput playerInput)
+    public void AddPlayer()
     {
-        playerList.Add(playerInput);
-    }
+        PlayerCharacter[] foundPlayersComponents = FindObjectsOfType<PlayerCharacter>();
 
-    public void OnPlayerLeft(PlayerInput playerInput)
-    {
-
+        foreach (PlayerCharacter p in foundPlayersComponents)
+        {
+            if (!activePlayers.Contains(p))
+                activePlayers.Add(p);
+        }
+        
     }
 
 }

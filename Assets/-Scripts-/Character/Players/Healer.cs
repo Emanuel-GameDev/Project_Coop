@@ -115,14 +115,12 @@ public class Healer : CharacterClass
         if (context.performed)
         {
             animator.SetTrigger("IsAttacking");
-            //PubSub.Instance.Notify(EMessageType.healerCombo, null);
         }
 
         if (context.canceled)
         {
             animator.ResetTrigger("IsAttacking");
         }
-
 
     }
 

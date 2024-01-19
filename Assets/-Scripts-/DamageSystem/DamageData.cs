@@ -8,9 +8,6 @@ public class DamageData
     public Condition condition = null;
     public bool bossAttack = false;
 
-
-    public bool blockedByTank;
-
     public DamageData(float damage, IDamager dealer)
     {
         this.damage = damage;
