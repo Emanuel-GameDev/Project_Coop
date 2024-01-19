@@ -288,7 +288,10 @@ public class Ranged : CharacterClass
             //se potenziamento sbloccato => damage
             if (dodgeDamageUnlocked)
             {
-               
+                if(data.dealer is IDamageable)
+                {
+                    ((IDamageable)data.dealer).TakeDamage(new DamageData(Damage*dodgeDamageMultiplier,null));
+                }
             }
             
             //se c'è il boss + potenziamento sbloccato => tp
