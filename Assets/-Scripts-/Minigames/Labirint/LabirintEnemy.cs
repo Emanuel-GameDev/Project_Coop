@@ -3,11 +3,11 @@ using UnityEngine.AI;
 
 public class LabirintEnemy : MonoBehaviour
 {
-    public LayerMask TargetLayer;
     public float maxFollowDistance = 15f;
     public Grid grid;
     protected Vector3 destination;
 
+    private EnemyTargetDetection targetDetection;
     private Transform target;
     private NavMeshAgent agent;
     private Vector3 agentDestination;
@@ -25,6 +25,7 @@ public class LabirintEnemy : MonoBehaviour
 
     protected void Start()
     {
+        targetDetection= GetComponentInChildren<EnemyTargetDetection>();
         grid = LabirintManager.Instance.Grid;
         destination = transform.position;
         InizializeAgent();
@@ -105,7 +106,7 @@ public class LabirintEnemy : MonoBehaviour
             Navigate();
         }
 
-        Debug.Log($"Has Reach Destination: {hasReachDestination}, Has Reach Center: {hasReachCenter}, count: {debugCount}");
+        //Debug.Log($"Has Reach Destination: {hasReachDestination}, Has Reach Center: {hasReachCenter}, count: {debugCount}");
     }
 
     private void Navigate()
@@ -129,12 +130,20 @@ public class LabirintEnemy : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (Utility.IsInLayerMask(other.gameObject, TargetLayer))
+        LabirintPlayer player = other.GetComponent<LabirintPlayer>();
+
+        if (player != null)
         {
-            if(target == null)
-                target = other.transform;
+            player.Killed();
+            target = null;
         }
     }
 
+
+    public void SetTarget(Transform target)
+    {
+        if (this.target == null)
+            this.target = target;
+    }
 
 }

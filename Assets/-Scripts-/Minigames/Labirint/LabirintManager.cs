@@ -37,6 +37,7 @@ public class LabirintManager : MonoBehaviour
     [SerializeField]
     List<Labirint> Labirints;
     int playerCount = 1;
+    int deadPlayerCount = 0;
     Labirint currentLabirint;
     int pickedKey;
     public Grid Grid => grid;
@@ -67,7 +68,7 @@ public class LabirintManager : MonoBehaviour
 
     private void EndGame()
     {
-        Debug.Log("End Game");
+        Debug.Log("End Game: You Win");
     }
 
     private void SetupLabirint()
@@ -82,6 +83,7 @@ public class LabirintManager : MonoBehaviour
         SetElements(currentLabirint.GetKeySpawnPoints(), keyCount);
         SetElements(currentLabirint.GetPlayerSpawnPoints(), playerCount);
         pickedKey = 0;
+        deadPlayerCount = 0;
         SetEnemyes(currentLabirint.GetEnemySpawnPoints());
         SetPlayers(currentLabirint.GetPlayerSpawnPoints());
     }
@@ -127,6 +129,10 @@ public class LabirintManager : MonoBehaviour
         }
     }
 
-    
-
+    internal void PlayerDead()
+    {
+        deadPlayerCount++;
+        if (deadPlayerCount >= playerCount)
+            Debug.Log("End Game: You Lose");
+    }
 }

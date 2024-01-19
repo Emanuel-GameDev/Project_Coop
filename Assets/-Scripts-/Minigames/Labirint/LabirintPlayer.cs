@@ -31,6 +31,11 @@ public class LabirintPlayer : MonoBehaviour
         pickedKeys++;
         LabirintManager.Instance.PickedKey();
     }
+    internal void Killed()
+    {
+        gameObject.SetActive(false);
+        LabirintManager.Instance.PlayerDead();
+    }
 
     #region Movement
     protected void Move()
@@ -115,6 +120,8 @@ public class LabirintPlayer : MonoBehaviour
     {
 
     }
-    #endregion
+
     
+    #endregion
+
 }
