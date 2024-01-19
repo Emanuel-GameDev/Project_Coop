@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.TextCore.Text;
 
 public class EnemyCharacter : Character
@@ -17,9 +18,15 @@ public class EnemyCharacter : Character
     protected float moveSpeed;
 
     protected Animator animator;
+    protected NavMeshAgent agent;
     protected PowerUpData powerUpData;
+    public Transform target;
 
     public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
+    public float MoveSpeed => moveSpeed;
+    public NavMeshAgent Agent => agent;
+    public Transform Target => target;
+
     [HideInInspector]
     public float currentHp;
     
@@ -27,6 +34,7 @@ public class EnemyCharacter : Character
     {
         base.InitialSetup();
         animator = GetComponent<Animator>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     #region PowerUp
@@ -45,4 +53,21 @@ public class EnemyCharacter : Character
         if (data.condition != null)
             data.condition.AddCondition(this);
     }
+
+    public virtual void TargetSelection() 
+    {
+        List<PlayerCharacter> activePlayers = GameManager.Instance.coopManager.activePlayers;
+
+        Transform target = activePlayers[0].transform;
+        float distance = Vector3.Distance(transform.position, target.position);
+        
+        foreach (PlayerCharacter player in activePlayers)
+        {
+            if (Vector3.Distance(transform.position, player.transform.position) < distance)
+                target = player.transform;
+        }
+
+        this.target = target;
+    }
+
 }
