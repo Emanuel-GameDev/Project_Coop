@@ -4,5 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 public interface IDamager
 {
-    public float GetDamage();
+    //modifiche
+
+    //float GetDamage();
+    DamageData GetDamageData();
+
+
+    //aaaaaa non so
+    virtual void OnParryNotify() { }
+
+    //fine modifiche
 }

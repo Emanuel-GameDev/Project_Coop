@@ -1,43 +1,111 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CoopManager : MonoBehaviour
 {
-    [SerializeField] Character character;
+    [SerializeField] private CharacterClass switchPlayerUp;
+    [SerializeField] private CharacterClass switchPlayerRight;
+    [SerializeField] private CharacterClass switchPlayerDown;
+    [SerializeField] private CharacterClass switchPlayerLeft;
+    private bool canSwitch = true;
+    public List<PlayerCharacter> activePlayers = new List<PlayerCharacter>();
+    private List<CharacterClass> internalSwitchList;
 
-    [SerializeField] private CharacterData switchPlayerUp;
-    [SerializeField] private CharacterData switchPlayerRight;
-    [SerializeField] private CharacterData switchPlayerDown;
-    [SerializeField] private CharacterData switchPlayerLeft;
+    private List<PlayerInput> playerList = new List<PlayerInput>();
 
-
-    public void Switch1_performed(InputAction.CallbackContext context)
+    private static CoopManager _instance;
+    public static CoopManager Instance
     {
-        Debug.Log(context.action);
-        if(context.performed)
-            character.SetCharacterData(switchPlayerUp);
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<CoopManager>();
+
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new("CoopManager");
+                    _instance = singletonObject.AddComponent<CoopManager>();
+                }
+            }
+
+            return _instance;
+        }
     }
 
-    public void Switch2_performed(InputAction.CallbackContext context)
+    private void Awake()
     {
-        Debug.Log(context.action);
-        if (context.performed)
-            character.SetCharacterData(switchPlayerRight);
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
-    public void Switch3_performed(InputAction.CallbackContext context)
+
+    private void Start()
     {
-        Debug.Log(context.action);
-        if (context.performed)
-            character.SetCharacterData(switchPlayerDown);
+        internalSwitchList = new List<CharacterClass>()
+        {
+            switchPlayerUp,
+            switchPlayerRight,
+            switchPlayerDown,
+            switchPlayerLeft
+        };
+
+        foreach (CharacterClass ch in internalSwitchList)
+        {
+            if (ch == null)
+            {
+                Debug.LogError("Missing player to switch Reference. PlayerManager/CoopManager");
+                return;
+            }
+        }
+
     }
-    public void Switch4_performed(InputAction.CallbackContext context)
+
+    public void JoinPlayer(int numPlayers)
     {
-        Debug.Log(context.action);
-        if (context.performed)
-            character.SetCharacterData(switchPlayerLeft);
+        for (int i = 0; i < numPlayers; i++)
+        {
+            GameManager.Instance.playerInputManager.JoinPlayer();
+        }
+    }
+
+    public void SwitchCharacter(PlayerCharacter characterToSwitch, int switchInto)
+    {
+        if (!canSwitch)
+            return;
+        
+        foreach (PlayerCharacter player in activePlayers)
+        {
+            if (player.CharacterClass == internalSwitchList[switchInto])
+                return;
+        }
+
+        characterToSwitch.SwitchCharacterClass(internalSwitchList[switchInto]);
+    }
+
+    public void OnPlayerJoined(PlayerInput playerInput)
+    {
+        playerList.Add(playerInput);
+        GameManager.Instance.PlayerIsJoined(playerInput);
+    }
+
+    public void OnPlayerLeft(PlayerInput playerInput)
+    {
+        playerList.Remove(playerInput);
+        GameManager.Instance.PlayerAsLeft(playerInput);
+    }
+
+    public void SetCanSwitch(bool canSwitch) 
+    { 
+        this.canSwitch = canSwitch;
     }
 
 }
