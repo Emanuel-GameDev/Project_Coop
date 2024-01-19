@@ -15,7 +15,7 @@ public class SlotRow : MonoBehaviour
 
      private List<GameObject> reorderSlots;
 
-     bool stopped;
+     public bool stopped { get; private set; }
      bool isSlowDown;
 
     float rotationSpeed;
@@ -128,7 +128,7 @@ public class SlotRow : MonoBehaviour
     {
         
 
-        if (!stopped)
+        if (!stopped && !isSlowDown)
         {
             transform.localPosition += Vector3.up * Time.deltaTime * rotationSpeed;
 
@@ -141,29 +141,25 @@ public class SlotRow : MonoBehaviour
         else if (isSlowDown)
         {
             isSlowDown = false;
-            StartCoroutine(StabilizateRow(targetPosition));
-        }
-        
-
-        //if(Input.GetMouseButtonDown(0) && !stopped)
-        //{
             
+        }
 
-        //    StopRow();
-        //}
+
+        if (Input.GetMouseButtonDown(0) && !isSlowDown)
+        {
+            StopRow();
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            stopped = false;
-
-            selectedSlot = null;
+            ResetRow();
         }
         
     }
 
     public void StopRow()
     {
-        stopped = true;
+        
 
         Debug.Log(transform.localPosition.y % slotDistance);
 
@@ -172,7 +168,7 @@ public class SlotRow : MonoBehaviour
 
         if(transform.localPosition.y % slotDistance > (slotDistance/2))
         {
-            targetDistance = new Vector3(transform.localPosition.x, transform.localPosition.y + (slotDistance- (transform.localPosition.y % slotDistance)));  //non ok
+            targetDistance = new Vector3(transform.localPosition.x, transform.localPosition.y + (slotDistance- (transform.localPosition.y % slotDistance)));  //ok
         }
 
         if(transform.localPosition.y % slotDistance <= (slotDistance/2))
@@ -183,6 +179,8 @@ public class SlotRow : MonoBehaviour
         targetPosition = targetDistance;
 
         Debug.LogFormat("Target Position : {0} , Posizione iniziale : {1}",targetPosition,transform.localPosition);
+
+        StartCoroutine(StabilizateRow(targetPosition));
     }
 
     IEnumerator StabilizateRow(Vector3 target)
@@ -202,18 +200,29 @@ public class SlotRow : MonoBehaviour
 
         selectedSlot = reorderSlots[stoppedPosition].GetComponent<Slot>();
 
-        
-        if (GameObject.ReferenceEquals(mainMachine.GetLastRow(), gameObject))
-        {
-            Debug.Log(gameObject);
-            mainMachine.CheckForWin();  //non gli va bene quando si fermano tutte e 4 contemporeamente
-        }
+        stopped = true;
+
+
+        //if (GameObject.ReferenceEquals(mainMachine.GetLastRow(), gameObject))
+        //{
+        //    Debug.Log(gameObject);
+        //    mainMachine.CheckForWin();  //non gli va bene quando si fermano tutte e 4 contemporeamente
+        //}
+
+        mainMachine.CheckAllRowStopped();
     }
 
     
     public Slot GetSelectedSlot()
     {
         return selectedSlot;
+    }
+
+    public void ResetRow()
+    {
+        stopped = false;
+        isSlowDown = false;
+        selectedSlot = null;
     }
 
    

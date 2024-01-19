@@ -42,7 +42,7 @@ public class Slotmachine : MonoBehaviour
         //TODO: inserire input manuali per debug
     }
 
-    public void CheckForWin()
+    private void CheckForWin()
     {
         win = true;
 
@@ -68,5 +68,24 @@ public class Slotmachine : MonoBehaviour
     public GameObject GetLastRow()
     {
         return rows[rows.Count - 1].gameObject;
+    }
+
+    public void CheckAllRowStopped()
+    {
+        bool allStopped=true;
+
+        foreach (SlotRow row in rows)
+        {
+            if(!row.stopped)
+            {
+                allStopped = false;
+                break;
+            }
+        }
+
+        if (allStopped)
+        {
+            CheckForWin();
+        }
     }
 }
