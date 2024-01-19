@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -145,15 +146,15 @@ public class SlotRow : MonoBehaviour
         }
 
 
-        if (Input.GetMouseButtonDown(0) && !isSlowDown)
-        {
-            StopRow();
-        }
+        //if (Input.GetMouseButtonDown(0) && !isSlowDown)
+        //{
+        //    StopRow();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ResetRow();
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    ResetRow();
+        //}
         
     }
 
@@ -223,6 +224,14 @@ public class SlotRow : MonoBehaviour
         stopped = false;
         isSlowDown = false;
         selectedSlot = null;
+    }
+
+    public void StartSlowDown()
+    {
+        if(!isSlowDown)
+        {
+            StopRow();
+        }
     }
 
    

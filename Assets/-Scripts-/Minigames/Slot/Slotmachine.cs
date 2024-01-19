@@ -16,6 +16,8 @@ public class Slotmachine : MonoBehaviour
     float rotationSpeed;
     [SerializeField,Tooltip("Velocità/tempo impiegato alla colonna per fermarsi")] 
     float stabilizationSpeed;
+    [SerializeField, Tooltip("Delay restart della colonna")]
+    float restartDelay;
 
     [Header("Sprite figure")]
     [SerializeField] private Sprite dpsSprite;
@@ -28,7 +30,7 @@ public class Slotmachine : MonoBehaviour
 
     [SerializeField] private List<SlotRow> rows;
 
-    bool win;
+    bool canInteract;
 
     private void Awake()
     {
@@ -37,14 +39,51 @@ public class Slotmachine : MonoBehaviour
             row.SetRow(numberOfSlots,numberWinSlots,slotDistance,dpsSprite,enemySprite,rotationSpeed,stabilizationSpeed);
         }
     }
+
+    private void Start()
+    {
+        canInteract = true;
+    }
     private void Update()
     {
         //TODO: inserire input manuali per debug
+
+        if (canInteract)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                rows[0].StartSlowDown();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                rows[1].StartSlowDown();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                rows[2].StartSlowDown();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                rows[3].StartSlowDown();
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                StartCoroutine(RestartSlotMachine());
+            }
+        }
+       
+
     }
 
     private void CheckForWin()
     {
-        win = true;
+        bool win = true;
 
         foreach (SlotRow row in rows)
         {
@@ -85,7 +124,20 @@ public class Slotmachine : MonoBehaviour
 
         if (allStopped)
         {
+            canInteract = false;
             CheckForWin();
         }
     }
+
+    public IEnumerator RestartSlotMachine()
+    {
+        foreach (SlotRow row in rows)
+        {
+            row.ResetRow();
+
+            yield return new WaitForSeconds(restartDelay);
+        }
+
+        canInteract = true;
+    } 
 }
