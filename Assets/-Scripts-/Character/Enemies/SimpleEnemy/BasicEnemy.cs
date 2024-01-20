@@ -99,6 +99,11 @@ public class BasicEnemy : EnemyCharacter
     {
         //base.TargetSelection();
     }
+    public override void TakeDamage(DamageData data)
+    {
+        //base.TakeDamage(data);
+        Debug.Log(data.dealer.ToString());
+    }
 
     private void OnDrawGizmos()
     {
