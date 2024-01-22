@@ -5,12 +5,15 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
+
+
 public class MovementTutorialState : TutorialFase
 {
     TutorialManager tutorialManager;
-    [SerializeField] Dialogue dialogo;
-    [SerializeField] public UnityEvent OnFaseStart;
-     public UnityEvent OnFaseEnd;
+
+    MovementTutorialFaseData faseData;
+
+    bool moveCheck = false;
 
     public MovementTutorialState(TutorialManager tutorialManager)
     {
@@ -19,40 +22,63 @@ public class MovementTutorialState : TutorialFase
     
     public override void Enter()
     {
-        base.Enter();
+         base.Enter();
+
+         faseData = (MovementTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
 
         tutorialManager.DeactivatePlayerInput(tutorialManager.dps);
         tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
         tutorialManager.DeactivatePlayerInput(tutorialManager.ranged);
         tutorialManager.DeactivatePlayerInput(tutorialManager.tank);
 
-        tutorialManager.OnMovementFaseStart.Invoke();
+        tutorialManager.dialogueBox.OnDialogueEnded += StartFaseTimer;
+
+        tutorialManager.PlayDialogue(tutorialManager.fases[tutorialManager.faseCount].faseData.faseStartDialogue);
+    }
+
+    
+
+    private void StartFaseTimer()
+    {
+        tutorialManager.StartCoroutine(tutorialManager.Timer(faseData.faseLenght));
 
         tutorialManager.dps.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         tutorialManager.healer.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         tutorialManager.ranged.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
 
+        tutorialManager.dialogueBox.OnDialogueEnded -= StartFaseTimer;
     }
-    bool check = false;
+
 
     public override void Update()
     {
         base.Update();
-        //tutorialManager.StartCoroutine(Count());
 
         
 
-        if (!check)
+        if (!moveCheck)
         {
             foreach (PlayerCharacter p in GameManager.Instance.coopManager.activePlayers)
             {
                 if(p.MoveDirection!=Vector2.zero)
                 {
-                    check=true;
+                    moveCheck=true;
+                    Debug.Log(moveCheck);
                 }
             }
 
+        }
+
+        if (tutorialManager.timerEnded)
+        {
+            tutorialManager.timerEnded = false;
+            stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+
+            tutorialManager.DeactivatePlayerInput(tutorialManager.dps);
+            tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
+            tutorialManager.DeactivatePlayerInput(tutorialManager.ranged);
+            tutorialManager.DeactivatePlayerInput(tutorialManager.tank);
         }
     }
 
@@ -60,14 +86,13 @@ public class MovementTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
-        //tutorialManager.OnMovementFaseEnd.Invoke();
+
+        tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
+
+        if (!moveCheck)
+            tutorialManager.PlayDialogue(faseData.specialFaseEndDialogue);
+        else
+            tutorialManager.PlayDialogue(tutorialManager.fases[tutorialManager.faseCount].faseData.faseEndDialogue);
+
     }
-
-    //IEnumerator Count()
-    //{
-    //    Debug.Log("waiting");
-    //    yield return new WaitForSeconds(10);
-    //    tutorialManager.stateMachine.SetState(new AttackTutorialState(tutorialManager));
-    //}
-
 }
