@@ -36,4 +36,6 @@ public class Slot : MonoBehaviour
     {
         gameObject.AddComponent<SpriteRenderer>().sprite=sprite;
     }
+
+    
 }

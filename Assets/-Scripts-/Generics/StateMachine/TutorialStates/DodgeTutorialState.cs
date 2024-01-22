@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DodgeTutorialState : TutorialFase
+public class DodgeTutorialState : State
 {
     TutorialManager tutorialManager;
 
@@ -21,7 +21,7 @@ public class DodgeTutorialState : TutorialFase
 
     public override void Update()
     {
-        base.Update();
+        base.Enter();
 
 
     }
@@ -29,6 +29,6 @@ public class DodgeTutorialState : TutorialFase
 
     public override void Exit()
     {
-        base.Exit();
+        base.Enter();
     }
 }

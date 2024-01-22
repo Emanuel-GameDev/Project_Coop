@@ -18,7 +18,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     public float damageReceivedMultiplier = 1;
 
     //Lo uso per chimare tutte le funzioni iniziali
-    protected virtual void Awake()
+    protected void Awake()
     {
         InitialSetup();
     }
