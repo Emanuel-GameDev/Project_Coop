@@ -273,6 +273,12 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: 2028243610401785429}
     m_Position: {x: 0, y: 200, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -1421527109978586786}
+    m_Position: {x: 35, y: 265, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -3428458377005611982}
+    m_Position: {x: 70, y: 330, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -3871653718465354645}
@@ -487,6 +493,32 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1102 &-3428458377005611982
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: DodgeUpStickMan
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 8bb768b46df7bdf43aebb856971c1b77, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1102 &-2908559104443988121
 AnimatorState:
   serializedVersion: 6
@@ -524,7 +556,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 2de192b0d9b1ab649882e43af87dca77, type: 2}
+    m_Motion: {fileID: 7400000, guid: 2db18a616c8599643aec6ca42db81cb0, type: 2}
     m_Threshold: -1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -532,7 +564,7 @@ BlendTree:
     m_DirectBlendParameter: X
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: e2c81cd9ec6e2ba41b740b716e83fd8c, type: 2}
+    m_Motion: {fileID: 7400000, guid: 6d5a10cd26fd3564ebb0f377b1f31fca, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -555,7 +587,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: f53db675bce546c4c925a3bb31b6ee59, type: 2}
+    m_Motion: {fileID: 7400000, guid: 2db18a616c8599643aec6ca42db81cb0, type: 2}
     m_Threshold: -1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -563,7 +595,7 @@ BlendTree:
     m_DirectBlendParameter: X
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: f90d4f513d0ca5244b5fd270f544a5fd, type: 2}
+    m_Motion: {fileID: 7400000, guid: 6d5a10cd26fd3564ebb0f377b1f31fca, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -602,6 +634,32 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1102 &-1421527109978586786
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: DodgeDownStickMan
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 720391d73fea17d4c8d3dd38aa195ff3, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!206 &-779973676650692752
 BlendTree:
   m_ObjectHideFlags: 1
@@ -611,7 +669,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: c56a5868155c2e1438d73f3c9fb47abd, type: 2}
+    m_Motion: {fileID: 7400000, guid: 720391d73fea17d4c8d3dd38aa195ff3, type: 2}
     m_Threshold: -1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -619,7 +677,7 @@ BlendTree:
     m_DirectBlendParameter: X
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 978ac2a0a0187fb48b761ff646ef4160, type: 2}
+    m_Motion: {fileID: 7400000, guid: 8bb768b46df7bdf43aebb856971c1b77, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -1077,7 +1135,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 49e1abebb99c75c4fb1bffa41ebd85b3, type: 2}
+    m_Motion: {fileID: 7400000, guid: 2db18a616c8599643aec6ca42db81cb0, type: 2}
     m_Threshold: -1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -1085,7 +1143,7 @@ BlendTree:
     m_DirectBlendParameter: X
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 111c50d22b0b2f848b631190158564b1, type: 2}
+    m_Motion: {fileID: 7400000, guid: 6d5a10cd26fd3564ebb0f377b1f31fca, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
