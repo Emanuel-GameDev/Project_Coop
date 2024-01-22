@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DodgeTutorialFaseData : MonoBehaviour
+[CreateAssetMenu(menuName = "Tutorial/TutorialFaseData/DodgeTutorialFaseData")]
+public class DodgeTutorialFaseData : TutorialFaseData
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [Header("Dialoghi pre-tutorial schivata dei personaggi")]
+    [SerializeField] public Dialogue dpsDodgeDialogue;
+    [SerializeField] public Dialogue rangedDodgeDialogue;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [Header("Dialoghi pre-tutorial schivata perfetta dei personaggi")]
+    [SerializeField] public Dialogue dpsPerfectDodgeDialogue;
+    [SerializeField] public Dialogue rangedPerfectDodgeDialogue;
 }

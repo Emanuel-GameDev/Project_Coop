@@ -5,4 +5,5 @@ using UnityEngine;
 public abstract class TutorialFase : State<TutorialFase>
 {
 
+    
 }

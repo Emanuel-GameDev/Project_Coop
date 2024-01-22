@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class BasicEnemy : EnemyCharacter
 {
 
-    [SerializeField] float stoppingDistance = 1;
+    public Transform groundLevel;
 
-
+    [SerializeField] public float viewRange = 2f;
+    [SerializeField] public float attackRange = 1;
+    [SerializeField] float attackDelay = 1;
 
     //di prova
     [SerializeField] Transform tryTarget;
@@ -16,23 +19,70 @@ public class BasicEnemy : EnemyCharacter
     NavMeshPath path;
 
     [SerializeField] Transform pivot;
+
+    public StateMachine<BasicEnemyState> stateMachine { get; } = new();
+
     Vector2 lastNonZeroDirection;
-    bool isMoving;
-    bool isAttacking = false;
+
+
+    [HideInInspector] public bool isMoving;
+    [HideInInspector] public bool isAttacking = false;
+
+    [HideInInspector] public BasicEnemyIdleState idleState;
+    [HideInInspector] public BasicEnemyMoveState moveState;
+    [HideInInspector] public BasicEnemyAttackState attackState;
+
+    [HideInInspector] public bool AIActive = true;
+
+    [HideInInspector] public bool canSee = true;
+    [HideInInspector] public bool canMove = false;
+    [HideInInspector] public bool canAttack = false;
+
+    [SerializeField] public Detector viewTrigger;
+    [SerializeField] public Detector attackTrigger;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        idleState = new BasicEnemyIdleState(this);
+        moveState = new BasicEnemyMoveState(this);
+        attackState = new BasicEnemyAttackState(this);
+
+
+        path = new NavMeshPath();
+    }
 
     private void Start()
     {
-        path = new NavMeshPath();
+        viewTrigger.GetComponent<CapsuleCollider>().radius = viewRange;
+        attackTrigger.GetComponent<CapsuleCollider>().radius = attackRange;
+
+        stateMachine.SetState(idleState);
     }
 
     private void Update()
     {
-        if (agent.CalculatePath(tryTarget.position, path))
+        if(AIActive)
+        stateMachine.StateUpdate();
+
+        
+    }
+
+    public void FollowPath()
+    {
+        if (!canMove)
+        {
+            rb.velocity = Vector3.zero;
+            return;
+        }
+
+        if (agent.CalculatePath(target.position, path))
         {
             if (path.corners.Length > 1)
                 Move(path.corners[1] - path.corners[0], rb);
             else
-                Move(tryTarget.position - transform.position, rb);
+                Move(target.position - transform.position, rb);
         }
         else
             rb.velocity = Vector3.zero;
@@ -40,16 +90,13 @@ public class BasicEnemy : EnemyCharacter
 
     public virtual void Move(Vector3 direction, Rigidbody rb)
     {
-        if (Vector3.Distance(transform.position,tryTarget.position) < stoppingDistance)
-        {
-            rb.velocity = Vector3.zero;
+        //if (Vector3.Distance(transform.position,tryTarget.position) < attackRange)
+        //{
+        //    rb.velocity = Vector3.zero;
 
-            //attacca
-            if(!isAttacking)
-                StartCoroutine(Attack());
 
-            return;
-        }
+        //    return;
+        //}
         
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
@@ -69,7 +116,7 @@ public class BasicEnemy : EnemyCharacter
 
         SetSpriteDirection(lastNonZeroDirection);
 
-        animator.SetBool("isMooving", isMoving);
+        animator.SetBool("isMoving", isMoving);
     }
 
     protected void SetSpriteDirection(Vector2 direction)
@@ -81,32 +128,44 @@ public class BasicEnemy : EnemyCharacter
 
         if ((direction.x > 0.5 && scale.x > 0) || (direction.x < -0.5 && scale.x < 0))
             scale.x *= -1;
-
+        
         pivot.gameObject.transform.localScale = scale;
     }
 
-    IEnumerator Attack()
+    public Animator GetAnimator()
     {
+        return animator;
+    }
+    
+    public IEnumerator Attack()
+    {
+
         isAttacking = true;
-        GetComponentInChildren<SpriteRenderer>().material.color = Color.red;
-        yield return new WaitForSeconds(0.2f);
+        //GetComponentInChildren<SpriteRenderer>().material.color = Color.red;
+        animator.SetTrigger("Attack");
+
+        yield return new WaitForSeconds(attackDelay);
         isAttacking = false;
-        GetComponentInChildren<SpriteRenderer>().material.color = Color.white;
+        //GetComponentInChildren<SpriteRenderer>().material.color = Color.white;
     }
 
 
     public override void TargetSelection()
     {
-        //base.TargetSelection();
-    }
-    public override void TakeDamage(DamageData data)
-    {
-        //base.TakeDamage(data);
-        Debug.Log(data.dealer.ToString());
+        
     }
 
-    private void OnDrawGizmos()
+    public void SetTarget(Transform newTarget)
     {
-        Gizmos.DrawWireSphere(transform.position, stoppingDistance);
+        target = newTarget;
     }
+
+    public override void TakeDamage(DamageData data)
+    {
+        base.TakeDamage(data);
+
+        
+    }
+
+    
 }
