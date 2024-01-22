@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealTutorialState : State
+public class HealTutorialState : TutorialFase
 {
     TutorialManager tutorialManager;
 
@@ -21,7 +21,7 @@ public class HealTutorialState : State
 
     public override void Update()
     {
-        base.Enter();
+        base.Update();
 
 
     }
@@ -29,6 +29,6 @@ public class HealTutorialState : State
 
     public override void Exit()
     {
-        base.Enter();
+        base.Exit();
     }
 }
