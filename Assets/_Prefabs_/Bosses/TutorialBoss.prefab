@@ -250,6 +250,7 @@ GameObject:
   - component: {fileID: 5275965238212643612}
   - component: {fileID: 1255704674414632997}
   - component: {fileID: 8028825823184856611}
+  - component: {fileID: 7293738630276026740}
   m_Layer: 7
   m_Name: TutorialBoss
   m_TagString: Untagged
@@ -416,3 +417,36 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7293738630276026740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8892075984851458196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee20297708f9d404ea9cff48fd7971cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stunned: 0
+  damageReceivedMultiplier: 1
+  maxHp: 0
+  damage: 0
+  staminaDamage: 0
+  attackSpeed: 0
+  moveSpeed: 0
+  target: {fileID: 0}
+  currentHp: 0
+  minDistance: 0.1
+  shortDistanceRange: 15
+  shortDistanceChancePercentage: 0.65
+  moveRepeatPercentage: 0.25
+  flurryDistance: 0
+  flurrySpeed: 0
+  punchQuantity: 0
+  chargeTimer: 0
+  chargeDuration: 0
+  chargeSpeed: 0
+  chargeDistance: 0
+  moveDuration: 0

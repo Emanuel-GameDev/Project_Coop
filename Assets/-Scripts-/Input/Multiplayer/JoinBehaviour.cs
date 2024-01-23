@@ -53,7 +53,8 @@ public class JoinBehaviour : MonoBehaviour
         if (!playerCursor.activeInHierarchy)
         {
             PlayerInput cursor = PlayerInput.Instantiate(playerCursor, -1, controlScheme, -1, device);
-            cursor.transform.SetParent(CharacterSelectionMenu.Instance.gameObject.transform);
+            cursor.transform.SetParent(CharacterSelectionMenu.Instance.characterIcons[0]._icon.gameObject.GetComponent<RectTransform>());
+            cursor.gameObject.GetComponent<RectTransform>().position = cursor.transform.parent.gameObject.GetComponent<RectTransform>().position;
             cursor.transform.localScale = new Vector3(1f, 1f, 1f);
         }
     }
