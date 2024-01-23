@@ -44,10 +44,8 @@ public class BasicEnemy : EnemyCharacter
     [SerializeField] float CarvingTime = 0.5f;
     [SerializeField] float CarvingMoveThreshold = 0.1f;
 
-    public NavMeshObstacle obstacle;
+    [HideInInspector] public NavMeshObstacle obstacle;
 
-    float lastMoveTime;
-     Vector3 lastPosition;
 
 
     protected override void Awake()
@@ -60,7 +58,6 @@ public class BasicEnemy : EnemyCharacter
         obstacle.carveOnlyStationary = false;
         obstacle.carving = true;
 
-        lastPosition = transform.position;
 
         idleState = new BasicEnemyIdleState(this);
         moveState = new BasicEnemyMoveState(this);
@@ -104,8 +101,6 @@ public class BasicEnemy : EnemyCharacter
         }
 
         obstacle.enabled = false;
-        lastMoveTime = Time.time;
-        lastPosition = transform.position;
 
         agent.enabled = true;
 
