@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public CoopManager coopManager { get; private set; }
     public CameraManager cameraManager { get; private set; }
 
+
     public bool canJoin = false;
     private static GameManager _instance;
     public static GameManager Instance

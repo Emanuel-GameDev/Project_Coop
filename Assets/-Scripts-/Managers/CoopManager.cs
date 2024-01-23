@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,7 +10,8 @@ public class CoopManager : MonoBehaviour
     [SerializeField] private CharacterClass switchPlayerDown;
     [SerializeField] private CharacterClass switchPlayerLeft;
     private bool canSwitch = true;
-    public List<PlayerCharacter> activePlayers = new List<PlayerCharacter>();
+    public List<PlayerSelection> playerInputDevices = new List<PlayerSelection>();
+    public List<PlayerCharacter> activePlayers;
     private List<CharacterClass> internalSwitchList;
 
     private List<PlayerInput> playerList = new List<PlayerInput>();
@@ -34,6 +36,11 @@ public class CoopManager : MonoBehaviour
         }
     }
 
+    public CharacterClass SwitchPlayerUp => switchPlayerUp;
+    public CharacterClass SwitchPlayerRight => switchPlayerRight;
+    public CharacterClass SwitchPlayerDown => switchPlayerDown;
+    public CharacterClass SwitchPlayerLeft => switchPlayerLeft;
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -52,10 +59,10 @@ public class CoopManager : MonoBehaviour
     {
         internalSwitchList = new List<CharacterClass>()
         {
-            switchPlayerUp,
-            switchPlayerRight,
-            switchPlayerDown,
-            switchPlayerLeft
+            SwitchPlayerUp,
+            SwitchPlayerRight,
+            SwitchPlayerDown,
+            SwitchPlayerLeft
         };
 
         foreach (CharacterClass ch in internalSwitchList)
@@ -77,20 +84,7 @@ public class CoopManager : MonoBehaviour
         }
     }
 
-    public void SwitchCharacter(PlayerCharacter characterToSwitch, int switchInto)
-    {
-        if (!canSwitch)
-            return;
-        
-        foreach (PlayerCharacter player in activePlayers)
-        {
-            if (player.CharacterClass == internalSwitchList[switchInto])
-                return;
-        }
-
-        characterToSwitch.SwitchCharacterClass(internalSwitchList[switchInto]);
-    }
-
+    
     public void OnPlayerJoined(PlayerInput playerInput)
     {
         playerList.Add(playerInput);
@@ -108,4 +102,38 @@ public class CoopManager : MonoBehaviour
         this.canSwitch = canSwitch;
     }
 
+    /// <summary>
+    /// Prende dal character selection menù la lista dei player selection e aggiorna i player attivi
+    /// </summary>
+    public void UpdateSelectedPalyers(List<PlayerSelection> list) 
+    {
+        playerInputDevices.Clear(); 
+
+        foreach (PlayerSelection player in list) 
+        {
+            if (player.selected)
+                playerInputDevices.Add(player);
+        }
+    }
+
+    //quando si istanzia il prefab di un giocatore se è un player character va buttato nella lista activePlayers, da valutare se spostare la lista nel GameManager
+
+    internal bool CanSwitchCharacter(CharacterClass switchPlayerUp, PlayerCharacter playerCharacter)
+    {
+        if (!canSwitch)
+            return false;
+        
+        PlayerSelection toSwtich = new();
+        
+        foreach(PlayerSelection player in playerInputDevices)
+        {
+            if (player.data._class == switchPlayerUp)
+                return false;
+            if (player.data._class == playerCharacter.CharacterClass)
+                toSwtich = player;
+        }
+        toSwtich.data._class = switchPlayerUp;
+
+        return true;
+    }
 }

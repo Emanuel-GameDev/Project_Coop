@@ -4,36 +4,41 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.InputSystem.Users;
 
 public struct PlayerSelection
 {
     public PlayerData data;
-    public bool iconSelected;
+    public bool selected;
     public bool randomBtnSelected;
     public int deviceID;
     public string deviceName;
+    public InputDevice device;
 
     public PlayerSelection(PlayerData data, bool iconSelected, bool randomBtnSelected)
     {
         this.data = data;
-        this.iconSelected = iconSelected;
+        this.selected = iconSelected;
         this.randomBtnSelected = randomBtnSelected;
         deviceID = 0;
         deviceName = "";
+        device = null;
     }
 
     public void EditIcon(bool iconSelected)
     {
-        this.iconSelected = iconSelected;
+        this.selected = iconSelected;
     }
 
-    public void EditControlScheme(InputDevice device)
+    public void EditDevice(InputDevice device)
     {
         // Ottenere l'ID univoco dell'InputDevice come chiave
         deviceID = device.deviceId;
 
         // Ottenere il nome del dispositivo come valore
         deviceName = device.name;
+
+        this.device = device;
     }
 
     public void Print()
@@ -108,7 +113,7 @@ public class CharacterSelectionMenu : MonoBehaviour
         {
             if (iconToCheck == s.data._icon)
             {
-                if (s.iconSelected)
+                if (s.selected)
                     return true;
                 else
                     return false;
@@ -129,7 +134,7 @@ public class CharacterSelectionMenu : MonoBehaviour
             if (iconToSelect == s.data._icon)
             {
                 s.EditIcon(mode);
-                s.EditControlScheme(whoSelected);
+                s.EditDevice(whoSelected);
                 s.Print();
             }
         }
@@ -139,4 +144,11 @@ public class CharacterSelectionMenu : MonoBehaviour
     {
 
     }
+
+    public void EndSelection()
+    {
+        CoopManager.Instance.UpdateSelectedPalyers(selectableCharacters);
+    }
+
+
 }
