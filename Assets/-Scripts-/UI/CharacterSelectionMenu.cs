@@ -8,24 +8,40 @@ using System;
 public struct PlayerSelection
 {
     public PlayerData data;
-    public bool selected;
-    public Dictionary<int, string> playerControlScheme;
+    public bool iconSelected;
+    public bool randomBtnSelected;
+    public int deviceID;
+    public string deviceName;
 
-    public PlayerSelection(PlayerData data, bool selected)
+    public PlayerSelection(PlayerData data, bool iconSelected, bool randomBtnSelected)
     {
         this.data = data;
-        this.selected = selected;
-        playerControlScheme = new Dictionary<int,string>();
+        this.iconSelected = iconSelected;
+        this.randomBtnSelected = randomBtnSelected;
+        deviceID = 0;
+        deviceName = "";
     }
 
-    public void Edit(bool selected)
+    public void EditIcon(bool iconSelected)
     {
-        this.selected = selected;
+        this.iconSelected = iconSelected;
+    }
+
+    public void EditControlScheme(InputDevice device)
+    {
+        // Ottenere l'ID univoco dell'InputDevice come chiave
+        deviceID = device.deviceId;
+
+        // Ottenere il nome del dispositivo come valore
+        deviceName = device.name;
     }
 
     public void Print()
     {
-        Debug.Log(data._class.ToString());
+        Debug.Log(
+            "classe: " + data._class.ToString() + "\n" +
+            "id dispositivo: " + deviceID + "\n" +
+            "nome dispositivo: " + deviceName + "\n");
     }
 }
 
@@ -44,8 +60,6 @@ public class CharacterSelectionMenu : MonoBehaviour
     // la struct che verrà usata per capire se un personaggio è stato selezionato
     private List<PlayerSelection> selectableCharacters = new List<PlayerSelection>();
 
-    private Button randomBtn;
-
     public static CharacterSelectionMenu Instance;
 
     private void Awake()
@@ -59,20 +73,13 @@ public class CharacterSelectionMenu : MonoBehaviour
     private void Start()
     {
         InitialiazeSelections();
-
-        randomBtn = GetComponentInChildren<Button>();
-
-        if (randomBtn == null)
-            Debug.LogError("Error getting Btn reference");
-        else
-            randomBtn.onClick.AddListener(SelectRandom);
     }
 
     private void InitialiazeSelections()
     {
         for (int i = 0; i < characterIcons.Count; i++)
         {
-            PlayerSelection selection = new PlayerSelection(characterIcons[i], false);
+            PlayerSelection selection = new PlayerSelection(characterIcons[i], false, false);
             selectableCharacters.Add(selection);
         }
     }
@@ -101,7 +108,7 @@ public class CharacterSelectionMenu : MonoBehaviour
         {
             if (iconToCheck == s.data._icon)
             {
-                if (s.selected)
+                if (s.iconSelected)
                     return true;
                 else
                     return false;
@@ -115,20 +122,21 @@ public class CharacterSelectionMenu : MonoBehaviour
     /// Aggiorna il bool all'interno della lista delle selezioni quando un personaggio clicca sull'icona
     /// </summary>
     /// <param name="iconToSelect"></param>
-    public void UpdateSelection(RectTransform iconToSelect, bool mode)
+    public void UpdateSelection(RectTransform iconToSelect, bool mode, InputDevice whoSelected)
     {
         foreach (PlayerSelection s in selectableCharacters)
         {
             if (iconToSelect == s.data._icon)
             {
-                s.Edit(mode);
+                s.EditIcon(mode);
+                s.EditControlScheme(whoSelected);
                 s.Print();
             }
         }
     }
 
-    public void SelectRandom()
+    public void UpdateRandomSelection()
     {
-        Debug.Log("ksj");
+
     }
 }
