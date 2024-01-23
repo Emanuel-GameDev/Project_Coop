@@ -124,7 +124,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stunned: 0
   damageReceivedMultiplier: 1
-  characterClass: {fileID: 0}
+  characterClass: {fileID: 7349943595437100007, guid: a515c5230cc12cf47a15b95d1a202fdd,
+    type: 3}
   protectedByTank: 0
 --- !u!54 &6851799198813683004
 Rigidbody:
@@ -399,6 +400,26 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 85efb363-392f-4bbc-aff9-19e731dd404c
     m_ActionName: Player/Interact[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ca8189d5-9025-4f34-8404-f88abfc96bbb
+    m_ActionName: Player/Menu[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: dec0a516-4526-44f8-8f49-6059a1f55f22
+    m_ActionName: Player/Option[/Keyboard/i]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2bd01a4c-1513-474f-a598-f422126c66f7
+    m_ActionName: Labirint/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 09e4f0af-c130-4512-b1ac-59d390c95e3f
+    m_ActionName: Labirint/Menu[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6730f1b7-9659-4eab-8ae2-968211cbf3ea
+    m_ActionName: Labirint/Option[/Keyboard/i]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
