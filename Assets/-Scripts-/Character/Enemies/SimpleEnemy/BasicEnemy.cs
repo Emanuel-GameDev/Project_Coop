@@ -41,9 +41,26 @@ public class BasicEnemy : EnemyCharacter
     [SerializeField] public Detector viewTrigger;
     [SerializeField] public Detector attackTrigger;
 
+    [SerializeField] float CarvingTime = 0.5f;
+    [SerializeField] float CarvingMoveThreshold = 0.1f;
+
+    public NavMeshObstacle obstacle;
+
+    float lastMoveTime;
+     Vector3 lastPosition;
+
+
     protected override void Awake()
     {
         base.Awake();
+
+        obstacle = GetComponent<NavMeshObstacle>();
+
+        obstacle.enabled = false;
+        obstacle.carveOnlyStationary = false;
+        obstacle.carving = true;
+
+        lastPosition = transform.position;
 
         idleState = new BasicEnemyIdleState(this);
         moveState = new BasicEnemyMoveState(this);
@@ -66,7 +83,16 @@ public class BasicEnemy : EnemyCharacter
         if(AIActive)
         stateMachine.StateUpdate();
 
-        
+        //if(Vector3.Distance(lastPosition, transform.position) > CarvingMoveThreshold)
+        //{
+        //    lastMoveTime = Time.time;
+        //    lastPosition = transform.position;
+        //}
+        //if (lastMoveTime + CarvingTime < Time.time)
+        //{
+        //    Agent.enabled=false;
+        //    obstacle.enabled=true;
+        //}
     }
 
     public void FollowPath()
@@ -77,8 +103,15 @@ public class BasicEnemy : EnemyCharacter
             return;
         }
 
+        obstacle.enabled = false;
+        lastMoveTime = Time.time;
+        lastPosition = transform.position;
+
+        agent.enabled = true;
+
         if (agent.CalculatePath(target.position, path))
         {
+
             if (path.corners.Length > 1)
                 Move(path.corners[1] - path.corners[0], rb);
             else

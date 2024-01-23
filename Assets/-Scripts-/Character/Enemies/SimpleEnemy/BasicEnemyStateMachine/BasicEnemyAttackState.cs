@@ -19,6 +19,9 @@ public class BasicEnemyAttackState : BasicEnemyState
         basicEnemy.SetTarget(basicEnemy.attackTrigger.GetPlayersDetected()[0].transform);
 
         basicEnemy.StartCoroutine(basicEnemy.Attack());
+
+        basicEnemy.Agent.enabled = false;
+        basicEnemy.obstacle.enabled = true;
     }
     bool change=false;
     public override void Update()
