@@ -192,6 +192,7 @@ public class DPS : CharacterClass
         IsAttacking = true;
         string triggerName = ATTACK + (nextComboState).ToString();
         animator.SetTrigger(triggerName);
+
     }
     public void OnAttackAnimationEnd()
     {

@@ -17,12 +17,9 @@ public enum TutorialFaseType
 
 
 
-
 public class TutorialManager : MonoBehaviour
 {
     public StateMachine<TutorialFase> stateMachine { get; } = new();
-
-    //[SerializeField] List<Fase> faseList;
 
     [SerializeField] public DialogueBox dialogueBox;
 
@@ -38,29 +35,8 @@ public class TutorialManager : MonoBehaviour
     public PlayerCharacter tank;
     public PlayerCharacter ranged;
 
-    public BasicEnemy tutorialEnemy;
-
-    [Header("Movement")]
-    [SerializeField] float faseLenght = 10;
-    //public UnityEvent OnMovementFaseStart;
-    //[SerializeField] UnityEvent OnMovementFaseEnd;
-    //[SerializeField] UnityEvent OnMovementFaseEndSpecial;
-
-    //[Header("Attack")]
-    //[SerializeField] UnityEvent OnAttackFaseStart;
-    //[SerializeField] UnityEvent OnAttackFaseEnd;
-
-    //[Header("Dodge")]
-    //[SerializeField] UnityEvent OnDodgeFaseStart;
-    //[SerializeField] UnityEvent OnDodgeFaseEnd;
-
-    //[Header("Guard")]
-    //[SerializeField] UnityEvent OnGuardFaseStart;
-    //[SerializeField] UnityEvent OnGuardFaseEnd;
-
-    //[Header("Heal")]
-    //[SerializeField] UnityEvent OnHealFaseStart;
-    //[SerializeField] UnityEvent OnHealFaseEnd;
+    public TutorialEnemy tutorialEnemy;
+    
 
     [Serializable]
     public class Fase
@@ -72,8 +48,6 @@ public class TutorialManager : MonoBehaviour
 
     [SerializeField] public Fase[] fases = new Fase[1];
 
-    //[SerializeField] public UnityEvent[] OnFaseStart = new UnityEvent[Enum.GetValues(typeof(TutorialFase)).Length];
-    //[SerializeField] public UnityEvent[] OnFaseEnd = new UnityEvent[Enum.GetValues(typeof(TutorialFase)).Length];
 
     public int faseCount = 0;
 
@@ -121,17 +95,6 @@ public class TutorialManager : MonoBehaviour
 
     private void Start()
     {
-        //stateMachine.RegisterState(TutorialFase.Intermediate, new IntermediateTutorialFase(this));
-
-        //stateMachine.RegisterState(TutorialFase.Movement, new MovementTutorialState(this));
-
-        //stateMachine.RegisterState(TutorialFase.Attack, new AttackTutorialState(this));
-
-        //stateMachine.RegisterState(TutorialFase.Dodge, new DodgeTutorialState(this));
-
-        //stateMachine.RegisterState(TutorialFase.Guard, new GuardTutorialState(this));
-
-        //stateMachine.RegisterState(TutorialFase.Heal, new HealTutorialState(this));
 
         stateMachine.SetState(new IntermediateTutorialFase(this));
 
@@ -140,8 +103,6 @@ public class TutorialManager : MonoBehaviour
         current = healer.CharacterClass;
         //dps.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
         //OnMovementFaseStart.Invoke();
-
-
 
     }
 
@@ -159,6 +120,8 @@ public class TutorialManager : MonoBehaviour
         timerEnded = true;
         StopCoroutine(Timer(time));
     }
+
+    
 
     public void PlayDialogue(Dialogue dialogueToPlay)
     {
@@ -178,8 +141,12 @@ public class TutorialManager : MonoBehaviour
         character.GetComponent<PlayerInput>().actions.Disable();
     }
 
+    public bool blockFaseChange = false;
+
     public void StartNextFase()
     {
+        if (blockFaseChange)
+            return;
         
         switch (fases[faseCount].faseData.faseType)
         {
@@ -206,10 +173,15 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
+    public void Fade()
+    {
+        playableDirector.Play();
+    }
+
     public void EndCurrentFase()
     {
         faseCount++;
-        playableDirector.Play();
+        Fade();
 
         dialogueBox.OnDialogueEnded -= EndCurrentFase;
     }
@@ -231,24 +203,32 @@ public class TutorialManager : MonoBehaviour
         healer.gameObject.SetActive(true);
         ranged.gameObject.SetActive(true);
         tank.gameObject.SetActive(true);
+
+        DeactivatePlayerInput(dps);
+        DeactivatePlayerInput(healer);
+        DeactivatePlayerInput(ranged);
+        DeactivatePlayerInput(tank);
     }
 
     private void ResetEnemyPosition()
     {
         tutorialEnemy.gameObject.SetActive(false);
-        tutorialEnemy.gameObject.transform.SetPositionAndRotation(DPSRespawn.position, dps.gameObject.transform.rotation);
-        tutorialEnemy.gameObject.SetActive(true);
+        tutorialEnemy.gameObject.transform.SetPositionAndRotation(enemyRespawn.position, tutorialEnemy.gameObject.transform.rotation);
 
         DeactivateEnemyAI();
+        tutorialEnemy.gameObject.SetActive(true);
     }
 
     public void DeactivateEnemyAI()
     {
-        tutorialEnemy.enabled = false;
+        //tutorialEnemy.enabled = false;
+        tutorialEnemy.AIActive = false;
+        
     }
 
     public void ActivateEnemyAI()
     {
-        tutorialEnemy.enabled = true;
+        //tutorialEnemy.enabled = true;
+        tutorialEnemy.AIActive = true;
     }
 }
