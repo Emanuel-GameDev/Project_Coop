@@ -10,7 +10,7 @@ public class SlotRow : MonoBehaviour
      int numberWinSlots;
      float slotDistance = 0.25f;
 
-    //inserire giocatore scelto
+    //inserire giocatore scelto ggggggg
      private Sprite playerSprite;
      private Sprite mouseSprite;
 

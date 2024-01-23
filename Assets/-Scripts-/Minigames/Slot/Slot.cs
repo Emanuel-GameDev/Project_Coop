@@ -13,6 +13,7 @@ public class Slot : MonoBehaviour
     [SerializeField] private Sprite sprite;
     [SerializeField] private slotType slotType;
 
+    //didindi
     public Sprite Sprite 
     { 
         get => sprite;

@@ -81,6 +81,7 @@ public class Slotmachine : MonoBehaviour
 
     }
 
+    //rorrrorr
     private void CheckForWin()
     {
         bool win = true;
