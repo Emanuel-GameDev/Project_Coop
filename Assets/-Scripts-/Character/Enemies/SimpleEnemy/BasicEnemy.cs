@@ -80,16 +80,6 @@ public class BasicEnemy : EnemyCharacter
         if(AIActive)
         stateMachine.StateUpdate();
 
-        //if(Vector3.Distance(lastPosition, transform.position) > CarvingMoveThreshold)
-        //{
-        //    lastMoveTime = Time.time;
-        //    lastPosition = transform.position;
-        //}
-        //if (lastMoveTime + CarvingTime < Time.time)
-        //{
-        //    Agent.enabled=false;
-        //    obstacle.enabled=true;
-        //}
     }
 
     public void FollowPath()
