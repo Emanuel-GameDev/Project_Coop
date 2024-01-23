@@ -324,14 +324,20 @@ public class Tank : CharacterClass
         if (context.performed && isAttacking == false && canCancelAttack == false)
         {
             SetCanMove(false, character.GetRigidBody());
-            isBlocking = true;
-            ShowStaminaBar(true);
-            Debug.Log($"is blocking [{isBlocking}]");
+            if(isBlocking != true)
+            {
+                isBlocking = true;
+               //animator.SetBool("isBlocking", isBlocking);
+                animator.SetTrigger("2");
 
+            }
+
+            ShowStaminaBar(true);
+            
             //Rotate pivor Trigger per proteggere player
             pivotTriggerProtected.enabled = true;
             pivotTriggerProtected.Rotate(GetLastNonZeroDirection());
-            Debug.Log(GetLastNonZeroDirection());
+            
 
             //Trigger che setta ai player protectedByTank a true;
             triggerProtectPlayer.SetPlayersProtected(true);
@@ -345,13 +351,19 @@ public class Tank : CharacterClass
         else if (context.canceled && isBlocking == true)
         {
             SetCanMove(true, character.GetRigidBody());
+            if (isBlocking != false)
+            {
+                
+                isBlocking = false;
+                //animator.SetBool("isBlocking", isBlocking);
+                animator.SetTrigger("3");
+            }
             isBlocking = false;
             ShowStaminaBar(false);
+            
 
             //Da mettere reset in animazione alzata scudo
             ResetStamina();
-
-            Debug.Log($"is blocking [{isBlocking}]");
 
             //Trigger che setta ai player protectedByTank a true;
             triggerProtectPlayer.SetPlayersProtected(false);

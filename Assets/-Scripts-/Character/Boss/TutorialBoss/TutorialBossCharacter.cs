@@ -35,7 +35,7 @@ public class TutorialBossCharacter : BossCharacter
     public float crashWaveStaminaDamage;
     public float crashTimer;
 
-    public DamageData damageData;
+    [HideInInspector] public DamageData damageData;
 
     public void SetChargeDamageData()
     {

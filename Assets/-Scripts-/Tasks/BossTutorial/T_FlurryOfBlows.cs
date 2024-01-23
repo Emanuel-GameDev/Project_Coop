@@ -4,7 +4,7 @@ using UnityEngine;
 namespace MBTExample
 {
     [AddComponentMenu("")]
-    [MBTNode("Custom Taks/Raffica Di Colpi ")]
+    [MBTNode("Kerberos/Raffica Di Colpi")]
     public class T_FlurryOfBlows : Leaf
     {
         public TransformReference targetTransform;
