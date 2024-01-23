@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Timeline;
 
 [CreateAssetMenu(menuName = "Tutorial/TutorialFaseData/AttackTutorialFaseData")]
 public class AttackTutorialFaseData : TutorialFaseData
 {
+
     [Header("Dialoghi pre-tutorial dei personaggi")]
     [SerializeField] public Dialogue dpsDialogue;
     [SerializeField] public Dialogue healerDialogue;
