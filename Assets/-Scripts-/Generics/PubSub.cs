@@ -5,9 +5,7 @@ using UnityEngine;
 
 public enum EMessageType
 {
-    comboPerformed,
-    dialogueStarted,
-    dialogueEnded
+    comboPerformed
 
 }
 

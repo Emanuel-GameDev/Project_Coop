@@ -57,6 +57,7 @@ public class JoinBehaviour : MonoBehaviour
             cursor.gameObject.GetComponent<RectTransform>().position = cursor.transform.parent.gameObject.GetComponent<RectTransform>().position;
             cursor.transform.localScale = new Vector3(1f, 1f, 1f);
         }
+
     }
 
     public void OnPlayerJoin()
