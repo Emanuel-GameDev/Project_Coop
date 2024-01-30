@@ -11,6 +11,8 @@ public class PlayerCharacter : Character
     
     public float MaxHp => characterClass.MaxHp;
     public float CurrentHp => characterClass.currentHp;
+    public bool protectedByTank;
+    
 
     private Vector3 screenPosition;
     private Vector3 worldPosition;
@@ -56,7 +58,18 @@ public class PlayerCharacter : Character
     }
 
     public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
-    public override void TakeDamage(DamageData data) => characterClass.TakeDamage(data);
+    public override void TakeDamage(DamageData data)
+    {
+        if (protectedByTank && data.blockedByTank)
+        {
+            Debug.Log("Protetto da tank");
+        }
+        else
+        {
+            characterClass.TakeDamage(data);
+        }
+    }
+       
     public override DamageData GetDamageData() => characterClass.GetDamageData();
 
     #region Input
@@ -104,24 +117,36 @@ public class PlayerCharacter : Character
     public void SwitchUp(InputAction.CallbackContext context)
     {
         if (context.performed)
-            GameManager.Instance.coopManager.SwitchCharacter(this, 0);
+            if(CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerUp, this))
+            {
+                SwitchCharacterClass(CoopManager.Instance.SwitchPlayerUp);
+            }
     }
 
     public void SwitchRight(InputAction.CallbackContext context)
     {
         if(context.performed)
-            GameManager.Instance.coopManager.SwitchCharacter(this, 1);
+            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerRight, this))
+            {
+                SwitchCharacterClass(CoopManager.Instance.SwitchPlayerRight);
+            }
     }
 
     public void SwitchDown(InputAction.CallbackContext context)
     {
         if (context.performed)
-            GameManager.Instance.coopManager.SwitchCharacter(this, 2);
+            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerDown, this))
+            {
+                SwitchCharacterClass(CoopManager.Instance.SwitchPlayerDown);
+            }
     }
     public void SwitchLeft(InputAction.CallbackContext context)
     {
         if (context.performed)
-            GameManager.Instance.coopManager.SwitchCharacter(this, 3);
+            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerLeft, this))
+            {
+                SwitchCharacterClass(CoopManager.Instance.SwitchPlayerLeft);
+            }
     }
 
     #endregion

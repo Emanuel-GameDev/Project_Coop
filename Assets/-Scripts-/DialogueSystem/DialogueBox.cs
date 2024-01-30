@@ -24,7 +24,8 @@ public class DialogueBox : MonoBehaviour
 
     Dialogue.DialogueLine nextLine;
 
-    [SerializeField] List<UnityEvent> OnDialogueEnd;
+    [SerializeField]  List<UnityEvent> OnDialogueEnd;
+    [SerializeField] public event Action OnDialogueEnded;
 
     private AudioSource audioSource;
 
@@ -54,7 +55,10 @@ public class DialogueBox : MonoBehaviour
         }
         else
         {
-            OnDialogueEnd[dialogueIndex].Invoke();
+
+            //OnDialogueEnd[dialogueIndex]?.Invoke();
+            OnDialogueEnded.Invoke();
+
             dialogueIndex++;
 
             if (dialogueIndex == dialogues.Length)

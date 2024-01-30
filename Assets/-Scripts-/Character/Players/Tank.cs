@@ -74,6 +74,8 @@ public class Tank : CharacterClass
     private bool canPerfectBlock;
     private bool uniqueAbilityReady = true;
     private bool statBoosted;
+    private bool canProtectOther;
+    
 
     private int comboIndex = 0;
     private int comboMax = 2;
@@ -88,6 +90,8 @@ public class Tank : CharacterClass
     private GenericBarScript staminaBar;
     private GameObject chargedAttackAreaObject = null;
     private PerfectTimingHandler perfectBlockHandler;
+    private ProtectPlayers triggerProtectPlayer;
+    private PivotTriggerProtected pivotTriggerProtected;
 
 
     public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
@@ -100,6 +104,8 @@ public class Tank : CharacterClass
 
         staminaBar.Setvalue(maxStamina);
         staminaBar.gameObject.SetActive(false);
+        triggerProtectPlayer = GetComponentInChildren<ProtectPlayers>();
+        pivotTriggerProtected = GetComponentInChildren<PivotTriggerProtected>();
 
         perfectBlockHandler = GetComponentInChildren<PerfectTimingHandler>(true);
 
@@ -117,8 +123,6 @@ public class Tank : CharacterClass
         {
             TakeDamage(new DamageData(10, null));
         }
-
-
 
     }
 
@@ -286,6 +290,7 @@ public class Tank : CharacterClass
 
         Vector2 lastNonZeroDirection = GetLastNonZeroDirection();
 
+        
         Vector3 lastDirection = new Vector3(lastNonZeroDirection.x, 0f, lastNonZeroDirection.y);
 
         Vector3 dealerDirection = dealerMB.gameObject.transform.position - transform.position;
@@ -323,6 +328,15 @@ public class Tank : CharacterClass
             ShowStaminaBar(true);
             Debug.Log($"is blocking [{isBlocking}]");
 
+            //Rotate pivor Trigger per proteggere player
+            pivotTriggerProtected.enabled = true;
+            pivotTriggerProtected.Rotate(GetLastNonZeroDirection());
+            Debug.Log(GetLastNonZeroDirection());
+
+            //Trigger che setta ai player protectedByTank a true;
+            triggerProtectPlayer.SetPlayersProtected(true);
+
+
             //eliminare
             mostraGizmoRangeParata = true;
 
@@ -338,6 +352,10 @@ public class Tank : CharacterClass
             ResetStamina();
 
             Debug.Log($"is blocking [{isBlocking}]");
+
+            //Trigger che setta ai player protectedByTank a true;
+            triggerProtectPlayer.SetPlayersProtected(false);
+
 
             //eliminare
             mostraGizmoRangeParata = false;
@@ -377,6 +395,8 @@ public class Tank : CharacterClass
             }
 
             Debug.Log("parata perfetta eseguita, rimanenti per potenziamento boss = " + (attacksToBlockForUpgrade - perfectBlockCount));
+
+            data.dealer.OnParryNotify();
             if (damageOnParry)
             {
                 dealerMB.TakeDamage(new DamageData(perfectBlockDamage, character));
@@ -409,9 +429,11 @@ public class Tank : CharacterClass
         }
         if (isBlocking && AttackInBlockAngle(data))
         {
+            data.blockedByTank = true;
 
             if (statBoosted)
             {
+               
                 staminaBar.DecreaseValue(data.staminaDamage * staminaDamageReductionMulty);
                 currentStamina -= (data.staminaDamage * staminaDamageReductionMulty);
 

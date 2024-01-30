@@ -115,12 +115,14 @@ public class Healer : CharacterClass
         if (context.performed)
         {
             animator.SetTrigger("IsAttacking");
+            //PubSub.Instance.Notify(EMessageType.healerCombo, null);
         }
 
         if (context.canceled)
         {
             animator.ResetTrigger("IsAttacking");
         }
+
 
     }
 
@@ -365,6 +367,7 @@ public class Healer : CharacterClass
     public override void TakeDamage(DamageData data)
     {
         base.TakeDamage(data);
+        Debug.Log("Hit");
         bossPowerUpHitCount = 0;
     }
 

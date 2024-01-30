@@ -3,38 +3,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public abstract class State
+public abstract class State<T> where T : State<T>
 {
-    public virtual void Enter() { }
+    protected StateMachine<T> stateMachine;
+
+    public void SetStateMachine(StateMachine<T> machine)
+    {
+        stateMachine = machine ?? throw new ArgumentNullException(nameof(machine));
+    }
+
+    public virtual void Enter() 
+    { 
+        Debug.Log(this.ToString()); 
+    }
     public virtual void Update() { }
     public virtual void Exit() { }
 }
 
 
-public class StateMachine<T> where T : Enum
+public class StateMachine<T> where T : State<T>
 {
-    Dictionary<T, State> _states = new();
-    State currentState;
-
-    public void RegisterState(T type, State state)
-    {
-        if (_states.ContainsKey(type))
-            return;
-
-        _states.Add(type, state);
-    }
+    private T currentState;
+    public T CurrentState => currentState;
 
     public void StateUpdate()
     {
         currentState?.Update();
     }
 
-    public void SetState(T type)
+    public void SetState(T state)
     {
         currentState?.Exit();
 
-        currentState = _states[type];
+        currentState = state ?? throw new ArgumentNullException(nameof(state));
+        currentState.SetStateMachine(this);
 
         currentState.Enter();
     }

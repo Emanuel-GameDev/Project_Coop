@@ -14,7 +14,6 @@ public enum AbilityUpgrade
     Ability5
 }
 
-
 public class CharacterClass : MonoBehaviour
 {
     protected Animator animator;
@@ -46,6 +45,7 @@ public class CharacterClass : MonoBehaviour
     protected float uniqueAbilityCooldownIncreaseAtUse;
 
     public bool Stunned => character.stunned;
+    
     public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
@@ -114,6 +114,7 @@ public class CharacterClass : MonoBehaviour
 
     public virtual void TakeDamage(DamageData data)
     {
+        
         if (data.condition != null)
             character.AddToConditions(data.condition);
 
