@@ -182,7 +182,7 @@ public class BasicEnemy : EnemyCharacter
     {
         base.TakeDamage(data);
 
-        
+        currentHp -= data.damage ;
     }
 
     
