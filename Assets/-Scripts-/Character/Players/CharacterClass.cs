@@ -56,6 +56,17 @@ public class CharacterClass : MonoBehaviour
     public virtual float UniqueAbilityCooldown => uniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses);
     public float DamageReceivedMultiplier => character.damageReceivedMultiplier;
 
+    #region Statistic Variables
+    public int unusedKey = 0;
+    public float totalDamageDone = 0;
+    public int enemysKilled = 0;
+    public int perfectDodgeDone = 0;
+    public int perfectGuadDone = 0;
+    public int minigameWon = 0;
+    public float totalDamageTaken = 0;
+    public float totalHealDone = 0;
+    public float totalHealReceived = 0;
+    #endregion
 
     #region Animation Variable
     private static string Y = "Y";
@@ -194,10 +205,35 @@ public class CharacterClass : MonoBehaviour
 
     internal List<PowerUp> GetPowerUpList() => powerUpData._powerUpData;
 
-
-
-
     #endregion
 
-    
+    #region SaveGame
+    public virtual ClassData SaveClassData()
+    {
+        Debug.Log(this.GetType().ToString());
+        ClassData data = new ClassData();
+
+        data.className = this.GetType().ToString();
+        data.powerUps = GetPowerUpList();
+        foreach(KeyValuePair<AbilityUpgrade,bool> kvp in upgradeStatus)
+        {
+            if (kvp.Value)
+                data.unlockedAbility.Add(kvp.Key);
+        }
+        data.unusedKey = unusedKey;
+
+        data.totalDamageDone = totalDamageDone;
+        data.totalDamageTaken = totalDamageTaken;
+        data.totalHealDone = totalHealDone;
+        data.totalHealReceived = totalHealReceived;
+
+        data.enemysKilled = enemysKilled;
+        data.perfectDodgeDone = perfectDodgeDone;
+        data.perfectGuadDone = perfectGuadDone;
+        data.minigameWon = minigameWon;
+
+        return data;
+    }
+    #endregion
+
 }
