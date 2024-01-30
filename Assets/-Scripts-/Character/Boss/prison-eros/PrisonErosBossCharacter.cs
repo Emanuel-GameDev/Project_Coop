@@ -9,6 +9,8 @@ public class PrisonErosBossCharacter : BossCharacter
     public float minDistance;
     public float followDuration;
     public float walkSpeed;
+    public SpriteRenderer spriteRenderer;
+    public MeshRenderer shadowMesh;
 
     [HideInInspector] public DamageData damageData;
 
@@ -20,7 +22,8 @@ public class PrisonErosBossCharacter : BossCharacter
     public int slamNormalStaminaDamage;
     public int slamAreaDamage;
     public int slamAreaStaminaDamage;
-    public GameObject objectShadowSlam;
+
+    
     
     
 

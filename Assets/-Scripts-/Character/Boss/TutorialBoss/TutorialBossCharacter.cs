@@ -9,6 +9,7 @@ public class TutorialBossCharacter : BossCharacter
     public float minDistance;
     public float followDuration;
     public float walkSpeed;
+    public Animator anim => animator;
 
     [Header("Raffica Di Pugni")]
     public float flurryDistance;

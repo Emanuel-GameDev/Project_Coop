@@ -2,13 +2,13 @@ using MBT;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PhaseRainOfAss
+public enum AttackPhase
 {
+    slam,
     damageable,
-    follow,
-    slam
-
+    follow
 }
+
 namespace MBTExample
 {
     [AddComponentMenu("")]
@@ -21,12 +21,15 @@ namespace MBTExample
         private PrisonErosBossCharacter bossCharacter;
         private Vector3 targetPosition;
         private bool mustStop = false;
+        private AttackPhase phase;
 
-        private PhaseRainOfAss phaseAttack;
+       
         private int attackCount;
         private float tempTimerDamageable;
         private float tempTimerFollow;
         private bool canFollow;
+        private bool canTakeDamage = false;
+        private bool isShadow;
         
 
         public override void OnEnter()
@@ -37,37 +40,12 @@ namespace MBTExample
             attackCount = 0;
             tempTimerDamageable = 0;
             tempTimerFollow = 0;
-            phaseAttack = PhaseRainOfAss.follow;
-            
+           
 
-            //sale su con animazione
-            bossCharacter.GetComponentInChildren<Collider>().enabled = false;
-            bossCharacter.GetComponentInChildren<SpriteRenderer>().enabled = false;
-            bossCharacter.objectShadowSlam.SetActive(true);
-            
-
-
+            //sale su con animazione          
         }
-
         public override NodeResult Execute()
         {
-
-            switch (phaseAttack) 
-            {
-                case PhaseRainOfAss.follow:
-                    break;
-
-                case PhaseRainOfAss.damageable:
-                    break;
-
-                    case PhaseRainOfAss.slam:
-                    break;
-
-            }
-
-
-
-
             if (attackCount <= bossCharacter.slamsQuantity)
             {
                 attackCount++;
@@ -75,20 +53,42 @@ namespace MBTExample
                 //Inizio inseguimento player
                 if (canFollow && bossCharacter.followDuration >= tempTimerFollow)
                 {
+                   if(!isShadow)
+                    {
+                        SetShadowForm(true);                        
+                    }
                     tempTimerFollow += Time.deltaTime;
-                    //Follow target
+
+                    //Follow target                    
                     targetPosition = targetTransform.Value.position;
                     bossCharacter.Agent.speed = bossCharacter.walkSpeed;
                     bossCharacter.Agent.SetDestination(targetPosition);
-                }
-                else
-                {
-                    canFollow = false;
-                    //Inizio schianto
-                    Debug.Log("BOOOM");
                     
+                }
+
+                //inizio slam
+                else if (!canFollow && !canTakeDamage)
+                {                   
+                    if (isShadow)
+                    {
+                        bossCharacter.Agent.isStopped = true;
+                        SetShadowForm(false);
+                        //Inizio schianto
+                        //anim play schianto, con chiamata che crea onda urto e setto canTakeDamage a true
+
+                    }
 
                 }
+                else if(canTakeDamage && bossCharacter.timerDamageable >= tempTimerDamageable)
+                {                    
+                    tempTimerFollow += Time.deltaTime;
+
+
+
+                }
+
+
+
             }
             else
             {
@@ -99,8 +99,25 @@ namespace MBTExample
             return NodeResult.running;
 
         }
-           
+
+        private void SetShadowForm(bool value)
+        {
+            if(value)
+            {
+                bossCharacter.shadowMesh.enabled = true;
+                bossCharacter.spriteRenderer.enabled = false;
+                isShadow = true;
+            }
+            else
+            {
+                bossCharacter.shadowMesh.enabled = false;
+                bossCharacter.spriteRenderer.enabled = true;
+                isShadow=false;
+            }
+        }
+        
+
     }
 
-
+    
 }
