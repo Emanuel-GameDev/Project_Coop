@@ -325,7 +325,8 @@ public class Ranged : CharacterClass
 
         if (context.performed)
         {
-            
+            Debug.Log("Ho premuto e, ganzo");
+
             if (landMineUnlocked)
             {
                 if (nearbyLandmine.Count<=0)
