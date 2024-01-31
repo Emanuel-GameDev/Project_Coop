@@ -74,5 +74,9 @@ public class TutorialBossCharacter : BossCharacter
             attackCondition = null;
         }
     }
+    public override void TakeDamage(DamageData data)
+    {
+        base.TakeDamage(data);
+    }
 
 }

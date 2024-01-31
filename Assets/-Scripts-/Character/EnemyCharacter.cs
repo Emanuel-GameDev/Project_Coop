@@ -49,6 +49,7 @@ public class EnemyCharacter : Character
     public override void TakeDamage(DamageData data)
     {
         currentHp -= data.damage * damageReceivedMultiplier;
+        Debug.Log(currentHp);
 
         if (data.condition != null)
             data.condition.AddCondition(this);
