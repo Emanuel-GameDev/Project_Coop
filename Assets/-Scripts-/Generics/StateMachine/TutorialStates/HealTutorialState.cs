@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class HealTutorialState : TutorialFase
 {
     TutorialManager tutorialManager;
-    Dictionary<Character, bool> playerHealed;
+    List<PlayerCharacter> playerHealed;
 
     HealTutorialFaseData faseData;
 
@@ -22,11 +22,7 @@ public class HealTutorialState : TutorialFase
 
         faseData = (HealTutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
 
-        playerHealed = new Dictionary<Character, bool>();
-        playerHealed.Add(tutorialManager.dps, false);
-        playerHealed.Add(tutorialManager.ranged, false);
-        playerHealed.Add(tutorialManager.tank, false);
-        playerHealed.Add(tutorialManager.tutorialEnemy, false);
+        playerHealed = new List<PlayerCharacter> { tutorialManager.dps, tutorialManager.ranged, tutorialManager.tank };
 
         DamageData damageData = new DamageData(1, null);
 
@@ -35,7 +31,7 @@ public class HealTutorialState : TutorialFase
         tutorialManager.tank.CharacterClass.TakeDamage(damageData);
         tutorialManager.tutorialEnemy.TakeDamage(damageData);
 
-        PubSub.Instance.RegisterFunction(EMessageType.characterHealed, CharacterHealed);
+        //PubSub.Instance.RegisterFunction(EMessageType.characterHealed, CharacterHealed);
 
         tutorialManager.DeactivatePlayerInput(tutorialManager.dps);
         tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
@@ -52,7 +48,7 @@ public class HealTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
 
         tutorialManager.healer.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.healer.GetComponent<PlayerInput>().actions.FindAction("Defence").Enable();
+        tutorialManager.healer.GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
     }
 
     private void CharacterHealed(object obj)
@@ -60,7 +56,21 @@ public class HealTutorialState : TutorialFase
         if(obj is PlayerCharacter) 
         { 
             PlayerCharacter character = (PlayerCharacter)obj;
-            
+
+            switch (character.CharacterClass)
+            {
+                case DPS:
+                    
+                    break;
+
+                case Ranged:
+
+                    break;
+
+                case Tank:
+
+                    break;
+            }
         }
     }
 
@@ -69,8 +79,15 @@ public class HealTutorialState : TutorialFase
     {
         base.Update();
 
-
-
+        if (playerHealed.TrueForAll(p => p.CharacterClass.currentHp >= p.CharacterClass.MaxHp))
+        {
+            Debug.Log("fatto");
+            stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+        }
+        //else if(tutorialManager.tutorialEnemy.currentHp >= tutorialManager.tutorialEnemy.MaxHp)
+        //{
+        //    Debug.Log("enemy");
+        //}
 
     }
 
@@ -78,5 +95,9 @@ public class HealTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
+
+        tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
+
+        tutorialManager.PlayDialogue(faseData.faseEndDialogue);
     }
 }

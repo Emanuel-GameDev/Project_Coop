@@ -2,17 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuardTutorialFaseData : MonoBehaviour
+[CreateAssetMenu(menuName = "Tutorial/TutorialFaseData/GuardTutorialFaseData")]
+public class GuardTutorialFaseData : TutorialFaseData
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [Header("Dialoghi tutorial")]
+    [SerializeField] public Dialogue tankPreGuardDialogue;
+    [SerializeField] public Dialogue tankPerfectGuardDialogue;
 }

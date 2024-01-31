@@ -6,6 +6,8 @@ public class GuardTutorialState : TutorialFase
 {
     TutorialManager tutorialManager;
 
+    GuardTutorialFaseData faseData;
+
     public GuardTutorialState(TutorialManager tutorialManager)
     {
         this.tutorialManager = tutorialManager;
@@ -15,6 +17,7 @@ public class GuardTutorialState : TutorialFase
     {
         base.Enter();
 
+        faseData = (GuardTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
 
     }
 

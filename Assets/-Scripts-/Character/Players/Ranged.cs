@@ -154,6 +154,8 @@ public class Ranged : CharacterClass
 
     public override void TakeDamage(DamageData data)
     {
+        base.TakeDamage(data);
+
         if (!isDodging)
         {
             StartCoroutine(PerfectDodgeHandler(data));

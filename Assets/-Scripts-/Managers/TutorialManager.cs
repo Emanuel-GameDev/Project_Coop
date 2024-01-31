@@ -154,6 +154,13 @@ public class TutorialManager : MonoBehaviour
     {
         if (blockFaseChange)
             return;
+
+        if (faseCount >= fases.Length)
+        {
+            //cambio scena o altro
+            Debug.Log("Tutorial finito");
+            return;
+        }
         
         switch (fases[faseCount].faseData.faseType)
         {
