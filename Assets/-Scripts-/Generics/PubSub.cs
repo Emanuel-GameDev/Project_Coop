@@ -5,8 +5,7 @@ using UnityEngine;
 
 public enum EMessageType
 {
-    comboPerformed,
-    characterHealed
+    guardExecuted,
 
 }
 

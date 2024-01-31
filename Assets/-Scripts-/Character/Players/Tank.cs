@@ -458,7 +458,7 @@ public class Tank : CharacterClass
 
             }
 
-
+            PubSub.Instance.Notify(EMessageType.guardExecuted, this);
 
 
             Debug.Log($"current stamina : {currentStamina}");

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5010088789243547342}
   - component: {fileID: 3677896974153611461}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 4608263645444898559}
   - component: {fileID: 4733868738482115906}
   - component: {fileID: 8927806176503077103}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: staminaFill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 6881438036376319908}
   - component: {fileID: 1760337779335715948}
   - component: {fileID: 1721678512628058995}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: staminaBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 7795939001576386896}
   - component: {fileID: 2771623010131672532}
   - component: {fileID: 252954332475082225}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,7 +349,7 @@ GameObject:
   - component: {fileID: 1575827595881566471}
   - component: {fileID: 4516026672969026843}
   - component: {fileID: 6921148262180643267}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -449,7 +449,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2963454913299796501}
   - component: {fileID: 7560104134494915230}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: pivotTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -497,7 +497,7 @@ GameObject:
   - component: {fileID: 7765382940177011070}
   - component: {fileID: 3579435343604430961}
   - component: {fileID: 866524282085160988}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TriggerProtected
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -616,7 +616,7 @@ GameObject:
   - component: {fileID: 7285095868567581064}
   - component: {fileID: 7413900412628496255}
   - component: {fileID: 1086042808532573689}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Damager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -738,7 +738,7 @@ GameObject:
   - component: {fileID: 413376642743336375}
   - component: {fileID: 7402305790619443405}
   - component: {fileID: 2671203252233228587}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -781,6 +781,15 @@ MonoBehaviour:
   uniqueAbilityCooldown: 5
   uniqueAbilityCooldownIncreaseAtUse: 2
   currentHp: 0
+  unusedKey: 0
+  totalDamageDone: 0
+  enemysKilled: 0
+  perfectDodgeDone: 0
+  perfectGuadDone: 0
+  minigameWon: 0
+  totalDamageTaken: 0
+  totalHealDone: 0
+  totalHealReceived: 0
   timeCheckAttackType: 0.2
   chargedAttackTimer: 2.5
   chargedAttackDamage: 50
@@ -831,7 +840,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3092766138524625209}
   - component: {fileID: 43161592474016108}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -881,7 +890,7 @@ GameObject:
   - component: {fileID: 4257267218553036429}
   - component: {fileID: 7284150836238793052}
   - component: {fileID: 3541656848522542652}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: ChargedAttackReadySprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -956,7 +965,7 @@ GameObject:
   - component: {fileID: 4105457712847685252}
   - component: {fileID: 7504197498009630953}
   - component: {fileID: 8080869563879724190}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: staminaBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1058,7 +1067,7 @@ GameObject:
   - component: {fileID: 4865319549316213672}
   - component: {fileID: 2238252672781703722}
   - component: {fileID: 2117858826262299022}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1160,7 +1169,7 @@ GameObject:
   - component: {fileID: 5604392628004077315}
   - component: {fileID: 3557231203337738040}
   - component: {fileID: 7912903311025550559}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
