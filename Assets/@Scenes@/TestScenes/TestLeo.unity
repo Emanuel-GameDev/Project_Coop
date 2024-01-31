@@ -256,6 +256,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &302445105
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 302445108}
+  - component: {fileID: 302445107}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &302445107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302445105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9875fb573074734380c0db31c4e03ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedSceneName: LabirintMinigame
+--- !u!4 &302445108
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302445105}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.2, y: 1, z: 6.9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &641824374
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,7 +384,7 @@ GameObject:
   - component: {fileID: 759738694}
   - component: {fileID: 759738693}
   - component: {fileID: 759738692}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -482,7 +527,7 @@ GameObject:
   - component: {fileID: 797695587}
   - component: {fileID: 797695589}
   - component: {fileID: 797695588}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Terrain_(0.00, 0.00, -1000.00)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1680,7 +1725,7 @@ GameObject:
   - component: {fileID: 1925410723}
   - component: {fileID: 1925410725}
   - component: {fileID: 1925410724}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Terrain_(-1000.00, 0.00, 0.00)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1772,7 +1817,7 @@ GameObject:
   - component: {fileID: 1968638226}
   - component: {fileID: 1968638228}
   - component: {fileID: 1968638227}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Terrain_(-1000.00, 0.00, -1000.00)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2083,3 +2128,4 @@ SceneRoots:
   - {fileID: 988925142}
   - {fileID: 294888393}
   - {fileID: 1989185871}
+  - {fileID: 302445108}
