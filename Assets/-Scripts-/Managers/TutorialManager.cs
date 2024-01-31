@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -35,6 +36,8 @@ public class TutorialManager : MonoBehaviour
     public PlayerCharacter tank;
     public PlayerCharacter ranged;
 
+    public List<PlayerCharacter> characters = new List<PlayerCharacter>();
+
     public TutorialEnemy tutorialEnemy;
     
 
@@ -54,48 +57,52 @@ public class TutorialManager : MonoBehaviour
     private void Awake()
     {
         SetUpCharacters();
+        
 
         playableDirector = gameObject.GetComponent<PlayableDirector>();
-
-
     }
 
     private void SetUpCharacters()
     {
-        PlayerCharacter searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is DPS);
+        //PlayerCharacter searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is DPS);
 
-        if (searched != null)
-        {
-            dps = searched;
-        }
+        //if (searched != null)
+        //{
+        //    dps = searched;
+        //}
 
-        searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Healer);
+        //searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Healer);
 
-        if (searched != null)
-        {
-            healer = searched;
-        }
+        //if (searched != null)
+        //{
+        //    healer = searched;
+        //}
 
-        searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Ranged);
+        //searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Ranged);
 
-        if (searched != null)
-        {
-            ranged = searched;
-        }
+        //if (searched != null)
+        //{
+        //    ranged = searched;
+        //}
 
-        searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Tank);
+        //searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Tank);
 
-        if (searched != null)
-        {
-            tank = searched;
-        }
+        //if (searched != null)
+        //{
+        //    tank = searched;
+        //}
+
+        characters.Add(dps);
+        characters.Add(healer);
+        characters.Add(ranged);
+        characters.Add(tank);
+
     }
 
     public CharacterClass current;
 
     private void Start()
     {
-
         stateMachine.SetState(new IntermediateTutorialFase(this));
 
         playableDirector.Play();
