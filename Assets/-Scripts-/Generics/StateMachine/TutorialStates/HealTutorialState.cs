@@ -51,28 +51,28 @@ public class HealTutorialState : TutorialFase
         tutorialManager.healer.GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
     }
 
-    private void CharacterHealed(object obj)
-    {
-        if(obj is PlayerCharacter) 
-        { 
-            PlayerCharacter character = (PlayerCharacter)obj;
+    //private void CharacterHealed(object obj)
+    //{
+    //    if(obj is PlayerCharacter) 
+    //    { 
+    //        PlayerCharacter character = (PlayerCharacter)obj;
 
-            switch (character.CharacterClass)
-            {
-                case DPS:
+    //        switch (character.CharacterClass)
+    //        {
+    //            case DPS:
                     
-                    break;
+    //                break;
 
-                case Ranged:
+    //            case Ranged:
 
-                    break;
+    //                break;
 
-                case Tank:
+    //            case Tank:
 
-                    break;
-            }
-        }
-    }
+    //                break;
+    //        }
+    //    }
+    //}
 
 
     public override void Update()
