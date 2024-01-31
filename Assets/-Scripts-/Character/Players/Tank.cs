@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -23,6 +24,8 @@ public class Tank : CharacterClass
 
     [SerializeField, Tooltip("Quantità di danno parabile prima di rottura parata")]
     float maxStamina;
+    [SerializeField, Tooltip("timer tra una parata in altra")]
+    float blockTimer;
     [SerializeField, Tooltip("Danno parata perfetta")]
     float perfectBlockDamage;
     [SerializeField, Tooltip("Angolo parata frontale al tank")]
@@ -75,6 +78,7 @@ public class Tank : CharacterClass
     private bool uniqueAbilityReady = true;
     private bool statBoosted;
     private bool canProtectOther;
+    private bool canBlock = true;
     
 
     private int comboIndex = 0;
@@ -115,15 +119,7 @@ public class Tank : CharacterClass
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Keypad6))
-        {
-            bossfightPowerUpUnlocked = true;
-        }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            TakeDamage(new DamageData(10, null));
-        }
-
+       
     }
 
 
@@ -321,17 +317,22 @@ public class Tank : CharacterClass
     }
     public override void Defence(Character parent, InputAction.CallbackContext context)
     {
-        if (context.performed && isAttacking == false && canCancelAttack == false)
+        if (context.performed && isAttacking == false && canCancelAttack == false && canBlock)
         {
             SetCanMove(false, character.GetRigidBody());
-            isBlocking = true;
-            ShowStaminaBar(true);
-            Debug.Log($"is blocking [{isBlocking}]");
+            if(isBlocking != true)
+            {
+                isBlocking = true;               
+                animator.SetTrigger("StartBlock");
 
+            }
+
+            ShowStaminaBar(true);
+            
             //Rotate pivor Trigger per proteggere player
             pivotTriggerProtected.enabled = true;
             pivotTriggerProtected.Rotate(GetLastNonZeroDirection());
-            Debug.Log(GetLastNonZeroDirection());
+            
 
             //Trigger che setta ai player protectedByTank a true;
             triggerProtectPlayer.SetPlayersProtected(true);
@@ -345,13 +346,19 @@ public class Tank : CharacterClass
         else if (context.canceled && isBlocking == true)
         {
             SetCanMove(true, character.GetRigidBody());
+            if (isBlocking != false)
+            {
+                
+                isBlocking = false;
+                StartCoroutine(nameof(ToggleBlock));               
+                animator.SetTrigger("ToggleBlock");
+            }
             isBlocking = false;
             ShowStaminaBar(false);
+            
 
             //Da mettere reset in animazione alzata scudo
             ResetStamina();
-
-            Debug.Log($"is blocking [{isBlocking}]");
 
             //Trigger che setta ai player protectedByTank a true;
             triggerProtectPlayer.SetPlayersProtected(false);
@@ -365,17 +372,23 @@ public class Tank : CharacterClass
         //se potenziamento 4 parata perfetta fa danno
     }
 
+    private IEnumerator ToggleBlock()
+    {
+        canBlock = false;
+       yield return new WaitForSeconds(blockTimer);
+        canBlock = true;
+
+    }
+
     private void ResetStamina()
     {
         currentStamina = maxStamina;
         staminaBar.ResetValue();
     }
-
     public void ShowStaminaBar(bool toShow)
     {
         staminaBar.gameObject.SetActive(toShow);
     }
-
     private IEnumerator StartPerfectBlockTimer(DamageData data)
     {
         canPerfectBlock = true;
@@ -476,7 +489,6 @@ public class Tank : CharacterClass
 
         if (context.performed && uniqueAbilityReady)
         {
-
             //Da eliminare
             mostraGizmoAbilitaUnica = true;
             Invoke(nameof(SetGizmoAbilitaUnica), 1.2f);
@@ -537,6 +549,7 @@ public class Tank : CharacterClass
     {
         if (context.performed && !isAttacking && !isBlocking)
         {
+            
             SetCanMove(false, character.GetRigidBody());
 
             if (bossfightPowerUpUnlocked && isAttacking == false)
