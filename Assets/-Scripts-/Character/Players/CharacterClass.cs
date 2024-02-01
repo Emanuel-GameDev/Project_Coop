@@ -28,7 +28,7 @@ public class CharacterClass : MonoBehaviour
     protected bool bossfightPowerUpUnlocked;
     protected bool isInBossfight;
     protected float uniqueAbilityUses;
-    
+
     protected Vector2 lastNonZeroDirection;
 
     [SerializeField, Tooltip("La salute massima del personaggio.")]
@@ -45,7 +45,7 @@ public class CharacterClass : MonoBehaviour
     protected float uniqueAbilityCooldownIncreaseAtUse;
 
     public bool Stunned => character.stunned;
-    
+
     public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
@@ -57,15 +57,15 @@ public class CharacterClass : MonoBehaviour
     public float DamageReceivedMultiplier => character.damageReceivedMultiplier;
 
     #region Statistic Variables
-    public int unusedKey = 0;
-    public float totalDamageDone = 0;
-    public int enemysKilled = 0;
-    public int perfectDodgeDone = 0;
-    public int perfectGuadDone = 0;
-    public int minigameWon = 0;
-    public float totalDamageTaken = 0;
-    public float totalHealDone = 0;
-    public float totalHealReceived = 0;
+    public int unusedKey { get; protected set; } = 0;
+    public float totalDamageDone { get; protected set; } = 0;
+    public int enemysKilled { get; protected set; } = 0;
+    public int perfectDodgeDone { get; protected set; } = 0;
+    public int perfectGuardDone { get; protected set; } = 0;
+    public int minigameWon { get; protected set; } = 0;
+    public float totalDamageTaken { get; protected set; } = 0;
+    public float totalHealDone { get; protected set; } = 0;
+    public float totalHealReceived { get; protected set; } = 0;
     #endregion
 
     #region Animation Variable
@@ -98,10 +98,10 @@ public class CharacterClass : MonoBehaviour
 
     public virtual void Attack(Character parent, InputAction.CallbackContext context)
     {
-        if(Stunned)
+        if (Stunned)
         {
             return;
-            
+
         }
     }
     public virtual void Defence(Character parent, InputAction.CallbackContext context)
@@ -125,7 +125,7 @@ public class CharacterClass : MonoBehaviour
 
     public virtual void TakeDamage(DamageData data)
     {
-        
+
         if (data.condition != null)
             character.AddToConditions(data.condition);
 
@@ -139,7 +139,7 @@ public class CharacterClass : MonoBehaviour
         DamageData data = new DamageData(Damage, character);
         return data;
     }
-    
+
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
     public Vector2 GetLastNonZeroDirection() => lastNonZeroDirection;
 
@@ -207,15 +207,15 @@ public class CharacterClass : MonoBehaviour
 
     #endregion
 
-    #region SaveGame
+    #region SaveLoadGame
     public virtual ClassData SaveClassData()
     {
         Debug.Log(this.GetType().ToString());
         ClassData data = new ClassData();
 
         data.className = this.GetType().ToString();
-        data.powerUps = GetPowerUpList();
-        foreach(KeyValuePair<AbilityUpgrade,bool> kvp in upgradeStatus)
+        data.powerUpsData = powerUpData;
+        foreach (KeyValuePair<AbilityUpgrade, bool> kvp in upgradeStatus)
         {
             if (kvp.Value)
                 data.unlockedAbility.Add(kvp.Key);
@@ -229,11 +229,35 @@ public class CharacterClass : MonoBehaviour
 
         data.enemysKilled = enemysKilled;
         data.perfectDodgeDone = perfectDodgeDone;
-        data.perfectGuadDone = perfectGuadDone;
+        data.perfectGuardDone = perfectGuardDone;
         data.minigameWon = minigameWon;
 
         return data;
     }
+
+    public virtual void LoadClassData(ClassData data)
+    {
+        if(data.className != this.GetType().ToString())
+            return;
+
+        powerUpData = data.powerUpsData;
+        foreach (AbilityUpgrade au in data.unlockedAbility)
+        {
+            upgradeStatus[au] = true;
+        }
+        unusedKey = data.unusedKey;
+
+        totalDamageDone = data.totalDamageDone;
+        totalDamageTaken = data.totalDamageTaken;
+        totalHealDone = data.totalHealDone;
+        totalHealReceived = data.totalHealReceived;
+
+        enemysKilled = data.enemysKilled;
+        perfectDodgeDone = data.perfectDodgeDone;
+        perfectGuardDone = data.perfectGuardDone;
+        minigameWon = data.minigameWon;
+    }
+
     #endregion
 
 }

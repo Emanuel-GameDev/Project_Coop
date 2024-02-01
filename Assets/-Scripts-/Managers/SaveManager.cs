@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
     SaveData saveData;
     
-    
-    
-    public void SaveData()
+    public void SaveAllData()
     {
         saveData = new SaveData();
-        //saveData.players.Add()
+
+        UpdateLevelsData();
+        UpdatePlayersData();
 
         string filePath = Application.persistentDataPath + "/SaveGames/SaveData.json";
         string json = JsonUtility.ToJson(saveData);
@@ -21,13 +22,44 @@ public class SaveManager : MonoBehaviour
         Debug.Log("Dati PowerUp salvati con successo!");
     }
 
-    public void LoadData()
+    public void LoadAllData()
     {
         string filePath = Application.persistentDataPath + "/SaveGames/SaveData.json";
         string json = File.ReadAllText(filePath);
         saveData = JsonUtility.FromJson<SaveData>(json);
 
+        LoadLevelsData();
+        LoadPlayersData();
+
         Debug.Log("Dati PowerUp caricati con successo!");
+    }
+
+    public void LoadLevelsData()
+    {
+        LevelsManager.Instance.LoadLevelData(saveData.levels, saveData.lastLevel);
+    }
+    public void UpdateLevelsData()
+    {
+        saveData.levels = LevelsManager.Instance.SaveLevelData();
+        saveData.lastLevel = LevelsManager.Instance.currentLevel;
+    }
+
+    private void LoadPlayersData()
+    {
+        foreach (PlayerCharacter player in GameManager.Instance.coopManager.activePlayers)
+        {
+            player.CharacterClass.LoadClassData(saveData.players.Find(c => c.className == player.CharacterClass.GetType().ToString()));
+        }
+    }
+
+    private void UpdatePlayersData()
+    {
+        saveData.players.Clear();
+
+        foreach (PlayerCharacter player in GameManager.Instance.coopManager.activePlayers)
+        {
+            saveData.players.Add(player.CharacterClass.SaveClassData());
+        }
     }
 
 }
@@ -37,7 +69,7 @@ public class SaveData
 {
     //Livelli
     public List<LevelData> levels;
-
+    public eLevel lastLevel;
 
     //Players
     public List<ClassData> players;
@@ -47,14 +79,15 @@ public class SaveData
 [Serializable]
 public  class LevelData
 {
-    public string levelName;
+    public eLevel levelName;
     public List<HazardData> hazards;
 }
 
 [Serializable]
 public class HazardData
 {
-    public string hazardName;
+    public eHazardType hazardName;
+    public int position;
     public bool defeated;
 }
 
@@ -63,7 +96,7 @@ public class ClassData
 {
     //Statistiche Base
     public string className;
-    public List<PowerUp> powerUps;
+    public PowerUpData powerUpsData;
     public List<AbilityUpgrade> unlockedAbility;
     public int unusedKey;
 
@@ -75,6 +108,6 @@ public class ClassData
 
     public int enemysKilled;
     public int perfectDodgeDone;
-    public int perfectGuadDone;
+    public int perfectGuardDone;
     public int minigameWon;
 }
