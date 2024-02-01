@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 using UnityEngine.Playables;
 
 
@@ -96,7 +97,109 @@ public class TutorialManager : MonoBehaviour
         characters.Add(healer);
         characters.Add(ranged);
         characters.Add(tank);
+        
 
+    }
+
+    private void SetInputs()
+    {
+        Debug.Log("only 1");
+        //da rivedere a input system finito
+
+        InputUser dpsUser = dps.GetComponent<PlayerInput>().user;
+        InputUser healerUser = healer.GetComponent<PlayerInput>().user;
+        InputUser rangedUser = ranged.GetComponent<PlayerInput>().user;
+        InputUser tankUser = tank.GetComponent<PlayerInput>().user;
+
+        string dpsControl = "";
+        string healerControl = "";
+        string rangedControl = "";
+        string tankControl = "";
+
+        InputDevice[] dpsDevices = new InputDevice[0];
+        InputDevice[] healerDevices = new InputDevice[0];
+        InputDevice[] rangedDevices = new InputDevice[0];
+        InputDevice[] tankDevices = new InputDevice[0];
+
+
+        if (dps.GetComponent<PlayerInput>().devices.Count > 0)
+        {
+            dpsControl = dps.GetComponent<PlayerInput>().currentControlScheme;
+            dpsDevices = dpsUser.pairedDevices.ToArray();
+        }
+
+        if (healer.GetComponent<PlayerInput>().devices.Count > 0)
+        {
+            healerControl = healer.GetComponent<PlayerInput>().currentControlScheme;
+            healerDevices = healerUser.pairedDevices.ToArray();
+        }
+
+        if (ranged.GetComponent<PlayerInput>().devices.Count > 0)
+        {
+            rangedControl = ranged.GetComponent<PlayerInput>().currentControlScheme;
+            rangedDevices = rangedUser.pairedDevices.ToArray();
+        }
+
+        if (tank.GetComponent<PlayerInput>().devices.Count > 0)
+        {
+            tankControl = tank.GetComponent<PlayerInput>().currentControlScheme;
+            tankDevices = tankUser.pairedDevices.ToArray();
+        }
+
+
+
+
+        if (healerDevices.Length <= 0)
+        {
+            healer.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
+
+            foreach (InputDevice device in dpsDevices)
+                InputUser.PerformPairingWithDevice(device,
+                    healer.GetComponent<PlayerInput>().user);
+
+
+            if (tankDevices.Length <= 0)
+            {
+                tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
+
+
+                foreach (InputDevice device in dpsDevices)
+                    InputUser.PerformPairingWithDevice(device,
+                        tank.GetComponent<PlayerInput>().user);
+            }
+
+        }
+        else
+        {
+            if (tankDevices.Length <= 0)
+            {
+                tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(healerControl);
+
+
+                foreach (InputDevice device in healerDevices)
+                    InputUser.PerformPairingWithDevice(device,
+                        tank.GetComponent<PlayerInput>().user);
+            }
+        }
+
+        if (rangedDevices.Length <= 0)
+        {
+            ranged.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
+
+            foreach (InputDevice device in dpsDevices)
+                InputUser.PerformPairingWithDevice(device,
+                    ranged.GetComponent<PlayerInput>().user);
+        }
+
+
+
+        //tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
+
+        //foreach (InputDevice device in dpsDevices)
+        //    InputUser.PerformPairingWithDevice(device,
+        //        tank.GetComponent<PlayerInput>().user);
+
+        //dpsUser.UnpairDevices();
     }
 
     public CharacterClass current;
@@ -185,6 +288,8 @@ public class TutorialManager : MonoBehaviour
                 stateMachine.SetState(new HealTutorialState(this));
                 break;
         }
+
+        
     }
 
     public void Fade()
@@ -199,7 +304,7 @@ public class TutorialManager : MonoBehaviour
 
         dialogueBox.OnDialogueEnded -= EndCurrentFase;
     }
-
+    bool setted = false;
     private void ResetPlayersPosition()
     {
         dps.gameObject.SetActive(false);
@@ -222,6 +327,13 @@ public class TutorialManager : MonoBehaviour
         DeactivatePlayerInput(healer);
         DeactivatePlayerInput(ranged);
         DeactivatePlayerInput(tank);
+
+        if (!setted && fases[faseCount].faseData.faseType != TutorialFaseType.movement)
+        {
+            Debug.Log("SET");
+            SetInputs();
+            setted = true;
+        }
     }
 
     private void ResetEnemyPosition()

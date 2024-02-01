@@ -12,6 +12,7 @@ public class GuardTutorialState : TutorialFase
     GuardTutorialFaseData faseData;
 
     int guardExecuted = 0;
+    int perfectGuardExecuted = 0;
 
     public GuardTutorialState(TutorialManager tutorialManager)
     {
@@ -35,20 +36,9 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
-        var firstPlayer = tutorialManager.dps.GetComponent<PlayerInput>().user;
-        var firstControl = tutorialManager.dps.GetComponent<PlayerInput>().currentControlScheme;
-        var secondPlayer = tutorialManager.tank.GetComponent<PlayerInput>().user;
-
-        InputDevice[] firstDevices = firstPlayer.pairedDevices.ToArray();
-
-        tutorialManager.tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(firstControl);
-        
-        foreach (InputDevice device in firstDevices )
-        InputUser.PerformPairingWithDevice(device,
-            tutorialManager.tank.GetComponent<PlayerInput>().user);
-
-        firstPlayer.UnpairDevices();
+       
     }
+
 
     private void WaitAfterDialogue()
     {
@@ -63,18 +53,43 @@ public class GuardTutorialState : TutorialFase
     private void UpdateCounter(object obj)
     {
         guardExecuted++;
+
         Debug.Log("conta");
+
+        if(guardExecuted == 3)
+        {
+            //PubSub.Instance.UnregisterFunction(EMessageType.guardExecuted, UpdateCounter);
+            tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
+            tutorialManager.PlayDialogue(faseData.tankPerfectGuardDialogue);
+
+            tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+            tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+
+            tutorialManager.DeactivateEnemyAI();
+
+            PubSub.Instance.RegisterFunction(EMessageType.perfectGuardExecuted, UpdatePerfectCounter);
+
+
+        }
+    }
+
+    private void UpdatePerfectCounter(object obj)
+    {
+        perfectGuardExecuted++;
+
+        if( perfectGuardExecuted >= 3)
+        {
+            tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+
+
+            stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+        }
     }
 
     public override void Update()
     {
         base.Update();
-
-        if(guardExecuted >= faseData.numberOfBlockToPass)
-        {
-            //ora perfetti
-            Debug.Log("3");
-        }
 
     }
 
@@ -82,6 +97,7 @@ public class GuardTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
-        PubSub.Instance.UnregisterFunction(EMessageType.guardExecuted, UpdateCounter);
+        //PubSub.Instance.UnregisterFunction(EMessageType.perfectGuardExecuted, UpdateCounter);
+        tutorialManager.EndCurrentFase();
     }
 }

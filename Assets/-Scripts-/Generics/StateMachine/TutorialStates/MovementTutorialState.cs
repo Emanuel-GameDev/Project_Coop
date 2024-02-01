@@ -61,7 +61,6 @@ public class MovementTutorialState : TutorialFase
         {
             foreach (PlayerCharacter p in tutorialManager.characters)
             {
-                Debug.Log(p);
                 if(p.MoveDirection != Vector2.zero)
                 {
                     moveCheck=true;
