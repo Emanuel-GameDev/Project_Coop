@@ -33,7 +33,7 @@ public class BasicEnemy : EnemyCharacter
     [HideInInspector] public BasicEnemyMoveState moveState;
     [HideInInspector] public BasicEnemyAttackState attackState;
 
-    [HideInInspector] public bool AIActive = true;
+    /*[HideInInspector] */public bool AIActive = true;
 
     [HideInInspector] public bool canSee = true;
     [HideInInspector] public bool canMove = false;
@@ -109,6 +109,8 @@ public class BasicEnemy : EnemyCharacter
 
     public virtual void Move(Vector3 direction, Rigidbody rb)
     {
+        if (obstacle.enabled)
+            return;
         //if (Vector3.Distance(transform.position,tryTarget.position) < attackRange)
         //{
         //    rb.velocity = Vector3.zero;

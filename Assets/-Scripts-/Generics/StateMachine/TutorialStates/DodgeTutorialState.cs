@@ -38,6 +38,9 @@ public class DodgeTutorialState : TutorialFase
             tutorialManager.DeactivatePlayerInput(characters[i]);
         }
 
+
+        tutorialManager.DeactivateEnemyAI();
+
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
     }
@@ -79,9 +82,9 @@ public class DodgeTutorialState : TutorialFase
             //PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
             characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
             characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+            tutorialManager.DeactivateEnemyAI();
 
-
-            if (currentCharacterIndex < 2)
+            if (currentCharacterIndex < 1)
             {
                 //sottofase successiva
                 tutorialManager.Fade();
@@ -105,7 +108,7 @@ public class DodgeTutorialState : TutorialFase
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         currentCharacterIndex++;
-
+        tutorialManager.DeactivateEnemyAI();
         dodgeCount = 0;
         perfectDodgeCount = 0;
 
@@ -149,7 +152,7 @@ public class DodgeTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
-
+        tutorialManager.EndCurrentFase();
         //PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdatePerfectDodgeCounter);
     }
 }

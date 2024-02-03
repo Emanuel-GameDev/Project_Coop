@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -24,6 +25,9 @@ public class TutorialManager : MonoBehaviour
     public StateMachine<TutorialFase> stateMachine { get; } = new();
 
     [SerializeField] public DialogueBox dialogueBox;
+
+    [SerializeField] Dialogue endingDialogueOne;
+    [SerializeField] Dialogue endingDialogueTwo;
 
     [SerializeField] Transform DPSRespawn;
     [SerializeField] Transform healerRespawn;
@@ -241,10 +245,20 @@ public class TutorialManager : MonoBehaviour
 
     public void ResetScene()
     {
-        ResetPlayersPosition();
-        ResetEnemyPosition();
+        if (!finale)
+        {
+            ResetPlayersPosition();
+            ResetEnemyPosition();
+        }
+        else
+        {
+            PlayFinalePartTwo();
+        }
     }
-
+    public void ActivatePlayerInput(PlayerCharacter character)
+    {
+        character.GetComponent<PlayerInput>().actions.Enable();
+    }
 
     public void DeactivatePlayerInput(PlayerCharacter character)
     {
@@ -252,6 +266,38 @@ public class TutorialManager : MonoBehaviour
     }
 
     public bool blockFaseChange = false;
+    bool finale = false;
+
+    private void PlayFinalePartOne()
+    {
+        blockFaseChange = true;
+        finale = true;
+        dialogueBox.OnDialogueEnded += Fade;
+        PlayDialogue(endingDialogueOne);
+    }
+
+    private void PlayFinalePartTwo()
+    {
+        dialogueBox.OnDialogueEnded -= Fade;
+
+        dialogueBox.OnDialogueEnded += TutorialEnd;
+        PlayDialogue(endingDialogueTwo);
+    }
+
+    private void TutorialEndIntermediate()
+    {
+        Fade();
+    }
+
+    private void TutorialEnd()
+    {
+        dialogueBox.OnDialogueEnded -= TutorialEnd;
+
+        foreach (PlayerCharacter character in characters) 
+        { 
+            ActivatePlayerInput(character);
+        }
+    }
 
     public void StartNextFase()
     {
@@ -262,6 +308,9 @@ public class TutorialManager : MonoBehaviour
         {
             //cambio scena o altro
             Debug.Log("Tutorial finito");
+            
+            PlayFinalePartOne();
+
             return;
         }
         
@@ -328,11 +377,14 @@ public class TutorialManager : MonoBehaviour
         DeactivatePlayerInput(ranged);
         DeactivatePlayerInput(tank);
 
-        if (/*!setted &&*/ fases[faseCount].faseData.faseType != TutorialFaseType.movement)
+        if(faseCount < fases.Length)
         {
-            Debug.Log("SET");
-            SetInputs();
-            setted = true;
+            if (/*!setted &&*/ fases[faseCount].faseData.faseType != TutorialFaseType.movement)
+            {
+                Debug.Log("SET");
+                SetInputs();
+                setted = true;
+            }
         }
     }
 
@@ -340,7 +392,8 @@ public class TutorialManager : MonoBehaviour
     {
         tutorialEnemy.gameObject.SetActive(false);
         tutorialEnemy.gameObject.transform.SetPositionAndRotation(enemyRespawn.position, tutorialEnemy.gameObject.transform.rotation);
-
+        tutorialEnemy.viewTrigger.ClearList();
+        tutorialEnemy.attackTrigger.ClearList();
         DeactivateEnemyAI();
         tutorialEnemy.gameObject.SetActive(true);
     }

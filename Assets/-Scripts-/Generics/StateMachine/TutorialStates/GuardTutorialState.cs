@@ -66,7 +66,7 @@ public class GuardTutorialState : TutorialFase
             tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
             tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
-            tutorialManager.DeactivateEnemyAI();
+            tutorialManager.ActivateEnemyAI();
 
             PubSub.Instance.RegisterFunction(EMessageType.perfectGuardExecuted, UpdatePerfectCounter);
             //PubSub.Instance.UnregisterFunction(EMessageType.guardExecuted, UpdateCounter);
@@ -82,7 +82,7 @@ public class GuardTutorialState : TutorialFase
         {
             tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
             tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
-
+            tutorialManager.DeactivateEnemyAI();
 
             stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
         }

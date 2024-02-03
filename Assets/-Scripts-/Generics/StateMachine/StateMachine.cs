@@ -14,7 +14,7 @@ public abstract class State<T> where T : State<T>
 
     public virtual void Enter() 
     { 
-        //Debug.Log(this.ToString()); 
+        Debug.Log(this.ToString()); 
     }
     public virtual void Update() { }
     public virtual void Exit() { }

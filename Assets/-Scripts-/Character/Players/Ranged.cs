@@ -283,7 +283,7 @@ public class Ranged : CharacterClass
 
     protected IEnumerator PerfectDodgeHandler(DamageData data)
     {
-        perfectTimingHandler.gameObject.SetActive(true);
+        //perfectTimingHandler.gameObject.SetActive(true);
         yield return new WaitForSeconds(perfectDodgeDuration);
         if(isDodging)
         {
@@ -301,7 +301,7 @@ public class Ranged : CharacterClass
             base.TakeDamage(data);
         }
 
-        perfectTimingHandler.gameObject.SetActive(false);
+        //perfectTimingHandler.gameObject.SetActive(false);
         Debug.Log($"PerfectDodge: {isDodging}");
     }
 
