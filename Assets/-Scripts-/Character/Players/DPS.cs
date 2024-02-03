@@ -73,7 +73,6 @@ public class DPS : CharacterClass
     private float lastPerfectDodgeTime;
     private float lastDashAttackTime;
     private float lastHitTime;
-    private float totalDamageDone = 0;
     private float perfectDodgeCounter = 0;
     private float dashAttackStartTime;
     private float dashAttackDamageMultiplier;
