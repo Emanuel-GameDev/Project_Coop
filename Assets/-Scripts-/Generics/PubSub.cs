@@ -6,7 +6,9 @@ using UnityEngine;
 public enum EMessageType
 {
     guardExecuted,
-    perfectGuardExecuted
+    perfectGuardExecuted,
+    dodgeExecuted,
+    perfectDodgeExecuted
 
 }
 

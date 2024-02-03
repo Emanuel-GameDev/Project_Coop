@@ -265,7 +265,6 @@ public class Ranged : CharacterClass
         {
             isDodging = true;
 
-            
             //animazione
 
             Vector3 dodgeDirection = new Vector3(direction.x, 0f, direction.y).normalized;
@@ -273,6 +272,7 @@ public class Ranged : CharacterClass
             rb.velocity = dodgeDirection * (dodgeDistance / dodgeDuration);
 
             yield return new WaitForSeconds(dodgeDuration);
+            PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
 
             rb.velocity = Vector3.zero;
 
@@ -292,9 +292,9 @@ public class Ranged : CharacterClass
             {
                
             }
-            
+
             //se c'è il boss + potenziamento sbloccato => tp
-            
+            PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
         }
         else
         {

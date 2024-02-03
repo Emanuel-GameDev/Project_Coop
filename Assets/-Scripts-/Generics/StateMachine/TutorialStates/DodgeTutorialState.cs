@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -22,11 +23,13 @@ public class DodgeTutorialState : TutorialFase
         base.Enter();
         faseData = (DodgeTutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
 
+        PubSub.Instance.RegisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
+        PubSub.Instance.RegisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
 
         tutorialManager.blockFaseChange = true;
         currentCharacterIndex = -1;
 
-        characters = new PlayerCharacter[2] { tutorialManager.dps, tutorialManager.ranged };
+        characters = new PlayerCharacter[2] { tutorialManager.ranged, tutorialManager.dps };
         charactersPreTutorialDialogue = new Dialogue[2] { faseData.dpsDodgeDialogue, faseData.rangedDodgeDialogue };
         charactersPerfectTutorialDialogue = new Dialogue[2] { faseData.dpsPerfectDodgeDialogue, faseData.rangedPerfectDodgeDialogue };
 
@@ -39,6 +42,42 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
     }
 
+    private void UpdatePerfectDodgeCounter(object obj)
+    {
+        perfectDodgeCount++;
+        Debug.Log("schiva perfect");
+        if ( perfectDodgeCount == 3)
+        {
+            characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+
+            if (currentCharacterIndex < 2)
+            {
+                //sottofase successiva
+                tutorialManager.Fade();
+                SetupNextCharacter();
+            }
+            else
+            {
+                //fase successiva
+                tutorialManager.blockFaseChange = false;
+                stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+            }
+
+        }
+    }
+
+    private void UpdateDodgeCounter(object obj)
+    {
+        dodgeCount++;
+        Debug.Log("schiva");
+        if(dodgeCount == 3)
+        {
+            //PubSub.Instance.RegisterFunction(EMessageType.dodgeExecuted, UpdatePerfectDodgeCounter);
+            //PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
+        }
+    }
+
     public void WaitAfterDialogue()
     {
         tutorialManager.StartCoroutine(Wait(0.5f));
@@ -49,26 +88,30 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         currentCharacterIndex++;
 
+        dodgeCount = 0;
+        perfectDodgeCount = 0;
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);
     }
+
     int dodgeCount = 0;
+    int perfectDodgeCount = 0;
 
     private void StartSubFase()
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= StartSubFase;
 
-        dodgeCount = 0;
 
         characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
         characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
-        //tutorialManager.tutorialEnemy.OnHit += EnemyHitted;
+        tutorialManager.ActivateEnemyAI();
 
 
     }
+
+   
 
     public IEnumerator Wait(float time)
     {
@@ -88,5 +131,7 @@ public class DodgeTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
+
+        //PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdatePerfectDodgeCounter);
     }
 }
