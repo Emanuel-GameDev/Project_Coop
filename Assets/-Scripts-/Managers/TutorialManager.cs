@@ -328,7 +328,7 @@ public class TutorialManager : MonoBehaviour
         DeactivatePlayerInput(ranged);
         DeactivatePlayerInput(tank);
 
-        if (!setted && fases[faseCount].faseData.faseType != TutorialFaseType.movement)
+        if (/*!setted &&*/ fases[faseCount].faseData.faseType != TutorialFaseType.movement)
         {
             Debug.Log("SET");
             SetInputs();

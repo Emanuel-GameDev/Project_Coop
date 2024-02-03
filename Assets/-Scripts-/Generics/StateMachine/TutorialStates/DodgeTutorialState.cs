@@ -29,7 +29,7 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.blockFaseChange = true;
         currentCharacterIndex = -1;
 
-        characters = new PlayerCharacter[2] { tutorialManager.ranged, tutorialManager.dps };
+        characters = new PlayerCharacter[2] { tutorialManager.dps, tutorialManager.ranged };
         charactersPreTutorialDialogue = new Dialogue[2] { faseData.dpsDodgeDialogue, faseData.rangedDodgeDialogue };
         charactersPerfectTutorialDialogue = new Dialogue[2] { faseData.dpsPerfectDodgeDialogue, faseData.rangedPerfectDodgeDialogue };
 
@@ -51,18 +51,20 @@ public class DodgeTutorialState : TutorialFase
             characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
             characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
 
-            if (currentCharacterIndex < 2)
-            {
-                //sottofase successiva
-                tutorialManager.Fade();
-                SetupNextCharacter();
-            }
-            else
-            {
-                //fase successiva
-                tutorialManager.blockFaseChange = false;
-                stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
-            }
+            //da rimettere dopo
+
+            //if (currentCharacterIndex < 2)
+            //{
+            //    //sottofase successiva
+            //    tutorialManager.Fade();
+            //    SetupNextCharacter();
+            //}
+            //else
+            //{
+            //    //fase successiva
+            //    tutorialManager.blockFaseChange = false;
+            //    stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+            //}
 
         }
     }
@@ -75,6 +77,22 @@ public class DodgeTutorialState : TutorialFase
         {
             //PubSub.Instance.RegisterFunction(EMessageType.dodgeExecuted, UpdatePerfectDodgeCounter);
             //PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
+            characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+
+
+            if (currentCharacterIndex < 2)
+            {
+                //sottofase successiva
+                tutorialManager.Fade();
+                SetupNextCharacter();
+            }
+            else
+            {
+                //fase successiva
+                tutorialManager.blockFaseChange = false;
+                stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+            }
         }
     }
 

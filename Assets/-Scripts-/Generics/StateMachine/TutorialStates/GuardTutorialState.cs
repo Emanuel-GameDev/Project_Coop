@@ -24,6 +24,7 @@ public class GuardTutorialState : TutorialFase
         base.Enter();
 
         guardExecuted = 0;
+        perfectGuardExecuted = 0;
 
         faseData = (GuardTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
         PubSub.Instance.RegisterFunction(EMessageType.guardExecuted, UpdateCounter);
@@ -68,7 +69,7 @@ public class GuardTutorialState : TutorialFase
             tutorialManager.DeactivateEnemyAI();
 
             PubSub.Instance.RegisterFunction(EMessageType.perfectGuardExecuted, UpdatePerfectCounter);
-            PubSub.Instance.UnregisterFunction(EMessageType.guardExecuted, UpdateCounter);
+            //PubSub.Instance.UnregisterFunction(EMessageType.guardExecuted, UpdateCounter);
 
         }
     }
@@ -97,7 +98,7 @@ public class GuardTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
-        PubSub.Instance.UnregisterFunction(EMessageType.perfectGuardExecuted, UpdateCounter);
+        //PubSub.Instance.UnregisterFunction(EMessageType.perfectGuardExecuted, UpdateCounter);
         tutorialManager.EndCurrentFase();
     }
 }
