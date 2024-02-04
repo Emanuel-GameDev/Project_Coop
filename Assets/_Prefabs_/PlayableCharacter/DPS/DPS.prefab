@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5010088789243547342}
   - component: {fileID: 3677896974153611461}
   - component: {fileID: 1414187362575845532}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,9 +74,9 @@ SpriteRenderer:
   m_SortingLayerID: 1822292781
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1776059030, guid: 3c251eb7b43d2aa418a35e184254e321, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5a955939b8f77a14a9590cd8b3c49b4a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 2}
@@ -107,7 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 144035731354277357}
   - component: {fileID: 5447450477027960601}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DashChargePivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 2220537986706086118}
   - component: {fileID: 5333102164573210422}
   - component: {fileID: 2629932912929956704}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -271,7 +271,7 @@ GameObject:
   - component: {fileID: 1370634436663787394}
   - component: {fileID: 6325802730058635662}
   - component: {fileID: 8947802189197243782}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 6150543768576723474}
   - component: {fileID: 7268932270757791126}
   - component: {fileID: 5423811060114292364}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -447,10 +447,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2194752481810029036}
   - component: {fileID: 1471243717186543930}
-  - component: {fileID: 7285095868567581064}
   - component: {fileID: 7413900412628496255}
   - component: {fileID: 1086042808532573689}
-  m_Layer: 0
+  - component: {fileID: 5350265294695284272}
+  m_Layer: 6
   m_Name: Damager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -490,27 +490,6 @@ MonoBehaviour:
   onTrigger:
     m_PersistentCalls:
       m_Calls: []
---- !u!65 &7285095868567581064
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5763330479945256150}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!33 &7413900412628496255
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -518,7 +497,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5763330479945256150}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1086042808532573689
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -561,6 +540,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &5350265294695284272
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5763330479945256150}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5985021711681410352
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,7 +572,7 @@ GameObject:
   - component: {fileID: 413376642743336375}
   - component: {fileID: 7349943595437100007}
   - component: {fileID: 4864925256783361604}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DPS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -669,7 +669,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3092766138524625209}
   - component: {fileID: 43161592474016108}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -717,7 +717,7 @@ GameObject:
   - component: {fileID: 245183838780094665}
   - component: {fileID: 2296547201794606155}
   - component: {fileID: 1708355816417955743}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}

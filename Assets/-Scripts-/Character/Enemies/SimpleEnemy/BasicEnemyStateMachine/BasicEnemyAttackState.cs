@@ -17,23 +17,35 @@ public class BasicEnemyAttackState : BasicEnemyState
         basicEnemy.canAttack = true;
 
         basicEnemy.SetTarget(basicEnemy.attackTrigger.GetPlayersDetected()[0].transform);
-    }
 
+        basicEnemy.StartCoroutine(basicEnemy.Attack());
+
+        basicEnemy.Agent.enabled = false;
+        basicEnemy.obstacle.enabled = true;
+    }
+    
     public override void Update()
     {
         base.Update();
 
-        if(!basicEnemy.isAttacking)
-            basicEnemy.StartCoroutine(basicEnemy.Attack());
 
-        if (basicEnemy.attackTrigger.GetPlayersDetected().Count == 0)
+        if (!basicEnemy.isAttacking)
         {
-            if(basicEnemy.viewTrigger.GetPlayersDetected().Count <= 0)
-                stateMachine.SetState(basicEnemy.idleState);
-            else
-                stateMachine.SetState(basicEnemy.moveState);
+            //if (basicEnemy.attackTrigger.GetPlayersDetected().Count == 0)
+            //{
+                if(basicEnemy.viewTrigger.GetPlayersDetected().Count <= 0)
+                    stateMachine.SetState(basicEnemy.idleState);
+                else
+                    stateMachine.SetState(basicEnemy.moveState);
+
+               
+            //}
+
+            //basicEnemy.StartCoroutine(basicEnemy.Attack());
+
         }
 
+        
     }
 
     public override void Exit()

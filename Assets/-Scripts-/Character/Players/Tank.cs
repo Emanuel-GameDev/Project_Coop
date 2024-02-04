@@ -408,6 +408,8 @@ public class Tank : CharacterClass
             }
 
             Debug.Log("parata perfetta eseguita, rimanenti per potenziamento boss = " + (attacksToBlockForUpgrade - perfectBlockCount));
+            PubSub.Instance.Notify(EMessageType.perfectGuardExecuted, this);
+
 
             data.dealer.OnParryNotify();
             if (damageOnParry)
@@ -458,7 +460,7 @@ public class Tank : CharacterClass
 
             }
 
-
+            PubSub.Instance.Notify(EMessageType.guardExecuted, this);
 
 
             Debug.Log($"current stamina : {currentStamina}");

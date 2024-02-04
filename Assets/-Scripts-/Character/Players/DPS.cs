@@ -73,10 +73,10 @@ public class DPS : CharacterClass
     private float lastPerfectDodgeTime;
     private float lastDashAttackTime;
     private float lastHitTime;
-    private float totalDamageDone = 0;
     private float perfectDodgeCounter = 0;
     private float dashAttackStartTime;
     private float dashAttackDamageMultiplier;
+    private float currentBossfightTotalDamageDone = 0;
     private Vector3 startPosition;
 
 
@@ -241,7 +241,7 @@ public class DPS : CharacterClass
     {
         isDodging = true;
         animator.SetTrigger(DODGESTART);
-
+        PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
         yield return StartCoroutine(Move(dodgeDirection, rb, dodgeDuration, dodgeDistance));
 
         isDodging = false;
@@ -274,6 +274,7 @@ public class DPS : CharacterClass
         {
             perfectDodgeCounter++;
             lastPerfectDodgeTime = Time.time;
+            PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
         }
         else
         {
@@ -286,6 +287,7 @@ public class DPS : CharacterClass
                 
         }
         perfectTimingHandler.gameObject.SetActive(false);
+        
         Debug.Log($"PerfectDodge: {isDodging}, Count: {perfectDodgeCounter}");
     }
 
@@ -478,8 +480,8 @@ public class DPS : CharacterClass
 
     private void TotalDamageUpdate(float damage)
     {
-        totalDamageDone += damage;
-        if (totalDamageDone > bossPowerUpTotalDamageToUnlock)
+        currentBossfightTotalDamageDone += damage;
+        if (currentBossfightTotalDamageDone > bossPowerUpTotalDamageToUnlock)
             bossfightPowerUpUnlocked = true;
     }
 

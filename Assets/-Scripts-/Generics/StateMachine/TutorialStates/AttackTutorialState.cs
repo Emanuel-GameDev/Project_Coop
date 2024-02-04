@@ -115,7 +115,10 @@ public class AttackTutorialState : TutorialFase
             hitCount = 0;
             tutorialManager.tutorialEnemy.OnHit -= EnemyHitted;
 
-            if(currentCharacterIndex < 3)
+            characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Attack").Disable();
+
+            if (currentCharacterIndex < 3)
             {
                 //sottofase successiva
                 tutorialManager.Fade();

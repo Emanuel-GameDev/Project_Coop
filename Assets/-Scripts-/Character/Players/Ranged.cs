@@ -106,9 +106,9 @@ public class Ranged : CharacterClass
 
     private float empowerCoolDownDecrease => reduceEmpowerFireCoolDownUnlocked ? chargeTimeReduction : 0;
 
-    bool isAttacking;
-    bool isDodging;
-    bool isInvunerable;
+    bool isAttacking=false;
+    bool isDodging=false;
+    bool isInvunerable=false;
 
     public override void Inizialize(PlayerCharacter character)
     {
@@ -139,7 +139,15 @@ public class Ranged : CharacterClass
     {
         if(!isDodging)
         {
-            base.Move(direction, rb);
+            if(!isAttacking && !isDodging)
+            {
+                base.Move(direction, rb);
+            }
+            else
+            {
+                rb.velocity = Vector3.zero;
+            }
+            
 
             if (rb.velocity.magnitude > 0.1f)
             {
@@ -152,8 +160,12 @@ public class Ranged : CharacterClass
         }      
     }
 
+    
+
     public override void TakeDamage(DamageData data)
     {
+        base.TakeDamage(data);
+
         if (!isDodging)
         {
             StartCoroutine(PerfectDodgeHandler(data));
@@ -263,7 +275,6 @@ public class Ranged : CharacterClass
         {
             isDodging = true;
 
-            
             //animazione
 
             Vector3 dodgeDirection = new Vector3(direction.x, 0f, direction.y).normalized;
@@ -271,6 +282,7 @@ public class Ranged : CharacterClass
             rb.velocity = dodgeDirection * (dodgeDistance / dodgeDuration);
 
             yield return new WaitForSeconds(dodgeDuration);
+            PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
 
             rb.velocity = Vector3.zero;
 
@@ -281,7 +293,7 @@ public class Ranged : CharacterClass
 
     protected IEnumerator PerfectDodgeHandler(DamageData data)
     {
-        perfectTimingHandler.gameObject.SetActive(true);
+        //perfectTimingHandler.gameObject.SetActive(true);
         yield return new WaitForSeconds(perfectDodgeDuration);
         if(isDodging)
         {
@@ -290,16 +302,16 @@ public class Ranged : CharacterClass
             {
                
             }
-            
+
             //se c'è il boss + potenziamento sbloccato => tp
-            
+            PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
         }
         else
         {
             base.TakeDamage(data);
         }
 
-        perfectTimingHandler.gameObject.SetActive(false);
+        //perfectTimingHandler.gameObject.SetActive(false);
         Debug.Log($"PerfectDodge: {isDodging}");
     }
 
@@ -309,8 +321,11 @@ public class Ranged : CharacterClass
     #region ExtraAbility
     public override void UseExtraAbility(Character parent, InputAction.CallbackContext context) //E
     {
+
         if (context.performed)
         {
+            Debug.Log("Ho premuto e, ganzo");
+
             if (landMineUnlocked)
             {
                 if (nearbyLandmine.Count<=0)
@@ -389,8 +404,13 @@ public class Ranged : CharacterClass
                 return;
                 //inserire suono (?)
             }
+            else
+            {
+                empowerStartTimer = Time.time;
+                isAttacking = true;
+            }
 
-            empowerStartTimer = Time.time;
+            
 
         }
         else if (context.canceled && canUseUniqueAbility)
@@ -414,8 +434,14 @@ public class Ranged : CharacterClass
                 empowerCoolDownTimer = UniqueAbilityCooldown;
 
                 Debug.Log("colpo potenziato");
+
+                
             }
+
+            isAttacking = false;
         }
+
+        
 
     }
 

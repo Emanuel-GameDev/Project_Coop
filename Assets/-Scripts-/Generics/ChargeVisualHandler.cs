@@ -57,7 +57,6 @@ public class ChargeVisualHandler : MonoBehaviour
             float barLenght = Mathf.Lerp(minValue, maxValue, duration/maxTime);
             float topDistance = Mathf.Max(0, maxValue - barLenght);
             barTransform.offsetMin = new Vector2(barTransform.offsetMin.x, topDistance);
-            Debug.Log($"top: {topDistance}");
             float angle = Mathf.Atan2(Direction.x, Direction.y) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, angle, 0);
 

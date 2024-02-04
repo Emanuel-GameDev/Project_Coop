@@ -113,7 +113,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5397187245343582824}
@@ -159,9 +159,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -818425704, guid: 3c251eb7b43d2aa418a35e184254e321, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ed52f613ba9ad894fa54c6c535850c29, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
@@ -427,6 +427,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4930156251241236398}
   - component: {fileID: 1175752689224028946}
+  - component: {fileID: 1192599075251949909}
   m_Layer: 0
   m_Name: Damager
   m_TagString: Untagged
@@ -442,13 +443,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8651999239047149385}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: -0.3046981, z: 0, w: 0.952449}
+  m_LocalPosition: {x: 0.94013214, y: 0, z: -0.52588415}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5397187245343582824}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -35.48, z: 0}
 --- !u!114 &1175752689224028946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,7 +464,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   onTrigger:
     m_PersistentCalls:
       m_Calls: []
+--- !u!136 &1192599075251949909
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8651999239047149385}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.9767686
+  m_Height: 2.2480917
+  m_Direction: 0
+  m_Center: {x: -0.051463366, y: 0.23123455, z: 0.20567119}
