@@ -5,7 +5,10 @@ using UnityEngine;
 
 public enum EMessageType
 {
-    comboPerformed
+    guardExecuted,
+    perfectGuardExecuted,
+    dodgeExecuted,
+    perfectDodgeExecuted
 
 }
 

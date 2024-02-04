@@ -22,17 +22,17 @@ namespace MBTExample
 
             bossCharacter.SetCrashDirectDamageData();
             Debug.Log("Schianto Iniziato");
+            bossCharacter.anim.SetTrigger("Crash");
         }
 
         public override NodeResult Execute()
         {
-
-            //Play animazione con tutta la gestione, devo chiamare da qualche parte bossCharacter.SetCrashWaveDamageData();
-
-            //
+            
+         
             if (tempTimer > bossCharacter.crashTimer)
             {
                 Debug.Log("Schianto Finito");
+                bossCharacter.anim.SetTrigger("Return");
                 return NodeResult.success;
             }
 

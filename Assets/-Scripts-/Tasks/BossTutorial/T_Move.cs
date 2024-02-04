@@ -27,6 +27,7 @@ namespace MBTExample
             activePlayers = GameManager.Instance.coopManager.activePlayers;
             mustStop = false;
             tempTimer = 0;
+            playerFound.Value = false;
         }
 
         public override NodeResult Execute()

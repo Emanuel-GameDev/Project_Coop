@@ -19,8 +19,11 @@ public class BasicEnemyAttackState : BasicEnemyState
         basicEnemy.SetTarget(basicEnemy.attackTrigger.GetPlayersDetected()[0].transform);
 
         basicEnemy.StartCoroutine(basicEnemy.Attack());
+
+        basicEnemy.Agent.enabled = false;
+        basicEnemy.obstacle.enabled = true;
     }
-    bool change=false;
+    
     public override void Update()
     {
         base.Update();
@@ -35,7 +38,7 @@ public class BasicEnemyAttackState : BasicEnemyState
                 else
                     stateMachine.SetState(basicEnemy.moveState);
 
-                change = true;
+               
             //}
 
             //basicEnemy.StartCoroutine(basicEnemy.Attack());
@@ -48,6 +51,5 @@ public class BasicEnemyAttackState : BasicEnemyState
     public override void Exit()
     {
         base.Exit();
-        change = false;
     }
 }

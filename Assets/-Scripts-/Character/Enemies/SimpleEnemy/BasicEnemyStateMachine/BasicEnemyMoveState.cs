@@ -16,6 +16,9 @@ public class BasicEnemyMoveState : BasicEnemyState
         basicEnemy.canAttack = false;
 
         basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
+
+        //basicEnemy.obstacle.enabled = false;
+        //basicEnemy.Agent.enabled = true;
     }
 
     public override void Update()

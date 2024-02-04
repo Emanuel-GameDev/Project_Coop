@@ -54,8 +54,8 @@ public class GameManager : MonoBehaviour
         coopManager = CoopManager.Instance;
         cameraManager = CameraManager.Instance;
 
-        if (playerInputManager != null)
-            playerInputManager.JoinPlayer(0, -1, null);
+        //if (playerInputManager != null)
+        //    playerInputManager.JoinPlayer(0, -1, null);
         if (cameraManager != null && coopManager != null)
             cameraManager.AddAllPlayers();
 

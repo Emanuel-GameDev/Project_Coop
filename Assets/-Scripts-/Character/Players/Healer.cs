@@ -115,7 +115,6 @@ public class Healer : CharacterClass
         if (context.performed)
         {
             animator.SetTrigger("IsAttacking");
-            //PubSub.Instance.Notify(EMessageType.healerCombo, null);
         }
 
         if (context.canceled)
@@ -272,6 +271,7 @@ public class Healer : CharacterClass
                     foreach (PlayerCharacter pc in playerInArea)
                     {
                         pc.TakeDamage(new DamageData(-smallHeal, null));
+                        //PubSub.Instance.Notify(EMessageType.characterHealed, pc);
                     }
                     
                     smallHealTimer = 0;

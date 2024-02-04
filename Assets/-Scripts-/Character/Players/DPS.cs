@@ -241,7 +241,7 @@ public class DPS : CharacterClass
     {
         isDodging = true;
         animator.SetTrigger(DODGESTART);
-
+        PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
         yield return StartCoroutine(Move(dodgeDirection, rb, dodgeDuration, dodgeDistance));
 
         isDodging = false;
@@ -274,6 +274,7 @@ public class DPS : CharacterClass
         {
             perfectDodgeCounter++;
             lastPerfectDodgeTime = Time.time;
+            PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
         }
         else
         {
@@ -286,6 +287,7 @@ public class DPS : CharacterClass
                 
         }
         perfectTimingHandler.gameObject.SetActive(false);
+        
         Debug.Log($"PerfectDodge: {isDodging}, Count: {perfectDodgeCounter}");
     }
 

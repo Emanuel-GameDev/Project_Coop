@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 using UnityEngine.Playables;
 
 
@@ -23,6 +26,9 @@ public class TutorialManager : MonoBehaviour
 
     [SerializeField] public DialogueBox dialogueBox;
 
+    [SerializeField] Dialogue endingDialogueOne;
+    [SerializeField] Dialogue endingDialogueTwo;
+
     [SerializeField] Transform DPSRespawn;
     [SerializeField] Transform healerRespawn;
     [SerializeField] Transform tankRespawn;
@@ -34,6 +40,8 @@ public class TutorialManager : MonoBehaviour
     public PlayerCharacter healer;
     public PlayerCharacter tank;
     public PlayerCharacter ranged;
+
+    public List<PlayerCharacter> characters = new List<PlayerCharacter>();
 
     public TutorialEnemy tutorialEnemy;
     
@@ -54,48 +62,154 @@ public class TutorialManager : MonoBehaviour
     private void Awake()
     {
         SetUpCharacters();
+        
 
         playableDirector = gameObject.GetComponent<PlayableDirector>();
-
-
     }
 
     private void SetUpCharacters()
     {
-        PlayerCharacter searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is DPS);
+        //PlayerCharacter searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is DPS);
 
-        if (searched != null)
+        //if (searched != null)
+        //{
+        //    dps = searched;
+        //}
+
+        //searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Healer);
+
+        //if (searched != null)
+        //{
+        //    healer = searched;
+        //}
+
+        //searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Ranged);
+
+        //if (searched != null)
+        //{
+        //    ranged = searched;
+        //}
+
+        //searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Tank);
+
+        //if (searched != null)
+        //{
+        //    tank = searched;
+        //}
+
+        characters.Add(dps);
+        characters.Add(healer);
+        characters.Add(ranged);
+        characters.Add(tank);
+        
+
+    }
+
+    private void SetInputs()
+    {
+        Debug.Log("only 1");
+        //da rivedere a input system finito
+
+        InputUser dpsUser = dps.GetComponent<PlayerInput>().user;
+        InputUser healerUser = healer.GetComponent<PlayerInput>().user;
+        InputUser rangedUser = ranged.GetComponent<PlayerInput>().user;
+        InputUser tankUser = tank.GetComponent<PlayerInput>().user;
+
+        string dpsControl = "";
+        string healerControl = "";
+        string rangedControl = "";
+        string tankControl = "";
+
+        InputDevice[] dpsDevices = new InputDevice[0];
+        InputDevice[] healerDevices = new InputDevice[0];
+        InputDevice[] rangedDevices = new InputDevice[0];
+        InputDevice[] tankDevices = new InputDevice[0];
+
+
+        if (dps.GetComponent<PlayerInput>().devices.Count > 0)
         {
-            dps = searched;
+            dpsControl = dps.GetComponent<PlayerInput>().currentControlScheme;
+            dpsDevices = dpsUser.pairedDevices.ToArray();
         }
 
-        searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Healer);
-
-        if (searched != null)
+        if (healer.GetComponent<PlayerInput>().devices.Count > 0)
         {
-            healer = searched;
+            healerControl = healer.GetComponent<PlayerInput>().currentControlScheme;
+            healerDevices = healerUser.pairedDevices.ToArray();
         }
 
-        searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Ranged);
-
-        if (searched != null)
+        if (ranged.GetComponent<PlayerInput>().devices.Count > 0)
         {
-            ranged = searched;
+            rangedControl = ranged.GetComponent<PlayerInput>().currentControlScheme;
+            rangedDevices = rangedUser.pairedDevices.ToArray();
         }
 
-        searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Tank);
-
-        if (searched != null)
+        if (tank.GetComponent<PlayerInput>().devices.Count > 0)
         {
-            tank = searched;
+            tankControl = tank.GetComponent<PlayerInput>().currentControlScheme;
+            tankDevices = tankUser.pairedDevices.ToArray();
         }
+
+
+
+
+        if (healerDevices.Length <= 0)
+        {
+            healer.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
+
+            foreach (InputDevice device in dpsDevices)
+                InputUser.PerformPairingWithDevice(device,
+                    healer.GetComponent<PlayerInput>().user);
+
+
+            if (tankDevices.Length <= 0)
+            {
+                tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
+
+
+                foreach (InputDevice device in dpsDevices)
+                    InputUser.PerformPairingWithDevice(device,
+                        tank.GetComponent<PlayerInput>().user);
+            }
+
+        }
+        else
+        {
+            if (tankDevices.Length <= 0)
+            {
+                tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(healerControl);
+
+
+                foreach (InputDevice device in healerDevices)
+                    InputUser.PerformPairingWithDevice(device,
+                        tank.GetComponent<PlayerInput>().user);
+            }
+        }
+
+        if (rangedDevices.Length <= 0)
+        {
+            ranged.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
+
+            foreach (InputDevice device in dpsDevices)
+                InputUser.PerformPairingWithDevice(device,
+                    ranged.GetComponent<PlayerInput>().user);
+        }
+
+
+
+        //tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
+
+        //foreach (InputDevice device in dpsDevices)
+        //    InputUser.PerformPairingWithDevice(device,
+        //        tank.GetComponent<PlayerInput>().user);
+
+        //dpsUser.UnpairDevices();
     }
 
     public CharacterClass current;
 
     private void Start()
     {
-
         stateMachine.SetState(new IntermediateTutorialFase(this));
 
         playableDirector.Play();
@@ -131,10 +245,20 @@ public class TutorialManager : MonoBehaviour
 
     public void ResetScene()
     {
-        ResetPlayersPosition();
-        ResetEnemyPosition();
+        if (!finale)
+        {
+            ResetPlayersPosition();
+            ResetEnemyPosition();
+        }
+        else
+        {
+            PlayFinalePartTwo();
+        }
     }
-
+    public void ActivatePlayerInput(PlayerCharacter character)
+    {
+        character.GetComponent<PlayerInput>().actions.Enable();
+    }
 
     public void DeactivatePlayerInput(PlayerCharacter character)
     {
@@ -142,11 +266,53 @@ public class TutorialManager : MonoBehaviour
     }
 
     public bool blockFaseChange = false;
+    bool finale = false;
+
+    private void PlayFinalePartOne()
+    {
+        blockFaseChange = true;
+        finale = true;
+        dialogueBox.OnDialogueEnded += Fade;
+        PlayDialogue(endingDialogueOne);
+    }
+
+    private void PlayFinalePartTwo()
+    {
+        dialogueBox.OnDialogueEnded -= Fade;
+
+        dialogueBox.OnDialogueEnded += TutorialEnd;
+        PlayDialogue(endingDialogueTwo);
+    }
+
+    private void TutorialEndIntermediate()
+    {
+        Fade();
+    }
+
+    private void TutorialEnd()
+    {
+        dialogueBox.OnDialogueEnded -= TutorialEnd;
+
+        foreach (PlayerCharacter character in characters) 
+        { 
+            ActivatePlayerInput(character);
+        }
+    }
 
     public void StartNextFase()
     {
         if (blockFaseChange)
             return;
+
+        if (faseCount >= fases.Length)
+        {
+            //cambio scena o altro
+            Debug.Log("Tutorial finito");
+            
+            PlayFinalePartOne();
+
+            return;
+        }
         
         switch (fases[faseCount].faseData.faseType)
         {
@@ -171,6 +337,8 @@ public class TutorialManager : MonoBehaviour
                 stateMachine.SetState(new HealTutorialState(this));
                 break;
         }
+
+        
     }
 
     public void Fade()
@@ -185,7 +353,7 @@ public class TutorialManager : MonoBehaviour
 
         dialogueBox.OnDialogueEnded -= EndCurrentFase;
     }
-
+    bool setted = false;
     private void ResetPlayersPosition()
     {
         dps.gameObject.SetActive(false);
@@ -208,13 +376,24 @@ public class TutorialManager : MonoBehaviour
         DeactivatePlayerInput(healer);
         DeactivatePlayerInput(ranged);
         DeactivatePlayerInput(tank);
+
+        if(faseCount < fases.Length)
+        {
+            if (/*!setted &&*/ fases[faseCount].faseData.faseType != TutorialFaseType.movement)
+            {
+                Debug.Log("SET");
+                SetInputs();
+                setted = true;
+            }
+        }
     }
 
     private void ResetEnemyPosition()
     {
         tutorialEnemy.gameObject.SetActive(false);
         tutorialEnemy.gameObject.transform.SetPositionAndRotation(enemyRespawn.position, tutorialEnemy.gameObject.transform.rotation);
-
+        tutorialEnemy.viewTrigger.ClearList();
+        tutorialEnemy.attackTrigger.ClearList();
         DeactivateEnemyAI();
         tutorialEnemy.gameObject.SetActive(true);
     }
