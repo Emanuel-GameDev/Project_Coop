@@ -35,7 +35,7 @@ namespace MBTExample
             bossCharacter.SetChargeDamageData();
 
             Debug.Log("Start Charge Timer");
-            bossCharacter.anim.SetTrigger("Charge");
+            
             tempTimer = 0;
             
         }
@@ -52,6 +52,7 @@ namespace MBTExample
                     bossCharacter.Agent.isStopped = false;
                     bossCharacter.Agent.speed = bossCharacter.chargeSpeed;
                     bossCharacter.Agent.SetDestination(targetPosition);
+                    bossCharacter.anim.SetTrigger("Charge");
                     started = true;
 
                 }

@@ -25,6 +25,7 @@ namespace MBTExample
             bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
             targetPosition = targetTransform.Value.position;
             activePlayers = GameManager.Instance.coopManager.activePlayers;
+            bossCharacter.Agent.isStopped = false;
             mustStop = false;
             tempTimer = 0;
             playerFound.Value = false;

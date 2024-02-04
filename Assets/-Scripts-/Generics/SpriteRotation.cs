@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SpriteRotation : MonoBehaviour
 {
+    [SerializeField] private bool shouldUpdate;
     public void RotateToCamera()
     {
         Camera cam = Camera.main;
@@ -17,5 +18,12 @@ public class SpriteRotation : MonoBehaviour
     private void Awake()
     {
         RotateToCamera();
+    }
+    private void Update()
+    {
+        if (shouldUpdate)
+        {
+            RotateToCamera();
+        }
     }
 }
