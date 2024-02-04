@@ -39,7 +39,7 @@ public class EnemyCharacter : Character
 
     #region PowerUp
     public override void AddPowerUp(PowerUp powerUp) => powerUpData.Add(powerUp);
-    public override List<PowerUp> GetPowerUpList() => powerUpData._powerUpData;
+    public override List<PowerUp> GetPowerUpList() => powerUpData.powerUps;
     public override void RemovePowerUp(PowerUp powerUp) => powerUpData.Remove(powerUp);
     #endregion
     public override DamageData GetDamageData()

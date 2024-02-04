@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public enum AbilityUpgrade
 {
@@ -19,6 +20,7 @@ public class CharacterClass : MonoBehaviour
     protected Animator animator;
     protected PlayerCharacter character;
     protected PowerUpData powerUpData;
+    protected ExtraData extraData;
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
     protected UnityAction unityAction;
     protected SpriteRenderer spriteRenderer;
@@ -46,27 +48,15 @@ public class CharacterClass : MonoBehaviour
 
     public bool Stunned => character.stunned;
 
-    public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
+    public virtual float MaxHp => maxHp * powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
 
-    public virtual float Damage => damage + powerUpData.damageIncrease;
-    public virtual float MoveSpeed => moveSpeed + powerUpData.moveSpeedIncrease;
-    public virtual float AttackSpeed => attackSpeed + powerUpData.attackSpeedIncrease;
-    public virtual float UniqueAbilityCooldown => uniqueAbilityCooldown - powerUpData.uniqueAbilityCooldownDecrease + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses);
+    public virtual float Damage => damage * powerUpData.damageIncrease;
+    public virtual float MoveSpeed => moveSpeed * powerUpData.moveSpeedIncrease;
+    public virtual float AttackSpeed => attackSpeed * powerUpData.attackSpeedIncrease;
+    public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) * powerUpData.UniqueAbilityCooldownDecrease;
     public float DamageReceivedMultiplier => character.damageReceivedMultiplier;
-
-    #region Statistic Variables
-    public int unusedKey { get; protected set; } = 0;
-    public float totalDamageDone { get; protected set; } = 0;
-    public int enemysKilled { get; protected set; } = 0;
-    public int perfectDodgeDone { get; protected set; } = 0;
-    public int perfectGuardDone { get; protected set; } = 0;
-    public int minigameWon { get; protected set; } = 0;
-    public float totalDamageTaken { get; protected set; } = 0;
-    public float totalHealDone { get; protected set; } = 0;
-    public float totalHealReceived { get; protected set; } = 0;
-    #endregion
 
     #region Animation Variable
     private static string Y = "Y";
@@ -75,7 +65,7 @@ public class CharacterClass : MonoBehaviour
     public virtual void Inizialize(PlayerCharacter character)
     {
         powerUpData = new PowerUpData();
-        //this.characterData = characterData;
+        extraData = new ExtraData();
         upgradeStatus = new();
         foreach (AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
         {
@@ -95,6 +85,8 @@ public class CharacterClass : MonoBehaviour
         }
         SetIsInBossfight(false);
     }
+
+    #region Abilities
 
     public virtual void Attack(Character parent, InputAction.CallbackContext context)
     {
@@ -122,7 +114,9 @@ public class CharacterClass : MonoBehaviour
     {
 
     }
+    #endregion
 
+    #region Combat
     public virtual void TakeDamage(DamageData data)
     {
 
@@ -141,9 +135,11 @@ public class CharacterClass : MonoBehaviour
     }
 
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
-    public Vector2 GetLastNonZeroDirection() => lastNonZeroDirection;
+    #endregion
 
     #region Move
+    public Vector2 GetLastNonZeroDirection() => lastNonZeroDirection;
+
     //dati x e z chiama Move col Vector2
     public virtual void Move(float x, float z, Rigidbody rb)
     {
@@ -199,65 +195,58 @@ public class CharacterClass : MonoBehaviour
     #endregion
 
     #region PowerUp
-    internal void AddPowerUp(PowerUp powerUp) => powerUpData.Add(powerUp);
+    public void AddPowerUp(PowerUp powerUp) => powerUpData.Add(powerUp);
 
-    internal void RemovePowerUp(PowerUp powerUp) => powerUpData.Remove(powerUp);
+    public void RemovePowerUp(PowerUp powerUp) => powerUpData.Remove(powerUp);
 
-    internal List<PowerUp> GetPowerUpList() => powerUpData._powerUpData;
+    public List<PowerUp> GetPowerUpList() => powerUpData.powerUps;
 
     #endregion
 
     #region SaveLoadGame
     public virtual ClassData SaveClassData()
     {
-        Debug.Log(this.GetType().ToString());
         ClassData data = new ClassData();
 
         data.className = this.GetType().ToString();
+
         data.powerUpsData = powerUpData;
+        data.extraData = extraData;
+
         foreach (KeyValuePair<AbilityUpgrade, bool> kvp in upgradeStatus)
         {
             if (kvp.Value)
                 data.unlockedAbility.Add(kvp.Key);
         }
-        data.unusedKey = unusedKey;
-
-        data.totalDamageDone = totalDamageDone;
-        data.totalDamageTaken = totalDamageTaken;
-        data.totalHealDone = totalHealDone;
-        data.totalHealReceived = totalHealReceived;
-
-        data.enemysKilled = enemysKilled;
-        data.perfectDodgeDone = perfectDodgeDone;
-        data.perfectGuardDone = perfectGuardDone;
-        data.minigameWon = minigameWon;
 
         return data;
     }
 
     public virtual void LoadClassData(ClassData data)
     {
-        if(data.className != this.GetType().ToString())
+        string className = this.GetType().ToString();
+
+        if (data == null || data.className != className)
             return;
 
         powerUpData = data.powerUpsData;
+        extraData = data.extraData;
+
         foreach (AbilityUpgrade au in data.unlockedAbility)
         {
             upgradeStatus[au] = true;
         }
-        unusedKey = data.unusedKey;
-
-        totalDamageDone = data.totalDamageDone;
-        totalDamageTaken = data.totalDamageTaken;
-        totalHealDone = data.totalHealDone;
-        totalHealReceived = data.totalHealReceived;
-
-        enemysKilled = data.enemysKilled;
-        perfectDodgeDone = data.perfectDodgeDone;
-        perfectGuardDone = data.perfectGuardDone;
-        minigameWon = data.minigameWon;
     }
 
     #endregion
 
+    #region Misc
+    public ExtraData GetExtraData()
+    {
+        ExtraData data = extraData;
+        return extraData;
+    }
+
+
+    #endregion
 }

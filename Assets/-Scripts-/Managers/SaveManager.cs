@@ -97,17 +97,6 @@ public class ClassData
     //Statistiche Base
     public string className;
     public PowerUpData powerUpsData;
+    public ExtraData extraData;
     public List<AbilityUpgrade> unlockedAbility;
-    public int unusedKey;
-
-    //Statisiche di Gioco
-    public float totalDamageDone;
-    public float totalDamageTaken;
-    public float totalHealDone;
-    public float totalHealReceived;
-
-    public int enemysKilled;
-    public int perfectDodgeDone;
-    public int perfectGuardDone;
-    public int minigameWon;
 }

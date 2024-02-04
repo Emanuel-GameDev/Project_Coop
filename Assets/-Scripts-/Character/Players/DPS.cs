@@ -76,6 +76,7 @@ public class DPS : CharacterClass
     private float perfectDodgeCounter = 0;
     private float dashAttackStartTime;
     private float dashAttackDamageMultiplier;
+    private float currentBossfightTotalDamageDone = 0;
     private Vector3 startPosition;
 
 
@@ -477,8 +478,8 @@ public class DPS : CharacterClass
 
     private void TotalDamageUpdate(float damage)
     {
-        totalDamageDone += damage;
-        if (totalDamageDone > bossPowerUpTotalDamageToUnlock)
+        currentBossfightTotalDamageDone += damage;
+        if (currentBossfightTotalDamageDone > bossPowerUpTotalDamageToUnlock)
             bossfightPowerUpUnlocked = true;
     }
 

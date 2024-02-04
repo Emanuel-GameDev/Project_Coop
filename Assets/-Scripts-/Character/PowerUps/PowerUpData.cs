@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [Serializable]
 public class PowerUpData
 {
-   public List<PowerUp> _powerUpData { get; private set; } = new List<PowerUp>();
+   public List<PowerUp> powerUps { get; private set; } = new List<PowerUp>();
 
     // Damage
     public float damageIncrease { get; private set; } = 0;
@@ -16,7 +16,10 @@ public class PowerUpData
     public float moveSpeedIncrease { get; private set; } = 0;
 
     // Cooldown
-    public float uniqueAbilityCooldownDecrease { get; private set; } = 0;
+    public float UniqueAbilityCooldownDecrease => 1 - uniqueAbilityCooldownDecrease > 0 ? 1 - uniqueAbilityCooldownDecrease : 0 ;
+    private float uniqueAbilityCooldownDecrease = 0;
+
+
 
     // Stamina
     public float attackSpeedIncrease { get; private set; } = 0;
@@ -26,26 +29,26 @@ public class PowerUpData
     //Aggiunge a lista powerUp e calcolo statistiche
     public void Add(PowerUp powerUp)
     {
-        _powerUpData.Add(powerUp);
+        powerUps.Add(powerUp);
         switch (powerUp.powerUpType)
         {
-            case PowerUpType.Damage:
+            case eStatsType.Damage:
                 damageIncrease += powerUp.value;
                 break;
 
-            case PowerUpType.Health:
+            case eStatsType.Health:
                 maxHpIncrease += powerUp.value;
                 break;
 
-            case PowerUpType.MoveSpeed:
+            case eStatsType.MoveSpeed:
                 moveSpeedIncrease += powerUp.value;
                 break;
 
-            case PowerUpType.UniqueAbilityCooldown:
+            case eStatsType.UniqueAbilityCooldown:
                 uniqueAbilityCooldownDecrease += powerUp.value;
                 break;
 
-            case PowerUpType.AttackSpeed:
+            case eStatsType.AttackSpeed:
                 attackSpeedIncrease += powerUp.value;
                 break;
         }
@@ -54,29 +57,29 @@ public class PowerUpData
     //Rimuovi a lista powerUp e calcolo statistiche
     public void Remove(PowerUp powerUp)
     {
-        if (_powerUpData.Contains(powerUp))
+        if (powerUps.Contains(powerUp))
         {
-            _powerUpData.Remove(powerUp);
+            powerUps.Remove(powerUp);
 
             switch (powerUp.powerUpType)
             {
-                case PowerUpType.Damage:
+                case eStatsType.Damage:
                     damageIncrease -= powerUp.value;
                     break;
 
-                case PowerUpType.Health:
+                case eStatsType.Health:
                     maxHpIncrease -= powerUp.value;
                     break;
 
-                case PowerUpType.MoveSpeed:
+                case eStatsType.MoveSpeed:
                     moveSpeedIncrease -= powerUp.value;
                     break;
 
-                case PowerUpType.UniqueAbilityCooldown:
+                case eStatsType.UniqueAbilityCooldown:
                     uniqueAbilityCooldownDecrease -= powerUp.value;
                     break;
 
-                case PowerUpType.AttackSpeed:
+                case eStatsType.AttackSpeed:
                     attackSpeedIncrease -= powerUp.value;
                     break;
             }
