@@ -7,17 +7,17 @@ public class Slotmachine : MonoBehaviour
     [Header("Variabili colonna")]   
     
     [SerializeField,Tooltip("Numero delle figure totali nella colonna")]
-    int numberOfSlots;
+    int numberOfSlots=0;
     [SerializeField,Tooltip("Numero delle figure vincenti nella colonna")]
-    int numberWinSlots;
+    int numberWinSlots=0;
     [SerializeField,Tooltip("Distanza delle figure nella colonna")] 
     float slotDistance = 0.25f;
     [SerializeField,Tooltip("Velocità di rotazione della colonna")] 
-    float rotationSpeed;
+    float rotationSpeed=0;
     [SerializeField,Tooltip("Velocità/tempo impiegato alla colonna per fermarsi")] 
-    float stabilizationSpeed;
+    float stabilizationSpeed = 0;
     [SerializeField, Tooltip("Delay restart della colonna")]
-    float restartDelay;
+    float restartDelay=0;
 
     [Header("Sprite figure")]
     [SerializeField] private Sprite dpsSprite;

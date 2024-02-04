@@ -106,9 +106,9 @@ public class Ranged : CharacterClass
 
     private float empowerCoolDownDecrease => reduceEmpowerFireCoolDownUnlocked ? chargeTimeReduction : 0;
 
-    bool isAttacking;
-    bool isDodging;
-    bool isInvunerable;
+    bool isAttacking=false;
+    bool isDodging=false;
+    bool isInvunerable=false;
 
     public override void Inizialize(PlayerCharacter character)
     {
@@ -139,7 +139,15 @@ public class Ranged : CharacterClass
     {
         if(!isDodging)
         {
-            base.Move(direction, rb);
+            if(!isAttacking && !isDodging)
+            {
+                base.Move(direction, rb);
+            }
+            else
+            {
+                rb.velocity = Vector3.zero;
+            }
+            
 
             if (rb.velocity.magnitude > 0.1f)
             {
@@ -151,6 +159,8 @@ public class Ranged : CharacterClass
             }
         }      
     }
+
+    
 
     public override void TakeDamage(DamageData data)
     {
@@ -311,8 +321,11 @@ public class Ranged : CharacterClass
     #region ExtraAbility
     public override void UseExtraAbility(Character parent, InputAction.CallbackContext context) //E
     {
+
         if (context.performed)
         {
+            Debug.Log("Ho premuto e, ganzo");
+
             if (landMineUnlocked)
             {
                 if (nearbyLandmine.Count<=0)
@@ -391,8 +404,13 @@ public class Ranged : CharacterClass
                 return;
                 //inserire suono (?)
             }
+            else
+            {
+                empowerStartTimer = Time.time;
+                isAttacking = true;
+            }
 
-            empowerStartTimer = Time.time;
+            
 
         }
         else if (context.canceled && canUseUniqueAbility)
@@ -416,8 +434,14 @@ public class Ranged : CharacterClass
                 empowerCoolDownTimer = UniqueAbilityCooldown;
 
                 Debug.Log("colpo potenziato");
+
+                
             }
+
+            isAttacking = false;
         }
+
+        
 
     }
 
