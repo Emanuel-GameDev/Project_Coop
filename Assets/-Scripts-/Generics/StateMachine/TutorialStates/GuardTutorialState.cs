@@ -63,10 +63,10 @@ public class GuardTutorialState : TutorialFase
             tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
             tutorialManager.PlayDialogue(faseData.tankPerfectGuardDialogue);
 
-            tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-            tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+            tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
 
-            tutorialManager.ActivateEnemyAI();
+            tutorialManager.DeactivateEnemyAI();
 
             PubSub.Instance.RegisterFunction(EMessageType.perfectGuardExecuted, UpdatePerfectCounter);
             //PubSub.Instance.UnregisterFunction(EMessageType.guardExecuted, UpdateCounter);

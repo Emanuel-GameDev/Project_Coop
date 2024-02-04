@@ -44,6 +44,7 @@ public class TutorialManager : MonoBehaviour
     public List<PlayerCharacter> characters = new List<PlayerCharacter>();
 
     public TutorialEnemy tutorialEnemy;
+    [SerializeField] GameObject lilith;
     
 
     [Serializable]
@@ -252,6 +253,8 @@ public class TutorialManager : MonoBehaviour
         }
         else
         {
+            tutorialEnemy.gameObject.SetActive(false);
+            lilith.SetActive(false);
             PlayFinalePartTwo();
         }
     }
@@ -284,10 +287,7 @@ public class TutorialManager : MonoBehaviour
         PlayDialogue(endingDialogueTwo);
     }
 
-    private void TutorialEndIntermediate()
-    {
-        Fade();
-    }
+   
 
     private void TutorialEnd()
     {
@@ -392,9 +392,14 @@ public class TutorialManager : MonoBehaviour
     {
         tutorialEnemy.gameObject.SetActive(false);
         tutorialEnemy.gameObject.transform.SetPositionAndRotation(enemyRespawn.position, tutorialEnemy.gameObject.transform.rotation);
+
         tutorialEnemy.viewTrigger.ClearList();
         tutorialEnemy.attackTrigger.ClearList();
+
+        tutorialEnemy.stateMachine.SetState(tutorialEnemy.idleState);
+        tutorialEnemy.GetRigidBody().velocity= Vector3.zero;
         DeactivateEnemyAI();
+
         tutorialEnemy.gameObject.SetActive(true);
     }
 
