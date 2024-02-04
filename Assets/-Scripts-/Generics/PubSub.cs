@@ -9,7 +9,6 @@ public enum EMessageType
     perfectGuardExecuted,
     dodgeExecuted,
     perfectDodgeExecuted
-
 }
 
 
@@ -54,6 +53,11 @@ public class PubSub : MonoBehaviour
 
     public void Notify(EMessageType messageType, object messageContent)
     {
+        if (_registeredFunctions == null || !_registeredFunctions.ContainsKey(messageType))
+        {
+            return;
+        }
+
         foreach (Action<object> function in _registeredFunctions[messageType])
         {
             function.Invoke(messageContent);

@@ -7,22 +7,22 @@ public class PowerUpData
    public List<PowerUp> powerUps { get; private set; } = new List<PowerUp>();
 
     // Damage
-    public float damageIncrease { get; private set; } = 0;
+    public float damageIncrease { get; private set; } = 1;
 
     // Health
-    public float maxHpIncrease { get; private set; } = 0;
+    public float maxHpIncrease { get; private set; } = 1;
 
     // Speed
-    public float moveSpeedIncrease { get; private set; } = 0;
+    public float moveSpeedIncrease { get; private set; } = 1;
 
     // Cooldown
     public float UniqueAbilityCooldownDecrease => 1 - uniqueAbilityCooldownDecrease > 0 ? 1 - uniqueAbilityCooldownDecrease : 0 ;
-    private float uniqueAbilityCooldownDecrease = 0;
+    private float uniqueAbilityCooldownDecrease = 1;
 
 
 
     // Stamina
-    public float attackSpeedIncrease { get; private set; } = 0;
+    public float attackSpeedIncrease { get; private set; } = 1;
 
 
 
