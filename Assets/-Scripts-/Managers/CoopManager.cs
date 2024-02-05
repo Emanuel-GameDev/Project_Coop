@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class CoopManager : MonoBehaviour
 {
@@ -75,9 +76,14 @@ public class CoopManager : MonoBehaviour
             }
         }
 
-        InitializePlayers();
-
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        InitializePlayers();
+    }
+
 
     private void InitializePlayers()
     {
@@ -87,6 +93,7 @@ public class CoopManager : MonoBehaviour
 
             GO.gameObject.GetComponent<PlayerCharacter>().SwitchCharacterClass(p.data._class);
         }
+        Debug.Log($"Inizializza: {playerInputDevices.Count}");
     }
 
     //public void JoinPlayer(int numPlayers)

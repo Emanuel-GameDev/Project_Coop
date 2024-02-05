@@ -224,18 +224,26 @@ public class CharacterSelectionMenu : MonoBehaviour
         // una funzione nel coopManager tipo che ha lui una lista e quando la voglio gliela chiedo
         // Intendo devices
 
-        List<PlayerSelection> list = selectableCharacters;
+        int temp = 0;
 
         foreach (InputDevice device in devices)
         {
-            int rand = Random.Range(0, list.Count);
+            int rand = 0;
+            do
+            {
+                rand = Random.Range(0, selectableCharacters.Count);
+            }
+            while (selectableCharacters[rand].selected);
+
+            temp = rand;
 
             selectableCharacters[rand].EditIcon(true);
             selectableCharacters[rand].EditDevice(device);
             selectableCharacters[rand].Print();
 
-            list.RemoveAt(rand);
         }
+
+        selectableCharacters[temp].Print();
 
         EndSelection();
     }
@@ -246,6 +254,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     {
         Debug.Log("Selezione completa");
         CoopManager.Instance.UpdateSelectedPlayers(selectableCharacters);
+        GameManager.Instance.LoadNextScene();
     }
 
 

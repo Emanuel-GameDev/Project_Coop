@@ -122,6 +122,16 @@ public class GameManager : MonoBehaviour
         this.canJoin = canJoin;
     }
 
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1;
+    }
+
     #region Scene Management (maybe temp)
 
     public void LoadScene(int id)
