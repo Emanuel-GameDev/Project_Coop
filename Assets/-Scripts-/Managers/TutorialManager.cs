@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 
 public enum TutorialFaseType
 {
@@ -353,7 +354,7 @@ public class TutorialManager : MonoBehaviour
     {
         dialogueBox.OnDialogueEnded -= TutorialEnd;
 
-
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
         foreach (PlayerCharacter character in characters)
         {
@@ -443,7 +444,7 @@ public class TutorialManager : MonoBehaviour
 
         if (faseCount < fases.Length)
         {
-            if (/*!setted &&*/ fases[faseCount].faseData.faseType != TutorialFaseType.movement)
+            if (!setted && fases[faseCount].faseData.faseType != TutorialFaseType.movement)
             {
                 Debug.Log("SET");
                 SetInputs();
