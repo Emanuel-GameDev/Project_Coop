@@ -60,10 +60,7 @@ public class TutorialManager : MonoBehaviour
 
     public int faseCount = 0;
 
-    private void Awake()
-    {
-
-    }
+  
 
     private void SetUpCharacters()
     {
