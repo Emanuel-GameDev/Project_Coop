@@ -44,6 +44,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3679722225858389049}
   - component: {fileID: 8834725042193988488}
+  - component: {fileID: 7361058080087012423}
   m_Layer: 7
   m_Name: visual
   m_TagString: Untagged
@@ -61,7 +62,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -2.747873, y: 0.49832028, z: -11.64961}
-  m_LocalScale: {x: 0.35720998, y: 0.35720998, z: 0.35720998}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7171072998376235493}
@@ -118,6 +119,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7361058080087012423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636597113684329488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35b2ddf7b708cb84cab5a3f51b163aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shouldUpdate: 1
 --- !u!1 &4413517995448248663
 GameObject:
   m_ObjectHideFlags: 0
@@ -2029,7 +2043,7 @@ GameObject:
   - component: {fileID: 5633511273928634180}
   - component: {fileID: 103600533958862017}
   - component: {fileID: 4000912084111234522}
-  - component: {fileID: 1304712668269367690}
+  - component: {fileID: 1862017897759909622}
   m_Layer: 7
   m_Name: Kerberos boss
   m_TagString: Untagged
@@ -2047,8 +2061,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 10.77, y: -0.07, z: 0.96}
-  m_LocalScale: {x: 3.5721, y: 3.5721, z: 3.5721}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7171072998376235493}
   m_Father: {fileID: 0}
@@ -2215,8 +2229,8 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &1304712668269367690
-BoxCollider:
+--- !u!136 &1862017897759909622
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2233,6 +2247,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.5297894, y: 2.0000002, z: 0.60455245}
-  m_Center: {x: 0.26489538, y: 0, z: 0.19772339}
+  serializedVersion: 2
+  m_Radius: 1.6141882
+  m_Height: 4.353948
+  m_Direction: 1
+  m_Center: {x: -0.1618309, y: 0.53709435, z: -0.00000011920929}

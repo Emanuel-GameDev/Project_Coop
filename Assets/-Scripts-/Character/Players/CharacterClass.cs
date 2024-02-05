@@ -49,7 +49,7 @@ public class CharacterClass : MonoBehaviour
     public bool Stunned => character.stunned;
 
     public virtual float MaxHp => maxHp * powerUpData.maxHpIncrease;
-    [HideInInspector]
+    //[HideInInspector]
     public float currentHp;
 
     public virtual float Damage => damage * powerUpData.damageIncrease;
@@ -67,6 +67,7 @@ public class CharacterClass : MonoBehaviour
         powerUpData = new PowerUpData();
         extraData = new ExtraData();
         upgradeStatus = new();
+        currentHp = MaxHp;
         foreach (AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
         {
             upgradeStatus.Add(au, false);
