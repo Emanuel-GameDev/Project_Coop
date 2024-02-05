@@ -41,7 +41,7 @@ public class DialogueBox : MonoBehaviour
         [SerializeField] public TextMeshProUGUI nameText;
         [SerializeField] public TextMeshProUGUI contentText;
 
-        [SerializeField] public Image speakerFrame;
+        //[SerializeField] public Image speakerFrame;
         [SerializeField] public Image dialogueFrame;
     }
 
@@ -120,10 +120,10 @@ public class DialogueBox : MonoBehaviour
 
         nextBox.characterImage.sprite = nextLine.Character.CharacterImage;
 
-        if(nextBox.speakerFrame != null)
-            nextBox.speakerFrame.color = nextLine.Character.CharacterColor;
+        //if (nextBox.speakerFrame != null)
+        //    nextBox.speakerFrame.color = nextLine.Character.CharacterColor;
 
-        if(nextBox.dialogueFrame != null)
+        if (nextBox.dialogueFrame != null)
             nextBox.dialogueFrame.color = nextLine.Character.CharacterColor;
 
 
