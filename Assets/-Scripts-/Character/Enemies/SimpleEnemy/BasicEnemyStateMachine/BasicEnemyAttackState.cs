@@ -16,7 +16,8 @@ public class BasicEnemyAttackState : BasicEnemyState
         basicEnemy.canMove = false;
         basicEnemy.canAttack = true;
 
-        basicEnemy.SetTarget(basicEnemy.attackTrigger.GetPlayersDetected()[0].transform);
+        //da rimettere dopo
+        //basicEnemy.SetTarget(basicEnemy.attackTrigger.GetPlayersDetected()[0].transform);
 
         basicEnemy.StartCoroutine(basicEnemy.Attack());
 

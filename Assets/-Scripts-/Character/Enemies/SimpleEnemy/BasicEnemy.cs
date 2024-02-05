@@ -95,16 +95,23 @@ public class BasicEnemy : EnemyCharacter
 
         agent.enabled = true;
 
-        if (agent.CalculatePath(target.position, path))
+        if (target != null)
         {
+            if (agent.CalculatePath(target.position, path))
+            {
 
-            if (path.corners.Length > 1)
-                Move(path.corners[1] - path.corners[0], rb);
+                if (path.corners.Length > 1)
+                    Move(path.corners[1] - path.corners[0], rb);
+                else
+                    Move(target.position - transform.position, rb);
+            }
             else
-                Move(target.position - transform.position, rb);
+                rb.velocity = Vector3.zero;
         }
         else
+        {
             rb.velocity = Vector3.zero;
+        }
     }
 
     public virtual void Move(Vector3 direction, Rigidbody rb)
