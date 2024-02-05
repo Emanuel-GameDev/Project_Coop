@@ -51,8 +51,8 @@ public class DodgeTutorialState : TutorialFase
         Debug.Log("schiva perfect");
         if ( perfectDodgeCount == 3)
         {
-            characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
-            characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+            //characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            //characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
 
             //da rimettere dopo
 

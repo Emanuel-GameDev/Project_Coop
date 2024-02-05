@@ -279,6 +279,11 @@ public class TutorialManager : MonoBehaviour
         //dps.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
         //OnMovementFaseStart.Invoke();
 
+        DeactivatePlayerInput(dps);
+        DeactivatePlayerInput(healer);
+        DeactivatePlayerInput(ranged);
+        DeactivatePlayerInput(tank);
+
     }
 
     private void Update()
@@ -434,10 +439,10 @@ public class TutorialManager : MonoBehaviour
         //ranged.gameObject.SetActive(true);
         //tank.gameObject.SetActive(true);
 
-        DeactivatePlayerInput(dps);
-        DeactivatePlayerInput(healer);
-        DeactivatePlayerInput(ranged);
-        DeactivatePlayerInput(tank);
+        //DeactivatePlayerInput(dps);
+        //DeactivatePlayerInput(healer);
+        //DeactivatePlayerInput(ranged);
+        //DeactivatePlayerInput(tank);
 
         if (faseCount < fases.Length)
         {
