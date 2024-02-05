@@ -224,8 +224,6 @@ public class CharacterSelectionMenu : MonoBehaviour
         // una funzione nel coopManager tipo che ha lui una lista e quando la voglio gliela chiedo
         // Intendo devices
 
-        int temp = 0;
-
         foreach (InputDevice device in devices)
         {
             int rand = 0;
@@ -235,15 +233,11 @@ public class CharacterSelectionMenu : MonoBehaviour
             }
             while (selectableCharacters[rand].selected);
 
-            temp = rand;
-
             selectableCharacters[rand].EditIcon(true);
             selectableCharacters[rand].EditDevice(device);
             selectableCharacters[rand].Print();
 
         }
-
-        selectableCharacters[temp].Print();
 
         EndSelection();
     }

@@ -93,7 +93,6 @@ public class CoopManager : MonoBehaviour
 
             GO.gameObject.GetComponent<PlayerCharacter>().SwitchCharacterClass(p.data._class);
         }
-        Debug.Log($"Inizializza: {playerInputDevices.Count}");
     }
 
     //public void JoinPlayer(int numPlayers)
