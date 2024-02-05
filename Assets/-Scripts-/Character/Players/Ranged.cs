@@ -273,8 +273,10 @@ public class Ranged : CharacterClass
         {
             isDodging = true;
 
-            
+
             //animazione
+
+            animator.SetTrigger("Dodge");
 
             Vector3 dodgeDirection = new Vector3(direction.x, 0f, direction.y).normalized;
 
