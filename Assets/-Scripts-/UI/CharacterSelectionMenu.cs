@@ -122,14 +122,19 @@ public class CharacterSelectionMenu : MonoBehaviour
     /// Controlla se un'icona è stata selezionata da un'altro player
     /// </summary>
     /// <param name="iconToCheck"></param>
-    public bool AlreadySelected(RectTransform iconToCheck)
+    public bool AlreadySelected(RectTransform iconToCheck, InputDevice device)
     {
         foreach (PlayerSelection s in selectableCharacters)
         {
             if (iconToCheck == s.data._icon)
             {
                 if (s.selected)
-                    return true;
+                {
+                    if (s.device == device)
+                        return false;
+                    else
+                        return true;
+                }  
                 else
                     return false;
             }
@@ -169,7 +174,7 @@ public class CharacterSelectionMenu : MonoBehaviour
 
         foreach (PlayerSelection player in selectableCharacters)
         {
-            if (AlreadySelected(player.data._icon))
+            if (AlreadySelected(player.data._icon, null))
                 count++;
 
         }
