@@ -27,6 +27,14 @@ public class CursorBehaviour : MonoBehaviour
 
     public void OnCursorMove(InputAction.CallbackContext context)
     {
+        if (context.started && randomBtnSelected)
+        {
+            Debug.LogWarning($"Player {context.control.device.deviceId} non può muoversi poiché ha" +
+                $" avviato una votazione per la selezione random");
+
+            return;
+        }    
+
         // Bottone premuto
         if (context.started && !objectSelected)
         {
@@ -56,6 +64,14 @@ public class CursorBehaviour : MonoBehaviour
     /// <param name="context"></param>
     public void OnSelectedButton(InputAction.CallbackContext context)
     {
+        if (randomBtnSelected && context.started)
+        {
+            Debug.LogWarning($"Player {context.control.device.deviceId} non può selezionare poiché ha avviato" +
+                $" una votazione per la selezione random");
+
+            return;
+        }
+
         if (context.started)
         {
             selectionParent = transform.parent.gameObject;

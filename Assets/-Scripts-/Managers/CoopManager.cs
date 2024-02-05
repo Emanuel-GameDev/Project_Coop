@@ -10,10 +10,16 @@ public class CoopManager : MonoBehaviour
     [SerializeField] private CharacterClass switchPlayerRight;
     [SerializeField] private CharacterClass switchPlayerDown;
     [SerializeField] private CharacterClass switchPlayerLeft;
+
+
     private bool canSwitch = true;
 
+    // Lista dei dispositivi degli utenti collegati
     public List<PlayerSelection> playerInputDevices = new List<PlayerSelection>();
+    // Lista dei personaggi attivi
     public List<PlayerCharacter> activePlayers;
+
+
     private List<CharacterClass> internalSwitchList;
 
     private static CoopManager _instance;
@@ -100,25 +106,6 @@ public class CoopManager : MonoBehaviour
 
         HPHandler.Instance.SetActivePlayers();
     }
-
-    //public void JoinPlayer(int numPlayers)
-    //{
-    //    for (int i = 0; i < numPlayers; i++)
-    //    {
-    //        GameManager.Instance.playerInputManager.JoinPlayer();
-    //    }
-    //}
-
-
-    //public void OnPlayerJoined(PlayerInput playerInput)
-    //{
-    //    GameManager.Instance.PlayerIsJoined(playerInput);
-    //}
-
-    //public void OnPlayerLeft(PlayerInput playerInput)
-    //{
-    //    GameManager.Instance.PlayerAsLeft(playerInput);
-    //}
 
     public void SetCanSwitch(bool canSwitch) 
     { 
