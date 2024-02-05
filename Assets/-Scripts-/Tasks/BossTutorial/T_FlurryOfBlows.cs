@@ -27,6 +27,8 @@ namespace MBTExample
             Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
             targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), 0, (direction.z * bossCharacter.flurryDistance)) + bossCharacter.transform.position;
             bossCharacter.SetFlurryOfBlowsDamageData(attackCount);
+            Debug.Log("inizio attacco " + attackCount);
+
 
             bossCharacter.Agent.speed = bossCharacter.flurrySpeed;
             bossCharacter.Agent.SetDestination(targetPosition);
