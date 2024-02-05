@@ -97,6 +97,8 @@ public class CoopManager : MonoBehaviour
             playerCharacter.SwitchCharacterClass(p.data._class);
             activePlayers.Add(playerCharacter);
         }
+
+        HPHandler.Instance.SetActivePlayers();
     }
 
     //public void JoinPlayer(int numPlayers)
