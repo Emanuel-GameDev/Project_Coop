@@ -15,7 +15,10 @@ public class BasicEnemyMoveState : BasicEnemyState
         basicEnemy.canMove = true;
         basicEnemy.canAttack = false;
 
-        basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
+        //da rimettere dopo
+        //basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
+
+
 
         //basicEnemy.obstacle.enabled = false;
         //basicEnemy.Agent.enabled = true;

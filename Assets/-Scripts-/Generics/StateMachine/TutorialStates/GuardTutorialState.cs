@@ -37,6 +37,7 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
+        tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
        
     }
 

@@ -108,6 +108,7 @@ public class DodgeTutorialState : TutorialFase
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         currentCharacterIndex++;
+        tutorialManager.tutorialEnemy.SetTarget(characters[currentCharacterIndex].transform);
         tutorialManager.DeactivateEnemyAI();
         dodgeCount = 0;
         perfectDodgeCount = 0;
