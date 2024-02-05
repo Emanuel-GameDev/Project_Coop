@@ -284,6 +284,8 @@ public class TutorialManager : MonoBehaviour
         DeactivatePlayerInput(ranged);
         DeactivatePlayerInput(tank);
 
+        DeactivateEnemyAI();
+
     }
 
     private void Update()
@@ -465,7 +467,7 @@ public class TutorialManager : MonoBehaviour
 
         tutorialEnemy.stateMachine.SetState(tutorialEnemy.idleState);
         tutorialEnemy.GetRigidBody().velocity = Vector3.zero;
-        DeactivateEnemyAI();
+        
 
         tutorialEnemy.gameObject.SetActive(true);
     }
