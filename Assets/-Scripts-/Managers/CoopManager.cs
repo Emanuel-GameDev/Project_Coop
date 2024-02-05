@@ -10,11 +10,10 @@ public class CoopManager : MonoBehaviour
     [SerializeField] private CharacterClass switchPlayerDown;
     [SerializeField] private CharacterClass switchPlayerLeft;
     private bool canSwitch = true;
+
     public List<PlayerSelection> playerInputDevices = new List<PlayerSelection>();
     public List<PlayerCharacter> activePlayers;
     private List<CharacterClass> internalSwitchList;
-
-    private List<PlayerInput> playerList = new List<PlayerInput>();
 
     private static CoopManager _instance;
     public static CoopManager Instance
@@ -40,6 +39,8 @@ public class CoopManager : MonoBehaviour
     public CharacterClass SwitchPlayerRight => switchPlayerRight;
     public CharacterClass SwitchPlayerDown => switchPlayerDown;
     public CharacterClass SwitchPlayerLeft => switchPlayerLeft;
+
+    public GameObject capsulePrefab;
 
     private void Awake()
     {
@@ -74,28 +75,38 @@ public class CoopManager : MonoBehaviour
             }
         }
 
+        InitializePlayers();
+
     }
 
-    public void JoinPlayer(int numPlayers)
+    private void InitializePlayers()
     {
-        for (int i = 0; i < numPlayers; i++)
+        foreach (PlayerSelection p in playerInputDevices)
         {
-            GameManager.Instance.playerInputManager.JoinPlayer();
+            PlayerInput GO = PlayerInput.Instantiate(capsulePrefab, p.device.deviceId, p.device.displayName, -1, p.device);
+
+            GO.gameObject.GetComponent<PlayerCharacter>().SwitchCharacterClass(p.data._class);
         }
     }
 
-    
-    public void OnPlayerJoined(PlayerInput playerInput)
-    {
-        playerList.Add(playerInput);
-        GameManager.Instance.PlayerIsJoined(playerInput);
-    }
+    //public void JoinPlayer(int numPlayers)
+    //{
+    //    for (int i = 0; i < numPlayers; i++)
+    //    {
+    //        GameManager.Instance.playerInputManager.JoinPlayer();
+    //    }
+    //}
 
-    public void OnPlayerLeft(PlayerInput playerInput)
-    {
-        playerList.Remove(playerInput);
-        GameManager.Instance.PlayerAsLeft(playerInput);
-    }
+
+    //public void OnPlayerJoined(PlayerInput playerInput)
+    //{
+    //    GameManager.Instance.PlayerIsJoined(playerInput);
+    //}
+
+    //public void OnPlayerLeft(PlayerInput playerInput)
+    //{
+    //    GameManager.Instance.PlayerAsLeft(playerInput);
+    //}
 
     public void SetCanSwitch(bool canSwitch) 
     { 
@@ -105,7 +116,7 @@ public class CoopManager : MonoBehaviour
     /// <summary>
     /// Prende dal character selection menù la lista dei player selection e aggiorna i player attivi
     /// </summary>
-    public void UpdateSelectedPalyers(List<PlayerSelection> list) 
+    public void UpdateSelectedPlayers(List<PlayerSelection> list) 
     {
         playerInputDevices.Clear(); 
 
@@ -122,10 +133,10 @@ public class CoopManager : MonoBehaviour
     {
         if (!canSwitch)
             return false;
-        
-        PlayerSelection toSwtich = new();
-        
-        foreach(PlayerSelection player in playerInputDevices)
+
+        PlayerSelection toSwtich = null;
+
+        foreach (PlayerSelection player in playerInputDevices)
         {
             if (player.data._class == switchPlayerUp)
                 return false;
@@ -135,5 +146,6 @@ public class CoopManager : MonoBehaviour
         toSwtich.data._class = switchPlayerUp;
 
         return true;
+        
     }
 }
