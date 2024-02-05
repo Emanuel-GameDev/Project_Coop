@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -120,5 +121,24 @@ public class GameManager : MonoBehaviour
     {
         this.canJoin = canJoin;
     }
+
+    #region Scene Management (maybe temp)
+
+    public void LoadScene(int id)
+    {
+        SceneManager.LoadScene(id);
+    }
+
+    public void Exit()
+    {
+        Application.Quit();
+    }
+
+    public void LoadNextScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    #endregion
 
 }

@@ -33,7 +33,7 @@ public class BasicEnemy : EnemyCharacter
     [HideInInspector] public BasicEnemyMoveState moveState;
     [HideInInspector] public BasicEnemyAttackState attackState;
 
-    /*[HideInInspector] */public bool AIActive = true;
+    [HideInInspector] public bool AIActive = true;
 
     [HideInInspector] public bool canSee = true;
     [HideInInspector] public bool canMove = false;
