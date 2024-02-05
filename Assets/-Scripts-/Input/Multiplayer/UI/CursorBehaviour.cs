@@ -61,7 +61,7 @@ public class CursorBehaviour : MonoBehaviour
             selectionParent = transform.parent.gameObject;
 
             // Se un'altro personaggio ha già selezionato un'oggetto return
-            if (CharacterSelectionMenu.Instance.AlreadySelected(selectionParent.GetComponent<RectTransform>())) return;
+            if (CharacterSelectionMenu.Instance.AlreadySelected(selectionParent.GetComponent<RectTransform>(), context.control.device)) return;
 
             // Se non ho selezionato niente, seleziono
             if (!objectSelected)

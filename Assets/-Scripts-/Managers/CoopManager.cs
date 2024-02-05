@@ -81,19 +81,21 @@ public class CoopManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        activePlayers.Clear();
         InitializePlayers();
     }
 
 
     private void InitializePlayers()
     {
+        activePlayers.Clear();
         foreach (PlayerSelection p in playerInputDevices)
         {
             PlayerInput GO = PlayerInput.Instantiate(capsulePrefab, p.device.deviceId, p.device.displayName, -1, p.device);
 
-            GO.gameObject.GetComponent<PlayerCharacter>().SwitchCharacterClass(p.data._class);
-            activePlayers.Add(GO.gameObject.GetComponent<PlayerCharacter>());
+            PlayerCharacter playerCharacter = GO.gameObject.GetComponent<PlayerCharacter>();
+           
+            playerCharacter.SwitchCharacterClass(p.data._class);
+            activePlayers.Add(playerCharacter);
         }
     }
 
