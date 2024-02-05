@@ -105,6 +105,7 @@ public class CoopManager : MonoBehaviour
         }
 
         HPHandler.Instance.SetActivePlayers();
+        CameraManager.Instance.AddAllPlayers();
     }
 
     public void SetCanSwitch(bool canSwitch) 

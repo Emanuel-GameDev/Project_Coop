@@ -10,7 +10,7 @@ public class SceneChangerSelector : MonoBehaviour
         
         if (!string.IsNullOrEmpty(selectedSceneName))
         {
-            //SceneLoadManager.Instance.ChangeScene(selectedSceneName);
+           SceneManager.LoadScene(selectedSceneName);
         }
         else
         {
