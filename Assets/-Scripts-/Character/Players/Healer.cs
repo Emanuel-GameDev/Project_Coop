@@ -271,7 +271,7 @@ public class Healer : CharacterClass
                     foreach (PlayerCharacter pc in playerInArea)
                     {
                         pc.TakeDamage(new DamageData(-smallHeal, null));
-                        //PubSub.Instance.Notify(EMessageType.characterHealed, pc);
+                        PubSub.Instance.Notify(EMessageType.characterHealed, pc);
                     }
                     
                     smallHealTimer = 0;
