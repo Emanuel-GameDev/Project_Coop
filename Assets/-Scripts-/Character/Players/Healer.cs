@@ -204,14 +204,14 @@ public class Healer : CharacterClass
             if (bossAbilityChargeTimer < bossAbilityCharge)
             {
                 bossAbilityChargeTimer += Time.deltaTime;
-                if(!character.GetPowerUpList().Contains(bossAbilitySlowdown))
-                    character.AddPowerUp(bossAbilitySlowdown);
+                if(!playerCharacter.GetPowerUpList().Contains(bossAbilitySlowdown))
+                    playerCharacter.AddPowerUp(bossAbilitySlowdown);
             }
         }
         else
         {
-            if (character.GetPowerUpList().Contains(bossAbilitySlowdown))
-                character.RemovePowerUp(bossAbilitySlowdown);
+            if (playerCharacter.GetPowerUpList().Contains(bossAbilitySlowdown))
+                playerCharacter.RemovePowerUp(bossAbilitySlowdown);
             bossAbilityChargeTimer = 0;
         }
 
@@ -308,7 +308,7 @@ public class Healer : CharacterClass
             radius = healAreaRadius;
 
 
-        HealArea areaSpawned = Instantiate(healArea, new Vector3(character.transform.position.x, 0, character.transform.position.z), Quaternion.identity).GetComponent<HealArea>();
+        HealArea areaSpawned = Instantiate(healArea, new Vector3(playerCharacter.transform.position.x, 0, playerCharacter.transform.position.z), Quaternion.identity).GetComponent<HealArea>();
 
 
         areaSpawned.Initialize(

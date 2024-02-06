@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerCharacter : Character
+public class PlayerCharacter : Character, InputReceiver
 {
     [SerializeField]
     protected CharacterClass characterClass;
@@ -12,8 +12,9 @@ public class PlayerCharacter : Character
     public float MaxHp => characterClass.MaxHp;
     public float CurrentHp => characterClass.currentHp;
     public bool protectedByTank;
-    
 
+    private ePlayerCharacter currentCharacter;
+    private PlayerInputHandler playerInputHandler;
     private Vector3 screenPosition;
     private Vector3 worldPosition;
     Plane plane = new Plane(Vector3.up, -1);
@@ -25,7 +26,8 @@ public class PlayerCharacter : Character
     protected override void InitialSetup()
     {
         base.InitialSetup();
-        InizializeClass();
+        if(characterClass != null)
+            InizializeClass(characterClass);
     }
 
     private void Update()
@@ -33,11 +35,12 @@ public class PlayerCharacter : Character
         Move(moveDir);
     }
 
-    public void InizializeClass()
+    public void InizializeClass(CharacterClass newCharClass)
     {
-        CharacterClass cClass = Instantiate(characterClass.gameObject, gameObject.transform).GetComponent<CharacterClass>();
+        CharacterClass cClass = Instantiate(newCharClass.gameObject, gameObject.transform).GetComponent<CharacterClass>();
         cClass.Inizialize(this);
         SetCharacterClass(cClass);
+        SetCharacter(cClass.Character);
     }
 
 
@@ -51,10 +54,12 @@ public class PlayerCharacter : Character
 
     public void SwitchCharacterClass(CharacterClass newCharClass)
     {
-        characterClass.Disable(this);
-        Destroy(characterClass.gameObject);
-        characterClass = newCharClass;
-        InizializeClass();
+        if(characterClass != null)
+        {
+            characterClass.Disable(this);
+            Destroy(characterClass.gameObject);
+        }
+        InizializeClass(newCharClass);
     }
 
     public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
@@ -71,6 +76,29 @@ public class PlayerCharacter : Character
     }
        
     public override DamageData GetDamageData() => characterClass.GetDamageData();
+
+    #region InterfaceImpletation
+
+    public void SetCharacter(ePlayerCharacter character)
+    {
+        currentCharacter = character;
+        if(playerInputHandler != null)
+            playerInputHandler.SetCharacter(currentCharacter);
+        if (characterClass == null)
+            SwitchCharacterClass(CoopManager.Instance.GetCharacterClass(character));
+    }
+    public ePlayerCharacter GetCharacter() => currentCharacter;
+
+    public void SetInputHandler(PlayerInputHandler inputHandler)
+    {
+        playerInputHandler = inputHandler;
+    }
+    public PlayerInputHandler GetInputHandler()
+    {
+        return playerInputHandler;
+    }
+
+    #endregion
 
     #region Input
 
@@ -114,36 +142,36 @@ public class PlayerCharacter : Character
 
     #region SwitchCharacters
 
-    public void SwitchUp(InputAction.CallbackContext context)
+    public void SwitchUpInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            if(CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerUp, this))
+            if(CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerUp))
             {
                 SwitchCharacterClass(CoopManager.Instance.SwitchPlayerUp);
             }
     }
 
-    public void SwitchRight(InputAction.CallbackContext context)
+    public void SwitchRightInput(InputAction.CallbackContext context)
     {
         if(context.performed)
-            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerRight, this))
+            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerRight))
             {
                 SwitchCharacterClass(CoopManager.Instance.SwitchPlayerRight);
             }
     }
 
-    public void SwitchDown(InputAction.CallbackContext context)
+    public void SwitchDownInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerDown, this))
+            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerDown))
             {
                 SwitchCharacterClass(CoopManager.Instance.SwitchPlayerDown);
             }
     }
-    public void SwitchLeft(InputAction.CallbackContext context)
+    public void SwitchLeftInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerLeft, this))
+            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerLeft))
             {
                 SwitchCharacterClass(CoopManager.Instance.SwitchPlayerLeft);
             }
@@ -180,7 +208,35 @@ public class PlayerCharacter : Character
     {
         Interact(context);
     }
-    #endregion
+
 
     #endregion
+
+    #region UnusedInput
+
+    public void JoinInput(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void MenuInput(InputAction.CallbackContext context)
+    {
+        
+    }
+
+    public void OptionInput(InputAction.CallbackContext context)
+    {
+       
+    }
+
+    public void MoveMinigameInput(InputAction.CallbackContext context)
+    {
+        
+    }
+    #endregion
+
+
+    #endregion
+
+
 }

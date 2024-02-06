@@ -6,22 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class CoopManager : MonoBehaviour
 {
-    [SerializeField] private CharacterClass switchPlayerUp;
-    [SerializeField] private CharacterClass switchPlayerRight;
-    [SerializeField] private CharacterClass switchPlayerDown;
-    [SerializeField] private CharacterClass switchPlayerLeft;
-
-
-    private bool canSwitch = true;
-
-    // Lista dei dispositivi degli utenti collegati
-    public List<PlayerSelection> playerInputDevices = new List<PlayerSelection>();
-    // Lista dei personaggi attivi
-    public List<PlayerCharacter> activePlayers;
-
-
-    private List<CharacterClass> internalSwitchList;
-
     private static CoopManager _instance;
     public static CoopManager Instance
     {
@@ -42,12 +26,41 @@ public class CoopManager : MonoBehaviour
         }
     }
 
+    [SerializeField] private GameObject playerInputPrefab;
+    [SerializeField] private CharacterClass switchPlayerUp;
+    [SerializeField] private CharacterClass switchPlayerRight;
+    [SerializeField] private CharacterClass switchPlayerDown;
+    [SerializeField] private CharacterClass switchPlayerLeft;
     public CharacterClass SwitchPlayerUp => switchPlayerUp;
     public CharacterClass SwitchPlayerRight => switchPlayerRight;
     public CharacterClass SwitchPlayerDown => switchPlayerDown;
     public CharacterClass SwitchPlayerLeft => switchPlayerLeft;
+   
+    private bool canSwitchCharacter = true;
 
-    public GameObject capsulePrefab;
+    private PlayerInputManager inputManager;
+    private List<PlayerInputHandler> playerInputHandlers;
+
+    private List<CharacterClass> internalSwitchList;
+
+    public List<PlayerCharacter> ActivePlayers
+    {
+        get
+        {
+            List<PlayerCharacter> players = new();
+            if(playerInputHandlers != null)
+            {
+                foreach (PlayerInputHandler player in playerInputHandlers)
+                {
+                    if (player.CurrentReceiver != null && player.CurrentReceiver is PlayerCharacter)
+                    {
+                        players.Add((PlayerCharacter)player.CurrentReceiver);
+                    }
+                }
+            }
+            return players;
+        }
+    }
 
     private void Awake()
     {
@@ -65,6 +78,13 @@ public class CoopManager : MonoBehaviour
 
     private void Start()
     {
+        inputManager = GetComponent<PlayerInputManager>();
+        InizializeSwitchList();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void InizializeSwitchList()
+    {
         internalSwitchList = new List<CharacterClass>()
         {
             SwitchPlayerUp,
@@ -81,9 +101,24 @@ public class CoopManager : MonoBehaviour
                 return;
             }
         }
-
-        SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
+    public void OnPlayerJoined(PlayerInput playerInput)
+    {
+        if(playerInputHandlers == null)
+            playerInputHandlers = new List<PlayerInputHandler>();
+
+        playerInput.gameObject.transform.parent = transform;
+        PlayerInputHandler newPlayerInputHandler = playerInput.gameObject.GetComponent<PlayerInputHandler>();
+        if (newPlayerInputHandler != null)
+        {
+            playerInputHandlers.Add(newPlayerInputHandler);
+            newPlayerInputHandler.SetReceiver(SceneInputReceiverManager.Instance.GetSceneInputReceiver(newPlayerInputHandler));
+        }
+        else
+            Debug.LogError("Missing PlayerInputHandler Component");
+    }
+
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -93,59 +128,41 @@ public class CoopManager : MonoBehaviour
 
     private void InitializePlayers()
     {
-        activePlayers.Clear();
-        foreach (PlayerSelection p in playerInputDevices)
+        foreach (PlayerInputHandler player in playerInputHandlers)
         {
-            PlayerInput GO = PlayerInput.Instantiate(capsulePrefab, p.device.deviceId, p.device.displayName, -1, p.device);
-
-            PlayerCharacter playerCharacter = GO.gameObject.GetComponent<PlayerCharacter>();
-           
-            playerCharacter.SwitchCharacterClass(p.data._class);
-            activePlayers.Add(playerCharacter);
+            player.SetReceiver(SceneInputReceiverManager.Instance.GetSceneInputReceiver(player));
         }
-
         HPHandler.Instance.SetActivePlayers();
         CameraManager.Instance.AddAllPlayers();
     }
 
     public void SetCanSwitch(bool canSwitch) 
     { 
-        this.canSwitch = canSwitch;
+        this.canSwitchCharacter = canSwitch;
     }
 
-    /// <summary>
-    /// Prende dal character selection menù la lista dei player selection e aggiorna i player attivi
-    /// </summary>
-    public void UpdateSelectedPlayers(List<PlayerSelection> list) 
+    internal bool CanSwitchCharacter(CharacterClass targetClass)
     {
-        playerInputDevices.Clear(); 
-
-        foreach (PlayerSelection player in list) 
-        {
-            if (player.selected)
-                playerInputDevices.Add(player);
-        }
-    }
-
-    //quando si istanzia il prefab di un giocatore se è un player character va buttato nella lista activePlayers, da valutare se spostare la lista nel GameManager
-
-    internal bool CanSwitchCharacter(CharacterClass switchPlayerUp, PlayerCharacter playerCharacter)
-    {
-        if (!canSwitch)
+        if (!canSwitchCharacter)
             return false;
 
-        PlayerSelection toSwtich = null;
-
-        foreach (PlayerSelection player in playerInputDevices)
+        foreach(PlayerInputHandler player in playerInputHandlers)
         {
-            if (player.data._class == switchPlayerUp)
+            if (player.currentCharacter == targetClass.Character)
                 return false;
-            if (player.data._class == playerCharacter.CharacterClass)
-                toSwtich = player;
         }
-        toSwtich.data._class = switchPlayerUp;
 
         return true;
         
+    }
+
+    public CharacterClass GetCharacterClass(ePlayerCharacter character)
+    {
+        foreach(CharacterClass ch in internalSwitchList)
+        {
+            if(ch.Character == character)
+                return ch;
+        }
+        return null;
     }
 }

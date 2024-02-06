@@ -39,7 +39,7 @@ public class HPHandler : MonoBehaviour
 
     public void SetActivePlayers()
     {
-        List<PlayerCharacter> players = GameManager.Instance.coopManager.activePlayers;
+        List<PlayerCharacter> players = GameManager.Instance.coopManager.ActivePlayers;
         foreach (PlayerCharacter player in players)
         {
            if(player1 == null)

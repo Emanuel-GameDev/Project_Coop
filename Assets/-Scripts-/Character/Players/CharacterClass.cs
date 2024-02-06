@@ -18,7 +18,7 @@ public enum AbilityUpgrade
 public class CharacterClass : MonoBehaviour
 {
     protected Animator animator;
-    protected PlayerCharacter character;
+    protected PlayerCharacter playerCharacter;
     protected PowerUpData powerUpData;
     protected ExtraData extraData;
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
@@ -33,6 +33,8 @@ public class CharacterClass : MonoBehaviour
 
     protected Vector2 lastNonZeroDirection;
 
+    [SerializeField, Tooltip("Identifica il personaggio.")]
+    protected ePlayerCharacter character;
     [SerializeField, Tooltip("La salute massima del personaggio.")]
     protected float maxHp;
     [SerializeField, Tooltip("Il danno inflitto dal personaggio.")]
@@ -46,17 +48,18 @@ public class CharacterClass : MonoBehaviour
     [SerializeField, Tooltip("L'incremento del tempo di attesa dell'abilità unica dopo ogni uso.")]
     protected float uniqueAbilityCooldownIncreaseAtUse;
 
-    public bool Stunned => character.stunned;
+    public bool Stunned => playerCharacter.stunned;
 
     public virtual float MaxHp => maxHp * powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
 
+    public ePlayerCharacter Character => character;
     public virtual float Damage => damage * powerUpData.damageIncrease;
     public virtual float MoveSpeed => moveSpeed * powerUpData.moveSpeedIncrease;
     public virtual float AttackSpeed => attackSpeed * powerUpData.attackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) * powerUpData.UniqueAbilityCooldownDecrease;
-    public float DamageReceivedMultiplier => character.damageReceivedMultiplier;
+    public float DamageReceivedMultiplier => playerCharacter.damageReceivedMultiplier;
 
     #region Animation Variable
     private static string Y = "Y";
@@ -73,7 +76,7 @@ public class CharacterClass : MonoBehaviour
             upgradeStatus.Add(au, false);
         }
         animator = GetComponent<Animator>();
-        this.character = character;
+        this.playerCharacter = character;
         bossfightPowerUpUnlocked = false;
         uniqueAbilityUses = 0;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -122,7 +125,7 @@ public class CharacterClass : MonoBehaviour
     {
 
         if (data.condition != null)
-            character.AddToConditions(data.condition);
+            playerCharacter.AddToConditions(data.condition);
 
         currentHp -= data.damage * DamageReceivedMultiplier;
         damager.RemoveCondition();
@@ -131,7 +134,7 @@ public class CharacterClass : MonoBehaviour
 
     public virtual DamageData GetDamageData()
     {
-        DamageData data = new DamageData(Damage, character);
+        DamageData data = new DamageData(Damage, playerCharacter);
         return data;
     }
 
