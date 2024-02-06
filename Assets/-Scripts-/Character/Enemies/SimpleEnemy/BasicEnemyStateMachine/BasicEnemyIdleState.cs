@@ -18,6 +18,9 @@ public class BasicEnemyIdleState : BasicEnemyState
         basicEnemy.canMove = false;
         basicEnemy.canAttack = false;
 
+        basicEnemy.Agent.enabled = false;
+        basicEnemy.obstacle.enabled = true;
+
     }
 
     public override void Update()

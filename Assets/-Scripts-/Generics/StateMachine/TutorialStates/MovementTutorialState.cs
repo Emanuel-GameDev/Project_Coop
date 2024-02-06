@@ -59,9 +59,9 @@ public class MovementTutorialState : TutorialFase
 
         if (!moveCheck)
         {
-            foreach (PlayerCharacter p in GameManager.Instance.coopManager.activePlayers)
+            foreach (PlayerCharacter p in tutorialManager.characters)
             {
-                if(p.MoveDirection!=Vector2.zero)
+                if(p.MoveDirection != Vector2.zero)
                 {
                     moveCheck=true;
                     Debug.Log(moveCheck);
@@ -73,12 +73,12 @@ public class MovementTutorialState : TutorialFase
         if (tutorialManager.timerEnded)
         {
             tutorialManager.timerEnded = false;
-            stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
 
             tutorialManager.DeactivatePlayerInput(tutorialManager.dps);
             tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
             tutorialManager.DeactivatePlayerInput(tutorialManager.ranged);
             tutorialManager.DeactivatePlayerInput(tutorialManager.tank);
+            stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
         }
     }
 

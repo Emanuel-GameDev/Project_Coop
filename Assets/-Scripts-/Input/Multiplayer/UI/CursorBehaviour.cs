@@ -14,17 +14,27 @@ public class CursorBehaviour : MonoBehaviour
     private int currentIndex = 0;
 
     public bool objectSelected = false;
+    private bool randomBtnSelected = false;
 
-    public void Initialize(List<PlayerSelection> selections)
+    public void Initialize(List<PlayerSelection> selectableCharacters)
     {
-        foreach (PlayerSelection selection in selections)
+        // Lista di icone
+        foreach (PlayerSelection item in selectableCharacters)
         {
-            objectsToOver.Add(selection.data._icon);
+            objectsToOver.Add(item.data._icon);
         }
     }
 
     public void OnCursorMove(InputAction.CallbackContext context)
     {
+        if (context.started && randomBtnSelected)
+        {
+            Debug.LogWarning($"Player {context.control.device.deviceId} non può muoversi poiché ha" +
+                $" avviato una votazione per la selezione random");
+
+            return;
+        }    
+
         // Bottone premuto
         if (context.started && !objectSelected)
         {
@@ -47,14 +57,27 @@ public class CursorBehaviour : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Filtra la validità della selezione del personaggio,
+    /// poi chiede al menu di aggiornare la selezione nella lista di PlayerSelections
+    /// </summary>
+    /// <param name="context"></param>
     public void OnSelectedButton(InputAction.CallbackContext context)
     {
+        if (randomBtnSelected && context.started)
+        {
+            Debug.LogWarning($"Player {context.control.device.deviceId} non può selezionare poiché ha avviato" +
+                $" una votazione per la selezione random");
+
+            return;
+        }
+
         if (context.started)
         {
             selectionParent = transform.parent.gameObject;
 
             // Se un'altro personaggio ha già selezionato un'oggetto return
-            if (CharacterSelectionMenu.Instance.AlreadySelected(selectionParent.GetComponent<RectTransform>())) return;
+            if (CharacterSelectionMenu.Instance.AlreadySelected(selectionParent.GetComponent<RectTransform>(), context.control.device)) return;
 
             // Se non ho selezionato niente, seleziono
             if (!objectSelected)
@@ -69,13 +92,20 @@ public class CursorBehaviour : MonoBehaviour
                 Debug.Log("Deselected");
             }
 
-            CharacterSelectionMenu.Instance.UpdateSelection(selectionParent.GetComponent<RectTransform>(), objectSelected, context.control.device);
+            CharacterSelectionMenu.Instance.UpdatePlayerSelection(selectionParent.GetComponent<RectTransform>(), objectSelected, context.control.device);
         }
     }
 
+    /// <summary>
+    /// Chiede al menu di aggiornare il numero degli utenti che hanno dato il consenso ad usare la selezione random
+    /// </summary>
+    /// <param name="context"></param>
     public void OnRandomPressed(InputAction.CallbackContext context)
     {
         if (context.started)
-            Debug.Log("Random pressed");
+        {
+            randomBtnSelected = !randomBtnSelected;
+            CharacterSelectionMenu.Instance.TriggerRandomSelection(randomBtnSelected, context.control.device);
+        }
     }
 }

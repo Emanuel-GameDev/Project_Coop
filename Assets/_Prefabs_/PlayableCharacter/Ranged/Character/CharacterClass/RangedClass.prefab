@@ -64,8 +64,8 @@ MonoBehaviour:
   empowerAdditionalRange: 15
   empowerDamageMultiplier: 3
   empowerSizeMultiplier: 2
-  dodgeCoolDown: 3
-  dodgeDistance: 7.5
+  dodgeCoolDown: 1
+  dodgeDistance: 12
   dodgeDuration: 0.3
   perfectDodgeDuration: 0.15
   dodgeDamageMultiplier: 0.75
@@ -497,8 +497,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1822292781
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -1495093531, guid: 3c251eb7b43d2aa418a35e184254e321, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -523,6 +523,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35b2ddf7b708cb84cab5a3f51b163aab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shouldUpdate: 0
 --- !u!1 &6399322224377243278
 GameObject:
   m_ObjectHideFlags: 0

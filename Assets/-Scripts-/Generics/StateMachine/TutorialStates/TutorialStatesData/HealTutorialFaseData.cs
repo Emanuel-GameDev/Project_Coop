@@ -2,17 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealTutorialFaseData : MonoBehaviour
+[CreateAssetMenu(menuName = "Tutorial/TutorialFaseData/HealTutorialFaseData")]
+public class HealTutorialFaseData : TutorialFaseData
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [Header("Dialogo speciale")]
+    [SerializeField] public Dialogue specialDialogue;
 }

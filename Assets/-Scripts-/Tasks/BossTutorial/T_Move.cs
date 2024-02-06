@@ -25,36 +25,41 @@ namespace MBTExample
             bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
             targetPosition = targetTransform.Value.position;
             activePlayers = GameManager.Instance.coopManager.activePlayers;
+            bossCharacter.Agent.isStopped = false;
             mustStop = false;
             tempTimer = 0;
+            playerFound.Value = false;
+            bossCharacter.anim.SetTrigger("Move");
         }
 
         public override NodeResult Execute()
         {
            
             if (bossCharacter.followDuration >= tempTimer)
-            {
-               
+            {             
                 tempTimer += Time.deltaTime;
-
+               
                 //Follow target
                 targetPosition = targetTransform.Value.position;
-                bossCharacter.Agent.speed = bossCharacter.walkSpeed;
+                bossCharacter.Agent.speed = bossCharacter.walkSpeed;               
                 bossCharacter.Agent.SetDestination(targetPosition);
 
                 //Check if a player enters in small range;
                 if (CheckForNearPlayer())
                 {
                     playerFound.Value = true;
+                    bossCharacter.anim.SetTrigger("Return");
                     return NodeResult.success;
                 }
 
 
                 float dist = Vector3.Distance(targetPosition, bossCharacter.transform.position);
+                
 
                 if (mustStop || dist <= bossCharacter.minDistance)
                 {
                     bossCharacter.Agent.isStopped = true;
+                    bossCharacter.anim.SetTrigger("Return");
                     return NodeResult.success;
                 }
 
@@ -63,6 +68,7 @@ namespace MBTExample
             {
                 //start charge
                 playerFound.Value = false;
+                bossCharacter.anim.SetTrigger("Return");
                 return NodeResult.failure;
                 
             }
@@ -88,6 +94,7 @@ namespace MBTExample
             }
             return false;
         }
+       
 
 
 

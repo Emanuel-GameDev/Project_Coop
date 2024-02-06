@@ -59,11 +59,13 @@ public class CameraManager : MonoBehaviour
 
     public void AddTarget(Transform target)
     {
+        if(targetGroup != null) 
         targetGroup.AddMember(target.transform, 1, cameraDistance);
     }
     
     public void RemoveTarget(Transform target)
     {
-        targetGroup.RemoveMember(target.transform);
+        if (targetGroup != null)
+            targetGroup.RemoveMember(target.transform);
     }
 }

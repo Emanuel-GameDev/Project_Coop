@@ -36,4 +36,9 @@ public class Detector : MonoBehaviour
     {
         return playersDetected;
     }
+
+    public void ClearList()
+    {
+        playersDetected.Clear();
+    }
 }

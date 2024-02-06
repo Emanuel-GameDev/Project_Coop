@@ -1,6 +1,7 @@
 using MBT;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class TutorialBossCharacter : BossCharacter
@@ -9,6 +10,8 @@ public class TutorialBossCharacter : BossCharacter
     public float minDistance;
     public float followDuration;
     public float walkSpeed;
+    public GameObject visual;
+    public Animator anim => animator;
 
     [Header("Raffica Di Pugni")]
     public float flurryDistance;
@@ -35,8 +38,24 @@ public class TutorialBossCharacter : BossCharacter
     public float crashWaveStaminaDamage;
     public float crashTimer;
 
-    public DamageData damageData;
+    [HideInInspector] public DamageData damageData;
+    [HideInInspector] public GameObject pivot;
 
+    private void Start()
+    {
+        visual.transform.localPosition = Vector3.zero;
+        pivot = GetComponentInChildren<Pivot>().gameObject;
+    }
+    private void Update()
+    {
+        if (target != null)
+        {
+
+
+            Vector2 direction = new Vector2(target.gameObject.transform.position.x - transform.position.x, target.gameObject.transform.position.z - transform.position.z);
+            SetSpriteDirection(direction);
+        }
+    }
     public void SetChargeDamageData()
     {
         staminaDamage = chargeStaminaDamage;
@@ -72,6 +91,24 @@ public class TutorialBossCharacter : BossCharacter
             damage = lastPunchDamage;
             attackCondition = null;
         }
+    }
+    public override void TakeDamage(DamageData data)
+    {
+        base.TakeDamage(data);
+    }
+
+
+    protected void SetSpriteDirection(Vector2 direction)
+    {
+        if (direction.y != 0)
+            anim.SetFloat("Y", direction.y);
+
+        Vector3 scale = pivot.gameObject.transform.localScale;
+
+        if ((direction.x > 0.5 && scale.x > 0) || (direction.x < -0.5 && scale.x < 0))
+            scale.x *= -1;
+
+        pivot.gameObject.transform.localScale = scale;
     }
 
 }

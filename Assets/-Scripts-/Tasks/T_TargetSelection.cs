@@ -16,6 +16,7 @@ namespace MBTExample
 
         public override void OnEnter()
         {
+           
            bossCharacter =  parentGameObject.Value.GetComponent<BossCharacter>();
             bossCharacter.TargetSelection();
             blackboardVariable.Value = bossCharacter.Target;

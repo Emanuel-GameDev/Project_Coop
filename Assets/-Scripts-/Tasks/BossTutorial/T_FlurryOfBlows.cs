@@ -4,7 +4,7 @@ using UnityEngine;
 namespace MBTExample
 {
     [AddComponentMenu("")]
-    [MBTNode("Custom Taks/Raffica Di Colpi ")]
+    [MBTNode("Kerberos/Raffica Di Colpi")]
     public class T_FlurryOfBlows : Leaf
     {
         public TransformReference targetTransform;
@@ -23,14 +23,16 @@ namespace MBTExample
             bossCharacter.Agent.isStopped = false;
             attackCount = 0;
 
-            Debug.Log("primo attacco");
-            
+           
             Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
             targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), 0, (direction.z * bossCharacter.flurryDistance)) + bossCharacter.transform.position;
             bossCharacter.SetFlurryOfBlowsDamageData(attackCount);
+            Debug.Log("inizio attacco " + attackCount);
+
 
             bossCharacter.Agent.speed = bossCharacter.flurrySpeed;
             bossCharacter.Agent.SetDestination(targetPosition);
+            bossCharacter.anim.SetTrigger("FlurryOfBlows");
 
 
 
@@ -50,6 +52,7 @@ namespace MBTExample
                 if (attackCount >= bossCharacter.punchQuantity)
                 {
                     bossCharacter.Agent.isStopped = true;
+                    bossCharacter.anim.SetTrigger("Return");
                     return NodeResult.success;
                 }
 
@@ -64,6 +67,7 @@ namespace MBTExample
 
                     bossCharacter.Agent.speed = bossCharacter.flurrySpeed;
                     bossCharacter.Agent.SetDestination(targetPosition);
+                    bossCharacter.anim.SetTrigger("FlurryOfBlows");
                     
                     return NodeResult.running;
 

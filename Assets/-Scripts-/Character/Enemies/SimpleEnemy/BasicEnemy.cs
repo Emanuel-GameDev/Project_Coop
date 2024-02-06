@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.TextCore.Text;
 
 public class BasicEnemy : EnemyCharacter
 {
@@ -14,7 +15,7 @@ public class BasicEnemy : EnemyCharacter
     [SerializeField] float attackDelay = 1;
 
     //di prova
-    [SerializeField] Transform tryTarget;
+    //[SerializeField] Transform tryTarget;
 
     NavMeshPath path;
 
@@ -41,9 +42,23 @@ public class BasicEnemy : EnemyCharacter
     [SerializeField] public Detector viewTrigger;
     [SerializeField] public Detector attackTrigger;
 
+    [SerializeField] float CarvingTime = 0.5f;
+    [SerializeField] float CarvingMoveThreshold = 0.1f;
+
+    [HideInInspector] public NavMeshObstacle obstacle;
+
+
+
     protected override void Awake()
     {
         base.Awake();
+
+        obstacle = GetComponent<NavMeshObstacle>();
+
+        obstacle.enabled = false;
+        obstacle.carveOnlyStationary = false;
+        obstacle.carving = true;
+
 
         idleState = new BasicEnemyIdleState(this);
         moveState = new BasicEnemyMoveState(this);
@@ -66,7 +81,6 @@ public class BasicEnemy : EnemyCharacter
         if(AIActive)
         stateMachine.StateUpdate();
 
-        
     }
 
     public void FollowPath()
@@ -77,19 +91,33 @@ public class BasicEnemy : EnemyCharacter
             return;
         }
 
-        if (agent.CalculatePath(target.position, path))
+        obstacle.enabled = false;
+
+        agent.enabled = true;
+
+        if (target != null)
         {
-            if (path.corners.Length > 1)
-                Move(path.corners[1] - path.corners[0], rb);
+            if (agent.CalculatePath(target.position, path))
+            {
+
+                if (path.corners.Length > 1)
+                    Move(path.corners[1] - path.corners[0], rb);
+                else
+                    Move(target.position - transform.position, rb);
+            }
             else
-                Move(target.position - transform.position, rb);
+                rb.velocity = Vector3.zero;
         }
         else
+        {
             rb.velocity = Vector3.zero;
+        }
     }
 
     public virtual void Move(Vector3 direction, Rigidbody rb)
     {
+        if (obstacle.enabled)
+            return;
         //if (Vector3.Distance(transform.position,tryTarget.position) < attackRange)
         //{
         //    rb.velocity = Vector3.zero;
@@ -164,8 +192,9 @@ public class BasicEnemy : EnemyCharacter
     {
         base.TakeDamage(data);
 
-        
+        currentHp -= data.damage ;
     }
 
     
+
 }
