@@ -9,7 +9,8 @@ public enum EMessageType
     perfectGuardExecuted,
     dodgeExecuted,
     perfectDodgeExecuted,
-    dialogueInput
+    dialogueInput,
+    slotInput
 }
 
 
