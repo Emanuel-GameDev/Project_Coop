@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7171072998376235493}
+  - component: {fileID: 772682740373608012}
   m_Layer: 0
   m_Name: Pivot
   m_TagString: Untagged
@@ -25,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 707992863352827762}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.76926, y: -0.13950346, z: 3.2612774}
-  m_LocalScale: {x: 0.2799474, y: 0.2799474, z: 0.2799474}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2957815417332490815}
@@ -34,6 +35,18 @@ Transform:
   - {fileID: 6765491392667053844}
   m_Father: {fileID: 1720486994485155886}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &772682740373608012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707992863352827762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fb99085f39f1c044899a10605c8c9dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1636597113684329488
 GameObject:
   m_ObjectHideFlags: 0
@@ -61,7 +74,7 @@ Transform:
   m_GameObject: {fileID: 1636597113684329488}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.747873, y: 0.49832028, z: -11.64961}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -108,7 +121,7 @@ SpriteRenderer:
   m_SortingLayerID: 1822292781
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b56e5b8df1ca55d47ab2c97c07df000f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 555a4c0c6ba497a4db7344b5424a2da2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2168,6 +2181,7 @@ MonoBehaviour:
   minDistance: 0.2
   followDuration: 10
   walkSpeed: 4
+  visual: {fileID: 0}
   flurryDistance: 5
   flurrySpeed: 2
   punchQuantity: 3
@@ -2186,6 +2200,7 @@ MonoBehaviour:
   crashWaveDamage: 0
   crashWaveStaminaDamage: 0
   crashTimer: 0
+  pivot: {fileID: 0}
 --- !u!195 &103600533958862017
 NavMeshAgent:
   m_ObjectHideFlags: 0

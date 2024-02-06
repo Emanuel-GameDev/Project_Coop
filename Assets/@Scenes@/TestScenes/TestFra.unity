@@ -1271,7 +1271,7 @@ PrefabInstance:
     - target: {fileID: 3679722225858389049, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.99999994
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3679722225858389049, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -1303,6 +1303,11 @@ PrefabInstance:
       propertyPath: maxHp
       value: 200
       objectReference: {fileID: 0}
+    - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: visual
+      value: 
+      objectReference: {fileID: 1856112198}
     - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: crashTimer
@@ -1447,6 +1452,11 @@ PrefabInstance:
         type: 3}
       propertyPath: rect.y
       value: 119
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834725042193988488, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2016,6 +2026,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e4e7b014c3a19945af8275465d7addf, type: 3}
+--- !u!1 &1856112198 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1636597113684329488, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+    type: 3}
+  m_PrefabInstance: {fileID: 843898820}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1908692256
 GameObject:
   m_ObjectHideFlags: 0

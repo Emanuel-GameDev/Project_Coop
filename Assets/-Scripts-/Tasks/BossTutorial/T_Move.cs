@@ -41,7 +41,7 @@ namespace MBTExample
                
                 //Follow target
                 targetPosition = targetTransform.Value.position;
-                bossCharacter.Agent.speed = bossCharacter.walkSpeed;
+                bossCharacter.Agent.speed = bossCharacter.walkSpeed;               
                 bossCharacter.Agent.SetDestination(targetPosition);
 
                 //Check if a player enters in small range;
@@ -94,6 +94,7 @@ namespace MBTExample
             }
             return false;
         }
+       
 
 
 
