@@ -67,7 +67,7 @@ public class Healer : CharacterClass
     [Tooltip("Colpi consecutivi richiesti al boss, senza subire danni, per sbloccare l'abilità del boss")]
     [SerializeField] int bossPowerUpHitToUnlock = 10;
     [Tooltip("Rallentamento durante l'abilità del boss")]
-    [SerializeField] PowerUp bossAbilitySlowdown;
+    [SerializeField] float bossAbilitySlowdown;
 
     CapsuleCollider smallHealAreaCollider;
 
@@ -106,6 +106,7 @@ public class Healer : CharacterClass
         healIcons = new Dictionary<PlayerCharacter, GameObject>();
 
         animator.SetFloat("Y", -1);
+        baseMoveSpeed = MoveSpeed;
     }
 
 
@@ -181,7 +182,7 @@ public class Healer : CharacterClass
         mineAbilityTimer = mineAbilityCooldown;
         smallHealTimer = singleHealCooldown;
     }
-
+    float baseMoveSpeed = 0;
     private void Update()
     {
         if (uniqueAbilityTimer < UniqueAbilityCooldown)
@@ -204,14 +205,22 @@ public class Healer : CharacterClass
             if (bossAbilityChargeTimer < bossAbilityCharge)
             {
                 bossAbilityChargeTimer += Time.deltaTime;
-                //if (!character.GetPowerUpList().Contains(bossAbilitySlowdown))
+
+                moveSpeed = bossAbilitySlowdown;              //if (moveSpeed)
+                //{
                 //    character.AddPowerUp(bossAbilitySlowdown);
+                //    Debug.Log("Add");
+                //}
             }
         }
         else
         {
+            moveSpeed = baseMoveSpeed;
             //if (character.GetPowerUpList().Contains(bossAbilitySlowdown))
+            //{
             //    character.RemovePowerUp(bossAbilitySlowdown);
+            //    Debug.Log("Remove");
+            //}
             bossAbilityChargeTimer = 0;
         }
 
