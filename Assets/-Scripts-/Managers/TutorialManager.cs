@@ -60,10 +60,7 @@ public class TutorialManager : MonoBehaviour
 
     public int faseCount = 0;
 
-    private void Awake()
-    {
-
-    }
+  
 
     private void SetUpCharacters()
     {
@@ -282,6 +279,13 @@ public class TutorialManager : MonoBehaviour
         //dps.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
         //OnMovementFaseStart.Invoke();
 
+        DeactivatePlayerInput(dps);
+        DeactivatePlayerInput(healer);
+        DeactivatePlayerInput(ranged);
+        DeactivatePlayerInput(tank);
+
+        DeactivateEnemyAI();
+
     }
 
     private void Update()
@@ -437,10 +441,10 @@ public class TutorialManager : MonoBehaviour
         //ranged.gameObject.SetActive(true);
         //tank.gameObject.SetActive(true);
 
-        DeactivatePlayerInput(dps);
-        DeactivatePlayerInput(healer);
-        DeactivatePlayerInput(ranged);
-        DeactivatePlayerInput(tank);
+        //DeactivatePlayerInput(dps);
+        //DeactivatePlayerInput(healer);
+        //DeactivatePlayerInput(ranged);
+        //DeactivatePlayerInput(tank);
 
         if (faseCount < fases.Length)
         {
@@ -463,7 +467,7 @@ public class TutorialManager : MonoBehaviour
 
         tutorialEnemy.stateMachine.SetState(tutorialEnemy.idleState);
         tutorialEnemy.GetRigidBody().velocity = Vector3.zero;
-        DeactivateEnemyAI();
+        
 
         tutorialEnemy.gameObject.SetActive(true);
     }

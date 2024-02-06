@@ -15,7 +15,7 @@ public class BasicEnemy : EnemyCharacter
     [SerializeField] float attackDelay = 1;
 
     //di prova
-    [SerializeField] Transform tryTarget;
+    //[SerializeField] Transform tryTarget;
 
     NavMeshPath path;
 

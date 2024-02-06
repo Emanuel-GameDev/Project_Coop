@@ -49,7 +49,7 @@ public class CharacterClass : MonoBehaviour
     public bool Stunned => character.stunned;
 
     public virtual float MaxHp => maxHp * powerUpData.maxHpIncrease;
-    //[HideInInspector]
+    [HideInInspector]
     public float currentHp;
 
     public virtual float Damage => damage * powerUpData.damageIncrease;

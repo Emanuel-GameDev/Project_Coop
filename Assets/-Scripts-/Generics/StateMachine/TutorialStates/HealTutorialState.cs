@@ -26,10 +26,10 @@ public class HealTutorialState : TutorialFase
 
         DamageData damageData = new DamageData(1, null);
 
-        tutorialManager.dps.CharacterClass.TakeDamage(damageData);
-        tutorialManager.ranged.CharacterClass.TakeDamage(damageData);
-        tutorialManager.tank.CharacterClass.TakeDamage(damageData);
-        tutorialManager.tutorialEnemy.TakeDamage(damageData);
+        //tutorialManager.dps.CharacterClass.TakeDamage(damageData);
+        //tutorialManager.ranged.CharacterClass.TakeDamage(damageData);
+        //tutorialManager.tank.CharacterClass.TakeDamage(damageData);
+        //tutorialManager.tutorialEnemy.TakeDamage(damageData);
 
         //PubSub.Instance.RegisterFunction(EMessageType.characterHealed, CharacterHealed);
 
@@ -40,6 +40,11 @@ public class HealTutorialState : TutorialFase
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
+
+        foreach(PlayerCharacter character in playerHealed)
+        {
+            character.CharacterClass.currentHp = character.MaxHp - 5;
+        }
 
     }
 
