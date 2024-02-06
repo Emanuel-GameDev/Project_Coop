@@ -186,7 +186,7 @@ public class Ranged : CharacterClass
 
             isAttacking = true;
 
-            Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
+            Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook(context);
 
             //controllo che la look non sia zero, possibilità solo se si una il controller
             if (_look != Vector3.zero)
@@ -420,7 +420,7 @@ public class Ranged : CharacterClass
             if (endTimer - empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
             {
 
-                Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
+                Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook(context);
 
                 //controllo che la look non sia zero, possibilità solo se si una il controller
                 if (_look != Vector3.zero)

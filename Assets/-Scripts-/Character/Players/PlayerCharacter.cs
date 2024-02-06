@@ -81,11 +81,11 @@ public class PlayerCharacter : Character
             lookDir = context.ReadValue<Vector2>();
     }
 
-    public Vector3 ReadLook()
+    public Vector3 ReadLook(InputAction.CallbackContext context)
     {
-        var gamepad = Gamepad.current;
+        string gamepad = context.control.device.displayName;
 
-        if (gamepad != null)
+        if (gamepad.Contains("Controller") || gamepad.Contains("Gamepad") || gamepad.Contains("Joystick"))
         {
             //perndo la look dal player.input utilizzando il gamepad
             return new Vector3(lookDir.x, 0, lookDir.y).normalized;
