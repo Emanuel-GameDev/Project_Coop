@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PowerUpType
+public enum eStatsType
 {
     Damage,
     Health,
@@ -14,7 +14,10 @@ public enum PowerUpType
 [CreateAssetMenu(menuName = "Character/PowerUp")]
 public class PowerUp : ScriptableObject
 {
-    public PowerUpType powerUpType;
+    public eStatsType powerUpType;
 
+    [Range(0, 1), Tooltip("Incremento della statistica in percentuale dove 1 = 100%.")]
     public float value;
+
+    public int moneyCost;
 }

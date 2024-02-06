@@ -1,4 +1,9 @@
+
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Ranged : CharacterClass
 {
@@ -9,111 +14,474 @@ public class Ranged : CharacterClass
 
     private Vector3 lookDirection = Vector3.forward;
 
-    
+
     //base Attack
     public override float AttackSpeed => base.AttackSpeed;
-    float fireTimer;
+    public override float UniqueAbilityCooldown => base.UniqueAbilityCooldown;
+
+    float fireTimer=0;
 
     [Header("Variabili attacco")]
     [SerializeField, Tooltip("velocità proiettile base")]
-    float projectileSpeed=30f;
+    float projectileSpeed = 30f;
     [SerializeField, Tooltip("gittata proiettile base")]
-    float projectileRange=30f;
+    float projectileRange = 30f;
     [SerializeField, Tooltip("frequenza di sparo multiplo")]
-    float consecutiveFireTimer=0.3f;
+    float consecutiveFireTimer = 0.3f;
+    [SerializeField, Tooltip("numero di spari con sparo multiplo")]
+    float numberProjectile = 3;
 
     [Header("Abilità unica")]
 
     [SerializeField, Tooltip("tempo necessario per colpo potenziato")]
-    float empowerFireCoolDown=1.5f;
-    float empowerFireTimer=0;
+    float empowerFireChargeTime = 1.5f;
+    [SerializeField, Tooltip("tempo ridotto caricamento con potenziamento")]
+    float chargeTimeReduction = 0.5f;
+    float empowerStartTimer = 0; //timer da caricare
+    float empowerCoolDownTimer = 0;
+    bool canUseUniqueAbility => empowerCoolDownTimer <= 0;
     [SerializeField, Tooltip("Aumento gittata per colpo potenziato")]
-    float empowerAdditionalRange=15f;
+    float empowerAdditionalRange = 15f;
     [SerializeField, Tooltip("moltiplicatore danno per colpo potenziato")]
     [Min(1)]
-    float empowerMultiplier=1.3f;
+    float empowerDamageMultiplier = 1.3f;
+    [SerializeField, Tooltip("Moltplicatore grandezza proiettile per colpo caricato")] //forse da cambiare con uno sprite
+    float empowerSizeMultiplier = 1.3f;
 
     [Header("Schivata")]
 
     [SerializeField, Tooltip("coolDown Schivata")]
-    float dodgeCoolDown=3f;
-    float dodgeTimer=0;
+    [Min(0)]
+    float dodgeCoolDown = 3f;
+    float dodgeTimer = 0;
     [SerializeField, Tooltip("distanza massima schivata")]
-    float dodgeDistance=15f;
+    float dodgeDistance = 15f;
+    [SerializeField, Tooltip("Durata schivata")]
+    [Min(0)]
+    float dodgeDuration = 0.3f;
+    [SerializeField, Tooltip("Durata schivata perfetta")]
+    [Min(0)]
+    float perfectDodgeDuration = 0.15f;
+    [SerializeField, Tooltip("Danno schivata perfetta")]
+    float dodgeDamageMultiplier = 0.75f;
+
+    [Header("Abilità extra")]
+    [SerializeField, Tooltip("coolDown recupero mina esplosa")]
+    float landMineCoolDown = 10f;
+    [SerializeField, Tooltip("Numero massimo delle mine")]
+    int maxNumberLandMine = 1;
+    [SerializeField] int landMineInInventory;
+    [SerializeField, Tooltip("Prefab della mina")]
+    GameObject prefabLandMine;
+    [SerializeField, Tooltip("danno della mina")]
+    float landMineDamageMultiplier = 2f;
+    [SerializeField, Tooltip("raggio della mina")]
+    float landMineRange = 5f;
+    [SerializeField, Tooltip("Sprite di raccolta mina")]
+    GameObject minePickUpVisualizer;
+    bool mineNearby => nearbyLandmine.Count > 0;
+    
+
+    public List<LandMine> nearbyLandmine;
 
     [Header("Potenziamneto Boss fight")]
+    [SerializeField, Tooltip("distanza massima per schivata perfetta ")]
+    float perfectDodgeBossDistance = 30f;
     [SerializeField, Tooltip("Schivate perfette per sbloccare l'abilità")]
-    int dodgeCounterToUnlock=10;
-    int dodgeCounter=0;
+    int dodgeCounterToUnlock = 10;
+    int dodgeCounter = 0; //contatore schivate perfette durante la bossfight
     [SerializeField, Tooltip("moltiplicatore danno per distanza del colpo")]
     [Min(1)]
-    float maxDamageMultiplier=2.5f;
+    float maxDamageMultiplier = 2.5f;
+
+    
+
+    private bool reduceEmpowerFireCoolDownUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
+    private bool multiBaseAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
+    private bool dodgeTeleportBossUnlocked => upgradeStatus[AbilityUpgrade.Ability3];
+    private bool dodgeDamageUnlocked => upgradeStatus[AbilityUpgrade.Ability4];
+    private bool landMineUnlocked => upgradeStatus[AbilityUpgrade.Ability5];
+
+    private PerfectTimingHandler perfectTimingHandler;
+
+    private float empowerCoolDownDecrease => reduceEmpowerFireCoolDownUnlocked ? chargeTimeReduction : 0;
+
+    bool isAttacking=false;
+    bool isDodging=false;
+    bool isInvunerable=false;
+
+    public override void Inizialize(PlayerCharacter character)
+    {
+        base.Inizialize(character);
+        nearbyLandmine = new List<LandMine>();
+        landMineInInventory = maxNumberLandMine;
+        perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>();
+        //perfectTimingHandler.gameObject.SetActive(false);
+    }
 
 
-
+    private void Start()
+    {
+        
+    }
 
 
     private void Update()
     {
-        if (fireTimer > 0)
+        CoolDownManager();
+
+        minePickUpVisualizer.SetActive(mineNearby);
+
+
+    }
+
+    public override void Move(Vector3 direction, Rigidbody rb)
+    {
+        if(!isDodging)
         {
-            fireTimer -= Time.deltaTime;
+            if(!isAttacking && !isDodging)
+            {
+                base.Move(direction, rb);
+            }
+            else
+            {
+                rb.velocity = Vector3.zero;
+            }
+            
+
+            if (rb.velocity.magnitude > 0.1f)
+            {
+                animator.SetBool("isMoving", true);
+            }
+            else
+            {
+                animator.SetBool("isMoving", false);
+            }
+        }      
+    }
+
+    
+
+    public override void TakeDamage(DamageData data)
+    {
+        if (!isDodging)
+        {
+            StartCoroutine(PerfectDodgeHandler(data));
         }
     }
 
+    //sparo
+    #region Attack
+    public override void Attack(Character parent, InputAction.CallbackContext context)
+    {
+        if (context.performed && !isAttacking)
+        {
+            if (fireTimer > 0)
+            {
+                Debug.Log("In ricarica...");
 
-    public override void Attack(Character parent)
+                return;
+                //inserire suono (?)
+            }
+
+            isAttacking = true;
+
+            Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
+
+            //controllo che la look non sia zero, possibilità solo se si una il controller
+            if (_look != Vector3.zero)
+            {
+                lookDirection = _look;
+            }
+
+            //in futuro inserire il colpo avanzato
+            if (multiBaseAttackUnlocked)
+            {
+                StartCoroutine(MultipleFireProjectile(lookDirection));
+            }
+            else
+            {
+
+                BasicFireProjectile(lookDirection);
+
+                fireTimer = AttackSpeed;
+
+                Debug.Log("colpo normale");
+
+                isAttacking = false;
+            }
+
+        }
+    }
+
+    //Sparo normale
+    private void BasicFireProjectile(Vector3 direction)
     {
 
-        if(fireTimer > 0)
+        Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
+
+        newProjectile.transform.position = transform.position;
+
+        newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer);
+
+    }
+
+    //Sparo triplo
+    private IEnumerator MultipleFireProjectile(Vector3 direction)
+    {
+        for (int i = 0; i < numberProjectile; i++)
         {
-            Debug.Log("In ricarica...");
+            BasicFireProjectile(direction);
 
-            return;
-            //inserire suono (?)
+            yield return new WaitForSeconds(consecutiveFireTimer);
         }
-
-        Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
-
-        //controllo che la look non sia zero, possibilità solo se si una il controller
-        if(_look != Vector3.zero)
-        {
-            lookDirection = _look;
-        }
-
-        //in futuro inserire il colpo avanzato
-        BasicFireProjectile(lookDirection);
 
         fireTimer = AttackSpeed;
+
+        Debug.Log("colpo triplo");
+
+        dodgeTimer = dodgeCoolDown;
+
+        isAttacking = false;
     }
 
-    public override void Defence(Character parent)
+
+
+    #endregion
+
+    //schivata
+    #region Defence
+    public override void Defence(Character parent, InputAction.CallbackContext context)
     {
-        base.Defence(parent);
+        if (context.performed)
+        {
+            if (dodgeTimer > 0)
+            {
+                Debug.Log("schivata effettuata di recente");
+                return;
+            }
+
+            StartCoroutine(Dodge(lastNonZeroDirection, parent.GetRigidBody()));
+
+            Debug.Log(lastNonZeroDirection);
+        }
     }
 
-    public override void UseExtraAbility(Character parent)
+    protected IEnumerator Dodge(Vector2 direction,Rigidbody rb)
     {
-        base.UseExtraAbility(parent);
+        if (!isDodging)
+        {
+            isDodging = true;
+
+
+            //animazione
+
+            animator.SetTrigger("Dodge");
+
+            Vector3 dodgeDirection = new Vector3(direction.x, 0f, direction.y).normalized;
+
+            rb.velocity = dodgeDirection * (dodgeDistance / dodgeDuration);
+
+            yield return new WaitForSeconds(dodgeDuration);
+            PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
+
+            rb.velocity = Vector3.zero;
+
+            isDodging = false;
+        }
+        
     }
 
-    public override void UseUniqueAbility(Character parent)
+    protected IEnumerator PerfectDodgeHandler(DamageData data)
     {
-        base.UseUniqueAbility(parent);
+        //perfectTimingHandler.gameObject.SetActive(true);
+        yield return new WaitForSeconds(perfectDodgeDuration);
+        if(isDodging)
+        {
+            //se potenziamento sbloccato => damage
+            if (dodgeDamageUnlocked)
+            {
+               
+            }
+
+            //se c'è il boss + potenziamento sbloccato => tp
+            PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
+        }
+        else
+        {
+            base.TakeDamage(data);
+        }
+
+        //perfectTimingHandler.gameObject.SetActive(false);
+        Debug.Log($"PerfectDodge: {isDodging}");
     }
 
-    private void BasicFireProjectile(Vector3 direction)
+    #endregion
+
+    //mina
+    #region ExtraAbility
+    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context) //E
+    {
+
+        if (context.performed)
+        {
+            Debug.Log("Ho premuto e, ganzo");
+
+            if (landMineUnlocked)
+            {
+                if (nearbyLandmine.Count<=0)
+                {
+                    //animazione droppaggio mina
+
+                    //animator.settrigger("Droplandmine"); => da aggiungere
+
+                    //momentaneo
+                    CreateLandMine();
+                    //
+
+                    
+                }
+                else
+                {
+                    //prendo mina
+                    nearbyLandmine[nearbyLandmine.Count - 1].PickUpLandmine();
+                }
+                
+            }
+        }
+       
+    }
+
+    //probabile funzione da mettere in una animazione
+    public void CreateLandMine()
+    {
+        if (landMineInInventory > 0)
+        {
+            GameObject newLandMine = Instantiate(prefabLandMine);
+
+            newLandMine.transform.position = new Vector3(transform.position.x, 0 , transform.position.z);
+
+            newLandMine.GetComponent<LandMine>().Initialize(gameObject.GetComponentInParent<PlayerCharacter>(),landMineRange,Damage * landMineDamageMultiplier,gameObject.layer);
+
+            landMineInInventory--;
+
+            Debug.Log("lascio mina");
+        }
+        else
+        {
+            Debug.Log("mina già piazzata");
+        }
+    }
+
+    public void RecoverLandMine()
+    {
+        landMineInInventory++;
+    }
+
+    public void StartLandmineGeneration()
+    {
+        StartCoroutine(RegenerateLandMine());
+    }
+    private IEnumerator RegenerateLandMine()
+    {
+        yield return new WaitForSeconds(landMineCoolDown);
+
+        landMineInInventory++;
+    }
+
+    #endregion
+      
+    //sparo caricato
+    #region Unique ability
+    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context) //Q
+    {
+
+        if (context.performed)
+        {
+            if (empowerCoolDownTimer > 0)
+            {
+                Debug.Log("In ricarica...(abilità unica)");
+
+                return;
+                //inserire suono (?)
+            }
+            else
+            {
+                empowerStartTimer = Time.time;
+                isAttacking = true;
+            }
+
+            
+
+        }
+        else if (context.canceled && canUseUniqueAbility)
+        {
+            float endTimer = Time.time;
+
+            if (endTimer - empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
+            {
+
+                Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
+
+                //controllo che la look non sia zero, possibilità solo se si una il controller
+                if (_look != Vector3.zero)
+                {
+                    lookDirection = _look;
+                }
+
+                //in futuro inserire il colpo avanzato
+                EmpowerFireProjectile(lookDirection);
+
+                empowerCoolDownTimer = UniqueAbilityCooldown;
+
+                Debug.Log("colpo potenziato");
+
+                
+            }
+
+            isAttacking = false;
+        }
+
+        
+
+    }
+
+    //sparo caricato (abilità unica)
+    private void EmpowerFireProjectile(Vector3 direction)
     {
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
         newProjectile.transform.position = transform.position;
 
-        newProjectile.Inizialize(direction, projectileRange, projectileSpeed);
-
-     
+        newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier,gameObject.layer);
     }
 
-    
+    #endregion
+
+    //vari coolDown del personaggio
+    private void CoolDownManager()
+    {
+        //sparo normale
+        if (fireTimer > 0)
+        {
+            fireTimer -= Time.deltaTime;
+        }
+
+        //abilità unica (colpo caricato)
+        if (empowerCoolDownTimer > 0)
+        {
+            empowerCoolDownTimer -= Time.deltaTime;
+        }
+
+        //schivata
+        if(dodgeTimer > 0)
+        {
+            dodgeTimer -= Time.deltaTime;
+        }
+    }
+
+
+
 
 }
 
@@ -135,4 +503,4 @@ public class Ranged : CharacterClass
 //2: L’attacco base spara una raffica di 3 proiettili
 //3: Schivare perfettamente un colpo teletrasporta il personaggio in una parte dell’arena lontana dal boss
 //4: Schivare perfettamente un colpo danneggia il nemico attaccante
-//5: Il personaggio può lasciare a terra una mina che esplode al contatto con un nemico
+//5: Il personaggio può lasciare a terra una mina che esplode al contatto con un nemico -- unica che va ripresa, se esplode applicare cd
