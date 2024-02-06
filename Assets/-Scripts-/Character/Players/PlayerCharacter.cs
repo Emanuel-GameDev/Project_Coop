@@ -81,6 +81,15 @@ public class PlayerCharacter : Character
             lookDir = context.ReadValue<Vector2>();
     }
 
+    public void DialogueInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            PubSub.Instance.Notify(EMessageType.dialogueInput, this);
+            Debug.Log("input");
+        }
+    }
+
     public Vector3 ReadLook()
     {
         var gamepad = Gamepad.current;
