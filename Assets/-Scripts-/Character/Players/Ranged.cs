@@ -164,8 +164,6 @@ public class Ranged : CharacterClass
 
     public override void TakeDamage(DamageData data)
     {
-        base.TakeDamage(data);
-
         if (!isDodging)
         {
             StartCoroutine(PerfectDodgeHandler(data));
@@ -275,14 +273,16 @@ public class Ranged : CharacterClass
         {
             isDodging = true;
 
+
             //animazione
+
+            animator.SetTrigger("Dodge");
 
             Vector3 dodgeDirection = new Vector3(direction.x, 0f, direction.y).normalized;
 
             rb.velocity = dodgeDirection * (dodgeDistance / dodgeDuration);
 
             yield return new WaitForSeconds(dodgeDuration);
-            PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
 
             rb.velocity = Vector3.zero;
 
@@ -293,7 +293,7 @@ public class Ranged : CharacterClass
 
     protected IEnumerator PerfectDodgeHandler(DamageData data)
     {
-        //perfectTimingHandler.gameObject.SetActive(true);
+        perfectTimingHandler.gameObject.SetActive(true);
         yield return new WaitForSeconds(perfectDodgeDuration);
         if(isDodging)
         {
@@ -302,16 +302,16 @@ public class Ranged : CharacterClass
             {
                
             }
-
+            
             //se c'è il boss + potenziamento sbloccato => tp
-            PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
+            
         }
         else
         {
             base.TakeDamage(data);
         }
 
-        //perfectTimingHandler.gameObject.SetActive(false);
+        perfectTimingHandler.gameObject.SetActive(false);
         Debug.Log($"PerfectDodge: {isDodging}");
     }
 
