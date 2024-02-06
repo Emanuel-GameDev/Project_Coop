@@ -11,6 +11,7 @@ public class TutorialBossCharacter : BossCharacter
     public float followDuration;
     public float walkSpeed;
     public GameObject visual;
+    public GameObject pivot;
     public Animator anim => animator;
 
     [Header("Raffica Di Pugni")]
@@ -39,12 +40,12 @@ public class TutorialBossCharacter : BossCharacter
     public float crashTimer;
 
     [HideInInspector] public DamageData damageData;
-    [HideInInspector] public GameObject pivot;
+   
 
     private void Start()
     {
         visual.transform.localPosition = Vector3.zero;
-        pivot = GetComponentInChildren<Pivot>().gameObject;
+       
     }
     private void Update()
     {
