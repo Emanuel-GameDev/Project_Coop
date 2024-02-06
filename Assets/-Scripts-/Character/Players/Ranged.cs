@@ -164,8 +164,6 @@ public class Ranged : CharacterClass
 
     public override void TakeDamage(DamageData data)
     {
-        base.TakeDamage(data);
-
         if (!isDodging)
         {
             StartCoroutine(PerfectDodgeHandler(data));
@@ -275,7 +273,10 @@ public class Ranged : CharacterClass
         {
             isDodging = true;
 
+
             //animazione
+
+            animator.SetTrigger("Dodge");
 
             Vector3 dodgeDirection = new Vector3(direction.x, 0f, direction.y).normalized;
 
