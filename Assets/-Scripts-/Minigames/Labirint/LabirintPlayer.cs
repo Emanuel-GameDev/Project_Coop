@@ -2,7 +2,7 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using System;
 
-public class LabirintPlayer : MonoBehaviour
+public class LabirintPlayer : DefaultInputReceiver
 {
     public float moveSpeed = 10f;
     public Grid grid;
@@ -105,23 +105,13 @@ public class LabirintPlayer : MonoBehaviour
     #endregion
 
     #region Input
-    public void MoveInput(InputAction.CallbackContext context)
+
+    public override void MoveMinigameInput(InputAction.CallbackContext context)
     {
         Vector2 inputDirection = context.ReadValue<Vector2>();
         moveDir = Utility.YtoZ(SetVector01(inputDirection));
         //Debug.Log($"inputDir: {inputDirection}, MoveDir: {moveDir}");
     }
-    public void StartInput(InputAction.CallbackContext context)
-    {
-
-    }
-
-    public void SelectInput(InputAction.CallbackContext context)
-    {
-
-    }
-
-    
     #endregion
 
 }

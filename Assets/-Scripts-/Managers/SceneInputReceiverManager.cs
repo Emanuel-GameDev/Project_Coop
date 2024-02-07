@@ -24,7 +24,8 @@ public class SceneInputReceiverManager : MonoBehaviour
         }
     }
 
-    
+    [SerializeField, Tooltip("Imposta la mappatura di comandi da utilizzare per la scena corrente")]
+    eInputMap sceneInputMap;
     [SerializeField, Tooltip("Imposta il Prefab che riceve gli input per la scena corrente")] 
     GameObject currentSceneInputReceiverPrefab;
     [SerializeField, Tooltip("Imposta il punto di spawn del Prefab nella scena")] 
@@ -70,4 +71,16 @@ public class SceneInputReceiverManager : MonoBehaviour
             return newInputReceiver;
         }
     }
+
+    public string GetSceneActionMap()
+    {
+        return sceneInputMap.ToString();
+    }
+}
+
+public enum eInputMap
+{
+    Player,
+    UI,
+    Minigame
 }

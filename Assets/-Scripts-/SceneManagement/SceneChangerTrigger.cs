@@ -33,7 +33,7 @@ public class SceneChangerTrigger : MonoBehaviour
             if (objectCount <= 0)
             {
                 objectCount = 0;
-                StartCoroutine(UnloadSceneAfterDelay();
+                StartCoroutine(UnloadSceneAfterDelay());
             }
         }
     }

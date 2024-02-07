@@ -66,8 +66,6 @@ public class LabirintEnemy : MonoBehaviour
             target = null;
             SetRandomDestination();
         }
-        
-        Debug.Log($"Target: {target}");
     }
 
     private void SetRandomDestination()

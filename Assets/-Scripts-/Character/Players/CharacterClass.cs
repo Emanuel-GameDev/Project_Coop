@@ -65,7 +65,7 @@ public class CharacterClass : MonoBehaviour
     private static string Y = "Y";
     #endregion
 
-    public virtual void Inizialize(PlayerCharacter character)
+    public virtual void Inizialize(PlayerCharacter playerCharacter)
     {
         powerUpData = new PowerUpData();
         extraData = new ExtraData();
@@ -76,7 +76,7 @@ public class CharacterClass : MonoBehaviour
             upgradeStatus.Add(au, false);
         }
         animator = GetComponent<Animator>();
-        this.playerCharacter = character;
+        this.playerCharacter = playerCharacter;
         bossfightPowerUpUnlocked = false;
         uniqueAbilityUses = 0;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -85,7 +85,7 @@ public class CharacterClass : MonoBehaviour
         damager = GetComponentInChildren<Damager>(true);
         if (damager != null)
         {
-            damager.SetSource(character);
+            damager.SetSource(playerCharacter);
         }
         SetIsInBossfight(false);
     }

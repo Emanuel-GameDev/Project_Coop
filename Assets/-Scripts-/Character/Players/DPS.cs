@@ -134,9 +134,9 @@ public class DPS : CharacterClass
     public override float MoveSpeed => base.MoveSpeed + ExtraSpeed;
     public override float Damage => base.Damage * ExtraDamage();
 
-    public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
+    public override void Inizialize(PlayerCharacter playerCharacter)
     {
-        base.Inizialize(/*characterData,*/ character);
+        base.Inizialize(playerCharacter);
         lastDodgeTime = -dodgeCooldown;
         lastAttackTime = -timeBetweenCombo;
         lastUniqueAbilityUseTime = -UniqueAbilityCooldown;
@@ -153,6 +153,7 @@ public class DPS : CharacterClass
         chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
         perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
         perfectTimingHandler.gameObject.SetActive(false);
+        character = ePlayerCharacter.Brutus;
     }
 
 
