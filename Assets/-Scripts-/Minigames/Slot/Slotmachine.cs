@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class Slotmachine : MonoBehaviour
     [Header("Variabili colonna")]   
     
     [SerializeField,Tooltip("Numero delle figure totali nella colonna")]
+    [Min(5)]
     int numberOfSlots=0;
     [SerializeField,Tooltip("Numero delle figure vincenti nella colonna")]
     int numberWinSlots=0;
@@ -32,18 +34,27 @@ public class Slotmachine : MonoBehaviour
 
     bool canInteract;
 
+    public GameObject GO;
+
     private void Awake()
     {
         foreach(SlotRow row in rows)
         {
             row.SetRow(numberOfSlots,numberWinSlots,slotDistance,dpsSprite,enemySprite,rotationSpeed,stabilizationSpeed);
         }
+
+        GameManager.Instance.coopManager.capsulePrefab = GO;
     }
 
     private void Start()
     {
         canInteract = true;
+
+        
     }
+
+   
+
     private void Update()
     {
         //TODO: inserire input manuali per debug
@@ -140,5 +151,7 @@ public class Slotmachine : MonoBehaviour
         }
 
         canInteract = true;
-    } 
+    }
+
+
 }
