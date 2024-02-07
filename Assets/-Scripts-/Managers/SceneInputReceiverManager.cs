@@ -31,6 +31,8 @@ public class SceneInputReceiverManager : MonoBehaviour
     Transform receiverSpawnPoint;
     [SerializeField, Tooltip("Determina se nella scena corrente è possibile cambiare personaggio")] 
     bool canSwitchCharacter;
+    public bool CanSwitchCharacter => canSwitchCharacter;
+
 
     private void Awake()
     {

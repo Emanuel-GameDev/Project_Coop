@@ -98,6 +98,12 @@ public class PlayerCharacter : Character, InputReceiver
         return playerInputHandler;
     }
 
+    public void Dismiss()
+    {
+        //characterClass.SaveClassData();
+        Destroy(gameObject);
+    }
+
     #endregion
 
     #region Input

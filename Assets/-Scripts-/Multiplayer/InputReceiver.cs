@@ -8,6 +8,8 @@ public interface InputReceiver
     void SetInputHandler(PlayerInputHandler inputHandler);
     PlayerInputHandler GetInputHandler();
 
+    void Dismiss();
+
     // Lista di tutti gli input di tutte le possibili mappe 
     #region MapInput
 

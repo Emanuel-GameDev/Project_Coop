@@ -12,8 +12,6 @@ public class GameManager : MonoBehaviour
     public CoopManager coopManager { get; private set; }
     public CameraManager cameraManager { get; private set; }
 
-
-    public bool canJoin = false;
     private static GameManager _instance;
     public static GameManager Instance
     {
@@ -34,6 +32,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private Dictionary<string, AsyncOperation> sceneLoadOperations = new Dictionary<string, AsyncOperation>();
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -47,14 +47,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-
     private void Start()
     {
         playerInputManager = PlayerInputManager.instance;
         coopManager = CoopManager.Instance;
         cameraManager = CameraManager.Instance;
-
 
         if (cameraManager != null && coopManager != null)
             cameraManager.AddAllPlayers();
@@ -93,34 +90,9 @@ public class GameManager : MonoBehaviour
         //    player.CharacterClass.SetIsInBossfight(true);
         //}
         //Debug End
-
-        // Imposta la possibilità di joinare il game
-        if (canJoin)
-        {
-            playerInputManager.joinAction.action.Enable();
-        }
-        else
-        {
-            playerInputManager.joinAction.action.Disable();
-        }
     }
 
-    public void PlayerIsJoined(PlayerInput playerInput)
-    {
-        if(cameraManager != null)
-            cameraManager.AddTarget(playerInput.transform);
-    }
-
-    public void PlayerAsLeft(PlayerInput playerInput)
-    {
-        if (cameraManager != null)
-            cameraManager.RemoveTarget(playerInput.transform);
-    }
-
-    public void SetCanJoin(bool canJoin)
-    {
-        this.canJoin = canJoin;
-    }
+    
 
     public void PauseGame()
     {
@@ -132,23 +104,88 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    #region Scene Management (maybe temp)
+    #region Scene Management
+
+    public void ChangeScene(string sceneName)
+    {
+        if (sceneLoadOperations.ContainsKey(sceneName))
+        {
+            if (!sceneLoadOperations[sceneName].isDone)
+                StartLoadScreen();
+
+            ActivateLoadedScene(sceneName);
+        }
+    }
+
+    public void LoadSceneInbackground(string sceneName)
+    {
+        if (!sceneLoadOperations.ContainsKey(sceneName))
+        {
+            AsyncOperation asyncOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            asyncOp.allowSceneActivation = false;
+            sceneLoadOperations.Add(sceneName, asyncOp);
+        }
+    }
+
+    public void ActivateLoadedScene(string sceneName)
+    {
+        if (sceneLoadOperations.ContainsKey(sceneName))
+        {
+            foreach (var kvp in sceneLoadOperations)
+            {
+                if (kvp.Key != sceneName)
+                {
+                    SceneManager.UnloadSceneAsync(kvp.Key);
+                }
+            }
+
+            sceneLoadOperations[sceneName].allowSceneActivation = true;
+        }
+    }
+
+    public void CancelSceneLoad(string sceneName)
+    {
+        if (sceneLoadOperations.ContainsKey(sceneName))
+        {
+            sceneLoadOperations[sceneName].allowSceneActivation = false;
+            SceneManager.UnloadSceneAsync(sceneName);
+            sceneLoadOperations.Remove(sceneName);
+        }
+    }
+
+    public bool IsSceneLoaded(string sceneName)
+    {
+        if(sceneLoadOperations.ContainsKey(sceneName))
+        {
+           return sceneLoadOperations[sceneName].isDone;
+        }
+        else
+            return false;
+    }
+
 
     public void LoadScene(int id)
     {
         SceneManager.LoadScene(id);
     }
-
-    public void Exit()
+    public void LoadScene(string name)
     {
-        Application.Quit();
+        SceneManager.LoadScene(name);
     }
-
     public void LoadNextScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    public void StartLoadScreen()
+    {
+        //Do Something
+    }
+
     #endregion
 
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 }

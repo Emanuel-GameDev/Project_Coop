@@ -26,6 +26,7 @@ public class CoopManager : MonoBehaviour
         }
     }
 
+    [SerializeField] private bool playerCanJoin = true;
     [SerializeField] private GameObject playerInputPrefab;
     [SerializeField] private CharacterClass switchPlayerUp;
     [SerializeField] private CharacterClass switchPlayerRight;
@@ -83,6 +84,14 @@ public class CoopManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        InitializePlayers();
+        SetCanSwitchCharacter(SceneInputReceiverManager.Instance.CanSwitchCharacter);
+    }
+
+    #region Switching Character
+
     private void InizializeSwitchList()
     {
         internalSwitchList = new List<CharacterClass>()
@@ -103,6 +112,53 @@ public class CoopManager : MonoBehaviour
         }
     }
 
+    public void SetCanSwitchCharacter(bool canSwitch)
+    {
+        this.canSwitchCharacter = canSwitch;
+    }
+
+    public bool CanSwitchCharacter(CharacterClass targetClass)
+    {
+        if (!canSwitchCharacter)
+            return false;
+
+        foreach (PlayerInputHandler player in playerInputHandlers)
+        {
+            if (player.currentCharacter == targetClass.Character)
+                return false;
+        }
+
+        return true;
+
+    }
+
+    public CharacterClass GetCharacterClass(ePlayerCharacter character)
+    {
+        foreach (CharacterClass ch in internalSwitchList)
+        {
+            if (ch.Character == character)
+                return ch;
+        }
+        return null;
+    }
+
+    #endregion
+
+    #region Player Management
+
+    public void SetPlayerCanJoin(bool canJoin)
+    {
+        playerCanJoin = canJoin;
+        if (playerCanJoin)
+        {
+            inputManager.EnableJoining();
+        }
+        else
+        {
+            inputManager.DisableJoining();
+        }
+    }
+
     public void OnPlayerJoined(PlayerInput playerInput)
     {
         if(playerInputHandlers == null)
@@ -119,12 +175,18 @@ public class CoopManager : MonoBehaviour
             Debug.LogError("Missing PlayerInputHandler Component");
     }
 
-
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    public void OnPlayerLeft(PlayerInput playerInput)
     {
-        InitializePlayers();
+        PlayerInputHandler leftingPlayerInputHandler = playerInput.gameObject.GetComponent<PlayerInputHandler>();
+        if (leftingPlayerInputHandler != null)
+        {
+            leftingPlayerInputHandler.CurrentReceiver.Dismiss();
+            playerInputHandlers.Remove(leftingPlayerInputHandler);
+            Destroy(leftingPlayerInputHandler.gameObject);
+        }
     }
 
+    #endregion  
 
     private void InitializePlayers()
     {
@@ -135,34 +197,5 @@ public class CoopManager : MonoBehaviour
         HPHandler.Instance.SetActivePlayers();
         CameraManager.Instance.AddAllPlayers();
     }
-
-    public void SetCanSwitch(bool canSwitch) 
-    { 
-        this.canSwitchCharacter = canSwitch;
-    }
-
-    internal bool CanSwitchCharacter(CharacterClass targetClass)
-    {
-        if (!canSwitchCharacter)
-            return false;
-
-        foreach(PlayerInputHandler player in playerInputHandlers)
-        {
-            if (player.currentCharacter == targetClass.Character)
-                return false;
-        }
-
-        return true;
-        
-    }
-
-    public CharacterClass GetCharacterClass(ePlayerCharacter character)
-    {
-        foreach(CharacterClass ch in internalSwitchList)
-        {
-            if(ch.Character == character)
-                return ch;
-        }
-        return null;
-    }
+ 
 }
