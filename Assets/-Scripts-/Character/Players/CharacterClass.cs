@@ -90,6 +90,21 @@ public class CharacterClass : MonoBehaviour
         SetIsInBossfight(false);
     }
 
+    public virtual void Enable(PlayerCharacter character)
+    {
+        playerCharacter = character;
+        lastNonZeroDirection = Vector2.down;
+        transform.parent = playerCharacter.transform;
+        damager.SetSource(playerCharacter);
+    }
+
+    public virtual void Disable(PlayerCharacter character)
+    {
+        playerCharacter = null;
+        damager.SetSource(null);
+        CharacterPoolManager.Instance.ReturnCharacter(this);
+    }
+
     #region Abilities
 
     public virtual void Attack(Character parent, InputAction.CallbackContext context)
@@ -101,11 +116,6 @@ public class CharacterClass : MonoBehaviour
         }
     }
     public virtual void Defence(Character parent, InputAction.CallbackContext context)
-    {
-
-    }
-
-    public virtual void Disable(Character character)
     {
 
     }

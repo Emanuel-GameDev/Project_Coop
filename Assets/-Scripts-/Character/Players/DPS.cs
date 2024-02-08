@@ -405,9 +405,11 @@ public class DPS : CharacterClass
     {
         base.UnlockUpgrade(abilityUpgrade);
         if (abilityUpgrade == AbilityUpgrade.Ability3)
-            damager.AssignFunctionToOnTrigger(DeflectProjectile);
+            AddDeflect();
         Debug.Log("Unlock" + abilityUpgrade.ToString());
     }
+
+    
 
     public override void LockUpgrade(AbilityUpgrade abilityUpgrade)
     {
@@ -424,16 +426,30 @@ public class DPS : CharacterClass
         }
 
     }
+    private void AddDeflect()
+    {
+        damager.AssignFunctionToOnTrigger(DeflectProjectile);
+    }
 
     private void RemoveDeflect()
     {
         damager.RemoveFunctionFromOnTrigger(DeflectProjectile);
     }
 
-    public override void Disable(Character character)
+    public override void Enable(PlayerCharacter character)
+    {
+        base.Enable(character);
+        if (projectileDeflectionUnlocked)
+            AddDeflect();
+            
+    }
+
+    public override void Disable(PlayerCharacter character)
     {
         if (projectileDeflectionUnlocked)
             RemoveDeflect();
+
+        base.Disable(character);
     }
 
     #region Damage

@@ -28,21 +28,9 @@ public class CoopManager : MonoBehaviour
 
     [SerializeField] private bool playerCanJoin = true;
     [SerializeField] private GameObject playerInputPrefab;
-    [SerializeField] private CharacterClass switchPlayerUp;
-    [SerializeField] private CharacterClass switchPlayerRight;
-    [SerializeField] private CharacterClass switchPlayerDown;
-    [SerializeField] private CharacterClass switchPlayerLeft;
-    public CharacterClass SwitchPlayerUp => switchPlayerUp;
-    public CharacterClass SwitchPlayerRight => switchPlayerRight;
-    public CharacterClass SwitchPlayerDown => switchPlayerDown;
-    public CharacterClass SwitchPlayerLeft => switchPlayerLeft;
    
-    private bool canSwitchCharacter = true;
-
     private PlayerInputManager inputManager;
     private List<PlayerInputHandler> playerInputHandlers;
-
-    private List<CharacterClass> internalSwitchList;
 
     public List<PlayerCharacter> ActivePlayers
     {
@@ -80,69 +68,14 @@ public class CoopManager : MonoBehaviour
     private void Start()
     {
         inputManager = GetComponent<PlayerInputManager>();
-        InizializeSwitchList();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         InitializePlayers();
-        SetCanSwitchCharacter(SceneInputReceiverManager.Instance.CanSwitchCharacter);
+        
     }
-
-    #region Switching Character
-
-    private void InizializeSwitchList()
-    {
-        internalSwitchList = new List<CharacterClass>()
-        {
-            SwitchPlayerUp,
-            SwitchPlayerRight,
-            SwitchPlayerDown,
-            SwitchPlayerLeft
-        };
-
-        foreach (CharacterClass ch in internalSwitchList)
-        {
-            if (ch == null)
-            {
-                Debug.LogError("Missing player to switch Reference. PlayerManager/CoopManager");
-                return;
-            }
-        }
-    }
-
-    public void SetCanSwitchCharacter(bool canSwitch)
-    {
-        this.canSwitchCharacter = canSwitch;
-    }
-
-    public bool CanSwitchCharacter(CharacterClass targetClass)
-    {
-        if (!canSwitchCharacter)
-            return false;
-
-        foreach (PlayerInputHandler player in playerInputHandlers)
-        {
-            if (player.currentCharacter == targetClass.Character)
-                return false;
-        }
-
-        return true;
-
-    }
-
-    public CharacterClass GetCharacterClass(ePlayerCharacter character)
-    {
-        foreach (CharacterClass ch in internalSwitchList)
-        {
-            if (ch.Character == character)
-                return ch;
-        }
-        return null;
-    }
-
-    #endregion
 
     #region Player Management
 

@@ -37,10 +37,9 @@ public class PlayerCharacter : Character, InputReceiver
 
     public void InizializeClass(CharacterClass newCharClass)
     {
-        CharacterClass cClass = Instantiate(newCharClass.gameObject, gameObject.transform).GetComponent<CharacterClass>();
-        cClass.Inizialize(this);
-        SetCharacterClass(cClass);
-        SetCharacter(cClass.Character);
+        newCharClass.Enable(this);
+        SetCharacterClass(newCharClass);
+        SetCharacter(newCharClass.Character);
     }
 
 
@@ -55,11 +54,10 @@ public class PlayerCharacter : Character, InputReceiver
     public void SwitchCharacterClass(CharacterClass newCharClass)
     {
         if(characterClass != null)
-        {
             characterClass.Disable(this);
-            Destroy(characterClass.gameObject);
-        }
-        InizializeClass(newCharClass);
+        
+        if(newCharClass != null)
+            InizializeClass(newCharClass);
     }
 
     public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
@@ -85,7 +83,7 @@ public class PlayerCharacter : Character, InputReceiver
         if(playerInputHandler != null)
             playerInputHandler.SetCharacter(currentCharacter);
         if (characterClass == null)
-            SwitchCharacterClass(CoopManager.Instance.GetCharacterClass(character));
+            CharacterPoolManager.Instance.SwitchCharacter(this, character);
     }
     public ePlayerCharacter GetCharacter() => currentCharacter;
 
@@ -151,36 +149,26 @@ public class PlayerCharacter : Character, InputReceiver
     public void SwitchUpInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            if(CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerUp))
-            {
-                SwitchCharacterClass(CoopManager.Instance.SwitchPlayerUp);
-            }
+            CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Brutus);
+            
     }
 
     public void SwitchRightInput(InputAction.CallbackContext context)
     {
         if(context.performed)
-            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerRight))
-            {
-                SwitchCharacterClass(CoopManager.Instance.SwitchPlayerRight);
-            }
+            CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Caina);
     }
 
     public void SwitchDownInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerDown))
-            {
-                SwitchCharacterClass(CoopManager.Instance.SwitchPlayerDown);
-            }
+            CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Cassius);
     }
+
     public void SwitchLeftInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerLeft))
-            {
-                SwitchCharacterClass(CoopManager.Instance.SwitchPlayerLeft);
-            }
+            CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Jude);
     }
 
     #endregion
