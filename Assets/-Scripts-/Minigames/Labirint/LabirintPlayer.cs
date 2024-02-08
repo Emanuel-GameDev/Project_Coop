@@ -1,15 +1,24 @@
 using UnityEngine.InputSystem;
 using UnityEngine;
 using System;
+using UnityEngine.TextCore.Text;
 
 public class LabirintPlayer : DefaultInputReceiver
 {
     public float moveSpeed = 10f;
     public Grid grid;
+
+    public Sprite brutusSprite; 
+    public Sprite cainaSprite;
+    public Sprite cassiusSprite;
+    public Sprite judeSprite;
+
     Vector3 moveDir;
     Vector3 destination;
     public int pickedKeys { get; private set; } = 0;
 
+    private SpriteRenderer spriteRenderer;
+    
     void Start()
     {
         InitialSetup();
@@ -20,6 +29,7 @@ public class LabirintPlayer : DefaultInputReceiver
         destination = transform.position;
         pickedKeys = 0;
         grid = LabirintManager.Instance.Grid;
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
     void Update()
     {
@@ -35,6 +45,33 @@ public class LabirintPlayer : DefaultInputReceiver
     {
         gameObject.SetActive(false);
         LabirintManager.Instance.PlayerDead();
+    }
+
+    public override void SetCharacter(ePlayerCharacter character)
+    {
+        base.SetCharacter(character);
+        SetCharacterSprite(character);
+    }
+
+    private void SetCharacterSprite(ePlayerCharacter character)
+    {
+        switch (character)
+        {
+            case ePlayerCharacter.EmptyCharacter:
+                break;
+            case ePlayerCharacter.Brutus:
+                spriteRenderer.sprite = brutusSprite;
+                break;
+            case ePlayerCharacter.Caina:
+                spriteRenderer.sprite = cainaSprite;
+                break;
+            case ePlayerCharacter.Cassius:
+                spriteRenderer.sprite = cassiusSprite;
+                break;
+            case ePlayerCharacter.Jude:
+                spriteRenderer.sprite = judeSprite;
+                break;
+        }
     }
 
     #region Movement
@@ -115,3 +152,4 @@ public class LabirintPlayer : DefaultInputReceiver
     #endregion
 
 }
+

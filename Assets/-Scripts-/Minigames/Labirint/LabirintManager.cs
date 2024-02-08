@@ -42,6 +42,9 @@ public class LabirintManager : MonoBehaviour
     int pickedKey;
     public Grid Grid => grid;
 
+    private StateMachine<LabirintState> stateMachine = new StateMachine<LabirintState>();
+
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -56,21 +59,36 @@ public class LabirintManager : MonoBehaviour
 
     private void Start()
     {
-        SetupLabirint();
+        //SetupLabirint();
+        stateMachine.SetState(new StartLabirint());
     }
 
+    #region GameManagement
     public void PickedKey()
     {
         pickedKey++;
         if (pickedKey >= keyCount)
-            EndGame();
+            EndGame(true);
     }
 
-    private void EndGame()
+    public void PlayerDead()
     {
-        Debug.Log("End Game: You Win");
+        deadPlayerCount++;
+        if (deadPlayerCount >= playerCount)
+            EndGame(false);
     }
 
+    private void EndGame(bool playerWin)
+    {
+        if(playerWin)
+            Debug.Log("End Game: You Win");
+        else
+            Debug.Log("End Game: You Lose");
+    }
+
+    #endregion
+
+    #region Labirint Setup
     private void SetupLabirint()
     {
         currentLabirint = Labirints[Random.Range(0, Labirints.Count)];
@@ -128,11 +146,6 @@ public class LabirintManager : MonoBehaviour
             }
         }
     }
-
-    internal void PlayerDead()
-    {
-        deadPlayerCount++;
-        if (deadPlayerCount >= playerCount)
-            Debug.Log("End Game: You Lose");
-    }
+    #endregion
+    
 }
