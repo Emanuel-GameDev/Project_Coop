@@ -13,28 +13,16 @@ public class BasicEnemyMoveState : BasicEnemyState
     {
         base.Enter();
         basicEnemy.canMove = true;
-        basicEnemy.canAttack = false;
-
-        //da rimettere dopo
-        //basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
+        basicEnemy.canAction = false;
 
 
+        basicEnemy.GetAnimator().SetBool("isMoving", true);
 
-        //basicEnemy.obstacle.enabled = false;
-        //basicEnemy.Agent.enabled = true;
     }
 
     public override void Update()
     {
         base.Update();
-
-        if (basicEnemy.attackTrigger.GetPlayersDetected().Count > 0)
-        {
-            
-            stateMachine.SetState(basicEnemy.attackState);
-        }
-
-        basicEnemy.FollowPath();
     }
 
     public override void Exit()

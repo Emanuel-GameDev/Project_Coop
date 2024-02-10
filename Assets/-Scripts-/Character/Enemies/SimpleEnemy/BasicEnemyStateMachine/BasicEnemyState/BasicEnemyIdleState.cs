@@ -16,10 +16,10 @@ public class BasicEnemyIdleState : BasicEnemyState
 
         basicEnemy.canSee = true;
         basicEnemy.canMove = false;
-        basicEnemy.canAttack = false;
+        basicEnemy.canAction = false;
 
-        basicEnemy.Agent.enabled = false;
-        basicEnemy.obstacle.enabled = true;
+        basicEnemy.ActivateObstacle();
+
 
     }
 
@@ -27,9 +27,9 @@ public class BasicEnemyIdleState : BasicEnemyState
     {
         base.Update();
 
-        if (basicEnemy.viewTrigger.GetPlayersDetected().Count > 0 && basicEnemy.canSee)
+        if (basicEnemy.viewTrigger.GetPlayersCountInTrigger() > 0 && basicEnemy.canSee)
         {
-           
+            basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
             stateMachine.SetState(basicEnemy.moveState);
         }
     }

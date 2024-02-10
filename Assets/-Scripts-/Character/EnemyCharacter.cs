@@ -35,6 +35,8 @@ public class EnemyCharacter : Character
         base.InitialSetup();
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+
+        currentHp = maxHp;
     }
 
     #region PowerUp
