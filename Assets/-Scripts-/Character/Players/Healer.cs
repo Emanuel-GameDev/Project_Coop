@@ -93,10 +93,9 @@ public class Healer : CharacterClass
 
     bool inputState = true;
 
-    public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
+    public override void Inizialize()
     {
-        base.Inizialize(/*characterData,*/ character);
-        transform.position = character.transform.position;
+        base.Inizialize();
         playerInArea = new List<PlayerCharacter>();
         smallHealAreaCollider = gameObject.AddComponent<CapsuleCollider>();
         smallHealAreaCollider.isTrigger = true;
@@ -219,9 +218,6 @@ public class Healer : CharacterClass
             bossAbilityReady = true;
 
     }
-
-
-
 
 
     public override void Move(Vector2 direction, Rigidbody rb)

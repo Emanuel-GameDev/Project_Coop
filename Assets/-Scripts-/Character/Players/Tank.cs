@@ -98,9 +98,9 @@ public class Tank : CharacterClass
     private PivotTriggerProtected pivotTriggerProtected;
 
 
-    public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
+    public override void Inizialize()
     {
-        base.Inizialize(/*characterData,*/ character);
+        base.Inizialize();
         currentStamina = maxStamina;
         currentHp = MaxHp;
 

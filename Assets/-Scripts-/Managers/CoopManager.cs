@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -27,6 +28,7 @@ public class CoopManager : MonoBehaviour
     }
 
     [SerializeField] private bool playerCanJoin = true;
+    [SerializeField] private float DelayBeforeRemoveDisconnectedPlayers = 30f;
     [SerializeField] private GameObject playerInputPrefab;
    
     private PlayerInputManager inputManager;
@@ -130,5 +132,21 @@ public class CoopManager : MonoBehaviour
         HPHandler.Instance.SetActivePlayers();
         CameraManager.Instance.AddAllPlayers();
     }
- 
+
+    public void OnDeviceLost(PlayerInput playerInput)
+    {
+        StartCoroutine(DisconnectPlayer(playerInput));
+    }
+
+    public void OnDeviceRegained(PlayerInput playerInput)
+    {
+        StopCoroutine(DisconnectPlayer(playerInput));
+    }
+
+    IEnumerator DisconnectPlayer(PlayerInput playerInput)
+    {
+        yield return new WaitForSeconds(DelayBeforeRemoveDisconnectedPlayers);
+        OnPlayerLeft(playerInput);
+    }
+
 }

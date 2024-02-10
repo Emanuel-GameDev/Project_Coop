@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerCharacter : Character, InputReceiver
 {
-    [SerializeField]
     protected CharacterClass characterClass;
     public CharacterClass CharacterClass => characterClass; 
     
@@ -75,7 +74,7 @@ public class PlayerCharacter : Character, InputReceiver
        
     public override DamageData GetDamageData() => characterClass.GetDamageData();
 
-    #region InterfaceImpletation
+    #region Interface Implementation
 
     public void SetCharacter(ePlayerCharacter character)
     {
@@ -90,6 +89,13 @@ public class PlayerCharacter : Character, InputReceiver
     public void SetInputHandler(PlayerInputHandler inputHandler)
     {
         playerInputHandler = inputHandler;
+        if(playerInputHandler != null)
+        {
+            if (playerInputHandler.currentCharacter != ePlayerCharacter.EmptyCharacter)
+                SetCharacter(playerInputHandler.currentCharacter);
+            else
+                CharacterPoolManager.Instance.GetFreeRandomCharacter(this);
+        }   
     }
     public PlayerInputHandler GetInputHandler()
     {
@@ -98,6 +104,10 @@ public class PlayerCharacter : Character, InputReceiver
 
     public void Dismiss()
     {
+        if(characterClass != null)
+            characterClass.Disable(this);
+
+        CameraManager.Instance.RemoveTarget(this.transform);
         //characterClass.SaveClassData();
         Destroy(gameObject);
     }

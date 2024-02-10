@@ -43,6 +43,15 @@ public class PlayerInputHandler : MonoBehaviour
         currentCharacter = character;
     }
 
+    public void OnDeviceLost(PlayerInput playerInput)
+    {
+        CoopManager.Instance.OnDeviceLost(playerInput);
+    }
+
+    public void OnDeviceRegained(PlayerInput playerInput)
+    {
+        CoopManager.Instance.OnDeviceRegained(playerInput);
+    }
 
     // La lista di tutti gli input di tutte le possibili mappe 
     #region MapInput

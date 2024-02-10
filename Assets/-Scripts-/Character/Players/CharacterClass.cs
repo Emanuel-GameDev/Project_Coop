@@ -65,7 +65,7 @@ public class CharacterClass : MonoBehaviour
     private static string Y = "Y";
     #endregion
 
-    public virtual void Inizialize(PlayerCharacter playerCharacter)
+    public virtual void Inizialize()
     {
         powerUpData = new PowerUpData();
         extraData = new ExtraData();
@@ -76,7 +76,6 @@ public class CharacterClass : MonoBehaviour
             upgradeStatus.Add(au, false);
         }
         animator = GetComponent<Animator>();
-        this.playerCharacter = playerCharacter;
         bossfightPowerUpUnlocked = false;
         uniqueAbilityUses = 0;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -95,6 +94,7 @@ public class CharacterClass : MonoBehaviour
         playerCharacter = character;
         lastNonZeroDirection = Vector2.down;
         transform.parent = playerCharacter.transform;
+        transform.localPosition = Vector3.zero;
         damager.SetSource(playerCharacter);
     }
 

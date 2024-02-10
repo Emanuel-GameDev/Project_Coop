@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class CharacterPoolManager : MonoBehaviour
 {
@@ -55,6 +56,8 @@ public class CharacterPoolManager : MonoBehaviour
         {
             CharacterClass characterClass = GameObject.Instantiate(character, transform);
             freeCharacters.Add(characterClass);
+            characterClass.Inizialize();
+            characterClass.gameObject.SetActive(false);
         }
     }
 
@@ -68,6 +71,7 @@ public class CharacterPoolManager : MonoBehaviour
         {
             playerCharacter.SwitchCharacterClass(searchedClass);
             freeCharacters.Remove(searchedClass);
+            searchedClass.gameObject.SetActive(true);
             return;
         }
     }
@@ -77,6 +81,11 @@ public class CharacterPoolManager : MonoBehaviour
         characterClass.gameObject.transform.parent = transform;
         characterClass.gameObject.SetActive(false);
         freeCharacters.Add(characterClass);
+    }
+
+    public void GetFreeRandomCharacter(PlayerCharacter playerCharacter)
+    {
+        SwitchCharacter(playerCharacter , freeCharacters[Random.Range(0, freeCharacters.Count)].Character);
     }
 
     #endregion
