@@ -134,9 +134,9 @@ public class DPS : CharacterClass
     public override float MoveSpeed => base.MoveSpeed + ExtraSpeed;
     public override float Damage => base.Damage * ExtraDamage();
 
-    public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
+    public override void Inizialize()
     {
-        base.Inizialize(/*characterData,*/ character);
+        base.Inizialize();
         lastDodgeTime = -dodgeCooldown;
         lastAttackTime = -timeBetweenCombo;
         lastUniqueAbilityUseTime = -UniqueAbilityCooldown;
@@ -153,6 +153,7 @@ public class DPS : CharacterClass
         chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
         perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
         perfectTimingHandler.gameObject.SetActive(false);
+        character = ePlayerCharacter.Brutus;
     }
 
 
@@ -404,9 +405,11 @@ public class DPS : CharacterClass
     {
         base.UnlockUpgrade(abilityUpgrade);
         if (abilityUpgrade == AbilityUpgrade.Ability3)
-            damager.AssignFunctionToOnTrigger(DeflectProjectile);
+            AddDeflect();
         Debug.Log("Unlock" + abilityUpgrade.ToString());
     }
+
+    
 
     public override void LockUpgrade(AbilityUpgrade abilityUpgrade)
     {
@@ -423,16 +426,30 @@ public class DPS : CharacterClass
         }
 
     }
+    private void AddDeflect()
+    {
+        damager.AssignFunctionToOnTrigger(DeflectProjectile);
+    }
 
     private void RemoveDeflect()
     {
         damager.RemoveFunctionFromOnTrigger(DeflectProjectile);
     }
 
-    public override void Disable(Character character)
+    public override void Enable(PlayerCharacter character)
+    {
+        base.Enable(character);
+        if (projectileDeflectionUnlocked)
+            AddDeflect();
+            
+    }
+
+    public override void Disable(PlayerCharacter character)
     {
         if (projectileDeflectionUnlocked)
             RemoveDeflect();
+
+        base.Disable(character);
     }
 
     #region Damage
