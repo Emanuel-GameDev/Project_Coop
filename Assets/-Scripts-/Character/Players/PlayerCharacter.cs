@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class PlayerCharacter : Character, InputReceiver
 {
     protected CharacterClass characterClass;
-    public CharacterClass CharacterClass => characterClass; 
-    
+    public CharacterClass CharacterClass => characterClass;
+
     public float MaxHp => characterClass.MaxHp;
     public float CurrentHp => characterClass.currentHp;
     public bool protectedByTank;
@@ -20,8 +21,9 @@ public class PlayerCharacter : Character, InputReceiver
 
     Vector2 lookDir;
     Vector2 moveDir;
-
+    Vector2 lastNonZeroDirection;
     public Vector2 MoveDirection => moveDir;
+    public Vector2 LastDirection => lastNonZeroDirection;
     protected override void InitialSetup()
     {
         base.InitialSetup();
@@ -34,32 +36,33 @@ public class PlayerCharacter : Character, InputReceiver
         Move(moveDir);
     }
 
+    #region CharacterClass Management
     public void InizializeClass(CharacterClass newCharClass)
     {
         newCharClass.Enable(this);
         SetCharacterClass(newCharClass);
         SetCharacter(newCharClass.Character);
     }
+    public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
+    public void SwitchCharacterClass(CharacterClass newCharClass)
+    {
+        if (characterClass != null)
+            characterClass.Disable(this);
 
+        if (newCharClass != null)
+            InizializeClass(newCharClass);
+    }
+    #endregion
 
+    #region Redirect To Class
     protected virtual void Move(Vector2 direction) => characterClass.Move(direction, rb);
-
     public override void AddPowerUp(PowerUp powerUp) => characterClass.AddPowerUp(powerUp);
     public override void RemovePowerUp(PowerUp powerUp) => characterClass.RemovePowerUp(powerUp);
     public override List<PowerUp> GetPowerUpList() => characterClass.GetPowerUpList();
-
     public void UnlockUpgrade(AbilityUpgrade abilityUpgrade) => characterClass.UnlockUpgrade(abilityUpgrade);
+    #endregion
 
-    public void SwitchCharacterClass(CharacterClass newCharClass)
-    {
-        if(characterClass != null)
-            characterClass.Disable(this);
-        
-        if(newCharClass != null)
-            InizializeClass(newCharClass);
-    }
-
-    public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
+    #region Damage
     public override void TakeDamage(DamageData data)
     {
         if (protectedByTank && data.blockedByTank)
@@ -73,6 +76,8 @@ public class PlayerCharacter : Character, InputReceiver
     }
        
     public override DamageData GetDamageData() => characterClass.GetDamageData();
+
+    #endregion
 
     #region Interface Implementation
 
@@ -206,6 +211,8 @@ public class PlayerCharacter : Character, InputReceiver
     public void MoveInput(InputAction.CallbackContext context)
     {
         moveDir = context.ReadValue<Vector2>();
+        if (moveDir != Vector2.zero)
+            lastNonZeroDirection = moveDir;
     }
 
     public void InteractInput(InputAction.CallbackContext context)
@@ -241,6 +248,5 @@ public class PlayerCharacter : Character, InputReceiver
 
 
     #endregion
-
 
 }
