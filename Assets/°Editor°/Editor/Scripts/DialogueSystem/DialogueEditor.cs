@@ -5,6 +5,10 @@ using System.IO;
 using UnityEditor.VersionControl;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.Tables;
+using UnityEditor.Localization;
+using UnityEngine.Localization;
 
 public class DialogueEditor : EditorWindow
 {
@@ -73,9 +77,25 @@ public class DialogueEditor : EditorWindow
 
         GUILayout.Space(10);
 
+
         if (GUILayout.Button("Refresh"))
         {
             refreshDialogues=true;
+            tableCollection = LocalizationEditorSettings.GetStringTableCollection("Dialogue");
+            table = tableCollection.StringTables[1];
+
+            //for (int i = 0;i< tableCollection.StringTables.Count;i++)
+            //{
+            //    if (tableCollection.StringTables[i].GetEntry($"{selectedDialogue.ToString()}LineID:{i}") == null)
+            //    {
+            //        tableCollection.StringTables[i].AddEntry($"{selectedDialogue.ToString()}LineID:{i}", "");
+
+            //        selectedDialogue.Lines[i].Content.
+            //    }
+
+            //}
+            
+
         }
 
         GUILayout.Space(10);
@@ -95,6 +115,7 @@ public class DialogueEditor : EditorWindow
         if (selectedDialogue == null)
             return;
 
+
         _selectedElement = EditorGUILayout.Popup(_selectedElement, dialogueNames);
 
 
@@ -105,6 +126,7 @@ public class DialogueEditor : EditorWindow
 
         if (GUILayout.Button("New line above"))
         {
+            
             selectedDialogue.AddLine(0);
             EditorUtility.SetDirty(selectedDialogue);
         }
@@ -126,13 +148,42 @@ public class DialogueEditor : EditorWindow
 
         EditorGUILayout.EndHorizontal();
 
+        if(currentLocale == null)
+        {
+            currentLocale = LocalizationEditorSettings.GetLocale(LocalizationSettings.SelectedLocale.Identifier);
+        }
+
+        if(table==null)
+        {
+            tableCollection = LocalizationEditorSettings.GetStringTableCollection("Dialogue");
+            table = tableCollection.StringTables[1];
+        }
+
+        for (int i = 0; i < selectedDialogue.Lines.Count; i++)
+        {
+            if (table.GetEntry($"{selectedDialogue.name}LineID:{i}") == null)
+            {
+                StringTableEntry entry = table.AddEntry($"{selectedDialogue.name}LineID:{i}", "");
+
+                selectedDialogue.Lines[i].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{i}");
+            }
+        }
+
         DialoguesLineGUI(selectedDialogue);
 
     }
 
+    StringTableCollection tableCollection;
+    StringTable table;
+    Locale currentLocale;
+
+    StringTableEntry entry;
+
     private void DialoguesLineGUI(Dialogue selectedDialogue)
     {
         
+            if (table == null)
+                return;
         _scrollView = EditorGUILayout.BeginScrollView(_scrollView);
 
 
@@ -143,8 +194,11 @@ public class DialogueEditor : EditorWindow
 
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
+            entry = table.GetEntry($"{selectedDialogue.name}LineID:{i}");
+
+
             string characterName = (bool)line.Character ? line.Character.Name : "[null]";
-            string content = line.Content.Length < 50 ? line.Content : line.Content.Substring(0, 50);
+            string content = entry.Value.Length < 50 ? entry.Value : entry.Value.Substring(0, 50);
 
             line.openInEditor = EditorGUILayout.Foldout(line.openInEditor, $"Line: {i + 1} ({characterName}: {content})");
 
@@ -169,7 +223,8 @@ public class DialogueEditor : EditorWindow
 
                 EditorGUILayout.EndHorizontal();
 
-                line.Content = EditorGUILayout.TextField("Text content", line.Content);
+                entry.Value = EditorGUILayout.TextField("Text content", entry.Value);
+                //line.Content. = EditorGUILayout.TextField("Text content", line.Content[$"{selectedDialogue.name}LineID:{i}"].ToString());
 
 
 
@@ -250,6 +305,8 @@ public class DialogueEditor : EditorWindow
             if (EditorGUI.EndChangeCheck())
             {
                 EditorUtility.SetDirty(selectedDialogue);
+                EditorUtility.SetDirty(table);
+                EditorUtility.SetDirty(table.SharedData);
             }
 
             EditorGUILayout.EndVertical();
