@@ -43,7 +43,7 @@ public class Slotmachine : MonoBehaviour
             row.SetRow(numberOfSlots,numberWinSlots,slotDistance,dpsSprite,enemySprite,rotationSpeed,stabilizationSpeed);
         }
 
-        GameManager.Instance.coopManager.capsulePrefab = GO;
+       // GameManager.Instance.coopManager.playerInputPrefab = GO;
     }
 
     private void Start()

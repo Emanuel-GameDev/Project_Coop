@@ -77,7 +77,7 @@ public class DialogueBox : MonoBehaviour
             //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").started -= NextLineInput;
             //}
 
-            foreach (PlayerCharacter character in GameManager.Instance.coopManager.activePlayers)
+            foreach (PlayerCharacter character in GameManager.Instance.coopManager.ActivePlayers)
             {
                 character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
             }
@@ -157,7 +157,7 @@ public class DialogueBox : MonoBehaviour
 
     public void StartDialogue() 
     {
-        foreach (PlayerCharacter character in GameManager.Instance.coopManager.activePlayers)
+        foreach (PlayerCharacter character in GameManager.Instance.coopManager.ActivePlayers)
         {
             character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
             Debug.Log("Enable");
