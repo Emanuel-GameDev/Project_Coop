@@ -176,7 +176,7 @@ public class DPS : CharacterClass
         currentComboState = 1;
         nextComboState = currentComboState;
         DoMeleeAttack();
-        character.GetRigidBody().velocity = Vector3.zero;
+        playerCharacter.GetRigidBody().velocity = Vector3.zero;
     }
     private void ContinueCombo()
     {
@@ -250,7 +250,7 @@ public class DPS : CharacterClass
 
     private IEnumerator Move(Vector2 direction, Rigidbody rb, float duration, float distance)
     {
-        startPosition = character.transform.position;
+        startPosition = playerCharacter.transform.position;
         rb.velocity = Vector3.zero;
 
         Vector3 destination = startPosition + new Vector3(direction.x, 0f, direction.y).normalized * distance;
@@ -361,8 +361,8 @@ public class DPS : CharacterClass
 
     public void DashAttackTeleport()
     {
-        character.GetRigidBody().MovePosition(startPosition);
-        Debug.Log($"Teleport at: {startPosition}, current position: {character.transform.position}");
+        playerCharacter.GetRigidBody().MovePosition(startPosition);
+        Debug.Log($"Teleport at: {startPosition}, current position: {playerCharacter.transform.position}");
     }
 
     public void EndDashAttack()
@@ -460,7 +460,7 @@ public class DPS : CharacterClass
 
         Debug.Log($"Damage Done: {damage}");
 
-        return new DamageData(damage, character);
+        return new DamageData(damage, playerCharacter);
 
     }
 

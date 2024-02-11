@@ -259,7 +259,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     public void EndSelection()
     {
         Debug.Log("Selezione completa");
-        CoopManager.Instance.UpdateSelectedPlayers(selectableCharacters);
+        //CoopManager.Instance.UpdateSelectedPlayers(selectableCharacters);
         GameManager.Instance.LoadNextScene();
     }
 
