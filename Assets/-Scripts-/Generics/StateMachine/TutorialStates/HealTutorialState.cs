@@ -31,7 +31,7 @@ public class HealTutorialState : TutorialFase
         //tutorialManager.tank.CharacterClass.TakeDamage(damageData);
         //tutorialManager.tutorialEnemy.TakeDamage(damageData);
 
-        //PubSub.Instance.RegisterFunction(EMessageType.characterHealed, CharacterHealed);
+        PubSub.Instance.RegisterFunction(EMessageType.characterHealed, CharacterHealed);
 
         tutorialManager.DeactivatePlayerInput(tutorialManager.dps);
         tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
@@ -56,28 +56,37 @@ public class HealTutorialState : TutorialFase
         tutorialManager.healer.GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
     }
 
-    //private void CharacterHealed(object obj)
-    //{
-    //    if(obj is PlayerCharacter) 
-    //    { 
-    //        PlayerCharacter character = (PlayerCharacter)obj;
+    private void CharacterHealed(object obj)
+    {
+        if (obj is PlayerCharacter)
+        {
+            PlayerCharacter character = (PlayerCharacter)obj;
 
-    //        switch (character.CharacterClass)
-    //        {
-    //            case DPS:
-                    
-    //                break;
+            switch (character.CharacterClass)
+            {
+                case DPS:
+                    tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
 
-    //            case Ranged:
+                    tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
+                    tutorialManager.PlayDialogue(faseData.DPSDialogue);
+                    break;
 
-    //                break;
+                case Ranged:
+                    tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
 
-    //            case Tank:
+                    tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
+                    tutorialManager.PlayDialogue(faseData.rangedDialogue);
+                    break;
 
-    //                break;
-    //        }
-    //    }
-    //}
+                case Tank:
+                    tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
+
+                    tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
+                    tutorialManager.PlayDialogue(faseData.tankDialogue);
+                    break;
+            }
+        }
+    }
 
 
     public override void Update()

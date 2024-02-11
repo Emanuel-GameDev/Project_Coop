@@ -8,7 +8,10 @@ public enum EMessageType
     guardExecuted,
     perfectGuardExecuted,
     dodgeExecuted,
-    perfectDodgeExecuted
+    perfectDodgeExecuted,
+    dialogueInput,
+    characterHealed,
+    slotInput
 }
 
 
@@ -66,10 +69,12 @@ public class PubSub : MonoBehaviour
 
     public void UnregisterFunction(EMessageType messageType, Action<object> function)
     {
-        if (_registeredFunctions.ContainsKey(messageType))
+        if (_registeredFunctions == null || !_registeredFunctions.ContainsKey(messageType))
         {
-            _registeredFunctions[messageType].Remove(function);
+            return;
         }
+       
+            _registeredFunctions[messageType].Remove(function);
 
     }
 

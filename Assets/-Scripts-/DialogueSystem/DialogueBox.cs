@@ -2,8 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class DialogueBox : MonoBehaviour
@@ -45,6 +48,8 @@ public class DialogueBox : MonoBehaviour
         [SerializeField] public Image dialogueFrame;
     }
 
+    
+
     private void NextLine()
     {
         if (dialogueLineIndex < dialogues[dialogueIndex].Lines.Count - 1)
@@ -66,6 +71,18 @@ public class DialogueBox : MonoBehaviour
                 dialogueIndex--;
             }
 
+            //foreach (PlayerCharacter character in GameManager.Instance.coopManager.activePlayers)
+            //{
+            //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
+            //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").started -= NextLineInput;
+            //}
+
+            foreach (PlayerCharacter character in GameManager.Instance.coopManager.activePlayers)
+            {
+                character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
+            }
+
+
             gameObject.SetActive(false);
         }
 
@@ -73,6 +90,10 @@ public class DialogueBox : MonoBehaviour
     BoxType nextBox;
     private void SetUpNextLine()
     {
+       
+
+
+
         nextLine = dialogues[dialogueIndex].GetLine(dialogueLineIndex);
 
         if(nextBox != null)
@@ -136,11 +157,20 @@ public class DialogueBox : MonoBehaviour
 
     public void StartDialogue() 
     {
+        foreach (PlayerCharacter character in GameManager.Instance.coopManager.activePlayers)
+        {
+            character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
+            Debug.Log("Enable");
+        }
+
+
         gameObject.SetActive(true);
         dialogueLineIndex = 0;
         SetUpNextLine();
         typeCoroutine = StartCoroutine(TypeLine());
     }
+
+ 
 
     IEnumerator TypeLine()
     {
@@ -153,21 +183,41 @@ public class DialogueBox : MonoBehaviour
             yield return new WaitForSeconds(1/characterPerSecond);
         }
     }
-
+    bool registered=false;
     private void OnEnable()
     {
         audioSource = GetComponent<AudioSource>();
-        
+
+        if(!registered)
+        PubSub.Instance.RegisterFunction(EMessageType.dialogueInput, NextLineInput);
+
+        registered = true;
         //prova
         //StartDialogue();
     }
 
+    private void OnDisable()
+    {
+        //PubSub.Instance.UnregisterFunction(EMessageType.dialogueInput, NextLineInput);
 
-    //input di prova
+        
+    }
+    float timer;
     private void Update()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (timer < 0.1)
         {
+            timer += Time.deltaTime;
+        }
+    }
+    //input di prova
+    private void NextLineInput(object obj)
+    {
+        if (timer < 0.1)
+            return;
+
+        timer = 0;
+
             if(nextBox.contentText.text == dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content)
                 NextLine();
             else
@@ -175,7 +225,7 @@ public class DialogueBox : MonoBehaviour
                 StopCoroutine(typeCoroutine);
                 nextBox.contentText.text = dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content;
             }
-        }
+        
     }
 
     public void SetDialogue(Dialogue newDialogues)

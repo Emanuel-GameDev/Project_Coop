@@ -333,6 +333,10 @@ public class TutorialManager : MonoBehaviour
     public void DeactivatePlayerInput(PlayerCharacter character)
     {
         character.GetComponent<PlayerInput>().actions.Disable();
+
+        
+            character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
+       
     }
 
 

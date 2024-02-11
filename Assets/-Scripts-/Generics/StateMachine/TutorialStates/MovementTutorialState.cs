@@ -73,12 +73,12 @@ public class MovementTutorialState : TutorialFase
         if (tutorialManager.timerEnded)
         {
             tutorialManager.timerEnded = false;
-            stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
 
             tutorialManager.DeactivatePlayerInput(tutorialManager.dps);
             tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
             tutorialManager.DeactivatePlayerInput(tutorialManager.ranged);
             tutorialManager.DeactivatePlayerInput(tutorialManager.tank);
+            stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
         }
     }
 

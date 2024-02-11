@@ -14,7 +14,7 @@ public class PrisonErosBossCharacter : BossCharacter
 
     [HideInInspector] public DamageData damageData;
 
-    [Header("Pioggia Di Natiche")]  
+    [Header("Pioggia Di Natiche")]
     public int slamsQuantity;
     public int timerDamageable;
     public int timerSlamFollow;
@@ -23,6 +23,11 @@ public class PrisonErosBossCharacter : BossCharacter
     public int slamAreaDamage;
     public int slamAreaStaminaDamage;
 
+    [Header("Colpo Di Frusta")]
+    public int flickDamage;
+    public int flickStaminaDamage;
+    public int flickMoveSpeed;
+    [HideInInspector] public bool flickDone;
     
     
     
@@ -38,6 +43,11 @@ public class PrisonErosBossCharacter : BossCharacter
     public void CrossbowDamageData()
     {
         
+    }
+    
+    public void SetFlickDone()
+    {
+        flickDone = true;
     }
     
 }

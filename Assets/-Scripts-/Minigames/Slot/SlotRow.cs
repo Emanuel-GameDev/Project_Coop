@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 //using UnityEditor.Search;
 using UnityEngine;
-using UnityEngine.Rendering;
+ using UnityEngine.Rendering;
 
 public class SlotRow : MonoBehaviour
 {
@@ -123,6 +123,10 @@ public class SlotRow : MonoBehaviour
         finalRowRotation=new Vector3(lastSlot.x, lastSlot.y-(slotDistance/2), lastSlot.z);
 
         Debug.Log(finalRowRotation.y);
+
+        //set Additional image placeholder
+
+
     }
 
     public void RotateRow()
@@ -234,5 +238,16 @@ public class SlotRow : MonoBehaviour
         }
     }
 
+
+    private void SetAdditionalImage()
+    {
+        for (int i = 0; i <= 2; i++)
+        {
+            GameObject slot = new GameObject($"slot #{i}");
+            slot.transform.SetParent(gameObject.transform, true);
+
+            slot.AddComponent<Slot>();
+        }
+    }
    
 }

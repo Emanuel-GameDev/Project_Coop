@@ -67,7 +67,7 @@ public class Healer : CharacterClass
     [Tooltip("Colpi consecutivi richiesti al boss, senza subire danni, per sbloccare l'abilità del boss")]
     [SerializeField] int bossPowerUpHitToUnlock = 10;
     [Tooltip("Rallentamento durante l'abilità del boss")]
-    [SerializeField] PowerUp bossAbilitySlowdown;
+    [SerializeField] float bossAbilitySlowdown;
 
     CapsuleCollider smallHealAreaCollider;
 
@@ -105,6 +105,7 @@ public class Healer : CharacterClass
         healIcons = new Dictionary<PlayerCharacter, GameObject>();
 
         animator.SetFloat("Y", -1);
+        baseMoveSpeed = MoveSpeed;
     }
 
 
@@ -133,7 +134,7 @@ public class Healer : CharacterClass
     {
         inputState = true;
     }
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.GetComponent<PlayerCharacter>() && !playerInArea.Contains(other.gameObject.GetComponent<PlayerCharacter>()))
@@ -180,7 +181,7 @@ public class Healer : CharacterClass
         mineAbilityTimer = mineAbilityCooldown;
         smallHealTimer = singleHealCooldown;
     }
-
+    float baseMoveSpeed = 0;
     private void Update()
     {
         if (uniqueAbilityTimer < UniqueAbilityCooldown)
@@ -203,14 +204,15 @@ public class Healer : CharacterClass
             if (bossAbilityChargeTimer < bossAbilityCharge)
             {
                 bossAbilityChargeTimer += Time.deltaTime;
-                if(!playerCharacter.GetPowerUpList().Contains(bossAbilitySlowdown))
-                    playerCharacter.AddPowerUp(bossAbilitySlowdown);
+
+                moveSpeed = bossAbilitySlowdown;         
             }
         }
         else
         {
-            if (playerCharacter.GetPowerUpList().Contains(bossAbilitySlowdown))
-                playerCharacter.RemovePowerUp(bossAbilitySlowdown);
+
+            moveSpeed = baseMoveSpeed;
+            
             bossAbilityChargeTimer = 0;
         }
 
@@ -267,9 +269,10 @@ public class Healer : CharacterClass
                     foreach (PlayerCharacter pc in playerInArea)
                     {
                         pc.TakeDamage(new DamageData(-smallHeal, null));
-                        //PubSub.Instance.Notify(EMessageType.characterHealed, pc);
+                        PubSub.Instance.Notify(EMessageType.characterHealed, pc);
                     }
-                    
+
+
                     smallHealTimer = 0;
                 }
             }
