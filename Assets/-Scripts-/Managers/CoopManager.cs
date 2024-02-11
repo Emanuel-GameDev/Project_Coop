@@ -96,7 +96,7 @@ public class CoopManager : MonoBehaviour
         activePlayers.Clear();
         foreach (PlayerSelection p in playerInputDevices)
         {
-            PlayerInput GO = PlayerInput.Instantiate(capsulePrefab, p.device.deviceId, p.device.displayName, -1, p.device);
+            PlayerInput GO = PlayerInput.Instantiate(capsulePrefab, p.device.deviceId, p.controlScheme, -1, p.device);
 
             PlayerCharacter playerCharacter = GO.gameObject.GetComponent<PlayerCharacter>();
            

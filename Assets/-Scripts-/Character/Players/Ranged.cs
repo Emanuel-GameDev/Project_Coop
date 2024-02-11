@@ -115,8 +115,8 @@ public class Ranged : CharacterClass
         base.Inizialize(character);
         nearbyLandmine = new List<LandMine>();
         landMineInInventory = maxNumberLandMine;
-        perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>();
-        //perfectTimingHandler.gameObject.SetActive(false);
+        perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>(true);
+        perfectTimingHandler.gameObject.SetActive(false);
     }
 
 
@@ -186,7 +186,7 @@ public class Ranged : CharacterClass
 
             isAttacking = true;
 
-            Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
+            Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook(context);
 
             //controllo che la look non sia zero, possibilità solo se si una il controller
             if (_look != Vector3.zero)
@@ -294,7 +294,7 @@ public class Ranged : CharacterClass
 
     protected IEnumerator PerfectDodgeHandler(DamageData data)
     {
-        //perfectTimingHandler.gameObject.SetActive(true);
+        perfectTimingHandler.gameObject.SetActive(true);
         yield return new WaitForSeconds(perfectDodgeDuration);
         if(isDodging)
         {
@@ -312,7 +312,7 @@ public class Ranged : CharacterClass
             base.TakeDamage(data);
         }
 
-        //perfectTimingHandler.gameObject.SetActive(false);
+        perfectTimingHandler.gameObject.SetActive(false);
         Debug.Log($"PerfectDodge: {isDodging}");
     }
 
@@ -421,7 +421,7 @@ public class Ranged : CharacterClass
             if (endTimer - empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
             {
 
-                Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
+                Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook(context);
 
                 //controllo che la look non sia zero, possibilità solo se si una il controller
                 if (_look != Vector3.zero)
