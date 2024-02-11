@@ -16,17 +16,19 @@ public class PrisonErosBossCharacter : BossCharacter
 
     [Header("Pioggia Di Natiche")]
     public int slamsQuantity;
-    public int timerDamageable;
-    public int timerSlamFollow;
-    public int slamNormalDamage;
-    public int slamNormalStaminaDamage;
-    public int slamAreaDamage;
-    public int slamAreaStaminaDamage;
+    public float timerDamageable;
+    public float timerSlamFollow;
+    public float slamNormalDamage;
+    public float slamNormalStaminaDamage;
+    public float slamAreaDamage;
+    public float slamAreaStaminaDamage;
 
     [Header("Colpo Di Frusta")]
     public int flickDamage;
     public int flickStaminaDamage;
     public int flickMoveSpeed;
+    public float flickSpeed;
+    public float flickDistance;
     [HideInInspector] public bool flickDone;
     
     

@@ -23,16 +23,25 @@ namespace MBTExample
             bossCharacter = parentGameObject.Value.GetComponent<PrisonErosBossCharacter>();
             bossCharacter.flickDone = false;
             targetPosition = targetTransform.Value.position;
+            
+            Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
+            targetPosition = new Vector3((direction.x * bossCharacter.flickDistance), 0, (direction.z * bossCharacter.flickDistance)) + bossCharacter.transform.position;
             bossCharacter.Agent.SetDestination(targetPosition);
-            bossCharacter.Agent.SetDestination(targetPosition);
-            //PlayAnimazione attacco frusta
+
+            //PlayAnimazione attacco frusta a fine animazione setto flickDone
 
         }
 
         public override NodeResult Execute()
         {
-            if (bossCharacter.flickDone)
+           
+            float dist = Vector3.Distance(targetPosition, bossCharacter.transform.position);
+            if (bossCharacter.flickDone || dist <= bossCharacter.minDistance)
+            {
+
+                bossCharacter.Agent.isStopped = true;
                 return NodeResult.success;
+            }
             return NodeResult.running;
         }
 

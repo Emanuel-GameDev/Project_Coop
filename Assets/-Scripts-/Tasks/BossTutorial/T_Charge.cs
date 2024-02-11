@@ -30,7 +30,7 @@ namespace MBTExample
             Vector3 direction = (targetTransform.Value.position -bossCharacter.transform.position).normalized;
             targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), 0,(direction.z * bossCharacter.chargeDistance)) + bossCharacter.transform.position; 
 
-            bossDamager = bossCharacter.GetComponent<IDamager>();
+           
             //Setto il danno
             bossCharacter.SetChargeDamageData();
 
