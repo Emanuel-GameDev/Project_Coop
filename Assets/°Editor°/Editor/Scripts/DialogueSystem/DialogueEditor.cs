@@ -18,6 +18,7 @@ public class DialogueEditor : EditorWindow
         GetWindow<DialogueEditor>();
     }
 
+    private int _selectedName;
     private int _selectedElement;
     private Vector2 _scrollView;
 
@@ -30,7 +31,9 @@ public class DialogueEditor : EditorWindow
     string[] dialogues;
     string[] dialogueNames;
 
-
+    string lastSearched;
+    string searchedNames;
+    List<string> namesFound=new List<string>();
     private void CreateNewDialogue()
     {
         if (string.IsNullOrEmpty(_newDialogueName))
@@ -84,17 +87,6 @@ public class DialogueEditor : EditorWindow
             tableCollection = LocalizationEditorSettings.GetStringTableCollection("Dialogue");
             table = tableCollection.StringTables[1];
 
-            //for (int i = 0;i< tableCollection.StringTables.Count;i++)
-            //{
-            //    if (tableCollection.StringTables[i].GetEntry($"{selectedDialogue.ToString()}LineID:{i}") == null)
-            //    {
-            //        tableCollection.StringTables[i].AddEntry($"{selectedDialogue.ToString()}LineID:{i}", "");
-
-            //        selectedDialogue.Lines[i].Content.
-            //    }
-
-            //}
-            
 
         }
 
@@ -116,8 +108,47 @@ public class DialogueEditor : EditorWindow
             return;
 
 
-        _selectedElement = EditorGUILayout.Popup(_selectedElement, dialogueNames);
 
+        //searchedNames = EditorGUILayout.TextField("Search",searchedNames);
+
+        //if (lastSearched != searchedNames)
+        //{
+        //    namesFound.Clear();
+
+        //    if (!string.IsNullOrEmpty(searchedNames))
+        //    {
+        //        foreach(string dialogue in dialogueNames)
+        //        {
+        //            if (dialogue.Contains(searchedNames)) 
+        //                namesFound.Add(dialogue);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        foreach (string dialogue in dialogueNames)
+        //        {
+        //            namesFound.Add(dialogue);
+        //        }
+        //    }
+        //    lastSearched = searchedNames;
+        //}
+
+
+
+        _selectedElement = EditorGUILayout.Popup(_selectedElement, dialogueNames);
+       // _selectedName = EditorGUILayout.Popup(_selectedElement, namesFound.ToArray());
+
+        //if(_selectedName<0 || _selectedName > namesFound.Count)
+        //      _selectedName=0;
+
+        //      for (int i = 0; i <= dialogueNames.Length; i++)
+        //      {
+        //          if (dialogueNames[i] == namesFound[_selectedName])
+        //          {
+        //              _selectedElement = i;
+        //              break;
+        //          }
+        //      }
 
 
         GUILayout.Space(20);
@@ -164,7 +195,7 @@ public class DialogueEditor : EditorWindow
             if (table.GetEntry($"{selectedDialogue.name}LineID:{i}") == null)
             {
                 StringTableEntry entry = table.AddEntry($"{selectedDialogue.name}LineID:{i}", "");
-
+                
                 selectedDialogue.Lines[i].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{i}");
             }
         }
@@ -293,6 +324,7 @@ public class DialogueEditor : EditorWindow
 
                 if (GUILayout.Button("Remove",EditorStyles.miniButtonRight) && EditorUtility.DisplayDialog("Warning","Do you want to remove this line?","Yes","No"))
                 {
+                    tableCollection.RemoveEntry($"{selectedDialogue.name}LineID:{i}");
                     selectedDialogue.RemoveLine(i);
                 }
 
