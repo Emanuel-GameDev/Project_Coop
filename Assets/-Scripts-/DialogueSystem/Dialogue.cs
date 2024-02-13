@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Localization;
 
-    public enum dialogueType
+public enum dialogueType
     {
         dialogue,
         tutorial
@@ -20,7 +21,7 @@ public class Dialogue : ScriptableObject
     public class DialogueLine
     {
         [SerializeField] private DialogueCharacter character;
-        [SerializeField] private string content = "";
+        [SerializeField] private LocalizedString localizedLine ;
 
         public bool overrideNameColor;
         [SerializeField] private Color nameColor;
@@ -53,10 +54,10 @@ public class Dialogue : ScriptableObject
             set { character = value; }
         }
 
-        public string Content
+        public LocalizedString Content
         {
-            get { return content; }
-            set { content = value; }
+            get { return localizedLine; }
+            set { localizedLine = value; }
         }
 
         public Color NameColor

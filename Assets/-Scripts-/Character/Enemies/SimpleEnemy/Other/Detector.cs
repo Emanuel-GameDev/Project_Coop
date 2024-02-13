@@ -6,6 +6,7 @@ using UnityEngine;
 public class Detector : MonoBehaviour
 {
     List<PlayerCharacter> playersDetected;
+    int playersInside;
 
     private void Awake()
     {
@@ -18,6 +19,7 @@ public class Detector : MonoBehaviour
         if(other.gameObject.TryGetComponent<PlayerCharacter>(out PlayerCharacter character))
         {
             playersDetected.Add(character);
+            playersInside++;
         }
     }
 
@@ -28,6 +30,7 @@ public class Detector : MonoBehaviour
             if(playersDetected.Contains(character))
             {
                 playersDetected.Remove(character);
+                playersInside--;
             }
         }
     }
@@ -35,6 +38,11 @@ public class Detector : MonoBehaviour
     public List<PlayerCharacter> GetPlayersDetected()
     {
         return playersDetected;
+    }
+
+    public int GetPlayersCountInTrigger()
+    {
+        return playersInside;
     }
 
     public void ClearList()

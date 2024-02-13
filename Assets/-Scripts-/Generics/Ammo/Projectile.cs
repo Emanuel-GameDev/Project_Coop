@@ -12,6 +12,8 @@ public class Projectile : MonoBehaviour, IDamager
 
     Rigidbody rb;
 
+    public Transform dealerTransform => transform;
+
     private void Awake()
     {
         projectileSize = transform.lossyScale;
