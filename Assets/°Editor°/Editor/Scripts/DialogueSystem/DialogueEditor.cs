@@ -79,7 +79,7 @@ public class DialogueEditor : EditorWindow
         EditorGUILayout.EndHorizontal();
 
         GUILayout.Space(10);
-
+        
 
         if (GUILayout.Button("Refresh"))
         {
@@ -157,8 +157,21 @@ public class DialogueEditor : EditorWindow
 
         if (GUILayout.Button("New line above"))
         {
-            
             selectedDialogue.AddLine(0);
+
+            table.AddEntry($"{selectedDialogue.name}LineID:{selectedDialogue.Lines.Count-1}", "");
+
+
+            for (int i = selectedDialogue.Lines.Count - 1; i >= 0; i--)
+            {
+                if(i>0)
+                    table.GetEntry($"{selectedDialogue.name}LineID:{i}").Value = table.GetEntry($"{selectedDialogue.name}LineID:{i-1}").Value;
+
+                selectedDialogue.Lines[i].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{i}");
+                
+            }
+
+
             EditorUtility.SetDirty(selectedDialogue);
         }
 
@@ -174,6 +187,7 @@ public class DialogueEditor : EditorWindow
         {
             selectedDialogue.AddLine(newLineIndex-1);
         }
+
         newLineIndex =  EditorGUILayout.IntField(newLineIndex, GUILayout.MaxWidth(50));
         newLineIndex = Mathf.Clamp(newLineIndex,1,selectedDialogue.Lines.Count);
 
@@ -195,7 +209,7 @@ public class DialogueEditor : EditorWindow
             if (table.GetEntry($"{selectedDialogue.name}LineID:{i}") == null)
             {
                 StringTableEntry entry = table.AddEntry($"{selectedDialogue.name}LineID:{i}", "");
-                
+
                 selectedDialogue.Lines[i].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{i}");
             }
         }
