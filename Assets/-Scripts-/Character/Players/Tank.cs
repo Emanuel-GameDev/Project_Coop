@@ -33,6 +33,11 @@ public class Tank : CharacterClass
     [SerializeField, Tooltip("finestra di tempo nella quale appena viene colpito può parare per fare parata perfetta")]
     float perfectBlockTimeWindow = 0.4f;
 
+    private enum blockZone
+    {
+        
+    }
+
     [Header("Unique Ability")]
 
     [SerializeField, Tooltip("cooldown abilità unica")]
