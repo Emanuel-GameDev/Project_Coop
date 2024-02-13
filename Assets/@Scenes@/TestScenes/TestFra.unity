@@ -5088,7 +5088,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 41326477}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3826835, y: -0.000000015896624, z: 0.000000006584597, w: 0.92387956}
+  m_LocalRotation: {x: 0.3826835, y: 0.000000015896621, z: -0.000000006584596, w: 0.92387956}
   m_LocalPosition: {x: -0.17933533, y: 5.8235683, z: -14.589131}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
@@ -6911,7 +6911,7 @@ PrefabInstance:
     - target: {fileID: 1148828877330473255, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: rect.x
-      value: 18
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 1148828877330473255, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -7874,7 +7874,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162180525}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3826835, y: -0.000000015896624, z: 0.000000006584597, w: 0.92387956}
+  m_LocalRotation: {x: 0.3826835, y: 0.000000015896621, z: -0.000000006584596, w: 0.92387956}
   m_LocalPosition: {x: -0.17933533, y: 5.8235683, z: -14.589131}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8998,13 +8998,15 @@ GameObject:
   - component: {fileID: 1927028732}
   - component: {fileID: 1927028735}
   - component: {fileID: 1927028743}
-  - component: {fileID: 1927028742}
-  - component: {fileID: 1927028741}
-  - component: {fileID: 1927028740}
   - component: {fileID: 1927028739}
   - component: {fileID: 1927028738}
   - component: {fileID: 1927028737}
   - component: {fileID: 1927028736}
+  - component: {fileID: 1927028749}
+  - component: {fileID: 1927028748}
+  - component: {fileID: 1927028747}
+  - component: {fileID: 1927028746}
+  - component: {fileID: 1927028745}
   - component: {fileID: 1927028744}
   m_Layer: 0
   m_Name: BehaviorTreePrisoner
@@ -9040,7 +9042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25af8627659c6949b60949c3aa8d91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedEditorNode: {fileID: 1927028740}
+  selectedEditorNode: {fileID: 0}
   repeatOnFinish: 0
   maxExecutionsPerTick: 1000
   parent: {fileID: 0}
@@ -9156,102 +9158,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: bossParent
   val: {fileID: 312339408183417741}
---- !u!114 &1927028740
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1927028730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58fe7bc6a9b18e148b82820c7c1c0a90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: Wait
-  rect:
-    serializedVersion: 2
-    x: 673
-    y: 498
-    width: 160
-    height: 45
-  parent: {fileID: 1927028741}
-  children: []
-  behaviourTree: {fileID: 0}
-  runtimePriority: 0
-  breakpoint: 0
-  time:
-    useConstant: 1
-    mode: 0
-    blackboard: {fileID: 0}
-    key: 
-    constantValue: 3
-  randomDeviation: 0
-  continueOnRestart: 0
---- !u!114 &1927028741
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1927028730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c78c7da6b00e1b46bad07949050f82f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: Sequence
-  rect:
-    serializedVersion: 2
-    x: 587
-    y: 379
-    width: 160
-    height: 45
-  parent: {fileID: 1927028743}
-  children:
-  - {fileID: 1927028744}
-  - {fileID: 1927028742}
-  - {fileID: 1927028740}
-  behaviourTree: {fileID: 0}
-  runtimePriority: 0
-  breakpoint: 0
-  random: 0
---- !u!114 &1927028742
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1927028730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abb7dfe926a7e2842bfc22baf5d68043, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: PioggiaDiNatiche
-  rect:
-    serializedVersion: 2
-    x: 492
-    y: 490
-    width: 160
-    height: 45
-  parent: {fileID: 1927028741}
-  children: []
-  behaviourTree: {fileID: 0}
-  runtimePriority: 0
-  breakpoint: 0
-  targetTransform:
-    useConstant: 0
-    mode: 0
-    blackboard: {fileID: 1927028733}
-    key: targetTransform
-    constantValue: {fileID: 0}
-  parentGameObject:
-    useConstant: 0
-    mode: 0
-    blackboard: {fileID: 1927028733}
-    key: bossParent
-    constantValue: {fileID: 0}
 --- !u!114 &1927028743
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -9267,13 +9173,13 @@ MonoBehaviour:
   title: Repeater
   rect:
     serializedVersion: 2
-    x: 685
+    x: 684
     y: 279
     width: 160
     height: 45
   parent: {fileID: 1927028735}
   children:
-  - {fileID: 1927028741}
+  - {fileID: 1927028749}
   behaviourTree: {fileID: 0}
   runtimePriority: 0
   breakpoint: 0
@@ -9289,17 +9195,130 @@ MonoBehaviour:
   m_GameObject: {fileID: 1927028730}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0b7cfe3e9cfba47a378c725cf5d0b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Distance Condition
+  rect:
+    serializedVersion: 2
+    x: 866
+    y: 573
+    width: 160
+    height: 45
+  parent: {fileID: 1927028746}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  comparator: 0
+  distance:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 0
+  transform1:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: {fileID: 0}
+  transform2:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: {fileID: 0}
+--- !u!114 &1927028745
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927028730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0b7cfe3e9cfba47a378c725cf5d0b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Distance Condition
+  rect:
+    serializedVersion: 2
+    x: 666
+    y: 591
+    width: 160
+    height: 45
+  parent: {fileID: 1927028746}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  comparator: 0
+  distance:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 0
+  transform1:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: {fileID: 0}
+  transform2:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: {fileID: 0}
+--- !u!114 &1927028746
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927028730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08540605df275034fafc8e05c6704214, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Selector
+  rect:
+    serializedVersion: 2
+    x: 712
+    y: 469
+    width: 160
+    height: 45
+  parent: {fileID: 1927028749}
+  children:
+  - {fileID: 1927028745}
+  - {fileID: 1927028744}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  random: 0
+--- !u!114 &1927028747
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927028730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06386bd79ecddda4cb87af1796475792, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   title: 'Target Selection '
   rect:
     serializedVersion: 2
-    x: 299
-    y: 493
+    x: 335
+    y: 513
     width: 160
     height: 45
-  parent: {fileID: 1927028741}
+  parent: {fileID: 1927028748}
   children: []
   behaviourTree: {fileID: 0}
   runtimePriority: 0
@@ -9307,15 +9326,88 @@ MonoBehaviour:
   parentGameObject:
     useConstant: 0
     mode: 0
-    blackboard: {fileID: 1927028733}
-    key: bossParent
+    blackboard: {fileID: 0}
+    key: 
     constantValue: {fileID: 0}
   blackboardVariable:
     useConstant: 0
     mode: 1
-    blackboard: {fileID: 1927028733}
-    key: targetTransform
+    blackboard: {fileID: 0}
+    key: 
     constantValue: {fileID: 0}
+--- !u!114 &1927028748
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927028730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534e3ec7de6cd444e984c2e7f68e42e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Is Set Condition
+  rect:
+    serializedVersion: 2
+    x: 487
+    y: 450
+    width: 160
+    height: 45
+  parent: {fileID: 1927028749}
+  children:
+  - {fileID: 1927028747}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  abort: 0
+  invert: 0
+  type: 0
+  boolReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 0
+  objectReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: {fileID: 0}
+  transformReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: {fileID: 0}
+--- !u!114 &1927028749
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927028730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c78c7da6b00e1b46bad07949050f82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Sequence
+  rect:
+    serializedVersion: 2
+    x: 683
+    y: 381
+    width: 160
+    height: 45
+  parent: {fileID: 1927028743}
+  children:
+  - {fileID: 1927028748}
+  - {fileID: 1927028746}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  random: 0
 --- !u!1 &1953718714
 GameObject:
   m_ObjectHideFlags: 0
@@ -9612,7 +9704,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!136 &531099557396309529
 CapsuleCollider:
   m_ObjectHideFlags: 0
