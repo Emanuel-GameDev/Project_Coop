@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class PlayerCharacter : Character, InputReceiver
 {
-    [SerializeField]
     protected CharacterClass characterClass;
-    public CharacterClass CharacterClass => characterClass; 
-    
+    public CharacterClass CharacterClass => characterClass;
+
     public float MaxHp => characterClass.MaxHp;
     public float CurrentHp => characterClass.currentHp;
     public bool protectedByTank;
@@ -21,8 +21,9 @@ public class PlayerCharacter : Character, InputReceiver
 
     Vector2 lookDir;
     Vector2 moveDir;
-
+    Vector2 lastNonZeroDirection;
     public Vector2 MoveDirection => moveDir;
+    public Vector2 LastDirection => lastNonZeroDirection;
     protected override void InitialSetup()
     {
         base.InitialSetup();
@@ -35,34 +36,33 @@ public class PlayerCharacter : Character, InputReceiver
         Move(moveDir);
     }
 
+    #region CharacterClass Management
     public void InizializeClass(CharacterClass newCharClass)
     {
-        CharacterClass cClass = Instantiate(newCharClass.gameObject, gameObject.transform).GetComponent<CharacterClass>();
-        cClass.Inizialize(this);
-        SetCharacterClass(cClass);
-        SetCharacter(cClass.Character);
+        newCharClass.Enable(this);
+        SetCharacterClass(newCharClass);
+        SetCharacter(newCharClass.Character);
     }
+    public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
+    public void SwitchCharacterClass(CharacterClass newCharClass)
+    {
+        if (characterClass != null)
+            characterClass.Disable(this);
 
+        if (newCharClass != null)
+            InizializeClass(newCharClass);
+    }
+    #endregion
 
+    #region Redirect To Class
     protected virtual void Move(Vector2 direction) => characterClass.Move(direction, rb);
-
     public override void AddPowerUp(PowerUp powerUp) => characterClass.AddPowerUp(powerUp);
     public override void RemovePowerUp(PowerUp powerUp) => characterClass.RemovePowerUp(powerUp);
     public override List<PowerUp> GetPowerUpList() => characterClass.GetPowerUpList();
-
     public void UnlockUpgrade(AbilityUpgrade abilityUpgrade) => characterClass.UnlockUpgrade(abilityUpgrade);
+    #endregion
 
-    public void SwitchCharacterClass(CharacterClass newCharClass)
-    {
-        if(characterClass != null)
-        {
-            characterClass.Disable(this);
-            Destroy(characterClass.gameObject);
-        }
-        InizializeClass(newCharClass);
-    }
-
-    public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
+    #region Damage
     public override void TakeDamage(DamageData data)
     {
         if (protectedByTank && data.blockedByTank)
@@ -77,7 +77,9 @@ public class PlayerCharacter : Character, InputReceiver
        
     public override DamageData GetDamageData() => characterClass.GetDamageData();
 
-    #region InterfaceImpletation
+    #endregion
+
+    #region Interface Implementation
 
     public void SetCharacter(ePlayerCharacter character)
     {
@@ -85,13 +87,20 @@ public class PlayerCharacter : Character, InputReceiver
         if(playerInputHandler != null)
             playerInputHandler.SetCharacter(currentCharacter);
         if (characterClass == null)
-            SwitchCharacterClass(CoopManager.Instance.GetCharacterClass(character));
+            CharacterPoolManager.Instance.SwitchCharacter(this, character);
     }
     public ePlayerCharacter GetCharacter() => currentCharacter;
 
     public void SetInputHandler(PlayerInputHandler inputHandler)
     {
         playerInputHandler = inputHandler;
+        if(playerInputHandler != null)
+        {
+            if (playerInputHandler.currentCharacter != ePlayerCharacter.EmptyCharacter)
+                SetCharacter(playerInputHandler.currentCharacter);
+            else
+                CharacterPoolManager.Instance.GetFreeRandomCharacter(this);
+        }   
     }
     public PlayerInputHandler GetInputHandler()
     {
@@ -100,6 +109,10 @@ public class PlayerCharacter : Character, InputReceiver
 
     public void Dismiss()
     {
+        if(characterClass != null)
+            characterClass.Disable(this);
+
+        CameraManager.Instance.RemoveTarget(this.transform);
         //characterClass.SaveClassData();
         Destroy(gameObject);
     }
@@ -124,11 +137,11 @@ public class PlayerCharacter : Character, InputReceiver
         }
     }
 
-    public Vector3 ReadLook()
+    public Vector3 ReadLook(InputAction.CallbackContext context)
     {
-        var gamepad = Gamepad.current;
+        string gamepad = context.control.device.displayName;
 
-        if (gamepad != null)
+        if (gamepad.Contains("Gamepad") || gamepad.Contains("Controller") || gamepad.Contains("Joystick"))
         {
             //perndo la look dal player.input utilizzando il gamepad
             return new Vector3(lookDir.x, 0, lookDir.y).normalized;
@@ -160,36 +173,26 @@ public class PlayerCharacter : Character, InputReceiver
     public void SwitchUpInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            if(CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerUp))
-            {
-                SwitchCharacterClass(CoopManager.Instance.SwitchPlayerUp);
-            }
+            CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Brutus);
+            
     }
 
     public void SwitchRightInput(InputAction.CallbackContext context)
     {
         if(context.performed)
-            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerRight))
-            {
-                SwitchCharacterClass(CoopManager.Instance.SwitchPlayerRight);
-            }
+            CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Caina);
     }
 
     public void SwitchDownInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerDown))
-            {
-                SwitchCharacterClass(CoopManager.Instance.SwitchPlayerDown);
-            }
+            CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Cassius);
     }
+
     public void SwitchLeftInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            if (CoopManager.Instance.CanSwitchCharacter(CoopManager.Instance.SwitchPlayerLeft))
-            {
-                SwitchCharacterClass(CoopManager.Instance.SwitchPlayerLeft);
-            }
+            CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Jude);
     }
 
     #endregion
@@ -217,6 +220,8 @@ public class PlayerCharacter : Character, InputReceiver
     public void MoveInput(InputAction.CallbackContext context)
     {
         moveDir = context.ReadValue<Vector2>();
+        if (moveDir != Vector2.zero)
+            lastNonZeroDirection = moveDir;
     }
 
     public void InteractInput(InputAction.CallbackContext context)
@@ -252,6 +257,5 @@ public class PlayerCharacter : Character, InputReceiver
 
 
     #endregion
-
 
 }

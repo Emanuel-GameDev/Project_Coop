@@ -110,9 +110,9 @@ public class Ranged : CharacterClass
     bool isDodging=false;
     bool isInvunerable=false;
 
-    public override void Inizialize(PlayerCharacter character)
+    public override void Inizialize()
     {
-        base.Inizialize(character);
+        base.Inizialize();
         nearbyLandmine = new List<LandMine>();
         landMineInInventory = maxNumberLandMine;
         perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>(true);
@@ -186,7 +186,7 @@ public class Ranged : CharacterClass
 
             isAttacking = true;
 
-            Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
+            Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook(context);
 
             //controllo che la look non sia zero, possibilità solo se si una il controller
             if (_look != Vector3.zero)
@@ -421,7 +421,7 @@ public class Ranged : CharacterClass
             if (endTimer - empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
             {
 
-                Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook();
+                Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook(context);
 
                 //controllo che la look non sia zero, possibilità solo se si una il controller
                 if (_look != Vector3.zero)
