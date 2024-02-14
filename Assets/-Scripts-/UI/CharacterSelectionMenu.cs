@@ -9,12 +9,14 @@ public class PlayerSelection
     public PlayerData data;
     public bool selected;
     public InputDevice device;
+    public string controlScheme;
 
-    public PlayerSelection(PlayerData data, bool iconSelected, bool randomBtnSelected)
+    public PlayerSelection(PlayerData data, bool iconSelected)
     {
         this.data = data;
         selected = iconSelected;
         device = null;
+        controlScheme = "";
     }
 
     public void EditIcon(bool iconSelected)
@@ -26,7 +28,12 @@ public class PlayerSelection
     {
         this.device = (device != null) ? device : null;
 
-        Debug.Log(device.name);
+        if (device.displayName.Contains("Controller") || device.displayName.Contains("Gamepad"))
+            controlScheme = "Gamepad";
+        if (device.displayName.Contains("Joystick"))
+            controlScheme = "Joystick";
+        if (device.displayName.Contains("Keyboard"))
+            controlScheme = "Keyboard";
     }
 
     public void Print()
@@ -93,7 +100,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     {
         for (int i = 0; i < characterIcons.Count; i++)
         {
-            PlayerSelection selection = new PlayerSelection(characterIcons[i], false, false);
+            PlayerSelection selection = new PlayerSelection(characterIcons[i], false);
             selectableCharacters.Add(selection);
         }
     }

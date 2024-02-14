@@ -146,6 +146,5 @@ public class CoopManager : MonoBehaviour
         toSwtich.data._class = switchPlayerUp;
 
         return true;
-        
     }
 }

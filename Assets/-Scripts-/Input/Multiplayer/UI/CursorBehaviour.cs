@@ -102,10 +102,11 @@ public class CursorBehaviour : MonoBehaviour
     /// <param name="context"></param>
     public void OnRandomPressed(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && !objectSelected)
         {
             randomBtnSelected = !randomBtnSelected;
             CharacterSelectionMenu.Instance.TriggerRandomSelection(randomBtnSelected, context.control.device);
         }
+
     }
 }
