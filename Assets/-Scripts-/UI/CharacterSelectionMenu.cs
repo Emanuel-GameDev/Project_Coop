@@ -11,12 +11,12 @@ public class PlayerSelection
     public InputDevice device;
     public string controlScheme;
 
-    public PlayerSelection(PlayerData data, bool iconSelected)
+    public PlayerSelection(PlayerData data, bool iconSelected, bool randomBtnSelected)
     {
         this.data = data;
         selected = iconSelected;
         device = null;
-        controlScheme = "";
+        controlScheme = null;
     }
 
     public void EditIcon(bool iconSelected)
@@ -100,7 +100,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     {
         for (int i = 0; i < characterIcons.Count; i++)
         {
-            PlayerSelection selection = new PlayerSelection(characterIcons[i], false);
+            PlayerSelection selection = new PlayerSelection(characterIcons[i], false, false);
             selectableCharacters.Add(selection);
         }
     }
@@ -259,7 +259,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     public void EndSelection()
     {
         Debug.Log("Selezione completa");
-        CoopManager.Instance.UpdateSelectedPlayers(selectableCharacters);
+        //CoopManager.Instance.UpdateSelectedPlayers(selectableCharacters);
         GameManager.Instance.LoadNextScene();
     }
 

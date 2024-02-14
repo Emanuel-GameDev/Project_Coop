@@ -9,6 +9,9 @@ public interface IDamager
     //float GetDamage();
     DamageData GetDamageData();
 
+    
+    Transform dealerTransform { get; }
+
 
     //aaaaaa non so
     virtual void OnParryNotify() { }

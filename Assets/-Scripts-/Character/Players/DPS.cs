@@ -134,9 +134,9 @@ public class DPS : CharacterClass
     public override float MoveSpeed => base.MoveSpeed + ExtraSpeed;
     public override float Damage => base.Damage * ExtraDamage();
 
-    public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
+    public override void Inizialize()
     {
-        base.Inizialize(/*characterData,*/ character);
+        base.Inizialize();
         lastDodgeTime = -dodgeCooldown;
         lastAttackTime = -timeBetweenCombo;
         lastUniqueAbilityUseTime = -UniqueAbilityCooldown;
@@ -153,6 +153,7 @@ public class DPS : CharacterClass
         chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
         perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
         perfectTimingHandler.gameObject.SetActive(false);
+        character = ePlayerCharacter.Brutus;
     }
 
 
@@ -176,7 +177,7 @@ public class DPS : CharacterClass
         currentComboState = 1;
         nextComboState = currentComboState;
         DoMeleeAttack();
-        character.GetRigidBody().velocity = Vector3.zero;
+        playerCharacter.GetRigidBody().velocity = Vector3.zero;
     }
     private void ContinueCombo()
     {
@@ -250,7 +251,7 @@ public class DPS : CharacterClass
 
     private IEnumerator Move(Vector2 direction, Rigidbody rb, float duration, float distance)
     {
-        startPosition = character.transform.position;
+        startPosition = playerCharacter.transform.position;
         rb.velocity = Vector3.zero;
 
         Vector3 destination = startPosition + new Vector3(direction.x, 0f, direction.y).normalized * distance;
@@ -361,8 +362,8 @@ public class DPS : CharacterClass
 
     public void DashAttackTeleport()
     {
-        character.GetRigidBody().MovePosition(startPosition);
-        Debug.Log($"Teleport at: {startPosition}, current position: {character.transform.position}");
+        playerCharacter.GetRigidBody().MovePosition(startPosition);
+        Debug.Log($"Teleport at: {startPosition}, current position: {playerCharacter.transform.position}");
     }
 
     public void EndDashAttack()
@@ -404,9 +405,11 @@ public class DPS : CharacterClass
     {
         base.UnlockUpgrade(abilityUpgrade);
         if (abilityUpgrade == AbilityUpgrade.Ability3)
-            damager.AssignFunctionToOnTrigger(DeflectProjectile);
+            AddDeflect();
         Debug.Log("Unlock" + abilityUpgrade.ToString());
     }
+
+    
 
     public override void LockUpgrade(AbilityUpgrade abilityUpgrade)
     {
@@ -423,16 +426,30 @@ public class DPS : CharacterClass
         }
 
     }
+    private void AddDeflect()
+    {
+        damager.AssignFunctionToOnTrigger(DeflectProjectile);
+    }
 
     private void RemoveDeflect()
     {
         damager.RemoveFunctionFromOnTrigger(DeflectProjectile);
     }
 
-    public override void Disable(Character character)
+    public override void Enable(PlayerCharacter character)
+    {
+        base.Enable(character);
+        if (projectileDeflectionUnlocked)
+            AddDeflect();
+            
+    }
+
+    public override void Disable(PlayerCharacter character)
     {
         if (projectileDeflectionUnlocked)
             RemoveDeflect();
+
+        base.Disable(character);
     }
 
     #region Damage
@@ -460,7 +477,7 @@ public class DPS : CharacterClass
 
         Debug.Log($"Damage Done: {damage}");
 
-        return new DamageData(damage, character);
+        return new DamageData(damage, playerCharacter);
 
     }
 

@@ -14,8 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - character: {fileID: 11400000, guid: 4496642c7d8bafe4184edec3db19b57b, type: 2}
-    content: "Leggere, affilate, ancora sporche di sangue\u2026 sono proprio le mie
-      bambine."
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: AttackPre-TutorialDialogueBrutusLineID:0
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -28,5 +35,9 @@ MonoBehaviour:
     dialogueLineVoice: {fileID: 0}
     overrideDialogueSpeed: 0
     characterPerSecond: 20
+    dialogueType: 0
     openInEditor: 1
     overrideOptionsOpenInEditor: 0
+  references:
+    version: 2
+    RefIds: []

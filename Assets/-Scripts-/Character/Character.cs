@@ -17,6 +17,8 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     [HideInInspector]
     public float damageReceivedMultiplier = 1;
 
+    public Transform dealerTransform => transform;
+
     //Lo uso per chimare tutte le funzioni iniziali
     protected virtual void Awake()
     {
@@ -37,6 +39,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     public abstract void TakeDamage(DamageData data);
 
     public abstract DamageData GetDamageData();
+
 
     #region PowerUp & Conditions
     public abstract void AddPowerUp(PowerUp powerUp);
@@ -80,5 +83,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         activeInteractable = interactable;
         canInteract = false;
     }
+
+  
     #endregion
 }

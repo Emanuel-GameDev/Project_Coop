@@ -77,7 +77,7 @@ public class DialogueBox : MonoBehaviour
             //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").started -= NextLineInput;
             //}
 
-            foreach (PlayerCharacter character in GameManager.Instance.coopManager.activePlayers)
+            foreach (PlayerCharacter character in GameManager.Instance.coopManager.ActivePlayers)
             {
                 character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
             }
@@ -157,7 +157,7 @@ public class DialogueBox : MonoBehaviour
 
     public void StartDialogue() 
     {
-        foreach (PlayerCharacter character in GameManager.Instance.coopManager.activePlayers)
+        foreach (PlayerCharacter character in GameManager.Instance.coopManager.ActivePlayers)
         {
             character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
             Debug.Log("Enable");
@@ -177,7 +177,7 @@ public class DialogueBox : MonoBehaviour
         if (audioSource.clip != null)
             audioSource.Play();
 
-        foreach(char c in nextLine.Content.ToCharArray())
+        foreach(char c in nextLine.Content.GetLocalizedString().ToCharArray())
         {
             nextBox.contentText.text += c;
             yield return new WaitForSeconds(1/characterPerSecond);
@@ -218,12 +218,12 @@ public class DialogueBox : MonoBehaviour
 
         timer = 0;
 
-            if(nextBox.contentText.text == dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content)
+            if(nextBox.contentText.text == dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content.GetLocalizedString())
                 NextLine();
             else
             {
                 StopCoroutine(typeCoroutine);
-                nextBox.contentText.text = dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content;
+                nextBox.contentText.text = dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content.GetLocalizedString();
             }
         
     }

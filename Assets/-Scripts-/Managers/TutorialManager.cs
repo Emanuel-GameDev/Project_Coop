@@ -64,28 +64,28 @@ public class TutorialManager : MonoBehaviour
 
     private void SetUpCharacters()
     {
-        PlayerCharacter searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is DPS);
+        PlayerCharacter searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is DPS);
 
         if (searched != null)
         {
             dps = searched;
         }
 
-        searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Healer);
+        searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is Healer);
 
         if (searched != null)
         {
             healer = searched;
         }
 
-        searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Ranged);
+        searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is Ranged);
 
         if (searched != null)
         {
             ranged = searched;
         }
 
-        searched = GameManager.Instance.coopManager.activePlayers.Find(c => c.CharacterClass is Tank);
+        searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is Tank);
 
         if (searched != null)
         {
@@ -112,7 +112,7 @@ public class TutorialManager : MonoBehaviour
         //da rivedere a input system finito
 
         int idInputs = 0;
-        List<PlayerCharacter> players = GameManager.Instance.coopManager.activePlayers;
+        List<PlayerCharacter> players = GameManager.Instance.coopManager.ActivePlayers;
 
 
 
@@ -467,7 +467,7 @@ public class TutorialManager : MonoBehaviour
         tutorialEnemy.gameObject.transform.SetPositionAndRotation(enemyRespawn.position, tutorialEnemy.gameObject.transform.rotation);
 
         tutorialEnemy.viewTrigger.ClearList();
-        tutorialEnemy.attackTrigger.ClearList();
+        tutorialEnemy.closeRangeTrigger.ClearList();
 
         tutorialEnemy.stateMachine.SetState(tutorialEnemy.idleState);
         tutorialEnemy.GetRigidBody().velocity = Vector3.zero;

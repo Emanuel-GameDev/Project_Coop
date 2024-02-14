@@ -2171,7 +2171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stunned: 0
   damageReceivedMultiplier: 1
-  maxHp: 0
+  maxHp: 200
   damage: 0
   staminaDamage: 0
   attackSpeed: 0
@@ -2181,26 +2181,26 @@ MonoBehaviour:
   minDistance: 0.2
   followDuration: 10
   walkSpeed: 4
-  visual: {fileID: 0}
+  visual: {fileID: 1636597113684329488}
+  pivot: {fileID: 707992863352827762}
   flurryDistance: 5
   flurrySpeed: 2
   punchQuantity: 3
-  normalPunchDamage: 0
-  normalPunchStaminaDamage: 0
-  lastPunchDamage: 0
-  lastPunchStaminaDamage: 0
-  chargeDamage: 0
-  chargeStaminaDamage: 0
+  normalPunchDamage: 10
+  normalPunchStaminaDamage: 33
+  lastPunchDamage: 15
+  lastPunchStaminaDamage: 34
+  chargeDamage: 20
+  chargeStaminaDamage: 100
   chargeTimer: 2
-  chargeDuration: 0
-  chargeSpeed: 3
-  chargeDistance: 5
-  crashDirectDamage: 0
-  crashDirectStaminaDamage: 0
-  crashWaveDamage: 0
-  crashWaveStaminaDamage: 0
-  crashTimer: 0
-  pivot: {fileID: 0}
+  chargeDuration: 4
+  chargeSpeed: 7
+  chargeDistance: 10
+  crashDirectDamage: 50
+  crashDirectStaminaDamage: 100
+  crashWaveDamage: 15
+  crashWaveStaminaDamage: 100
+  crashTimer: 1
 --- !u!195 &103600533958862017
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2263,7 +2263,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.6141882
-  m_Height: 4.353948
+  m_Radius: 2.97
+  m_Height: 7.21
   m_Direction: 1
   m_Center: {x: -0.1618309, y: 0.53709435, z: -0.00000011920929}
