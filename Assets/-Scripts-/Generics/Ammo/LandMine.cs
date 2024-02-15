@@ -8,6 +8,8 @@ public class LandMine : MonoBehaviour, IDamager
 
     [SerializeField] Pickable pickable;
 
+    public Transform dealerTransform => transform;
+
     private void Awake()
     {
         pickable=GetComponentInChildren<Pickable>();

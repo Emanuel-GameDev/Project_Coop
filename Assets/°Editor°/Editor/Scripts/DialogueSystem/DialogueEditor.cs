@@ -5,6 +5,10 @@ using System.IO;
 using UnityEditor.VersionControl;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.Tables;
+using UnityEditor.Localization;
+using UnityEngine.Localization;
 
 public class DialogueEditor : EditorWindow
 {
@@ -14,6 +18,7 @@ public class DialogueEditor : EditorWindow
         GetWindow<DialogueEditor>();
     }
 
+    private int _selectedName;
     private int _selectedElement;
     private Vector2 _scrollView;
 
@@ -26,7 +31,9 @@ public class DialogueEditor : EditorWindow
     string[] dialogues;
     string[] dialogueNames;
 
-
+    string lastSearched;
+    string searchedNames;
+    List<string> namesFound=new List<string>();
     private void CreateNewDialogue()
     {
         if (string.IsNullOrEmpty(_newDialogueName))
@@ -72,10 +79,15 @@ public class DialogueEditor : EditorWindow
         EditorGUILayout.EndHorizontal();
 
         GUILayout.Space(10);
+        
 
         if (GUILayout.Button("Refresh"))
         {
             refreshDialogues=true;
+            tableCollection = LocalizationEditorSettings.GetStringTableCollection("Dialogue");
+            table = tableCollection.StringTables[1];
+
+
         }
 
         GUILayout.Space(10);
@@ -95,8 +107,48 @@ public class DialogueEditor : EditorWindow
         if (selectedDialogue == null)
             return;
 
-        _selectedElement = EditorGUILayout.Popup(_selectedElement, dialogueNames);
 
+
+        //searchedNames = EditorGUILayout.TextField("Search",searchedNames);
+
+        //if (lastSearched != searchedNames)
+        //{
+        //    namesFound.Clear();
+
+        //    if (!string.IsNullOrEmpty(searchedNames))
+        //    {
+        //        foreach(string dialogue in dialogueNames)
+        //        {
+        //            if (dialogue.Contains(searchedNames)) 
+        //                namesFound.Add(dialogue);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        foreach (string dialogue in dialogueNames)
+        //        {
+        //            namesFound.Add(dialogue);
+        //        }
+        //    }
+        //    lastSearched = searchedNames;
+        //}
+
+
+
+        _selectedElement = EditorGUILayout.Popup(_selectedElement, dialogueNames);
+       // _selectedName = EditorGUILayout.Popup(_selectedElement, namesFound.ToArray());
+
+        //if(_selectedName<0 || _selectedName > namesFound.Count)
+        //      _selectedName=0;
+
+        //      for (int i = 0; i <= dialogueNames.Length; i++)
+        //      {
+        //          if (dialogueNames[i] == namesFound[_selectedName])
+        //          {
+        //              _selectedElement = i;
+        //              break;
+        //          }
+        //      }
 
 
         GUILayout.Space(20);
@@ -106,6 +158,20 @@ public class DialogueEditor : EditorWindow
         if (GUILayout.Button("New line above"))
         {
             selectedDialogue.AddLine(0);
+
+            table.AddEntry($"{selectedDialogue.name}LineID:{selectedDialogue.Lines.Count-1}", "");
+
+
+            for (int i = selectedDialogue.Lines.Count - 1; i >= 0; i--)
+            {
+                if(i>0)
+                    table.GetEntry($"{selectedDialogue.name}LineID:{i}").Value = table.GetEntry($"{selectedDialogue.name}LineID:{i-1}").Value;
+
+                selectedDialogue.Lines[i].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{i}");
+                
+            }
+
+
             EditorUtility.SetDirty(selectedDialogue);
         }
 
@@ -121,18 +187,48 @@ public class DialogueEditor : EditorWindow
         {
             selectedDialogue.AddLine(newLineIndex-1);
         }
+
         newLineIndex =  EditorGUILayout.IntField(newLineIndex, GUILayout.MaxWidth(50));
         newLineIndex = Mathf.Clamp(newLineIndex,1,selectedDialogue.Lines.Count);
 
         EditorGUILayout.EndHorizontal();
 
+        if(currentLocale == null)
+        {
+            currentLocale = LocalizationEditorSettings.GetLocale(LocalizationSettings.SelectedLocale.Identifier);
+        }
+
+        if(table==null)
+        {
+            tableCollection = LocalizationEditorSettings.GetStringTableCollection("Dialogue");
+            table = tableCollection.StringTables[1];
+        }
+
+        for (int i = 0; i < selectedDialogue.Lines.Count; i++)
+        {
+            if (table.GetEntry($"{selectedDialogue.name}LineID:{i}") == null)
+            {
+                StringTableEntry entry = table.AddEntry($"{selectedDialogue.name}LineID:{i}", "");
+
+                selectedDialogue.Lines[i].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{i}");
+            }
+        }
+
         DialoguesLineGUI(selectedDialogue);
 
     }
 
+    StringTableCollection tableCollection;
+    StringTable table;
+    Locale currentLocale;
+
+    StringTableEntry entry;
+
     private void DialoguesLineGUI(Dialogue selectedDialogue)
     {
         
+            if (table == null)
+                return;
         _scrollView = EditorGUILayout.BeginScrollView(_scrollView);
 
 
@@ -143,8 +239,11 @@ public class DialogueEditor : EditorWindow
 
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
+            entry = table.GetEntry($"{selectedDialogue.name}LineID:{i}");
+
+
             string characterName = (bool)line.Character ? line.Character.Name : "[null]";
-            string content = line.Content.Length < 50 ? line.Content : line.Content.Substring(0, 50);
+            string content = entry.Value.Length < 50 ? entry.Value : entry.Value.Substring(0, 50);
 
             line.openInEditor = EditorGUILayout.Foldout(line.openInEditor, $"Line: {i + 1} ({characterName}: {content})");
 
@@ -169,7 +268,8 @@ public class DialogueEditor : EditorWindow
 
                 EditorGUILayout.EndHorizontal();
 
-                line.Content = EditorGUILayout.TextField("Text content", line.Content);
+                entry.Value = EditorGUILayout.TextField("Text content", entry.Value);
+                //line.Content. = EditorGUILayout.TextField("Text content", line.Content[$"{selectedDialogue.name}LineID:{i}"].ToString());
 
 
 
@@ -238,6 +338,7 @@ public class DialogueEditor : EditorWindow
 
                 if (GUILayout.Button("Remove",EditorStyles.miniButtonRight) && EditorUtility.DisplayDialog("Warning","Do you want to remove this line?","Yes","No"))
                 {
+                    tableCollection.RemoveEntry($"{selectedDialogue.name}LineID:{i}");
                     selectedDialogue.RemoveLine(i);
                 }
 
@@ -250,6 +351,8 @@ public class DialogueEditor : EditorWindow
             if (EditorGUI.EndChangeCheck())
             {
                 EditorUtility.SetDirty(selectedDialogue);
+                EditorUtility.SetDirty(table);
+                EditorUtility.SetDirty(table.SharedData);
             }
 
             EditorGUILayout.EndVertical();

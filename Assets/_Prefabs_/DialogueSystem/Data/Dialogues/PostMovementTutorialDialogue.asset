@@ -14,9 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - character: {fileID: 11400000, guid: 0e91698fd1bdd5e4d86045955efd7bc1, type: 2}
-    content: "Bene bene, ora basta correre in tondo come degli idioti. Vediamo piuttosto
-      se vi ricordate come si combatte. Si d\xE0 il caso che abbia qui con me le
-      vostre armi. Che fortuna no?"
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: PostMovementTutorialDialogueLineID:0
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -29,5 +35,9 @@ MonoBehaviour:
     dialogueLineVoice: {fileID: 0}
     overrideDialogueSpeed: 0
     characterPerSecond: 20
+    dialogueType: 0
     openInEditor: 1
     overrideOptionsOpenInEditor: 0
+  references:
+    version: 2
+    RefIds: []
