@@ -522,6 +522,7 @@ public class Tank : CharacterClass
 
                     AggroCondition aggroCondition = Utility.InstantiateCondition<AggroCondition>();
                     aggroCondition.SetVariable(this, aggroDuration);
+                    
 
                     hittedDama.TakeDamage(new DamageData(0, playerCharacter, aggroCondition));
 

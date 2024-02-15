@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
 {
     public bool stunned = false;
+    public bool underAggro = false;
 
     protected Rigidbody rb;
     protected List<Condition> conditions;
