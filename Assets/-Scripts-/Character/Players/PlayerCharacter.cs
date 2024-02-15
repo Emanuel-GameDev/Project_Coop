@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 public class PlayerCharacter : Character, InputReceiver
 {
@@ -27,7 +25,7 @@ public class PlayerCharacter : Character, InputReceiver
     protected override void InitialSetup()
     {
         base.InitialSetup();
-        if(characterClass != null)
+        if (characterClass != null)
             InizializeClass(characterClass);
     }
 
@@ -73,8 +71,23 @@ public class PlayerCharacter : Character, InputReceiver
         {
             characterClass.TakeDamage(data);
         }
+        //Ricontrollare
+        if (inLove && GetComponentInChildren<LoveCondition>().started && data.condition is LoveCondition)
+        {
+            foreach (PlayerCharacter p in GameManager.Instance.coopManager.ActivePlayers)
+            {
+                if (this != p)
+                {
+                    if (p.inLove)
+                    {
+                        //Mettere calcolo danno
+                    }
+                }
+            }
+        }
     }
-       
+
+
     public override DamageData GetDamageData() => characterClass.GetDamageData();
 
     #endregion
@@ -84,7 +97,7 @@ public class PlayerCharacter : Character, InputReceiver
     public void SetCharacter(ePlayerCharacter character)
     {
         currentCharacter = character;
-        if(playerInputHandler != null)
+        if (playerInputHandler != null)
             playerInputHandler.SetCharacter(currentCharacter);
         if (characterClass == null)
             CharacterPoolManager.Instance.SwitchCharacter(this, character);
@@ -94,13 +107,13 @@ public class PlayerCharacter : Character, InputReceiver
     public void SetInputHandler(PlayerInputHandler inputHandler)
     {
         playerInputHandler = inputHandler;
-        if(playerInputHandler != null)
+        if (playerInputHandler != null)
         {
             if (playerInputHandler.currentCharacter != ePlayerCharacter.EmptyCharacter)
                 SetCharacter(playerInputHandler.currentCharacter);
             else
                 CharacterPoolManager.Instance.GetFreeRandomCharacter(this);
-        }   
+        }
     }
     public PlayerInputHandler GetInputHandler()
     {
@@ -109,7 +122,7 @@ public class PlayerCharacter : Character, InputReceiver
 
     public void Dismiss()
     {
-        if(characterClass != null)
+        if (characterClass != null)
             characterClass.Disable(this);
 
         CameraManager.Instance.RemoveTarget(this.transform);
@@ -174,12 +187,12 @@ public class PlayerCharacter : Character, InputReceiver
     {
         if (context.performed)
             CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Brutus);
-            
+
     }
 
     public void SwitchRightInput(InputAction.CallbackContext context)
     {
-        if(context.performed)
+        if (context.performed)
             CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Caina);
     }
 
@@ -241,17 +254,17 @@ public class PlayerCharacter : Character, InputReceiver
 
     public void MenuInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public void OptionInput(InputAction.CallbackContext context)
     {
-       
+
     }
 
     public void MoveMinigameInput(InputAction.CallbackContext context)
     {
-        
+
     }
     #endregion
 

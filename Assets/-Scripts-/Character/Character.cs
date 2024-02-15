@@ -6,8 +6,12 @@ using UnityEngine.InputSystem;
 
 public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
 {
-    public bool stunned = false;
-    public bool underAggro = false;
+
+    [HideInInspector] public bool stunned = false;
+    [HideInInspector] public bool underAggro = false;
+    [HideInInspector] public bool inLove = false;
+    [HideInInspector] public bool bleeding = false;
+    
 
     protected Rigidbody rb;
     protected List<Condition> conditions;

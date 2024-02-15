@@ -9,6 +9,7 @@ public abstract class Condition : MonoBehaviour
         Condition condition = Utility.InstantiateCondition<Condition>();
         condition.parent = parent;
         condition.transform.parent = parent.transform;
+        return;
     }
     public virtual void RemoveCondition(Character parent)
     {

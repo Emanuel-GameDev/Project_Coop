@@ -31,7 +31,6 @@ public class StunCondition : Condition
 
     public void SetVariable(float duration)
     {
-
         this.duration = duration;
 
     }
