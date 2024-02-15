@@ -576,7 +576,7 @@ public class Tank : CharacterClass
 
     #region Move
 
-    public override void Move(Vector2 direction, Rigidbody rb)
+    public override void Move(Vector2 direction, Rigidbody2D rb)
     {
         if (canMove)
         {
@@ -588,7 +588,7 @@ public class Tank : CharacterClass
     }
 
 
-    private void SetCanMove(bool move, Rigidbody rigidbody)
+    private void SetCanMove(bool move, Rigidbody2D rigidbody)
     {
         canMove = move;
         if (move == false)

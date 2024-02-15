@@ -14,7 +14,7 @@ public class Detector : MonoBehaviour
         playersDetected = new List<PlayerCharacter>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.gameObject.TryGetComponent<PlayerCharacter>(out PlayerCharacter character))
         {
@@ -23,7 +23,7 @@ public class Detector : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.TryGetComponent<PlayerCharacter>(out PlayerCharacter character))
         {
