@@ -84,6 +84,8 @@ public class SlotRow : MonoBehaviour
                 slot.GetComponent<Slot>().Type = slotType.Mouse;
             }
 
+
+
             generatedSlots.Add(slot);
 
             
@@ -125,6 +127,24 @@ public class SlotRow : MonoBehaviour
         Debug.Log(finalRowRotation.y);
 
         //set Additional image placeholder
+
+        //add before
+
+        for (int i = 0; i < 2; i++) 
+        {
+            GameObject slot = Instantiate(reorderSlots[reorderSlots.Count-1-i]);
+            slot.transform.SetParent(gameObject.transform, true);
+            slot.transform.localPosition = new Vector3(0, + ((slotDistance*i)+slotDistance), 0);
+        }
+
+        //add after
+
+        for (int i = 0;i < 2; i++)
+        {
+            GameObject slot = Instantiate(reorderSlots[0+i]);
+            slot.transform.SetParent(gameObject.transform, true);
+            slot.transform.localPosition = new Vector3(0, reorderSlots[reorderSlots.Count-1].transform.localPosition.y -((slotDistance * i) + slotDistance), 0);
+        }
 
 
     }

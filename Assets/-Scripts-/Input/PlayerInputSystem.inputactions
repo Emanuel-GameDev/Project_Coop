@@ -916,7 +916,7 @@
                     "id": "809f371f-c5e2-4e7a-83a1-d867598f40dd",
                     "path": "2DVector",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "StickDeadzone(max=2.13)",
                     "groups": "",
                     "action": "Navigate",
                     "isComposite": true,
@@ -1182,6 +1182,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard;Gamepad;Touch;Joystick;XR",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "08fefe99-e2da-4da6-a728-07535c6987b1",
+                    "path": "<SwitchProControllerHID>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
                     "action": "Submit",
                     "isComposite": false,
                     "isPartOfComposite": false

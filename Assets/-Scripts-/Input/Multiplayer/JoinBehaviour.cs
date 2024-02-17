@@ -52,6 +52,8 @@ public class JoinBehaviour : MonoBehaviour
 
         if (!playerCursor.activeInHierarchy)
         {
+            Debug.Log(device.displayName + "    " + controlScheme);
+
             PlayerInput cursor = PlayerInput.Instantiate(playerCursor, PlayerInputManager.instance.playerCount + 1, controlScheme, -1, device);
             cursor.transform.SetParent(CharacterSelectionMenu.Instance.characterIcons[0]._icon.gameObject.GetComponent<RectTransform>());
             cursor.gameObject.GetComponent<RectTransform>().position = cursor.transform.parent.gameObject.GetComponent<RectTransform>().position;
