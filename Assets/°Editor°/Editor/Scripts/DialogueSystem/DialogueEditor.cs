@@ -164,8 +164,10 @@ public class DialogueEditor : EditorWindow
 
             for (int i = selectedDialogue.Lines.Count - 1; i >= 0; i--)
             {
-                if(i>0)
-                    table.GetEntry($"{selectedDialogue.name}LineID:{i}").Value = table.GetEntry($"{selectedDialogue.name}LineID:{i-1}").Value;
+                if (i > 0)
+                    table.GetEntry($"{selectedDialogue.name}LineID:{i}").Value = table.GetEntry($"{selectedDialogue.name}LineID:{i - 1}").Value;
+                else
+                    table.GetEntry($"{selectedDialogue.name}LineID:{i}").Value = "";
 
                 selectedDialogue.Lines[i].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{i}");
                 
@@ -177,7 +179,19 @@ public class DialogueEditor : EditorWindow
 
         if (GUILayout.Button("New line below"))
         {
+
             selectedDialogue.AddLine(selectedDialogue.Lines.Count);
+            table.AddEntry($"{selectedDialogue.name}LineID:{selectedDialogue.Lines.Count - 1}", "");
+           
+            //if (table.GetEntry($"{selectedDialogue.name}LineID:{selectedDialogue.Lines.Count - 1}") != null)
+            //    Debug.Log($"{selectedDialogue.name}LineID:{selectedDialogue.Lines.Count - 1}");
+            //else
+            //    Debug.Log("null");
+            
+
+            selectedDialogue.Lines[selectedDialogue.Lines.Count - 1].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{selectedDialogue.Lines.Count - 1}");
+
+
             EditorUtility.SetDirty(selectedDialogue);
         }
 
@@ -186,6 +200,22 @@ public class DialogueEditor : EditorWindow
         if (GUILayout.Button("New line at:"))
         {
             selectedDialogue.AddLine(newLineIndex-1);
+
+
+            table.AddEntry($"{selectedDialogue.name}LineID:{selectedDialogue.Lines.Count - 1}", "");
+
+
+            for (int i = selectedDialogue.Lines.Count - 1; i >= newLineIndex-1; i--)
+            {
+                if (i > newLineIndex-1)
+                    table.GetEntry($"{selectedDialogue.name}LineID:{i}").Value = table.GetEntry($"{selectedDialogue.name}LineID:{i - 1}").Value;
+                else
+                    table.GetEntry($"{selectedDialogue.name}LineID:{i}").Value = "";
+
+                selectedDialogue.Lines[i].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{i}");
+
+            }
+
         }
 
         newLineIndex =  EditorGUILayout.IntField(newLineIndex, GUILayout.MaxWidth(50));
@@ -211,6 +241,11 @@ public class DialogueEditor : EditorWindow
                 StringTableEntry entry = table.AddEntry($"{selectedDialogue.name}LineID:{i}", "");
 
                 selectedDialogue.Lines[i].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{i}");
+            }
+
+            if(!selectedDialogue.Lines[i].Content.ContainsKey($"{selectedDialogue.name}LineID:{i}"))
+            {
+                selectedDialogue.Lines[i].Content.SetReference("Dialogue",$"{selectedDialogue.name}LineID:{i}");
             }
         }
 
@@ -338,8 +373,20 @@ public class DialogueEditor : EditorWindow
 
                 if (GUILayout.Button("Remove",EditorStyles.miniButtonRight) && EditorUtility.DisplayDialog("Warning","Do you want to remove this line?","Yes","No"))
                 {
-                    tableCollection.RemoveEntry($"{selectedDialogue.name}LineID:{i}");
                     selectedDialogue.RemoveLine(i);
+
+                    for(int l = i; l < selectedDialogue.LinesCount(); l++)
+                    {
+
+                        table.GetEntry($"{selectedDialogue.name}LineID:{l}").Value = table.GetEntry($"{selectedDialogue.name}LineID:{l + 1}").Value;
+                        
+
+                        selectedDialogue.Lines[l].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{l}");
+
+                    }
+
+                    tableCollection.RemoveEntry($"{selectedDialogue.name}LineID:{selectedDialogue.Lines.Count}");
+
                 }
 
                     EditorGUILayout.EndHorizontal();

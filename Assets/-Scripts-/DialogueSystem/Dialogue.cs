@@ -104,8 +104,12 @@ public class Dialogue : ScriptableObject
     public DialogueLine GetLine(int index) => lines[index];
 
     public void AddLine(int index) 
-    { 
-        lines.Insert(index, new DialogueLine());
+    {
+        //if (index > lines.Count - 1)
+        //    lines.Add(new DialogueLine());
+        //else
+            lines.Insert(index, new DialogueLine());
+
         lines[index].CharacterPerSecond = 20;
     }
 
