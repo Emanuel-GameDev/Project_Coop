@@ -182,13 +182,8 @@ public class DialogueEditor : EditorWindow
 
             selectedDialogue.AddLine(selectedDialogue.Lines.Count);
             table.AddEntry($"{selectedDialogue.name}LineID:{selectedDialogue.Lines.Count - 1}", "");
-           
-            //if (table.GetEntry($"{selectedDialogue.name}LineID:{selectedDialogue.Lines.Count - 1}") != null)
-            //    Debug.Log($"{selectedDialogue.name}LineID:{selectedDialogue.Lines.Count - 1}");
-            //else
-            //    Debug.Log("null");
-            
 
+            
             selectedDialogue.Lines[selectedDialogue.Lines.Count - 1].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{selectedDialogue.Lines.Count - 1}");
 
 
@@ -216,6 +211,7 @@ public class DialogueEditor : EditorWindow
 
             }
 
+            EditorUtility.SetDirty(selectedDialogue);
         }
 
         newLineIndex =  EditorGUILayout.IntField(newLineIndex, GUILayout.MaxWidth(50));
@@ -241,13 +237,18 @@ public class DialogueEditor : EditorWindow
                 StringTableEntry entry = table.AddEntry($"{selectedDialogue.name}LineID:{i}", "");
 
                 selectedDialogue.Lines[i].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{i}");
+
+                EditorUtility.SetDirty(selectedDialogue);
             }
 
-            if(!selectedDialogue.Lines[i].Content.ContainsKey($"{selectedDialogue.name}LineID:{i}"))
+            if(selectedDialogue.Lines[i].Content.TableEntryReference != $"{selectedDialogue.name}LineID:{i}")
             {
                 selectedDialogue.Lines[i].Content.SetReference("Dialogue",$"{selectedDialogue.name}LineID:{i}");
+
+                EditorUtility.SetDirty(selectedDialogue);
             }
         }
+         
 
         DialoguesLineGUI(selectedDialogue);
 
@@ -379,13 +380,15 @@ public class DialogueEditor : EditorWindow
                     {
 
                         table.GetEntry($"{selectedDialogue.name}LineID:{l}").Value = table.GetEntry($"{selectedDialogue.name}LineID:{l + 1}").Value;
-                        
 
+                        
                         selectedDialogue.Lines[l].Content.SetReference("Dialogue", $"{selectedDialogue.name}LineID:{l}");
 
                     }
 
                     tableCollection.RemoveEntry($"{selectedDialogue.name}LineID:{selectedDialogue.Lines.Count}");
+
+                    EditorUtility.SetDirty(selectedDialogue);
 
                 }
 

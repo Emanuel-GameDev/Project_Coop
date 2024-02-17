@@ -109,7 +109,7 @@ public class Dialogue : ScriptableObject
         //    lines.Add(new DialogueLine());
         //else
             lines.Insert(index, new DialogueLine());
-
+        lines[index].Content = new LocalizedString();
         lines[index].CharacterPerSecond = 20;
     }
 
