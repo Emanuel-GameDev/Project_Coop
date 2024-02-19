@@ -97,7 +97,7 @@ public class TutorialBossCharacter : BossCharacter
     }
 
 
-    protected void SetSpriteDirection(Vector2 direction)
+    protected override void SetSpriteDirection(Vector2 direction)
     {
         if (direction.y != 0)
             anim.SetFloat("Y", direction.y);
