@@ -27,6 +27,7 @@ public class PlayerCharacter : Character, InputReceiver
     protected override void InitialSetup()
     {
         base.InitialSetup();
+
         if(characterClass != null)
             InizializeClass(characterClass);
     }

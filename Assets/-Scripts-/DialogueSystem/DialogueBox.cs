@@ -2,17 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
-using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class DialogueBox : MonoBehaviour
 {
+    //debug
+    [SerializeField] bool startImmediatly = false;
+
     [Header("Set Up")]
-    
+
 
     [SerializeField] private List<BoxType> boxTypes = new();
 
@@ -27,12 +27,12 @@ public class DialogueBox : MonoBehaviour
 
     Dialogue.DialogueLine nextLine;
 
-    [SerializeField]  List<UnityEvent> OnDialogueEnd;
+    [SerializeField] List<UnityEvent> OnDialogueEnd;
     [SerializeField] public event Action OnDialogueEnded;
 
     private AudioSource audioSource;
 
-    Coroutine  typeCoroutine;
+    Coroutine typeCoroutine;
 
     [Serializable]
     public class BoxType
@@ -46,9 +46,10 @@ public class DialogueBox : MonoBehaviour
 
         //[SerializeField] public Image speakerFrame;
         [SerializeField] public Image dialogueFrame;
+        [SerializeField] public Image dialogueChecker;
     }
 
-    
+
 
     private void NextLine()
     {
@@ -62,6 +63,7 @@ public class DialogueBox : MonoBehaviour
         {
 
             //OnDialogueEnd[dialogueIndex]?.Invoke();
+            if(OnDialogueEnd.Count>0)
             OnDialogueEnded.Invoke();
 
             dialogueIndex++;
@@ -77,10 +79,10 @@ public class DialogueBox : MonoBehaviour
             //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").started -= NextLineInput;
             //}
 
-            foreach (PlayerCharacter character in GameManager.Instance.coopManager.ActivePlayers)
-            {
-                character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
-            }
+            //foreach (PlayerCharacter character in GameManager.Instance.coopManager.ActivePlayers)
+            //{
+            //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
+            //}
 
 
             gameObject.SetActive(false);
@@ -90,13 +92,13 @@ public class DialogueBox : MonoBehaviour
     BoxType nextBox;
     private void SetUpNextLine()
     {
-       
+
 
 
 
         nextLine = dialogues[dialogueIndex].GetLine(dialogueLineIndex);
 
-        if(nextBox != null)
+        if (nextBox != null)
             nextBox.box.gameObject.SetActive(false);
 
         nextBox = boxTypes.Find(t => t.boxType == nextLine.dialogueType);
@@ -145,23 +147,55 @@ public class DialogueBox : MonoBehaviour
         //    nextBox.speakerFrame.color = nextLine.Character.CharacterColor;
 
         if (nextBox.dialogueFrame != null)
+        {
             nextBox.dialogueFrame.color = nextLine.Character.CharacterColor;
 
+        }
 
-
+        if (nextBox.dialogueChecker != null)
+        {
+            nextBox.dialogueChecker.color = nextLine.Character.CharacterColor;
+            nextBox.dialogueChecker.enabled = false;
+        }
 
 
         nextBox.contentText.text = string.Empty;
 
-    }
-
-    public void StartDialogue() 
-    {
-        foreach (PlayerCharacter character in GameManager.Instance.coopManager.ActivePlayers)
+        Animator boxAnimator = nextBox.box.GetComponent<Animator>();
+        Animator characterImageAnimator = nextBox.characterImage.gameObject.GetComponent<Animator>();
+        if (boxAnimator != null)
         {
-            character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
-            Debug.Log("Enable");
+            boxAnimator.SetTrigger("NextLine");
+            boxAnimator.ResetTrigger("NextLine");
+
+            
+            if(characterImageAnimator != null)
+            {
+                if (dialogueLineIndex > 0)
+                {
+               
+                    if (nextLine.Character != dialogues[dialogueIndex].GetLine(dialogueLineIndex-1).Character)
+                    {
+                        characterImageAnimator.SetTrigger("CharacterChanged");
+                        characterImageAnimator.ResetTrigger("CharacterChanged");
+                    }
+
+                }
+
+            }
+
         }
+
+
+    }
+    
+    public void StartDialogue()
+    {
+        //foreach (PlayerCharacter character in GameManager.Instance.coopManager.ActivePlayers)
+        //{
+        //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
+        //    Debug.Log("Enable");
+        //}
 
 
         gameObject.SetActive(true);
@@ -170,28 +204,33 @@ public class DialogueBox : MonoBehaviour
         typeCoroutine = StartCoroutine(TypeLine());
     }
 
- 
+
 
     IEnumerator TypeLine()
     {
         if (audioSource.clip != null)
             audioSource.Play();
 
-        foreach(char c in nextLine.Content.GetLocalizedString().ToCharArray())
+        foreach (char c in nextLine.Content.GetLocalizedString().ToCharArray())
         {
             nextBox.contentText.text += c;
-            yield return new WaitForSeconds(1/characterPerSecond);
+            yield return new WaitForSeconds(1 / characterPerSecond);
         }
+
+        if(nextBox.dialogueChecker != null)
+            nextBox.dialogueChecker.enabled = true;
     }
-    bool registered=false;
+    bool registered = false;
     private void OnEnable()
     {
         audioSource = GetComponent<AudioSource>();
 
-        if(!registered)
-        PubSub.Instance.RegisterFunction(EMessageType.dialogueInput, NextLineInput);
+        //if(!registered)
+        //PubSub.Instance.RegisterFunction(EMessageType.dialogueInput, NextLineInput);
 
         registered = true;
+
+        
         //prova
         //StartDialogue();
     }
@@ -200,14 +239,27 @@ public class DialogueBox : MonoBehaviour
     {
         //PubSub.Instance.UnregisterFunction(EMessageType.dialogueInput, NextLineInput);
 
-        
+
     }
     float timer;
+
+    bool oneTime = false;
     private void Update()
     {
+        if (startImmediatly && Input.GetKeyDown(KeyCode.Backspace) && !oneTime)
+        {
+            oneTime = true;
+            StartDialogue();
+        }
+
         if (timer < 0.1)
         {
             timer += Time.deltaTime;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            NextLineInput(null);
         }
     }
     //input di prova
@@ -218,14 +270,19 @@ public class DialogueBox : MonoBehaviour
 
         timer = 0;
 
-            if(nextBox.contentText.text == dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content.GetLocalizedString())
-                NextLine();
-            else
+        if (nextBox.contentText.text == dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content.GetLocalizedString())
+            NextLine();
+        else
+        {
+            StopCoroutine(typeCoroutine);
+            nextBox.contentText.text = dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content.GetLocalizedString();
+
+            if (nextBox.dialogueChecker != null)
             {
-                StopCoroutine(typeCoroutine);
-                nextBox.contentText.text = dialogues[dialogueIndex].GetLine(dialogueLineIndex).Content.GetLocalizedString();
+                nextBox.dialogueChecker.enabled = true;
             }
-        
+        }
+
     }
 
     public void SetDialogue(Dialogue newDialogues)

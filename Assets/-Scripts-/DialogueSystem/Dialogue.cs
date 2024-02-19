@@ -60,6 +60,12 @@ public class Dialogue : ScriptableObject
             set { localizedLine = value; }
         }
 
+        public dialogueType DialogueType
+        {
+            get { return dialogueType; }
+            set { dialogueType = value; }
+        }
+
         public Color NameColor
         {
             get { return nameColor; }
@@ -105,10 +111,7 @@ public class Dialogue : ScriptableObject
 
     public void AddLine(int index) 
     {
-        //if (index > lines.Count - 1)
-        //    lines.Add(new DialogueLine());
-        //else
-            lines.Insert(index, new DialogueLine());
+        lines.Insert(index, new DialogueLine());
         lines[index].Content = new LocalizedString();
         lines[index].CharacterPerSecond = 20;
     }

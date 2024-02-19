@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
@@ -60,12 +61,30 @@ public class TutorialManager : MonoBehaviour
 
     public int faseCount = 0;
 
-  
-
+    List<PlayerInputHandler> inputHandlers;
+    List<CharacterClass> nonPlayingCharacter;
     private void SetUpCharacters()
     {
+        inputHandlers = new List<PlayerInputHandler>();
+
+        foreach(PlayerInputHandler ih in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        {
+            inputHandlers.Add(ih);
+        }
+
+        
+
+
+        //dps.SetInputHandler(GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>()[0]);
+        
+        //nonPlayingCharacter = CharacterPoolManager.Instance.GetComponentsInChildren<CharacterClass>().ToList();
+        //GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>();
+
+
         PlayerCharacter searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is DPS);
 
+        ////dps = SceneInputReceiverManager.Instance.
+        ////CharacterPoolManager.Instance.SwitchCharacter(GameManager.Instance.coopManager.ActivePlayers[0], ePlayerCharacter.Brutus);
         if (searched != null)
         {
             dps = searched;
@@ -85,12 +104,15 @@ public class TutorialManager : MonoBehaviour
             ranged = searched;
         }
 
+
+
         searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is Tank);
 
         if (searched != null)
         {
             tank = searched;
         }
+
 
         characters.Add(dps);
         characters.Add(healer);
@@ -266,7 +288,9 @@ public class TutorialManager : MonoBehaviour
     private void Start()
     {
 
-        SetUpCharacters();
+
+
+        //SetUpCharacters();
 
 
         playableDirector = gameObject.GetComponent<PlayableDirector>();
@@ -275,16 +299,16 @@ public class TutorialManager : MonoBehaviour
 
         playableDirector.Play();
 
-        current = healer.CharacterClass;
+
         //dps.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
         //OnMovementFaseStart.Invoke();
 
-        DeactivatePlayerInput(dps);
-        DeactivatePlayerInput(healer);
-        DeactivatePlayerInput(ranged);
-        DeactivatePlayerInput(tank);
+        //DeactivatePlayerInput(dps);
+        //DeactivatePlayerInput(healer);
+        //DeactivatePlayerInput(ranged);
+        //DeactivatePlayerInput(tank);
 
-        DeactivateEnemyAI();
+        //DeactivateEnemyAI();
 
     }
 
@@ -334,9 +358,9 @@ public class TutorialManager : MonoBehaviour
     {
         character.GetComponent<PlayerInput>().actions.Disable();
 
-        
-            character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
-       
+
+        character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
+
     }
 
 
@@ -429,10 +453,10 @@ public class TutorialManager : MonoBehaviour
 
     private void ResetPlayersPosition()
     {
-        dps.GetRigidBody().Move(DPSRespawn.position, dps.gameObject.transform.rotation);
-        healer.GetRigidBody().Move(healerRespawn.position, dps.gameObject.transform.rotation);
-        ranged.GetRigidBody().Move(rangedRespawn.position, dps.gameObject.transform.rotation);
-        tank.GetRigidBody().Move(tankRespawn.position, dps.gameObject.transform.rotation);
+        //dps.GetRigidBody().Move(DPSRespawn.position, dps.gameObject.transform.rotation);
+        //healer.GetRigidBody().Move(healerRespawn.position, dps.gameObject.transform.rotation);
+        //ranged.GetRigidBody().Move(rangedRespawn.position, dps.gameObject.transform.rotation);
+        //tank.GetRigidBody().Move(tankRespawn.position, dps.gameObject.transform.rotation);
 
         //dps.gameObject.transform.SetPositionAndRotation(DPSRespawn.position, dps.gameObject.transform.rotation);
         //healer.gameObject.transform.SetPositionAndRotation(healerRespawn.position, healer.gameObject.transform.rotation);
