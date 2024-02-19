@@ -50,10 +50,9 @@ public class TutorialBossCharacter : BossCharacter
     {
         if (target != null)
         {
-
-
             Vector2 direction = new Vector2(target.gameObject.transform.position.x - transform.position.x, target.gameObject.transform.position.z - transform.position.z);
             SetSpriteDirection(direction);
+            
         }
     }
     public void SetChargeDamageData()

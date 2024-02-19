@@ -2170,6 +2170,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stunned: 0
+  underAggro: 0
+  inLove: 0
+  bleeding: 0
   damageReceivedMultiplier: 1
   maxHp: 200
   damage: 0
@@ -2182,7 +2185,7 @@ MonoBehaviour:
   followDuration: 10
   walkSpeed: 4
   visual: {fileID: 1636597113684329488}
-  pivot: {fileID: 707992863352827762}
+  _pivot: {fileID: 707992863352827762}
   flurryDistance: 5
   flurrySpeed: 2
   punchQuantity: 3
@@ -2193,7 +2196,6 @@ MonoBehaviour:
   chargeDamage: 20
   chargeStaminaDamage: 100
   chargeTimer: 2
-  chargeDuration: 4
   chargeSpeed: 7
   chargeDistance: 10
   crashDirectDamage: 50
