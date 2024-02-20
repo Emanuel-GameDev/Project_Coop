@@ -99,7 +99,7 @@ public class CoopManager : MonoBehaviour
         if(playerInputHandlers == null)
             playerInputHandlers = new List<PlayerInputHandler>();
 
-        playerInput.gameObject.transform.parent = transform;
+        playerInput.gameObject.transform.SetParent(transform);
         PlayerInputHandler newPlayerInputHandler = playerInput.gameObject.GetComponent<PlayerInputHandler>();
         if (newPlayerInputHandler != null)
         {

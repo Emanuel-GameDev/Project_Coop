@@ -10,14 +10,14 @@ public class JoinBehaviour : MonoBehaviour
 
     void Start()
     {
-        InputAction joinAction = new InputAction(binding: "/*/<button>");
+        //InputAction joinAction = new InputAction(binding: "/*/<button>");
 
-        joinAction.started += (joinAction) =>
-        {
-            AddPlayer(joinAction.control.device);
-        };
+        //joinAction.started += (joinAction) =>
+        //{
+        //    AddPlayer(joinAction.control.device);
+        //};
 
-        joinAction.Enable();
+        //joinAction.Enable();
     }
 
     private void AddPlayer(InputDevice device)
