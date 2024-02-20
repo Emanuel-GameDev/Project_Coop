@@ -1,4 +1,6 @@
 using MBT;
+using System.Collections;
+using System.Threading;
 using UnityEngine;
 
 namespace MBTExample
@@ -15,6 +17,7 @@ namespace MBTExample
         private bool mustStop = false;
 
         private int attackCount;
+        private bool canAttack;
 
         public override void OnEnter()
         {
@@ -23,7 +26,7 @@ namespace MBTExample
             bossCharacter.Agent.isStopped = false;
             attackCount = 0;
 
-           
+
             Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
             targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), 0, (direction.z * bossCharacter.flurryDistance)) + bossCharacter.transform.position;
             bossCharacter.SetFlurryOfBlowsDamageData(attackCount);
@@ -60,15 +63,18 @@ namespace MBTExample
                 {
                     
                     Debug.Log("inizio attacco " + attackCount);
-
                     
                     Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
                     targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), 0, (direction.z * bossCharacter.flurryDistance)) + bossCharacter.transform.position;
 
-                    bossCharacter.anim.SetTrigger("FlurryOfBlows" + attackCount);
-                    bossCharacter.Agent.speed = bossCharacter.flurrySpeed;
-                    bossCharacter.Agent.SetDestination(targetPosition);
-                   
+                    if (canAttack)
+                    {
+                        bossCharacter.anim.SetTrigger("FlurryOfBlows" + attackCount);
+                        bossCharacter.Agent.speed = bossCharacter.flurrySpeed;
+                        bossCharacter.Agent.SetDestination(targetPosition);
+
+                    }
+
                     return NodeResult.running;
 
                 }
@@ -79,8 +85,13 @@ namespace MBTExample
             return NodeResult.running;
         }
         
+        public IEnumerator AttackPreview(float Timer)
+        {
+            yield return new WaitForSeconds(Timer);
+            canAttack = true;
 
+        }
     }
 
-
+    
 }
