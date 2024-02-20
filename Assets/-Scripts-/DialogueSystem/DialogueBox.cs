@@ -63,7 +63,8 @@ public class DialogueBox : MonoBehaviour
         {
 
             //OnDialogueEnd[dialogueIndex]?.Invoke();
-            if(OnDialogueEnd.Count>0)
+
+            //if(OnDialogueEnd.Count>0)
             OnDialogueEnded.Invoke();
 
             dialogueIndex++;
@@ -161,30 +162,30 @@ public class DialogueBox : MonoBehaviour
 
         nextBox.contentText.text = string.Empty;
 
-        Animator boxAnimator = nextBox.box.GetComponent<Animator>();
-        Animator characterImageAnimator = nextBox.characterImage.gameObject.GetComponent<Animator>();
-        if (boxAnimator != null)
-        {
-            boxAnimator.SetTrigger("NextLine");
-            boxAnimator.ResetTrigger("NextLine");
+        //Animator boxAnimator = nextBox.box.GetComponent<Animator>();
+        //Animator characterImageAnimator = nextBox.characterImage.gameObject.GetComponent<Animator>();
+        //if (boxAnimator != null)
+        //{
+        //    boxAnimator.SetTrigger("NextLine");
+        //    boxAnimator.ResetTrigger("NextLine");
 
             
-            if(characterImageAnimator != null)
-            {
-                if (dialogueLineIndex > 0)
-                {
+        //    if(characterImageAnimator != null)
+        //    {
+        //        if (dialogueLineIndex > 0)
+        //        {
                
-                    if (nextLine.Character != dialogues[dialogueIndex].GetLine(dialogueLineIndex-1).Character)
-                    {
-                        characterImageAnimator.SetTrigger("CharacterChanged");
-                        characterImageAnimator.ResetTrigger("CharacterChanged");
-                    }
+        //            if (nextLine.Character != dialogues[dialogueIndex].GetLine(dialogueLineIndex-1).Character)
+        //            {
+        //                //characterImageAnimator.SetTrigger("CharacterChanged");
+        //                //characterImageAnimator.ResetTrigger("CharacterChanged");
+        //            }
 
-                }
+        //        }
 
-            }
+        //    }
 
-        }
+        //}
 
 
     }

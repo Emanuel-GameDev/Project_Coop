@@ -42,11 +42,11 @@ public class MovementTutorialState : TutorialFase
     {
         tutorialManager.StartCoroutine(tutorialManager.Timer(faseData.faseLenght));
 
-        tutorialManager.dps.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.healer.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.ranged.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-
+        //tutorialManager.dps.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        //tutorialManager.healer.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        //tutorialManager.ranged.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        //tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        Debug.Log("Fase start");
         tutorialManager.dialogueBox.OnDialogueEnded -= StartFaseTimer;
     }
 

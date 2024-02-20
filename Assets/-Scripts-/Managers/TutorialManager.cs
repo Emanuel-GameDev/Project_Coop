@@ -340,7 +340,7 @@ public class TutorialManager : MonoBehaviour
         if (!finale)
         {
             ResetPlayersPosition();
-            ResetEnemyPosition();
+            //ResetEnemyPosition();
         }
         else
         {
@@ -356,10 +356,10 @@ public class TutorialManager : MonoBehaviour
 
     public void DeactivatePlayerInput(PlayerCharacter character)
     {
-        character.GetComponent<PlayerInput>().actions.Disable();
+        //character.GetComponent<PlayerInput>().actions.Disable();
 
 
-        character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
+        //character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
 
     }
 
@@ -454,10 +454,10 @@ public class TutorialManager : MonoBehaviour
     private void ResetPlayersPosition()
     {
 
-        dps.GetRigidBody().MovePosition(DPSRespawn.position);
-        healer.GetRigidBody().MovePosition(healerRespawn.position);
-        ranged.GetRigidBody().MovePosition(rangedRespawn.position);
-        tank.GetRigidBody().MovePosition(tankRespawn.position);
+        //dps.GetRigidBody().MovePosition(DPSRespawn.position);
+        //healer.GetRigidBody().MovePosition(healerRespawn.position);
+        //ranged.GetRigidBody().MovePosition(rangedRespawn.position);
+        //tank.GetRigidBody().MovePosition(tankRespawn.position);
 
 
         //dps.gameObject.transform.SetPositionAndRotation(DPSRespawn.position, dps.gameObject.transform.rotation);
