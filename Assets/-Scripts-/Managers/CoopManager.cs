@@ -79,6 +79,11 @@ public class CoopManager : MonoBehaviour
         
     }
 
+    public List<PlayerInputHandler> GetActualHandlers()
+    {
+        return playerInputHandlers;
+    }
+
     #region Player Management
 
     public void SetPlayerCanJoin(bool canJoin)

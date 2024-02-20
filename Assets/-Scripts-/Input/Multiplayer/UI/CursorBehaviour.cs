@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class CursorBehaviour : MonoBehaviour
+public class CursorBehaviour : DefaultInputReceiver
 {
     private Vector2 movement;
     private GameObject selectionParent;
@@ -25,8 +25,21 @@ public class CursorBehaviour : MonoBehaviour
         }
     }
 
-    public void OnCursorMove(InputAction.CallbackContext context)
+    private void Start()
     {
+        List<PlayerSelection> list = CharacterSelectionMenu.Instance.GetCharactersSelected();
+
+        Initialize(list);
+
+        foreach (RectTransform rect in objectsToOver)
+        {
+            Debug.Log(rect.gameObject.name);
+        }
+    }
+
+    public override void Navigate(InputAction.CallbackContext context)
+    {
+        Debug.Log("NAVIGATE");
         if (context.started && randomBtnSelected)
         {
             Debug.LogWarning($"Player {context.control.device.deviceId} non può muoversi poiché ha" +
@@ -62,8 +75,9 @@ public class CursorBehaviour : MonoBehaviour
     /// poi chiede al menu di aggiornare la selezione nella lista di PlayerSelections
     /// </summary>
     /// <param name="context"></param>
-    public void OnSelectedButton(InputAction.CallbackContext context)
+    public override void Submit(InputAction.CallbackContext context)
     {
+        Debug.Log("SUBMIT");
         if (randomBtnSelected && context.started)
         {
             Debug.LogWarning($"Player {context.control.device.deviceId} non può selezionare poiché ha avviato" +
@@ -100,8 +114,9 @@ public class CursorBehaviour : MonoBehaviour
     /// Chiede al menu di aggiornare il numero degli utenti che hanno dato il consenso ad usare la selezione random
     /// </summary>
     /// <param name="context"></param>
-    public void OnRandomPressed(InputAction.CallbackContext context)
+    public override void RandomSelection(InputAction.CallbackContext context)
     {
+        Debug.Log("random");
         if (context.started && !objectSelected)
         {
             randomBtnSelected = !randomBtnSelected;
@@ -109,4 +124,6 @@ public class CursorBehaviour : MonoBehaviour
         }
 
     }
+
+
 }
