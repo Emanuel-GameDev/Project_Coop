@@ -1,3 +1,4 @@
+using Codice.Client.Common.FsNodeReaders;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -23,6 +24,9 @@ public class BasicEnemyEditor : Editor
             
             Handles.color = new Color(0, 1, 0, 0.2f);
             Handles.DrawSolidDisc(enemy.groundLevel.position, Vector3.up, enemy.attackRange);
+
+            Handles.color = new Color(0, 0, 1, 0.2f);
+            Handles.DrawSolidDisc(enemy.groundLevel.position, Vector3.up, enemy.escapeRange);
         }
 
         Handles.zTest = oldZtest;

@@ -23,6 +23,7 @@ public class BasicEnemy : EnemyCharacter
     [SerializeField] EnemyType enemyType;
 
     [Header("Variabili ranged")]
+    [SerializeField] public float escapeRange = 0f;
     [SerializeField] int numberOfConsecutiveShoot;
     [SerializeField] float projectileSpeed;
     [SerializeField] float projectileRange;
@@ -61,6 +62,7 @@ public class BasicEnemy : EnemyCharacter
     [Header("Detectors")]
     [SerializeField] public Detector viewTrigger;
     [SerializeField] public Detector attackTrigger;
+    [SerializeField] public Detector EscapeTrigger;
 
     [Header("navMesh carving value")]
     [SerializeField] float CarvingTime = 0.5f;
@@ -93,6 +95,11 @@ public class BasicEnemy : EnemyCharacter
     {
         viewTrigger.GetComponent<CapsuleCollider>().radius = viewRange;
         attackTrigger.GetComponent<CapsuleCollider>().radius = attackRange;
+
+        if(enemyType == EnemyType.ranged)
+        {
+            EscapeTrigger.GetComponent<CapsuleCollider>().radius = escapeRange;
+        }
 
         stateMachine.SetState(idleState);
     }
