@@ -11,6 +11,7 @@ public class TutorialBossCharacter : BossCharacter
     public float followDuration;
     public float walkSpeed;
     public GameObject visual;
+    public GameObject _pivot;
     public Animator anim => animator;
 
     [Header("Raffica Di Pugni")]
@@ -26,7 +27,6 @@ public class TutorialBossCharacter : BossCharacter
     public float chargeDamage;
     public float chargeStaminaDamage;
     public float chargeTimer;
-    public float chargeDuration;
     public float chargeSpeed;
     public float chargeDistance;
     public float ChargeStaminaDamage => chargeStaminaDamage + powerUpData.damageIncrease;
@@ -39,12 +39,12 @@ public class TutorialBossCharacter : BossCharacter
     public float crashTimer;
 
     [HideInInspector] public DamageData damageData;
-    [HideInInspector] public GameObject pivot;
+   
 
     private void Start()
     {
         visual.transform.localPosition = Vector3.zero;
-        pivot = GetComponentInChildren<Pivot>().gameObject;
+       
     }
     private void Update()
     {
@@ -98,17 +98,17 @@ public class TutorialBossCharacter : BossCharacter
     }
 
 
-    protected void SetSpriteDirection(Vector2 direction)
+    protected override void SetSpriteDirection(Vector2 direction)
     {
         if (direction.y != 0)
             anim.SetFloat("Y", direction.y);
 
-        Vector3 scale = pivot.gameObject.transform.localScale;
+        Vector3 scale = _pivot.gameObject.transform.localScale;
 
         if ((direction.x > 0.5 && scale.x > 0) || (direction.x < -0.5 && scale.x < 0))
             scale.x *= -1;
 
-        pivot.gameObject.transform.localScale = scale;
+        _pivot.gameObject.transform.localScale = scale;
     }
 
 }

@@ -134,9 +134,9 @@ public class DPS : CharacterClass
     public override float MoveSpeed => base.MoveSpeed + ExtraSpeed;
     public override float Damage => base.Damage * ExtraDamage();
 
-    public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
+    public override void Inizialize()
     {
-        base.Inizialize(/*characterData,*/ character);
+        base.Inizialize();
         lastDodgeTime = -dodgeCooldown;
         lastAttackTime = -timeBetweenCombo;
         lastUniqueAbilityUseTime = -UniqueAbilityCooldown;
@@ -153,6 +153,7 @@ public class DPS : CharacterClass
         chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
         perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
         perfectTimingHandler.gameObject.SetActive(false);
+        character = ePlayerCharacter.Brutus;
     }
 
 
@@ -176,7 +177,7 @@ public class DPS : CharacterClass
         currentComboState = 1;
         nextComboState = currentComboState;
         DoMeleeAttack();
-        character.GetRigidBody().velocity = Vector3.zero;
+        playerCharacter.GetRigidBody().velocity = Vector3.zero;
     }
     private void ContinueCombo()
     {
@@ -237,7 +238,7 @@ public class DPS : CharacterClass
         }
     }
 
-    protected IEnumerator Dodge(Vector2 dodgeDirection, Rigidbody rb)
+    protected IEnumerator Dodge(Vector2 dodgeDirection, Rigidbody2D rb)
     {
         isDodging = true;
         animator.SetTrigger(DODGESTART);
@@ -248,22 +249,22 @@ public class DPS : CharacterClass
         animator.SetTrigger(DODGEEND);
     }
 
-    private IEnumerator Move(Vector2 direction, Rigidbody rb, float duration, float distance)
+    private IEnumerator Move(Vector2 direction, Rigidbody2D rb, float duration, float distance)
     {
-        startPosition = character.transform.position;
-        rb.velocity = Vector3.zero;
+        Vector2 startPosition = playerCharacter.transform.position;
+        rb.velocity = Vector2.zero;
 
-        Vector3 destination = startPosition + new Vector3(direction.x, 0f, direction.y).normalized * distance;
+        Vector2 destination = startPosition + direction.normalized * distance;
 
         float elapsedTime = 0f;
         while (elapsedTime < duration)
         {
-            rb.MovePosition(Vector3.Lerp(startPosition, destination, elapsedTime / duration));
+            rb.MovePosition(Vector2.Lerp(startPosition, destination, elapsedTime / duration));
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        rb.velocity = Vector3.zero;
+        rb.velocity = Vector2.zero;
     }
 
     protected IEnumerator PerfectDodgeHandler(DamageData data)
@@ -331,7 +332,7 @@ public class DPS : CharacterClass
             Utility.DebugTrace("Performed");
             isDashingAttack = true;
             dashAttackStartTime = Time.time;
-            parent.GetRigidBody().velocity = Vector3.zero;
+            parent.GetRigidBody().velocity = Vector2.zero;
             animator.SetTrigger(STARTDASHATTACK);
             chargeHandler.StartCharging(dashAttackStartTime);
         }
@@ -346,7 +347,7 @@ public class DPS : CharacterClass
 
     }
 
-    protected IEnumerator DashAttack(Vector2 attackDirection, Rigidbody rb)
+    protected IEnumerator DashAttack(Vector2 attackDirection, Rigidbody2D rb)
     {
         animator.SetTrigger(MOVEDASHATTACK);
         dashAttackDamageMultiplier = dashAttackRushDamageMultiplier;
@@ -361,8 +362,8 @@ public class DPS : CharacterClass
 
     public void DashAttackTeleport()
     {
-        character.GetRigidBody().MovePosition(startPosition);
-        Debug.Log($"Teleport at: {startPosition}, current position: {character.transform.position}");
+        playerCharacter.GetRigidBody().MovePosition(startPosition);
+        Debug.Log($"Teleport at: {startPosition}, current position: {playerCharacter.transform.position}");
     }
 
     public void EndDashAttack()
@@ -375,7 +376,7 @@ public class DPS : CharacterClass
     #endregion
 
 
-    public override void Move(Vector2 direction, Rigidbody rb)
+    public override void Move(Vector2 direction, Rigidbody2D rb)
     {
         if (canMove)
         {
@@ -404,9 +405,11 @@ public class DPS : CharacterClass
     {
         base.UnlockUpgrade(abilityUpgrade);
         if (abilityUpgrade == AbilityUpgrade.Ability3)
-            damager.AssignFunctionToOnTrigger(DeflectProjectile);
+            AddDeflect();
         Debug.Log("Unlock" + abilityUpgrade.ToString());
     }
+
+    
 
     public override void LockUpgrade(AbilityUpgrade abilityUpgrade)
     {
@@ -415,7 +418,7 @@ public class DPS : CharacterClass
             RemoveDeflect();
     }
 
-    public void DeflectProjectile(Collider collider)
+    public void DeflectProjectile(Collider2D collider)
     {
         if (Utility.IsInLayerMask(collider.gameObject.layer, projectileLayer))
         {
@@ -423,32 +426,17 @@ public class DPS : CharacterClass
         }
 
     }
+    private void AddDeflect()
+    {
+        damager.AssignFunctionToOnTrigger(DeflectProjectile);
+    }
 
     private void RemoveDeflect()
     {
         damager.RemoveFunctionFromOnTrigger(DeflectProjectile);
     }
 
-    public override void Disable(Character character)
-    {
-        if (projectileDeflectionUnlocked)
-            RemoveDeflect();
-    }
-
     #region Damage
-    //Modifiche
-
-    //public override float GetDamage()
-    //{
-    //    BossDamageCheck();
-
-    //    float damage = isDashingAttack ? base.Damage * dashAttackDamageMultiplier : Damage;
-
-    //    TotalDamageUpdate(damage);
-
-    //    Debug.Log($"Damage Done: {damage}");
-    //    return damage;
-    //}
 
     public override DamageData GetDamageData()
     {
@@ -460,11 +448,10 @@ public class DPS : CharacterClass
 
         Debug.Log($"Damage Done: {damage}");
 
-        return new DamageData(damage, character);
+        return new DamageData(damage, playerCharacter);
 
     }
 
-    //fine modifiche
 
     private void BossDamageCheck()
     {

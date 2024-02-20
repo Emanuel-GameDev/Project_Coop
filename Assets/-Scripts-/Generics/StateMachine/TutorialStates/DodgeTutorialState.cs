@@ -37,20 +37,47 @@ public class DodgeTutorialState : TutorialFase
         {
             tutorialManager.DeactivatePlayerInput(characters[i]);
         }
-
+        characterChange = true;
 
         tutorialManager.DeactivateEnemyAI();
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
-    }
 
+        perfectDodgeCountAllowed = false;
+    }
+    bool characterChange = true;
+    bool perfectDodgeCountAllowed = false;
     private void UpdatePerfectDodgeCounter(object obj)
     {
+        if (!perfectDodgeCountAllowed)
+            return;
+
+
         perfectDodgeCount++;
+
         Debug.Log("schiva perfect");
+
         if ( perfectDodgeCount == 3)
         {
+            if (currentCharacterIndex < 1)
+            {
+                //sottofase successiva
+                characterChange = true;
+                tutorialManager.Fade();
+                characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+                characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+                SetupNextCharacter();
+            }
+            else
+            {
+                //fase successiva
+                tutorialManager.blockFaseChange = false;
+                tutorialManager.DeactivateEnemyAI();
+                stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+            }
+
+            perfectDodgeCountAllowed = false;
             //characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
             //characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
 
@@ -78,24 +105,23 @@ public class DodgeTutorialState : TutorialFase
         Debug.Log("schiva");
         if(dodgeCount == 3)
         {
+            
+            perfectDodgeCount = 0;
+
+            tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
+
+            if (characters[currentCharacterIndex].CharacterClass is DPS)
+                tutorialManager.PlayDialogue(faseData.dpsPerfectDodgeDialogue);
+            else if(characters[currentCharacterIndex].CharacterClass is Ranged)
+                tutorialManager.PlayDialogue(faseData.rangedPerfectDodgeDialogue);
+
             //PubSub.Instance.RegisterFunction(EMessageType.dodgeExecuted, UpdatePerfectDodgeCounter);
             //PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
             characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
             characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
             tutorialManager.DeactivateEnemyAI();
 
-            if (currentCharacterIndex < 1)
-            {
-                //sottofase successiva
-                tutorialManager.Fade();
-                SetupNextCharacter();
-            }
-            else
-            {
-                //fase successiva
-                tutorialManager.blockFaseChange = false;
-                stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
-            }
+            perfectDodgeCountAllowed = true;
         }
     }
 
@@ -106,15 +132,34 @@ public class DodgeTutorialState : TutorialFase
 
     private void SetupNextCharacter()
     {
+        characterChange = false;
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         currentCharacterIndex++;
         tutorialManager.tutorialEnemy.SetTarget(characters[currentCharacterIndex].transform);
-        tutorialManager.DeactivateEnemyAI();
+        //tutorialManager.DeactivateEnemyAI();
         dodgeCount = 0;
         perfectDodgeCount = 0;
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);
+
+        //PubSub.Instance.UnregisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
+    }
+
+    private void SetupPerfectDodgeTutorial()
+    {
+        tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
+
+        characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+
+
+        tutorialManager.tutorialEnemy.SetTarget(characters[currentCharacterIndex].transform);
+        tutorialManager.ActivateEnemyAI();
+
+        perfectDodgeCount = 0;
+
+        
     }
 
     int dodgeCount = 0;
@@ -139,7 +184,13 @@ public class DodgeTutorialState : TutorialFase
     {
         yield return new WaitForSeconds(time);
 
-        SetupNextCharacter();
+        if (characterChange)
+            SetupNextCharacter();
+        else
+            SetupPerfectDodgeTutorial();
+
+
+
     }
 
     public override void Update()

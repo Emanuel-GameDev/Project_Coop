@@ -66,8 +66,6 @@ public class LabirintEnemy : MonoBehaviour
             target = null;
             SetRandomDestination();
         }
-        
-        Debug.Log($"Target: {target}");
     }
 
     private void SetRandomDestination()
@@ -128,7 +126,7 @@ public class LabirintEnemy : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         LabirintPlayer player = other.GetComponent<LabirintPlayer>();
 

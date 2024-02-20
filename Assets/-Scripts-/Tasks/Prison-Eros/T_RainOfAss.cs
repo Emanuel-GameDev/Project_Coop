@@ -59,10 +59,15 @@ namespace MBTExample
                     }
                     tempTimerFollow += Time.deltaTime;
 
-                    //Follow target                    
+                    //Follow target
+                    
                     targetPosition = targetTransform.Value.position;
                     bossCharacter.Agent.speed = bossCharacter.walkSpeed;
+                    float distance = Vector2.Distance(transform.position, targetPosition);
                     bossCharacter.Agent.SetDestination(targetPosition);
+
+                    if (distance < bossCharacter.minDistance)
+                        canFollow = false;
                     
                 }
 
@@ -79,12 +84,17 @@ namespace MBTExample
                     }
 
                 }
-                else if(canTakeDamage && bossCharacter.timerDamageable >= tempTimerDamageable)
+
+                //inizio subisci danno
+                else if(canTakeDamage )
                 {                    
                     tempTimerFollow += Time.deltaTime;
 
-
-
+                    if(bossCharacter.timerDamageable >= tempTimerDamageable)
+                    {
+                        canFollow = true;
+                        canTakeDamage = false;
+                    }
                 }
 
 

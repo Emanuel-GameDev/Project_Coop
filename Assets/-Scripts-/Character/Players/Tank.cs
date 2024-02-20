@@ -33,6 +33,11 @@ public class Tank : CharacterClass
     [SerializeField, Tooltip("finestra di tempo nella quale appena viene colpito può parare per fare parata perfetta")]
     float perfectBlockTimeWindow = 0.4f;
 
+    private enum blockZone
+    {
+        
+    }
+
     [Header("Unique Ability")]
 
     [SerializeField, Tooltip("cooldown abilità unica")]
@@ -98,9 +103,9 @@ public class Tank : CharacterClass
     private PivotTriggerProtected pivotTriggerProtected;
 
 
-    public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
+    public override void Inizialize()
     {
-        base.Inizialize(/*characterData,*/ character);
+        base.Inizialize();
         currentStamina = maxStamina;
         currentHp = MaxHp;
 
@@ -175,7 +180,7 @@ public class Tank : CharacterClass
     }
     public void CheckAttackToDo()
     {
-        SetCanMove(false, character.GetRigidBody());
+        SetCanMove(false, playerCharacter.GetRigidBody());
 
         if (pressed && chargedAttack)
         {
@@ -248,7 +253,7 @@ public class Tank : CharacterClass
             comboIndex = 0;
             isAttacking = false;
             Debug.Log("Reset Variables");
-            SetCanMove(true, character.GetRigidBody());
+            SetCanMove(true, playerCharacter.GetRigidBody());
 
         }
         else if (comboIndex == 2)
@@ -268,7 +273,7 @@ public class Tank : CharacterClass
                 if (Utility.IsInLayerMask(r.transform.gameObject, LayerMask.GetMask("Enemy")))
                 {
                     IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
-                    hittedDama.TakeDamage(new DamageData(chargedAttackDamage, character, null));
+                    hittedDama.TakeDamage(new DamageData(chargedAttackDamage, playerCharacter, null));
                     Debug.Log(r.transform.gameObject.name + " colpito con " + chargedAttackDamage + " damage di attacco ad area");
 
                 }
@@ -319,7 +324,7 @@ public class Tank : CharacterClass
     {
         if (context.performed && isAttacking == false && canCancelAttack == false && canBlock)
         {
-            SetCanMove(false, character.GetRigidBody());
+            SetCanMove(false, playerCharacter.GetRigidBody());
             if(isBlocking != true)
             {
                 isBlocking = true;               
@@ -345,7 +350,7 @@ public class Tank : CharacterClass
 
         else if (context.canceled && isBlocking == true)
         {
-            SetCanMove(true, character.GetRigidBody());
+            SetCanMove(true, playerCharacter.GetRigidBody());
             if (isBlocking != false)
             {
                 
@@ -414,7 +419,7 @@ public class Tank : CharacterClass
             data.dealer.OnParryNotify();
             if (damageOnParry)
             {
-                dealerMB.TakeDamage(new DamageData(perfectBlockDamage, character));
+                dealerMB.TakeDamage(new DamageData(perfectBlockDamage, playerCharacter));
             }
         }
 
@@ -466,7 +471,7 @@ public class Tank : CharacterClass
             Debug.Log($"current stamina : {currentStamina}");
             if (currentStamina <= 0)
             {
-                SetCanMove(true, character.GetRigidBody());
+                SetCanMove(true, playerCharacter.GetRigidBody());
                 isBlocking = false;
                 ShowStaminaBar(false);
                 Debug.Log("Parata Rotta");
@@ -518,7 +523,7 @@ public class Tank : CharacterClass
                     AggroCondition aggroCondition = Utility.InstantiateCondition<AggroCondition>();
                     aggroCondition.SetVariable(this, aggroDuration);
 
-                    hittedDama.TakeDamage(new DamageData(0, character, aggroCondition));
+                    hittedDama.TakeDamage(new DamageData(0, playerCharacter, aggroCondition));
 
 
                 }
@@ -526,7 +531,7 @@ public class Tank : CharacterClass
         }
         //Incremento statistiche difesa e stamina
         statBoosted = true;
-        character.damageReceivedMultiplier = healthDamageReductionMulty;
+        playerCharacter.damageReceivedMultiplier = healthDamageReductionMulty;
         Invoke(nameof(SetStatToNormal), aggroDuration);
 
 
@@ -539,7 +544,7 @@ public class Tank : CharacterClass
     private void SetStatToNormal()
     {
         statBoosted = false;
-        character.damageReceivedMultiplier = 1;
+        playerCharacter.damageReceivedMultiplier = 1;
     }
 
 
@@ -552,7 +557,7 @@ public class Tank : CharacterClass
         if (context.performed && !isAttacking && !isBlocking)
         {
             
-            SetCanMove(false, character.GetRigidBody());
+            SetCanMove(false, playerCharacter.GetRigidBody());
 
             if (bossfightPowerUpUnlocked && isAttacking == false)
             {
@@ -571,7 +576,7 @@ public class Tank : CharacterClass
 
     #region Move
 
-    public override void Move(Vector2 direction, Rigidbody rb)
+    public override void Move(Vector2 direction, Rigidbody2D rb)
     {
         if (canMove)
         {
@@ -583,7 +588,7 @@ public class Tank : CharacterClass
     }
 
 
-    private void SetCanMove(bool move, Rigidbody rigidbody)
+    private void SetCanMove(bool move, Rigidbody2D rigidbody)
     {
         canMove = move;
         if (move == false)

@@ -8,6 +8,8 @@ public class LandMine : MonoBehaviour, IDamager
 
     [SerializeField] Pickable pickable;
 
+    public Transform dealerTransform => transform;
+
     private void Awake()
     {
         pickable=GetComponentInChildren<Pickable>();
@@ -57,7 +59,7 @@ public class LandMine : MonoBehaviour, IDamager
         }
     }*/
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         Ranged sniper = other.gameObject.GetComponentInChildren<Ranged>();       
 
@@ -85,7 +87,7 @@ public class LandMine : MonoBehaviour, IDamager
 
 
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         
     }

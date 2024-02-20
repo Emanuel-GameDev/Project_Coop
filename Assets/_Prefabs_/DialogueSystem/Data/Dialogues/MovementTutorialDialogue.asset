@@ -14,8 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - character: {fileID: 11400000, guid: 0e91698fd1bdd5e4d86045955efd7bc1, type: 2}
-    content: "Prima di tutto, che ne dite di sgranchirvi un po\u2019? Direi che una
-      bella corsetta dopo tanto tempo in gabbia \xE8 proprio quello che ci vuole."
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: MovementTutorialDialogueLineID:0
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -29,10 +36,18 @@ MonoBehaviour:
     overrideDialogueSpeed: 0
     characterPerSecond: 20
     dialogueType: 0
-    openInEditor: 0
+    openInEditor: 1
     overrideOptionsOpenInEditor: 0
   - character: {fileID: 11400000, guid: ca23e7a9a0c76b44cb6642a0f8731d65, type: 2}
-    content: "\u201CUSATE LA LEVETTA SINISTRA PER MUOVERVI \u201C"
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: MovementTutorialDialogueLineID:1
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -46,5 +61,8 @@ MonoBehaviour:
     overrideDialogueSpeed: 0
     characterPerSecond: 20
     dialogueType: 1
-    openInEditor: 0
+    openInEditor: 1
     overrideOptionsOpenInEditor: 0
+  references:
+    version: 2
+    RefIds: []

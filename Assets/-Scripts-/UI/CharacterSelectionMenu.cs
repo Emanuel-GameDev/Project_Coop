@@ -8,47 +8,16 @@ public class PlayerSelection
 {
     public PlayerData data;
     public bool selected;
-    public InputDevice device;
-    public string controlScheme;
 
-    public PlayerSelection(PlayerData data, bool iconSelected, bool randomBtnSelected)
+    public PlayerSelection(PlayerData data, bool iconSelected)
     {
         this.data = data;
         selected = iconSelected;
-        device = null;
-        controlScheme = null;
     }
 
     public void EditIcon(bool iconSelected)
     {
         selected = iconSelected;
-    }
-
-    public void EditDevice(InputDevice device)
-    {
-        this.device = (device != null) ? device : null;
-
-        if (device.displayName.Contains("Controller") || device.displayName.Contains("Gamepad"))
-            controlScheme = "Gamepad";
-        if (device.displayName.Contains("Joystick"))
-            controlScheme = "Joystick";
-        if (device.displayName.Contains("Keyboard"))
-            controlScheme = "Keyboard";
-    }
-
-    public void Print()
-    {
-        if (data == null || device == null)
-        {
-            Debug.LogError("NoDevice");
-            return;
-        }
-
-
-        Debug.Log(
-            "classe: " + data._class.ToString() + "\n" +
-            "id dispositivo: " + device.deviceId + "\n" +
-            "nome dispositivo: " + device.name + "\n");
     }
 
 }
@@ -67,8 +36,6 @@ public class CharacterSelectionMenu : MonoBehaviour
 
     // la struct che verrà usata per capire se un personaggio è stato selezionato
     private List<PlayerSelection> selectableCharacters = new List<PlayerSelection>();
-
-    private List<InputDevice> devices = new List<InputDevice>();    
 
     private int randomSelectionCounter = 0;
 
@@ -100,29 +67,9 @@ public class CharacterSelectionMenu : MonoBehaviour
     {
         for (int i = 0; i < characterIcons.Count; i++)
         {
-            PlayerSelection selection = new PlayerSelection(characterIcons[i], false, false);
+            PlayerSelection selection = new PlayerSelection(characterIcons[i], false);
             selectableCharacters.Add(selection);
         }
-    }
-
-    // forse è da cmabiare perché pensavo di avere una list di dispositivi nel coopmanager
-    public void AddToDevices(InputDevice deviceToAdd)
-    {
-        devices.Add(deviceToAdd);
-    }
-
-    /// <summary>
-    /// Instanzia il cursore dalla cartella Resources
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public GameObject LoadCursor(int id)
-    {
-        GameObject cursor = Resources.Load<GameObject>($"CursorPrefabs/P{id}_Cursor");
-
-        cursor.GetComponent<CursorBehaviour>().Initialize(selectableCharacters);
-
-        return cursor;
     }
 
     /// <summary>
@@ -137,10 +84,7 @@ public class CharacterSelectionMenu : MonoBehaviour
             {
                 if (s.selected)
                 {
-                    if (s.device == device)
-                        return false;
-                    else
-                        return true;
+                    return true;
                 }  
                 else
                     return false;
@@ -163,9 +107,6 @@ public class CharacterSelectionMenu : MonoBehaviour
             if (iconToSelect == s.data._icon)
             {
                 s.EditIcon(mode);
-                s.EditDevice(whoSelected);
-
-                s.Print();
             }
         }
 
@@ -235,8 +176,9 @@ public class CharacterSelectionMenu : MonoBehaviour
         // N.B ora uso una lista che viene riempita ogni volta che uno si connette, magarti vorrei avere
         // una funzione nel coopManager tipo che ha lui una lista e quando la voglio gliela chiedo
         // Intendo devices
-
-        foreach (InputDevice device in devices)
+        List<PlayerInputHandler> handlers = CoopManager.Instance.GetActualHandlers();
+        
+        foreach (PlayerInputHandler handler in handlers)
         {
             int rand = 0;
             do
@@ -246,9 +188,6 @@ public class CharacterSelectionMenu : MonoBehaviour
             while (selectableCharacters[rand].selected);
 
             selectableCharacters[rand].EditIcon(true);
-            selectableCharacters[rand].EditDevice(device);
-            selectableCharacters[rand].Print();
-
         }
 
         EndSelection();
@@ -259,7 +198,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     public void EndSelection()
     {
         Debug.Log("Selezione completa");
-        CoopManager.Instance.UpdateSelectedPlayers(selectableCharacters);
+        //CoopManager.Instance.UpdateSelectedPlayers(selectableCharacters);
         GameManager.Instance.LoadNextScene();
     }
 

@@ -14,11 +14,11 @@ public class Damager : MonoBehaviour
     bool oneTimeCondition;
 
     [SerializeField]
-    UnityEvent<Collider> onTrigger = new();
+    UnityEvent<Collider2D> onTrigger = new();
 
     //decidere se tenere ConditionToApply
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         onTrigger.Invoke(other);
 
@@ -27,18 +27,12 @@ public class Damager : MonoBehaviour
             IDamageable damageable = other.GetComponent<IDamageable>();
             if (damageable != null)
             {
-               
-                //modifiche
-
-                // damageable.TakeDamage(new DamageData(source.GetDamage(),source, conditionToApply));
                 DamageData newData = source.GetDamageData();
 
                 if(newData.condition==null && conditionToApply != null)
                     newData.condition = conditionToApply;
 
                 damageable.TakeDamage(newData);
-
-                //fine modifica
 
                 if (oneTimeCondition)
                     conditionToApply = null;
@@ -53,12 +47,12 @@ public class Damager : MonoBehaviour
         source ??= GetComponentInChildren<IDamager>();
     }
 
-    public void AssignFunctionToOnTrigger(UnityAction<Collider> action)
+    public void AssignFunctionToOnTrigger(UnityAction<Collider2D> action)
     {
         onTrigger.AddListener(action);
     }
 
-    public void RemoveFunctionFromOnTrigger(UnityAction<Collider> action)
+    public void RemoveFunctionFromOnTrigger(UnityAction<Collider2D> action)
     {
         onTrigger.RemoveListener(action);
     }

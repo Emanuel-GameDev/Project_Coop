@@ -298,6 +298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6da214327990b4b4395e8dfcd89dc313, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  character: 3
   maxHp: 33
   damage: 1
   attackSpeed: 30
@@ -310,7 +311,7 @@ MonoBehaviour:
   healIcon: {fileID: 1667381298283499555, guid: 81008e70013cfa54fa69a382d51da323,
     type: 3}
   smallHeal: 100
-  singleHealCooldown: 5
+  singleHealCooldown: 3
   smallHealAreaRadius: 3
   healMine: {fileID: 5625512617348793040, guid: 2186adaa1671c884ca63c9ed27490efb,
     type: 3}
@@ -331,8 +332,7 @@ MonoBehaviour:
   slowDown: {fileID: 11400000, guid: 02dd0b24375e42649a232ae5881994d6, type: 2}
   damageIncrementPercentage: 1
   bossPowerUpHitToUnlock: 10
-  bossAbilitySlowdown: {fileID: 11400000, guid: 02dd0b24375e42649a232ae5881994d6,
-    type: 2}
+  bossAbilitySlowdown: 10
 --- !u!1 &7942482601117714189
 GameObject:
   m_ObjectHideFlags: 0

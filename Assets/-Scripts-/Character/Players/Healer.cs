@@ -67,7 +67,7 @@ public class Healer : CharacterClass
     [Tooltip("Colpi consecutivi richiesti al boss, senza subire danni, per sbloccare l'abilità del boss")]
     [SerializeField] int bossPowerUpHitToUnlock = 10;
     [Tooltip("Rallentamento durante l'abilità del boss")]
-    [SerializeField] PowerUp bossAbilitySlowdown;
+    [SerializeField] float bossAbilitySlowdown;
 
     CapsuleCollider smallHealAreaCollider;
 
@@ -93,10 +93,9 @@ public class Healer : CharacterClass
 
     bool inputState = true;
 
-    public override void Inizialize(/*CharacterData characterData,*/ PlayerCharacter character)
+    public override void Inizialize()
     {
-        base.Inizialize(/*characterData,*/ character);
-        transform.position = character.transform.position;
+        base.Inizialize();
         playerInArea = new List<PlayerCharacter>();
         smallHealAreaCollider = gameObject.AddComponent<CapsuleCollider>();
         smallHealAreaCollider.isTrigger = true;
@@ -106,6 +105,7 @@ public class Healer : CharacterClass
         healIcons = new Dictionary<PlayerCharacter, GameObject>();
 
         animator.SetFloat("Y", -1);
+        baseMoveSpeed = MoveSpeed;
     }
 
 
@@ -134,8 +134,8 @@ public class Healer : CharacterClass
     {
         inputState = true;
     }
-
-    private void OnTriggerEnter(Collider other)
+    
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.GetComponent<PlayerCharacter>() && !playerInArea.Contains(other.gameObject.GetComponent<PlayerCharacter>()))
         {
@@ -157,7 +157,7 @@ public class Healer : CharacterClass
 
 
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.GetComponent<PlayerCharacter>())
         {
@@ -181,7 +181,7 @@ public class Healer : CharacterClass
         mineAbilityTimer = mineAbilityCooldown;
         smallHealTimer = singleHealCooldown;
     }
-
+    float baseMoveSpeed = 0;
     private void Update()
     {
         if (uniqueAbilityTimer < UniqueAbilityCooldown)
@@ -204,14 +204,15 @@ public class Healer : CharacterClass
             if (bossAbilityChargeTimer < bossAbilityCharge)
             {
                 bossAbilityChargeTimer += Time.deltaTime;
-                if(!character.GetPowerUpList().Contains(bossAbilitySlowdown))
-                    character.AddPowerUp(bossAbilitySlowdown);
+
+                moveSpeed = bossAbilitySlowdown;         
             }
         }
         else
         {
-            if (character.GetPowerUpList().Contains(bossAbilitySlowdown))
-                character.RemovePowerUp(bossAbilitySlowdown);
+
+            moveSpeed = baseMoveSpeed;
+            
             bossAbilityChargeTimer = 0;
         }
 
@@ -221,10 +222,7 @@ public class Healer : CharacterClass
     }
 
 
-
-
-
-    public override void Move(Vector2 direction, Rigidbody rb)
+    public override void Move(Vector2 direction, Rigidbody2D rb)
     {
         if (!inputState)
         {
@@ -271,9 +269,10 @@ public class Healer : CharacterClass
                     foreach (PlayerCharacter pc in playerInArea)
                     {
                         pc.TakeDamage(new DamageData(-smallHeal, null));
-                        //PubSub.Instance.Notify(EMessageType.characterHealed, pc);
+                        PubSub.Instance.Notify(EMessageType.characterHealed, pc);
                     }
-                    
+
+
                     smallHealTimer = 0;
                 }
             }
@@ -308,7 +307,7 @@ public class Healer : CharacterClass
             radius = healAreaRadius;
 
 
-        HealArea areaSpawned = Instantiate(healArea, new Vector3(character.transform.position.x, 0, character.transform.position.z), Quaternion.identity).GetComponent<HealArea>();
+        HealArea areaSpawned = Instantiate(healArea, new Vector3(playerCharacter.transform.position.x, 0, playerCharacter.transform.position.z), Quaternion.identity).GetComponent<HealArea>();
 
 
         areaSpawned.Initialize(

@@ -18,7 +18,7 @@ public enum AbilityUpgrade
 public class CharacterClass : MonoBehaviour
 {
     protected Animator animator;
-    protected PlayerCharacter character;
+    protected PlayerCharacter playerCharacter;
     protected PowerUpData powerUpData;
     protected ExtraData extraData;
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
@@ -33,6 +33,8 @@ public class CharacterClass : MonoBehaviour
 
     protected Vector2 lastNonZeroDirection;
 
+    [SerializeField, Tooltip("Identifica il personaggio.")]
+    protected ePlayerCharacter character;
     [SerializeField, Tooltip("La salute massima del personaggio.")]
     protected float maxHp;
     [SerializeField, Tooltip("Il danno inflitto dal personaggio.")]
@@ -46,23 +48,24 @@ public class CharacterClass : MonoBehaviour
     [SerializeField, Tooltip("L'incremento del tempo di attesa dell'abilità unica dopo ogni uso.")]
     protected float uniqueAbilityCooldownIncreaseAtUse;
 
-    public bool Stunned => character.stunned;
+    public bool Stunned => playerCharacter.stunned;
 
     public virtual float MaxHp => maxHp * powerUpData.maxHpIncrease;
     [HideInInspector]
     public float currentHp;
 
+    public ePlayerCharacter Character => character;
     public virtual float Damage => damage * powerUpData.damageIncrease;
     public virtual float MoveSpeed => moveSpeed * powerUpData.moveSpeedIncrease;
     public virtual float AttackSpeed => attackSpeed * powerUpData.attackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) * powerUpData.UniqueAbilityCooldownDecrease;
-    public float DamageReceivedMultiplier => character.damageReceivedMultiplier;
+    public float DamageReceivedMultiplier => playerCharacter.damageReceivedMultiplier;
 
     #region Animation Variable
     private static string Y = "Y";
     #endregion
 
-    public virtual void Inizialize(PlayerCharacter character)
+    public virtual void Inizialize()
     {
         powerUpData = new PowerUpData();
         extraData = new ExtraData();
@@ -73,7 +76,6 @@ public class CharacterClass : MonoBehaviour
             upgradeStatus.Add(au, false);
         }
         animator = GetComponent<Animator>();
-        this.character = character;
         bossfightPowerUpUnlocked = false;
         uniqueAbilityUses = 0;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -82,9 +84,25 @@ public class CharacterClass : MonoBehaviour
         damager = GetComponentInChildren<Damager>(true);
         if (damager != null)
         {
-            damager.SetSource(character);
+            damager.SetSource(playerCharacter);
         }
         SetIsInBossfight(false);
+    }
+
+    public virtual void Enable(PlayerCharacter character)
+    {
+        playerCharacter = character;
+        lastNonZeroDirection = Vector2.down;
+        transform.parent = playerCharacter.transform;
+        transform.localPosition = Vector3.zero;
+        damager.SetSource(playerCharacter);
+    }
+
+    public virtual void Disable(PlayerCharacter character)
+    {
+        playerCharacter = null;
+        damager.SetSource(null);
+        CharacterPoolManager.Instance.ReturnCharacter(this);
     }
 
     #region Abilities
@@ -98,11 +116,6 @@ public class CharacterClass : MonoBehaviour
         }
     }
     public virtual void Defence(Character parent, InputAction.CallbackContext context)
-    {
-
-    }
-
-    public virtual void Disable(Character character)
     {
 
     }
@@ -122,7 +135,7 @@ public class CharacterClass : MonoBehaviour
     {
 
         if (data.condition != null)
-            character.AddToConditions(data.condition);
+            playerCharacter.AddToConditions(data.condition);
 
         currentHp -= data.damage * DamageReceivedMultiplier;
         damager.RemoveCondition();
@@ -131,7 +144,7 @@ public class CharacterClass : MonoBehaviour
 
     public virtual DamageData GetDamageData()
     {
-        DamageData data = new DamageData(Damage, character);
+        DamageData data = new DamageData(Damage, playerCharacter);
         return data;
     }
 
@@ -141,31 +154,19 @@ public class CharacterClass : MonoBehaviour
     #region Move
     public Vector2 GetLastNonZeroDirection() => lastNonZeroDirection;
 
-    //dati x e z chiama Move col Vector2
-    public virtual void Move(float x, float z, Rigidbody rb)
-    {
-        Move(new Vector2(x, z), rb);
-    }
 
-    // Dato un vector2 chiama move col Vector3
-    public virtual void Move(Vector2 direction, Rigidbody rb)
-    {
-        Move(new Vector3(direction.x, 0, direction.y).normalized, rb);
-    }
-
-    //dato un vector 3 setta la velocit� del rigidBody in quella direzione, se il vettore non � normalizzato lo normalizza
-    public virtual void Move(Vector3 direction, Rigidbody rb)
+    public virtual void Move(Vector2 direction, Rigidbody2D rb)
     {
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
-        rb.velocity = new Vector3(direction.x * MoveSpeed, direction.y, direction.z * MoveSpeed);
+
+        rb.velocity = direction * MoveSpeed;
 
         isMoving = rb.velocity.magnitude > 0.2f;
 
-        Vector2 direction2D = new Vector2(direction.x, direction.z);
+        if (direction != Vector2.zero)
+            lastNonZeroDirection = direction;
 
-        if (direction2D != Vector2.zero)
-            lastNonZeroDirection = direction2D;
         SetSpriteDirection(lastNonZeroDirection);
     }
 

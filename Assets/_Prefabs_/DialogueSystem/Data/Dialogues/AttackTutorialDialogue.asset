@@ -14,9 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - character: {fileID: 11400000, guid: 4496642c7d8bafe4184edec3db19b57b, type: 2}
-    content: Te ne vai in giro per la prigione con le nostre cose come se niente
-      fosse? Dubito che sia davvero una questione di fortuna, donna. Stai tramando
-      qualcosa.
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: AttackTutorialDialogueLineID:0
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -33,8 +39,15 @@ MonoBehaviour:
     openInEditor: 0
     overrideOptionsOpenInEditor: 0
   - character: {fileID: 11400000, guid: 0e91698fd1bdd5e4d86045955efd7bc1, type: 2}
-    content: "Mi hai chiamato \u201Cdonna\u201D? Oh cielo, che cosa maschilista e
-      anacronistica."
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: AttackTutorialDialogueLineID:1
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -51,7 +64,15 @@ MonoBehaviour:
     openInEditor: 0
     overrideOptionsOpenInEditor: 0
   - character: {fileID: 11400000, guid: 732786ad5e1b1c44fa2f27afadeb570a, type: 2}
-    content: Mi trovi concorde. Veramente fuori luogo.
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: AttackTutorialDialogueLineID:2
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -68,7 +89,15 @@ MonoBehaviour:
     openInEditor: 0
     overrideOptionsOpenInEditor: 0
   - character: {fileID: 11400000, guid: a4e56baf9e8af614492f46ffc4b37544, type: 2}
-    content: "\u2026pessimo."
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: AttackTutorialDialogueLineID:3
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -85,7 +114,15 @@ MonoBehaviour:
     openInEditor: 0
     overrideOptionsOpenInEditor: 0
   - character: {fileID: 11400000, guid: 4496642c7d8bafe4184edec3db19b57b, type: 2}
-    content: ...
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: AttackTutorialDialogueLineID:4
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -102,9 +139,15 @@ MonoBehaviour:
     openInEditor: 0
     overrideOptionsOpenInEditor: 0
   - character: {fileID: 11400000, guid: 0e91698fd1bdd5e4d86045955efd7bc1, type: 2}
-    content: "Basta perdere tempo. Ecco le vostre armi. Non fatevi problemi a fare
-      pratica su Dumpy, \xE8 estremamente resistente\u2026 inoltre  credo che la
-      sua IA abbia sviluppato un\u2019interessante forma di masochismo."
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: AttackTutorialDialogueLineID:5
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -121,7 +164,15 @@ MonoBehaviour:
     openInEditor: 0
     overrideOptionsOpenInEditor: 0
   - character: {fileID: 11400000, guid: ca23e7a9a0c76b44cb6642a0f8731d65, type: 2}
-    content: "\u201CPREMETE RB PER COLPIRMI\u2026 PER FAVORE.\u201D"
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: AttackTutorialDialogueLineID:6
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -135,5 +186,8 @@ MonoBehaviour:
     overrideDialogueSpeed: 0
     characterPerSecond: 20
     dialogueType: 1
-    openInEditor: 0
+    openInEditor: 1
     overrideOptionsOpenInEditor: 0
+  references:
+    version: 2
+    RefIds: []

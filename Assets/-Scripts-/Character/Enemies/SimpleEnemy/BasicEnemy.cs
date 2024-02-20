@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Localization.Settings;
 using UnityEngine.TextCore.Text;
 
 public enum EnemyType
@@ -14,6 +15,8 @@ public enum EnemyType
 public class BasicEnemy : EnemyCharacter
 {
 
+
+    [Tooltip("Serve per gli effetti visivi dell' editor")]
     public Transform groundLevel;
     [Header("Variabili di base")]
     [SerializeField] public float viewRange = 2f;
@@ -35,6 +38,8 @@ public class BasicEnemy : EnemyCharacter
     //di prova
     //[SerializeField] Transform tryTarget;
 
+    [SerializeField] public float closeRange = 1;
+   
     NavMeshPath path;
 
     [Header("Pivot")]
@@ -45,28 +50,33 @@ public class BasicEnemy : EnemyCharacter
 
     Vector2 lastNonZeroDirection;
 
-
-    [HideInInspector] public bool isMoving;
-    [HideInInspector] public bool isAttacking = false;
+    [SerializeField] public float despawnTime = 1;
 
     [HideInInspector] public BasicEnemyIdleState idleState;
     [HideInInspector] public BasicEnemyMoveState moveState;
-    [HideInInspector] public BasicEnemyAttackState attackState;
+    [HideInInspector] public BasicEnemyActionState actionState;
+    [HideInInspector] public BasicEnemyDeathState deathState;
+    [HideInInspector] public BasicEnemyStunState stunState;
+    [HideInInspector] public BasicEnemyParriedState parriedState;
 
     [HideInInspector] public bool AIActive = true;
 
+    [HideInInspector] public bool isMoving;
+    [HideInInspector] public bool isActioning = false;
+
     [HideInInspector] public bool canSee = true;
     [HideInInspector] public bool canMove = false;
-    [HideInInspector] public bool canAttack = false;
+    [HideInInspector] public bool canAction = false;
 
     [Header("Detectors")]
     [SerializeField] public Detector viewTrigger;
-    [SerializeField] public Detector attackTrigger;
+    [SerializeField] public Detector closeRangeTrigger;
     [SerializeField] public Detector EscapeTrigger;
 
     [Header("navMesh carving value")]
     [SerializeField] float CarvingTime = 0.5f;
     [SerializeField] float CarvingMoveThreshold = 0.1f;
+
 
     [HideInInspector] public NavMeshObstacle obstacle;
 
@@ -85,43 +95,49 @@ public class BasicEnemy : EnemyCharacter
 
         idleState = new BasicEnemyIdleState(this);
         moveState = new BasicEnemyMoveState(this);
-        attackState = new BasicEnemyAttackState(this,enemyType);
+        actionState = new BasicEnemyActionState(this);
 
 
         path = new NavMeshPath();
+
+
+        //obstacle.enabled = false;
+        //obstacle.carveOnlyStationary = false;
+        //obstacle.carving = true;
+
+        
+
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         viewTrigger.GetComponent<CapsuleCollider>().radius = viewRange;
-        attackTrigger.GetComponent<CapsuleCollider>().radius = attackRange;
+        closeRangeTrigger.GetComponent<CapsuleCollider>().radius = closeRange;
+
 
         if(enemyType == EnemyType.ranged)
         {
             EscapeTrigger.GetComponent<CapsuleCollider>().radius = escapeRange;
         }
 
-        stateMachine.SetState(idleState);
+        stateMachine.SetState(idleState);       
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if(AIActive)
-        stateMachine.StateUpdate();
-
+            stateMachine.StateUpdate();
     }
 
     public void FollowPath()
     {
         if (!canMove)
         {
-            rb.velocity = Vector3.zero;
+            rb.velocity = Vector2.zero;
             return;
         }
 
-        obstacle.enabled = false;
-
-        agent.enabled = true;
+        ActivateAgent();
 
         if (target != null)
         {
@@ -134,41 +150,28 @@ public class BasicEnemy : EnemyCharacter
                     Move(target.position - transform.position, rb);
             }
             else
-                rb.velocity = Vector3.zero;
+                rb.velocity = Vector2.zero;
         }
         else
         {
-            rb.velocity = Vector3.zero;
+            rb.velocity = Vector2.zero;
         }
     }
 
-    public virtual void Move(Vector3 direction, Rigidbody rb)
+    public virtual void Move(Vector2 direction, Rigidbody2D rb)
     {
         if (obstacle.enabled)
             return;
-        //if (Vector3.Distance(transform.position,tryTarget.position) < attackRange)
-        //{
-        //    rb.velocity = Vector3.zero;
 
-
-        //    return;
-        //}
-        
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
 
-        rb.velocity = new Vector3(direction.x * MoveSpeed, direction.y, direction.z * MoveSpeed);
-
-
-
-
-        Vector2 direction2D = new Vector2(direction.x, direction.z);
+        rb.velocity = direction * MoveSpeed;
 
         isMoving = rb.velocity.magnitude > 0.2f;
-        
 
-        if (direction2D != Vector2.zero)
-            lastNonZeroDirection = direction2D;
+        if (direction != Vector2.zero)
+            lastNonZeroDirection = direction;
 
         SetSpriteDirection(lastNonZeroDirection);
 
@@ -193,10 +196,11 @@ public class BasicEnemy : EnemyCharacter
         return animator;
     }
     
+    //forse nei figli
     public IEnumerator Attack()
     {
 
-        isAttacking = true;
+        isActioning= true;
         //GetComponentInChildren<SpriteRenderer>().material.color = Color.red;
 
         switch (enemyType)
@@ -207,7 +211,7 @@ public class BasicEnemy : EnemyCharacter
                 break;
 
             case EnemyType.ranged:
-                playerInRange = attackTrigger.GetPlayersDetected();
+                playerInRange = closeRangeTrigger.GetPlayersDetected();
 
                 for (int i = 0; i < numberOfConsecutiveShoot; i++)
                 {
@@ -233,7 +237,7 @@ public class BasicEnemy : EnemyCharacter
 
 
         
-        isAttacking = false;
+        isActioning= false;
         //GetComponentInChildren<SpriteRenderer>().material.color = Color.white;
     }
 
@@ -245,18 +249,67 @@ public class BasicEnemy : EnemyCharacter
         
     }
 
-    public void SetTarget(Transform newTarget)
-    {
-        target = newTarget;
-    }
+    //public void SetTarget(Transform newTarget)
+    //{
+    //    target = newTarget;
+
+    //    isActioning = true;
+
+    //    animator.SetTrigger("Attack");
+
+    //    yield return new WaitForSeconds(attackSpeed);
+    //    isActioning = false;
+    //}
 
     public override void TakeDamage(DamageData data)
     {
         base.TakeDamage(data);
 
-        currentHp -= data.damage ;
+        if (currentHp <= 0)
+        {
+
+            stateMachine.SetState(deathState);
+        }
+        else 
+        {
+            SetTarget(data.dealer.dealerTransform);
+            stateMachine.SetState(stunState);
+        }
+       
     }
 
 
+
+    public void DamagedAnimationEndedEvent()
+    {
+        animator.SetTrigger("DamageEnded");
+
+        stateMachine.SetState(moveState);
+    }
+
+
+
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+    }
+
+   
+    public void ActivateAgent()
+    {
+        obstacle.enabled = false;
+        Agent.enabled = true;
+    }
+
+    public void ActivateObstacle()
+    {
+        Agent.enabled = false;
+        obstacle.enabled = true;
+    }
+
+    public void Despawn()
+    {
+        Destroy(gameObject);
+    }
 
 }

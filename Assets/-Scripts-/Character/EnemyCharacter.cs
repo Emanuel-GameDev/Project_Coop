@@ -35,6 +35,8 @@ public class EnemyCharacter : Character
         base.InitialSetup();
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+
+        currentHp = maxHp;
     }
 
     #region PowerUp
@@ -57,7 +59,7 @@ public class EnemyCharacter : Character
 
     public virtual void TargetSelection() 
     {
-        List<PlayerCharacter> activePlayers = GameManager.Instance.coopManager.activePlayers;
+        List<PlayerCharacter> activePlayers = GameManager.Instance.coopManager.ActivePlayers;
 
         Transform target = activePlayers[0].transform;
         float distance = Vector3.Distance(transform.position, target.position);
