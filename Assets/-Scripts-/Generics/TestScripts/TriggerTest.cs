@@ -6,7 +6,7 @@ public class TriggerTest : MonoBehaviour
 {
     public float increaseFactor = 0.001f;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.GetComponent<PlayerCharacter>())
             Debug.Log("Triggered");

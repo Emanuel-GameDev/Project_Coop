@@ -26,9 +26,9 @@ public class ArrowPointerRotation : MonoBehaviour
         {
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-            Quaternion targetRotation = Quaternion.Euler(90, 0, angle - 90);
+            Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90);
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
 }

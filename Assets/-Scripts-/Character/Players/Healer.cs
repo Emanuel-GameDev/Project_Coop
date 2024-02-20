@@ -135,7 +135,7 @@ public class Healer : CharacterClass
         inputState = true;
     }
     
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.GetComponent<PlayerCharacter>() && !playerInArea.Contains(other.gameObject.GetComponent<PlayerCharacter>()))
         {
@@ -157,7 +157,7 @@ public class Healer : CharacterClass
 
 
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.GetComponent<PlayerCharacter>())
         {
@@ -222,7 +222,7 @@ public class Healer : CharacterClass
     }
 
 
-    public override void Move(Vector2 direction, Rigidbody rb)
+    public override void Move(Vector2 direction, Rigidbody2D rb)
     {
         if (!inputState)
         {

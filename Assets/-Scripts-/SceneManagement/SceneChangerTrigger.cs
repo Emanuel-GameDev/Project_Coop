@@ -13,7 +13,7 @@ public class SceneChangerTrigger : MonoBehaviour
 
     private int objectCount = 0;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.gameObject.GetComponent<IInteracter>() != null)
         {
@@ -25,7 +25,7 @@ public class SceneChangerTrigger : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.GetComponent<IInteracter>() != null)
         {

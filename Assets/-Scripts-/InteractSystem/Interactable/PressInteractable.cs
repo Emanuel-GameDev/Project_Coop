@@ -10,7 +10,7 @@ public class PressInteractable : MonoBehaviour, IInteractable
         OnInteract?.Invoke();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.TryGetComponent<IInteracter>(out var interacter))
         {
@@ -18,7 +18,7 @@ public class PressInteractable : MonoBehaviour, IInteractable
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (other.TryGetComponent<IInteracter>(out var interacter))
         {

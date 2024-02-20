@@ -135,7 +135,7 @@ public class Ranged : CharacterClass
 
     }
 
-    public override void Move(Vector3 direction, Rigidbody rb)
+    public override void Move(Vector2 direction, Rigidbody2D rb)
     {
         if(!isDodging)
         {
@@ -145,7 +145,7 @@ public class Ranged : CharacterClass
             }
             else
             {
-                rb.velocity = Vector3.zero;
+                rb.velocity = Vector2.zero;
             }
             
 
@@ -267,7 +267,7 @@ public class Ranged : CharacterClass
         }
     }
 
-    protected IEnumerator Dodge(Vector2 direction,Rigidbody rb)
+    protected IEnumerator Dodge(Vector2 direction,Rigidbody2D rb)
     {
         if (!isDodging)
         {
@@ -278,14 +278,14 @@ public class Ranged : CharacterClass
 
             animator.SetTrigger("Dodge");
 
-            Vector3 dodgeDirection = new Vector3(direction.x, 0f, direction.y).normalized;
+            Vector2 dodgeDirection = direction.normalized;
 
             rb.velocity = dodgeDirection * (dodgeDistance / dodgeDuration);
 
             yield return new WaitForSeconds(dodgeDuration);
             PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
 
-            rb.velocity = Vector3.zero;
+            rb.velocity = Vector2.zero;
 
             isDodging = false;
         }
