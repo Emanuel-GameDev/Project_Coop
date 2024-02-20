@@ -1,9 +1,12 @@
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public interface InputReceiver
 {
     void SetCharacter(ePlayerCharacter character);
     ePlayerCharacter GetCharacter();
+
+    GameObject GetCharacterObject();
 
     void SetInputHandler(PlayerInputHandler inputHandler);
     PlayerInputHandler GetInputHandler();

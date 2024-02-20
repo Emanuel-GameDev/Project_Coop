@@ -14,7 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - character: {fileID: 11400000, guid: 732786ad5e1b1c44fa2f27afadeb570a, type: 2}
-    content: Godo
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: TankHealedDialogueTutorialLineID:0
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -30,3 +38,6 @@ MonoBehaviour:
     dialogueType: 0
     openInEditor: 1
     overrideOptionsOpenInEditor: 0
+  references:
+    version: 2
+    RefIds: []

@@ -16,6 +16,11 @@ public class DefaultInputReceiver : MonoBehaviour, InputReceiver
         return character;
     }
 
+    public virtual GameObject GetCharacterObject()
+    {
+        return gameObject;
+    }
+
     public virtual void SetInputHandler(PlayerInputHandler inputHandler)
     {
         this.playerInputHandler = inputHandler;
@@ -110,6 +115,8 @@ public class DefaultInputReceiver : MonoBehaviour, InputReceiver
     {
         
     }
+
+    
     #endregion
 
     #endregion

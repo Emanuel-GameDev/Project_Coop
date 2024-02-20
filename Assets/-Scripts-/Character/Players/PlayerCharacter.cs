@@ -92,6 +92,11 @@ public class PlayerCharacter : Character, InputReceiver
     }
     public ePlayerCharacter GetCharacter() => currentCharacter;
 
+    public virtual GameObject GetCharacterObject()
+    {
+        return gameObject;
+    }
+
     public void SetInputHandler(PlayerInputHandler inputHandler)
     {
         playerInputHandler = inputHandler;
@@ -101,7 +106,7 @@ public class PlayerCharacter : Character, InputReceiver
                 SetCharacter(playerInputHandler.currentCharacter);
             else
                 CharacterPoolManager.Instance.GetFreeRandomCharacter(this);
-        }   
+        }
     }
     public PlayerInputHandler GetInputHandler()
     {

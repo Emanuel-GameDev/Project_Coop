@@ -36,12 +36,9 @@ public class AttackTutorialState : TutorialFase
 
         characters = new PlayerCharacter[4] {tutorialManager.dps, tutorialManager.tank , tutorialManager.ranged , tutorialManager.healer };
         charactersPreTutorialDialogue = new Dialogue[4] { faseData.dpsDialogue, faseData.tankDialogue, faseData.rangedDialogue, faseData.healerDialogue };
-            
 
-        for (int i = 0; i < 4; i++)
-        {
-            tutorialManager.DeactivatePlayerInput(characters[i]);
-        }
+
+        tutorialManager.DeactivateAllPlayerInputs();
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
@@ -68,8 +65,13 @@ public class AttackTutorialState : TutorialFase
 
         hitCount = 0;
 
-        characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
+        if(characters[currentCharacterIndex].GetInputHandler()==null)
+        {
+            tutorialManager.inputHandlers[0].SetCharacter(characters[currentCharacterIndex].CharacterClass.Character);
+        }
+
+        characters[currentCharacterIndex].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        characters[currentCharacterIndex].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
 
         comboHitCount = 0;
         tutorialManager.tutorialEnemy.OnHit += EnemyHitted;

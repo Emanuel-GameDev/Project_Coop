@@ -29,10 +29,7 @@ public class GuardTutorialState : TutorialFase
         faseData = (GuardTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
         PubSub.Instance.RegisterFunction(EMessageType.guardExecuted, UpdateCounter);
 
-        tutorialManager.DeactivatePlayerInput(tutorialManager.dps);
-        tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
-        tutorialManager.DeactivatePlayerInput(tutorialManager.ranged);
-        tutorialManager.DeactivatePlayerInput(tutorialManager.tank);
+        tutorialManager.DeactivateAllPlayerInputs();
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);

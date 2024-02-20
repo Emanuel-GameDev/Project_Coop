@@ -33,10 +33,10 @@ public class DodgeTutorialState : TutorialFase
         charactersPreTutorialDialogue = new Dialogue[2] { faseData.dpsDodgeDialogue, faseData.rangedDodgeDialogue };
         charactersPerfectTutorialDialogue = new Dialogue[2] { faseData.dpsPerfectDodgeDialogue, faseData.rangedPerfectDodgeDialogue };
 
-        for (int i = 0; i < 2; i++)
-        {
-            tutorialManager.DeactivatePlayerInput(characters[i]);
-        }
+
+        tutorialManager.DeactivateAllPlayerInputs();
+
+
         characterChange = true;
 
         tutorialManager.DeactivateEnemyAI();

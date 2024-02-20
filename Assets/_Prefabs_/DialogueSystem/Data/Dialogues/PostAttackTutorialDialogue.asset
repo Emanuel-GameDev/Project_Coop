@@ -14,8 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - character: {fileID: 11400000, guid: 0e91698fd1bdd5e4d86045955efd7bc1, type: 2}
-    content: "Oh, ora capisco perch\xE9 Morning ha espressamente ordinato di rinchiudervi
-      qui sotto, escluso Mr. Cassius. \xC8 stato particolarmente patetico."
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: PostAttackTutorialDialogueLineID:0
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -28,11 +35,19 @@ MonoBehaviour:
     dialogueLineVoice: {fileID: 0}
     overrideDialogueSpeed: 0
     characterPerSecond: 20
+    dialogueType: 0
     openInEditor: 1
     overrideOptionsOpenInEditor: 0
   - character: {fileID: 11400000, guid: 96d66554568dba841aed20de03fba36d, type: 2}
-    content: "Sono un uomo di scienza, non un bifolco. Non \xE8 che ti sei portata
-      dietro anche la mia attrezzatura?"
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: PostAttackTutorialDialogueLineID:1
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -45,5 +60,9 @@ MonoBehaviour:
     dialogueLineVoice: {fileID: 0}
     overrideDialogueSpeed: 0
     characterPerSecond: 20
+    dialogueType: 0
     openInEditor: 1
     overrideOptionsOpenInEditor: 0
+  references:
+    version: 2
+    RefIds: []

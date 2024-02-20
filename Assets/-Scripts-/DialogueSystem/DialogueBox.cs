@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class DialogueBox : MonoBehaviour
@@ -72,6 +73,13 @@ public class DialogueBox : MonoBehaviour
             if (dialogueIndex == dialogues.Length)
             {
                 dialogueIndex--;
+            }
+
+
+            foreach(PlayerInputHandler handler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+            {
+                handler.GetComponent<PlayerInput>().actions.Enable();
+                handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
             }
 
             //foreach (PlayerCharacter character in GameManager.Instance.coopManager.activePlayers)
@@ -192,6 +200,13 @@ public class DialogueBox : MonoBehaviour
     
     public void StartDialogue()
     {
+
+        foreach (PlayerInputHandler handler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        {
+            handler.GetComponent<PlayerInput>().actions.Disable();
+            handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
+        }
+
         //foreach (PlayerCharacter character in GameManager.Instance.coopManager.ActivePlayers)
         //{
         //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
@@ -226,8 +241,8 @@ public class DialogueBox : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
 
-        //if(!registered)
-        //PubSub.Instance.RegisterFunction(EMessageType.dialogueInput, NextLineInput);
+        if (!registered)
+            PubSub.Instance.RegisterFunction(EMessageType.dialogueInput, NextLineInput);
 
         registered = true;
 
@@ -258,10 +273,10 @@ public class DialogueBox : MonoBehaviour
             timer += Time.deltaTime;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            NextLineInput(null);
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    NextLineInput(null);
+        //}
     }
     //input di prova
     private void NextLineInput(object obj)

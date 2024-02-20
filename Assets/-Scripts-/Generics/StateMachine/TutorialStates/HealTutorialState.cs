@@ -33,10 +33,7 @@ public class HealTutorialState : TutorialFase
 
         PubSub.Instance.RegisterFunction(EMessageType.characterHealed, CharacterHealed);
 
-        tutorialManager.DeactivatePlayerInput(tutorialManager.dps);
-        tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
-        tutorialManager.DeactivatePlayerInput(tutorialManager.ranged);
-        tutorialManager.DeactivatePlayerInput(tutorialManager.tank);
+        tutorialManager.DeactivateAllPlayerInputs();
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
@@ -65,21 +62,21 @@ public class HealTutorialState : TutorialFase
             switch (character.CharacterClass)
             {
                 case DPS:
-                    tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
+                    tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
 
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.DPSDialogue);
                     break;
 
                 case Ranged:
-                    tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
+                    tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
 
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.rangedDialogue);
                     break;
 
                 case Tank:
-                    tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
+                    tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
 
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.tankDialogue);
