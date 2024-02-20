@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            sceneLoadOperations[sceneName].allowSceneActivation = true;
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
         }
     }
 
