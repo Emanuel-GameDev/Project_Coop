@@ -38,7 +38,6 @@ public class CharacterPoolManager : MonoBehaviour
         }
     }
 
-    [SerializeField] 
     private List<CharacterClass> characters = new List<CharacterClass>();
 
     private List<CharacterClass> freeCharacters = new List<CharacterClass>();
@@ -52,6 +51,11 @@ public class CharacterPoolManager : MonoBehaviour
 
     private void InizializeList()
     {
+        foreach(PlayerCharacterData characterData in GameManager.Instance.GetCharacterDataList())
+        {
+            characters.Add(characterData.CharacterClassPrefab.GetComponent<CharacterClass>());
+        }
+
         foreach (CharacterClass character in characters)
         {
             CharacterClass characterClass = GameObject.Instantiate(character, transform);

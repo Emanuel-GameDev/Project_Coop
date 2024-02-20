@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] PowerUp powerUpToGive; //Debug
-    [SerializeField] PlayerCharacter player; //Debug
+    [SerializeField]
+    private List<PlayerCharacterData> playerCharacterDatas;
+
     public PlayerInputManager playerInputManager { get; private set; }
     public CoopManager coopManager { get; private set; }
     public CameraManager cameraManager { get; private set; }
@@ -56,6 +58,11 @@ public class GameManager : MonoBehaviour
         if (cameraManager != null && coopManager != null)
             cameraManager.AddAllPlayers();
 
+        if(playerCharacterDatas == null || playerCharacterDatas.Count <= 0)
+        {
+            Debug.LogError("No player character datas found");
+        }
+
     }
 
     private void Update()
@@ -91,8 +98,6 @@ public class GameManager : MonoBehaviour
         //}
         //Debug End
     }
-
-    
 
     public void PauseGame()
     {
@@ -188,4 +193,21 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public List<PlayerCharacterData> GetCharacterDataList() => playerCharacterDatas;
+
+    public PlayerCharacterData GetCharacterData(ePlayerCharacter character)
+    {
+        foreach (PlayerCharacterData characterData in playerCharacterDatas)
+        {
+            if (characterData.Character == character)
+            {
+                return characterData;
+            }
+        }
+
+        Debug.LogError($"Character {character} not found");
+        return null;
+    }
+    
 }
