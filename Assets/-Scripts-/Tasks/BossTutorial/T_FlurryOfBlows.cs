@@ -1,6 +1,6 @@
 using MBT;
+using System;
 using System.Collections;
-using System.Threading;
 using UnityEngine;
 
 namespace MBTExample
@@ -14,84 +14,99 @@ namespace MBTExample
 
         private TutorialBossCharacter bossCharacter;
         private Vector3 targetPosition;
-        private bool mustStop = false;
 
         private int attackCount;
-        private bool canAttack;
+        private bool attackStarted = false;
 
         public override void OnEnter()
         {
-            bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();            
-            mustStop = false;
+            bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
             bossCharacter.Agent.isStopped = false;
+            attackStarted = false;
             attackCount = 0;
+            bossCharacter.SetFlurryOfBlowsDamageData(attackCount);
+            bossCharacter.Agent.speed = bossCharacter.flurrySpeed;
+            bossCharacter.canAttackAnim = false;
 
 
             Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
-            targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), 0, (direction.z * bossCharacter.flurryDistance)) + bossCharacter.transform.position;
-            bossCharacter.SetFlurryOfBlowsDamageData(attackCount);
-            Debug.Log("inizio attacco " + attackCount);
-
-
-            bossCharacter.Agent.speed = bossCharacter.flurrySpeed;
-            bossCharacter.Agent.SetDestination(targetPosition);
-            bossCharacter.anim.SetTrigger("FlurryOfBlows");
-
-
+            targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), (direction.y * bossCharacter.flurryDistance), 0) + bossCharacter.transform.position;
 
         }
 
         public override NodeResult Execute()
         {
-            
-            float dist = Vector3.Distance(targetPosition, bossCharacter.transform.position);
 
-            if (mustStop || dist <= bossCharacter.minDistance)
+            float dist = Vector2.Distance(targetPosition, bossCharacter.transform.position);
+
+            //esci da attacco
+            if (attackCount >= bossCharacter.punchQuantity)
             {
-                attackCount++;
-                bossCharacter.SetFlurryOfBlowsDamageData(attackCount);
+               
+               
+                bossCharacter.anim.SetTrigger("Return");
+                return NodeResult.success;
+            }
 
-
-                if (attackCount >= bossCharacter.punchQuantity)
+            else
+            {
+                //attacco
+                if (bossCharacter.canAttackAnim)
                 {
-                    bossCharacter.Agent.isStopped = true;
-                    bossCharacter.anim.SetTrigger("Return");
-                    return NodeResult.success;
-                }
+                   
+                    attackCount++;
+                    bossCharacter.SetFlurryOfBlowsDamageData(attackCount);
 
-                else
-                {
-                    
                     Debug.Log("inizio attacco " + attackCount);
-                    
+
                     Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
-                    targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), 0, (direction.z * bossCharacter.flurryDistance)) + bossCharacter.transform.position;
 
-                    if (canAttack)
-                    {
-                        bossCharacter.anim.SetTrigger("FlurryOfBlows" + attackCount);
-                        bossCharacter.Agent.speed = bossCharacter.flurrySpeed;
-                        bossCharacter.Agent.SetDestination(targetPosition);
+                    targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), (direction.y * bossCharacter.flurryDistance), 0) + bossCharacter.transform.position;
 
-                    }
+                    bossCharacter.canAttackAnim = false;
+                    attackStarted = false;
+                    bossCharacter.anim.SetTrigger("FlurryOfBlows" + attackCount);
+                    
+                    bossCharacter.Agent.SetDestination(targetPosition);
 
                     return NodeResult.running;
-
                 }
+
+                //preview attacco
+                else if(!attackStarted)
+                {
+                    SetUpBoss();
+                    AttackPreview();
+                    bossCharacter.StartCoroutine(bossCharacter.StartAttackPunch());
+                    
+                }
+
 
             }
 
 
             return NodeResult.running;
         }
-        
-        public IEnumerator AttackPreview(float Timer)
+
+        private void SetUpBoss()
         {
-            yield return new WaitForSeconds(Timer);
-            canAttack = true;
+            attackStarted = true;
+            Vector3.RotateTowards(bossCharacter.transform.rotation.eulerAngles, targetPosition,360f,360f);
+        }
+
+        public void AttackPreview()
+        {
+            
+            //mostra preview attacco
+            Debug.Log("Mostra preview");
+            Vector3.RotateTowards(bossCharacter.previewArrow.transform.rotation.eulerAngles, targetPosition, 360f, 360f);
+            bossCharacter.previewArrow.SetActive(true);
+
+
+
 
         }
     }
 
-    
+
 }

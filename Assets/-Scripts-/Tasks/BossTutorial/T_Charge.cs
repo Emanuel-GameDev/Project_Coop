@@ -28,7 +28,7 @@ namespace MBTExample
             mustStop = false;
 
             Vector3 direction = (targetTransform.Value.position -bossCharacter.transform.position).normalized;
-            targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), 0,(direction.z * bossCharacter.chargeDistance)) + bossCharacter.transform.position; 
+            targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), (direction.y * bossCharacter.chargeDistance),0) + bossCharacter.transform.position; 
 
            
             //Setto il danno
@@ -57,7 +57,7 @@ namespace MBTExample
 
                 }
 
-                float dist = Vector3.Distance(targetPosition, bossCharacter.transform.position);
+                float dist = Vector2.Distance(targetPosition, bossCharacter.transform.position);
                
                 if(mustStop || dist <= bossCharacter.minDistance)
                 {

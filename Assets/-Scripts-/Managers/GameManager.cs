@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] PowerUp powerUpToGive; //Debug
     [SerializeField] PlayerCharacter player; //Debug
+    [SerializeField] GameObject bossToEnable; //Debug
     public PlayerInputManager playerInputManager { get; private set; }
     public CoopManager coopManager { get; private set; }
     public CameraManager cameraManager { get; private set; }
@@ -89,6 +90,11 @@ public class GameManager : MonoBehaviour
         //{
         //    player.CharacterClass.SetIsInBossfight(true);
         //}
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            bossToEnable.SetActive(true);
+        }
         //Debug End
     }
 

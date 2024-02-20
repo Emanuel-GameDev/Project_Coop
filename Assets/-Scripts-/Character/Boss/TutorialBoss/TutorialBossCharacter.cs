@@ -10,6 +10,8 @@ public class TutorialBossCharacter : BossCharacter
     public float minDistance;
     public float followDuration;
     public float walkSpeed;
+    public float attackPreviewTimer;
+    public GameObject previewArrow;
     public GameObject visual;
     public GameObject _pivot;
     public Animator anim => animator;
@@ -39,13 +41,11 @@ public class TutorialBossCharacter : BossCharacter
     public float crashTimer;
 
     [HideInInspector] public DamageData damageData;
+    public bool canAttackAnim;
    
 
-    private void Start()
-    {
-        visual.transform.localPosition = Vector3.zero;
-       
-    }
+   
+   
     private void Update()
     {
         if (target != null)
@@ -95,8 +95,6 @@ public class TutorialBossCharacter : BossCharacter
     {
         base.TakeDamage(data);
     }
-
-
     protected override void SetSpriteDirection(Vector2 direction)
     {
         if (direction.y != 0)
@@ -109,5 +107,13 @@ public class TutorialBossCharacter : BossCharacter
 
         _pivot.gameObject.transform.localScale = scale;
     }
+    public IEnumerator StartAttackPunch()
+    {
+        yield return new WaitForSeconds(attackPreviewTimer);
+        canAttackAnim = true;
+        previewArrow.SetActive(false);
+        Debug.Log("Fine preview");
+    }
+ 
 
 }
