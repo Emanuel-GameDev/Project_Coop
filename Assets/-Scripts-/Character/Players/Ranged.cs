@@ -12,7 +12,7 @@ public class Ranged : CharacterClass
     //aggiungere prefab mina (?)
     //aggiungere vari timer(arma, schivata,cd vari)
 
-    private Vector3 lookDirection = Vector3.forward;
+    private Vector2 lookDirection = Vector2.up;
 
 
     //base Attack
@@ -186,10 +186,10 @@ public class Ranged : CharacterClass
 
             isAttacking = true;
 
-            Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook(context);
+            Vector2 _look = parent.GetComponent<PlayerCharacter>().ReadLook(context);
 
             //controllo che la look non sia zero, possibilità solo se si una il controller
-            if (_look != Vector3.zero)
+            if (_look != Vector2.zero)
             {
                 lookDirection = _look;
             }
@@ -215,7 +215,7 @@ public class Ranged : CharacterClass
     }
 
     //Sparo normale
-    private void BasicFireProjectile(Vector3 direction)
+    private void BasicFireProjectile(Vector2 direction)
     {
 
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
@@ -227,7 +227,7 @@ public class Ranged : CharacterClass
     }
 
     //Sparo triplo
-    private IEnumerator MultipleFireProjectile(Vector3 direction)
+    private IEnumerator MultipleFireProjectile(Vector2 direction)
     {
         for (int i = 0; i < numberProjectile; i++)
         {
@@ -359,6 +359,7 @@ public class Ranged : CharacterClass
         {
             GameObject newLandMine = Instantiate(prefabLandMine);
 
+            //TODO guardare la posizione in 2d
             newLandMine.transform.position = new Vector3(transform.position.x, 0 , transform.position.z);
 
             newLandMine.GetComponent<LandMine>().Initialize(gameObject.GetComponentInParent<PlayerCharacter>(),landMineRange,Damage * landMineDamageMultiplier,gameObject.layer);
@@ -421,10 +422,10 @@ public class Ranged : CharacterClass
             if (endTimer - empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
             {
 
-                Vector3 _look = parent.GetComponent<PlayerCharacter>().ReadLook(context);
+                Vector2 _look = parent.GetComponent<PlayerCharacter>().ReadLook(context);
 
                 //controllo che la look non sia zero, possibilità solo se si una il controller
-                if (_look != Vector3.zero)
+                if (_look != Vector2.zero)
                 {
                     lookDirection = _look;
                 }
@@ -447,7 +448,7 @@ public class Ranged : CharacterClass
     }
 
     //sparo caricato (abilità unica)
-    private void EmpowerFireProjectile(Vector3 direction)
+    private void EmpowerFireProjectile(Vector2 direction)
     {
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 

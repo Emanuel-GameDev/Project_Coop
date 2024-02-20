@@ -22,6 +22,7 @@ public class BasicEnemy : EnemyCharacter
     [SerializeField] public float viewRange = 2f;
     [SerializeField] public float attackRange = 1;
     [SerializeField] float attackDelay = 1;
+    [SerializeField] public float despawnTime = 1;
 
     [SerializeField] EnemyType enemyType;
 
@@ -50,7 +51,7 @@ public class BasicEnemy : EnemyCharacter
 
     Vector2 lastNonZeroDirection;
 
-    [SerializeField] public float despawnTime = 1;
+
 
     [HideInInspector] public BasicEnemyIdleState idleState;
     [HideInInspector] public BasicEnemyMoveState moveState;

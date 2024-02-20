@@ -20,13 +20,13 @@ public class BasicEnemyEditor : Editor
         {
             Handles.zTest = UnityEngine.Rendering.CompareFunction.LessEqual;
             Handles.color = new Color(1, 0, 0, 0.2f);
-            Handles.DrawSolidDisc(enemy.groundLevel.position, Vector3.up, enemy.viewRange);
+            Handles.DrawSolidDisc(enemy.groundLevel.position, Vector3.forward, enemy.viewRange);
             
             Handles.color = new Color(0, 1, 0, 0.2f);
-            Handles.DrawSolidDisc(enemy.groundLevel.position, Vector3.up, enemy.attackRange);
+            Handles.DrawSolidDisc(enemy.groundLevel.position, Vector3.forward, enemy.attackRange);
 
             Handles.color = new Color(0, 0, 1, 0.2f);
-            Handles.DrawSolidDisc(enemy.groundLevel.position, Vector3.up, enemy.escapeRange);
+            Handles.DrawSolidDisc(enemy.groundLevel.position, Vector3.forward, enemy.escapeRange);
         }
 
         Handles.zTest = oldZtest;
