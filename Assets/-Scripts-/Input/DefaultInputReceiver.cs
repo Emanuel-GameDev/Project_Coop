@@ -110,6 +110,35 @@ public class DefaultInputReceiver : MonoBehaviour, InputReceiver
     {
         
     }
+
+    #endregion
+
+    #region UI
+
+    public virtual void Navigate(InputAction.CallbackContext context)
+    {
+    }
+
+    public virtual void Submit(InputAction.CallbackContext context)
+    {
+    }
+
+    public virtual void RandomSelection(InputAction.CallbackContext context)
+    {
+    }
+
+    public virtual void Cancel(InputAction.CallbackContext context)
+    {
+    }
+
+    public virtual void Point(InputAction.CallbackContext context)
+    {
+    }
+
+    public virtual void ScrollWheel(InputAction.CallbackContext context)
+    {
+    }
+
     #endregion
 
     #endregion

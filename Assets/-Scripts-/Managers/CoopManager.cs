@@ -79,6 +79,11 @@ public class CoopManager : MonoBehaviour
         
     }
 
+    public List<PlayerInputHandler> GetActualHandlers()
+    {
+        return playerInputHandlers;
+    }
+
     #region Player Management
 
     public void SetPlayerCanJoin(bool canJoin)
@@ -99,7 +104,7 @@ public class CoopManager : MonoBehaviour
         if(playerInputHandlers == null)
             playerInputHandlers = new List<PlayerInputHandler>();
 
-        playerInput.gameObject.transform.parent = transform;
+        playerInput.gameObject.transform.SetParent(transform);
         PlayerInputHandler newPlayerInputHandler = playerInput.gameObject.GetComponent<PlayerInputHandler>();
         if (newPlayerInputHandler != null)
         {

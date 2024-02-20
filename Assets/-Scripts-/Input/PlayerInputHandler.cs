@@ -23,6 +23,11 @@ public class PlayerInputHandler : MonoBehaviour
         private set { _currentReceiver = value; }
     }
 
+    public PlayerInput GetPlayerInput()
+    {
+        return playerInput;
+    }
+
 
     private void Awake()
     {
@@ -34,8 +39,9 @@ public class PlayerInputHandler : MonoBehaviour
     {
         CurrentReceiver = newReceiver;
         playerInput.SwitchCurrentActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
-        if(currentCharacter != ePlayerCharacter.EmptyCharacter)
+        if (currentCharacter != ePlayerCharacter.EmptyCharacter)
             CurrentReceiver.SetCharacter(currentCharacter);
+
     }
 
     public void SetCharacter(ePlayerCharacter character)
@@ -91,6 +97,23 @@ public class PlayerInputHandler : MonoBehaviour
     #region Minigame
 
     public void MoveMinigameInput(InputAction.CallbackContext context) => CurrentReceiver.MoveMinigameInput(context);
+
+    #endregion
+
+
+    #region UI
+
+    public virtual void Navigate(InputAction.CallbackContext context) => CurrentReceiver.Navigate(context);
+
+    public virtual void Submit(InputAction.CallbackContext context) => CurrentReceiver.Submit(context);
+
+    public virtual void RandomSelection(InputAction.CallbackContext context) => CurrentReceiver.RandomSelection(context);
+
+    public virtual void Cancel(InputAction.CallbackContext context) => CurrentReceiver.Cancel(context);
+
+    public virtual void Point(InputAction.CallbackContext context) => CurrentReceiver.Point(context);
+
+    public virtual void ScrollWheel(InputAction.CallbackContext context) => CurrentReceiver.ScrollWheel(context);
 
     #endregion
 

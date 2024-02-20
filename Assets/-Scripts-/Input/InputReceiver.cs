@@ -47,5 +47,20 @@ public interface InputReceiver
     void MoveMinigameInput(InputAction.CallbackContext context);
     #endregion
 
+    #region UI
+
+    void Navigate(InputAction.CallbackContext context);
+
+    void Submit(InputAction.CallbackContext context);
+
+    void RandomSelection(InputAction.CallbackContext context);
+
+    void Cancel(InputAction.CallbackContext context);
+
+    void Point(InputAction.CallbackContext context);
+
+    void ScrollWheel(InputAction.CallbackContext context);
+
+    #endregion
     #endregion
 }

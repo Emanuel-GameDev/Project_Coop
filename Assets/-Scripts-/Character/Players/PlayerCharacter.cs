@@ -234,6 +234,30 @@ public class PlayerCharacter : Character, InputReceiver
 
     #region UnusedInput
 
+    public virtual void Navigate(InputAction.CallbackContext context)
+    {
+    }
+
+    public virtual void Submit(InputAction.CallbackContext context)
+    {
+    }
+
+    public virtual void RandomSelection(InputAction.CallbackContext context)
+    {
+    }
+
+    public virtual void Cancel(InputAction.CallbackContext context)
+    {
+    }
+
+    public virtual void Point(InputAction.CallbackContext context)
+    {
+    }
+
+    public virtual void ScrollWheel(InputAction.CallbackContext context)
+    {
+    }
+
     public void JoinInput(InputAction.CallbackContext context)
     {
 
