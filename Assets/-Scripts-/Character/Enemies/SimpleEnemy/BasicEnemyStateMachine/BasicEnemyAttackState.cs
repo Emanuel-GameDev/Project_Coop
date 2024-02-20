@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+   
 
 public class BasicEnemyAttackState : BasicEnemyState
 {
-    public BasicEnemyAttackState(BasicEnemy basicEnemy)
+    public BasicEnemyAttackState(BasicEnemy basicEnemy, EnemyType enemyType)
     {
         this.basicEnemy = basicEnemy;
+        this.enemyType = enemyType;
     }
 
     public override void Enter()
