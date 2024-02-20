@@ -11,7 +11,7 @@ public class EnemyTargetDetection : MonoBehaviour
         labirintEnemy = GetComponentInParent<LabirintEnemy>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.GetComponent<LabirintPlayer>())
         {

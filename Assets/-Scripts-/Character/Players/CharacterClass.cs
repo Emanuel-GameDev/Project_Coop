@@ -154,31 +154,19 @@ public class CharacterClass : MonoBehaviour
     #region Move
     public Vector2 GetLastNonZeroDirection() => lastNonZeroDirection;
 
-    //dati x e z chiama Move col Vector2
-    public virtual void Move(float x, float z, Rigidbody rb)
-    {
-        Move(new Vector2(x, z), rb);
-    }
 
-    // Dato un vector2 chiama move col Vector3
-    public virtual void Move(Vector2 direction, Rigidbody rb)
-    {
-        Move(new Vector3(direction.x, 0, direction.y).normalized, rb);
-    }
-
-    //dato un vector 3 setta la velocit� del rigidBody in quella direzione, se il vettore non � normalizzato lo normalizza
-    public virtual void Move(Vector3 direction, Rigidbody rb)
+    public virtual void Move(Vector2 direction, Rigidbody2D rb)
     {
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
-        rb.velocity = new Vector3(direction.x * MoveSpeed, direction.y, direction.z * MoveSpeed);
+
+        rb.velocity = direction * MoveSpeed;
 
         isMoving = rb.velocity.magnitude > 0.2f;
 
-        Vector2 direction2D = new Vector2(direction.x, direction.z);
+        if (direction != Vector2.zero)
+            lastNonZeroDirection = direction;
 
-        if (direction2D != Vector2.zero)
-            lastNonZeroDirection = direction2D;
         SetSpriteDirection(lastNonZeroDirection);
     }
 

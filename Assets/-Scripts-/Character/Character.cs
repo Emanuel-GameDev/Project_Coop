@@ -8,7 +8,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 {
     public bool stunned = false;
 
-    protected Rigidbody rb;
+    protected Rigidbody2D rb;
     protected List<Condition> conditions;
 
     private bool canInteract;
@@ -28,13 +28,13 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     //Tutto ciò che va fatto nello ad inizio
     protected virtual void InitialSetup()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponentInParent<Rigidbody2D>();
         conditions = new();
         canInteract = false;
         damageReceivedMultiplier = 1;
     }
 
-    public Rigidbody GetRigidBody() => rb;
+    public Rigidbody2D GetRigidBody() => rb;
 
     public abstract void TakeDamage(DamageData data);
 

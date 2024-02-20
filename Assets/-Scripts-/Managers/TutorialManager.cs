@@ -453,10 +453,12 @@ public class TutorialManager : MonoBehaviour
 
     private void ResetPlayersPosition()
     {
-        //dps.GetRigidBody().Move(DPSRespawn.position, dps.gameObject.transform.rotation);
-        //healer.GetRigidBody().Move(healerRespawn.position, dps.gameObject.transform.rotation);
-        //ranged.GetRigidBody().Move(rangedRespawn.position, dps.gameObject.transform.rotation);
-        //tank.GetRigidBody().Move(tankRespawn.position, dps.gameObject.transform.rotation);
+
+        dps.GetRigidBody().MovePosition(DPSRespawn.position);
+        healer.GetRigidBody().MovePosition(healerRespawn.position);
+        ranged.GetRigidBody().MovePosition(rangedRespawn.position);
+        tank.GetRigidBody().MovePosition(tankRespawn.position);
+
 
         //dps.gameObject.transform.SetPositionAndRotation(DPSRespawn.position, dps.gameObject.transform.rotation);
         //healer.gameObject.transform.SetPositionAndRotation(healerRespawn.position, healer.gameObject.transform.rotation);
@@ -494,7 +496,7 @@ public class TutorialManager : MonoBehaviour
         tutorialEnemy.closeRangeTrigger.ClearList();
 
         tutorialEnemy.stateMachine.SetState(tutorialEnemy.idleState);
-        tutorialEnemy.GetRigidBody().velocity = Vector3.zero;
+        tutorialEnemy.GetRigidBody().velocity = Vector2.zero;
         
 
         tutorialEnemy.gameObject.SetActive(true);

@@ -16,8 +16,6 @@ public class BasicEnemy : EnemyCharacter
     [SerializeField] public float viewRange = 2f;
     [SerializeField] public float closeRange = 1;
    
-
-
     NavMeshPath path;
 
     [SerializeField] Transform pivot;
@@ -85,7 +83,7 @@ public class BasicEnemy : EnemyCharacter
     {
         if (!canMove)
         {
-            rb.velocity = Vector3.zero;
+            rb.velocity = Vector2.zero;
             return;
         }
 
@@ -102,34 +100,28 @@ public class BasicEnemy : EnemyCharacter
                     Move(target.position - transform.position, rb);
             }
             else
-                rb.velocity = Vector3.zero;
+                rb.velocity = Vector2.zero;
         }
         else
         {
-            rb.velocity = Vector3.zero;
+            rb.velocity = Vector2.zero;
         }
     }
 
-    public virtual void Move(Vector3 direction, Rigidbody rb)
+    public virtual void Move(Vector2 direction, Rigidbody2D rb)
     {
         if (obstacle.enabled)
             return;
-       
+
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
 
-        rb.velocity = new Vector3(direction.x * MoveSpeed, direction.y, direction.z * MoveSpeed);
-
-
-
-
-        Vector2 direction2D = new Vector2(direction.x, direction.z);
+        rb.velocity = direction * MoveSpeed;
 
         isMoving = rb.velocity.magnitude > 0.2f;
-        
 
-        if (direction2D != Vector2.zero)
-            lastNonZeroDirection = direction2D;
+        if (direction != Vector2.zero)
+            lastNonZeroDirection = direction;
 
         SetSpriteDirection(lastNonZeroDirection);
 
