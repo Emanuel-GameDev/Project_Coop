@@ -53,6 +53,9 @@ public class CoopManager : MonoBehaviour
         }
     }
 
+
+   
+
     private void Awake()
     {
         if (_instance != null && _instance != this)

@@ -3,6 +3,7 @@ using UnityEngine;
 public class AggroCondition : Condition
 {
     private CharacterClass player;
+    private Character target;
     private float duration;
     private bool started;
     private float timer;
@@ -10,14 +11,19 @@ public class AggroCondition : Condition
     public override void AddCondition(Character parent)
     {       
         transform.parent = parent.transform;
-        base.AddCondition(parent);
+        target = parent;
+       //base.AddCondition(parent);
         Debug.Log(transform.parent.name + " sono sotto AGGRO per " + duration + " secondi");
+        started = true;
+        parent.underAggro = true;
     }
 
     public override void RemoveCondition(Character parent)
     {
         Debug.Log(parent.name + " non sono più sotto AGGRO");
-        Destroy(this.gameObject);
+        target = null;
+        parent.underAggro = false;
+        base.RemoveCondition(parent);
         
     }
 
@@ -32,11 +38,17 @@ public class AggroCondition : Condition
     {
        if(player != null)
         {
-            if (!started)
+            if (started)
             {
-                started = true;
-                timer = duration;
-                
+
+                if (timer >= duration)
+                {
+                    RemoveCondition(target);
+                }
+                else
+                {
+                    timer += Time.deltaTime;
+                }
             }
                 
         }
