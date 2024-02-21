@@ -84,25 +84,25 @@ public class TutorialManager : MonoBehaviour
             if(ih.currentCharacter == ePlayerCharacter.Brutus)
             {
                 dpsPresent = true;
-                dps=ih.CurrentReceiver.GetCharacterObject().GetComponent<PlayerCharacter>();
+                dps=ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Cassius)
             {
                 healerPresent = true;
-                healer = ih.CurrentReceiver.GetCharacterObject().GetComponent<PlayerCharacter>();
+                healer = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Jude)
             {
                 rangedPresent = true;
-                ranged = ih.CurrentReceiver.GetCharacterObject().GetComponent<PlayerCharacter>();
+                ranged = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Caina)
             {
                 tankPresent = true;
-                tank = ih.CurrentReceiver.GetCharacterObject().GetComponent<PlayerCharacter>();
+                tank = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
             }
         }
 
@@ -111,28 +111,28 @@ public class TutorialManager : MonoBehaviour
         {
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Brutus);
-            dps=receiver.GetCharacterObject().GetComponent<PlayerCharacter>();
+            dps=receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
         }
 
         if (!healerPresent)
         {
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Cassius);
-            healer = receiver.GetCharacterObject().GetComponent<PlayerCharacter>();
+            healer = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
         }
 
         if (!rangedPresent)
         {
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Jude);
-            ranged = receiver.GetCharacterObject().GetComponent<PlayerCharacter>();
+            ranged = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
         }
 
         if (!tankPresent)
         {
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Caina);
-            tank = receiver.GetCharacterObject().GetComponent<PlayerCharacter>();
+            tank = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
         }
 
         //dps.SetInputHandler(GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>()[0]);

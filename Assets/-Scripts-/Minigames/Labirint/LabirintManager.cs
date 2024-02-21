@@ -33,9 +33,14 @@ public class LabirintManager : MonoBehaviour
     [SerializeField]
     GameObject enemyPrefab;
     [SerializeField]
+    GameObject keyPrefab;
+    [SerializeField]
     Grid grid;
     [SerializeField]
     List<Labirint> Labirints;
+
+    List<GameObject> objectsForTheMatch;
+
     int playerCount = 1;
     int deadPlayerCount = 0;
     Labirint currentLabirint;
@@ -91,59 +96,36 @@ public class LabirintManager : MonoBehaviour
     #region Labirint Setup
     private void SetupLabirint()
     {
+        objectsForTheMatch = new();
         currentLabirint = Labirints[Random.Range(0, Labirints.Count)];
         foreach (Labirint labirint in Labirints)
         {
             labirint.gameObject.SetActive(false);
         }
         currentLabirint.gameObject.SetActive(true);
-        SetElements(currentLabirint.GetEnemySpawnPoints(), enemyCount);
-        SetElements(currentLabirint.GetKeySpawnPoints(), keyCount);
-        SetElements(currentLabirint.GetPlayerSpawnPoints(), playerCount);
+        SetElements(currentLabirint.GetEnemySpawnPoints(), enemyCount, enemyPrefab);
+        SetElements(currentLabirint.GetKeySpawnPoints(), keyCount, keyPrefab);
+        SetElements(currentLabirint.GetPlayerSpawnPoints(), playerCount, playerPrefab);
         pickedKey = 0;
         deadPlayerCount = 0;
-        SetEnemyes(currentLabirint.GetEnemySpawnPoints());
-        SetPlayers(currentLabirint.GetPlayerSpawnPoints());
     }
 
-    private void SetPlayers(List<GameObject> gameObjects)
+    private void SetElements(List<Vector3Int> positions, int quantity, GameObject element)
     {
-        foreach (GameObject obj in gameObjects)
+        for (int i = 0; i < quantity; i++)
         {
-            if (obj.activeInHierarchy)
+            if (i >= positions.Count)
+                return;
+            else
             {
-                GameObject.Instantiate(playerPrefab, obj.transform.position, Quaternion.identity);
+                int randomIndex = Random.Range(0, positions.Count);
+                Vector3Int position = positions[randomIndex];
+                positions.RemoveAt(randomIndex);
+                GameObject obj = GameObject.Instantiate(element, grid.CellToWorld(position), Quaternion.identity);
                 obj.SetActive(false);
-            }
-        }
-    }
-
-    private void SetEnemyes(List<GameObject> gameObjects)
-    {
-        foreach (GameObject obj in gameObjects)
-        {
-            if (obj.activeInHierarchy)
-            {
-                GameObject.Instantiate(enemyPrefab, obj.transform.position, Quaternion.identity);
-                obj.SetActive(false);
+                objectsForTheMatch.Add(obj);
             }
 
-        }
-    }
-
-    private void SetElements(List<GameObject> objects, int quantity)
-    {
-        if (quantity < objects.Count)
-        {
-            for (int i = 0; i < objects.Count - quantity; i++)
-            {
-                GameObject obj = objects[Random.Range(0, objects.Count)];
-                while (!obj.activeInHierarchy)
-                {
-                    obj = objects[Random.Range(0, objects.Count)];
-                }
-                obj.SetActive(false);
-            }
         }
     }
     #endregion

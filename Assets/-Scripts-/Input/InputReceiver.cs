@@ -6,7 +6,7 @@ public interface InputReceiver
     void SetCharacter(ePlayerCharacter character);
     ePlayerCharacter GetCharacter();
 
-    GameObject GetCharacterObject();
+    GameObject GetReceiverObject();
 
     void SetInputHandler(PlayerInputHandler inputHandler);
     PlayerInputHandler GetInputHandler();

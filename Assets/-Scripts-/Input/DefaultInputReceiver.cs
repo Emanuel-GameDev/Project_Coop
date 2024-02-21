@@ -6,6 +6,12 @@ public class DefaultInputReceiver : MonoBehaviour, InputReceiver
     protected ePlayerCharacter character;
     protected PlayerInputHandler playerInputHandler;
 
+
+    public GameObject GetReceiverObject()
+    {
+        return gameObject;    }
+
+
     public virtual void SetCharacter(ePlayerCharacter character)
     {
         this.character = character;

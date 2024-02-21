@@ -104,7 +104,7 @@ public class PlayerCharacter : Character, InputReceiver
     }
     public ePlayerCharacter GetCharacter() => currentCharacter;
 
-    public virtual GameObject GetCharacterObject()
+    public virtual GameObject GetReceiverObject()
     {
         return gameObject;
     }

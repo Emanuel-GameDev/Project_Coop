@@ -121,7 +121,6 @@ public class LabirintEnemy : MonoBehaviour
     {
         Vector3 cellDestination = grid.GetCellCenterWorld(grid.WorldToCell(vector3));
 
-
         return new Vector3(cellDestination.x, vector3.y, cellDestination.z);
     }
 
