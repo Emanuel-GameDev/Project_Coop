@@ -5,8 +5,13 @@ public class Projectile : MonoBehaviour, IDamager
     [SerializeField] private Vector3 travelDirection;
     [SerializeField] private float projectileSpeed;
     [SerializeField] private float rangeRemaining = 1;
+    [SerializeField] private float maxRange = 1;
     [SerializeField] private Vector3 projectileSize;
     [SerializeField] private float projectileDamage;
+
+    [SerializeField] bool incrementalDamage;
+
+
 
     private Damager damager;
 
@@ -29,7 +34,8 @@ public class Projectile : MonoBehaviour, IDamager
     {
 
         travelDirection = direction * 1000;
-        rangeRemaining = range;
+        maxRange = range;
+        rangeRemaining = maxRange;
         projectileSpeed = speed;
         transform.localScale = projectileSize * sizeMultiplier;
         projectileDamage = damage;

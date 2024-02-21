@@ -6,25 +6,52 @@ using UnityEngine.AI;
 using UnityEngine.Localization.Settings;
 using UnityEngine.TextCore.Text;
 
+public enum EnemyType
+{
+    melee,
+    ranged
+}
+
 public class BasicEnemy : EnemyCharacter
 {
 
 
     [Tooltip("Serve per gli effetti visivi dell' editor")]
     public Transform groundLevel;
-
+    [Header("Variabili di base")]
     [SerializeField] public float viewRange = 2f;
+    [SerializeField] public float attackRange = 1;
+    [SerializeField] float attackDelay = 1;
+    [SerializeField] public float despawnTime = 1;
+
+    [SerializeField] EnemyType enemyType;
+
+    [Header("Variabili ranged")]
+    [SerializeField] public float escapeRange = 0f;
+    [SerializeField] int numberOfConsecutiveShoot;
+    [SerializeField] float projectileSpeed;
+    [SerializeField] float projectileRange;
+
+    List<PlayerCharacter> playerInRange;
+    PlayerCharacter selectedPlayerInRange;
+
+
+    //di prova
+    //[SerializeField] Transform tryTarget;
+
     [SerializeField] public float closeRange = 1;
    
     NavMeshPath path;
 
+    [Header("Pivot")]
     [SerializeField] Transform pivot;
 
     public StateMachine<BasicEnemyState> stateMachine { get; } = new();
+    
 
     Vector2 lastNonZeroDirection;
 
-    [SerializeField] public float despawnTime = 1;
+
 
     [HideInInspector] public BasicEnemyIdleState idleState;
     [HideInInspector] public BasicEnemyMoveState moveState;
@@ -42,8 +69,15 @@ public class BasicEnemy : EnemyCharacter
     [HideInInspector] public bool canMove = false;
     [HideInInspector] public bool canAction = false;
 
+    [Header("Detectors")]
     [SerializeField] public Detector viewTrigger;
     [SerializeField] public Detector closeRangeTrigger;
+    [SerializeField] public Detector EscapeTrigger;
+
+    [Header("navMesh carving value")]
+    [SerializeField] float CarvingTime = 0.5f;
+    [SerializeField] float CarvingMoveThreshold = 0.1f;
+
 
     [HideInInspector] public NavMeshObstacle obstacle;
 
@@ -54,6 +88,17 @@ public class BasicEnemy : EnemyCharacter
         base.Awake();
 
         obstacle = GetComponent<NavMeshObstacle>();
+
+        obstacle.enabled = false;
+        obstacle.carveOnlyStationary = false;
+        obstacle.carving = true;
+
+
+        idleState = new BasicEnemyIdleState(this);
+        moveState = new BasicEnemyMoveState(this);
+        actionState = new BasicEnemyActionState(this);
+
+
         path = new NavMeshPath();
 
 
@@ -70,7 +115,13 @@ public class BasicEnemy : EnemyCharacter
         viewTrigger.GetComponent<CapsuleCollider>().radius = viewRange;
         closeRangeTrigger.GetComponent<CapsuleCollider>().radius = closeRange;
 
-        
+
+        if(enemyType == EnemyType.ranged)
+        {
+            EscapeTrigger.GetComponent<CapsuleCollider>().radius = escapeRange;
+        }
+
+        stateMachine.SetState(idleState);       
     }
 
     protected virtual void Update()
@@ -150,14 +201,66 @@ public class BasicEnemy : EnemyCharacter
     public IEnumerator Attack()
     {
 
-        isActioning = true;
+        isActioning= true;
+        //GetComponentInChildren<SpriteRenderer>().material.color = Color.red;
 
-        animator.SetTrigger("Attack");
+        switch (enemyType)
+        {
+            case EnemyType.melee:
+                animator.SetTrigger("Attack");
+                yield return new WaitForSeconds(attackDelay);
+                break;
 
-        yield return new WaitForSeconds(attackSpeed);
-        isActioning = false;
+            case EnemyType.ranged:
+                playerInRange = closeRangeTrigger.GetPlayersDetected();
 
+                for (int i = 0; i < numberOfConsecutiveShoot; i++)
+                {
+                    animator.SetTrigger("Attack");
+
+                    Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
+
+                    newProjectile.transform.position = transform.position;
+
+                    selectedPlayerInRange = playerInRange[Random.Range(0, playerInRange.Count)];
+
+
+
+                    Vector3 direction = transform.position - selectedPlayerInRange.transform.position;
+
+                    newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1, damage, gameObject.layer);
+                    yield return new WaitForSeconds(attackDelay);
+
+                    playerInRange.Clear();
+                }
+                break;
+        }
+
+
+        
+        isActioning= false;
+        //GetComponentInChildren<SpriteRenderer>().material.color = Color.white;
     }
+
+    
+    
+
+    public override void TargetSelection()
+    {
+        
+    }
+
+    //public void SetTarget(Transform newTarget)
+    //{
+    //    target = newTarget;
+
+    //    isActioning = true;
+
+    //    animator.SetTrigger("Attack");
+
+    //    yield return new WaitForSeconds(attackSpeed);
+    //    isActioning = false;
+    //}
 
     public override void TakeDamage(DamageData data)
     {
@@ -175,6 +278,8 @@ public class BasicEnemy : EnemyCharacter
         }
        
     }
+
+
 
     public void DamagedAnimationEndedEvent()
     {
