@@ -26,10 +26,7 @@ public class MovementTutorialState : TutorialFase
 
          faseData = (MovementTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
 
-        tutorialManager.DeactivatePlayerInput(tutorialManager.dps);
-        tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
-        tutorialManager.DeactivatePlayerInput(tutorialManager.ranged);
-        tutorialManager.DeactivatePlayerInput(tutorialManager.tank);
+        tutorialManager.DeactivateAllPlayerInputs();
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartFaseTimer;
 
@@ -42,10 +39,8 @@ public class MovementTutorialState : TutorialFase
     {
         tutorialManager.StartCoroutine(tutorialManager.Timer(faseData.faseLenght));
 
-        tutorialManager.dps.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.healer.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.ranged.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.ActivateAllPlayerInput();
+        
 
         tutorialManager.dialogueBox.OnDialogueEnded -= StartFaseTimer;
     }
@@ -74,10 +69,7 @@ public class MovementTutorialState : TutorialFase
         {
             tutorialManager.timerEnded = false;
 
-            tutorialManager.DeactivatePlayerInput(tutorialManager.dps);
-            tutorialManager.DeactivatePlayerInput(tutorialManager.healer);
-            tutorialManager.DeactivatePlayerInput(tutorialManager.ranged);
-            tutorialManager.DeactivatePlayerInput(tutorialManager.tank);
+            tutorialManager.DeactivateAllPlayerInputs();
             stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
         }
     }

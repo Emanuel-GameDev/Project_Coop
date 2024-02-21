@@ -104,6 +104,11 @@ public class PlayerCharacter : Character, InputReceiver
     }
     public ePlayerCharacter GetCharacter() => currentCharacter;
 
+    public virtual GameObject GetCharacterObject()
+    {
+        return gameObject;
+    }
+
     public void SetInputHandler(PlayerInputHandler inputHandler)
     {
         playerInputHandler = inputHandler;

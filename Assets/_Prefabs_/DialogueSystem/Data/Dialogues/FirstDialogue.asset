@@ -14,7 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - character: {fileID: 11400000, guid: 732786ad5e1b1c44fa2f27afadeb570a, type: 2}
-    content: "Prima di tutto, che ne dite di sgranchirvi un po\u2019? "
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: FirstDialogueLineID:0
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 1, g: 0, b: 0, a: 1}
     overrideNameFont: 0
@@ -27,10 +35,19 @@ MonoBehaviour:
     dialogueLineVoice: {fileID: 8300000, guid: 36244952caca9a24eaa853eb253af2d4, type: 3}
     overrideDialogueSpeed: 0
     characterPerSecond: 1
+    dialogueType: 0
     openInEditor: 0
     overrideOptionsOpenInEditor: 0
   - character: {fileID: 11400000, guid: 732786ad5e1b1c44fa2f27afadeb570a, type: 2}
-    content: 'fdjkghslkdhgkdsfsdfsdfsd '
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: FirstDialogueLineID:1
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -43,10 +60,19 @@ MonoBehaviour:
     dialogueLineVoice: {fileID: 8300000, guid: 61103754cd863574f8c357e8f15a81b1, type: 3}
     overrideDialogueSpeed: 0
     characterPerSecond: 10
+    dialogueType: 0
     openInEditor: 0
     overrideOptionsOpenInEditor: 1
   - character: {fileID: 11400000, guid: a4e56baf9e8af614492f46ffc4b37544, type: 2}
-    content: gdfgdfgfdgfd
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: FirstDialogueLineID:2
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -59,10 +85,19 @@ MonoBehaviour:
     dialogueLineVoice: {fileID: 0}
     overrideDialogueSpeed: 0
     characterPerSecond: 20
+    dialogueType: 0
     openInEditor: 0
     overrideOptionsOpenInEditor: 0
   - character: {fileID: 11400000, guid: 96d66554568dba841aed20de03fba36d, type: 2}
-    content: dsfsfdsfdsfdsfdsfdsfdsfdsfds
+    localizedLine:
+      m_TableReference:
+        m_TableCollectionName: Dialogue
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: FirstDialogueLineID:3
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     overrideNameColor: 0
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
@@ -75,5 +110,9 @@ MonoBehaviour:
     dialogueLineVoice: {fileID: 0}
     overrideDialogueSpeed: 0
     characterPerSecond: 20
+    dialogueType: 0
     openInEditor: 0
     overrideOptionsOpenInEditor: 0
+  references:
+    version: 2
+    RefIds: []
