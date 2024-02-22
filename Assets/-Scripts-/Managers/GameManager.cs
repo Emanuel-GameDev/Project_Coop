@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,6 +11,7 @@ public class GameManager : MonoBehaviour
     public PlayerInputManager playerInputManager { get; private set; }
     public CoopManager coopManager { get; private set; }
     public CameraManager cameraManager { get; private set; }
+    public GameObject BossGameobject; //Debug;
 
     private static GameManager _instance;
     public static GameManager Instance
@@ -58,7 +57,7 @@ public class GameManager : MonoBehaviour
         if (cameraManager != null && coopManager != null)
             cameraManager.AddAllPlayers();
 
-        if(playerCharacterDatas == null || playerCharacterDatas.Count <= 0)
+        if (playerCharacterDatas == null || playerCharacterDatas.Count <= 0)
         {
             Debug.LogError("No player character datas found");
         }
@@ -96,6 +95,11 @@ public class GameManager : MonoBehaviour
         //{
         //    player.CharacterClass.SetIsInBossfight(true);
         //}
+
+        if (Input.GetKeyDown(KeyCode.B))
+            {
+            BossGameobject.SetActive(true);
+        }
         //Debug End
     }
 
@@ -160,9 +164,9 @@ public class GameManager : MonoBehaviour
 
     public bool IsSceneLoaded(string sceneName)
     {
-        if(sceneLoadOperations.ContainsKey(sceneName))
+        if (sceneLoadOperations.ContainsKey(sceneName))
         {
-           return sceneLoadOperations[sceneName].isDone;
+            return sceneLoadOperations[sceneName].isDone;
         }
         else
             return false;
@@ -209,5 +213,5 @@ public class GameManager : MonoBehaviour
         Debug.LogError($"Character {character} not found");
         return null;
     }
-    
+
 }
