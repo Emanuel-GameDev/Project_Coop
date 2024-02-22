@@ -8,11 +8,15 @@ public class Labirint : MonoBehaviour
     [SerializeField]
     Tilemap objectsTilemap;
     [SerializeField]
+    Tilemap wallTilemap;
+    [SerializeField]
     TileBase playerSpawnPoints;
     [SerializeField]
     TileBase keySpawnPoints;
     [SerializeField]
     TileBase enemySpawnPoints;
+
+    public Tilemap WallTilemap => wallTilemap;
 
     public List<Vector3Int> GetPlayerSpawnPoints() => FindTilesOfType(objectsTilemap, playerSpawnPoints);
     public List<Vector3Int> GetKeySpawnPoints() => FindTilesOfType(objectsTilemap, keySpawnPoints);
