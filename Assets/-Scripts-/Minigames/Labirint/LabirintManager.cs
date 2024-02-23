@@ -66,7 +66,7 @@ public class LabirintManager : MonoBehaviour
     private void Start()
     {
         //SetupLabirint();
-        stateMachine.SetState(new StartLabirint());
+        stateMachine.SetState(new MenuLabirint());
         //Debug
         //StartGame();
     }
@@ -141,6 +141,8 @@ public class LabirintManager : MonoBehaviour
             player.transform.position = grid.GetCellCenterWorld(position);
             player.transform.SetParent(Grid.transform);
             player.transform.localScale = Vector3.one;
+            //player.transform.SetParent(null);
+            player.Inizialize();
         }
     }
 

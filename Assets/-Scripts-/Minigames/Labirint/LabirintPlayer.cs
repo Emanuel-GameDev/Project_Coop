@@ -1,22 +1,24 @@
-using UnityEngine.InputSystem;
 using UnityEngine;
-using System;
-using UnityEngine.TextCore.Text;
+using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
 public class LabirintPlayer : DefaultInputReceiver
 {
-    public float moveSpeed = 10f;
+    [SerializeField]
+    private float moveSpeed = 10f;
+    [SerializeField, Range(0,1f)]
+    private float directionTreshold = 0.2f;
     private Grid grid;
     private Tilemap wallTilemap;
-    private float tileSize;
+    //private float tileSize;
 
-    Vector3 moveDir;
-    Vector3 destination;
+    Vector2 moveDir;
+    Vector2 lastInput;
+    Vector2 destination;
     public int pickedKeys { get; private set; } = 0;
 
     private SpriteRenderer spriteRenderer;
-    
+
     void Start()
     {
         InitialSetup();
@@ -27,8 +29,7 @@ public class LabirintPlayer : DefaultInputReceiver
         destination = transform.position;
         pickedKeys = 0;
         grid = LabirintManager.Instance.Grid;
-        wallTilemap = LabirintManager.Instance.GetWallMap();
-        tileSize = grid.cellSize.x;
+        //tileSize = grid.cellSize.x;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         LabirintManager.Instance.AddPlayer(this);
     }
@@ -65,82 +66,82 @@ public class LabirintPlayer : DefaultInputReceiver
     #region Movement
     protected void Move()
     {
-        Vector3 direzioneMovimento = moveDir;
-        direzioneMovimento.Normalize();
+        if (wallTilemap == null)
+            return;
 
-        if (moveDir != Vector3.zero) // && CheckDirection())
+        if (moveDir != Vector2.zero && CheckDirection())
         {
-            //Vector3 nextCellPosition = grid.GetCellCenterWorld(grid.WorldToCell(transform.position + direzioneMovimento * grid.cellSize.x));
-            //if (!IsCellOccupied(nextCellPosition))
-            //    destination = nextCellPosition;
-
-            ////Debug.Log($"Destination: {destination}, MoveDir: {moveDir}");
-
-            Vector3Int cellaAttuale = grid.WorldToCell(transform.position);
-            Vector3Int cellaDestinazione = cellaAttuale + Vector3Int.RoundToInt(moveDir);
-
-            // Calcola la posizione del centro della cella di destinazione
-            Vector3 posizioneCentraleCella = grid.GetCellCenterWorld(cellaDestinazione);
+            //CheckDirections();
 
 
-            // Controlla se la destinazione è sulla griglia e non contiene un muro
-            if (wallTilemap.HasTile(cellaDestinazione))
+            Vector3Int currentCell = grid.WorldToCell(transform.position);
+            Vector3Int destinationCell = currentCell + Vector3Int.RoundToInt(moveDir);
+
+            Vector2 cellCentralPosition = grid.GetCellCenterWorld(destinationCell);
+
+            if (!wallTilemap.HasTile(destinationCell))
             {
-                // Non muovere se la destinazione contiene un muro o è fuori dalla griglia
-                moveDir = Vector3.zero;
-                destination = transform.position;
+                destination = cellCentralPosition;
             }
-            else if (Vector3.Distance(transform.position, posizioneCentraleCella) < 0.01f)
-            {
-                // Se il personaggio è al centro della cella, imposta la posizione di destinazione
-                destination = posizioneCentraleCella;
-            }
-
-            // Muovi il personaggio verso la destinazione
-            transform.position = Vector3.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
 
         }
 
-
-        //transform.position = Vector3.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
     }
 
-    //protected bool CheckDirection()
-    //{
-    //    bool hasReachCenter = Vector3.Distance(transform.position, destination) < 0.01f;
-    //    Vector3 directionToDestination = (destination - (Vector3)transform.position).normalized;
-    //    bool isSameAxis = false;
-    //    if ((directionToDestination.x == 0 && moveDir.x == 0) || (directionToDestination.z == 0 && moveDir.z == 0))
-    //        isSameAxis = true;
-    //    //Debug.Log($"MoveDir: {moveDir}");
-    //    //Debug.Log($"has reac Center: {hasReachCenter}, Is Same Axis: {isSameAxis}");
-    //    return hasReachCenter || isSameAxis;
-    //}
+    private void CheckDirections()
+    {
+        Vector2 destinationCell = destination;
 
-    //protected bool IsCellOccupied(Vector3 cellPosition)
-    //{
-    //    Collider[] colliders = Physics.OverlapBox(cellPosition, grid.cellSize / 2.1f);
+        if (Mathf.Abs(moveDir.x) > directionTreshold)
+        {
+            Vector2Int direction = moveDir.x > 0 ? Vector2Int.right : Vector2Int.left;
+            CheckIfCellIsOccupied(direction);
+        }
 
-    //    foreach (Collider collider in colliders)
-    //    {
-    //        if (!collider.isTrigger)
-    //        {
-    //            return true;
-    //        }
-    //    }
+        if (Mathf.Abs(moveDir.y) > directionTreshold)
+        {
+            Vector2Int direction = moveDir.y > 0 ? Vector2Int.up : Vector2Int.down;
+            
+        }
+    }
 
-    //    return false;
-    //}
+    private bool CheckIfCellIsOccupied(Vector2Int direction)
+    {
+        Vector3Int currentCell = grid.WorldToCell(transform.position);
+        Vector3Int destinationCell = currentCell + (Vector3Int)direction;
+        return wallTilemap.HasTile(destinationCell);
+       
+    }
+
+    protected bool CheckDirection()
+    {
+        bool hasReachCenter = Vector3.Distance(transform.position, destination) < 0.01f;
+        Vector2 directionToDestination = (destination - (Vector2)transform.position).normalized;
+        bool isSameAxis = ((directionToDestination.x == 0 && moveDir.x == 0) || (directionToDestination.y == 0 && moveDir.y == 0));
+        return hasReachCenter || isSameAxis;
+    }
+
+    public void Inizialize()
+    {
+        wallTilemap = LabirintManager.Instance.GetWallMap();
+        destination = transform.position;
+        lastInput = Vector2.zero;
+    }
+
     #endregion
 
     #region Input
-
     public override void MoveMinigameInput(InputAction.CallbackContext context)
     {
-        //Vector2 inputDirection = context.ReadValue<Vector2>();
         moveDir = context.ReadValue<Vector2>();
-        //Debug.Log($"inputDir: {inputDirection}, MoveDir: {moveDir}");
     }
+
+    public override void MenuInput(InputAction.CallbackContext context)
+    {
+
+    }
+
     #endregion
 
 }
