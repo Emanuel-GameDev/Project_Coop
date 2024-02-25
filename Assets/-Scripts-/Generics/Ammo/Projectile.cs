@@ -2,14 +2,36 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour, IDamager
 {
-    [SerializeField] private Vector3 travelDirection;
+    [Header("Proiettile statistiche base")]
+    [SerializeField] private Vector2 travelDirection;
     [SerializeField] private float projectileSpeed;
     [SerializeField] private float rangeRemaining = 1;
     [SerializeField] private float maxRange = 1;
     [SerializeField] private Vector3 projectileSize;
-    [SerializeField] private float projectileDamage;
+    [SerializeField] private float baseProjectileDamage;
+    [SerializeField] private float boostedProjectileDamage;
 
+    //valore utilizzare unicamente nel reflect per tenere conto della grandezza di base
+    private float sizeMultiplier;
+
+    [Header("Proprietà danno incrementale")]
     [SerializeField] bool incrementalDamage;
+    [Min(0)]
+    [SerializeField] float zone1Distance;
+    [Min(1)]
+    [SerializeField] float zone1DamageMultiplier;
+    [Min(0)]
+    [SerializeField] float zone2Distance;
+    [Min(1)]
+    [SerializeField] float zone2DamageMultiplier;
+    [Min(0)]
+    [SerializeField] float zone3Distance;
+    [Min(1)]
+    [SerializeField] float zone3DamageMultiplier;
+    //[Min(0)]
+    //[SerializeField] float zone4Distance;
+    [Min(1)]
+    [SerializeField] float maxZoneDamageMultiplier;
 
 
 
@@ -22,6 +44,7 @@ public class Projectile : MonoBehaviour, IDamager
     private void Awake()
     {
         projectileSize = transform.lossyScale;
+        damager= GetComponent<Damager>();
     }
 
     private void Start()
@@ -38,8 +61,20 @@ public class Projectile : MonoBehaviour, IDamager
         rangeRemaining = maxRange;
         projectileSpeed = speed;
         transform.localScale = projectileSize * sizeMultiplier;
-        projectileDamage = damage;
+        this.sizeMultiplier = sizeMultiplier;
+        baseProjectileDamage = damage;
+        boostedProjectileDamage = damage;
         gameObject.layer = layer;
+
+        //TODO cambiare sta roba asap
+        if (layer.ToString() == "Player")
+        {
+            damager.targetLayers = LayerMask.NameToLayer("Enemy");
+        }
+        else
+        {
+            damager.targetLayers = LayerMask.NameToLayer("Player");
+        }
     }
 
     private void OnEnable()
@@ -92,9 +127,40 @@ public class Projectile : MonoBehaviour, IDamager
     //Modifica
     public DamageData GetDamageData()
     {
+        
+        if (incrementalDamage)
+        {
+            float projectileTraveled = maxRange - rangeRemaining;
+            if(projectileTraveled <= zone1Distance)
+            {
+                boostedProjectileDamage *= zone1DamageMultiplier;
+            }
+            else if(projectileTraveled > zone1Distance && projectileTraveled<= zone2Distance)
+            {
+                boostedProjectileDamage *= zone2DamageMultiplier;
+            }
+            else if(projectileTraveled > zone2Distance && projectileTraveled <= zone3Distance)
+            {
+                boostedProjectileDamage *= zone3DamageMultiplier;
+            }
+            else
+            {
+                boostedProjectileDamage *= maxZoneDamageMultiplier;
+            }
+        }
+
         DismissProjectile();
 
-        return new DamageData(projectileDamage,this);
+        return new DamageData(boostedProjectileDamage,this);
+    }
+
+    public void ReflectProjectile(GameObject reflectionOwner,float reflectionMultiplier)
+    {
+        Projectile reflectedProjectile = ProjectilePool.Instance.GetProjectile();
+
+        reflectedProjectile.Inizialize(-travelDirection,maxRange,projectileSpeed,sizeMultiplier,baseProjectileDamage*reflectionMultiplier,reflectionOwner.layer);
+
+        DismissProjectile();
     }
 
 }

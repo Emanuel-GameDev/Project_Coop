@@ -150,8 +150,18 @@ MonoBehaviour:
   travelDirection: {x: 0, y: 0, z: 0}
   projectileSpeed: 0
   rangeRemaining: 1
+  maxRange: 1
   projectileSize: {x: 0, y: 0, z: 0}
-  projectileDamage: 0
+  baseProjectileDamage: 0
+  boostedProjectileDamage: 0
+  incrementalDamage: 0
+  zone1Distance: 10
+  zone1DamageMultiplier: 1
+  zone2Distance: 20
+  zone2DamageMultiplier: 1.15
+  zone3Distance: 30
+  zone3DamageMultiplier: 1.3
+  maxZoneDamageMultiplier: 1.45
 --- !u!114 &1696100344981423649
 MonoBehaviour:
   m_ObjectHideFlags: 0

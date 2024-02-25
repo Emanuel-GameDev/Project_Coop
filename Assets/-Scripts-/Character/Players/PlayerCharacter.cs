@@ -17,7 +17,7 @@ public class PlayerCharacter : Character, InputReceiver
     private PlayerInputHandler playerInputHandler;
     private Vector3 screenPosition;
     private Vector3 worldPosition;
-    Plane plane = new Plane(Vector3.up, -1);
+    Plane plane = new Plane(Vector3.back,0);
 
     Vector2 lookDir;
     Vector2 moveDir;
@@ -137,14 +137,14 @@ public class PlayerCharacter : Character, InputReceiver
         }
     }
 
-    public Vector3 ReadLook(InputAction.CallbackContext context)
+    public Vector2 ReadLook(InputAction.CallbackContext context)
     {
         string gamepad = context.control.device.displayName;
 
         if (gamepad.Contains("Gamepad") || gamepad.Contains("Controller") || gamepad.Contains("Joystick"))
         {
             //perndo la look dal player.input utilizzando il gamepad
-            return new Vector3(lookDir.x, 0, lookDir.y).normalized;
+            return new Vector2(lookDir.x, lookDir.y).normalized;
         }
         else
         {
@@ -161,7 +161,7 @@ public class PlayerCharacter : Character, InputReceiver
             }
 
             Debug.Log(worldPosition);
-            return new Vector3(worldPosition.x, 0, worldPosition.z);
+            return new Vector2(worldPosition.x, worldPosition.y);
         }
 
     }
