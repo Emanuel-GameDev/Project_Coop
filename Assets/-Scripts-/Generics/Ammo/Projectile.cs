@@ -44,17 +44,20 @@ public class Projectile : MonoBehaviour, IDamager
     private void Awake()
     {
         projectileSize = transform.lossyScale;
-        damager= GetComponent<Damager>();
+        damager = GetComponent<Damager>();
+
     }
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         transform.LookAt(travelDirection);
+        
     }
 
-    public void Inizialize(Vector3 direction, float range, float speed, float sizeMultiplier,float damage,LayerMask layer)
+    public void Inizialize(Vector2 direction, float range, float speed, float sizeMultiplier,float damage,LayerMask layer)
     {
+        
 
         travelDirection = direction * 1000;
         maxRange = range;
@@ -67,13 +70,16 @@ public class Projectile : MonoBehaviour, IDamager
         gameObject.layer = layer;
 
         //TODO cambiare sta roba asap
-        if (layer.ToString() == "Player")
+        if (gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            damager.targetLayers = LayerMask.NameToLayer("Enemy");
+            int Targetlayer= LayerMask.NameToLayer("Enemy");
+
+            damager.targetLayers = (1 << Targetlayer);
         }
         else
         {
-            damager.targetLayers = LayerMask.NameToLayer("Player");
+            int Targetlayer = LayerMask.NameToLayer("Player");
+            damager.targetLayers = (1 << Targetlayer);
         }
     }
 
