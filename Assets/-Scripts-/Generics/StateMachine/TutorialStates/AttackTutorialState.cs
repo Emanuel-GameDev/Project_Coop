@@ -13,11 +13,13 @@ public class AttackTutorialState : TutorialFase
     AttackTutorialFaseData faseData;
 
 
-    PlayerCharacter[] characters;
+    PlayerCharacter[] currentFaseCharacters;
     Dialogue[] charactersPreTutorialDialogue;
     int currentCharacterIndex;
 
     int hitCount = 0;
+
+    int inputHandlerIndex = 0;
 
     public AttackTutorialState(TutorialManager tutorialManager)
     {
@@ -34,7 +36,7 @@ public class AttackTutorialState : TutorialFase
 
         currentCharacterIndex = -1;
 
-        characters = new PlayerCharacter[4] {tutorialManager.dps, tutorialManager.tank , tutorialManager.ranged , tutorialManager.healer };
+        currentFaseCharacters = new PlayerCharacter[4] {tutorialManager.dps, tutorialManager.tank , tutorialManager.ranged , tutorialManager.healer };
         charactersPreTutorialDialogue = new Dialogue[4] { faseData.dpsDialogue, faseData.tankDialogue, faseData.rangedDialogue, faseData.healerDialogue };
 
 
@@ -43,6 +45,7 @@ public class AttackTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
     }
+
 
     public void WaitAfterDialogue()
     {
@@ -65,13 +68,22 @@ public class AttackTutorialState : TutorialFase
 
         hitCount = 0;
 
-        if(characters[currentCharacterIndex].GetInputHandler()==null)
+        if(currentFaseCharacters[currentCharacterIndex].GetInputHandler() == null)
         {
-            tutorialManager.inputHandlers[0].SetCharacter(characters[currentCharacterIndex].CharacterClass.Character);
+
+            tutorialManager.inputHandlers[inputHandlerIndex].SetReceiver(currentFaseCharacters[currentCharacterIndex]);
+
+            inputHandlerIndex++;
+
+            if (inputHandlerIndex >= tutorialManager.inputHandlers.Count)
+            {
+                inputHandlerIndex --;
+            }
+            
         }
 
-        characters[currentCharacterIndex].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        characters[currentCharacterIndex].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
+        tutorialManager.inputHandlers[0].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.inputHandlers[0].GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
 
         comboHitCount = 0;
         tutorialManager.tutorialEnemy.OnHit += EnemyHitted;
@@ -83,7 +95,7 @@ public class AttackTutorialState : TutorialFase
 
     private void EnemyHitted()
     {
-        if(characters[currentCharacterIndex].CharacterClass is DPS)
+        if(currentFaseCharacters[currentCharacterIndex].CharacterClass is DPS)
         {
             if(hitCounterTimer != null)
                 tutorialManager.StopCoroutine(hitCounterTimer);
@@ -117,8 +129,8 @@ public class AttackTutorialState : TutorialFase
             hitCount = 0;
             tutorialManager.tutorialEnemy.OnHit -= EnemyHitted;
 
-            characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
-            characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Attack").Disable();
+            currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Attack").Disable();
 
             if (currentCharacterIndex < 3)
             {

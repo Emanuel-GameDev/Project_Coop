@@ -189,15 +189,11 @@ public class DodgeTutorialState : TutorialFase
         else
             SetupPerfectDodgeTutorial();
 
-
-
     }
 
     public override void Update()
     {
         base.Update();
-
-
     }
 
 

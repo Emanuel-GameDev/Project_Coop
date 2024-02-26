@@ -112,13 +112,13 @@ public class BasicEnemy : EnemyCharacter
 
     protected virtual void Start()
     {
-        viewTrigger.GetComponent<CapsuleCollider>().radius = viewRange;
-        closeRangeTrigger.GetComponent<CapsuleCollider>().radius = closeRange;
+        viewTrigger.GetComponent<CircleCollider2D>().radius = viewRange;
+        closeRangeTrigger.GetComponent<CircleCollider2D>().radius = closeRange;
 
 
         if(enemyType == EnemyType.ranged)
         {
-            EscapeTrigger.GetComponent<CapsuleCollider>().radius = escapeRange;
+            EscapeTrigger.GetComponent<CircleCollider2D>().radius = escapeRange;
         }
 
         stateMachine.SetState(idleState);       

@@ -24,9 +24,7 @@ public class MovementTutorialState : TutorialFase
     {
          base.Enter();
 
-         faseData = (MovementTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
-
-        tutorialManager.DeactivateAllPlayerInputs();
+        faseData = (MovementTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartFaseTimer;
 
@@ -39,9 +37,6 @@ public class MovementTutorialState : TutorialFase
     {
         tutorialManager.StartCoroutine(tutorialManager.Timer(faseData.faseLenght));
 
-        tutorialManager.ActivateAllPlayerInput();
-        
-
         tutorialManager.dialogueBox.OnDialogueEnded -= StartFaseTimer;
     }
 
@@ -51,7 +46,6 @@ public class MovementTutorialState : TutorialFase
         base.Update();
 
         
-
         if (!moveCheck)
         {
             foreach (PlayerCharacter p in tutorialManager.characters)
@@ -69,7 +63,7 @@ public class MovementTutorialState : TutorialFase
         {
             tutorialManager.timerEnded = false;
 
-            tutorialManager.DeactivateAllPlayerInputs();
+            //tutorialManager.DeactivateAllPlayerInputs();
             stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
         }
     }

@@ -48,6 +48,9 @@ public class TutorialManager : MonoBehaviour
     [HideInInspector] public bool blockFaseChange = false;
     bool finale = false;
 
+    /*[HideInInspector]*/
+    Dictionary<PlayerCharacter, PlayerInputHandler> inputBindings;
+
     [Serializable]
     public class Fase
     {
@@ -62,11 +65,25 @@ public class TutorialManager : MonoBehaviour
     public int faseCount = 0;
 
     [HideInInspector] public List<PlayerInputHandler> inputHandlers;
-    
 
+    int _inputHandlerId = 0;
+
+    int inputHandlersID
+    {
+        get { return _inputHandlerId; }
+
+        set 
+        { 
+            if(value<inputHandlers.Count)
+                _inputHandlerId = value;
+            else
+                _inputHandlerId = 0;
+        }
+    }
 
     private void SetUpCharacters()
     {
+        inputHandlersID = 0;
         inputHandlers = new List<PlayerInputHandler>();
 
         foreach(PlayerInputHandler ih in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
@@ -85,24 +102,28 @@ public class TutorialManager : MonoBehaviour
             {
                 dpsPresent = true;
                 dps=ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+                inputBindings.Add(dps, ih);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Cassius)
             {
                 healerPresent = true;
                 healer = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+                inputBindings.Add(healer, ih);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Jude)
             {
                 rangedPresent = true;
                 ranged = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+                inputBindings.Add(ranged, ih);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Caina)
             {
                 tankPresent = true;
                 tank = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+                inputBindings.Add(tank, ih);
             }
         }
 
@@ -112,6 +133,9 @@ public class TutorialManager : MonoBehaviour
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Brutus);
             dps=receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+
+            inputBindings.Add(dps, inputHandlers[inputHandlersID]);
+            inputHandlersID++;
         }
 
         if (!healerPresent)
@@ -119,6 +143,9 @@ public class TutorialManager : MonoBehaviour
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Cassius);
             healer = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+
+            inputBindings.Add(healer, inputHandlers[inputHandlersID]);
+            inputHandlersID++;
         }
 
         if (!rangedPresent)
@@ -126,6 +153,9 @@ public class TutorialManager : MonoBehaviour
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Jude);
             ranged = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+
+            inputBindings.Add(ranged, inputHandlers[inputHandlersID]);
+            inputHandlersID++;
         }
 
         if (!tankPresent)
@@ -133,57 +163,18 @@ public class TutorialManager : MonoBehaviour
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Caina);
             tank = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+
+            inputBindings.Add(tank, inputHandlers[inputHandlersID]);
+            inputHandlersID++;
         }
 
-        //dps.SetInputHandler(GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>()[0]);
-
-        //nonPlayingCharacter = CharacterPoolManager.Instance.GetComponentsInChildren<CharacterClass>().ToList();
-        //GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>();
-
-
-        //PlayerCharacter searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is DPS);
-
-        //////dps = SceneInputReceiverManager.Instance.
-        //////CharacterPoolManager.Instance.SwitchCharacter(GameManager.Instance.coopManager.ActivePlayers[0], ePlayerCharacter.Brutus);
-        //if (searched != null)
-        //{
-        //    dps = searched;
-        //}
-
-        //searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is Healer);
-
-        //if (searched != null)
-        //{
-        //    healer = searched;
-        //}
-
-        //searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is Ranged);
-
-        //if (searched != null)
-        //{
-        //    ranged = searched;
-        //}
-
-
-
-        //searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is Tank);
-
-        //if (searched != null)
-        //{
-        //    tank = searched;
-        //}
-
+       
 
         characters.Add(dps);
         characters.Add(healer);
         characters.Add(ranged);
         characters.Add(tank);
 
-
-        //dps.gameObject.SetActive(true);
-        //healer.gameObject.SetActive(true);
-        //ranged.gameObject.SetActive(true);
-        //tank.gameObject.SetActive(true);
 
 
     }
@@ -351,8 +342,9 @@ public class TutorialManager : MonoBehaviour
         //GameObject instatieted = Instantiate(playerInputPrefab);
         //PlayerInput playerInput = playerInputPrefab.GetComponent<PlayerInput>();
         //CoopManager.Instance.OnPlayerJoined(playerInput);
+        inputBindings = new Dictionary<PlayerCharacter, PlayerInputHandler>();
 
-        
+
         SetUpCharacters();
 
 
@@ -542,7 +534,7 @@ public class TutorialManager : MonoBehaviour
         ranged.GetRigidBody().MovePosition(rangedRespawn.position);
         tank.GetRigidBody().MovePosition(tankRespawn.position);
 
-        DeactivateAllPlayerInputs();
+//DeactivateAllPlayerInputs();
        
 
         //dps.gameObject.transform.SetPositionAndRotation(DPSRespawn.position, dps.gameObject.transform.rotation);
@@ -574,6 +566,7 @@ public class TutorialManager : MonoBehaviour
 
     private void ResetEnemyPosition()
     {
+       
         tutorialEnemy.gameObject.SetActive(false);
         tutorialEnemy.gameObject.transform.SetPositionAndRotation(enemyRespawn.position, tutorialEnemy.gameObject.transform.rotation);
 

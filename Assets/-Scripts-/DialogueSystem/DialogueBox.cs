@@ -79,7 +79,9 @@ public class DialogueBox : MonoBehaviour
             foreach(PlayerInputHandler handler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
             {
                 handler.GetComponent<PlayerInput>().actions.Enable();
-                handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
+                InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
+                action.Disable();
+                action.performed -= NextLineInput;
             }
 
             //foreach (PlayerCharacter character in GameManager.Instance.coopManager.activePlayers)
@@ -197,14 +199,20 @@ public class DialogueBox : MonoBehaviour
 
 
     }
-    
+
+    List<InputAction> input;
+
     public void StartDialogue()
     {
 
         foreach (PlayerInputHandler handler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             handler.GetComponent<PlayerInput>().actions.Disable();
-            handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
+
+            InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
+
+            action.Enable();
+            action.performed += NextLineInput; 
         }
 
         //foreach (PlayerCharacter character in GameManager.Instance.coopManager.ActivePlayers)
@@ -221,7 +229,6 @@ public class DialogueBox : MonoBehaviour
     }
 
 
-
     IEnumerator TypeLine()
     {
         if (audioSource.clip != null)
@@ -230,33 +237,25 @@ public class DialogueBox : MonoBehaviour
         foreach (char c in nextLine.Content.GetLocalizedString().ToCharArray())
         {
             nextBox.contentText.text += c;
-            yield return new WaitForSeconds(1 / characterPerSecond);
+
+            if (!char.IsWhiteSpace(c))
+                yield return new WaitForSeconds(1 / characterPerSecond);
+                
+
         }
 
         if(nextBox.dialogueChecker != null)
             nextBox.dialogueChecker.enabled = true;
     }
     bool registered = false;
+
+
     private void OnEnable()
     {
         audioSource = GetComponent<AudioSource>();
 
-        if (!registered)
-            PubSub.Instance.RegisterFunction(EMessageType.dialogueInput, NextLineInput);
-
-        registered = true;
-
-        
-        //prova
-        //StartDialogue();
     }
 
-    private void OnDisable()
-    {
-        //PubSub.Instance.UnregisterFunction(EMessageType.dialogueInput, NextLineInput);
-
-
-    }
     float timer;
 
     bool oneTime = false;
@@ -273,13 +272,10 @@ public class DialogueBox : MonoBehaviour
             timer += Time.deltaTime;
         }
 
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    NextLineInput(null);
-        //}
     }
-    //input di prova
-    private void NextLineInput(object obj)
+   
+
+    private void NextLineInput(InputAction.CallbackContext obj)
     {
         if (timer < 0.1)
             return;

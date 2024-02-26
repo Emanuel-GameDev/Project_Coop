@@ -12,7 +12,7 @@ public class TutorialEnemy : BasicEnemy
     {
         base.TakeDamage(data);
         OnHit?.Invoke();
-        
+        Debug.Log("Hit");
     }
 
     
