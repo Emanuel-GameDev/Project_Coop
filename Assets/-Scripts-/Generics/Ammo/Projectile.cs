@@ -51,7 +51,8 @@ public class Projectile : MonoBehaviour, IDamager
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        transform.LookAt(travelDirection);
+        //transform.LookAt(travelDirection);
+        transform.position = new Vector3(transform.position.x, transform.position.y, -1);
         
     }
 

@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicMeleeEnemyAttackState : BasicEnemyActionState
+public class BasicRangedEnemyAttackState : BasicEnemyActionState
 {
-    public BasicMeleeEnemyAttackState(BasicEnemy basicEnemy) : base(basicEnemy)
+
+    public BasicRangedEnemyAttackState(BasicEnemy basicEnemy) : base(basicEnemy)
     {
     }
-
 
     public override void Enter()
     {
@@ -26,10 +26,16 @@ public class BasicMeleeEnemyAttackState : BasicEnemyActionState
         {
             if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() == 0)
             {
+
                 stateMachine.SetState(basicEnemy.moveState);
+
             }
             else
+            {
                 basicEnemy.StartCoroutine(basicEnemy.Attack());
+                
+            }
+                
 
         }
 

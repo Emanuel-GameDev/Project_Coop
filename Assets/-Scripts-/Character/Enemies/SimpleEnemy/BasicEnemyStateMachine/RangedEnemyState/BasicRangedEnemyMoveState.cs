@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicMeleeEnemyMoveState : BasicEnemyMoveState
+public class BasicRangedEnemyMoveState : BasicEnemyMoveState
 {
-    public BasicMeleeEnemyMoveState(BasicEnemy basicEnemy) : base(basicEnemy)
+    public BasicRangedEnemyMoveState(BasicEnemy basicEnemy) : base(basicEnemy)
     {
+
     }
 
     public override void Enter()
@@ -18,9 +19,9 @@ public class BasicMeleeEnemyMoveState : BasicEnemyMoveState
     {
         base.Update();
 
-        if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() > 0)
+        if (basicEnemy.viewTrigger.GetPlayersCountInTrigger() > 0)
         {
-            basicEnemy.SetTarget(basicEnemy.AttackRangeTrigger.GetPlayersDetected()[0].transform);
+            basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
             stateMachine.SetState(basicEnemy.actionState);
         }
         basicEnemy.FollowPath();
