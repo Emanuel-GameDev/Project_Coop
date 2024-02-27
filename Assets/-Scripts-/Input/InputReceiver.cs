@@ -57,8 +57,6 @@ public interface InputReceiver
 
     void Cancel(InputAction.CallbackContext context);
 
-    void Point(InputAction.CallbackContext context);
-
     void ScrollWheel(InputAction.CallbackContext context);
 
     #endregion

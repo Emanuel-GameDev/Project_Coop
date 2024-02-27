@@ -75,7 +75,7 @@ public class CoopManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        InitializePlayers();
+        //InitializePlayers();
         
     }
 
@@ -124,18 +124,24 @@ public class CoopManager : MonoBehaviour
             playerInputHandlers.Remove(leftingPlayerInputHandler);
             Destroy(leftingPlayerInputHandler.gameObject);
         }
+
     }
 
     #endregion  
 
-    private void InitializePlayers()
+    public void InitializePlayers()
     {
+        if (playerInputHandlers == null ||
+            playerInputHandlers.Count == 0) return;
+
         foreach (PlayerInputHandler player in playerInputHandlers)
         {
-            player.SetReceiver(SceneInputReceiverManager.Instance.GetSceneInputReceiver(player));
+            InputReceiver pReceiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(player);
+            player.SetReceiver(pReceiver);
         }
-        HPHandler.Instance.SetActivePlayers();
+
         CameraManager.Instance.AddAllPlayers();
+        HPHandler.Instance.SetActivePlayers();
     }
 
     public void OnDeviceLost(PlayerInput playerInput)
