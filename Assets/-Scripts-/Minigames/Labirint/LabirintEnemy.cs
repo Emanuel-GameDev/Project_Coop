@@ -7,12 +7,12 @@ public class LabirintEnemy : MonoBehaviour
     private float moveSpeed = 10f;
     public float maxFollowDistance = 15f;
     public Grid grid;
-    protected Vector2 destination;
 
     private EnemyTargetDetection targetDetection;
     private Transform target;
     private NavMeshAgent agent;
-    private Vector2 agentDestination;
+    private Vector2 finalDestination;
+    private Vector2 currentDestination;
     private NavMeshPath navMeshPath;
 
     private static int debugCountMax = 50;
@@ -29,8 +29,8 @@ public class LabirintEnemy : MonoBehaviour
     {
         targetDetection = GetComponentInChildren<EnemyTargetDetection>();
         grid = LabirintManager.Instance.Grid;
-        destination = transform.position;
-        agentDestination = transform.position;
+        currentDestination = transform.position;
+        finalDestination = transform.position;
         InizializeAgent();
     }
 
@@ -46,7 +46,7 @@ public class LabirintEnemy : MonoBehaviour
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
         agent.updateRotation = false;
         SetRandomDestination();
-        Navigate();
+        CalculateCurrentDestination();
     }
 
     protected void Update()
@@ -61,13 +61,14 @@ public class LabirintEnemy : MonoBehaviour
         {
             if (NavMesh.SamplePosition(target.position, out NavMeshHit hit, 5.0f, NavMesh.AllAreas))
             {
-                agentDestination = hit.position;
+                finalDestination = hit.position;
             }
-        }
-        if (Vector2.Distance(transform.position, agentDestination) > MaxFollowDistance)
-        {
-            target = null;
-            SetRandomDestination();
+
+            if (Vector2.Distance(transform.position, target.position) > MaxFollowDistance)
+            {
+                target = null;
+                SetRandomDestination();
+            }
         }
     }
 
@@ -81,7 +82,7 @@ public class LabirintEnemy : MonoBehaviour
             Vector2 randomPoint = transform.position + Random.onUnitSphere * randomDistance;
             founded = NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, randomDistance, NavMesh.AllAreas);
             if(founded)
-                agentDestination = grid.GetCellCenterWorld(grid.WorldToCell(hit.position));
+                finalDestination = grid.GetCellCenterWorld(grid.WorldToCell(hit.position));
         }
 
         debugCount = 0;
@@ -89,42 +90,32 @@ public class LabirintEnemy : MonoBehaviour
 
     private void HandlePathfindingAndMovement()
     {
-        //bool hasReachDestination = Vector2.Distance(transform.position, AgentGridDestination(agentDestination)) < 0.01f;
-        bool hasReachCenter = Vector2.Distance(transform.position, destination) < 0.01f;
+        bool hasReachFinalDestination = Vector2.Distance(transform.position, AgentGridDestination(finalDestination)) < 0.01f;
+        bool hasReachCurrentDestination = Vector2.Distance(transform.position, currentDestination) < 0.01f;
 
-        //if (hasReachDestination)
-        //{
-        //    SetRandomDestination();
-        //}
-        //else
-        //{
-        if (!hasReachCenter)
-            debugCount++;
-        if (debugCount > debugCountMax)
+        if (hasReachFinalDestination)
         {
             SetRandomDestination();
-            hasReachCenter = true;
+            Debug.Log("Reach Final Destination");
         }
-            
-    //}
 
-        if (hasReachCenter)
+        if (hasReachCurrentDestination)
         {
-            Navigate();
+            CalculateCurrentDestination();
+            Debug.Log("Reach Current Destination");
         }
 
-        transform.position = Vector2.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, currentDestination, moveSpeed * Time.deltaTime);
 
-        //Debug.Log($"Has Reach Destination: {hasReachDestination}, Has Reach Center: {hasReachCenter}, count: {debugCount}");
-        Debug.Log($"Has Reach Center: {hasReachCenter}, count: {debugCount}");
+        //Debug.Log($"Has Reach Destination: {hasReachFinalDestination}, Has Reach Center: {hasReachCurrentDestination}, count: {debugCount}");
     }
 
-    private void Navigate()
+    private void CalculateCurrentDestination()
     {
-        NavMesh.CalculatePath(transform.position, agentDestination, NavMesh.AllAreas, navMeshPath);
+        NavMesh.CalculatePath(transform.position, finalDestination, NavMesh.AllAreas, navMeshPath);
         if (navMeshPath.corners.Length > 1)
         {
-            destination = AgentGridDestination(navMeshPath.corners[1]);
+            currentDestination = AgentGridDestination(navMeshPath.corners[1]);
         }
     }
 
@@ -151,6 +142,20 @@ public class LabirintEnemy : MonoBehaviour
     {
         if (this.target == null)
             this.target = target;
+
+        Debug.Log($"thisTarget: {this.target}, newTarget: {target}");
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(finalDestination, 1.2f * grid.cellSize.x);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(currentDestination, 1 * grid.cellSize.x);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position,  maxFollowDistance * grid.cellSize.x);
+
+    }
+
 
 }
