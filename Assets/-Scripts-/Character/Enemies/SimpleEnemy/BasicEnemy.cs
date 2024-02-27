@@ -268,7 +268,6 @@ public class BasicEnemy : EnemyCharacter
 
         if (currentHp <= 0)
         {
-
             stateMachine.SetState(deathState);
         }
         else 

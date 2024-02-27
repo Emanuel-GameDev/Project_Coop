@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class TutorialEnemy : BasicEnemy
+public class TutorialEnemy : BasicMeleeEnemy
 {
     [HideInInspector] public event Action OnHit;
 

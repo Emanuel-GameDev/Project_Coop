@@ -27,6 +27,7 @@ public class MovementTutorialState : TutorialFase
         faseData = (MovementTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartFaseTimer;
+        tutorialManager.DeactivateEnemyAI();
 
         tutorialManager.PlayDialogue(tutorialManager.fases[tutorialManager.faseCount].faseData.faseStartDialogue);
     }
@@ -36,6 +37,13 @@ public class MovementTutorialState : TutorialFase
     private void StartFaseTimer()
     {
         tutorialManager.StartCoroutine(tutorialManager.Timer(faseData.faseLenght));
+
+        tutorialManager.DeactivateAllPlayerInputs();
+
+        foreach(PlayerInputHandler ih in tutorialManager.inputHandlers)
+        {
+            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        }
 
         tutorialManager.dialogueBox.OnDialogueEnded -= StartFaseTimer;
     }

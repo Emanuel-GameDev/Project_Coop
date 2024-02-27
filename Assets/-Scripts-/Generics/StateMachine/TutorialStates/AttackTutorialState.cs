@@ -1,10 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.Timeline;
 
 public class AttackTutorialState : TutorialFase
 {
@@ -30,13 +26,13 @@ public class AttackTutorialState : TutorialFase
     {
         base.Enter();
 
-        faseData = (AttackTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (AttackTutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
 
         tutorialManager.blockFaseChange = true;
 
         currentCharacterIndex = -1;
 
-        currentFaseCharacters = new PlayerCharacter[4] {tutorialManager.dps, tutorialManager.tank , tutorialManager.ranged , tutorialManager.healer };
+        currentFaseCharacters = new PlayerCharacter[4] { tutorialManager.dps, tutorialManager.tank, tutorialManager.ranged, tutorialManager.healer };
         charactersPreTutorialDialogue = new Dialogue[4] { faseData.dpsDialogue, faseData.tankDialogue, faseData.rangedDialogue, faseData.healerDialogue };
 
 
@@ -56,7 +52,21 @@ public class AttackTutorialState : TutorialFase
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         currentCharacterIndex++;
-        
+
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetReceiver(currentFaseCharacters[currentCharacterIndex]);
+
+
+        //inputHandlerIndex++;
+
+        //if (inputHandlerIndex >= tutorialManager.inputHandlers.Count)
+        //{
+        //    inputHandlerIndex--;
+        //}
+
+
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
+
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);
@@ -68,26 +78,11 @@ public class AttackTutorialState : TutorialFase
 
         hitCount = 0;
 
-        if(currentFaseCharacters[currentCharacterIndex].GetInputHandler() == null)
-        {
 
-            tutorialManager.inputHandlers[inputHandlerIndex].SetReceiver(currentFaseCharacters[currentCharacterIndex]);
-
-            inputHandlerIndex++;
-
-            if (inputHandlerIndex >= tutorialManager.inputHandlers.Count)
-            {
-                inputHandlerIndex --;
-            }
-            
-        }
-
-        tutorialManager.inputHandlers[0].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.inputHandlers[0].GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
 
         comboHitCount = 0;
         tutorialManager.tutorialEnemy.OnHit += EnemyHitted;
-        
+
 
     }
 
@@ -95,14 +90,14 @@ public class AttackTutorialState : TutorialFase
 
     private void EnemyHitted()
     {
-        if(currentFaseCharacters[currentCharacterIndex].CharacterClass is DPS)
+        if (currentFaseCharacters[currentCharacterIndex].CharacterClass is DPS)
         {
-            if(hitCounterTimer != null)
+            if (hitCounterTimer != null)
                 tutorialManager.StopCoroutine(hitCounterTimer);
 
             comboHitCount++;
 
-            if(comboHitCount == 3)
+            if (comboHitCount == 3)
             {
                 comboHitCount = 0;
                 hitCount++;
@@ -124,13 +119,13 @@ public class AttackTutorialState : TutorialFase
     {
         base.Update();
 
-        if(hitCount >= 3)
+        if (hitCount >= 3)
         {
             hitCount = 0;
             tutorialManager.tutorialEnemy.OnHit -= EnemyHitted;
 
-            currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
-            currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Attack").Disable();
+            tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Attack").Disable();
 
             if (currentCharacterIndex < 3)
             {

@@ -49,7 +49,7 @@ public class TutorialManager : MonoBehaviour
     bool finale = false;
 
     /*[HideInInspector]*/
-    Dictionary<PlayerCharacter, PlayerInputHandler> inputBindings;
+    [HideInInspector] public Dictionary<PlayerCharacter, PlayerInputHandler> inputBindings;
 
     [Serializable]
     public class Fase
@@ -179,160 +179,7 @@ public class TutorialManager : MonoBehaviour
 
     }
 
-    private void SetInputs()
-    {
-        //Debug.Log("only 1");
-        //da rivedere a input system finito
-
-        int idInputs = 0;
-        List<PlayerCharacter> players = GameManager.Instance.coopManager.ActivePlayers;
-
-
-
-        InputUser dpsUser = dps.GetComponent<PlayerInput>().user;
-        InputUser healerUser = healer.GetComponent<PlayerInput>().user;
-        InputUser rangedUser = ranged.GetComponent<PlayerInput>().user;
-        InputUser tankUser = tank.GetComponent<PlayerInput>().user;
-
-        string dpsControl = "";
-        string healerControl = "";
-        string rangedControl = "";
-        string tankControl = "";
-
-        InputDevice[] dpsDevices = new InputDevice[0];
-        InputDevice[] healerDevices = new InputDevice[0];
-        InputDevice[] rangedDevices = new InputDevice[0];
-        InputDevice[] tankDevices = new InputDevice[0];
-
-
-        if (dps.GetComponent<PlayerInput>().devices.Count > 0)
-        {
-            dpsControl = dps.GetComponent<PlayerInput>().currentControlScheme;
-            dpsDevices = dpsUser.pairedDevices.ToArray();
-        }
-
-        if (healer.GetComponent<PlayerInput>().devices.Count > 0)
-        {
-            healerControl = healer.GetComponent<PlayerInput>().currentControlScheme;
-            healerDevices = healerUser.pairedDevices.ToArray();
-        }
-
-        if (ranged.GetComponent<PlayerInput>().devices.Count > 0)
-        {
-            rangedControl = ranged.GetComponent<PlayerInput>().currentControlScheme;
-            rangedDevices = rangedUser.pairedDevices.ToArray();
-        }
-
-        if (tank.GetComponent<PlayerInput>().devices.Count > 0)
-        {
-            tankControl = tank.GetComponent<PlayerInput>().currentControlScheme;
-            tankDevices = tankUser.pairedDevices.ToArray();
-        }
-
-
-        
-
-
-        if (dpsDevices.Length <= 0)
-        {
-            dps.GetComponent<PlayerInput>().SwitchCurrentControlScheme(players[idInputs].GetComponent<PlayerInput>().currentControlScheme);
-
-            foreach (InputDevice device in players[idInputs].GetComponent<PlayerInput>().devices)
-                InputUser.PerformPairingWithDevice(device,
-                    dps.GetComponent<PlayerInput>().user);
-
-            if(idInputs < players.Count-1)
-                idInputs++;
-        }
-
-
-        if (healerDevices.Length <= 0)
-        {
-            healer.GetComponent<PlayerInput>().SwitchCurrentControlScheme(players[idInputs].GetComponent<PlayerInput>().currentControlScheme);
-
-            foreach (InputDevice device in players[idInputs].GetComponent<PlayerInput>().devices)
-                InputUser.PerformPairingWithDevice(device,
-                    healer.GetComponent<PlayerInput>().user);
-
-            if (idInputs < players.Count - 1)
-                idInputs++;
-        }
-
-        if (rangedDevices.Length <= 0)
-        {
-            ranged.GetComponent<PlayerInput>().SwitchCurrentControlScheme(players[idInputs].GetComponent<PlayerInput>().currentControlScheme);
-
-            foreach (InputDevice device in players[idInputs].GetComponent<PlayerInput>().devices)
-                InputUser.PerformPairingWithDevice(device,
-                    ranged.GetComponent<PlayerInput>().user);
-            if (idInputs < players.Count - 1)
-                idInputs++;
-        }
-
-        if (tankDevices.Length <= 0)
-        {
-            tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(players[idInputs].GetComponent<PlayerInput>().currentControlScheme);
-
-            foreach (InputDevice device in players[idInputs].GetComponent<PlayerInput>().devices)
-                InputUser.PerformPairingWithDevice(device,
-                    tank.GetComponent<PlayerInput>().user);
-            if (idInputs < players.Count - 1)
-                idInputs++;
-        }
-
-
-        //if (healerDevices.Length <= 0)
-        //{
-        //    healer.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
-
-        //    foreach (InputDevice device in dpsDevices)
-        //        InputUser.PerformPairingWithDevice(device,
-        //            healer.GetComponent<PlayerInput>().user);
-
-
-        //    if (tankDevices.Length <= 0)
-        //    {
-        //        tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
-
-
-        //        foreach (InputDevice device in dpsDevices)
-        //            InputUser.PerformPairingWithDevice(device,
-        //                tank.GetComponent<PlayerInput>().user);
-        //    }
-
-        //}
-        //else
-        //{
-        //    if (tankDevices.Length <= 0)
-        //    {
-        //        tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(healerControl);
-
-
-        //        foreach (InputDevice device in healerDevices)
-        //            InputUser.PerformPairingWithDevice(device,
-        //                tank.GetComponent<PlayerInput>().user);
-        //    }
-        //}
-
-        //if (rangedDevices.Length <= 0)
-        //{
-        //    ranged.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
-
-        //    foreach (InputDevice device in dpsDevices)
-        //        InputUser.PerformPairingWithDevice(device,
-        //            ranged.GetComponent<PlayerInput>().user);
-        //}
-
-
-
-        //tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
-
-        //foreach (InputDevice device in dpsDevices)
-        //    InputUser.PerformPairingWithDevice(device,
-        //        tank.GetComponent<PlayerInput>().user);
-
-        //dpsUser.UnpairDevices();
-    }
+    
 
     public CharacterClass current;
     [SerializeField] private GameObject playerInputPrefab;
@@ -343,6 +190,8 @@ public class TutorialManager : MonoBehaviour
         //PlayerInput playerInput = playerInputPrefab.GetComponent<PlayerInput>();
         //CoopManager.Instance.OnPlayerJoined(playerInput);
         inputBindings = new Dictionary<PlayerCharacter, PlayerInputHandler>();
+
+        DeactivateEnemyAI();
 
 
         SetUpCharacters();
@@ -395,7 +244,7 @@ public class TutorialManager : MonoBehaviour
         if (!finale)
         {
             ResetPlayersPosition();
-            //ResetEnemyPosition();
+            ResetEnemyPosition();
         }
         else
         {
@@ -426,7 +275,6 @@ public class TutorialManager : MonoBehaviour
             return;
 
         inputHandler.GetComponent<PlayerInput>().actions.Disable();
-        //inputHandler.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
 
     }
 
@@ -583,6 +431,13 @@ public class TutorialManager : MonoBehaviour
     public void DeactivateEnemyAI()
     {
         //tutorialEnemy.enabled = false;
+
+        tutorialEnemy.viewTrigger.ClearList();
+        tutorialEnemy.closeRangeTrigger.ClearList();
+
+        tutorialEnemy.stateMachine.SetState(tutorialEnemy.idleState);
+        tutorialEnemy.GetRigidBody().velocity = Vector2.zero;
+
         tutorialEnemy.AIActive = false;
 
     }
