@@ -35,11 +35,13 @@ namespace MBTExample
             bossCharacter.SetChargeDamageData();
 
             Debug.Log("Start Charge Timer");
-            
+            ShowAttackPreview(true);
             tempTimer = 0;
-            
+
         }
-      
+        
+           
+
         public override NodeResult Execute()
         {           
             
@@ -48,6 +50,7 @@ namespace MBTExample
             {
                 if (!started)
                 {
+                    ShowAttackPreview(false);
                     Debug.Log("partito");
                     bossCharacter.Agent.isStopped = false;
                     bossCharacter.Agent.speed = bossCharacter.chargeSpeed;
@@ -75,6 +78,12 @@ namespace MBTExample
 
             return NodeResult.running;
         }
-       
+
+        public void ShowAttackPreview(bool value)
+        {
+            bossCharacter.canShowPreview = value;           
+            bossCharacter.previewArrow.SetActive(value);
+            
+        }
     }
 }
