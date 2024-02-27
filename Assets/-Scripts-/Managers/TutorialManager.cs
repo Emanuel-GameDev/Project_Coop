@@ -175,7 +175,10 @@ public class TutorialManager : MonoBehaviour
         characters.Add(ranged);
         characters.Add(tank);
 
-
+        //Debug.Log(inputBindings[dps].CurrentReceiver.GetCharacter());
+        //Debug.Log(inputBindings[healer].CurrentReceiver.GetCharacter());
+        //Debug.Log(inputBindings[ranged].CurrentReceiver.GetCharacter());
+        //Debug.Log(inputBindings[tank].CurrentReceiver.GetCharacter());
 
     }
 
@@ -274,7 +277,9 @@ public class TutorialManager : MonoBehaviour
         if (inputHandler == null)
             return;
 
+        PlayerCharacter player = inputHandler.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
         inputHandler.GetComponent<PlayerInput>().actions.Disable();
+        player.GetRigidBody().velocity = Vector3.zero;
 
     }
 
@@ -372,8 +377,6 @@ public class TutorialManager : MonoBehaviour
         dialogueBox.OnDialogueEnded -= EndCurrentFase;
     }
 
-    bool setted = false;
-
     private void ResetPlayersPosition()
     {
 
@@ -382,34 +385,12 @@ public class TutorialManager : MonoBehaviour
         ranged.GetRigidBody().MovePosition(rangedRespawn.position);
         tank.GetRigidBody().MovePosition(tankRespawn.position);
 
-//DeactivateAllPlayerInputs();
+        dps.GetRigidBody().velocity = Vector2.zero;
+        healer.GetRigidBody().velocity = Vector2.zero;
+        ranged.GetRigidBody().velocity = Vector2.zero;
+        tank.GetRigidBody().velocity = Vector2.zero;
+
        
-
-        //dps.gameObject.transform.SetPositionAndRotation(DPSRespawn.position, dps.gameObject.transform.rotation);
-        //healer.gameObject.transform.SetPositionAndRotation(healerRespawn.position, healer.gameObject.transform.rotation);
-        //ranged.gameObject.transform.SetPositionAndRotation(rangedRespawn.position, ranged.gameObject.transform.rotation);
-        //tank.gameObject.transform.SetPositionAndRotation(tankRespawn.position, tank.gameObject.transform.rotation);
-
-
-        //dps.gameObject.SetActive(true);
-        //healer.gameObject.SetActive(true);
-        //ranged.gameObject.SetActive(true);
-        //tank.gameObject.SetActive(true);
-
-        //DeactivatePlayerInput(dps);
-        //DeactivatePlayerInput(healer);
-        //DeactivatePlayerInput(ranged);
-        //DeactivatePlayerInput(tank);
-
-        //if (faseCount < fases.Length)
-        //{
-        //    if (!setted && fases[faseCount].faseData.faseType != TutorialFaseType.movement)
-        //    {
-        //        Debug.Log("SET");
-        //        //SetInputs();
-        //        setted = true;
-        //    }
-        //}
     }
 
     private void ResetEnemyPosition()
@@ -430,8 +411,6 @@ public class TutorialManager : MonoBehaviour
 
     public void DeactivateEnemyAI()
     {
-        //tutorialEnemy.enabled = false;
-
         tutorialEnemy.viewTrigger.ClearList();
         tutorialEnemy.closeRangeTrigger.ClearList();
 
@@ -444,7 +423,6 @@ public class TutorialManager : MonoBehaviour
 
     public void ActivateEnemyAI()
     {
-        //tutorialEnemy.enabled = true;
         tutorialEnemy.AIActive = true;
     }
 }

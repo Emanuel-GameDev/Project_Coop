@@ -20,7 +20,7 @@ public class BasicMeleeEnemyMoveState : BasicEnemyMoveState
 
         if (basicEnemy.closeRangeTrigger.GetPlayersCountInTrigger() > 0)
         {
-            basicEnemy.SetTarget(basicEnemy.closeRangeTrigger.GetPlayersDetected()[0].transform);
+            basicEnemy.SetTarget(basicEnemy.closeRangeTrigger.GetPlayersDetected()[0].transform); 
             stateMachine.SetState(basicEnemy.actionState);
         }
         basicEnemy.FollowPath();

@@ -32,8 +32,8 @@ public class AttackTutorialState : TutorialFase
 
         currentCharacterIndex = -1;
 
-        currentFaseCharacters = new PlayerCharacter[4] { tutorialManager.dps, tutorialManager.tank, tutorialManager.ranged, tutorialManager.healer };
-        charactersPreTutorialDialogue = new Dialogue[4] { faseData.dpsDialogue, faseData.tankDialogue, faseData.rangedDialogue, faseData.healerDialogue };
+        currentFaseCharacters = new PlayerCharacter[2] { tutorialManager.dps,/* tutorialManager.tank, tutorialManager.ranged,*/ tutorialManager.healer };
+        charactersPreTutorialDialogue = new Dialogue[2] { faseData.dpsDialogue, /*faseData.tankDialogue, faseData.rangedDialogue,*/ faseData.healerDialogue };
 
 
         tutorialManager.DeactivateAllPlayerInputs();
@@ -54,14 +54,6 @@ public class AttackTutorialState : TutorialFase
         currentCharacterIndex++;
 
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetReceiver(currentFaseCharacters[currentCharacterIndex]);
-
-
-        //inputHandlerIndex++;
-
-        //if (inputHandlerIndex >= tutorialManager.inputHandlers.Count)
-        //{
-        //    inputHandlerIndex--;
-        //}
 
 
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
@@ -127,7 +119,7 @@ public class AttackTutorialState : TutorialFase
             tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
             tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Attack").Disable();
 
-            if (currentCharacterIndex < 3)
+            if (currentCharacterIndex < currentFaseCharacters.Length-1)
             {
                 //sottofase successiva
                 tutorialManager.Fade();

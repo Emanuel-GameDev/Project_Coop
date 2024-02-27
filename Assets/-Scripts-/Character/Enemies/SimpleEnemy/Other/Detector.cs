@@ -48,5 +48,6 @@ public class Detector : MonoBehaviour
     public void ClearList()
     {
         playersDetected.Clear();
+        playersInside = 0;
     }
 }

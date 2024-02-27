@@ -8,7 +8,7 @@ public class DodgeTutorialState : TutorialFase
     TutorialManager tutorialManager;
     DodgeTutorialFaseData faseData;
 
-    PlayerCharacter[] characters;
+    PlayerCharacter[] currentFaseCharacters;
     Dialogue[] charactersPreTutorialDialogue;
     Dialogue[] charactersPerfectTutorialDialogue;
     int currentCharacterIndex;
@@ -29,7 +29,7 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.blockFaseChange = true;
         currentCharacterIndex = -1;
 
-        characters = new PlayerCharacter[2] { tutorialManager.dps, tutorialManager.ranged };
+        currentFaseCharacters = new PlayerCharacter[2] { tutorialManager.dps, tutorialManager.ranged };
         charactersPreTutorialDialogue = new Dialogue[2] { faseData.dpsDodgeDialogue, faseData.rangedDodgeDialogue };
         charactersPerfectTutorialDialogue = new Dialogue[2] { faseData.dpsPerfectDodgeDialogue, faseData.rangedPerfectDodgeDialogue };
 
@@ -46,8 +46,10 @@ public class DodgeTutorialState : TutorialFase
 
         perfectDodgeCountAllowed = false;
     }
+
     bool characterChange = true;
     bool perfectDodgeCountAllowed = false;
+
     private void UpdatePerfectDodgeCounter(object obj)
     {
         if (!perfectDodgeCountAllowed)
@@ -65,8 +67,8 @@ public class DodgeTutorialState : TutorialFase
                 //sottofase successiva
                 characterChange = true;
                 tutorialManager.Fade();
-                characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
-                characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+                //currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+                //currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
                 SetupNextCharacter();
             }
             else
@@ -110,15 +112,16 @@ public class DodgeTutorialState : TutorialFase
 
             tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
 
-            if (characters[currentCharacterIndex].CharacterClass is DPS)
+            if (currentFaseCharacters[currentCharacterIndex].CharacterClass is DPS)
                 tutorialManager.PlayDialogue(faseData.dpsPerfectDodgeDialogue);
-            else if(characters[currentCharacterIndex].CharacterClass is Ranged)
+            else if(currentFaseCharacters[currentCharacterIndex].CharacterClass is Ranged)
                 tutorialManager.PlayDialogue(faseData.rangedPerfectDodgeDialogue);
 
             //PubSub.Instance.RegisterFunction(EMessageType.dodgeExecuted, UpdatePerfectDodgeCounter);
             //PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
-            characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
-            characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+            tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+
             tutorialManager.DeactivateEnemyAI();
 
             perfectDodgeCountAllowed = true;
@@ -135,7 +138,15 @@ public class DodgeTutorialState : TutorialFase
         characterChange = false;
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         currentCharacterIndex++;
-        tutorialManager.tutorialEnemy.SetTarget(characters[currentCharacterIndex].transform);
+        tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
+
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetReceiver(currentFaseCharacters[currentCharacterIndex]);
+
+
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+
+
         //tutorialManager.DeactivateEnemyAI();
         dodgeCount = 0;
         perfectDodgeCount = 0;
@@ -150,11 +161,11 @@ public class DodgeTutorialState : TutorialFase
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
 
-        characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
 
-        tutorialManager.tutorialEnemy.SetTarget(characters[currentCharacterIndex].transform);
+        tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
         tutorialManager.ActivateEnemyAI();
 
         perfectDodgeCount = 0;
@@ -170,8 +181,9 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded -= StartSubFase;
 
 
-        characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+
 
         tutorialManager.ActivateEnemyAI();
 
