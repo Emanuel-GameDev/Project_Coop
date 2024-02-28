@@ -5,14 +5,16 @@ using UnityEngine;
 public class SpriteRotation : MonoBehaviour
 {
     [SerializeField] private bool shouldUpdate;
+    
     public void RotateToCamera()
     {
         Camera cam = Camera.main;
-        if (cam != null)
+       if (cam != null)
         {
             Vector3 cameraRotation = cam.transform.eulerAngles;
             transform.eulerAngles = cameraRotation;
         }
+        
     }
 
     private void Awake()
