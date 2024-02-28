@@ -511,15 +511,11 @@ public class Tank : CharacterClass
 
     public void PerformUniqueAbility()
     {
-        RaycastHit2D[] hitted = Physics2D.CircleCastAll(transform.position, aggroRange, Vector2.up, aggroRange);
-        
+        RaycastHit[] hitted = Physics.SphereCastAll(transform.position, aggroRange, Vector3.up, aggroRange);
         if (hitted != null)
         {
-            
-
-            foreach (RaycastHit2D r in hitted)
+            foreach (RaycastHit r in hitted)
             {
-                
                 if (Utility.IsInLayerMask(r.transform.gameObject, LayerMask.GetMask("Enemy")))
                 {
                     IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
@@ -529,7 +525,8 @@ public class Tank : CharacterClass
                     
 
                     hittedDama.TakeDamage(new DamageData(0, playerCharacter, aggroCondition));
-                   
+
+
                 }
             }
         }

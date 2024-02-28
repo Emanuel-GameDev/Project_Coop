@@ -43,23 +43,17 @@ public class TutorialBossCharacter : BossCharacter
     [HideInInspector] public DamageData damageData;
     [HideInInspector] public bool canAttackAnim;
     [HideInInspector] public bool canShowPreview;
-    [HideInInspector] public bool previewStarted;
+   
 
-
-
-
+   
+   
     private void Update()
     {
-        
         if (target != null)
         {
             Vector2 direction = new Vector2(target.gameObject.transform.position.x - transform.position.x, target.gameObject.transform.position.y - transform.position.y);
             SetSpriteDirection(direction);
-
-            if (canShowPreview)
-            {               
-                previewArrow.transform.rotation = Quaternion.LookRotation(direction);
-            }
+            
         }
     }
     public void SetChargeDamageData()
@@ -116,21 +110,16 @@ public class TutorialBossCharacter : BossCharacter
     }
     public IEnumerator StartAttackPunch()
     {
-      
+       
         yield return new WaitForSeconds(attackPreviewTimer);
-        Debug.Log("fine preview");
+       
         previewArrow.SetActive(false);
-        
-        canShowPreview = false;
         canAttackAnim = true;
-        
-        
+        Debug.Log("Fine preview");
     }
     public void SetCanShowPreview()
     {
-        previewStarted = false;
         canShowPreview = true;
-        Debug.Log("inizio preview");
     }
 
     

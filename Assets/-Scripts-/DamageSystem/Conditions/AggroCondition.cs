@@ -12,7 +12,7 @@ public class AggroCondition : Condition
     {       
         transform.parent = parent.transform;
         target = parent;
-        //base.AddCondition(parent);
+       //base.AddCondition(parent);
         Debug.Log(transform.parent.name + " sono sotto AGGRO per " + duration + " secondi");
         started = true;
         parent.underAggro = true;
