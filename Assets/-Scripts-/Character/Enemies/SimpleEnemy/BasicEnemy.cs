@@ -116,7 +116,7 @@ public class BasicEnemy : EnemyCharacter
     {
         viewTrigger.GetComponent<CircleCollider2D>().radius = viewRange;
         AttackRangeTrigger.GetComponent<CircleCollider2D>().radius = attackRange;
-        closeRangeTrigger.GetComponent<CircleCollider2D>().radius = closeRange;
+        //closeRangeTrigger.GetComponent<CircleCollider2D>().radius = closeRange;
         if(enemyType == EnemyType.ranged)
         {
             EscapeTrigger.GetComponent<CircleCollider2D>().radius = escapeRange;
