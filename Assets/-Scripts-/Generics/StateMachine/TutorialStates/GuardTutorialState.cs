@@ -43,8 +43,10 @@ public class GuardTutorialState : TutorialFase
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
 
-        tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+        tutorialManager.inputBindings[tutorialManager.tank].SetReceiver(tutorialManager.tank);
+
+        tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
         tutorialManager.ActivateEnemyAI();
     }
@@ -61,8 +63,8 @@ public class GuardTutorialState : TutorialFase
             tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
             tutorialManager.PlayDialogue(faseData.tankPerfectGuardDialogue);
 
-            tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
-            tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+            tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
 
             tutorialManager.DeactivateEnemyAI();
 
@@ -78,8 +80,8 @@ public class GuardTutorialState : TutorialFase
 
         if( perfectGuardExecuted >= 3)
         {
-            tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
-            tutorialManager.tank.GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+            tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
             tutorialManager.DeactivateEnemyAI();
 
             stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));

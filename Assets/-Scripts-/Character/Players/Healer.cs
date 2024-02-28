@@ -69,7 +69,7 @@ public class Healer : CharacterClass
     [Tooltip("Rallentamento durante l'abilità del boss")]
     [SerializeField] float bossAbilitySlowdown;
 
-    CapsuleCollider smallHealAreaCollider;
+    CapsuleCollider2D smallHealAreaCollider;
 
     List<PlayerCharacter> playerInArea;
     Dictionary<PlayerCharacter,GameObject> healIcons;
@@ -97,10 +97,10 @@ public class Healer : CharacterClass
     {
         base.Inizialize();
         playerInArea = new List<PlayerCharacter>();
-        smallHealAreaCollider = gameObject.AddComponent<CapsuleCollider>();
+        smallHealAreaCollider = gameObject.AddComponent<CapsuleCollider2D>();
         smallHealAreaCollider.isTrigger = true;
-        smallHealAreaCollider.height = 1.5f;
-        smallHealAreaCollider.radius = smallHealAreaRadius;
+        //smallHealAreaCollider. = 1.5f;
+        //smallHealAreaCollider.radius = smallHealAreaRadius;
 
         healIcons = new Dictionary<PlayerCharacter, GameObject>();
 
@@ -307,7 +307,7 @@ public class Healer : CharacterClass
             radius = healAreaRadius;
 
 
-        HealArea areaSpawned = Instantiate(healArea, new Vector3(playerCharacter.transform.position.x, 0, playerCharacter.transform.position.z), Quaternion.identity).GetComponent<HealArea>();
+        HealArea areaSpawned = Instantiate(healArea, new Vector2(playerCharacter.transform.position.x, playerCharacter.transform.position.y), Quaternion.identity).GetComponent<HealArea>();
 
 
         areaSpawned.Initialize(
@@ -343,7 +343,7 @@ public class Healer : CharacterClass
 
                 animator.SetTrigger("PlaceMine");
 
-                instantiatedHealMine = Instantiate(healMine, new Vector3(parent.transform.position.x, 0.1f, parent.transform.position.z), Quaternion.identity);
+                instantiatedHealMine = Instantiate(healMine, new Vector3(parent.transform.position.x, parent.transform.position.y), Quaternion.identity);
                 instantiatedHealMine.GetComponent<HealMine>().Initialize(gameObject, mineHealQuantity, healMineRadius, healMineActivationTime);
 
                 mineAbilityTimer = 0;

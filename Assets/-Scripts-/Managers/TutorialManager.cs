@@ -48,6 +48,9 @@ public class TutorialManager : MonoBehaviour
     [HideInInspector] public bool blockFaseChange = false;
     bool finale = false;
 
+    /*[HideInInspector]*/
+    [HideInInspector] public Dictionary<PlayerCharacter, PlayerInputHandler> inputBindings;
+
     [Serializable]
     public class Fase
     {
@@ -62,11 +65,25 @@ public class TutorialManager : MonoBehaviour
     public int faseCount = 0;
 
     [HideInInspector] public List<PlayerInputHandler> inputHandlers;
-    
 
+    int _inputHandlerId = 0;
+
+    int inputHandlersID
+    {
+        get { return _inputHandlerId; }
+
+        set 
+        { 
+            if(value<inputHandlers.Count)
+                _inputHandlerId = value;
+            else
+                _inputHandlerId = 0;
+        }
+    }
 
     private void SetUpCharacters()
     {
+        inputHandlersID = 0;
         inputHandlers = new List<PlayerInputHandler>();
 
         foreach(PlayerInputHandler ih in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
@@ -85,24 +102,28 @@ public class TutorialManager : MonoBehaviour
             {
                 dpsPresent = true;
                 dps=ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+                inputBindings.Add(dps, ih);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Cassius)
             {
                 healerPresent = true;
                 healer = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+                inputBindings.Add(healer, ih);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Jude)
             {
                 rangedPresent = true;
                 ranged = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+                inputBindings.Add(ranged, ih);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Caina)
             {
                 tankPresent = true;
                 tank = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+                inputBindings.Add(tank, ih);
             }
         }
 
@@ -112,6 +133,9 @@ public class TutorialManager : MonoBehaviour
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Brutus);
             dps=receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+
+            inputBindings.Add(dps, inputHandlers[inputHandlersID]);
+            inputHandlersID++;
         }
 
         if (!healerPresent)
@@ -119,6 +143,9 @@ public class TutorialManager : MonoBehaviour
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Cassius);
             healer = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+
+            inputBindings.Add(healer, inputHandlers[inputHandlersID]);
+            inputHandlersID++;
         }
 
         if (!rangedPresent)
@@ -126,6 +153,9 @@ public class TutorialManager : MonoBehaviour
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Jude);
             ranged = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+
+            inputBindings.Add(ranged, inputHandlers[inputHandlersID]);
+            inputHandlersID++;
         }
 
         if (!tankPresent)
@@ -133,215 +163,26 @@ public class TutorialManager : MonoBehaviour
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Caina);
             tank = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+
+            inputBindings.Add(tank, inputHandlers[inputHandlersID]);
+            inputHandlersID++;
         }
 
-        //dps.SetInputHandler(GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>()[0]);
-
-        //nonPlayingCharacter = CharacterPoolManager.Instance.GetComponentsInChildren<CharacterClass>().ToList();
-        //GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>();
-
-
-        //PlayerCharacter searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is DPS);
-
-        //////dps = SceneInputReceiverManager.Instance.
-        //////CharacterPoolManager.Instance.SwitchCharacter(GameManager.Instance.coopManager.ActivePlayers[0], ePlayerCharacter.Brutus);
-        //if (searched != null)
-        //{
-        //    dps = searched;
-        //}
-
-        //searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is Healer);
-
-        //if (searched != null)
-        //{
-        //    healer = searched;
-        //}
-
-        //searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is Ranged);
-
-        //if (searched != null)
-        //{
-        //    ranged = searched;
-        //}
-
-
-
-        //searched = GameManager.Instance.coopManager.ActivePlayers.Find(c => c.CharacterClass is Tank);
-
-        //if (searched != null)
-        //{
-        //    tank = searched;
-        //}
-
+       
 
         characters.Add(dps);
         characters.Add(healer);
         characters.Add(ranged);
         characters.Add(tank);
 
-
-        //dps.gameObject.SetActive(true);
-        //healer.gameObject.SetActive(true);
-        //ranged.gameObject.SetActive(true);
-        //tank.gameObject.SetActive(true);
-
+        //Debug.Log(inputBindings[dps].CurrentReceiver.GetCharacter());
+        //Debug.Log(inputBindings[healer].CurrentReceiver.GetCharacter());
+        //Debug.Log(inputBindings[ranged].CurrentReceiver.GetCharacter());
+        //Debug.Log(inputBindings[tank].CurrentReceiver.GetCharacter());
 
     }
 
-    private void SetInputs()
-    {
-        //Debug.Log("only 1");
-        //da rivedere a input system finito
-
-        int idInputs = 0;
-        List<PlayerCharacter> players = GameManager.Instance.coopManager.ActivePlayers;
-
-
-
-        InputUser dpsUser = dps.GetComponent<PlayerInput>().user;
-        InputUser healerUser = healer.GetComponent<PlayerInput>().user;
-        InputUser rangedUser = ranged.GetComponent<PlayerInput>().user;
-        InputUser tankUser = tank.GetComponent<PlayerInput>().user;
-
-        string dpsControl = "";
-        string healerControl = "";
-        string rangedControl = "";
-        string tankControl = "";
-
-        InputDevice[] dpsDevices = new InputDevice[0];
-        InputDevice[] healerDevices = new InputDevice[0];
-        InputDevice[] rangedDevices = new InputDevice[0];
-        InputDevice[] tankDevices = new InputDevice[0];
-
-
-        if (dps.GetComponent<PlayerInput>().devices.Count > 0)
-        {
-            dpsControl = dps.GetComponent<PlayerInput>().currentControlScheme;
-            dpsDevices = dpsUser.pairedDevices.ToArray();
-        }
-
-        if (healer.GetComponent<PlayerInput>().devices.Count > 0)
-        {
-            healerControl = healer.GetComponent<PlayerInput>().currentControlScheme;
-            healerDevices = healerUser.pairedDevices.ToArray();
-        }
-
-        if (ranged.GetComponent<PlayerInput>().devices.Count > 0)
-        {
-            rangedControl = ranged.GetComponent<PlayerInput>().currentControlScheme;
-            rangedDevices = rangedUser.pairedDevices.ToArray();
-        }
-
-        if (tank.GetComponent<PlayerInput>().devices.Count > 0)
-        {
-            tankControl = tank.GetComponent<PlayerInput>().currentControlScheme;
-            tankDevices = tankUser.pairedDevices.ToArray();
-        }
-
-
-        
-
-
-        if (dpsDevices.Length <= 0)
-        {
-            dps.GetComponent<PlayerInput>().SwitchCurrentControlScheme(players[idInputs].GetComponent<PlayerInput>().currentControlScheme);
-
-            foreach (InputDevice device in players[idInputs].GetComponent<PlayerInput>().devices)
-                InputUser.PerformPairingWithDevice(device,
-                    dps.GetComponent<PlayerInput>().user);
-
-            if(idInputs < players.Count-1)
-                idInputs++;
-        }
-
-
-        if (healerDevices.Length <= 0)
-        {
-            healer.GetComponent<PlayerInput>().SwitchCurrentControlScheme(players[idInputs].GetComponent<PlayerInput>().currentControlScheme);
-
-            foreach (InputDevice device in players[idInputs].GetComponent<PlayerInput>().devices)
-                InputUser.PerformPairingWithDevice(device,
-                    healer.GetComponent<PlayerInput>().user);
-
-            if (idInputs < players.Count - 1)
-                idInputs++;
-        }
-
-        if (rangedDevices.Length <= 0)
-        {
-            ranged.GetComponent<PlayerInput>().SwitchCurrentControlScheme(players[idInputs].GetComponent<PlayerInput>().currentControlScheme);
-
-            foreach (InputDevice device in players[idInputs].GetComponent<PlayerInput>().devices)
-                InputUser.PerformPairingWithDevice(device,
-                    ranged.GetComponent<PlayerInput>().user);
-            if (idInputs < players.Count - 1)
-                idInputs++;
-        }
-
-        if (tankDevices.Length <= 0)
-        {
-            tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(players[idInputs].GetComponent<PlayerInput>().currentControlScheme);
-
-            foreach (InputDevice device in players[idInputs].GetComponent<PlayerInput>().devices)
-                InputUser.PerformPairingWithDevice(device,
-                    tank.GetComponent<PlayerInput>().user);
-            if (idInputs < players.Count - 1)
-                idInputs++;
-        }
-
-
-        //if (healerDevices.Length <= 0)
-        //{
-        //    healer.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
-
-        //    foreach (InputDevice device in dpsDevices)
-        //        InputUser.PerformPairingWithDevice(device,
-        //            healer.GetComponent<PlayerInput>().user);
-
-
-        //    if (tankDevices.Length <= 0)
-        //    {
-        //        tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
-
-
-        //        foreach (InputDevice device in dpsDevices)
-        //            InputUser.PerformPairingWithDevice(device,
-        //                tank.GetComponent<PlayerInput>().user);
-        //    }
-
-        //}
-        //else
-        //{
-        //    if (tankDevices.Length <= 0)
-        //    {
-        //        tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(healerControl);
-
-
-        //        foreach (InputDevice device in healerDevices)
-        //            InputUser.PerformPairingWithDevice(device,
-        //                tank.GetComponent<PlayerInput>().user);
-        //    }
-        //}
-
-        //if (rangedDevices.Length <= 0)
-        //{
-        //    ranged.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
-
-        //    foreach (InputDevice device in dpsDevices)
-        //        InputUser.PerformPairingWithDevice(device,
-        //            ranged.GetComponent<PlayerInput>().user);
-        //}
-
-
-
-        //tank.GetComponent<PlayerInput>().SwitchCurrentControlScheme(dpsControl);
-
-        //foreach (InputDevice device in dpsDevices)
-        //    InputUser.PerformPairingWithDevice(device,
-        //        tank.GetComponent<PlayerInput>().user);
-
-        //dpsUser.UnpairDevices();
-    }
+    
 
     public CharacterClass current;
     [SerializeField] private GameObject playerInputPrefab;
@@ -351,8 +192,11 @@ public class TutorialManager : MonoBehaviour
         //GameObject instatieted = Instantiate(playerInputPrefab);
         //PlayerInput playerInput = playerInputPrefab.GetComponent<PlayerInput>();
         //CoopManager.Instance.OnPlayerJoined(playerInput);
+        inputBindings = new Dictionary<PlayerCharacter, PlayerInputHandler>();
 
-        
+        DeactivateEnemyAI();
+
+
         SetUpCharacters();
 
 
@@ -403,7 +247,7 @@ public class TutorialManager : MonoBehaviour
         if (!finale)
         {
             ResetPlayersPosition();
-            //ResetEnemyPosition();
+            ResetEnemyPosition();
         }
         else
         {
@@ -433,8 +277,9 @@ public class TutorialManager : MonoBehaviour
         if (inputHandler == null)
             return;
 
+        PlayerCharacter player = inputHandler.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
         inputHandler.GetComponent<PlayerInput>().actions.Disable();
-        //inputHandler.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Enable();
+        player.GetRigidBody().velocity = Vector3.zero;
 
     }
 
@@ -532,8 +377,6 @@ public class TutorialManager : MonoBehaviour
         dialogueBox.OnDialogueEnded -= EndCurrentFase;
     }
 
-    bool setted = false;
-
     private void ResetPlayersPosition()
     {
 
@@ -542,38 +385,17 @@ public class TutorialManager : MonoBehaviour
         ranged.GetRigidBody().MovePosition(rangedRespawn.position);
         tank.GetRigidBody().MovePosition(tankRespawn.position);
 
-        DeactivateAllPlayerInputs();
+        dps.GetRigidBody().velocity = Vector2.zero;
+        healer.GetRigidBody().velocity = Vector2.zero;
+        ranged.GetRigidBody().velocity = Vector2.zero;
+        tank.GetRigidBody().velocity = Vector2.zero;
+
        
-
-        //dps.gameObject.transform.SetPositionAndRotation(DPSRespawn.position, dps.gameObject.transform.rotation);
-        //healer.gameObject.transform.SetPositionAndRotation(healerRespawn.position, healer.gameObject.transform.rotation);
-        //ranged.gameObject.transform.SetPositionAndRotation(rangedRespawn.position, ranged.gameObject.transform.rotation);
-        //tank.gameObject.transform.SetPositionAndRotation(tankRespawn.position, tank.gameObject.transform.rotation);
-
-
-        //dps.gameObject.SetActive(true);
-        //healer.gameObject.SetActive(true);
-        //ranged.gameObject.SetActive(true);
-        //tank.gameObject.SetActive(true);
-
-        //DeactivatePlayerInput(dps);
-        //DeactivatePlayerInput(healer);
-        //DeactivatePlayerInput(ranged);
-        //DeactivatePlayerInput(tank);
-
-        //if (faseCount < fases.Length)
-        //{
-        //    if (!setted && fases[faseCount].faseData.faseType != TutorialFaseType.movement)
-        //    {
-        //        Debug.Log("SET");
-        //        //SetInputs();
-        //        setted = true;
-        //    }
-        //}
     }
 
     private void ResetEnemyPosition()
     {
+       
         tutorialEnemy.gameObject.SetActive(false);
         tutorialEnemy.gameObject.transform.SetPositionAndRotation(enemyRespawn.position, tutorialEnemy.gameObject.transform.rotation);
 
@@ -589,14 +411,18 @@ public class TutorialManager : MonoBehaviour
 
     public void DeactivateEnemyAI()
     {
-        //tutorialEnemy.enabled = false;
+        tutorialEnemy.viewTrigger.ClearList();
+        tutorialEnemy.closeRangeTrigger.ClearList();
+
+        tutorialEnemy.stateMachine.SetState(tutorialEnemy.idleState);
+        tutorialEnemy.GetRigidBody().velocity = Vector2.zero;
+
         tutorialEnemy.AIActive = false;
 
     }
 
     public void ActivateEnemyAI()
     {
-        //tutorialEnemy.enabled = true;
         tutorialEnemy.AIActive = true;
     }
 }

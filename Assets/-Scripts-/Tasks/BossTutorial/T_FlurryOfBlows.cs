@@ -16,13 +16,15 @@ namespace MBTExample
         private Vector3 targetPosition;
 
         private int attackCount;
-        private bool attackStarted = false;
+        
 
         public override void OnEnter()
         {
             bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
             bossCharacter.Agent.isStopped = false;
-            attackStarted = false;
+
+           
+            bossCharacter.canShowPreview = true;
             attackCount = 0;
             bossCharacter.SetFlurryOfBlowsDamageData(attackCount);
             bossCharacter.Agent.speed = bossCharacter.flurrySpeed;
@@ -31,7 +33,7 @@ namespace MBTExample
 
             Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
             targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), (direction.y * bossCharacter.flurryDistance), 0) + bossCharacter.transform.position;
-
+           
         }
 
         public override NodeResult Execute()
@@ -42,8 +44,6 @@ namespace MBTExample
             //esci da attacco
             if (attackCount >= bossCharacter.punchQuantity)
             {
-               
-               
                 bossCharacter.anim.SetTrigger("Return");
                 return NodeResult.success;
             }
@@ -64,7 +64,7 @@ namespace MBTExample
                     targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), (direction.y * bossCharacter.flurryDistance), 0) + bossCharacter.transform.position;
 
                     bossCharacter.canAttackAnim = false;
-                    attackStarted = false;
+                   
                     bossCharacter.anim.SetTrigger("FlurryOfBlows" + attackCount);
                     
                     bossCharacter.Agent.SetDestination(targetPosition);
@@ -73,11 +73,14 @@ namespace MBTExample
                 }
 
                 //preview attacco
-                else if(!attackStarted)
+                else
                 {
-                    SetUpBoss();
-                    AttackPreview();
-                    bossCharacter.StartCoroutine(bossCharacter.StartAttackPunch());
+                    if(bossCharacter.canShowPreview)
+                    {
+                        NextAttackPreview();                                              
+                    }
+                   
+                    parentGameObject.Value.transform.LookAt(targetTransform.Value);
                     
                 }
 
@@ -88,24 +91,18 @@ namespace MBTExample
             return NodeResult.running;
         }
 
-        private void SetUpBoss()
+        public void NextAttackPreview()
         {
-            attackStarted = true;
-            Vector3.RotateTowards(bossCharacter.transform.rotation.eulerAngles, targetPosition,360f,360f);
-        }
-
-        public void AttackPreview()
-        {
+           
             
-            //mostra preview attacco
+            bossCharacter.canShowPreview = false;
             Debug.Log("Mostra preview");
-            Vector3.RotateTowards(bossCharacter.previewArrow.transform.rotation.eulerAngles, targetPosition, 360f, 360f);
             bossCharacter.previewArrow.SetActive(true);
-
-
-
-
+            StartCoroutine(bossCharacter.StartAttackPunch());
         }
+
+
+
     }
 
 

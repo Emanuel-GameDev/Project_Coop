@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class TutorialEnemy : BasicEnemy
+public class TutorialEnemy : BasicMeleeEnemy
 {
     [HideInInspector] public event Action OnHit;
 
@@ -12,7 +12,7 @@ public class TutorialEnemy : BasicEnemy
     {
         base.TakeDamage(data);
         OnHit?.Invoke();
-        
+        Debug.Log("Hit");
     }
 
     

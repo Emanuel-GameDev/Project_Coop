@@ -49,8 +49,10 @@ public class HealTutorialState : TutorialFase
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
 
-        tutorialManager.healer.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.healer.GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+        tutorialManager.inputBindings[tutorialManager.healer].SetReceiver(tutorialManager.healer);
+
+        tutorialManager.inputBindings[tutorialManager.healer].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.inputBindings[tutorialManager.healer].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
     }
 
     private void CharacterHealed(object obj)
