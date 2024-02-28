@@ -39,7 +39,7 @@ public class ChargeVisualHandler : MonoBehaviour
 
     private void SetBar()
     {
-        chargeVisual.localPosition = new Vector3(0, 0, maxValue/2);
+        chargeVisual.localPosition = new Vector3(0, maxValue/2, 0);
         chargeVisual.sizeDelta = new Vector2(chargeVisual.sizeDelta.x, maxValue);
     }
 
@@ -57,8 +57,8 @@ public class ChargeVisualHandler : MonoBehaviour
             float barLenght = Mathf.Lerp(minValue, maxValue, duration/maxTime);
             float topDistance = Mathf.Max(0, maxValue - barLenght);
             barTransform.offsetMin = new Vector2(barTransform.offsetMin.x, topDistance);
-            float angle = Mathf.Atan2(Direction.x, Direction.y) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0, angle, 0);
+            float angle = Mathf.Atan2(-Direction.x, Direction.y) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, 0, angle);
 
             yield return null;
         }

@@ -154,6 +154,10 @@ public class DPS : CharacterClass
         perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
         perfectTimingHandler.gameObject.SetActive(false);
         character = ePlayerCharacter.Brutus;
+
+        //Debug
+        UnlockUpgrade(AbilityUpgrade.Ability1);
+
     }
 
 
