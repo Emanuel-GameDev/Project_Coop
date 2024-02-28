@@ -578,7 +578,7 @@ public class TutorialManager : MonoBehaviour
         tutorialEnemy.gameObject.transform.SetPositionAndRotation(enemyRespawn.position, tutorialEnemy.gameObject.transform.rotation);
 
         tutorialEnemy.viewTrigger.ClearList();
-        tutorialEnemy.closeRangeTrigger.ClearList();
+        tutorialEnemy.AttackRangeTrigger.ClearList();
 
         tutorialEnemy.stateMachine.SetState(tutorialEnemy.idleState);
         tutorialEnemy.GetRigidBody().velocity = Vector2.zero;

@@ -4,21 +4,33 @@ using UnityEngine;
 
 public class RangedEnemy : BasicEnemy
 {
-    // Start is called before the first frame update
-    void Start()
+    
+
+    protected override void Awake()
     {
+        base.Awake();
+
+        obstacle.enabled = false;
+        obstacle.carveOnlyStationary = false;
+        obstacle.carving = true;
+
+
+        idleState = new BasicEnemyIdleState(this);
+        moveState = new BasicRangedEnemyMoveState(this);
+        actionState = new BasicRangedEnemyAttackState(this);
+        stunState = new BasicEnemyStunState(this);
+        parriedState = new BasicEnemyParriedState(this);
+        deathState = new BasicEnemyDeathState(this);
+        escapeState= new BasicRangedEnemyEscapeState(this);
+        
 
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void Start()
     {
+        base.Start();
 
-    }
-
-    public override void TargetSelection()
-    {
-        base.TargetSelection();
+        stateMachine.SetState(idleState);
     }
 
 

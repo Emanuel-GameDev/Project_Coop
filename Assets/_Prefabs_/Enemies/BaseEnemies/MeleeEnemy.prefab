@@ -74,7 +74,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -173,12 +173,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5378778454904049044}
-  - component: {fileID: 1156975679212181841}
   - component: {fileID: 9196240609147582965}
-  - component: {fileID: 6490863518560290872}
   - component: {fileID: 7397188717246825987}
   - component: {fileID: 597402758136942406}
   - component: {fileID: 2243331075031232612}
+  - component: {fileID: 1067704586656746039}
   m_Layer: 7
   m_Name: MeleeEnemy
   m_TagString: Untagged
@@ -201,30 +200,9 @@ Transform:
   m_Children:
   - {fileID: 6694475139551592042}
   - {fileID: 1495691587368610306}
+  - {fileID: 6633362932356240241}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!195 &1156975679212181841
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2791117155888583798}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.72
-  m_Speed: 0
-  m_Acceleration: 0
-  avoidancePriority: 50
-  m_AngularSpeed: 0
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2.29
-  m_BaseOffset: 1.1
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!95 &9196240609147582965
 Animator:
   serializedVersion: 5
@@ -246,51 +224,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6490863518560290872
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2791117155888583798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c69a7a9a69ac7354388b0b989826ef3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stunned: 0
-  damageReceivedMultiplier: 1
-  maxHp: 1
-  damage: 0
-  staminaDamage: 0
-  attackSpeed: 0
-  moveSpeed: 5
-  target: {fileID: 0}
-  currentHp: 0
-  groundLevel: {fileID: 1495691587368610306}
-  viewRange: 9
-  attackRange: 2.15
-  attackDelay: 0.5
-  despawnTime: 1
-  enemyType: 0
-  escapeRange: 0
-  numberOfConsecutiveShoot: 0
-  projectileSpeed: 0
-  projectileRange: 0
-  closeRange: 1
-  pivot: {fileID: 6694475139551592042}
-  AIActive: 1
-  isMoving: 0
-  isActioning: 0
-  canSee: 1
-  canMove: 0
-  canAction: 0
-  viewTrigger: {fileID: 1862429510760281389}
-  closeRangeTrigger: {fileID: 5431484774987057234}
-  EscapeTrigger: {fileID: 0}
-  CarvingTime: 0.1
-  CarvingMoveThreshold: 0.1
-  obstacle: {fileID: 0}
 --- !u!208 &7397188717246825987
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -357,7 +290,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -369,6 +302,104 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &1067704586656746039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2791117155888583798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b41f803478156e045bd4d13ca95728db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stunned: 0
+  damageReceivedMultiplier: 1
+  maxHp: 100
+  damage: 5
+  staminaDamage: 5
+  attackSpeed: 1
+  moveSpeed: 5
+  target: {fileID: 0}
+  currentHp: 0
+  groundLevel: {fileID: 1495691587368610306}
+  viewRange: 8
+  attackRange: 2
+  attackDelay: 1
+  despawnTime: 3
+  enemyType: 0
+  escapeRange: 0
+  numberOfConsecutiveShoot: 0
+  projectileSpeed: 0
+  projectileRange: 0
+  pivot: {fileID: 6694475139551592042}
+  AIActive: 1
+  isMoving: 0
+  isActioning: 0
+  canSee: 1
+  canMove: 0
+  canAction: 0
+  viewTrigger: {fileID: 1862429510760281389}
+  AttackRangeTrigger: {fileID: 5431484774987057234}
+  EscapeTrigger: {fileID: 0}
+  CarvingTime: 0.5
+  CarvingMoveThreshold: 0.1
+  obstacle: {fileID: 0}
+--- !u!1 &3348656291322857943
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6633362932356240241}
+  - component: {fileID: 8114321738050067013}
+  m_Layer: 7
+  m_Name: Agent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6633362932356240241
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3348656291322857943}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5378778454904049044}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!195 &8114321738050067013
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3348656291322857943}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.72
+  m_Speed: 0
+  m_Acceleration: 0
+  avoidancePriority: 50
+  m_AngularSpeed: 0
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2.29
+  m_BaseOffset: 1.1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &4577566544738255492
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,7 +563,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3709124152244261807
 Transform:
   m_ObjectHideFlags: 0
@@ -595,7 +626,7 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.33, y: -0.25}
