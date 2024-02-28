@@ -1,41 +1,23 @@
 using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class PlayerSelection
 {
     public PlayerData data;
     public bool selected;
-    public InputReceiver whoSelected;
 
-    public PlayerSelection(PlayerData data, bool iconSelected, InputReceiver receiver)
+    public PlayerSelection(PlayerData data, bool iconSelected)
     {
         this.data = data;
         selected = iconSelected;
-        this.whoSelected = receiver;
     }
 
     public void EditIcon(bool iconSelected)
     {
         selected = iconSelected;
-    }
-
-    public void AssignReceiver(InputReceiver receiver)
-    {
-        if (receiver == null) return;
-
-        whoSelected = receiver;
-    }
-
-    public void Select()
-    {
-        if(whoSelected == null) return;
-
-        whoSelected.SetCharacter(data._class);
     }
 
 }
@@ -44,7 +26,7 @@ public class PlayerSelection
 public class PlayerData
 {
     public RectTransform _icon;
-    public ePlayerCharacter _class;
+    public CharacterClass _class;
 }
 
 public class CharacterSelectionMenu : MonoBehaviour
@@ -56,23 +38,6 @@ public class CharacterSelectionMenu : MonoBehaviour
     private List<PlayerSelection> selectableCharacters = new List<PlayerSelection>();
 
     private int randomSelectionCounter = 0;
-    public bool randomVoteActive
-    {
-        get { 
-
-            if (randomSelectionCounter == 0) return false;
-            else return true;
-        }
-        private set { }
-    }
-
-    [SerializeField]
-    private List<TextMeshProUGUI> playerInfoTexts = new List<TextMeshProUGUI>();
-
-    private List<TextMeshProUGUI> privatePlayerTexts;
-
-    [SerializeField]
-    private TextMeshProUGUI displayInfo;
 
     public static CharacterSelectionMenu Instance;
 
@@ -87,27 +52,11 @@ public class CharacterSelectionMenu : MonoBehaviour
     private void Start()
     {
         InitialiazeSelections();
-
-        privatePlayerTexts = playerInfoTexts;
-        //GameManager.Instance.LoadSceneInbackground("TestLeo2D");
     }
 
-    public List<RectTransform> GetCharacterIcons()
+    public List<PlayerSelection> GetCharactersSelected()
     {
-        List<RectTransform> icons = new List<RectTransform>();
-
-        for (int i = 0; i < selectableCharacters.Count; i++)
-        {
-            icons.Add(selectableCharacters[i].data._icon);
-        }
-
-        return icons;
-    }
-
-    public void AssignInfoText(CursorBehaviour cursor)
-    {
-        cursor.infoText = privatePlayerTexts[privatePlayerTexts.Count - 1];
-        privatePlayerTexts.Remove(cursor.infoText);
+        return selectableCharacters;
     }
 
     /// <summary>
@@ -118,7 +67,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     {
         for (int i = 0; i < characterIcons.Count; i++)
         {
-            PlayerSelection selection = new PlayerSelection(characterIcons[i], false, null);
+            PlayerSelection selection = new PlayerSelection(characterIcons[i], false);
             selectableCharacters.Add(selection);
         }
     }
@@ -127,19 +76,16 @@ public class CharacterSelectionMenu : MonoBehaviour
     /// Controlla se un'icona è stata selezionata da un'altro player
     /// </summary>
     /// <param name="iconToCheck"></param>
-    public bool AlreadySelected(InputReceiver receiver, RectTransform iconToCheck)
+    public bool AlreadySelected(RectTransform iconToCheck, InputDevice device)
     {
         foreach (PlayerSelection s in selectableCharacters)
         {
             if (iconToCheck == s.data._icon)
             {
-                if (receiver != null)
-                {
-                    if (receiver == s.whoSelected) return false;
-                }
-
                 if (s.selected)
+                {
                     return true;
+                }  
                 else
                     return false;
             }
@@ -152,7 +98,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     /// Aggiorna il bool all'interno della lista delle selezioni quando un personaggio clicca sull'icona
     /// </summary>
     /// <param name="iconToSelect"></param>
-    public void UpdatePlayerSelection(InputReceiver receiver, RectTransform iconToSelect, bool mode)
+    public void UpdatePlayerSelection(RectTransform iconToSelect, bool mode, InputDevice whoSelected)
     {
         // Iter sulle selections
         foreach (PlayerSelection s in selectableCharacters)
@@ -161,8 +107,6 @@ public class CharacterSelectionMenu : MonoBehaviour
             if (iconToSelect == s.data._icon)
             {
                 s.EditIcon(mode);
-                s.AssignReceiver(receiver);
-                s.Select();
             }
         }
 
@@ -178,7 +122,7 @@ public class CharacterSelectionMenu : MonoBehaviour
 
         foreach (PlayerSelection player in selectableCharacters)
         {
-            if (AlreadySelected(null, player.data._icon))
+            if (AlreadySelected(player.data._icon, null))
                 count++;
 
         }
@@ -192,22 +136,17 @@ public class CharacterSelectionMenu : MonoBehaviour
     /// Serve ad incrementare o decrementare il conto degli utenti che hanno premuto il tasto random
     /// </summary>
     /// <param name="mode"></param>
-    public void TriggerRandomSelection(bool mode)
+    public void TriggerRandomSelection(bool mode, InputDevice whoSelected)
     {
         if (mode)
         {
             randomSelectionCounter++;
-
-            Debug.Log($"Player_NUM vuole avviare la selezione random");
-            displayInfo.text = "Player_NUM vuole avviare la selezione random, selezione personaggi disattivata (solo chi ha fatto la richiesta può annullarla)";
-
+            Debug.Log($"Player_{whoSelected.deviceId} vuole avviare la selezione random");
         }
         else
         {
             randomSelectionCounter--;
-
-            Debug.Log($"Player_NUM ha rimosso il consenso alla selezione random");
-            displayInfo.text = "Consenso rimosso";
+            Debug.Log($"Player_{whoSelected.deviceId} ha rimosso il consenso alla selezione random");
         }
 
         UpdateRandomBtnSelection();
@@ -220,7 +159,6 @@ public class CharacterSelectionMenu : MonoBehaviour
         if (randomSelectionCounter == totalPlayerCount)
         {
             Debug.Log("selezione random attivata");
-            displayInfo.text = "Selezione confermata da tutti i giocatori";
 
             RandomSelection();
         }
@@ -235,6 +173,9 @@ public class CharacterSelectionMenu : MonoBehaviour
     /// </summary>
     private void RandomSelection()
     {
+        // N.B ora uso una lista che viene riempita ogni volta che uno si connette, magarti vorrei avere
+        // una funzione nel coopManager tipo che ha lui una lista e quando la voglio gliela chiedo
+        // Intendo devices
         List<PlayerInputHandler> handlers = CoopManager.Instance.GetActualHandlers();
         
         foreach (PlayerInputHandler handler in handlers)
@@ -247,8 +188,6 @@ public class CharacterSelectionMenu : MonoBehaviour
             while (selectableCharacters[rand].selected);
 
             selectableCharacters[rand].EditIcon(true);
-            selectableCharacters[rand].AssignReceiver(handler.CurrentReceiver);
-            selectableCharacters[rand].Select();
         }
 
         EndSelection();
@@ -259,9 +198,8 @@ public class CharacterSelectionMenu : MonoBehaviour
     public void EndSelection()
     {
         Debug.Log("Selezione completa");
-
-        //GameManager.Instance.ActivateLoadedScene("TestLeo2D");
-        GameManager.Instance.LoadScene("TestLeo2D");
+        //CoopManager.Instance.UpdateSelectedPlayers(selectableCharacters);
+        GameManager.Instance.LoadNextScene();
     }
 
 

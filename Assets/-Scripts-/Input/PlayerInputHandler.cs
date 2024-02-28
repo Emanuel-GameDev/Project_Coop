@@ -111,6 +111,8 @@ public class PlayerInputHandler : MonoBehaviour
 
     public virtual void Cancel(InputAction.CallbackContext context) => CurrentReceiver.Cancel(context);
 
+    public virtual void Point(InputAction.CallbackContext context) => CurrentReceiver.Point(context);
+
     public virtual void ScrollWheel(InputAction.CallbackContext context) => CurrentReceiver.ScrollWheel(context);
 
     #endregion

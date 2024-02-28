@@ -404,7 +404,19 @@ MonoBehaviour:
     m_ActionId: 38b4dde8-886d-4323-b87d-79372b117593
     m_ActionName: UI/Cancel[/Keyboard/escape,/XInputControllerWindows/buttonEast]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7929319058598011305}
+        m_TargetAssemblyTypeName: PlayerInputHandler, Assembly-CSharp
+        m_MethodName: Point
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 45920ce1-4219-4daa-8f43-85b1f6e0056e
     m_ActionName: UI/Point[/Mouse/position]
   - m_PersistentCalls:

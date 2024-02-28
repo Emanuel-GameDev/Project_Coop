@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -9,43 +8,42 @@ public class CursorBehaviour : DefaultInputReceiver
 {
     private Vector2 movement;
     private GameObject selectionParent;
-    public TextMeshProUGUI infoText;
 
     // Gli oggetti su cui il cursore potrà muoversi
-    [HideInInspector] public List<RectTransform> objectsToOver;
+    [HideInInspector] public List<RectTransform> objectsToOver = new List<RectTransform>();
     private int currentIndex = 0;
 
     public bool objectSelected = false;
     private bool randomBtnSelected = false;
 
+    public void Initialize(List<PlayerSelection> selectableCharacters)
+    {
+        // Lista di icone
+        foreach (PlayerSelection item in selectableCharacters)
+        {
+            objectsToOver.Add(item.data._icon);
+        }
+    }
+
     private void Start()
     {
-        List<RectTransform> icons = CharacterSelectionMenu.Instance.GetCharacterIcons();
+        List<PlayerSelection> list = CharacterSelectionMenu.Instance.GetCharactersSelected();
 
-        //objectsToOver.Clear();
-        objectsToOver = new List<RectTransform>();
+        Initialize(list);
 
-        foreach (RectTransform icon in icons)
+        foreach (RectTransform rect in objectsToOver)
         {
-            objectsToOver.Add(icon);
+            Debug.Log(rect.gameObject.name);
         }
-
-        GetComponent<RectTransform>().SetParent(icons[0].gameObject.GetComponent<RectTransform>());
-        GetComponent<RectTransform>().localPosition = Vector3.zero;
-        GetComponent<RectTransform>().localScale = new Vector2(1f, 1f);
-
-        CharacterSelectionMenu.Instance.AssignInfoText(this);
     }
 
     public override void Navigate(InputAction.CallbackContext context)
     {
+        Debug.Log("NAVIGATE");
         if (context.started && randomBtnSelected)
         {
             Debug.LogWarning($"Player {context.control.device.deviceId} non può muoversi poiché ha" +
                 $" avviato una votazione per la selezione random");
-
-            infoText.text = $"Player {context.control.device.deviceId} non può muoversi poiché ha" +
-                $" avviato una votazione per la selezione random";
 
             return;
         }    
@@ -79,12 +77,11 @@ public class CursorBehaviour : DefaultInputReceiver
     /// <param name="context"></param>
     public override void Submit(InputAction.CallbackContext context)
     {
-        if (CharacterSelectionMenu.Instance.randomVoteActive && context.started)
+        Debug.Log("SUBMIT");
+        if (randomBtnSelected && context.started)
         {
             Debug.LogWarning($"Player {context.control.device.deviceId} non può selezionare poiché ha avviato" +
                 $" una votazione per la selezione random");
-            infoText.text = $"Player {context.control.device.deviceId} non può selezionare poiché ha avviato" +
-                $" una votazione per la selezione random";
 
             return;
         }
@@ -94,33 +91,23 @@ public class CursorBehaviour : DefaultInputReceiver
             selectionParent = transform.parent.gameObject;
 
             // Se un'altro personaggio ha già selezionato un'oggetto return
-            if (CharacterSelectionMenu.Instance.AlreadySelected(this, selectionParent.GetComponent<RectTransform>()))
-                return;
+            if (CharacterSelectionMenu.Instance.AlreadySelected(selectionParent.GetComponent<RectTransform>(), context.control.device)) return;
 
             // Se non ho selezionato niente, seleziono
             if (!objectSelected)
             {
                 objectSelected = true;
                 Debug.Log("selected");
-                infoText.text = "selected";
             }
             // Se ho già selezionato, deseleziono
             else
             {
                 objectSelected = false;
                 Debug.Log("Deselected");
-                infoText.text = "deselected";
             }
 
-            CharacterSelectionMenu.Instance.UpdatePlayerSelection(this, selectionParent.GetComponent<RectTransform>(), objectSelected);
+            CharacterSelectionMenu.Instance.UpdatePlayerSelection(selectionParent.GetComponent<RectTransform>(), objectSelected, context.control.device);
         }
-    }
-
-    public override void SetCharacter(ePlayerCharacter character)
-    {
-        base.SetCharacter(character);
-
-        playerInputHandler.SetCharacter(character);
     }
 
     /// <summary>
@@ -129,10 +116,11 @@ public class CursorBehaviour : DefaultInputReceiver
     /// <param name="context"></param>
     public override void RandomSelection(InputAction.CallbackContext context)
     {
+        Debug.Log("random");
         if (context.started && !objectSelected)
         {
             randomBtnSelected = !randomBtnSelected;
-            CharacterSelectionMenu.Instance.TriggerRandomSelection(randomBtnSelected);
+            CharacterSelectionMenu.Instance.TriggerRandomSelection(randomBtnSelected, context.control.device);
         }
 
     }

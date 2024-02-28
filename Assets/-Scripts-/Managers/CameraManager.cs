@@ -1,5 +1,4 @@
 using Cinemachine;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,6 +40,7 @@ public class CameraManager : MonoBehaviour
         else
         {
             _instance = this;
+            DontDestroyOnLoad(gameObject);
         }
     }
 
@@ -55,9 +55,7 @@ public class CameraManager : MonoBehaviour
         {
             AddTarget(player.transform);
         }
-
     }
-
 
     public void AddTarget(Transform target)
     {

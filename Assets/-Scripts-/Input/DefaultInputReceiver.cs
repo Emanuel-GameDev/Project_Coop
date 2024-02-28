@@ -137,6 +137,10 @@ public class DefaultInputReceiver : MonoBehaviour, InputReceiver
     {
     }
 
+    public virtual void Point(InputAction.CallbackContext context)
+    {
+    }
+
     public virtual void ScrollWheel(InputAction.CallbackContext context)
     {
     }

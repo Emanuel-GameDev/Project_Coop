@@ -48,11 +48,6 @@ public class SceneInputReceiverManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        CoopManager.Instance.InitializePlayers();
-    }
-
     public InputReceiver GetSceneInputReceiver(PlayerInputHandler newPlayerInputHandler)
     {
         if(currentSceneInputReceiverPrefab == null)
