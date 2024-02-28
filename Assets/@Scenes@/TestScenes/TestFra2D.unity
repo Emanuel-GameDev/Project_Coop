@@ -595,6 +595,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 707992863352827762, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1148828877330473255, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: rect.x
@@ -655,15 +660,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2109936022544078718, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2312809786650951938, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 2347805989210274344, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: rect.x
-      value: 272
+      value: 223
       objectReference: {fileID: 0}
     - target: {fileID: 2347805989210274344, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: rect.y
-      value: -192
+      value: -285
       objectReference: {fileID: 0}
     - target: {fileID: 4839482823447256924, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -687,6 +702,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
+      propertyPath: attacksDelay
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
       propertyPath: attackPreviewTimer
       value: 3
       objectReference: {fileID: 0}
@@ -698,12 +718,12 @@ PrefabInstance:
     - target: {fileID: 7125834032434093057, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: rect.x
-      value: 273
+      value: 245
       objectReference: {fileID: 0}
     - target: {fileID: 7125834032434093057, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: rect.y
-      value: -261
+      value: -359
       objectReference: {fileID: 0}
     - target: {fileID: 7153761786820462440, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -2835,6 +2855,11 @@ PrefabInstance:
       propertyPath: playerManager
       value: 
       objectReference: {fileID: 1838635677}
+    - target: {fileID: 726525942643775275, guid: 64a37e0cc339faf4b9a28466184282b9,
+        type: 3}
+      propertyPath: BossGameobject
+      value: 
+      objectReference: {fileID: 199618062}
     - target: {fileID: 1360045889991776551, guid: 64a37e0cc339faf4b9a28466184282b9,
         type: 3}
       propertyPath: m_Name
@@ -3046,6 +3071,7 @@ GameObject:
   - component: {fileID: 1986174217}
   - component: {fileID: 1986174216}
   - component: {fileID: 1986174215}
+  - component: {fileID: 1986174218}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -3140,6 +3166,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1986174213}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1986174218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986174213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.083333336
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 2fe9f484ab41a4549b9d8ff37e837f6c, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &1989185870
 GameObject:
   m_ObjectHideFlags: 0
