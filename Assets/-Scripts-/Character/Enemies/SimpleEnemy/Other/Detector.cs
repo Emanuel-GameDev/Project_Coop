@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CircleCollider2D))]
+
 public class Detector : MonoBehaviour
 {
     List<PlayerCharacter> playersDetected;
@@ -10,7 +10,7 @@ public class Detector : MonoBehaviour
 
     private void Awake()
     {
-        GetComponent<CircleCollider2D>().isTrigger = true;
+        GetComponent<Collider2D>().isTrigger = true;
         playersDetected = new List<PlayerCharacter>();
     }
 

@@ -11,6 +11,8 @@ public class Healer : CharacterClass
 
     [Tooltip("Icona che appare sopra il personaggio da curare")]
     [SerializeField] GameObject healIcon;
+    [Tooltip("")]
+    [SerializeField] Detector smallHealTrigger;
     [Tooltip("Quantità di vita curata dall'abilità di cura singola")]
     [SerializeField] float smallHeal = 5f;
     [Tooltip("Tempo di ricarica dell'abilità di cura singola")]
@@ -69,7 +71,7 @@ public class Healer : CharacterClass
     [Tooltip("Rallentamento durante l'abilità del boss")]
     [SerializeField] float bossAbilitySlowdown;
 
-    CapsuleCollider2D smallHealAreaCollider;
+    //CapsuleCollider2D smallHealAreaCollider;
 
     List<PlayerCharacter> playerInArea;
     Dictionary<PlayerCharacter,GameObject> healIcons;
@@ -97,8 +99,8 @@ public class Healer : CharacterClass
     {
         base.Inizialize();
         playerInArea = new List<PlayerCharacter>();
-        smallHealAreaCollider = gameObject.AddComponent<CapsuleCollider2D>();
-        smallHealAreaCollider.isTrigger = true;
+        //smallHealAreaCollider = gameObject.AddComponent<CapsuleCollider2D>();
+        //smallHealAreaCollider.isTrigger = true;
         //smallHealAreaCollider. = 1.5f;
         //smallHealAreaCollider.radius = smallHealAreaRadius;
 
@@ -266,7 +268,7 @@ public class Healer : CharacterClass
                     animator.SetTrigger("CastSmallHeal");
                     TakeDamage(new DamageData(-smallHeal, null));
 
-                    foreach (PlayerCharacter pc in playerInArea)
+                    foreach (PlayerCharacter pc in smallHealTrigger.GetPlayersDetected())
                     {
                         pc.TakeDamage(new DamageData(-smallHeal, null));
                         PubSub.Instance.Notify(EMessageType.characterHealed, pc);
@@ -336,7 +338,7 @@ public class Healer : CharacterClass
 
         if (instantiatedHealMine == null)
         {
-            if (upgradeStatus[AbilityUpgrade.Ability3]  && context.performed)
+            if (/*upgradeStatus[AbilityUpgrade.Ability3]  && */context.performed)
             {
                 if (mineAbilityTimer < mineAbilityCooldown)
                     return;

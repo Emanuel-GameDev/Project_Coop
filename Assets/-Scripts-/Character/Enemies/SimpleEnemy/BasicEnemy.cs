@@ -300,7 +300,7 @@ public class BasicEnemy : EnemyCharacter
 
 
 
-    public void SetTarget(Transform newTarget)
+    public virtual void SetTarget(Transform newTarget)
     {
         target = newTarget;
     }

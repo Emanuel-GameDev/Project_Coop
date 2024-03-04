@@ -44,15 +44,19 @@ public class HealTutorialState : TutorialFase
         }
 
     }
-
+    bool dialoguePlaying = false;
     private void WaitAfterDialogue()
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
 
         tutorialManager.inputBindings[tutorialManager.healer].SetReceiver(tutorialManager.healer);
 
+        tutorialManager.DeactivateAllPlayerInputs();
+
         tutorialManager.inputBindings[tutorialManager.healer].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         tutorialManager.inputBindings[tutorialManager.healer].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+
+        dialoguePlaying = false;
     }
 
     private void CharacterHealed(object obj)
@@ -68,6 +72,7 @@ public class HealTutorialState : TutorialFase
 
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.DPSDialogue);
+                    dialoguePlaying = true;
                     break;
 
                 case Ranged:
@@ -75,6 +80,7 @@ public class HealTutorialState : TutorialFase
 
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.rangedDialogue);
+                    dialoguePlaying = true;
                     break;
 
                 case Tank:
@@ -82,6 +88,7 @@ public class HealTutorialState : TutorialFase
 
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.tankDialogue);
+                    dialoguePlaying = true;
                     break;
             }
         }
@@ -92,9 +99,8 @@ public class HealTutorialState : TutorialFase
     {
         base.Update();
 
-        if (playerHealed.TrueForAll(p => p.CharacterClass.currentHp >= p.CharacterClass.MaxHp))
+        if (playerHealed.TrueForAll(p => p.CharacterClass.currentHp >= p.CharacterClass.MaxHp) && !dialoguePlaying)
         {
-            Debug.Log("fatto");
             stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
         }
         //else if(tutorialManager.tutorialEnemy.currentHp >= tutorialManager.tutorialEnemy.MaxHp)
@@ -110,7 +116,7 @@ public class HealTutorialState : TutorialFase
         base.Exit();
 
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
-
+        tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.PlayDialogue(faseData.faseEndDialogue);
     }
 }

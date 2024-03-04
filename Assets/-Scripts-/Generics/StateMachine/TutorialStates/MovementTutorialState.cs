@@ -26,6 +26,8 @@ public class MovementTutorialState : TutorialFase
 
         faseData = (MovementTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
 
+        tutorialManager.DeactivateAllPlayerInputs();
+
         tutorialManager.dialogueBox.OnDialogueEnded += StartFaseTimer;
         tutorialManager.DeactivateEnemyAI();
 

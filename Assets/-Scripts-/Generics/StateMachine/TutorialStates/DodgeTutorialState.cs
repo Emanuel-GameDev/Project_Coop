@@ -80,23 +80,7 @@ public class DodgeTutorialState : TutorialFase
             }
 
             perfectDodgeCountAllowed = false;
-            //characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
-            //characters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
-
-            //da rimettere dopo
-
-            //if (currentCharacterIndex < 2)
-            //{
-            //    //sottofase successiva
-            //    tutorialManager.Fade();
-            //    SetupNextCharacter();
-            //}
-            //else
-            //{
-            //    //fase successiva
-            //    tutorialManager.blockFaseChange = false;
-            //    stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
-            //}
+            
 
         }
     }
@@ -117,8 +101,6 @@ public class DodgeTutorialState : TutorialFase
             else if(currentFaseCharacters[currentCharacterIndex].CharacterClass is Ranged)
                 tutorialManager.PlayDialogue(faseData.rangedPerfectDodgeDialogue);
 
-            //PubSub.Instance.RegisterFunction(EMessageType.dodgeExecuted, UpdatePerfectDodgeCounter);
-            //PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
             tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
             tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
 
@@ -130,7 +112,8 @@ public class DodgeTutorialState : TutorialFase
 
     public void WaitAfterDialogue()
     {
-        tutorialManager.StartCoroutine(Wait(0.5f));
+        tutorialManager.DeactivateAllPlayerInputs();
+        tutorialManager.StartCoroutine(Wait(0.1f));
     }
 
     private void SetupNextCharacter()
@@ -142,7 +125,7 @@ public class DodgeTutorialState : TutorialFase
 
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetReceiver(currentFaseCharacters[currentCharacterIndex]);
 
-
+        tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
@@ -160,7 +143,7 @@ public class DodgeTutorialState : TutorialFase
     private void SetupPerfectDodgeTutorial()
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
-
+        tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
@@ -180,7 +163,7 @@ public class DodgeTutorialState : TutorialFase
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= StartSubFase;
 
-
+        tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 

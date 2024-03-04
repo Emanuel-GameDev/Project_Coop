@@ -85,6 +85,86 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &2752602637793973003
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7570589612364221297}
+  - component: {fileID: 4353074536356012956}
+  - component: {fileID: 3239358004793338620}
+  m_Layer: 6
+  m_Name: SmallHeal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7570589612364221297
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2752602637793973003}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5397187245343582824}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!70 &4353074536356012956
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2752602637793973003}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 5, y: 2.5}
+  m_Direction: 1
+--- !u!114 &3239358004793338620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2752602637793973003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3defd5cc67813a54399603acd9abfae6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3501642758352954326
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,6 +297,7 @@ Transform:
   - {fileID: 4599015545499789007}
   - {fileID: 4930156251241236398}
   - {fileID: 7313315143919620617}
+  - {fileID: 7570589612364221297}
   m_Father: {fileID: 1522690789077892484}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8120482230942929940
@@ -258,7 +339,7 @@ Transform:
   m_GameObject: {fileID: 7046500573469630641}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.024868, y: 0.3722012, z: 1.7208842}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -310,14 +391,15 @@ MonoBehaviour:
   visual: {fileID: 3501642758352954326}
   healIcon: {fileID: 1667381298283499555, guid: 81008e70013cfa54fa69a382d51da323,
     type: 3}
+  smallHealTrigger: {fileID: 3239358004793338620}
   smallHeal: 100
   singleHealCooldown: 3
   smallHealAreaRadius: 3
   healMine: {fileID: 5625512617348793040, guid: 2186adaa1671c884ca63c9ed27490efb,
     type: 3}
   mineHealQuantity: 10
-  healMineRadius: 1
-  healMineActivationTime: 1
+  healMineRadius: 4
+  healMineActivationTime: 2
   mineAbilityCooldown: 1
   healMineIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   gameObjectMineIcon: {fileID: 1784672836815079539}

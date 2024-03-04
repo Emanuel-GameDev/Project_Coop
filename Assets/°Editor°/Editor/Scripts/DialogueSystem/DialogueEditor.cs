@@ -15,7 +15,7 @@ public class DialogueEditor : EditorWindow
     [MenuItem("Tools/Dialogue Editor")]
     private static void OpenWindow()
     {
-        GetWindow<DialogueEditor>();
+        GetWindow<DialogueEditor>(); 
     }
 
     private int _selectedName;
@@ -67,6 +67,9 @@ public class DialogueEditor : EditorWindow
 
             refreshDialogues = false;
         }
+
+        if (lastSearched == null)
+            lastSearched = "";
 
 
         EditorGUILayout.BeginHorizontal();

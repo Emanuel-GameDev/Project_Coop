@@ -35,6 +35,7 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
+        
        
     }
 
@@ -44,7 +45,7 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
 
         tutorialManager.inputBindings[tutorialManager.tank].SetReceiver(tutorialManager.tank);
-
+        tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
@@ -61,7 +62,9 @@ public class GuardTutorialState : TutorialFase
         {
             //PubSub.Instance.UnregisterFunction(EMessageType.guardExecuted, UpdateCounter);
             tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
+            tutorialManager.DeactivateAllPlayerInputs();
             tutorialManager.PlayDialogue(faseData.tankPerfectGuardDialogue);
+
 
             tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
             tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
@@ -80,6 +83,8 @@ public class GuardTutorialState : TutorialFase
 
         if( perfectGuardExecuted >= 3)
         {
+            tutorialManager.DeactivateAllPlayerInputs();
+
             tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
             tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
             tutorialManager.DeactivateEnemyAI();

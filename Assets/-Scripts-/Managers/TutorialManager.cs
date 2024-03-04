@@ -48,7 +48,6 @@ public class TutorialManager : MonoBehaviour
     [HideInInspector] public bool blockFaseChange = false;
     bool finale = false;
 
-    /*[HideInInspector]*/
     [HideInInspector] public Dictionary<PlayerCharacter, PlayerInputHandler> inputBindings;
 
     [Serializable]
@@ -65,6 +64,7 @@ public class TutorialManager : MonoBehaviour
     public int faseCount = 0;
 
     [HideInInspector] public List<PlayerInputHandler> inputHandlers;
+    private Dictionary<PlayerInputHandler, PlayerCharacter> startingCharacters;
 
     int _inputHandlerId = 0;
 
@@ -85,8 +85,9 @@ public class TutorialManager : MonoBehaviour
     {
         inputHandlersID = 0;
         inputHandlers = new List<PlayerInputHandler>();
+        startingCharacters = new Dictionary<PlayerInputHandler, PlayerCharacter>();
 
-        foreach(PlayerInputHandler ih in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        foreach (PlayerInputHandler ih in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             inputHandlers.Add(ih);
         }
@@ -103,6 +104,7 @@ public class TutorialManager : MonoBehaviour
                 dpsPresent = true;
                 dps=ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
                 inputBindings.Add(dps, ih);
+                startingCharacters.Add(ih, dps);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Cassius)
@@ -110,6 +112,7 @@ public class TutorialManager : MonoBehaviour
                 healerPresent = true;
                 healer = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
                 inputBindings.Add(healer, ih);
+                startingCharacters.Add(ih, healer);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Jude)
@@ -117,6 +120,7 @@ public class TutorialManager : MonoBehaviour
                 rangedPresent = true;
                 ranged = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
                 inputBindings.Add(ranged, ih);
+                startingCharacters.Add(ih, ranged);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Caina)
@@ -124,9 +128,9 @@ public class TutorialManager : MonoBehaviour
                 tankPresent = true;
                 tank = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
                 inputBindings.Add(tank, ih);
+                startingCharacters.Add(ih, tank);
             }
         }
-
 
         if (!dpsPresent)
         {
@@ -189,9 +193,6 @@ public class TutorialManager : MonoBehaviour
 
     private void Start()
     {
-        //GameObject instatieted = Instantiate(playerInputPrefab);
-        //PlayerInput playerInput = playerInputPrefab.GetComponent<PlayerInput>();
-        //CoopManager.Instance.OnPlayerJoined(playerInput);
         inputBindings = new Dictionary<PlayerCharacter, PlayerInputHandler>();
 
         DeactivateEnemyAI();
@@ -289,6 +290,11 @@ public class TutorialManager : MonoBehaviour
         {
             DeactivatePlayerInput(ih);
         }
+
+        dps.GetRigidBody().velocity = Vector2.zero;
+        healer.GetRigidBody().velocity = Vector2.zero;
+        ranged.GetRigidBody().velocity = Vector2.zero;
+        tank.GetRigidBody().velocity = Vector2.zero;
     }
 
 
@@ -304,6 +310,11 @@ public class TutorialManager : MonoBehaviour
     {
         dialogueBox.OnDialogueEnded -= Fade;
 
+        foreach (PlayerInputHandler ih in inputHandlers)
+        {
+            ih.SetReceiver(startingCharacters[ih]);
+        }
+
         dialogueBox.OnDialogueEnded += TutorialEnd;
         PlayDialogue(endingDialogueTwo);
     }
@@ -314,7 +325,7 @@ public class TutorialManager : MonoBehaviour
     {
         dialogueBox.OnDialogueEnded -= TutorialEnd;
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
         foreach (PlayerCharacter character in characters)
         {
@@ -367,6 +378,7 @@ public class TutorialManager : MonoBehaviour
     public void Fade()
     {
         playableDirector.Play();
+        DeactivateAllPlayerInputs();
     }
 
     public void EndCurrentFase()
@@ -414,7 +426,7 @@ public class TutorialManager : MonoBehaviour
         tutorialEnemy.viewTrigger.ClearList();
         //tutorialEnemy.closeRangeTrigger.ClearList();
 
-        tutorialEnemy.stateMachine.SetState(tutorialEnemy.idleState);
+        //tutorialEnemy.stateMachine.SetState(tutorialEnemy.idleState);
         tutorialEnemy.GetRigidBody().velocity = Vector2.zero;
 
         tutorialEnemy.AIActive = false;
