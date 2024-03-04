@@ -39,6 +39,58 @@ public class LabirintPlayer : DefaultInputReceiver
         Move();
     }
 
+    public override void SetInputHandler(PlayerInputHandler inputHandler)
+    {
+        base.SetInputHandler(inputHandler);
+        if (inputHandler != null) 
+        { 
+            if(spriteRenderer == null)
+                spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+            if (inputHandler.currentCharacter != ePlayerCharacter.EmptyCharacter)
+            {
+                spriteRenderer.sprite = GetSprite(inputHandler.currentCharacter);
+            }
+            else
+            {
+                Sprite sprite = GetFreeSprite();
+                if (sprite != null)
+                    spriteRenderer.sprite = sprite;
+            }
+
+        } 
+    }
+
+    private Sprite GetFreeSprite()
+    {
+        ePlayerCharacter free = ePlayerCharacter.EmptyCharacter;
+        foreach (ePlayerCharacter character in Enum.GetValues(typeof(ePlayerCharacter)))
+        {
+            if(character != ePlayerCharacter.EmptyCharacter)
+            {
+                bool isFree = true;
+                foreach(PlayerInputHandler inputHandler in CoopManager.Instance.GetActualHandlers())
+                {
+                    if (inputHandler.currentCharacter == character)
+                        isFree = false;
+                }
+                if(isFree)
+                    free = character;
+            }
+        }
+        SetCharacter(free);
+        playerInputHandler.SetCharacter(free);
+        return GetSprite(free);
+    }
+
+    private Sprite GetSprite(ePlayerCharacter character)
+    {
+        if (character != ePlayerCharacter.EmptyCharacter)
+            return GameManager.Instance.GetCharacterData(character).PixelSprite;
+        else
+            return null;
+    }
+
     #region Movement
     protected void Move()
     {
@@ -140,7 +192,7 @@ public class LabirintPlayer : DefaultInputReceiver
     internal void PickKey()
     {
         pickedKeys++;
-        LabirintManager.Instance.PickedKey();
+        LabirintManager.Instance.PickedKey(character, pickedKeys);
     }
     internal void Killed()
     {

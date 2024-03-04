@@ -49,7 +49,7 @@ public class LabirintManager : MonoBehaviour
     public Grid Grid => grid;
 
     private StateMachine<LabirintState> stateMachine = new StateMachine<LabirintState>();
-
+    private LabirintUI labirintUI;
 
     private void Awake()
     {
@@ -77,13 +77,16 @@ public class LabirintManager : MonoBehaviour
         {
             SetupLabirint();
             StartGame();
+            labirintUI.AddAllPlayer(CoopManager.Instance.GetActualHandlers());
         }
     }
 
     #region GameManagement
-    public void PickedKey()
+    public void PickedKey(ePlayerCharacter character, int pickedKeys)
     {
         pickedKey++;
+        labirintUI.UpdatePickedKey(character, pickedKeys);
+        labirintUI.UpdateRemainingKeyCount(keyCount - pickedKey);
         if (pickedKey >= keyCount)
             EndGame(true);
     }
@@ -98,6 +101,8 @@ public class LabirintManager : MonoBehaviour
     private void StartGame()
     {
         currentLabirint.DisableObjectMap();
+        labirintUI.UpdateRemainingKeyCount(keyCount);
+
         foreach (GameObject obj in objectsForTheGame)
         {
             obj.SetActive(true);
@@ -165,7 +170,10 @@ public class LabirintManager : MonoBehaviour
         }
     }
 
-
+    public void SetLabirintUI(LabirintUI UI)
+    {
+        labirintUI = UI;
+    }
 
     #endregion
 
