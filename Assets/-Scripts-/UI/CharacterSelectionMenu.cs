@@ -261,7 +261,11 @@ public class CharacterSelectionMenu : MonoBehaviour
         Debug.Log("Selezione completa");
 
         //GameManager.Instance.ActivateLoadedScene("TestLeo2D");
-        GameManager.Instance.LoadScene("TestLeo2D");
+
+        //disabilito un attimo -fede
+        //GameManager.Instance.LoadScene("TestLeo2D");
+
+        GameManager.Instance.LoadNextScene();
     }
 
 

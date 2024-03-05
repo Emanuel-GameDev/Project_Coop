@@ -21,6 +21,12 @@ public class Slotmachine : MonoBehaviour
     [SerializeField, Tooltip("Delay restart della colonna")]
     float restartDelay=0;
 
+    [Header("Variabili per vedere in editor")]
+
+    [SerializeField] public ePlayerCharacter currentPlayer;
+    [SerializeField] public List<SlotPlayer> listOfCurrentPlayer;
+    [SerializeField] public List<SlotPlayer> randomListOfPlayer;
+
     [Header("Sprite figure")]
     [SerializeField] private Sprite dpsSprite;
     [SerializeField] private Sprite tankSprite;
@@ -34,65 +40,86 @@ public class Slotmachine : MonoBehaviour
 
     bool canInteract;
 
-    public GameObject GO;
+    //obsoleto
+    //public GameObject GO;
 
     private void Awake()
     {
-        foreach(SlotRow row in rows)
-        {
-            row.SetRow(numberOfSlots,numberWinSlots,slotDistance,dpsSprite,enemySprite,rotationSpeed,stabilizationSpeed);
-        }
+        
 
-       // GameManager.Instance.coopManager.playerInputPrefab = GO;
+        
+
+        // GameManager.Instance.coopManager.playerInputPrefab = GO;
     }
 
     private void Start()
     {
-        canInteract = true;
-
         
+
     }
 
-   
+    private void InitializeSlotMachineMinigame()
+    {
+        RandomReorder(listOfCurrentPlayer);
+
+        foreach (SlotRow row in rows)
+        {
+            row.SetRow(numberOfSlots, numberWinSlots, slotDistance, dpsSprite, enemySprite, rotationSpeed, stabilizationSpeed);
+        }
+
+        //da aggiungere dopo una possibile animazione/tutorial
+
+        foreach (SlotRow row in rows)
+        {
+            row.Initialize();
+            row.StartSlotMachine();
+        }
+
+
+        canInteract = true;
+    }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            InitializeSlotMachineMinigame();
+        }
         //TODO: inserire input manuali per debug
 
-        if (canInteract)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                rows[0].StartSlowDown();
-            }
+        //if (canInteract)
+        //{
+        //    if (Input.GetKeyDown(KeyCode.Alpha1))
+        //    {
+        //        rows[0].StartSlowDown();
+        //    }
 
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                rows[1].StartSlowDown();
-            }
+        //    if (Input.GetKeyDown(KeyCode.Alpha2))
+        //    {
+        //        rows[1].StartSlowDown();
+        //    }
 
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                rows[2].StartSlowDown();
-            }
+        //    if (Input.GetKeyDown(KeyCode.Alpha3))
+        //    {
+        //        rows[2].StartSlowDown();
+        //    }
 
-            if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                rows[3].StartSlowDown();
-            }
-        }
-        else
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                StartCoroutine(RestartSlotMachine());
-            }
-        }
+        //    if (Input.GetKeyDown(KeyCode.Alpha4))
+        //    {
+        //        rows[3].StartSlowDown();
+        //    }
+        //}
+        //else
+        //{
+        //    if (Input.GetKeyDown(KeyCode.Space))
+        //    {
+        //        StartCoroutine(RestartSlotMachine());
+        //    }
+        //}
        
 
     }
 
-    //rorrrorr
     private void CheckForWin()
     {
         bool win = true;
@@ -151,6 +178,49 @@ public class Slotmachine : MonoBehaviour
         }
 
         canInteract = true;
+    }
+
+    private void RandomReorder(List<SlotPlayer> currentPlayersList) 
+    {
+        List<SlotPlayer> notRandomPlayers = new List<SlotPlayer>(currentPlayersList);
+
+        if(notRandomPlayers.Count == 0)
+        {
+            Debug.LogError("Non ci sono player qua");
+            return;
+        }
+
+        do 
+        {
+
+            SlotPlayer player = notRandomPlayers[UnityEngine.Random.Range(0, notRandomPlayers.Count)];
+
+            randomListOfPlayer.Add(player);
+
+            notRandomPlayers.Remove(player);
+            
+        }
+        while (notRandomPlayers.Count > 0);
+
+        int index = 0;
+
+        do 
+        {
+            if (index >= currentPlayersList.Count)
+            {
+                index=0;
+            }
+
+            randomListOfPlayer.Add(currentPlayersList[index]);
+
+            index++;
+        }
+        while(randomListOfPlayer.Count < 4);
+    }
+
+    public void InputStopRowSlot(ePlayerCharacter character)
+    {
+        //ferma la riga per il giocatore giocante
     }
 
 
