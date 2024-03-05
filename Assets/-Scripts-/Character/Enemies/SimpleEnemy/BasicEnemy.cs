@@ -116,8 +116,7 @@ public class BasicEnemy : EnemyCharacter
     {
         viewTrigger.GetComponent<CircleCollider2D>().radius = viewRange;
         AttackRangeTrigger.GetComponent<CircleCollider2D>().radius = attackRange;
-
-
+        //closeRangeTrigger.GetComponent<CircleCollider2D>().radius = closeRange;
         if(enemyType == EnemyType.ranged)
         {
             EscapeTrigger.GetComponent<CircleCollider2D>().radius = escapeRange;
@@ -273,7 +272,6 @@ public class BasicEnemy : EnemyCharacter
 
         if (currentHp <= 0)
         {
-
             stateMachine.SetState(deathState);
         }
         else 
@@ -302,7 +300,7 @@ public class BasicEnemy : EnemyCharacter
 
 
 
-    public void SetTarget(Transform newTarget)
+    public virtual void SetTarget(Transform newTarget)
     {
         target = newTarget;
     }

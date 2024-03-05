@@ -20,24 +20,30 @@ public class HealMine : MonoBehaviour
     {
         characterInArea = new List<PlayerCharacter>();
     }
-
-    private void OnTriggerEnter(Collider other)
+    
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (other.GetComponent<PlayerCharacter>() != null)
+        if (collision.GetComponent<PlayerCharacter>() != null)
         {
-            characterInArea.Add(other.GetComponent<PlayerCharacter>());
+            characterInArea.Add(collision.GetComponent<PlayerCharacter>());
+
+            if (spawner.GetComponent<Healer>() == collision.GetComponentInChildren<Healer>())
+                spawner.GetComponent<Healer>().SetMineIcon(true, null);
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        characterInArea.Remove(other.GetComponent<PlayerCharacter>());
+        characterInArea.Remove(collision.GetComponent<PlayerCharacter>());
+
+        if (spawner.GetComponent<Healer>() == collision.GetComponentInChildren<Healer>())
+            spawner.GetComponent<Healer>().SetMineIcon(false, null);
     }
 
 
     private void Start()
     {
-        GetComponent<CapsuleCollider>().radius = radius;
+        GetComponent<CapsuleCollider2D>().size = new Vector2(radius,radius/2);
     }
     
     private void Update()
@@ -51,8 +57,8 @@ public class HealMine : MonoBehaviour
                     character.CharacterClass.currentHp += heal;
                 }
 
-                if (spawner.GetComponentInChildren<Healer>() != null)
-                    spawner.GetComponentInChildren<Healer>().SetMineIcon(false, null);
+                if (spawner.GetComponent<Healer>() != null)
+                    spawner.GetComponent<Healer>().SetMineIcon(false, null);
 
                 Destroy(gameObject);
             }

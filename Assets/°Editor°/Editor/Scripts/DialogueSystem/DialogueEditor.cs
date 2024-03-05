@@ -15,7 +15,7 @@ public class DialogueEditor : EditorWindow
     [MenuItem("Tools/Dialogue Editor")]
     private static void OpenWindow()
     {
-        GetWindow<DialogueEditor>();
+        GetWindow<DialogueEditor>(); 
     }
 
     private int _selectedName;
@@ -32,6 +32,7 @@ public class DialogueEditor : EditorWindow
     string[] dialogueNames;
 
     string lastSearched;
+    string lastSelected;
     string searchedNames;
     List<string> namesFound=new List<string>();
     private void CreateNewDialogue()
@@ -66,6 +67,9 @@ public class DialogueEditor : EditorWindow
 
             refreshDialogues = false;
         }
+
+        if (lastSearched == null)
+            lastSearched = "";
 
 
         EditorGUILayout.BeginHorizontal();
@@ -109,46 +113,60 @@ public class DialogueEditor : EditorWindow
 
 
 
-        //searchedNames = EditorGUILayout.TextField("Search",searchedNames);
+        searchedNames = EditorGUILayout.TextField("Search", searchedNames);
 
-        //if (lastSearched != searchedNames)
-        //{
-        //    namesFound.Clear();
+        if (lastSearched != searchedNames)
+        {
+            namesFound.Clear();
 
-        //    if (!string.IsNullOrEmpty(searchedNames))
-        //    {
-        //        foreach(string dialogue in dialogueNames)
-        //        {
-        //            if (dialogue.Contains(searchedNames)) 
-        //                namesFound.Add(dialogue);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (string dialogue in dialogueNames)
-        //        {
-        //            namesFound.Add(dialogue);
-        //        }
-        //    }
-        //    lastSearched = searchedNames;
-        //}
+            if (!string.IsNullOrEmpty(searchedNames))
+            {
+                foreach (string dialogue in dialogueNames)
+                {
+                    string dialogueLowerCase = dialogue.ToLower();
+
+                    if (dialogueLowerCase.Contains(searchedNames.ToLower()))
+                        namesFound.Add(dialogue);
+                }
+            }
+            else
+            {
+                foreach (string dialogue in dialogueNames)
+                {
+                    namesFound.Add(dialogue);
+                }
+            }
+            lastSearched = searchedNames;
+        }
 
 
 
-        _selectedElement = EditorGUILayout.Popup(_selectedElement, dialogueNames);
-       // _selectedName = EditorGUILayout.Popup(_selectedElement, namesFound.ToArray());
+        _selectedName = EditorGUILayout.Popup(_selectedName, namesFound.ToArray());
 
-        //if(_selectedName<0 || _selectedName > namesFound.Count)
-        //      _selectedName=0;
+        if (namesFound.Count < 1)
+        {
+            GUILayout.Label("No dialogue with this name found",EditorStyles.helpBox);
+            return;
+        }
 
-        //      for (int i = 0; i <= dialogueNames.Length; i++)
-        //      {
-        //          if (dialogueNames[i] == namesFound[_selectedName])
-        //          {
-        //              _selectedElement = i;
-        //              break;
-        //          }
-        //      }
+        if (_selectedName < 0 || _selectedName > namesFound.Count)
+            _selectedName = 0;
+
+        if(lastSelected != namesFound[_selectedName])
+        {
+            for (int i = 0; i < dialogueNames.Length; i++)
+            {
+                if (dialogueNames[i] == namesFound[_selectedName])
+                {
+                    _selectedElement = i;
+                    break;
+                }
+                
+            }
+
+
+            lastSelected = namesFound[_selectedName];
+        }
 
 
         GUILayout.Space(20);
@@ -305,7 +323,6 @@ public class DialogueEditor : EditorWindow
                 EditorGUILayout.EndHorizontal();
 
                 entry.Value = EditorGUILayout.TextField("Text content", entry.Value);
-                //line.Content. = EditorGUILayout.TextField("Text content", line.Content[$"{selectedDialogue.name}LineID:{i}"].ToString());
 
 
 
@@ -393,6 +410,7 @@ public class DialogueEditor : EditorWindow
                 }
 
                     EditorGUILayout.EndHorizontal();
+                    EditorGUI.indentLevel--;
             }
 
             
