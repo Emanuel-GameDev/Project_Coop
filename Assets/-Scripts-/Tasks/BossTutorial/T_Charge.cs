@@ -22,6 +22,7 @@ namespace MBTExample
 
         public override void OnEnter()
         {
+           
             bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
            
             started = false;
@@ -38,6 +39,7 @@ namespace MBTExample
             bossCharacter.anim.SetTrigger("PrepCharge");
             ShowAttackPreview(true);
             tempTimer = 0;
+            bossCharacter.anim.ResetTrigger("Return");
 
         }
         

@@ -22,6 +22,7 @@ namespace MBTExample
         private List<PlayerCharacter> activePlayers;
         public override void OnEnter()
         {
+            
             bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
             targetPosition = targetTransform.Value.position;
             activePlayers = GameManager.Instance.coopManager.ActivePlayers;
@@ -31,6 +32,7 @@ namespace MBTExample
             playerFound.Value = false;
             bossCharacter.anim.SetTrigger("Move");
             Debug.Log("si muove");
+            bossCharacter.anim.ResetTrigger("Return");
         }
 
         public override NodeResult Execute()
