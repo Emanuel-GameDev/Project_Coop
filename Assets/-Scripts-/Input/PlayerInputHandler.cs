@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +8,9 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField]
     private PlayerInput playerInput;
 
+    public ePlayerID playerID { private set; get; } = ePlayerID.NotSet;
+
+    public ePlayerCharacter startingCharacter { private set; get; } = ePlayerCharacter.EmptyCharacter;
     public ePlayerCharacter currentCharacter { private set; get; }
 
     public InputReceiver _currentReceiver;
@@ -47,6 +52,45 @@ public class PlayerInputHandler : MonoBehaviour
     public void SetCharacter(ePlayerCharacter character)
     {
         currentCharacter = character;
+    }
+
+   
+    public bool SetStartingCharacter(ePlayerCharacter character) 
+    {
+        if (startingCharacter == ePlayerCharacter.EmptyCharacter)
+        {
+            startingCharacter = character;
+            return true;
+        }
+        else 
+            return false;
+    }
+
+    public Color GetPlayerColor()
+    {
+        return GameManager.Instance.GetCharacterData(startingCharacter).CharacterColor;
+    }
+
+    public void SetPlayerID(List<PlayerInputHandler> playerInputHandlers)
+    {
+        foreach(ePlayerID ID in Enum.GetValues(typeof(ePlayerID)))
+        {
+            if (ID != ePlayerID.NotSet)
+            {
+                bool found = false;
+                foreach (PlayerInputHandler playerInputHandler in playerInputHandlers)
+                {
+                    if (playerInputHandler.playerID == ID)
+                        found = true;
+                }
+
+                if (!found)
+                {
+                    playerID = ID;
+                    return;
+                }
+            }
+        }  
     }
 
     public void OnDeviceLost(PlayerInput playerInput)
@@ -113,6 +157,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     public virtual void ScrollWheel(InputAction.CallbackContext context) => CurrentReceiver.ScrollWheel(context);
 
+    
     #endregion
 
     #endregion
@@ -128,4 +173,13 @@ public enum ePlayerCharacter
     Caina,
     Cassius,
     Jude
+}
+
+public enum ePlayerID
+{
+    NotSet,
+    Player1,
+    Player2,
+    Player3,
+    Player4
 }

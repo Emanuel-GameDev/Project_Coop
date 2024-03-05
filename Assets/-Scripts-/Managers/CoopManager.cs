@@ -112,6 +112,7 @@ public class CoopManager : MonoBehaviour
         if (newPlayerInputHandler != null)
         {
             playerInputHandlers.Add(newPlayerInputHandler);
+            newPlayerInputHandler.SetPlayerID(playerInputHandlers);
             newPlayerInputHandler.SetReceiver(SceneInputReceiverManager.Instance.GetSceneInputReceiver(newPlayerInputHandler));
         }
         else
