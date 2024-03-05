@@ -73,5 +73,5 @@ public class Damager : MonoBehaviour
     public void RemoveCondition()
     {
         conditionToApply = null;
-    }
+    } 
 }

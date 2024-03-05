@@ -24,11 +24,12 @@ public class MovementTutorialState : TutorialFase
     {
          base.Enter();
 
-         faseData = (MovementTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (MovementTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
 
         tutorialManager.DeactivateAllPlayerInputs();
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartFaseTimer;
+        tutorialManager.DeactivateEnemyAI();
 
         tutorialManager.PlayDialogue(tutorialManager.fases[tutorialManager.faseCount].faseData.faseStartDialogue);
     }
@@ -39,8 +40,12 @@ public class MovementTutorialState : TutorialFase
     {
         tutorialManager.StartCoroutine(tutorialManager.Timer(faseData.faseLenght));
 
-        tutorialManager.ActivateAllPlayerInput();
-        
+        tutorialManager.DeactivateAllPlayerInputs();
+
+        foreach(PlayerInputHandler ih in tutorialManager.inputHandlers)
+        {
+            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        }
 
         tutorialManager.dialogueBox.OnDialogueEnded -= StartFaseTimer;
     }
@@ -51,7 +56,6 @@ public class MovementTutorialState : TutorialFase
         base.Update();
 
         
-
         if (!moveCheck)
         {
             foreach (PlayerCharacter p in tutorialManager.characters)
@@ -69,7 +73,7 @@ public class MovementTutorialState : TutorialFase
         {
             tutorialManager.timerEnded = false;
 
-            tutorialManager.DeactivateAllPlayerInputs();
+            //tutorialManager.DeactivateAllPlayerInputs();
             stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
         }
     }

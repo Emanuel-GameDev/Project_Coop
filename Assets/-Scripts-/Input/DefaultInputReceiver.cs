@@ -9,7 +9,8 @@ public class DefaultInputReceiver : MonoBehaviour, InputReceiver
 
     public GameObject GetReceiverObject()
     {
-        return gameObject;    }
+        return gameObject;    
+    }
 
 
     public virtual void SetCharacter(ePlayerCharacter character)
@@ -134,10 +135,6 @@ public class DefaultInputReceiver : MonoBehaviour, InputReceiver
     }
 
     public virtual void Cancel(InputAction.CallbackContext context)
-    {
-    }
-
-    public virtual void Point(InputAction.CallbackContext context)
     {
     }
 

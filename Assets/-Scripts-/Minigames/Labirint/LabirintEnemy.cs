@@ -3,14 +3,16 @@ using UnityEngine.AI;
 
 public class LabirintEnemy : MonoBehaviour
 {
+    [SerializeField]
+    private float moveSpeed = 10f;
     public float maxFollowDistance = 15f;
     public Grid grid;
-    protected Vector3 destination;
 
     private EnemyTargetDetection targetDetection;
     private Transform target;
     private NavMeshAgent agent;
-    private Vector3 agentDestination;
+    private Vector2 finalDestination;
+    private Vector2 currentDestination;
     private NavMeshPath navMeshPath;
 
     private static int debugCountMax = 50;
@@ -18,16 +20,17 @@ public class LabirintEnemy : MonoBehaviour
 
     public float minRandomDestinationDistance = 2f;
     public float maxRandomDestinationDistance = 10f;
-    
+
     public float MaxDistance => maxRandomDestinationDistance * grid.cellSize.x;
     public float MinDistance => minRandomDestinationDistance * grid.cellSize.x;
     public float MaxFollowDistance => maxFollowDistance * grid.cellSize.x;
 
     protected void Start()
     {
-        targetDetection= GetComponentInChildren<EnemyTargetDetection>();
+        targetDetection = GetComponentInChildren<EnemyTargetDetection>();
         grid = LabirintManager.Instance.Grid;
-        destination = transform.position;
+        currentDestination = transform.position;
+        finalDestination = transform.position;
         InizializeAgent();
     }
 
@@ -43,10 +46,10 @@ public class LabirintEnemy : MonoBehaviour
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
         agent.updateRotation = false;
         SetRandomDestination();
-        Navigate();
+        CalculateCurrentDestination();
     }
 
-    protected  void Update()
+    protected void Update()
     {
         CheckTarget();
         HandlePathfindingAndMovement();
@@ -58,78 +61,76 @@ public class LabirintEnemy : MonoBehaviour
         {
             if (NavMesh.SamplePosition(target.position, out NavMeshHit hit, 5.0f, NavMesh.AllAreas))
             {
-                agentDestination = hit.position;
+                finalDestination = hit.position;
             }
-        }
-        if (Vector3.Distance(transform.position, agentDestination) > MaxFollowDistance)
-        {
-            target = null;
-            SetRandomDestination();
+
+            if (Vector2.Distance(transform.position, target.position) > MaxFollowDistance)
+            {
+                target = null;
+                SetRandomDestination();
+            }
         }
     }
 
     private void SetRandomDestination()
     {
-        float randomDistance = Random.Range(MinDistance, MaxDistance);
-        Vector3 randomPoint = transform.position + Random.onUnitSphere * randomDistance;
-        randomPoint.y = transform.position.y;
+        bool founded = false;
 
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(randomPoint, out hit, randomDistance, NavMesh.AllAreas))
+        while(!founded)
         {
-            agentDestination = hit.position;
+            float randomDistance = Random.Range(MinDistance, MaxDistance);
+            Vector2 randomPoint = transform.position + Random.onUnitSphere * randomDistance;
+            founded = NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, randomDistance, NavMesh.AllAreas);
+            if(founded)
+                finalDestination = grid.GetCellCenterWorld(grid.WorldToCell(hit.position));
         }
+
         debugCount = 0;
     }
 
     private void HandlePathfindingAndMovement()
     {
-        bool hasReachDestination = Vector3.Distance(transform.position, AgentGridDestination(agentDestination)) < 0.01f;
-        bool hasReachCenter = Vector3.Distance(transform.position, destination) < 0.01f;
+        bool hasReachFinalDestination = Vector2.Distance(transform.position, AgentGridDestination(finalDestination)) < 0.01f;
+        bool hasReachCurrentDestination = Vector2.Distance(transform.position, currentDestination) < 0.01f;
 
-        if (hasReachDestination)
+        if (hasReachFinalDestination)
         {
             SetRandomDestination();
-        }
-        else
-        {
-            if(hasReachCenter)
-                debugCount++;
-            if(debugCount > debugCountMax)
-                SetRandomDestination();
+            Debug.Log("Reach Final Destination");
         }
 
-        if (hasReachCenter)
+        if (hasReachCurrentDestination)
         {
-            Navigate();
+            CalculateCurrentDestination();
+            Debug.Log("Reach Current Destination");
         }
 
-        //Debug.Log($"Has Reach Destination: {hasReachDestination}, Has Reach Center: {hasReachCenter}, count: {debugCount}");
+        transform.position = Vector2.MoveTowards(transform.position, currentDestination, moveSpeed * Time.deltaTime);
+
+        //Debug.Log($"Has Reach Destination: {hasReachFinalDestination}, Has Reach Center: {hasReachCurrentDestination}, count: {debugCount}");
     }
 
-    private void Navigate()
+    private void CalculateCurrentDestination()
     {
-        NavMesh.CalculatePath(transform.position, agentDestination, NavMesh.AllAreas, navMeshPath);
+        NavMesh.CalculatePath(transform.position, finalDestination, NavMesh.AllAreas, navMeshPath);
         if (navMeshPath.corners.Length > 1)
         {
-            destination = AgentGridDestination(navMeshPath.corners[1]);
+            currentDestination = AgentGridDestination(navMeshPath.corners[1]);
         }
-        agent.SetDestination(destination);
     }
 
-    private Vector3 AgentGridDestination(Vector3 vector3)
+    private Vector2 AgentGridDestination(Vector2 destination)
     {
-        Vector3 cellDestination = grid.GetCellCenterWorld(grid.WorldToCell(vector3));
+        Vector2 cellDestination = grid.GetCellCenterWorld(grid.WorldToCell(destination));
 
-        return new Vector3(cellDestination.x, vector3.y, cellDestination.z);
+        return cellDestination;
     }
 
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        LabirintPlayer player = other.GetComponent<LabirintPlayer>();
 
-        if (player != null)
+        if (other.TryGetComponent<LabirintPlayer>(out var player))
         {
             player.Killed();
             target = null;
@@ -141,6 +142,20 @@ public class LabirintEnemy : MonoBehaviour
     {
         if (this.target == null)
             this.target = target;
+
+        Debug.Log($"thisTarget: {this.target}, newTarget: {target}");
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(finalDestination, 1.2f * grid.cellSize.x);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(currentDestination, 1 * grid.cellSize.x);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position,  maxFollowDistance * grid.cellSize.x);
+
+    }
+
 
 }

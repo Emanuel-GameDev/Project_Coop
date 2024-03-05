@@ -20,6 +20,8 @@ public class PlayerCharacterData : ScriptableObject
     private Sprite dialogueSprite;
     [SerializeField]
     private Sprite pixelSprite;
+    [SerializeField]
+    private Sprite pixelFaceSprite;
 
     public ePlayerCharacter Character => character;
     public Color CharacterColor => characterColor;
@@ -28,5 +30,6 @@ public class PlayerCharacterData : ScriptableObject
     public Sprite HudSprite => hudSprite;
     public Sprite DialogueSprite => dialogueSprite;
     public Sprite PixelSprite => pixelSprite;
+    public Sprite PixelFaceSprite => pixelFaceSprite;
 
 }

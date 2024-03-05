@@ -39,7 +39,7 @@ public class BasicEnemy : EnemyCharacter
     //di prova
     //[SerializeField] Transform tryTarget;
 
-    [SerializeField] public float closeRange = 1;
+    //[SerializeField] public float closeRange = 1;
    
     NavMeshPath path;
 
@@ -59,6 +59,7 @@ public class BasicEnemy : EnemyCharacter
     [HideInInspector] public BasicEnemyDeathState deathState;
     [HideInInspector] public BasicEnemyStunState stunState;
     [HideInInspector] public BasicEnemyParriedState parriedState;
+    [HideInInspector] public BasicRangedEnemyEscapeState escapeState;
 
     [HideInInspector] public bool AIActive = true;
 
@@ -71,7 +72,7 @@ public class BasicEnemy : EnemyCharacter
 
     [Header("Detectors")]
     [SerializeField] public Detector viewTrigger;
-    [SerializeField] public Detector closeRangeTrigger;
+    [SerializeField] public Detector AttackRangeTrigger;
     [SerializeField] public Detector EscapeTrigger;
 
     [Header("navMesh carving value")]
@@ -102,6 +103,7 @@ public class BasicEnemy : EnemyCharacter
         path = new NavMeshPath();
 
 
+
         //obstacle.enabled = false;
         //obstacle.carveOnlyStationary = false;
         //obstacle.carving = true;
@@ -112,13 +114,12 @@ public class BasicEnemy : EnemyCharacter
 
     protected virtual void Start()
     {
-        viewTrigger.GetComponent<CapsuleCollider>().radius = viewRange;
-        closeRangeTrigger.GetComponent<CapsuleCollider>().radius = closeRange;
-
-
+        viewTrigger.GetComponent<CircleCollider2D>().radius = viewRange;
+        AttackRangeTrigger.GetComponent<CircleCollider2D>().radius = attackRange;
+        //closeRangeTrigger.GetComponent<CircleCollider2D>().radius = closeRange;
         if(enemyType == EnemyType.ranged)
         {
-            EscapeTrigger.GetComponent<CapsuleCollider>().radius = escapeRange;
+            EscapeTrigger.GetComponent<CircleCollider2D>().radius = escapeRange;
         }
 
         stateMachine.SetState(idleState);       
@@ -212,7 +213,7 @@ public class BasicEnemy : EnemyCharacter
                 break;
 
             case EnemyType.ranged:
-                playerInRange = closeRangeTrigger.GetPlayersDetected();
+                playerInRange =  new List<PlayerCharacter>(AttackRangeTrigger.GetPlayersDetected());
 
                 for (int i = 0; i < numberOfConsecutiveShoot; i++)
                 {
@@ -226,13 +227,16 @@ public class BasicEnemy : EnemyCharacter
 
 
 
-                    Vector3 direction = transform.position - selectedPlayerInRange.transform.position;
+                    Vector3 direction =  selectedPlayerInRange.transform.position-transform.position ;
 
                     newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1, damage, gameObject.layer);
                     yield return new WaitForSeconds(attackDelay);
 
-                    playerInRange.Clear();
+                    
                 }
+
+                yield return new WaitForSeconds(attackSpeed);
+
                 break;
         }
 
@@ -268,12 +272,18 @@ public class BasicEnemy : EnemyCharacter
 
         if (currentHp <= 0)
         {
-
             stateMachine.SetState(deathState);
         }
         else 
         {
-            SetTarget(data.dealer.dealerTransform);
+            CharacterClass dealer= data.dealer as CharacterClass;
+
+            if(dealer != null)
+            {
+                SetTarget(data.dealer.dealerTransform);
+            }
+            
+            
             stateMachine.SetState(stunState);
         }
        
@@ -290,7 +300,7 @@ public class BasicEnemy : EnemyCharacter
 
 
 
-    public void SetTarget(Transform newTarget)
+    public virtual void SetTarget(Transform newTarget)
     {
         target = newTarget;
     }

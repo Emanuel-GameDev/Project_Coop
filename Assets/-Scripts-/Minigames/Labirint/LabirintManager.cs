@@ -1,6 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class LabirintManager : MonoBehaviour
 {
@@ -39,16 +39,17 @@ public class LabirintManager : MonoBehaviour
     [SerializeField]
     List<Labirint> Labirints;
 
-    List<GameObject> objectsForTheMatch;
+    List<GameObject> objectsForTheGame;
+    List<LabirintPlayer> players = new();
 
-    int playerCount = 1;
+    int PlayerCount => players.Count;
     int deadPlayerCount = 0;
     Labirint currentLabirint;
     int pickedKey;
     public Grid Grid => grid;
 
     private StateMachine<LabirintState> stateMachine = new StateMachine<LabirintState>();
-
+    private LabirintUI labirintUI;
 
     private void Awake()
     {
@@ -65,13 +66,27 @@ public class LabirintManager : MonoBehaviour
     private void Start()
     {
         //SetupLabirint();
-        stateMachine.SetState(new StartLabirint());
+        stateMachine.SetState(new MenuLabirint());
+        //Debug
+        //StartGame();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            SetupLabirint();
+            StartGame();
+            labirintUI.AddAllPlayer(CoopManager.Instance.GetActualHandlers());
+        }
     }
 
     #region GameManagement
-    public void PickedKey()
+    public void PickedKey(ePlayerCharacter character, int pickedKeys)
     {
         pickedKey++;
+        labirintUI.UpdatePickedKey(character, pickedKeys);
+        labirintUI.UpdateRemainingKeyCount(keyCount - pickedKey);
         if (pickedKey >= keyCount)
             EndGame(true);
     }
@@ -79,13 +94,24 @@ public class LabirintManager : MonoBehaviour
     public void PlayerDead()
     {
         deadPlayerCount++;
-        if (deadPlayerCount >= playerCount)
+        if (deadPlayerCount >= PlayerCount)
             EndGame(false);
+    }
+
+    private void StartGame()
+    {
+        currentLabirint.DisableObjectMap();
+        labirintUI.UpdateRemainingKeyCount(keyCount);
+
+        foreach (GameObject obj in objectsForTheGame)
+        {
+            obj.SetActive(true);
+        }
     }
 
     private void EndGame(bool playerWin)
     {
-        if(playerWin)
+        if (playerWin)
             Debug.Log("End Game: You Win");
         else
             Debug.Log("End Game: You Lose");
@@ -96,7 +122,7 @@ public class LabirintManager : MonoBehaviour
     #region Labirint Setup
     private void SetupLabirint()
     {
-        objectsForTheMatch = new();
+        objectsForTheGame = new();
         currentLabirint = Labirints[Random.Range(0, Labirints.Count)];
         foreach (Labirint labirint in Labirints)
         {
@@ -105,9 +131,24 @@ public class LabirintManager : MonoBehaviour
         currentLabirint.gameObject.SetActive(true);
         SetElements(currentLabirint.GetEnemySpawnPoints(), enemyCount, enemyPrefab);
         SetElements(currentLabirint.GetKeySpawnPoints(), keyCount, keyPrefab);
-        SetElements(currentLabirint.GetPlayerSpawnPoints(), playerCount, playerPrefab);
+        SetPlayers(currentLabirint.GetPlayerSpawnPoints());
         pickedKey = 0;
         deadPlayerCount = 0;
+    }
+
+    private void SetPlayers(List<Vector3Int> positions)
+    {
+        foreach (LabirintPlayer player in players)
+        {
+            int randomIndex = Random.Range(0, positions.Count);
+            Vector3Int position = positions[randomIndex];
+            positions.RemoveAt(randomIndex);
+            player.transform.position = grid.GetCellCenterWorld(position);
+            player.transform.SetParent(Grid.transform);
+            player.transform.localScale = Vector3.one;
+            //player.transform.SetParent(null);
+            player.Inizialize();
+        }
     }
 
     private void SetElements(List<Vector3Int> positions, int quantity, GameObject element)
@@ -121,13 +162,31 @@ public class LabirintManager : MonoBehaviour
                 int randomIndex = Random.Range(0, positions.Count);
                 Vector3Int position = positions[randomIndex];
                 positions.RemoveAt(randomIndex);
-                GameObject obj = GameObject.Instantiate(element, grid.CellToWorld(position), Quaternion.identity);
+                GameObject obj = GameObject.Instantiate(element, grid.GetCellCenterWorld(position), Quaternion.identity, Grid.transform);
                 obj.SetActive(false);
-                objectsForTheMatch.Add(obj);
+                objectsForTheGame.Add(obj);
             }
 
         }
     }
+
+    public void SetLabirintUI(LabirintUI UI)
+    {
+        labirintUI = UI;
+    }
+
     #endregion
-    
+
+    #region Misc
+    public Tilemap GetWallMap()
+    {
+        return currentLabirint.WallTilemap;
+    }
+
+    public void AddPlayer(LabirintPlayer labirintPlayer)
+    {
+        players.Add(labirintPlayer);
+    }
+    #endregion
+
 }

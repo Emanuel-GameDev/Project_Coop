@@ -52,7 +52,7 @@ public class HealArea : MonoBehaviour
         }
 
         countdown = 1 / tikPerSecond;
-        transform.localScale = new Vector3(radius, radius, radius);
+        transform.localScale = new Vector3(radius, radius/2, radius);
         DOTTimer = countdown;
     }
 
@@ -77,7 +77,7 @@ public class HealArea : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         if (characterInArea.Contains(other.gameObject.GetComponent<Character>()))
         {

@@ -34,7 +34,7 @@ public class EnemyCharacter : Character
     {
         base.InitialSetup();
         animator = GetComponent<Animator>();
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponentInChildren<NavMeshAgent>();
 
         currentHp = maxHp;
     }

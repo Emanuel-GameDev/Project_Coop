@@ -24,7 +24,7 @@ public class BasicMeleeEnemyAttackState : BasicEnemyActionState
 
         if (!basicEnemy.isActioning)
         {
-            if (basicEnemy.closeRangeTrigger.GetPlayersCountInTrigger() == 0)
+            if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() == 0)
             {
                 stateMachine.SetState(basicEnemy.moveState);
             }
