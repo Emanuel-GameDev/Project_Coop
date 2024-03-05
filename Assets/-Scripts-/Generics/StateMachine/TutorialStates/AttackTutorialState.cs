@@ -28,6 +28,12 @@ public class AttackTutorialState : TutorialFase
 
         faseData = (AttackTutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
 
+
+        tutorialManager.objectiveText.enabled = true;
+        tutorialManager.objectiveText.text = faseData.faseObjectiveBrutus.GetLocalizedString();
+        tutorialManager.objectiveNumbersGroup.SetActive(true);
+
+
         tutorialManager.blockFaseChange = true;
 
         currentCharacterIndex = -1;
@@ -55,11 +61,15 @@ public class AttackTutorialState : TutorialFase
         tutorialManager.DeactivateAllPlayerInputs();
 
         currentCharacterIndex++;
-
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetReceiver(currentFaseCharacters[currentCharacterIndex]);
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);
+
+        if (currentFaseCharacters[currentCharacterIndex].CharacterClass is DPS)
+            return;
+
+        tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
     }
 
     private void StartSubFase()
@@ -68,6 +78,8 @@ public class AttackTutorialState : TutorialFase
 
         hitCount = 0;
         comboHitCount = 0;
+
+        tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
 
         tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
@@ -94,6 +106,7 @@ public class AttackTutorialState : TutorialFase
             {
                 comboHitCount = 0;
                 hitCount++;
+                tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
             }
             else
                 hitCounterTimer = tutorialManager.StartCoroutine(ResetComboHitCounterTimer());
@@ -101,6 +114,7 @@ public class AttackTutorialState : TutorialFase
         else
         {
             hitCount++;
+            tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
         }
 
         Debug.Log(hitCount);

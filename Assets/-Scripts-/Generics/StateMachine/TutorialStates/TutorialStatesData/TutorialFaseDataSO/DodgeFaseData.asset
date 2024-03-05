@@ -13,8 +13,26 @@ MonoBehaviour:
   m_Name: DodgeFaseData
   m_EditorClassIdentifier: 
   faseType: 2
+  faseObjective:
+    m_TableReference:
+      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+    m_TableEntryReference:
+      m_KeyId: 8679825226596352
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   faseStartDialogue: {fileID: 11400000, guid: a8b8cd15458a19643adc56eea93fb7a3, type: 2}
   faseEndDialogue: {fileID: 0}
+  faseObjectivePerfect:
+    m_TableReference:
+      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+    m_TableEntryReference:
+      m_KeyId: 8679927777329152
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   dpsDodgeDialogue: {fileID: 11400000, guid: 68aeb699a5612194d83a5a223a9268e4, type: 2}
   rangedDodgeDialogue: {fileID: 11400000, guid: 0c7f22ade53cb0541ae5c181b1ff3175,
     type: 2}
@@ -22,3 +40,6 @@ MonoBehaviour:
     type: 2}
   rangedPerfectDodgeDialogue: {fileID: 11400000, guid: ab91eb39c0dc9284ca8fa0b81002399c,
     type: 2}
+  references:
+    version: 2
+    RefIds: []

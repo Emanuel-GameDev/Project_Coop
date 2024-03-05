@@ -26,7 +26,7 @@ public class BasicEnemyIdleState : BasicEnemyState
     public override void Update()
     {
         base.Update();
-
+        
         if (basicEnemy.viewTrigger.GetPlayersCountInTrigger() > 0 && basicEnemy.canSee)
         {
             basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
