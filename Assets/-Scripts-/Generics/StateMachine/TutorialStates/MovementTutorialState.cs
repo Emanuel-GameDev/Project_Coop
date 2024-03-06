@@ -27,6 +27,7 @@ public class MovementTutorialState : TutorialFase
         faseData = (MovementTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
+        tutorialManager.currentFaseObjective.SetActive(true);
         tutorialManager.objectiveNumbersGroup.SetActive(false);
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
 

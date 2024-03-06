@@ -26,6 +26,7 @@ public class TutorialManager : MonoBehaviour
 
     [SerializeField] public DialogueBox dialogueBox;
 
+    [SerializeField] public GameObject currentFaseObjective;
     [SerializeField] public TextMeshProUGUI objectiveText;
     [SerializeField] public GameObject objectiveNumbersGroup;
     [SerializeField] public TextMeshProUGUI objectiveNumberToReach;
@@ -205,6 +206,7 @@ public class TutorialManager : MonoBehaviour
 
         objectiveText.enabled = false;
         objectiveNumbersGroup.SetActive(false);
+        currentFaseObjective.SetActive(false);
 
 
         //dps.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
@@ -303,6 +305,7 @@ public class TutorialManager : MonoBehaviour
         finale = true;
         dialogueBox.OnDialogueEnded += Fade;
 
+        currentFaseObjective.SetActive(false);
         objectiveNumbersGroup.SetActive(false);
         objectiveText.enabled = false;
 
