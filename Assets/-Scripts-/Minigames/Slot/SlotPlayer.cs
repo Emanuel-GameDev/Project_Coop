@@ -24,6 +24,8 @@ public class SlotPlayer : DefaultInputReceiver
 
     public override void ButtonSouth(InputAction.CallbackContext context)
     {
+        slotmachine.InputStop(this);
+
         
     }
 
