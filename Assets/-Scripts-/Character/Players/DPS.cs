@@ -156,7 +156,7 @@ public class DPS : CharacterClass
         character = ePlayerCharacter.Brutus;
 
         //Debug
-        UnlockUpgrade(AbilityUpgrade.Ability1);
+        //UnlockUpgrade(AbilityUpgrade.Ability1);
 
     }
 
