@@ -5,32 +5,27 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SlotPlayer : MonoBehaviour
+public class SlotPlayer : DefaultInputReceiver
 {
     [SerializeField] Slotmachine slotmachine;
 
-    private PlayerInput input;
+    private void Awake()
+    {
+        slotmachine= FindAnyObjectByType(typeof(Slotmachine)).GetComponent<Slotmachine>();
+        slotmachine.listOfCurrentPlayer.Add(this);
 
+    }
 
     private void Start()
     {
-        slotmachine=FindObjectOfType(typeof(Slotmachine)) as Slotmachine;
-
+        
     }
 
-    private void OnEnable()
+
+    public override void ButtonSouth(InputAction.CallbackContext context)
     {
-        input = GetComponent<PlayerInput>();
-
+        
     }
 
-    public void Sium(InputAction.CallbackContext context)
-    {
-        Debug.Log("kjdshf");
-    }
 
-    public void SiumDialogue(InputAction.CallbackContext context)
-    {
-        Debug.Log("kjdshf si, ma dialoigue");
-    }
 }

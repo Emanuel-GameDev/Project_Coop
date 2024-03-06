@@ -295,6 +295,26 @@ public class PlayerCharacter : Character, InputReceiver
     {
 
     }
+
+    public virtual void ButtonEast(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public virtual void ButtonNorth(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public virtual void ButtonWeast(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public virtual void ButtonSouth(InputAction.CallbackContext context)
+    {
+
+    }
     #endregion
 
 
