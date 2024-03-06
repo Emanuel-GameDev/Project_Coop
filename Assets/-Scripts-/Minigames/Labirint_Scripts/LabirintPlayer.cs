@@ -22,6 +22,7 @@ public class LabirintPlayer : DefaultInputReceiver
     void Start()
     {
         InitialSetup();
+        Debug.Log("LabirintPlayer: Start");
     }
 
     private void InitialSetup()

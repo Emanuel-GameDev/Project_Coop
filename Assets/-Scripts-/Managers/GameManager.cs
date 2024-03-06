@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
     {
         if (!sceneLoadOperations.ContainsKey(sceneName))
         {
-            AsyncOperation asyncOp = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            AsyncOperation asyncOp = SceneManager.LoadSceneAsync(sceneName);
             asyncOp.allowSceneActivation = false;
             sceneLoadOperations.Add(sceneName, asyncOp);
         }
@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
+            sceneLoadOperations[sceneName].allowSceneActivation = true;
         }
     }
 

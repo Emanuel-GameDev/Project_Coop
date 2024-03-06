@@ -760,7 +760,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -405.75, y: -211.75}
+  m_AnchoredPosition: {x: -405.74994, y: -211.75}
   m_SizeDelta: {x: -861.5, y: -473.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &836742131
@@ -1036,6 +1036,11 @@ PrefabInstance:
       propertyPath: sceneInputMap
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1169905768434567888, guid: 8bc278fcdfbad674c8161998835298df,
+        type: 3}
+      propertyPath: receiverSpawnPoint
+      value: 
+      objectReference: {fileID: 1774823159}
     - target: {fileID: 1169905768434567888, guid: 8bc278fcdfbad674c8161998835298df,
         type: 3}
       propertyPath: currentSceneInputReceiverPrefab
@@ -1627,6 +1632,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1730500808}
   m_CullTransparentMesh: 1
+--- !u!4 &1774823159 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 645056140149763641, guid: 8bc278fcdfbad674c8161998835298df,
+    type: 3}
+  m_PrefabInstance: {fileID: 998522021}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1909459260
 GameObject:
   m_ObjectHideFlags: 0

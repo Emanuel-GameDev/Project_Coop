@@ -89,7 +89,7 @@ public class CharacterSelectionMenu : MonoBehaviour
         InitialiazeSelections();
 
         privatePlayerTexts = playerInfoTexts;
-        //GameManager.Instance.LoadSceneInbackground("TestLeo2D");
+        GameManager.Instance.LoadSceneInbackground("TestLeo2D");
     }
 
     public List<RectTransform> GetCharacterIcons()
@@ -260,8 +260,8 @@ public class CharacterSelectionMenu : MonoBehaviour
     {
         Debug.Log("Selezione completa");
 
-        //GameManager.Instance.ActivateLoadedScene("TestLeo2D");
-        GameManager.Instance.LoadScene("TestLeo2D");
+        GameManager.Instance.ActivateLoadedScene("TestLeo2D");
+        //GameManager.Instance.LoadScene("TestLeo2D");
     }
 
 
