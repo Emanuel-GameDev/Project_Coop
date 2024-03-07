@@ -32,7 +32,7 @@ public class BasicRangedEnemyAttackState : BasicEnemyActionState
             }
             else
             {
-                basicEnemy.StartCoroutine(basicEnemy.Attack());
+                basicEnemy.SetActionCoroutine(basicEnemy.StartCoroutine(basicEnemy.Attack()));
                 
             }
                 

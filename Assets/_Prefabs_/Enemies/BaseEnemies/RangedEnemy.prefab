@@ -170,7 +170,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8328543989035167427}
   - component: {fileID: 1633749168808221207}
-  - component: {fileID: 6832607202513412323}
   m_Layer: 7
   m_Name: visual
   m_TagString: Untagged
@@ -245,19 +244,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6832607202513412323
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3738527359534209349}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35b2ddf7b708cb84cab5a3f51b163aab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shouldUpdate: 1
 --- !u!1 &4055376560175982650
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,8 +466,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1656924804412423486}
-  - component: {fileID: 1029527507530107764}
-  - component: {fileID: 6840163604125614752}
   - component: {fileID: 1817876141876311186}
   - component: {fileID: 9146783216949467380}
   - component: {fileID: 6888633107115628428}
@@ -512,56 +496,6 @@ Transform:
   - {fileID: 4048570722855273471}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &1029527507530107764
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7200097971543015298}
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &6840163604125614752
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7200097971543015298}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 257
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!95 &1817876141876311186
 Animator:
   serializedVersion: 5
@@ -596,17 +530,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stunned: 0
+  underAggro: 0
+  inLove: 0
+  bleeding: 0
   damageReceivedMultiplier: 1
   maxHp: 50
   damage: 20
   staminaDamage: 20
-  attackSpeed: 3
+  attackSpeed: 1
   moveSpeed: 5
   target: {fileID: 0}
   currentHp: 0
   groundLevel: {fileID: 4631380387903047295}
-  viewRange: 16
-  attackRange: 15
+  viewRange: 12
+  attackRange: 20
   attackDelay: 0.3
   despawnTime: 1
   enemyType: 1
@@ -622,7 +559,7 @@ MonoBehaviour:
   canMove: 0
   canAction: 0
   viewTrigger: {fileID: 7216167695588562814}
-  AttackRangeTrigger: {fileID: 0}
+  AttackRangeTrigger: {fileID: 5865263756969893415}
   EscapeTrigger: {fileID: 3980155435287117935}
   CarvingTime: 0.5
   CarvingMoveThreshold: 0.1

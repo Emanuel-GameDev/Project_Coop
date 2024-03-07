@@ -32,6 +32,8 @@ public class BasicEnemy : EnemyCharacter
     [SerializeField] float projectileSpeed;
     [SerializeField] float projectileRange;
 
+    private Coroutine actionCourotine;
+
     List<PlayerCharacter> playerInRange;
     PlayerCharacter selectedPlayerInRange;
 
@@ -210,6 +212,7 @@ public class BasicEnemy : EnemyCharacter
             case EnemyType.melee:
                 animator.SetTrigger("Attack");
                 yield return new WaitForSeconds(attackDelay);
+                isActioning = false;
                 break;
 
             case EnemyType.ranged:
@@ -217,6 +220,8 @@ public class BasicEnemy : EnemyCharacter
 
                 for (int i = 0; i < numberOfConsecutiveShoot; i++)
                 {
+
+                    
                     animator.SetTrigger("Attack");
 
                     Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
@@ -227,7 +232,7 @@ public class BasicEnemy : EnemyCharacter
 
 
 
-                    Vector3 direction =  selectedPlayerInRange.transform.position-transform.position ;
+                    Vector2 direction =  selectedPlayerInRange.transform.position-transform.position ;
 
                     newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1, damage, gameObject.layer);
                     yield return new WaitForSeconds(attackDelay);
@@ -235,14 +240,21 @@ public class BasicEnemy : EnemyCharacter
                     
                 }
 
+                
+
                 yield return new WaitForSeconds(attackSpeed);
 
+                actionCourotine = null;
+
+                isActioning = false;
+
+                
                 break;
         }
 
 
         
-        isActioning= false;
+        
         //GetComponentInChildren<SpriteRenderer>().material.color = Color.white;
     }
 
@@ -283,7 +295,18 @@ public class BasicEnemy : EnemyCharacter
                 SetTarget(data.dealer.dealerTransform);
             }
             
-            
+            if(stateMachine.CurrentState == stunState) 
+            {
+                Debug.Log("son gia stunnato");
+                return;
+            }
+
+            if(actionCourotine != null) 
+            {
+                StopCoroutine(actionCourotine);
+                actionCourotine=null;
+            }
+
             stateMachine.SetState(stunState);
         }
        
@@ -321,6 +344,11 @@ public class BasicEnemy : EnemyCharacter
     public void Despawn()
     {
         Destroy(gameObject);
+    }
+
+    public void SetActionCoroutine(Coroutine coroutine) 
+    {
+        actionCourotine=coroutine;
     }
 
 }

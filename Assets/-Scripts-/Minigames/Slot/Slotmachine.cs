@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class Slotmachine : MonoBehaviour
 {
+    [Header("Variabili slot")]
+    [SerializeField, Tooltip("Numero massimo di tentativi prima di vincere")]
+    int lives = 3;
     [Header("Variabili colonna")]   
     
     [SerializeField,Tooltip("Numero delle figure totali nella colonna")]
@@ -44,6 +47,7 @@ public class Slotmachine : MonoBehaviour
     private int currentNumberOfTheSlot = 0;
 
     bool canInteract;
+    public bool inGame=false;
     
 
     //obsoleto
@@ -150,10 +154,20 @@ public class Slotmachine : MonoBehaviour
         if (win)
         {
             Debug.Log("avete vinto");
+
+            //fai animazione/dialogo di vincita
         }
         else
         {
             Debug.Log("avete perso");
+
+            lives--;
+
+            if(lives <= 0) 
+            {
+                
+                //fai animazione/dialogo perdita
+            }
         }
     }
 

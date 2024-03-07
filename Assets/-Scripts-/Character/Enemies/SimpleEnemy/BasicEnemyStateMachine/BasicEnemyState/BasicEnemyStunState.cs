@@ -4,18 +4,25 @@ using UnityEngine;
 
 public class BasicEnemyStunState : BasicEnemyState
 {
+    float stunTime=1f;
     public BasicEnemyStunState(BasicEnemy basicEnemy)
     {
         this.basicEnemy = basicEnemy;
+        
     }
 
     public override void Enter()
     {
         base.Enter();
 
+        stunTime = 1f;
+
+        Debug.Log(stunTime);
+
         basicEnemy.canSee = false;
         basicEnemy.canAction = false;
         basicEnemy.canMove = false;
+        basicEnemy.isActioning = false;
 
         basicEnemy.GetAnimator().SetTrigger("Damaged");
 
@@ -26,6 +33,14 @@ public class BasicEnemyStunState : BasicEnemyState
     {
         base.Update();
 
+        stunTime -= Time.deltaTime ;
+
+        Debug.Log(stunTime);
+        if(stunTime <= 0f)
+        {
+            
+            stateMachine.SetState(basicEnemy.moveState);
+        }
        
     }
 
