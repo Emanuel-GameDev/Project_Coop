@@ -13,13 +13,20 @@ MonoBehaviour:
   m_Name: MovementFaseData
   m_EditorClassIdentifier: 
   faseType: 0
+  faseObjective:
+    m_TableReference:
+      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+    m_TableEntryReference:
+      m_KeyId: 8676888987303936
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   faseStartDialogue: {fileID: 11400000, guid: d1bf1fd769dce00448f528f30a5e75b6, type: 2}
   faseEndDialogue: {fileID: 11400000, guid: 0878a2bdd99387b47bf0ea78b7bdeb94, type: 2}
-  OnFaseStart:
-    m_PersistentCalls:
-      m_Calls: []
-  OnFaseEnd:
-    m_PersistentCalls:
-      m_Calls: []
+  faseLenght: 10
   specialFaseEndDialogue: {fileID: 11400000, guid: 1ff6f74e6ae4a9e4f922f90a3c9a1e5a,
     type: 2}
+  references:
+    version: 2
+    RefIds: []

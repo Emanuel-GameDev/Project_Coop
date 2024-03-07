@@ -161,7 +161,7 @@ public class CharacterClass : MonoBehaviour
             direction = direction.normalized;
 
         rb.velocity = direction * MoveSpeed;
-
+        //rb.velocity =new Vector2(direction.x,direction.y*0.7f)* MoveSpeed;
         isMoving = rb.velocity.magnitude > 0.2f;
 
         if (direction != Vector2.zero)

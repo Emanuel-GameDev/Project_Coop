@@ -48,6 +48,14 @@ public interface InputReceiver
 
     #region Minigame
     void MoveMinigameInput(InputAction.CallbackContext context);
+
+    public void ButtonEast(InputAction.CallbackContext context);
+
+    public void ButtonNorth(InputAction.CallbackContext context);
+
+    public void ButtonWeast(InputAction.CallbackContext context);
+
+    public void ButtonSouth(InputAction.CallbackContext context);
     #endregion
 
     #region UI

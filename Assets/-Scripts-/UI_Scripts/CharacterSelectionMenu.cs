@@ -52,7 +52,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     // Le icone che vanno inserite da Inspector
     public List<PlayerData> characterIcons = new List<PlayerData>();
 
-    // la struct che verrà usata per capire se un personaggio è stato selezionato
+    // la struct che verrï¿½ usata per capire se un personaggio ï¿½ stato selezionato
     private List<PlayerSelection> selectableCharacters = new List<PlayerSelection>();
 
     private int randomSelectionCounter = 0;
@@ -89,7 +89,7 @@ public class CharacterSelectionMenu : MonoBehaviour
         InitialiazeSelections();
 
         privatePlayerTexts = playerInfoTexts;
-        GameManager.Instance.LoadSceneInbackground("TestLeo2D");
+        //GameManager.Instance.LoadSceneInbackground("TestLeo2D");
     }
 
     public List<RectTransform> GetCharacterIcons()
@@ -124,7 +124,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     }
 
     /// <summary>
-    /// Controlla se un'icona è stata selezionata da un'altro player
+    /// Controlla se un'icona ï¿½ stata selezionata da un'altro player
     /// </summary>
     /// <param name="iconToCheck"></param>
     public bool AlreadySelected(InputReceiver receiver, RectTransform iconToCheck)
@@ -199,7 +199,7 @@ public class CharacterSelectionMenu : MonoBehaviour
             randomSelectionCounter++;
 
             Debug.Log($"Player_NUM vuole avviare la selezione random");
-            displayInfo.text = "Player_NUM vuole avviare la selezione random, selezione personaggi disattivata (solo chi ha fatto la richiesta può annullarla)";
+            displayInfo.text = "Player_NUM vuole avviare la selezione random, selezione personaggi disattivata (solo chi ha fatto la richiesta puï¿½ annullarla)";
 
         }
         else

@@ -27,24 +27,32 @@ public class SlotRow : MonoBehaviour
 
     private Vector3 targetPosition;
 
-    [SerializeField] private Slot selectedSlot;
+    [SerializeField] private Slot selectedSlotImage;
     private Slotmachine mainMachine;
 
     private void Start()
     {
+        
+    }
+
+    public void Initialize()
+    {
         mainMachine = GetComponentInParent<Slotmachine>();
         stopped = true;
-        selectedSlot = null; //reset della slot presa
+        selectedSlotImage = null; //reset della slot presa
         reorderSlots = new List<GameObject>();
         InitializeRow();
-
-        //momentaneo
-        stopped = false;
+        
     }
 
     private void Update()
     {
         RotateRow();
+    }
+
+    public void StartSlotMachine() 
+    {
+        stopped = false;
     }
 
     public void SetRow(int slotNumber, int winNumber, float distance, Sprite playerSprite,Sprite enemySprite,float rotationSpeed,float stabilizationSpeed)
@@ -223,7 +231,7 @@ public class SlotRow : MonoBehaviour
 
         int stoppedPosition = (int)(transform.localPosition.y / slotDistance);
 
-        selectedSlot = reorderSlots[stoppedPosition].GetComponent<Slot>();
+        selectedSlotImage = reorderSlots[stoppedPosition].GetComponent<Slot>();
 
         stopped = true;
 
@@ -240,14 +248,14 @@ public class SlotRow : MonoBehaviour
     
     public Slot GetSelectedSlot()
     {
-        return selectedSlot;
+        return selectedSlotImage;
     }
 
     public void ResetRow()
     {
         stopped = false;
         isSlowDown = false;
-        selectedSlot = null;
+        selectedSlotImage = null;
     }
 
     public void StartSlowDown()

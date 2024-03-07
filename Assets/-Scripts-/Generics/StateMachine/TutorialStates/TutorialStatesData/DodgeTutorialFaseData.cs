@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
 
 [CreateAssetMenu(menuName = "Tutorial/TutorialFaseData/DodgeTutorialFaseData")]
 public class DodgeTutorialFaseData : TutorialFaseData
 {
+    [SerializeField] public LocalizedString faseObjectivePerfect;
+
     [Header("Dialoghi pre-tutorial schivata dei personaggi")]
     [SerializeField] public Dialogue dpsDodgeDialogue;
     [SerializeField] public Dialogue rangedDodgeDialogue;

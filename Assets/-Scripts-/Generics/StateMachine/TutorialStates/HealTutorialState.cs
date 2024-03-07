@@ -8,7 +8,7 @@ public class HealTutorialState : TutorialFase
 {
     TutorialManager tutorialManager;
     List<PlayerCharacter> playerHealed;
-
+    int numberOfPlayerHealed = 0;
     HealTutorialFaseData faseData;
 
     public HealTutorialState(TutorialManager tutorialManager)
@@ -21,6 +21,10 @@ public class HealTutorialState : TutorialFase
         base.Enter();
 
         faseData = (HealTutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
+
+        tutorialManager.objectiveText.enabled = true;
+        tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
+        tutorialManager.objectiveNumbersGroup.SetActive(true);
 
         playerHealed = new List<PlayerCharacter> { tutorialManager.dps, tutorialManager.ranged, tutorialManager.tank };
 
@@ -42,6 +46,9 @@ public class HealTutorialState : TutorialFase
         {
             character.CharacterClass.currentHp = character.MaxHp - 5;
         }
+
+        numberOfPlayerHealed = 0;
+        tutorialManager.objectiveNumberToReach.text = numberOfPlayerHealed.ToString();
 
     }
     bool dialoguePlaying = false;
@@ -70,6 +77,9 @@ public class HealTutorialState : TutorialFase
                 case DPS:
                     tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
 
+                    numberOfPlayerHealed++;
+                    tutorialManager.objectiveNumberToReach.text = numberOfPlayerHealed.ToString();
+
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.DPSDialogue);
                     dialoguePlaying = true;
@@ -78,6 +88,9 @@ public class HealTutorialState : TutorialFase
                 case Ranged:
                     tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
 
+                    numberOfPlayerHealed++;
+                    tutorialManager.objectiveNumberToReach.text = numberOfPlayerHealed.ToString();
+
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.rangedDialogue);
                     dialoguePlaying = true;
@@ -85,6 +98,9 @@ public class HealTutorialState : TutorialFase
 
                 case Tank:
                     tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
+
+                    numberOfPlayerHealed++;
+                    tutorialManager.objectiveNumberToReach.text = numberOfPlayerHealed.ToString();
 
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.tankDialogue);

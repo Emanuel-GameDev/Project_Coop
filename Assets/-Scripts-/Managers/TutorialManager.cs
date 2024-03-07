@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
@@ -25,6 +26,12 @@ public class TutorialManager : MonoBehaviour
 
     [SerializeField] public DialogueBox dialogueBox;
 
+    [SerializeField] public GameObject currentFaseObjective;
+    [SerializeField] public TextMeshProUGUI objectiveText;
+    [SerializeField] public GameObject objectiveNumbersGroup;
+    [SerializeField] public TextMeshProUGUI objectiveNumberToReach;
+    [SerializeField] public TextMeshProUGUI objectiveNumberReached;
+
     [SerializeField] Dialogue endingDialogueOne;
     [SerializeField] Dialogue endingDialogueTwo;
 
@@ -34,15 +41,15 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] Transform rangedRespawn;
     [SerializeField] Transform enemyRespawn;
 
-
-    public PlayerCharacter dps;
-    public PlayerCharacter healer;
-    public PlayerCharacter tank;
-    public PlayerCharacter ranged;
-
-    public List<PlayerCharacter> characters = new List<PlayerCharacter>();
-
     public TutorialEnemy tutorialEnemy;
+
+    [HideInInspector] public PlayerCharacter dps;
+    [HideInInspector] public PlayerCharacter healer;
+    [HideInInspector] public PlayerCharacter tank;
+    [HideInInspector] public PlayerCharacter ranged;
+
+    [HideInInspector] public List<PlayerCharacter> characters = new List<PlayerCharacter>();
+
     [SerializeField] GameObject lilith;
 
     [HideInInspector] public bool blockFaseChange = false;
@@ -179,11 +186,6 @@ public class TutorialManager : MonoBehaviour
         characters.Add(ranged);
         characters.Add(tank);
 
-        //Debug.Log(inputBindings[dps].CurrentReceiver.GetCharacter());
-        //Debug.Log(inputBindings[healer].CurrentReceiver.GetCharacter());
-        //Debug.Log(inputBindings[ranged].CurrentReceiver.GetCharacter());
-        //Debug.Log(inputBindings[tank].CurrentReceiver.GetCharacter());
-
     }
 
     
@@ -194,18 +196,17 @@ public class TutorialManager : MonoBehaviour
     private void Start()
     {
         inputBindings = new Dictionary<PlayerCharacter, PlayerInputHandler>();
-
-        DeactivateEnemyAI();
-
-
-        SetUpCharacters();
-
-
         playableDirector = gameObject.GetComponent<PlayableDirector>();
 
-        stateMachine.SetState(new IntermediateTutorialFase(this));
+        SetUpCharacters();
+        DeactivateEnemyAI();
 
+        stateMachine.SetState(new IntermediateTutorialFase(this));
         playableDirector.Play();
+
+        objectiveText.enabled = false;
+        objectiveNumbersGroup.SetActive(false);
+        currentFaseObjective.SetActive(false);
 
 
         //dps.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
@@ -303,6 +304,11 @@ public class TutorialManager : MonoBehaviour
         blockFaseChange = true;
         finale = true;
         dialogueBox.OnDialogueEnded += Fade;
+
+        currentFaseObjective.SetActive(false);
+        objectiveNumbersGroup.SetActive(false);
+        objectiveText.enabled = false;
+
         PlayDialogue(endingDialogueOne);
     }
 
