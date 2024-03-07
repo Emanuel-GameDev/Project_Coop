@@ -296,7 +296,7 @@ public class BasicEnemy : EnemyCharacter
     {
         animator.SetTrigger("DamageEnded");
 
-        stateMachine.SetState(moveState);
+        stateMachine.SetState(idleState);
     }
 
 
@@ -328,5 +328,6 @@ public class BasicEnemy : EnemyCharacter
     {
         Destroy(gameObject);
     }
+
 
 }
