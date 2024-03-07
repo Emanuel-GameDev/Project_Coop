@@ -10,7 +10,9 @@ public class SlotRow : MonoBehaviour
      int numberWinSlots;
      float slotDistance = 0.25f;
 
-    //inserire giocatore scelto ggggggg
+    //inserire giocatore scelto
+     public SlotPlayer selectedPlayer;
+
      private Sprite playerSprite;
      private Sprite mouseSprite;
 
@@ -277,5 +279,7 @@ public class SlotRow : MonoBehaviour
             slot.AddComponent<Slot>();
         }
     }
+
+    
    
 }
