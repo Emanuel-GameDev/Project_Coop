@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class HUDManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private static HUDManager _instance;
+    public static HUDManager Instance
     {
-        
-    }
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<HUDManager>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new("HUDManager");
+                    _instance = singletonObject.AddComponent<HUDManager>();
+                }
+            }
+
+            return _instance;
+        }
     }
 }
