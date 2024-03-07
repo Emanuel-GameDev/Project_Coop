@@ -22,6 +22,7 @@ namespace MBTExample
 
         public override void OnEnter()
         {
+           
             bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
            
             started = false;
@@ -35,8 +36,10 @@ namespace MBTExample
             bossCharacter.SetChargeDamageData();
 
             Debug.Log("Start Charge Timer");
+            bossCharacter.anim.SetTrigger("PrepCharge");
             ShowAttackPreview(true);
             tempTimer = 0;
+            bossCharacter.anim.ResetTrigger("Return");
 
         }
         
@@ -51,6 +54,9 @@ namespace MBTExample
                 if (!started)
                 {
                     ShowAttackPreview(false);
+                    Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
+                    targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), (direction.y * bossCharacter.chargeDistance), 0) + bossCharacter.transform.position;
+
                     Debug.Log("partito");
                     bossCharacter.Agent.isStopped = false;
                     bossCharacter.Agent.speed = bossCharacter.chargeSpeed;
@@ -67,6 +73,7 @@ namespace MBTExample
                     
                     bossCharacter.Agent.isStopped = true;
                     bossCharacter.anim.SetTrigger("Return");
+                    
                     return NodeResult.success;
                 }
             }
