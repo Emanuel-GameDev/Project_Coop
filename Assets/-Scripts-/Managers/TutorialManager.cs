@@ -32,6 +32,7 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] public TextMeshProUGUI objectiveNumberToReach;
     [SerializeField] public TextMeshProUGUI objectiveNumberReached;
 
+    [SerializeField] Dialogue postIntroDialogue;
     [SerializeField] Dialogue endingDialogueOne;
     [SerializeField] Dialogue endingDialogueTwo;
 
