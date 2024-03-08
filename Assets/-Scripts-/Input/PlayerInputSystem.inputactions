@@ -9,7 +9,7 @@
                     "name": "Move",
                     "type": "Value",
                     "id": "836dd6e1-9005-4477-9e30-debe0d8bf31d",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -139,6 +139,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SkipCutscene",
+                    "type": "Button",
+                    "id": "5886fdf8-6ed2-46fe-9576-4c4aeba951ae",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Hold(duration=3)",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -557,6 +566,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Dialogue",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2ed78e6a-4fd1-4172-a8b4-ae0c66313dca",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "SkipCutscene",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "35432738-ce88-4a68-b448-196d69f108a2",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "SkipCutscene",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

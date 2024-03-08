@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
+using UnityEngine.Video;
 
 public enum TutorialFaseType
 {
@@ -32,7 +34,11 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] public TextMeshProUGUI objectiveNumberToReach;
     [SerializeField] public TextMeshProUGUI objectiveNumberReached;
 
+    [SerializeField] GameObject introScreen;
     [SerializeField] Dialogue postIntroDialogue;
+    VideoPlayer videoPlayer;
+
+
     [SerializeField] Dialogue endingDialogueOne;
     [SerializeField] Dialogue endingDialogueTwo;
 
@@ -87,6 +93,98 @@ public class TutorialManager : MonoBehaviour
             else
                 _inputHandlerId = 0;
         }
+    }
+
+    private void Awake()
+    {
+        inputBindings = new Dictionary<PlayerCharacter, PlayerInputHandler>();
+        playableDirector = gameObject.GetComponent<PlayableDirector>();
+        videoPlayer = introScreen.GetComponent<VideoPlayer>();
+
+        
+    }
+
+    private void IntroEnded(VideoPlayer source)
+    {
+        introScreen.SetActive(false);
+        StartTutorial();
+        videoPlayer.loopPointReached -= IntroEnded;
+    }
+
+    public bool playIntro = false;
+
+    private void Start()
+    {
+        objectiveText.enabled = false;
+        objectiveNumbersGroup.SetActive(false);
+        currentFaseObjective.SetActive(false);
+        tutorialEnemy.gameObject.SetActive(false);
+
+      
+
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        {
+            inputHandler.GetComponent<PlayerInput>().actions.Disable();
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Enable();
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed += SkipIntro;
+        }
+
+        if (playIntro)
+        {
+            introScreen.SetActive(true);
+            videoPlayer.Play();
+            videoPlayer.loopPointReached += IntroEnded;
+        }
+        else
+        {
+            introScreen.SetActive(false) ;
+            StartTutorial();
+        }
+        
+
+
+        //dps.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+        //OnMovementFaseStart.Invoke();
+
+        //DeactivatePlayerInput(dps);
+        //DeactivatePlayerInput(healer);
+        //DeactivatePlayerInput(ranged);
+        //DeactivatePlayerInput(tank);
+
+        //DeactivateEnemyAI();
+
+    }
+
+    private void SkipIntro(InputAction.CallbackContext obj)
+    {
+        introScreen.SetActive(false);
+        StartTutorial();
+
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        {
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Disable();
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
+        }
+
+    }
+
+    private void Update()
+    {
+        if(!videoPlayer.isPlaying)
+            stateMachine.StateUpdate();
+    }
+     
+
+    private void StartTutorial()
+    {
+        SetUpCharacters();
+        DeactivateAllPlayerInputs();
+
+        tutorialEnemy.gameObject.SetActive(true);
+        DeactivateEnemyAI();
+
+        stateMachine.SetState(new IntermediateTutorialFase(this));
+        playableDirector.Play();
     }
 
     private void SetUpCharacters()
@@ -189,43 +287,14 @@ public class TutorialManager : MonoBehaviour
 
     }
 
-    
-
-    public CharacterClass current;
-    [SerializeField] private GameObject playerInputPrefab;
-
-    private void Start()
+    private void OnDisable()
     {
-        inputBindings = new Dictionary<PlayerCharacter, PlayerInputHandler>();
-        playableDirector = gameObject.GetComponent<PlayableDirector>();
-
-        SetUpCharacters();
-        DeactivateEnemyAI();
-
-        stateMachine.SetState(new IntermediateTutorialFase(this));
-        playableDirector.Play();
-
-        objectiveText.enabled = false;
-        objectiveNumbersGroup.SetActive(false);
-        currentFaseObjective.SetActive(false);
-
-
-        //dps.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
-        //OnMovementFaseStart.Invoke();
-
-        //DeactivatePlayerInput(dps);
-        //DeactivatePlayerInput(healer);
-        //DeactivatePlayerInput(ranged);
-        //DeactivatePlayerInput(tank);
-
-        //DeactivateEnemyAI();
-
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        {
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
+        }
     }
 
-    private void Update()
-    {
-        stateMachine.StateUpdate();
-    }
 
     [HideInInspector] public bool timerEnded = false;
 

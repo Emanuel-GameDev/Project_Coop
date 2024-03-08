@@ -136,6 +136,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void OptionInput(InputAction.CallbackContext context) => CurrentReceiver.OptionInput(context);
 
+
     #endregion
 
     #region Minigame
