@@ -1,10 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Slotmachine : MonoBehaviour
 {
+    [Header("Variabili slot")]
+    [SerializeField, Tooltip("Numero massimo di tentativi prima di vincere")]
+    int lives = 3;
     [Header("Variabili colonna")]   
     
     [SerializeField,Tooltip("Numero delle figure totali nella colonna")]
@@ -34,18 +38,24 @@ public class Slotmachine : MonoBehaviour
     [SerializeField] private Sprite healerSprite;
     [SerializeField] private Sprite enemySprite;
 
+    List<Sprite> playerSprites;
+
     [Header("Colonne")]
 
     [SerializeField] private List<SlotRow> rows;
 
+    private int currentNumberOfTheSlot = 0;
+
     bool canInteract;
+    public bool inGame=false;
+    
 
     //obsoleto
     //public GameObject GO;
 
     private void Awake()
     {
-        
+        playerSprites= new List<Sprite>() { dpsSprite, tankSprite, rangedSprite, healerSprite};
 
         
 
@@ -62,10 +72,13 @@ public class Slotmachine : MonoBehaviour
     {
         RandomReorder(listOfCurrentPlayer);
 
+        //forse cancellare
+        /*
         foreach (SlotRow row in rows)
         {
-            row.SetRow(numberOfSlots, numberWinSlots, slotDistance, dpsSprite, enemySprite, rotationSpeed, stabilizationSpeed);
+            row.SetRow(numberOfSlots, numberWinSlots, slotDistance, playerSprites, enemySprite, rotationSpeed, stabilizationSpeed);
         }
+        */
 
         //da aggiungere dopo una possibile animazione/tutorial
 
@@ -81,9 +94,14 @@ public class Slotmachine : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             InitializeSlotMachineMinigame();
+        }
+
+        if (Input.GetKeyDown(KeyCode.M)) 
+        {
+            StartCoroutine(RestartSlotMachine());
         }
         //TODO: inserire input manuali per debug
 
@@ -136,10 +154,20 @@ public class Slotmachine : MonoBehaviour
         if (win)
         {
             Debug.Log("avete vinto");
+
+            //fai animazione/dialogo di vincita
         }
         else
         {
             Debug.Log("avete perso");
+
+            lives--;
+
+            if(lives <= 0) 
+            {
+                
+                //fai animazione/dialogo perdita
+            }
         }
     }
 
@@ -177,12 +205,42 @@ public class Slotmachine : MonoBehaviour
             yield return new WaitForSeconds(restartDelay);
         }
 
+        currentNumberOfTheSlot = 0;
         canInteract = true;
     }
 
-    private void RandomReorder(List<SlotPlayer> currentPlayersList) 
+    private void SetRowInIndex(int index,ePlayerCharacter characterEnum) 
     {
+        Sprite playerSprites=null;
+
+        switch (characterEnum)
+        {
+            case ePlayerCharacter.Brutus:
+                playerSprites = dpsSprite;
+                break;
+            case ePlayerCharacter.Caina:
+                playerSprites = tankSprite;
+                break;
+            case ePlayerCharacter.Cassius:
+                playerSprites = healerSprite;
+                break;
+            case ePlayerCharacter.Jude:
+                playerSprites = rangedSprite;
+                break;
+            default:
+                Debug.LogError("Personaggio non riconosciuto");
+                break;
+        }
+
+        rows[index].SetRow(numberOfSlots, numberWinSlots, slotDistance, playerSprites, enemySprite, rotationSpeed, stabilizationSpeed);
+    }
+
+    private void RandomReorder(List<SlotPlayer> currentPlayersList) 
+    { 
         List<SlotPlayer> notRandomPlayers = new List<SlotPlayer>(currentPlayersList);
+
+        //TODO guardare se si puoò fare in modo dinamico
+        List<ePlayerCharacter> characterEnum = new List<ePlayerCharacter>() { ePlayerCharacter.Brutus, ePlayerCharacter.Caina, ePlayerCharacter.Cassius, ePlayerCharacter.Jude };
 
         if(notRandomPlayers.Count == 0)
         {
@@ -190,6 +248,7 @@ public class Slotmachine : MonoBehaviour
             return;
         }
 
+        int indexRow = 0;
         do 
         {
 
@@ -197,15 +256,43 @@ public class Slotmachine : MonoBehaviour
 
             randomListOfPlayer.Add(player);
 
+
             notRandomPlayers.Remove(player);
+
+            if(player.GetCharacter()== ePlayerCharacter.EmptyCharacter) 
+            {
+                Debug.LogError("il giocatore non ha un character, ne verrà associato uno randomico, ma non dovrebbe succedere");
+
+                ePlayerCharacter characterRemainingType = characterEnum[UnityEngine.Random.Range(0, characterEnum.Count)];
+
+                SetRowInIndex(indexRow, characterRemainingType);
+
+                characterEnum.Remove(characterRemainingType);
+            }
+            else
+            {
+                SetRowInIndex(indexRow, player.GetCharacter());
+
+                characterEnum.Remove(player.GetCharacter());
+            }
+
+            
+
+            indexRow++;
             
         }
         while (notRandomPlayers.Count > 0);
 
         int index = 0;
 
+        
+
         do 
         {
+            ePlayerCharacter characterRemainingType= characterEnum[UnityEngine.Random.Range(0,characterEnum.Count)];
+
+            characterEnum.Remove(characterRemainingType);
+
             if (index >= currentPlayersList.Count)
             {
                 index=0;
@@ -213,14 +300,46 @@ public class Slotmachine : MonoBehaviour
 
             randomListOfPlayer.Add(currentPlayersList[index]);
 
+            //setto le immagini rimanenti
+
+            SetRowInIndex(indexRow, characterRemainingType);
+
+
             index++;
+            indexRow++;
         }
         while(randomListOfPlayer.Count < 4);
+
+        for (int i = 0; i < rows.Count; i++) 
+        {
+            rows[i].selectedPlayer = randomListOfPlayer[i];
+        }
     }
 
-    public void InputStopRowSlot(ePlayerCharacter character)
+    private IEnumerator InputStopRowSlot(SlotPlayer player)
     {
         //ferma la riga per il giocatore giocante
+
+        if(player == rows[currentNumberOfTheSlot].selectedPlayer && canInteract) 
+        {
+            canInteract= false;
+
+            rows[currentNumberOfTheSlot].StartSlowDown();
+
+            
+
+            yield return new WaitForSeconds(stabilizationSpeed);
+
+            currentNumberOfTheSlot++;
+            canInteract = true;
+        }
+
+        
+    }
+
+    public void InputStop(SlotPlayer player) 
+    {
+        StartCoroutine(InputStopRowSlot(player));
     }
 
 
