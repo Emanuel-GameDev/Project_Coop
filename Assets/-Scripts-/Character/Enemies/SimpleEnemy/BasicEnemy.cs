@@ -83,7 +83,7 @@ public class BasicEnemy : EnemyCharacter
 
 
     [HideInInspector] public NavMeshObstacle obstacle;
-
+    [HideInInspector] public PlayerCharacter currentTarget;
 
 
     protected override void Awake()
@@ -318,7 +318,7 @@ public class BasicEnemy : EnemyCharacter
     {
         animator.SetTrigger("DamageEnded");
 
-        stateMachine.SetState(moveState);
+        stateMachine.SetState(idleState);
     }
 
 
@@ -326,6 +326,9 @@ public class BasicEnemy : EnemyCharacter
     public virtual void SetTarget(Transform newTarget)
     {
         target = newTarget;
+
+        if(newTarget.GetComponent<PlayerCharacter>()!=null)
+            currentTarget = newTarget.GetComponent<PlayerCharacter>();
     }
 
    

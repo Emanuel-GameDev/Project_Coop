@@ -39,7 +39,7 @@ public class BasicEnemyStunState : BasicEnemyState
         if(stunTime <= 0f)
         {
             
-            stateMachine.SetState(basicEnemy.moveState);
+            stateMachine.SetState(basicEnemy.idleState);
         }
        
     }

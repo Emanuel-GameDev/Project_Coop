@@ -32,9 +32,11 @@ public class TutorialEnemy : BasicMeleeEnemy
     {
         if (!invincible)
         {
-        base.TakeDamage(data);
-        OnHit?.Invoke();
+            //base.TakeDamage(data);
+            stateMachine.SetState(stunState);
+            OnHit?.Invoke();
             StartCoroutine(Invincibility());
+
         }
 
     }
