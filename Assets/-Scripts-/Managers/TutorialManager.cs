@@ -107,7 +107,7 @@ public class TutorialManager : MonoBehaviour
     private void IntroEnded(VideoPlayer source)
     {
         introScreen.SetActive(false);
-        StartTutorial();
+        PostIntro();
         videoPlayer.loopPointReached -= IntroEnded;
     }
 
@@ -138,7 +138,7 @@ public class TutorialManager : MonoBehaviour
         else
         {
             introScreen.SetActive(false) ;
-            StartTutorial();
+            PostIntro();
         }
         
 
@@ -158,7 +158,7 @@ public class TutorialManager : MonoBehaviour
     private void SkipIntro(InputAction.CallbackContext obj)
     {
         introScreen.SetActive(false);
-        StartTutorial();
+        PostIntro();
 
         foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
@@ -174,17 +174,36 @@ public class TutorialManager : MonoBehaviour
             stateMachine.StateUpdate();
     }
      
+    private void PostIntro()
+    {
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        {
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Disable();
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
+        }
+
+        SetUpCharacters();
+        DeactivateAllPlayerInputs();
+
+        ResetScene();
+
+        PlayDialogue(postIntroDialogue);
+        dialogueBox.OnDialogueEnded += StartTutorial;
+        
+
+    }
 
     private void StartTutorial()
     {
-        SetUpCharacters();
-        DeactivateAllPlayerInputs();
+        dialogueBox.OnDialogueEnded -= StartTutorial;
+        stateMachine.SetState(new IntermediateTutorialFase(this));
 
         tutorialEnemy.gameObject.SetActive(true);
         DeactivateEnemyAI();
 
-        stateMachine.SetState(new IntermediateTutorialFase(this));
         playableDirector.Play();
+
+       
     }
 
     private void SetUpCharacters()
@@ -287,13 +306,7 @@ public class TutorialManager : MonoBehaviour
 
     }
 
-    private void OnDisable()
-    {
-        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
-        {
-            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
-        }
-    }
+    
 
 
     [HideInInspector] public bool timerEnded = false;

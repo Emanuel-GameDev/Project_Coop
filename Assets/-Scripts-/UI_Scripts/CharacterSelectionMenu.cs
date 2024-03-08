@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -259,8 +260,8 @@ public class CharacterSelectionMenu : MonoBehaviour
     public void EndSelection()
     {
         Debug.Log("Selezione completa");
-
-        GameManager.Instance.ActivateLoadedScene();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        //GameManager.Instance.ActivateLoadedScene();
     }
 
 
