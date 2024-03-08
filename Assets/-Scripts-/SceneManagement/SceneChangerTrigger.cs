@@ -33,7 +33,8 @@ public class SceneChangerTrigger : MonoBehaviour
             if (objectCount <= 0)
             {
                 objectCount = 0;
-                StartCoroutine(UnloadSceneAfterDelay());
+                if(gameObject.activeInHierarchy)
+                    StartCoroutine(UnloadSceneAfterDelay());
             }
         }
     }
@@ -43,7 +44,7 @@ public class SceneChangerTrigger : MonoBehaviour
         yield return new WaitForSeconds(unloadSceneDelay);
         if(objectCount <= 0)
         {
-            GameManager.Instance.CancelSceneLoad(destinationSceneName);
+            //GameManager.Instance.CancelSceneLoad(destinationSceneName);
         }
     }
 

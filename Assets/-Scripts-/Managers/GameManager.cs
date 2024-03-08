@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -33,7 +36,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private Dictionary<string, AsyncOperation> sceneLoadOperations = new Dictionary<string, AsyncOperation>();
+    private AsyncOperation sceneLoadOperation;
 
     private void Awake()
     {
@@ -87,63 +90,44 @@ public class GameManager : MonoBehaviour
 
     #region Scene Management
 
+
     public void ChangeScene(string sceneName)
     {
-        if (sceneLoadOperations.ContainsKey(sceneName))
-        {
-            if (!sceneLoadOperations[sceneName].isDone)
-                StartLoadScreen();
-
-            ActivateLoadedScene(sceneName);
-        }
+        LoadSceneInbackground(sceneName);
+        StartLoadScreen();
     }
 
     public void LoadSceneInbackground(string sceneName)
     {
-        if (!sceneLoadOperations.ContainsKey(sceneName))
+        if (sceneLoadOperation == null)
         {
-            AsyncOperation asyncOp = SceneManager.LoadSceneAsync(sceneName);
-            asyncOp.allowSceneActivation = false;
-            sceneLoadOperations.Add(sceneName, asyncOp);
+            sceneLoadOperation = SceneManager.LoadSceneAsync(sceneName);
+            sceneLoadOperation.allowSceneActivation = false;
         }
     }
 
-    public void ActivateLoadedScene(string sceneName)
+    public void ActivateLoadedScene()
     {
-        if (sceneLoadOperations.ContainsKey(sceneName))
+        if (IsSceneLoaded())
         {
-            foreach (var kvp in sceneLoadOperations)
-            {
-                if (kvp.Key != sceneName)
-                {
-                    SceneManager.UnloadSceneAsync(kvp.Key);
-                }
-            }
-
-            sceneLoadOperations[sceneName].allowSceneActivation = true;
-        }
-    }
-
-    public void CancelSceneLoad(string sceneName)
-    {
-        if (sceneLoadOperations.ContainsKey(sceneName))
-        {
-            sceneLoadOperations[sceneName].allowSceneActivation = false;
-            SceneManager.UnloadSceneAsync(sceneName);
-            sceneLoadOperations.Remove(sceneName);
-        }
-    }
-
-    public bool IsSceneLoaded(string sceneName)
-    {
-        if (sceneLoadOperations.ContainsKey(sceneName))
-        {
-            return sceneLoadOperations[sceneName].isDone;
+            ActivateScene();
         }
         else
-            return false;
+        {
+            StartLoadScreen();
+        }
     }
 
+    private void ActivateScene()
+    {
+        sceneLoadOperation.allowSceneActivation = true;
+        sceneLoadOperation = null;
+    }
+
+    public bool IsSceneLoaded()
+    {
+        return sceneLoadOperation.progress >= 0.9f;
+    }
 
     public void LoadScene(int id)
     {
@@ -160,7 +144,16 @@ public class GameManager : MonoBehaviour
 
     public void StartLoadScreen()
     {
-        //Do Something
+        //Codice per attivare la loading Screen
+        StartCoroutine(LoadScreen());
+    }
+
+    IEnumerator LoadScreen()
+    {
+        Debug.Log("Load");
+        yield return new WaitUntil(() => IsSceneLoaded());
+        Debug.Log("Ended");
+        ActivateScene();
     }
 
     #endregion

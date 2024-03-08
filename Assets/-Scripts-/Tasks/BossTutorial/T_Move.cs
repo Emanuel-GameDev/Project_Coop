@@ -22,6 +22,7 @@ namespace MBTExample
         private List<PlayerCharacter> activePlayers;
         public override void OnEnter()
         {
+            
             bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
             targetPosition = targetTransform.Value.position;
             activePlayers = GameManager.Instance.coopManager.ActivePlayers;
@@ -30,6 +31,8 @@ namespace MBTExample
             tempTimer = 0;
             playerFound.Value = false;
             bossCharacter.anim.SetTrigger("Move");
+            Debug.Log("si muove");
+            bossCharacter.anim.ResetTrigger("Return");
         }
 
         public override NodeResult Execute()
@@ -48,6 +51,8 @@ namespace MBTExample
                 if (CheckForNearPlayer())
                 {
                     playerFound.Value = true;
+                    bossCharacter.Agent.isStopped = true;
+                    bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
                     bossCharacter.anim.SetTrigger("Return");
                     return NodeResult.success;
                 }
@@ -59,6 +64,7 @@ namespace MBTExample
                 if (mustStop || dist <= bossCharacter.minDistance)
                 {
                     bossCharacter.Agent.isStopped = true;
+                    bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
                     bossCharacter.anim.SetTrigger("Return");
                     return NodeResult.success;
                 }
@@ -66,8 +72,10 @@ namespace MBTExample
             }
             else
             {
-                //start charge
+                
                 playerFound.Value = false;
+                bossCharacter.Agent.isStopped = true;
+                bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
                 bossCharacter.anim.SetTrigger("Return");
                 return NodeResult.failure;
                 

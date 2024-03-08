@@ -1,13 +1,20 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class PressInteractable : MonoBehaviour, IInteractable
 {
-    [SerializeField] UnityEvent OnInteract;
-    
+    [SerializeField] UnityEvent OnAllPlayersInteract;
+
+    List<IInteracter> interacters = new List<IInteracter>();
+
     public void Interact(IInteracter interacter)
     {
-        OnInteract?.Invoke();
+        if(!interacters.Contains(interacter))
+            interacters.Add(interacter);
+
+        if (interacters.Count >= CoopManager.Instance.GetActualHandlers().Count)
+            OnAllPlayersInteract?.Invoke();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
