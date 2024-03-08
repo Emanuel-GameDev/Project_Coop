@@ -331,7 +331,7 @@ public class TutorialManager : MonoBehaviour
     {
         dialogueBox.OnDialogueEnded -= TutorialEnd;
 
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
         foreach (PlayerCharacter character in characters)
         {
@@ -398,10 +398,15 @@ public class TutorialManager : MonoBehaviour
     private void ResetPlayersPosition()
     {
 
-        dps.GetRigidBody().MovePosition(DPSRespawn.position);
-        healer.GetRigidBody().MovePosition(healerRespawn.position);
-        ranged.GetRigidBody().MovePosition(rangedRespawn.position);
-        tank.GetRigidBody().MovePosition(tankRespawn.position);
+        dps.transform.position = DPSRespawn.position;
+        healer.transform.position = healerRespawn.position;
+        ranged.transform.position = rangedRespawn.position;
+        tank.transform.position = tankRespawn.position;
+
+        //dps.GetRigidBody().MovePosition(DPSRespawn.position);
+        //healer.GetRigidBody().MovePosition(healerRespawn.position);
+        //ranged.GetRigidBody().MovePosition(rangedRespawn.position);
+        //tank.GetRigidBody().MovePosition(tankRespawn.position);
 
         dps.GetRigidBody().velocity = Vector2.zero;
         healer.GetRigidBody().velocity = Vector2.zero;
