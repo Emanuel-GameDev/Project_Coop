@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class TutorialEnemy : BasicMeleeEnemy
 {
     [HideInInspector] public event Action OnHit;
-    [SerializeField] float invincibilitySeconds = 0.1f;
+    [SerializeField] float invincibilitySeconds = 0.2f;
     [HideInInspector] public bool focus = false;
     bool invincible=false;
     protected override void Awake()
@@ -32,8 +32,8 @@ public class TutorialEnemy : BasicMeleeEnemy
     {
         if (!invincible)
         {
-            //base.TakeDamage(data);
-            stateMachine.SetState(stunState);
+            base.TakeDamage(data);
+            //stateMachine.SetState(stunState);
             OnHit?.Invoke();
             StartCoroutine(Invincibility());
 
@@ -43,8 +43,11 @@ public class TutorialEnemy : BasicMeleeEnemy
 
     public override void SetTarget(Transform newTarget)
     {
-        if(!focus)
+        if (!focus)
+        {
             base.SetTarget(newTarget);
+            stateMachine.SetState(moveState);
+        }
     }
 
     IEnumerator Invincibility()

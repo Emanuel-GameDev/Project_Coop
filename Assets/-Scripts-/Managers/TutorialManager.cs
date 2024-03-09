@@ -186,6 +186,7 @@ public class TutorialManager : MonoBehaviour
         DeactivateAllPlayerInputs();
 
         ResetScene();
+        DeactivateEnemyAI();
 
         PlayDialogue(postIntroDialogue);
         dialogueBox.OnDialogueEnded += StartTutorial;
@@ -202,7 +203,6 @@ public class TutorialManager : MonoBehaviour
         DeactivateEnemyAI();
 
         playableDirector.Play();
-
        
     }
 

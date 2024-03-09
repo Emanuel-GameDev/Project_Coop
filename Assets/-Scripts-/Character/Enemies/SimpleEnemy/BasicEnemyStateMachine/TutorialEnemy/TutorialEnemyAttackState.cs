@@ -28,7 +28,7 @@ public class TutorialEnemyAttackState : BasicMeleeEnemyAttackState
                 }
             }
 
-            stateMachine.SetState(basicEnemy.idleState);
+            stateMachine.SetState(basicEnemy.moveState);
 
         }
     }
