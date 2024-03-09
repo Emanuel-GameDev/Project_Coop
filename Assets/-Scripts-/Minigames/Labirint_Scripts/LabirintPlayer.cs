@@ -221,8 +221,26 @@ public class LabirintPlayer : DefaultInputReceiver
 
     public override void MenuInput(InputAction.CallbackContext context)
     {
-
+        MinigameMenuManager.Instance.MenuButton(context, this);
     }
+
+    #region UI
+    public override void Navigate(InputAction.CallbackContext context)
+    {
+        MinigameMenuManager.Instance.NavigateButton(context, this);
+    }
+
+    public override void Submit(InputAction.CallbackContext context)
+    {
+        MinigameMenuManager.Instance.SubmitButton(context, this);
+    }
+
+    public override void Cancel(InputAction.CallbackContext context)
+    {
+        MinigameMenuManager.Instance.CancelButton(context, this);
+    }
+
+    #endregion
 
     #endregion
 
