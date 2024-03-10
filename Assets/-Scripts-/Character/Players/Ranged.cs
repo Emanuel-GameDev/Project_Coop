@@ -224,6 +224,9 @@ public class Ranged : CharacterClass
 
         newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer);
 
+        //TODO inserire if se in presenza di boss, per ora c'è per provare
+        newProjectile.AddIncrementalDamage();
+
     }
 
     //Sparo triplo
@@ -359,8 +362,7 @@ public class Ranged : CharacterClass
         {
             GameObject newLandMine = Instantiate(prefabLandMine);
 
-            //TODO guardare la posizione in 2d
-            newLandMine.transform.position = new Vector3(transform.position.x, 0 , transform.position.z);
+            newLandMine.transform.position = new Vector3(transform.position.x, transform.position.y);
 
             newLandMine.GetComponent<LandMine>().Initialize(gameObject.GetComponentInParent<PlayerCharacter>(),landMineRange,Damage * landMineDamageMultiplier,gameObject.layer);
 
@@ -455,6 +457,8 @@ public class Ranged : CharacterClass
         newProjectile.transform.position = transform.position;
 
         newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier,gameObject.layer);
+
+        
     }
 
     #endregion
