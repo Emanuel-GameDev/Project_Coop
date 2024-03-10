@@ -369,7 +369,7 @@ NavMeshAgent:
   m_Acceleration: 0
   avoidancePriority: 50
   m_AngularSpeed: 0
-  m_StoppingDistance: 0
+  m_StoppingDistance: 0.3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -547,10 +547,11 @@ MonoBehaviour:
   attackDelay: 0.3
   despawnTime: 1
   enemyType: 1
-  escapeRange: 0
+  escapeRange: 8
   numberOfConsecutiveShoot: 3
   projectileSpeed: 30
   projectileRange: 30
+  searchRadious: 6
   pivot: {fileID: 6199984211406543536}
   AIActive: 1
   isMoving: 0

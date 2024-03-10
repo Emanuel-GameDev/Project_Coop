@@ -31,6 +31,7 @@ public class BasicEnemy : EnemyCharacter
     [SerializeField] int numberOfConsecutiveShoot;
     [SerializeField] float projectileSpeed;
     [SerializeField] float projectileRange;
+    public float searchRadious = 3f;
 
     private Coroutine actionCourotine;
 
@@ -101,7 +102,6 @@ public class BasicEnemy : EnemyCharacter
         moveState = new BasicEnemyMoveState(this);
         actionState = new BasicEnemyActionState(this);
 
-
         path = new NavMeshPath();
 
 
@@ -152,6 +152,35 @@ public class BasicEnemy : EnemyCharacter
                     Move(path.corners[1] - path.corners[0], rb);
                 else
                     Move(target.position - transform.position, rb);
+            }
+            else
+                rb.velocity = Vector2.zero;
+        }
+        else
+        {
+            rb.velocity = Vector2.zero;
+        }
+    }
+
+    public void FollowPosition(Vector2 pos)
+    {
+        if (!canMove)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+
+        ActivateAgent();
+
+        if (pos != null)
+        {
+            if (agent.CalculatePath(pos, path))
+            {
+
+                if (path.corners.Length > 1)
+                    Move(path.corners[1] - path.corners[0], rb);
+                else
+                    Move((Vector3)pos - transform.position, rb);
             }
             else
                 rb.velocity = Vector2.zero;
@@ -295,7 +324,7 @@ public class BasicEnemy : EnemyCharacter
                 SetTarget(data.dealer.dealerTransform);
             }
             
-            if(stateMachine.CurrentState == stunState) 
+            if(stateMachine.CurrentState.ToString() == stunState.ToString()) 
             {
                 Debug.Log("son gia stunnato");
                 return;
@@ -318,7 +347,8 @@ public class BasicEnemy : EnemyCharacter
     {
         animator.SetTrigger("DamageEnded");
 
-        stateMachine.SetState(moveState);
+        //per ora da problemi
+        //stateMachine.SetState(moveState);
     }
 
 

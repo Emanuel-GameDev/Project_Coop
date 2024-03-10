@@ -13,7 +13,7 @@ public class BasicRangedEnemyAttackState : BasicEnemyActionState
     {
         base.Enter();
 
-        basicEnemy.StartCoroutine(basicEnemy.Attack());
+        //basicEnemy.StartCoroutine(basicEnemy.Attack());
 
     }
 
@@ -30,10 +30,14 @@ public class BasicRangedEnemyAttackState : BasicEnemyActionState
                 stateMachine.SetState(basicEnemy.moveState);
 
             }
-            else
+            else if(basicEnemy.EscapeTrigger.GetPlayersCountInTrigger()==0)
             {
                 basicEnemy.SetActionCoroutine(basicEnemy.StartCoroutine(basicEnemy.Attack()));
                 
+            }
+            else 
+            {
+                stateMachine.SetState(basicEnemy.escapeState);
             }
                 
 
