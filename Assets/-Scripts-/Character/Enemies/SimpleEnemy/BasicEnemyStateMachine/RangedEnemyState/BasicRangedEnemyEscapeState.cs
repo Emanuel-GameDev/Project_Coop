@@ -101,6 +101,7 @@ public class BasicRangedEnemyEscapeState : BasicEnemyState
 
                 if(currentTime <= 0 || remainingTry<=0)
                 {
+                    basicEnemy.panicAttack = true;
                     stateMachine.SetState(basicEnemy.actionState);
                 }
 

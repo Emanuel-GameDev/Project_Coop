@@ -32,6 +32,7 @@ public class BasicEnemy : EnemyCharacter
     [SerializeField] float projectileSpeed;
     [SerializeField] float projectileRange;
     public float searchRadious = 3f;
+    [HideInInspector] public bool panicAttack=false;
 
     private Coroutine actionCourotine;
 
@@ -234,6 +235,12 @@ public class BasicEnemy : EnemyCharacter
     {
 
         isActioning= true;
+
+        if (panicAttack)
+        {
+            panicAttack = false;
+        }
+
         //GetComponentInChildren<SpriteRenderer>().material.color = Color.red;
 
         switch (enemyType)
@@ -380,5 +387,7 @@ public class BasicEnemy : EnemyCharacter
     {
         actionCourotine=coroutine;
     }
+
+   
 
 }

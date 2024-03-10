@@ -115,7 +115,10 @@ public class Projectile : MonoBehaviour, IDamager
 
     public void DismissProjectile()
     {
+        incrementalDamage = false;
         ProjectilePool.Instance.ReturnProjectile(this);
+
+        
     }
 
     private void ProjectileFlyDirection()
@@ -168,6 +171,11 @@ public class Projectile : MonoBehaviour, IDamager
         reflectedProjectile.Inizialize(-travelDirection,maxRange,projectileSpeed,sizeMultiplier,baseProjectileDamage*reflectionMultiplier,reflectionOwner.layer);
 
         DismissProjectile();
+    }
+
+    public void AddIncrementalDamage() 
+    {
+        incrementalDamage = true;
     }
 
 }

@@ -30,7 +30,7 @@ public class BasicRangedEnemyAttackState : BasicEnemyActionState
                 stateMachine.SetState(basicEnemy.moveState);
 
             }
-            else if(basicEnemy.EscapeTrigger.GetPlayersCountInTrigger()==0)
+            else if(basicEnemy.EscapeTrigger.GetPlayersCountInTrigger()==0 || basicEnemy.panicAttack)
             {
                 basicEnemy.SetActionCoroutine(basicEnemy.StartCoroutine(basicEnemy.Attack()));
                 
