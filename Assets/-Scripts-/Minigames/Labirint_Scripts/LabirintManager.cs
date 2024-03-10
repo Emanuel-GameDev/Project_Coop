@@ -75,10 +75,14 @@ public class LabirintManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            SetupLabirint();
-            StartGame();
-            labirintUI.AddAllPlayer(CoopManager.Instance.GetActiveHandlers());
+            StartPlay();
         }
+    }
+
+    public void StartPlay()
+    {
+        SetupLabirint();
+        StartGame();
     }
 
     #region GameManagement
@@ -102,6 +106,7 @@ public class LabirintManager : MonoBehaviour
     {
         currentLabirint.DisableObjectMap();
         labirintUI.UpdateRemainingKeyCount(keyCount);
+        labirintUI.SetAllPlayer(CoopManager.Instance.GetActiveHandlers());
 
         foreach (GameObject obj in objectsForTheGame)
         {
@@ -112,9 +117,27 @@ public class LabirintManager : MonoBehaviour
     private void EndGame(bool playerWin)
     {
         if (playerWin)
+        {
+            labirintUI.ActivateWinScreen();
             Debug.Log("End Game: You Win");
+        }
         else
+        {
+            labirintUI.ActivateLoseScreen();
             Debug.Log("End Game: You Lose");
+        }
+
+        foreach (GameObject obj in objectsForTheGame)
+        {
+            obj.SetActive(false);
+        }
+
+    }
+
+    public void ExitMinigame()
+    {
+        //Da fare
+        Debug.Log("Teoricamente dovresti uscire dalla scena");
     }
 
     #endregion
@@ -122,7 +145,7 @@ public class LabirintManager : MonoBehaviour
     #region Labirint Setup
     private void SetupLabirint()
     {
-        objectsForTheGame = new();
+        ResetLabirint();
         currentLabirint = Labirints[Random.Range(0, Labirints.Count)];
         foreach (Labirint labirint in Labirints)
         {
@@ -136,6 +159,25 @@ public class LabirintManager : MonoBehaviour
         deadPlayerCount = 0;
     }
 
+    private void ResetLabirint()
+    {
+        if (currentLabirint != null)
+        {
+            currentLabirint.EnableObjectMap();
+            currentLabirint.gameObject.SetActive(false);
+            currentLabirint = null;
+        }
+
+        if(objectsForTheGame != null)
+        {
+            foreach (GameObject obj in objectsForTheGame)
+            {
+                Destroy(obj);
+            }
+        }
+        objectsForTheGame = new();
+    }
+
     private void SetPlayers(List<Vector3Int> positions)
     {
         foreach (LabirintPlayer player in players)
@@ -146,8 +188,8 @@ public class LabirintManager : MonoBehaviour
             player.transform.position = grid.GetCellCenterWorld(position);
             player.transform.SetParent(Grid.transform);
             player.transform.localScale = Vector3.one;
-            //player.transform.SetParent(null);
             player.Inizialize();
+            player.gameObject.SetActive(true);
         }
     }
 

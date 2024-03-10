@@ -37,6 +37,7 @@ public class LabirintEnemy : MonoBehaviour
     private void InizializeAgent()
     {
         agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
         navMeshPath = new NavMeshPath();
         if (agent == null)
         {
@@ -44,9 +45,11 @@ public class LabirintEnemy : MonoBehaviour
         }
 
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
-        agent.updateRotation = false;
+        
         SetRandomDestination();
         CalculateCurrentDestination();
+        if(transform.rotation != Quaternion.identity)
+            transform.rotation = Quaternion.identity;
     }
 
     protected void Update()

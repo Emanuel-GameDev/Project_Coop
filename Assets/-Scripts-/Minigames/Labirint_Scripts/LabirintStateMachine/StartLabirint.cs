@@ -22,7 +22,7 @@ public class StartLabirint : LabirintState
 
     IEnumerator WaitForPlayers()
     {
-        yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers().Count > 0);
+        yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
         MinigameMenuManager.Instance.StartFirstMenu();
     }
 

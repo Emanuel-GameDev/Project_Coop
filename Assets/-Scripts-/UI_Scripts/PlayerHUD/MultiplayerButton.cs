@@ -6,6 +6,8 @@ public class MultiplayerButton : MonoBehaviour
 {
     MultiplayerConfirmationHandler multiplayerConfirmationHandler;
 
+    public ePlayerID playerID { get; private set; }
+
     public bool ready { get; private set; } = false;
 
     public void SetReady(bool ready)
@@ -14,9 +16,10 @@ public class MultiplayerButton : MonoBehaviour
         multiplayerConfirmationHandler.ChangeReady(this);
     }
 
-    public void SetMultiplayerConfirmationHandler(MultiplayerConfirmationHandler multiplayerConfirmationHandler)
+    public void InitialSetup(MultiplayerConfirmationHandler multiplayerConfirmationHandler, ePlayerID playerID)
     {
         this.multiplayerConfirmationHandler = multiplayerConfirmationHandler;
+        this.playerID = playerID;
     }
 
 }

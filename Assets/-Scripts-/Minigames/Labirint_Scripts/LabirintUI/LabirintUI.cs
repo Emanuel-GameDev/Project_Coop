@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public class LabirintUI : MonoBehaviour
 {
@@ -10,21 +8,28 @@ public class LabirintUI : MonoBehaviour
 
     [SerializeField] private TMP_Text remainingKeyCount;
 
+    [SerializeField] private MinigameMenu winScreen;
+    [SerializeField] private MinigameMenu loseScreen;
+
     private Dictionary<ePlayerCharacter, PlayerBoxUI> playerBox = new Dictionary<ePlayerCharacter, PlayerBoxUI>();
 
-    public void AddAllPlayer(List<PlayerInputHandler> players)
+    public void SetAllPlayer(List<PlayerInputHandler> players)
     {
         if (players != null)
         {
             for (int i = 0; i < players.Count && i < playersBox.Length; i++)
             {
-                if (players[i].currentCharacter != ePlayerCharacter.EmptyCharacter && !playerBox.ContainsKey(players[i].currentCharacter))
+                if (players[i].currentCharacter != ePlayerCharacter.EmptyCharacter)
                 {
-                    playersBox[i].gameObject.SetActive(true);
-                    playerBox.Add(players[i].currentCharacter, playersBox[i]);
-                    playersBox[i].SetIcon(GameManager.Instance.GetCharacterData(players[i].currentCharacter).PixelFaceSprite);
+                    if (!playerBox.ContainsKey(players[i].currentCharacter))
+                    {
+                        playersBox[i].gameObject.SetActive(true);
+                        playerBox.Add(players[i].currentCharacter, playersBox[i]);
+                        playersBox[i].SetIcon(GameManager.Instance.GetCharacterData(players[i].currentCharacter).PixelFaceSprite);
+                        
+                    }
+
                     playersBox[i].SetKeyCount(0);
-                    
                 }
             }
         }
@@ -58,4 +63,15 @@ public class LabirintUI : MonoBehaviour
             box.gameObject.SetActive(false);
         }
     }
+
+    public void ActivateWinScreen()
+    {
+        MinigameMenuManager.Instance.SetActiveMenu(winScreen);
+    }
+
+    public void ActivateLoseScreen()
+    {
+        MinigameMenuManager.Instance.SetActiveMenu(loseScreen);
+    }
+
 }

@@ -48,7 +48,7 @@ public class MinigameMenuManager : MonoBehaviour
         }
     }
 
-    public void MenuButton(LabirintPlayer player)
+    public void MenuButton(InputReceiver player)
     {
         if(currentActiveMenu != null)
         {
@@ -60,7 +60,7 @@ public class MinigameMenuManager : MonoBehaviour
         }
     }
 
-    public void SubmitButton(LabirintPlayer player)
+    public void SubmitButton(InputReceiver player)
     {
         if (currentActiveMenu != null)
         { 
@@ -68,7 +68,7 @@ public class MinigameMenuManager : MonoBehaviour
         }
     }
 
-    public void CancelButton(LabirintPlayer player)
+    public void CancelButton(InputReceiver player)
     {
         if (currentActiveMenu != null)
         {
@@ -76,18 +76,23 @@ public class MinigameMenuManager : MonoBehaviour
         }
     }
 
-    public void NavigateButton(Vector2 value, LabirintPlayer player)
+    public void NavigateButton(Vector2 value, InputReceiver player)
     {
         if (currentActiveMenu != null)
         {
             currentActiveMenu.NavigateButton(value, player);
         }
     }
+    public void SetActiveMenu(MinigameMenu minigameMenu)
+    {
+        SetActiveMenu(minigameMenu, GetFirstPlayer());
+    }
 
     public void SetActiveMenu(MinigameMenu minigameMenu, InputReceiver activeReceiver)
     {
         if(minigameMenu != null)
         {
+            CloseMenu();
             currentActiveMenu = minigameMenu;
             currentActiveMenu.gameObject.SetActive(true);
             currentActiveMenu.Inizialize(activeReceiver);
@@ -106,15 +111,27 @@ public class MinigameMenuManager : MonoBehaviour
         }
     }
 
+    private void CloseMenu()
+    {
+        if(currentActiveMenu != null)
+            currentActiveMenu.gameObject.SetActive(false);
+        currentActiveMenu = null;
+    }
+
     public void ExitMenu()
     {
-        currentActiveMenu.gameObject.SetActive(false);
-        currentActiveMenu = null;
+        CloseMenu();
         SetPlayersActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
     }
 
     public void StartFirstMenu()
     {
-        SetActiveMenu(firstMenu, CoopManager.Instance.GetActiveHandlers()[0].CurrentReceiver);
+        SetActiveMenu(firstMenu);
     }
+
+    public InputReceiver GetFirstPlayer()
+    {
+        return CoopManager.Instance.GetActiveHandlers()[0].CurrentReceiver;
+    }
+
 }

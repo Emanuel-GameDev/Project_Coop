@@ -34,15 +34,15 @@ public abstract class MinigameMenu : MonoBehaviour
 
     public virtual void Inizialize(InputReceiver activeReceiver)
     {
-        activeReceiver = this.activeReceiver = activeReceiver;
+        this.activeReceiver = activeReceiver;
     }
 
-    protected virtual void GoNextMenu()
+    public virtual void GoNextMenu()
     {
         MinigameMenuManager.Instance.SetActiveMenu(nextMenu, activeReceiver);
     }
 
-    protected virtual void GoPreviousMenu()
+    public virtual void GoPreviousMenu()
     {
         MinigameMenuManager.Instance.SetActiveMenu(previousMenu, activeReceiver);
     }
@@ -62,29 +62,41 @@ public abstract class MinigameMenu : MonoBehaviour
         this.nextMenu = nextMenu;
     }
 
-    public virtual void MenuButton(LabirintPlayer player)
+    public virtual void MenuButton(InputReceiver player)
     {
         if(MinigameMenuManager.Instance.PauseMenu != this)
         {
             SetNextMenu(MinigameMenuManager.Instance.PauseMenu);
             MinigameMenuManager.Instance.PauseMenu.previousMenu = this;
         }
-        menuButton?.Invoke();
+        else if (CheckPlayer(player))
+            menuButton?.Invoke();
     }
 
-    public virtual void SubmitButton(LabirintPlayer player)
+    public virtual void SubmitButton(InputReceiver player)
     {
-        submitButton?.Invoke();
+        if(CheckPlayer(player))
+            submitButton?.Invoke();
     }
 
-    public virtual void CancelButton(LabirintPlayer player)
+    protected virtual bool CheckPlayer(InputReceiver player)
     {
-        cancelButton?.Invoke();
+        if (!allowMultipleUsers)
+            return activeReceiver == player;
+        else 
+            return true;    
     }
 
-    public virtual void NavigateButton(Vector2 direction, LabirintPlayer player)
+    public virtual void CancelButton(InputReceiver player)
     {
-        navigateButton?.Invoke(direction);
+        if (CheckPlayer(player))
+            cancelButton?.Invoke();
+    }
+
+    public virtual void NavigateButton(Vector2 direction, InputReceiver player)
+    {
+        if (CheckPlayer(player))
+            navigateButton?.Invoke(direction);
     }
 
 }

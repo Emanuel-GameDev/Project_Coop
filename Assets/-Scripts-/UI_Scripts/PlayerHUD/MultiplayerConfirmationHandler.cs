@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -17,32 +15,28 @@ public class MultiplayerConfirmationHandler : MonoBehaviour
 
     public UnityEvent onAllReady;
 
-
     private int readyCount = 0;
 
     private int playerCount = 0;
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.K))
-            PlaceButtons();
-    }
+    List<MultiplayerButton> buttons = new();
 
-    void PlaceButtons()
+    public void PlaceButtons()
     {
         playerCount = CoopManager.Instance.GetActiveHandlers().Count;
 
         float panelWidth = confirmButton.GetComponent<RectTransform>().rect.width + spacing;
-
         float initialPos = -panelWidth * (playerCount - 1) / 2;
-
-        for (int i = 0; i < playerCount; i++)
+        int i = 0;
+        foreach (PlayerInputHandler player in CoopManager.Instance.GetActiveHandlers())
         {
             GameObject newButton = Instantiate(confirmButton);
 
             newButton.SetActive(true);
 
-            newButton.GetComponent<MultiplayerButton>().SetMultiplayerConfirmationHandler(this);
+            MultiplayerButton button = newButton.GetComponent<MultiplayerButton>();
+            button.InitialSetup(this, player.playerID);
+            buttons.Add(button);
 
             RectTransform buttonTransform = newButton.GetComponent<RectTransform>();
 
@@ -50,11 +44,21 @@ public class MultiplayerConfirmationHandler : MonoBehaviour
 
             float xPos = initialPos + (i * panelWidth);
 
-            buttonTransform.transform.localPosition = new Vector2(xPos, 0);
+            buttonTransform.localPosition = new Vector2(xPos, 0);
 
-            
+            i++;
         }
+
     }
+
+    public void GiveInput(InputReceiver receiver, bool isReady)
+    {
+        ePlayerID playerID = receiver.GetInputHandler().playerID;
+        MultiplayerButton button = buttons.Find(x => x.playerID == playerID);
+        if(button != null)
+            button.SetReady(isReady);
+    }
+
 
     public void ChangeReady(MultiplayerButton button)
     {

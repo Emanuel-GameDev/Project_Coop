@@ -185,6 +185,7 @@ public class LabirintPlayer : DefaultInputReceiver
     {
         wallTilemap = LabirintManager.Instance.GetWallMap();
         destination = transform.position;
+        pickedKeys = 0;
     }
 
     #endregion
