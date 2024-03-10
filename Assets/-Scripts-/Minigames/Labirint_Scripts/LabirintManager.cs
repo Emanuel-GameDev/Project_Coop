@@ -66,7 +66,7 @@ public class LabirintManager : MonoBehaviour
     private void Start()
     {
         //SetupLabirint();
-        stateMachine.SetState(new MenuLabirint());
+        stateMachine.SetState(new StartLabirint());
         //Debug
         //StartGame();
     }
@@ -77,7 +77,7 @@ public class LabirintManager : MonoBehaviour
         {
             SetupLabirint();
             StartGame();
-            labirintUI.AddAllPlayer(CoopManager.Instance.GetActualHandlers());
+            labirintUI.AddAllPlayer(CoopManager.Instance.GetActiveHandlers());
         }
     }
 

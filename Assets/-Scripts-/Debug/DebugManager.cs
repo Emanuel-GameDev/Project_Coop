@@ -70,10 +70,10 @@ public class DebugManager : MonoBehaviour
 
     private void GivePowerUP(PowerUp powerUpToGive)
     {
-        List<PlayerInputHandler> players = CoopManager.Instance.GetActualHandlers();
+        List<PlayerInputHandler> players = CoopManager.Instance.GetActiveHandlers();
         if (players != null && players.Count > 0)
         {
-            foreach (PlayerInputHandler player in CoopManager.Instance.GetActualHandlers())
+            foreach (PlayerInputHandler player in CoopManager.Instance.GetActiveHandlers())
             {
                 if (player.currentCharacter == targetCharacter && player.CurrentReceiver is PlayerCharacter character)
                 {
@@ -85,7 +85,7 @@ public class DebugManager : MonoBehaviour
 
     private void UnlockUpgrade(AbilityUpgrade ability)
     {
-        List<PlayerInputHandler> players = CoopManager.Instance.GetActualHandlers();
+        List<PlayerInputHandler> players = CoopManager.Instance.GetActiveHandlers();
         if ( players != null && players.Count > 0)
         {
             foreach (PlayerInputHandler player in players)

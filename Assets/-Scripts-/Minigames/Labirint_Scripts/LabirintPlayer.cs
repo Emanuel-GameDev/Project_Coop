@@ -70,7 +70,7 @@ public class LabirintPlayer : DefaultInputReceiver
             if(character != ePlayerCharacter.EmptyCharacter)
             {
                 bool isFree = true;
-                foreach(PlayerInputHandler inputHandler in CoopManager.Instance.GetActualHandlers())
+                foreach(PlayerInputHandler inputHandler in CoopManager.Instance.GetActiveHandlers())
                 {
                     if (inputHandler.currentCharacter == character)
                         isFree = false;
@@ -221,23 +221,27 @@ public class LabirintPlayer : DefaultInputReceiver
 
     public override void MenuInput(InputAction.CallbackContext context)
     {
-        MinigameMenuManager.Instance.MenuButton(context, this);
+        if(context.performed)
+            MinigameMenuManager.Instance.MenuButton(this);
     }
 
     #region UI
     public override void Navigate(InputAction.CallbackContext context)
     {
-        MinigameMenuManager.Instance.NavigateButton(context, this);
+        if (context.performed)
+            MinigameMenuManager.Instance.NavigateButton(context.ReadValue<Vector2>(), this);
     }
 
     public override void Submit(InputAction.CallbackContext context)
     {
-        MinigameMenuManager.Instance.SubmitButton(context, this);
+        if (context.performed)
+            MinigameMenuManager.Instance.SubmitButton(this);
     }
 
     public override void Cancel(InputAction.CallbackContext context)
     {
-        MinigameMenuManager.Instance.CancelButton(context, this);
+        if (context.performed)
+            MinigameMenuManager.Instance.CancelButton(this);
     }
 
     #endregion

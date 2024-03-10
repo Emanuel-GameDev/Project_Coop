@@ -7,6 +7,7 @@ public class PlayerInputHandler : MonoBehaviour
 {
     [SerializeField]
     private PlayerInput playerInput;
+    public PlayerInput PlayerInput => playerInput;
 
     public ePlayerID playerID { private set; get; } = ePlayerID.NotSet;
 
@@ -28,22 +29,21 @@ public class PlayerInputHandler : MonoBehaviour
         private set { _currentReceiver = value; }
     }
 
-    public PlayerInput GetPlayerInput()
-    {
-        return playerInput;
-    }
-
-
     private void Awake()
     {
         if (playerInput == null)
             playerInput = GetComponent<PlayerInput>();
     }
 
+    public void SetActionMap(eInputMap map)
+    {
+        playerInput.SwitchCurrentActionMap(map.ToString());
+    }
+
     public void SetReceiver(InputReceiver newReceiver)
     {
         CurrentReceiver = newReceiver;
-        playerInput.SwitchCurrentActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
+        SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
         if (currentCharacter != ePlayerCharacter.EmptyCharacter)
             CurrentReceiver.SetCharacter(currentCharacter);
 
@@ -168,8 +168,6 @@ public class PlayerInputHandler : MonoBehaviour
     #endregion
 
     #endregion
-
-
 }
 
 

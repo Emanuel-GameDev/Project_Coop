@@ -13,7 +13,7 @@ public class PressInteractable : MonoBehaviour, IInteractable
         if(!interacters.Contains(interacter))
             interacters.Add(interacter);
 
-        if (interacters.Count >= CoopManager.Instance.GetActualHandlers().Count)
+        if (interacters.Count >= CoopManager.Instance.GetActiveHandlers().Count)
             OnAllPlayersInteract?.Invoke();
     }
 

@@ -30,7 +30,7 @@ public class MultiplayerConfirmationHandler : MonoBehaviour
 
     void PlaceButtons()
     {
-        playerCount = CoopManager.Instance.GetActualHandlers().Count;
+        playerCount = CoopManager.Instance.GetActiveHandlers().Count;
 
         float panelWidth = confirmButton.GetComponent<RectTransform>().rect.width + spacing;
 
