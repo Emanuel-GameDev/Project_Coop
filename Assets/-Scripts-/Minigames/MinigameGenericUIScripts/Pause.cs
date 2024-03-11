@@ -10,27 +10,27 @@ public class Pause : MinigameMenu
     private Button selectedButton;
     private int selectedIndex = -1;
 
-    public override void CancelButton(InputReceiver player)
+    public override void CancelButton(ePlayerID player)
     {
         base.CancelButton(player);
     }
 
-    public override void MenuButton(InputReceiver player)
+    public override void MenuButton(ePlayerID player)
     {
         base.MenuButton(player);
     }
 
-    public override void NavigateButton(Vector2 direction, InputReceiver player)
+    public override void NavigateButton(Vector2 direction, ePlayerID player)
     {
         base.NavigateButton(direction, player);
         if (CheckPlayer(player))
             SelectButton(direction);
     }
 
-    public override void SubmitButton(InputReceiver player)
+    public override void SubmitButton(ePlayerID player)
     {
         base.SubmitButton(player);
-        if(selectedButton != null)
+        if(selectedButton != null && CheckPlayer(player))
             selectedButton.onClick?.Invoke();
     }
 

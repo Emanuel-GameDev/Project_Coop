@@ -48,7 +48,7 @@ public class MinigameMenuManager : MonoBehaviour
         }
     }
 
-    public void MenuButton(InputReceiver player)
+    public void MenuButton(ePlayerID player)
     {
         if(currentActiveMenu != null)
         {
@@ -60,7 +60,7 @@ public class MinigameMenuManager : MonoBehaviour
         }
     }
 
-    public void SubmitButton(InputReceiver player)
+    public void SubmitButton(ePlayerID player)
     {
         if (currentActiveMenu != null)
         { 
@@ -68,7 +68,7 @@ public class MinigameMenuManager : MonoBehaviour
         }
     }
 
-    public void CancelButton(InputReceiver player)
+    public void CancelButton(ePlayerID  player)
     {
         if (currentActiveMenu != null)
         {
@@ -76,7 +76,7 @@ public class MinigameMenuManager : MonoBehaviour
         }
     }
 
-    public void NavigateButton(Vector2 value, InputReceiver player)
+    public void NavigateButton(Vector2 value, ePlayerID player)
     {
         if (currentActiveMenu != null)
         {
@@ -88,7 +88,7 @@ public class MinigameMenuManager : MonoBehaviour
         SetActiveMenu(minigameMenu, GetFirstPlayer());
     }
 
-    public void SetActiveMenu(MinigameMenu minigameMenu, InputReceiver activeReceiver)
+    public void SetActiveMenu(MinigameMenu minigameMenu, ePlayerID activeReceiver)
     {
         if(minigameMenu != null)
         {
@@ -131,9 +131,9 @@ public class MinigameMenuManager : MonoBehaviour
         SetActiveMenu(firstMenu);
     }
 
-    public InputReceiver GetFirstPlayer()
+    public ePlayerID GetFirstPlayer()
     {
-        return CoopManager.Instance.GetActiveHandlers()[0].CurrentReceiver;
+        return CoopManager.Instance.GetActiveHandlers()[0].playerID;
     }
 
 }

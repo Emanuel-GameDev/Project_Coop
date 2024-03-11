@@ -28,23 +28,23 @@ public abstract class MinigameMenu : MonoBehaviour
     [SerializeField]
     protected UnityEvent<Vector2> navigateButton;
 
-    protected InputReceiver activeReceiver;
+    protected ePlayerID activePlayer;
 
 
 
-    public virtual void Inizialize(InputReceiver activeReceiver)
+    public virtual void Inizialize(ePlayerID activeReceiver)
     {
-        this.activeReceiver = activeReceiver;
+        this.activePlayer = activeReceiver;
     }
 
     public virtual void GoNextMenu()
     {
-        MinigameMenuManager.Instance.SetActiveMenu(nextMenu, activeReceiver);
+        MinigameMenuManager.Instance.SetActiveMenu(nextMenu, activePlayer);
     }
 
     public virtual void GoPreviousMenu()
     {
-        MinigameMenuManager.Instance.SetActiveMenu(previousMenu, activeReceiver);
+        MinigameMenuManager.Instance.SetActiveMenu(previousMenu, activePlayer);
     }
 
     protected virtual void ExitMenu()
@@ -62,7 +62,7 @@ public abstract class MinigameMenu : MonoBehaviour
         this.nextMenu = nextMenu;
     }
 
-    public virtual void MenuButton(InputReceiver player)
+    public virtual void MenuButton(ePlayerID player)
     {
         if(MinigameMenuManager.Instance.PauseMenu != this)
         {
@@ -73,27 +73,27 @@ public abstract class MinigameMenu : MonoBehaviour
             menuButton?.Invoke();
     }
 
-    public virtual void SubmitButton(InputReceiver player)
+    public virtual void SubmitButton(ePlayerID player)
     {
         if(CheckPlayer(player))
             submitButton?.Invoke();
     }
 
-    protected virtual bool CheckPlayer(InputReceiver player)
+    protected virtual bool CheckPlayer(ePlayerID player)
     {
         if (!allowMultipleUsers)
-            return activeReceiver == player;
+            return activePlayer == player;
         else 
             return true;    
     }
 
-    public virtual void CancelButton(InputReceiver player)
+    public virtual void CancelButton(ePlayerID player)
     {
         if (CheckPlayer(player))
             cancelButton?.Invoke();
     }
 
-    public virtual void NavigateButton(Vector2 direction, InputReceiver player)
+    public virtual void NavigateButton(Vector2 direction, ePlayerID player)
     {
         if (CheckPlayer(player))
             navigateButton?.Invoke(direction);

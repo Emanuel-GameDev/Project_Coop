@@ -1,28 +1,95 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayersReady : MinigameMenu
 {
     [SerializeField]
     MultiplayerConfirmationHandler multiplayerConfirmationHandler;
+    [SerializeField]
+    int waitSeconds = 3;
+    [SerializeField]
+    TMP_Text countdownText;
+    [SerializeField]
+    UnityEvent onCooldownEnded;
 
-    public override void Inizialize(InputReceiver activeReceiver)
+    bool countdownStarted = false;
+
+    public override void Inizialize(ePlayerID activeReceiver)
     {
-        base.Inizialize(activeReceiver);
-        multiplayerConfirmationHandler.PlaceButtons();
+        if (!countdownStarted)
+        {
+            base.Inizialize(activeReceiver);
+            multiplayerConfirmationHandler.PlaceButtons();
+        }
     }
 
-    public override void SubmitButton(InputReceiver player)
+    public override void SubmitButton(ePlayerID player)
     {
-        base.SubmitButton(player);
-        multiplayerConfirmationHandler.GiveInput(player, true);
+        if (!countdownStarted)
+        {
+            base.SubmitButton(player);
+            multiplayerConfirmationHandler.GiveInput(player, true);
+        }
     }
 
-    public override void CancelButton(InputReceiver player)
+    public override void CancelButton(ePlayerID player)
     {
-        base.CancelButton(player);
-        multiplayerConfirmationHandler.GiveInput(player, false);
+        if (!countdownStarted)
+        {
+            base.CancelButton(player);
+            multiplayerConfirmationHandler.GiveInput(player, false);
+        }
+    }
+
+    public override void MenuButton(ePlayerID player)
+    {
+        if (!countdownStarted)
+        {
+            base.MenuButton(player);
+        }
+    }
+
+    public override void NavigateButton(Vector2 direction, ePlayerID player)
+    {
+        if (!countdownStarted)
+        {
+            base.NavigateButton(direction, player);
+        }
+    }
+
+    public void StartCountdown()
+    {
+        if (!countdownStarted)
+        {
+            countdownStarted = true;
+            StartCoroutine(CountdownCoroutine(waitSeconds));
+        }
+    }
+
+    IEnumerator CountdownCoroutine(float duration)
+    {
+        float startTime = Time.realtimeSinceStartup;
+        float timeLeft = duration + 0.99f;
+
+        while (timeLeft >= 0)
+        {
+            float elapsedTime = Time.realtimeSinceStartup - startTime;
+
+            timeLeft -= elapsedTime;
+            int secondsLeft = Mathf.FloorToInt(timeLeft);
+            countdownText.text = secondsLeft.ToString();
+            startTime = Time.realtimeSinceStartup;
+            yield return null;
+            //Debug.Log(timeLeft);
+        }
+
+        onCooldownEnded?.Invoke();
+        countdownText.text = "";
+        multiplayerConfirmationHandler.ResetButtons();
+        countdownStarted = false;
     }
 
 }
+

@@ -99,13 +99,13 @@ public class LabirintEnemy : MonoBehaviour
         if (hasReachFinalDestination)
         {
             SetRandomDestination();
-            Debug.Log("Reach Final Destination");
+            //Debug.Log("Reach Final Destination");
         }
 
         if (hasReachCurrentDestination)
         {
             CalculateCurrentDestination();
-            Debug.Log("Reach Current Destination");
+            //Debug.Log("Reach Current Destination");
         }
 
         transform.position = Vector2.MoveTowards(transform.position, currentDestination, moveSpeed * Time.deltaTime);
@@ -146,7 +146,7 @@ public class LabirintEnemy : MonoBehaviour
         if (this.target == null)
             this.target = target;
 
-        Debug.Log($"thisTarget: {this.target}, newTarget: {target}");
+        //Debug.Log($"thisTarget: {this.target}, newTarget: {target}");
     }
 
     private void OnDrawGizmos()

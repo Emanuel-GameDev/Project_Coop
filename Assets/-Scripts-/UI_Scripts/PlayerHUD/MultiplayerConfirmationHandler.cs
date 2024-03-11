@@ -24,7 +24,7 @@ public class MultiplayerConfirmationHandler : MonoBehaviour
     public void PlaceButtons()
     {
         playerCount = CoopManager.Instance.GetActiveHandlers().Count;
-
+        readyCount = 0;
         float panelWidth = confirmButton.GetComponent<RectTransform>().rect.width + spacing;
         float initialPos = -panelWidth * (playerCount - 1) / 2;
         int i = 0;
@@ -51,9 +51,8 @@ public class MultiplayerConfirmationHandler : MonoBehaviour
 
     }
 
-    public void GiveInput(InputReceiver receiver, bool isReady)
+    public void GiveInput(ePlayerID playerID, bool isReady)
     {
-        ePlayerID playerID = receiver.GetInputHandler().playerID;
         MultiplayerButton button = buttons.Find(x => x.playerID == playerID);
         if(button != null)
             button.SetReady(isReady);
@@ -74,6 +73,14 @@ public class MultiplayerConfirmationHandler : MonoBehaviour
         if (readyCount >= playerCount)
         {
             onAllReady?.Invoke();
+        }
+    }
+
+    public void ResetButtons()
+    {
+        foreach (MultiplayerButton b in buttons)
+        {
+            b.SetReady(false);
         }
     }
 }
