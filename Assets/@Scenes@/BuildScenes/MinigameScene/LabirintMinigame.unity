@@ -735,7 +735,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9960785, g: 0.5568628, b: 0.1764706, a: 1}
     m_PressedColor: {r: 0.4641509, g: 0.4641509, b: 0.4641509, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.9960785, g: 0.5568628, b: 0.1764706, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -754,7 +754,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 149781162}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 265564333}
+        m_TargetAssemblyTypeName: MinigameMenu, Assembly-CSharp
+        m_MethodName: GoPreviousMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &151313866
 GameObject:
   m_ObjectHideFlags: 0
@@ -1367,17 +1379,43 @@ MonoBehaviour:
   previousMenu: {fileID: 0}
   menuButton:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 265564333}
+        m_TargetAssemblyTypeName: Pause, Assembly-CSharp
+        m_MethodName: GoPreviousMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   submitButton:
     m_PersistentCalls:
       m_Calls: []
   cancelButton:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 265564333}
+        m_TargetAssemblyTypeName: Pause, Assembly-CSharp
+        m_MethodName: GoPreviousMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   navigateButton:
     m_PersistentCalls:
       m_Calls: []
-  buttons: []
+  buttons:
+  - {fileID: 149781164}
+  - {fileID: 1673527739}
 --- !u!1 &390038943
 GameObject:
   m_ObjectHideFlags: 0
@@ -8910,7 +8948,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9960785, g: 0.5568628, b: 0.1764706, a: 1}
     m_PressedColor: {r: 0.4641509, g: 0.4641509, b: 0.4641509, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_SelectedColor: {r: 0.9960785, g: 0.5568628, b: 0.1764706, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -8929,7 +8967,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1673527737}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 955289490}
+        m_TargetAssemblyTypeName: LabirintManager, Assembly-CSharp
+        m_MethodName: ExitMinigame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1675856911
 GameObject:
   m_ObjectHideFlags: 0

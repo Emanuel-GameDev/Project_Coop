@@ -97,6 +97,7 @@ public class MinigameMenuManager : MonoBehaviour
             currentActiveMenu.gameObject.SetActive(true);
             currentActiveMenu.Inizialize(activeReceiver);
             SetPlayersActionMap(eInputMap.UI);
+            GameManager.Instance.PauseGame();
         }
         else
             ExitMenu();
@@ -122,6 +123,7 @@ public class MinigameMenuManager : MonoBehaviour
     {
         CloseMenu();
         SetPlayersActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
+        GameManager.Instance.ResumeGame();
     }
 
     public void StartFirstMenu()

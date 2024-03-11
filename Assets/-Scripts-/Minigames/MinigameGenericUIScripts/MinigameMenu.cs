@@ -66,7 +66,7 @@ public abstract class MinigameMenu : MonoBehaviour
     {
         if(MinigameMenuManager.Instance.PauseMenu != this)
         {
-            SetNextMenu(MinigameMenuManager.Instance.PauseMenu);
+            MinigameMenuManager.Instance.SetActiveMenu(MinigameMenuManager.Instance.PauseMenu, player);
             MinigameMenuManager.Instance.PauseMenu.previousMenu = this;
         }
         else if (CheckPlayer(player))
