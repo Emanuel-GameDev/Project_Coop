@@ -42,8 +42,11 @@ public class HPHandler : MonoBehaviour
         List<PlayerCharacter> players = GameManager.Instance.coopManager.ActivePlayers;
         foreach (PlayerCharacter player in players)
         {
-           if(player1 == null)
-             player1 = player;
+            if(player1 == null)
+            {
+                player1 = player;
+
+            }
             else if (player2 == null)
                 player2 = player;
             else if (player3 == null)
