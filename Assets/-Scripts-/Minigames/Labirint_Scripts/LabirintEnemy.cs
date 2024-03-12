@@ -37,6 +37,7 @@ public class LabirintEnemy : MonoBehaviour
     private void InizializeAgent()
     {
         agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
         navMeshPath = new NavMeshPath();
         if (agent == null)
         {
@@ -44,9 +45,11 @@ public class LabirintEnemy : MonoBehaviour
         }
 
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
-        agent.updateRotation = false;
+        
         SetRandomDestination();
         CalculateCurrentDestination();
+        if(transform.rotation != Quaternion.identity)
+            transform.rotation = Quaternion.identity;
     }
 
     protected void Update()
@@ -96,13 +99,13 @@ public class LabirintEnemy : MonoBehaviour
         if (hasReachFinalDestination)
         {
             SetRandomDestination();
-            Debug.Log("Reach Final Destination");
+            //Debug.Log("Reach Final Destination");
         }
 
         if (hasReachCurrentDestination)
         {
             CalculateCurrentDestination();
-            Debug.Log("Reach Current Destination");
+            //Debug.Log("Reach Current Destination");
         }
 
         transform.position = Vector2.MoveTowards(transform.position, currentDestination, moveSpeed * Time.deltaTime);
@@ -143,7 +146,7 @@ public class LabirintEnemy : MonoBehaviour
         if (this.target == null)
             this.target = target;
 
-        Debug.Log($"thisTarget: {this.target}, newTarget: {target}");
+        //Debug.Log($"thisTarget: {this.target}, newTarget: {target}");
     }
 
     private void OnDrawGizmos()

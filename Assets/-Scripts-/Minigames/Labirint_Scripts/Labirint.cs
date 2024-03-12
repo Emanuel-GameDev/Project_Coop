@@ -27,6 +27,11 @@ public class Labirint : MonoBehaviour
         objectsTilemap.gameObject.SetActive(false);
     }
 
+    public void EnableObjectMap()
+    {
+        objectsTilemap.gameObject.SetActive(true);
+    }
+
     List<Vector3Int> FindTilesOfType(Tilemap tilemap, TileBase targetTile)
     {
         List<Vector3Int> positions = new List<Vector3Int>();

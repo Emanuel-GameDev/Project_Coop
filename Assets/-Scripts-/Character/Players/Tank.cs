@@ -515,8 +515,7 @@ public class Tank : CharacterClass
         
         if (hitted != null)
         {
-            
-
+           
             foreach (RaycastHit2D r in hitted)
             {
                 

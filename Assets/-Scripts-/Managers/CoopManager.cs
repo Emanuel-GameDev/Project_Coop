@@ -82,9 +82,14 @@ public class CoopManager : MonoBehaviour
         
     }
 
-    public List<PlayerInputHandler> GetActualHandlers()
+    public List<PlayerInputHandler> GetActiveHandlers()
     {
         return playerInputHandlers;
+    }
+
+    public PlayerInputHandler GetPlayer(ePlayerID playerID)
+    {
+        return playerInputHandlers.Find(player => player.playerID == playerID);
     }
 
     #region Player Management

@@ -236,7 +236,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     /// </summary>
     private void RandomSelection()
     {
-        List<PlayerInputHandler> handlers = CoopManager.Instance.GetActualHandlers();
+        List<PlayerInputHandler> handlers = CoopManager.Instance.GetActiveHandlers();
         
         foreach (PlayerInputHandler handler in handlers)
         {

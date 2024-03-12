@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class DefaultInputReceiver : MonoBehaviour, InputReceiver
+public abstract class DefaultInputReceiver : MonoBehaviour, InputReceiver
 {
     protected ePlayerCharacter character;
     protected PlayerInputHandler playerInputHandler;
@@ -149,15 +149,15 @@ public class DefaultInputReceiver : MonoBehaviour, InputReceiver
     {
     }
 
-    public virtual void RandomSelection(InputAction.CallbackContext context)
-    {
-    }
-
     public virtual void Cancel(InputAction.CallbackContext context)
     {
     }
 
     public virtual void ScrollWheel(InputAction.CallbackContext context)
+    {
+    }
+
+    public virtual void RandomSelection(InputAction.CallbackContext context)
     {
     }
 
