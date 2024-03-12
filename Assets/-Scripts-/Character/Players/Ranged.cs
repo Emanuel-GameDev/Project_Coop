@@ -294,6 +294,7 @@ public class Ranged : CharacterClass
 
     protected IEnumerator PerfectDodgeHandler(DamageData data)
     {
+        Debug.Log("Check");
         perfectTimingHandler.gameObject.SetActive(true);
         yield return new WaitForSeconds(perfectDodgeDuration);
         if(isDodging)

@@ -63,7 +63,6 @@ public class DodgeTutorialState : TutorialFase
         perfectDodgeCount++;
         tutorialManager.objectiveNumberToReach.text = perfectDodgeCount.ToString();
 
-        Debug.Log("schiva perfect");
 
         if ( perfectDodgeCount == 3)
         {
@@ -134,7 +133,7 @@ public class DodgeTutorialState : TutorialFase
         characterChange = false;
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         currentCharacterIndex++;
-        tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
+        
 
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetReceiver(currentFaseCharacters[currentCharacterIndex]);
 
@@ -144,6 +143,10 @@ public class DodgeTutorialState : TutorialFase
 
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
         //tutorialManager.DeactivateEnemyAI();
+        //tutorialManager.tutorialEnemy.focus = false;
+        //tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
+        //tutorialManager.tutorialEnemy.focus = true;
+        
         dodgeCount = 0;
         perfectDodgeCount = 0;
 
@@ -163,7 +166,10 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
 
+        tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
+        tutorialManager.tutorialEnemy.focus = true;
+
         tutorialManager.ActivateEnemyAI();
 
         perfectDodgeCount = 0;
@@ -182,9 +188,10 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
-
         tutorialManager.ActivateEnemyAI();
-
+        tutorialManager.tutorialEnemy.focus = false;
+        tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
+        tutorialManager.tutorialEnemy.focus = true;
 
     }
 

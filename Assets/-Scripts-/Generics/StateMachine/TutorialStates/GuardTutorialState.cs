@@ -55,6 +55,10 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
         tutorialManager.ActivateEnemyAI();
+
+        tutorialManager.tutorialEnemy.focus = false;
+        tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
+        tutorialManager.tutorialEnemy.focus = true;
     }
 
     private void UpdateCounter(object obj)

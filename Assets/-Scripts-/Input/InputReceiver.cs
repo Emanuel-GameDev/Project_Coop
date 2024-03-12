@@ -44,6 +44,7 @@ public interface InputReceiver
     void MenuInput(InputAction.CallbackContext context);
 
     void OptionInput(InputAction.CallbackContext context);
+
     #endregion
 
     #region Minigame
@@ -69,6 +70,7 @@ public interface InputReceiver
     void Cancel(InputAction.CallbackContext context);
 
     void ScrollWheel(InputAction.CallbackContext context);
+    
 
     #endregion
     #endregion

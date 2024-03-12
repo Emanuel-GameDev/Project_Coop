@@ -22,13 +22,13 @@ public class TutorialEnemyAttackState : BasicMeleeEnemyAttackState
                     if (player == basicEnemy.currentTarget)
                     {
                         //stateMachine.SetState(basicEnemy.actionState);
+                        basicEnemy.StartCoroutine(basicEnemy.Attack());
                         return;
                     }
                 }
-                stateMachine.SetState(basicEnemy.moveState);
             }
-            else
-                basicEnemy.StartCoroutine(basicEnemy.Attack());
+
+            stateMachine.SetState(basicEnemy.moveState);
 
         }
     }

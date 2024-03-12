@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
+using UnityEngine.Video;
 
 public enum TutorialFaseType
 {
@@ -24,24 +26,41 @@ public class TutorialManager : MonoBehaviour
 {
     public StateMachine<TutorialFase> stateMachine { get; } = new();
 
-    [SerializeField] public DialogueBox dialogueBox;
-
+    [Header("Notification")]
     [SerializeField] public GameObject currentFaseObjective;
     [SerializeField] public TextMeshProUGUI objectiveText;
     [SerializeField] public GameObject objectiveNumbersGroup;
     [SerializeField] public TextMeshProUGUI objectiveNumberToReach;
     [SerializeField] public TextMeshProUGUI objectiveNumberReached;
 
+    [Header("Intro")]
+    [SerializeField] GameObject introScreen;
+    public bool playIntro = false;
+    VideoPlayer videoPlayer;
+
+    [Header("Dialogues")]
+    [SerializeField] public DialogueBox dialogueBox;
+    [SerializeField] Dialogue postIntroDialogue;
     [SerializeField] Dialogue endingDialogueOne;
     [SerializeField] Dialogue endingDialogueTwo;
 
+    [Header("Respawns")]
     [SerializeField] Transform DPSRespawn;
     [SerializeField] Transform healerRespawn;
     [SerializeField] Transform tankRespawn;
     [SerializeField] Transform rangedRespawn;
     [SerializeField] Transform enemyRespawn;
 
+    [Header("NPCs")]
     public TutorialEnemy tutorialEnemy;
+    [SerializeField] GameObject lilith;
+
+   
+    [Serializable]
+    public class Fase
+    {
+        [SerializeField] public TutorialFaseData faseData;
+    }
 
     [HideInInspector] public PlayerCharacter dps;
     [HideInInspector] public PlayerCharacter healer;
@@ -50,18 +69,12 @@ public class TutorialManager : MonoBehaviour
 
     [HideInInspector] public List<PlayerCharacter> characters = new List<PlayerCharacter>();
 
-    [SerializeField] GameObject lilith;
 
     [HideInInspector] public bool blockFaseChange = false;
     bool finale = false;
 
     [HideInInspector] public Dictionary<PlayerCharacter, PlayerInputHandler> inputBindings;
 
-    [Serializable]
-    public class Fase
-    {
-        [SerializeField] public TutorialFaseData faseData;
-    }
 
     PlayableDirector playableDirector;
 
@@ -86,6 +99,105 @@ public class TutorialManager : MonoBehaviour
             else
                 _inputHandlerId = 0;
         }
+    }
+
+    private void Awake()
+    {
+        inputBindings = new Dictionary<PlayerCharacter, PlayerInputHandler>();
+        playableDirector = gameObject.GetComponent<PlayableDirector>();
+        videoPlayer = introScreen.GetComponent<VideoPlayer>();
+    }
+
+
+
+    private void Start()
+    {
+        objectiveText.enabled = false;
+        objectiveNumbersGroup.SetActive(false);
+        currentFaseObjective.SetActive(false);
+        tutorialEnemy.gameObject.SetActive(false);
+
+      
+
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        {
+            inputHandler.GetComponent<PlayerInput>().actions.Disable();
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Enable();
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed += SkipIntro;
+        }
+
+        if (playIntro)
+        {
+            introScreen.SetActive(true);
+            videoPlayer.Play();
+            videoPlayer.loopPointReached += IntroEnded;
+        }
+        else
+        {
+            introScreen.SetActive(false) ;
+            PostIntro();
+        }
+        
+
+    }
+
+    private void Update()
+    {
+        if(!videoPlayer.isPlaying)
+            stateMachine.StateUpdate();
+    }
+
+    private void IntroEnded(VideoPlayer source)
+    {
+        introScreen.SetActive(false);
+        PostIntro();
+        videoPlayer.loopPointReached -= IntroEnded;
+    }
+
+    private void SkipIntro(InputAction.CallbackContext obj)
+    {
+        introScreen.SetActive(false);
+        PostIntro();
+
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        {
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Disable();
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
+        }
+
+    }
+
+     
+    private void PostIntro()
+    {
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        {
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Disable();
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
+        }
+
+        SetUpCharacters();
+        DeactivateAllPlayerInputs();
+
+        ResetScene();
+        DeactivateEnemyAI();
+
+        PlayDialogue(postIntroDialogue);
+        dialogueBox.OnDialogueEnded += StartTutorial;
+        
+
+    }
+
+    private void StartTutorial()
+    {
+        dialogueBox.OnDialogueEnded -= StartTutorial;
+        stateMachine.SetState(new IntermediateTutorialFase(this));
+
+        tutorialEnemy.gameObject.SetActive(true);
+        DeactivateEnemyAI();
+
+        playableDirector.Play();
+       
     }
 
     private void SetUpCharacters()
@@ -190,41 +302,6 @@ public class TutorialManager : MonoBehaviour
 
     
 
-    public CharacterClass current;
-    [SerializeField] private GameObject playerInputPrefab;
-
-    private void Start()
-    {
-        inputBindings = new Dictionary<PlayerCharacter, PlayerInputHandler>();
-        playableDirector = gameObject.GetComponent<PlayableDirector>();
-
-        SetUpCharacters();
-        DeactivateEnemyAI();
-
-        stateMachine.SetState(new IntermediateTutorialFase(this));
-        playableDirector.Play();
-
-        objectiveText.enabled = false;
-        objectiveNumbersGroup.SetActive(false);
-        currentFaseObjective.SetActive(false);
-
-
-        //dps.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
-        //OnMovementFaseStart.Invoke();
-
-        //DeactivatePlayerInput(dps);
-        //DeactivatePlayerInput(healer);
-        //DeactivatePlayerInput(ranged);
-        //DeactivatePlayerInput(tank);
-
-        //DeactivateEnemyAI();
-
-    }
-
-    private void Update()
-    {
-        stateMachine.StateUpdate();
-    }
 
     [HideInInspector] public bool timerEnded = false;
 
@@ -331,7 +408,7 @@ public class TutorialManager : MonoBehaviour
     {
         dialogueBox.OnDialogueEnded -= TutorialEnd;
 
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
         foreach (PlayerCharacter character in characters)
         {
@@ -398,10 +475,15 @@ public class TutorialManager : MonoBehaviour
     private void ResetPlayersPosition()
     {
 
-        dps.GetRigidBody().MovePosition(DPSRespawn.position);
-        healer.GetRigidBody().MovePosition(healerRespawn.position);
-        ranged.GetRigidBody().MovePosition(rangedRespawn.position);
-        tank.GetRigidBody().MovePosition(tankRespawn.position);
+        dps.transform.position = DPSRespawn.position;
+        healer.transform.position = healerRespawn.position;
+        ranged.transform.position = rangedRespawn.position;
+        tank.transform.position = tankRespawn.position;
+
+        //dps.GetRigidBody().MovePosition(DPSRespawn.position);
+        //healer.GetRigidBody().MovePosition(healerRespawn.position);
+        //ranged.GetRigidBody().MovePosition(rangedRespawn.position);
+        //tank.GetRigidBody().MovePosition(tankRespawn.position);
 
         dps.GetRigidBody().velocity = Vector2.zero;
         healer.GetRigidBody().velocity = Vector2.zero;

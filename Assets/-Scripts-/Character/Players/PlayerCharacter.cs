@@ -178,7 +178,7 @@ public class PlayerCharacter : Character, InputReceiver
                 worldPosition = (worldPosition - transform.position).normalized;
             }
 
-            Debug.Log(worldPosition);
+            //Debug.Log(worldPosition);
             return new Vector2(worldPosition.x, worldPosition.y);
         }
 
