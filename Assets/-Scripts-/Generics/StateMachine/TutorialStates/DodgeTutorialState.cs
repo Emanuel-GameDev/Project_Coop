@@ -23,6 +23,10 @@ public class DodgeTutorialState : TutorialFase
         base.Enter();
         faseData = (DodgeTutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
 
+        tutorialManager.objectiveText.enabled = true;
+        tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
+        tutorialManager.objectiveNumbersGroup.SetActive(true);
+
         PubSub.Instance.RegisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
         PubSub.Instance.RegisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
 
@@ -57,8 +61,8 @@ public class DodgeTutorialState : TutorialFase
 
 
         perfectDodgeCount++;
+        tutorialManager.objectiveNumberToReach.text = perfectDodgeCount.ToString();
 
-        Debug.Log("schiva perfect");
 
         if ( perfectDodgeCount == 3)
         {
@@ -88,13 +92,21 @@ public class DodgeTutorialState : TutorialFase
     private void UpdateDodgeCounter(object obj)
     {
         dodgeCount++;
-        Debug.Log("schiva");
+
+        if (dodgeCount < 3)
+        {
+            tutorialManager.objectiveNumberToReach.text = dodgeCount.ToString();
+        }
+
         if(dodgeCount == 3)
         {
             
             perfectDodgeCount = 0;
 
+            tutorialManager.objectiveNumberToReach.text = perfectDodgeCount.ToString();
+
             tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
+            tutorialManager.objectiveText.text = faseData.faseObjectivePerfect.GetLocalizedString();
 
             if (currentFaseCharacters[currentCharacterIndex].CharacterClass is DPS)
                 tutorialManager.PlayDialogue(faseData.dpsPerfectDodgeDialogue);
@@ -121,7 +133,7 @@ public class DodgeTutorialState : TutorialFase
         characterChange = false;
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         currentCharacterIndex++;
-        tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
+        
 
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetReceiver(currentFaseCharacters[currentCharacterIndex]);
 
@@ -129,10 +141,16 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
-
+        tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
         //tutorialManager.DeactivateEnemyAI();
+        //tutorialManager.tutorialEnemy.focus = false;
+        //tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
+        //tutorialManager.tutorialEnemy.focus = true;
+        
         dodgeCount = 0;
         perfectDodgeCount = 0;
+
+        tutorialManager.objectiveNumberToReach.text = dodgeCount.ToString();
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);
@@ -148,7 +166,10 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
 
+        tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
+        tutorialManager.tutorialEnemy.focus = true;
+
         tutorialManager.ActivateEnemyAI();
 
         perfectDodgeCount = 0;
@@ -167,9 +188,10 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
-
         tutorialManager.ActivateEnemyAI();
-
+        tutorialManager.tutorialEnemy.focus = false;
+        tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
+        tutorialManager.tutorialEnemy.focus = true;
 
     }
 

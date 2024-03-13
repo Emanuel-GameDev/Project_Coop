@@ -44,6 +44,9 @@ public class TutorialBossCharacter : BossCharacter
     [HideInInspector] public bool canAttackAnim;
     [HideInInspector] public bool canShowPreview;
     [HideInInspector] public bool previewStarted;
+    [HideInInspector] public bool canLastAttackPunch;
+    [HideInInspector] private bool canRotateInAnim;
+    [HideInInspector] private Vector2 direction;
 
 
 
@@ -53,8 +56,12 @@ public class TutorialBossCharacter : BossCharacter
         
         if (target != null)
         {
-            Vector2 direction = new Vector2(target.gameObject.transform.position.x - transform.position.x, target.gameObject.transform.position.y - transform.position.y);
-            SetSpriteDirection(direction);
+            direction = new Vector2(target.gameObject.transform.position.x - transform.position.x, target.gameObject.transform.position.y - transform.position.y);
+
+            if (canRotateInAnim)
+            {               
+                SetSpriteDirection(direction);
+            }
 
             if (canShowPreview)
             {               
@@ -132,6 +139,22 @@ public class TutorialBossCharacter : BossCharacter
         canShowPreview = true;
         Debug.Log("inizio preview");
     }
+    public void SetCanRotateInAnim(int value)
+    {
+        SetSpriteDirection(direction);
 
+        if (value == 0)
+        {
+            canRotateInAnim = false;
+        }
+        else
+        {
+            canRotateInAnim = true;
+        }
+    }
+    public void SetCanLastAttackPunch()
+    {
+        canLastAttackPunch = true;
+    }
     
 }

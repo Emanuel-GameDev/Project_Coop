@@ -612,6 +612,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1720486994485155886, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720486994485155886, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720486994485155886, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1720486994485155886, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -670,6 +685,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 2312809786650951938, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2347805989210274344, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: rect.x
@@ -703,6 +723,11 @@ PrefabInstance:
     - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: attacksDelay
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: followDuration
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
@@ -792,8 +817,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8409325380360465695, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
+      propertyPath: random
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8409325380360465695, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
       propertyPath: rect.x
-      value: 110
+      value: 109
       objectReference: {fileID: 0}
     - target: {fileID: 8409325380360465695, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -881,6 +911,12 @@ MonoBehaviour:
   P2HP: {fileID: 548036067}
   P3HP: {fileID: 459030765}
   P4HP: {fileID: 818660396}
+--- !u!4 &494717809 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 645056140149763641, guid: 8bc278fcdfbad674c8161998835298df,
+    type: 3}
+  m_PrefabInstance: {fileID: 27105190038623590}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &548036065
 GameObject:
   m_ObjectHideFlags: 0
@@ -3364,6 +3400,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1169905768434567888, guid: 8bc278fcdfbad674c8161998835298df,
+        type: 3}
+      propertyPath: receiverSpawnPoint
+      value: 
+      objectReference: {fileID: 494717809}
     - target: {fileID: 1169905768434567888, guid: 8bc278fcdfbad674c8161998835298df,
         type: 3}
       propertyPath: currentSceneInputReceiverPrefab

@@ -27,6 +27,11 @@ public class GuardTutorialState : TutorialFase
         perfectGuardExecuted = 0;
 
         faseData = (GuardTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
+
+        tutorialManager.objectiveText.enabled = true;
+        tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
+        tutorialManager.objectiveNumbersGroup.SetActive(true);
+
         PubSub.Instance.RegisterFunction(EMessageType.guardExecuted, UpdateCounter);
 
         tutorialManager.DeactivateAllPlayerInputs();
@@ -35,8 +40,8 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
-        
-       
+        tutorialManager.objectiveNumberToReach.text = guardExecuted.ToString();
+
     }
 
 
@@ -50,29 +55,37 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
         tutorialManager.ActivateEnemyAI();
+
+        tutorialManager.tutorialEnemy.focus = false;
+        tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
+        tutorialManager.tutorialEnemy.focus = true;
     }
 
     private void UpdateCounter(object obj)
     {
-        guardExecuted++;
-
-        Debug.Log("conta");
+            guardExecuted++;
+        if (guardExecuted < 3)
+        {
+            tutorialManager.objectiveNumberToReach.text = guardExecuted.ToString();
+        }
 
         if(guardExecuted == 3)
         {
-            //PubSub.Instance.UnregisterFunction(EMessageType.guardExecuted, UpdateCounter);
+            perfectGuardExecuted = 0;
+            tutorialManager.objectiveNumberToReach.text = perfectGuardExecuted.ToString();
+
             tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
             tutorialManager.DeactivateAllPlayerInputs();
             tutorialManager.PlayDialogue(faseData.tankPerfectGuardDialogue);
 
-
+            tutorialManager.objectiveText.text = faseData.faseObjectivePerfect.GetLocalizedString();
             tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
             tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
 
             tutorialManager.DeactivateEnemyAI();
 
             PubSub.Instance.RegisterFunction(EMessageType.perfectGuardExecuted, UpdatePerfectCounter);
-            //PubSub.Instance.UnregisterFunction(EMessageType.guardExecuted, UpdateCounter);
+
 
         }
     }
@@ -80,8 +93,9 @@ public class GuardTutorialState : TutorialFase
     private void UpdatePerfectCounter(object obj)
     {
         perfectGuardExecuted++;
+        tutorialManager.objectiveNumberToReach.text = perfectGuardExecuted.ToString();
 
-        if( perfectGuardExecuted >= 3)
+        if ( perfectGuardExecuted >= 3)
         {
             tutorialManager.DeactivateAllPlayerInputs();
 

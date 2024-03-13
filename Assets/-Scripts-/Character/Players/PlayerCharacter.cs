@@ -178,7 +178,7 @@ public class PlayerCharacter : Character, InputReceiver
                 worldPosition = (worldPosition - transform.position).normalized;
             }
 
-            Debug.Log(worldPosition);
+            //Debug.Log(worldPosition);
             return new Vector2(worldPosition.x, worldPosition.y);
         }
 
@@ -292,6 +292,26 @@ public class PlayerCharacter : Character, InputReceiver
     }
 
     public void MoveMinigameInput(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public virtual void ButtonEast(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public virtual void ButtonNorth(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public virtual void ButtonWeast(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public virtual void ButtonSouth(InputAction.CallbackContext context)
     {
 
     }

@@ -15,14 +15,14 @@ namespace MBTExample
 
         private int attackCount;
         
-        
-
 
         public override void OnEnter()
         {
+            
             bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
             bossCharacter.Agent.isStopped = false;
             bossCharacter.previewStarted = false;
+            bossCharacter.canLastAttackPunch = false;
 
 
             bossCharacter.SetCanShowPreview();
@@ -36,6 +36,7 @@ namespace MBTExample
             Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
             targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), (direction.y * bossCharacter.flurryDistance), 0) + bossCharacter.transform.position;
 
+            bossCharacter.anim.ResetTrigger("Return");
         }
 
         public override NodeResult Execute()
@@ -44,7 +45,7 @@ namespace MBTExample
             float dist = Vector2.Distance(targetPosition, bossCharacter.transform.position);
 
             //esci da attacco
-            if (attackCount >= bossCharacter.punchQuantity)
+            if (attackCount >= bossCharacter.punchQuantity && bossCharacter.canLastAttackPunch)
             {
                 bossCharacter.anim.SetTrigger("Return");
                 return NodeResult.success;

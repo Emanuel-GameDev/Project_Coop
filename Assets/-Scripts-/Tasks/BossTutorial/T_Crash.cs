@@ -17,12 +17,13 @@ namespace MBTExample
 
         public override void OnEnter()
         {
+          
             bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
             tempTimer = 0;
 
-            bossCharacter.SetCrashDirectDamageData();
-            Debug.Log("Schianto Iniziato");
+            bossCharacter.SetCrashDirectDamageData();           
             bossCharacter.anim.SetTrigger("Crash");
+            bossCharacter.anim.ResetTrigger("Return");
         }
 
         public override NodeResult Execute()
@@ -31,8 +32,9 @@ namespace MBTExample
          
             if (tempTimer > bossCharacter.crashTimer)
             {
-                Debug.Log("Schianto Finito");
+               
                 bossCharacter.anim.SetTrigger("Return");
+                
                 return NodeResult.success;
             }
 

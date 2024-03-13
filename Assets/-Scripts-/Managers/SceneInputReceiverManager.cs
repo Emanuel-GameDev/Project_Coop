@@ -46,6 +46,8 @@ public class SceneInputReceiverManager : MonoBehaviour
         {
             _instance = this;
         }
+
+        //CoopManager.Instance.InitializePlayers();
     }
 
     private void Start()
@@ -77,9 +79,9 @@ public class SceneInputReceiverManager : MonoBehaviour
         }
     }
 
-    public string GetSceneActionMap()
+    public eInputMap GetSceneActionMap()
     {
-        return sceneInputMap.ToString();
+        return sceneInputMap;
     }
 }
 

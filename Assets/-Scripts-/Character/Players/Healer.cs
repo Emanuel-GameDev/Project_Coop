@@ -338,7 +338,7 @@ public class Healer : CharacterClass
 
         if (instantiatedHealMine == null)
         {
-            if (/*upgradeStatus[AbilityUpgrade.Ability3]  && */context.performed)
+            if (upgradeStatus[AbilityUpgrade.Ability3] && context.performed)
             {
                 if (mineAbilityTimer < mineAbilityCooldown)
                     return;
@@ -368,7 +368,6 @@ public class Healer : CharacterClass
     public override void TakeDamage(DamageData data)
     {
         base.TakeDamage(data);
-        Debug.Log("Hit");
         bossPowerUpHitCount = 0;
     }
 

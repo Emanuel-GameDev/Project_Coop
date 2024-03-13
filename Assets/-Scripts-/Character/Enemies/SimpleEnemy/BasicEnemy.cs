@@ -31,6 +31,10 @@ public class BasicEnemy : EnemyCharacter
     [SerializeField] int numberOfConsecutiveShoot;
     [SerializeField] float projectileSpeed;
     [SerializeField] float projectileRange;
+    public float searchRadious = 3f;
+    [HideInInspector] public bool panicAttack=false;
+
+    private Coroutine actionCourotine;
 
     List<PlayerCharacter> playerInRange;
     PlayerCharacter selectedPlayerInRange;
@@ -81,7 +85,7 @@ public class BasicEnemy : EnemyCharacter
 
 
     [HideInInspector] public NavMeshObstacle obstacle;
-
+    [HideInInspector] public PlayerCharacter currentTarget;
 
 
     protected override void Awake()
@@ -98,7 +102,6 @@ public class BasicEnemy : EnemyCharacter
         idleState = new BasicEnemyIdleState(this);
         moveState = new BasicEnemyMoveState(this);
         actionState = new BasicEnemyActionState(this);
-
 
         path = new NavMeshPath();
 
@@ -160,6 +163,35 @@ public class BasicEnemy : EnemyCharacter
         }
     }
 
+    public void FollowPosition(Vector2 pos)
+    {
+        if (!canMove)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+
+        ActivateAgent();
+
+        if (pos != null)
+        {
+            if (agent.CalculatePath(pos, path))
+            {
+
+                if (path.corners.Length > 1)
+                    Move(path.corners[1] - path.corners[0], rb);
+                else
+                    Move((Vector3)pos - transform.position, rb);
+            }
+            else
+                rb.velocity = Vector2.zero;
+        }
+        else
+        {
+            rb.velocity = Vector2.zero;
+        }
+    }
+
     public virtual void Move(Vector2 direction, Rigidbody2D rb)
     {
         if (obstacle.enabled)
@@ -203,6 +235,12 @@ public class BasicEnemy : EnemyCharacter
     {
 
         isActioning= true;
+
+        if (panicAttack)
+        {
+            panicAttack = false;
+        }
+
         //GetComponentInChildren<SpriteRenderer>().material.color = Color.red;
 
         switch (enemyType)
@@ -210,6 +248,7 @@ public class BasicEnemy : EnemyCharacter
             case EnemyType.melee:
                 animator.SetTrigger("Attack");
                 yield return new WaitForSeconds(attackDelay);
+                isActioning = false;
                 break;
 
             case EnemyType.ranged:
@@ -217,6 +256,8 @@ public class BasicEnemy : EnemyCharacter
 
                 for (int i = 0; i < numberOfConsecutiveShoot; i++)
                 {
+
+                    
                     animator.SetTrigger("Attack");
 
                     Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
@@ -227,7 +268,7 @@ public class BasicEnemy : EnemyCharacter
 
 
 
-                    Vector3 direction =  selectedPlayerInRange.transform.position-transform.position ;
+                    Vector2 direction =  selectedPlayerInRange.transform.position-transform.position ;
 
                     newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1, damage, gameObject.layer);
                     yield return new WaitForSeconds(attackDelay);
@@ -235,14 +276,21 @@ public class BasicEnemy : EnemyCharacter
                     
                 }
 
+                
+
                 yield return new WaitForSeconds(attackSpeed);
 
+                actionCourotine = null;
+
+                isActioning = false;
+
+                
                 break;
         }
 
 
         
-        isActioning= false;
+        
         //GetComponentInChildren<SpriteRenderer>().material.color = Color.white;
     }
 
@@ -283,7 +331,18 @@ public class BasicEnemy : EnemyCharacter
                 SetTarget(data.dealer.dealerTransform);
             }
             
-            
+            if(stateMachine.CurrentState.ToString() == stunState.ToString()) 
+            {
+                Debug.Log("son gia stunnato");
+                return;
+            }
+
+            if(actionCourotine != null) 
+            {
+                StopCoroutine(actionCourotine);
+                actionCourotine=null;
+            }
+
             stateMachine.SetState(stunState);
         }
        
@@ -295,7 +354,8 @@ public class BasicEnemy : EnemyCharacter
     {
         animator.SetTrigger("DamageEnded");
 
-        stateMachine.SetState(moveState);
+        //per ora da problemi
+        //stateMachine.SetState(moveState);
     }
 
 
@@ -303,6 +363,9 @@ public class BasicEnemy : EnemyCharacter
     public virtual void SetTarget(Transform newTarget)
     {
         target = newTarget;
+
+        if(newTarget.GetComponent<PlayerCharacter>()!=null)
+            currentTarget = newTarget.GetComponent<PlayerCharacter>();
     }
 
    
@@ -322,5 +385,12 @@ public class BasicEnemy : EnemyCharacter
     {
         Destroy(gameObject);
     }
+
+    public void SetActionCoroutine(Coroutine coroutine) 
+    {
+        actionCourotine=coroutine;
+    }
+
+   
 
 }

@@ -44,10 +44,19 @@ public interface InputReceiver
     void MenuInput(InputAction.CallbackContext context);
 
     void OptionInput(InputAction.CallbackContext context);
+
     #endregion
 
     #region Minigame
     void MoveMinigameInput(InputAction.CallbackContext context);
+
+    public void ButtonEast(InputAction.CallbackContext context);
+
+    public void ButtonNorth(InputAction.CallbackContext context);
+
+    public void ButtonWeast(InputAction.CallbackContext context);
+
+    public void ButtonSouth(InputAction.CallbackContext context);
     #endregion
 
     #region UI
@@ -61,6 +70,7 @@ public interface InputReceiver
     void Cancel(InputAction.CallbackContext context);
 
     void ScrollWheel(InputAction.CallbackContext context);
+    
 
     #endregion
     #endregion
