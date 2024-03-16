@@ -11,7 +11,10 @@ public enum EMessageType
     perfectDodgeExecuted,
     dialogueInput,
     characterHealed,
-    slotInput
+    slotInput,
+    characterDamaged,
+    characterSwitched,
+    characterJoined
 }
 
 

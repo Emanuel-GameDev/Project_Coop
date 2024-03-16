@@ -1,10 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
 public class HPHandler : MonoBehaviour
 {
+    [SerializeField] GameObject HPContainer;
+
+    [SerializeField] Transform[] HpContainerTransform = new Transform[4];
+
+    [SerializeField] Sprite dpsContainerSprite;
+    [SerializeField] Sprite healerContainerSprite;
+    [SerializeField] Sprite rangedContainerSprite;
+    [SerializeField] Sprite tankContainerSprite;
+
     private static HPHandler _instance;
     public static HPHandler Instance
     {
@@ -26,47 +33,95 @@ public class HPHandler : MonoBehaviour
     }
 
 
-    public TextMeshProUGUI P1HP;
-    public TextMeshProUGUI P2HP;
-    public TextMeshProUGUI P3HP;
-    public TextMeshProUGUI P4HP;
+    List<PlayerCharacter> players;
+    Dictionary<PlayerCharacter, CharacterHUDContainer> containersAssociations;
 
-    private PlayerCharacter player1;
-    private PlayerCharacter player2;
-    private PlayerCharacter player3;
-    private PlayerCharacter player4;
+    private void OnEnable()
+    {
+        players = new List<PlayerCharacter>();
+        containersAssociations = new Dictionary<PlayerCharacter, CharacterHUDContainer>();
+        PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, UpdateContainer);
+        PubSub.Instance.RegisterFunction(EMessageType.characterJoined, AddContainer);
+        PubSub.Instance.RegisterFunction(EMessageType.characterSwitched, SetCharacter);
+    }
 
 
+    int id = 0;
     public void SetActivePlayers()
     {
-        List<PlayerCharacter> players = GameManager.Instance.coopManager.ActivePlayers;
-        foreach (PlayerCharacter player in players)
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
-            if(player1 == null)
-            {
-                player1 = player;
-
-            }
-            else if (player2 == null)
-                player2 = player;
-            else if (player3 == null)
-                player3 = player;
-            else
-                player4 = player;
+            if (inputHandler.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>() != null)
+                AddContainer(inputHandler.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>());
         }
     }
 
-    private void Update()
+    public void AddContainer(object obj)
     {
-        if (player1 != null)
-            P1HP.text = player1.CharacterClass.currentHp.ToString();
-        if (player2 != null)
-            P2HP.text = player2.CharacterClass.currentHp.ToString();
-        if (player3 != null)
-            P3HP.text = player3.CharacterClass.currentHp.ToString();
-        if (player4 != null)
-            P4HP.text = player4.CharacterClass.currentHp.ToString();
+        if (obj is not PlayerCharacter)
+            return;
+
+        PlayerCharacter player = (PlayerCharacter)obj;
+        players.Add(player);
+
+        GameObject hpContainerObject = Instantiate(HPContainer, HpContainerTransform[id]);
+        hpContainerObject.GetComponent<RectTransform>().SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
+
+        CharacterHUDContainer hpContainer = hpContainerObject.GetComponent<CharacterHUDContainer>();
+        hpContainer.referredCharacter = players[id];
+        containersAssociations.Add(players[id], hpContainer);
+
+        hpContainer.referredPlayerID = (ePlayerID)id + 1;
+
+        hpContainer.SetCharacterContainer(GetSpriteContainerFromClass(players[id].CharacterClass));
+        hpContainer.SetUpHp();
+        hpContainer.UpdateHp(players[id].CurrentHp);
+
+        id++;
+
+
+
     }
 
+    public void SetCharacter(object obj)
+    {
+        if (obj is PlayerCharacter)
+        {
+            PlayerCharacter playerCharacter = (PlayerCharacter)obj;
+            if(containersAssociations.ContainsKey(playerCharacter))
+                containersAssociations[playerCharacter].SetCharacterContainer(GetSpriteContainerFromClass(playerCharacter.CharacterClass));
+        }
+    }
 
+    public void UpdateContainer(object obj)
+    {
+        if (obj is PlayerCharacter)
+        {
+            PlayerCharacter playerCharacter = (PlayerCharacter)obj;
+            containersAssociations[playerCharacter].UpdateHp(playerCharacter.CurrentHp);
+        }
+    }
+
+    private Sprite GetSpriteContainerFromClass(CharacterClass characterClass)
+    {
+        switch (characterClass)
+        {
+            case DPS:
+                return dpsContainerSprite;
+            case Healer:
+                return healerContainerSprite;
+            case Ranged:
+                return rangedContainerSprite;
+            case Tank:
+                return tankContainerSprite;
+        }
+
+        return null;
+    }
+
+    private void OnDisable()
+    {
+        players.Clear();
+        containersAssociations.Clear();
+    }
 }
