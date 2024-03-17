@@ -2410,19 +2410,19 @@ MonoBehaviour:
   maxHp: 200
   damage: 0
   staminaDamage: 0
-  attackSpeed: 0
-  moveSpeed: 2
+  attackSpeed: 50
+  moveSpeed: 10
   target: {fileID: 0}
   currentHp: 0
-  minDistance: 0.2
-  followDuration: 10
-  walkSpeed: 4
-  attackPreviewTimer: 0
+  minDistance: 1
+  followDuration: 3
+  walkSpeed: 15
+  attackPreviewTimer: 0.1
   previewArrow: {fileID: 2109936022544078718}
   visual: {fileID: 1636597113684329488}
   _pivot: {fileID: 707992863352827762}
-  flurryDistance: 5
-  flurrySpeed: 2
+  flurryDistance: 2
+  flurrySpeed: 5
   punchQuantity: 3
   normalPunchDamage: 10
   normalPunchStaminaDamage: 33
@@ -2430,9 +2430,9 @@ MonoBehaviour:
   lastPunchStaminaDamage: 34
   chargeDamage: 20
   chargeStaminaDamage: 100
-  chargeTimer: 2
-  chargeSpeed: 7
-  chargeDistance: 10
+  chargeTimer: 1
+  chargeSpeed: 30
+  chargeDistance: 15
   crashDirectDamage: 50
   crashDirectStaminaDamage: 100
   crashWaveDamage: 15
