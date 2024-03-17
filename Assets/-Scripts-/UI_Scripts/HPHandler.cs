@@ -88,8 +88,12 @@ public class HPHandler : MonoBehaviour
         if (obj is PlayerCharacter)
         {
             PlayerCharacter playerCharacter = (PlayerCharacter)obj;
-            if(containersAssociations.ContainsKey(playerCharacter))
+            if (containersAssociations.ContainsKey(playerCharacter))
+            {
                 containersAssociations[playerCharacter].SetCharacterContainer(GetSpriteContainerFromClass(playerCharacter.CharacterClass));
+                containersAssociations[playerCharacter].SetUpHp();
+                containersAssociations[playerCharacter].UpdateHp(playerCharacter.CurrentHp);
+            }
         }
     }
 
