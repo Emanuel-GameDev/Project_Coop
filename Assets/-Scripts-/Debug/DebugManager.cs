@@ -81,6 +81,7 @@ public class DebugManager : MonoBehaviour
                 {
                     timeescaleChanged = true;
                     Time.timeScale = timescale;
+
                 }
             }
         }
