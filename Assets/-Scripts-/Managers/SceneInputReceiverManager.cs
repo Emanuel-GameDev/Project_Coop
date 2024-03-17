@@ -74,7 +74,7 @@ public class SceneInputReceiverManager : MonoBehaviour
                 return null;
             }
             newInputReceiver.SetInputHandler(newPlayerInputHandler);
-
+           
             return newInputReceiver;
         }
     }

@@ -16,6 +16,8 @@ public class PlayerCharacterData : ScriptableObject
     [SerializeField]
     private Sprite fullBodyArt;
     [SerializeField]
+    private Sprite hudHealthSprite;
+    [SerializeField]
     private Sprite hudSprite;
     [SerializeField]
     private Sprite dialogueSprite;
@@ -28,6 +30,7 @@ public class PlayerCharacterData : ScriptableObject
     public Color CharacterColor => characterColor;
     public GameObject CharacterClassPrefab => characterClassPrefab;
     public Sprite FullBodyArt => fullBodyArt;
+    public Sprite HudHealthSprite => hudHealthSprite;
     public Sprite HudSprite => hudSprite;
     public Sprite DialogueSprite => dialogueSprite;
     public SpriteLibraryAsset PixelAnimations => pixelAnimations;

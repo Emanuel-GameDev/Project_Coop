@@ -28,7 +28,7 @@ public class DialogueBox : MonoBehaviour
 
     Dialogue.DialogueLine nextLine;
 
-    [SerializeField] List<UnityEvent> OnDialogueEnd;
+    //[SerializeField] List<UnityEvent> OnDialogueEnd;
     [SerializeField] public event Action OnDialogueEnded;
 
     private AudioSource audioSource;
