@@ -18,6 +18,7 @@ public class LabirintPlayer : DefaultInputReceiver
     public int pickedKeys { get; private set; } = 0;
 
     private SpriteRenderer spriteRenderer;
+    private Animator animator;
 
     void Start()
     {
@@ -31,6 +32,7 @@ public class LabirintPlayer : DefaultInputReceiver
         pickedKeys = 0;
         grid = LabirintManager.Instance.Grid;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        animator = GetComponentInChildren<Animator>();
         LabirintManager.Instance.AddPlayer(this);
         previousPosition = grid.WorldToCell(transform.position);
     }

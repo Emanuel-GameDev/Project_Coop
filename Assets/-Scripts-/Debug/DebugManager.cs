@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using UnityEditor.Playables;
 using UnityEngine;
 
 public class DebugManager : MonoBehaviour
@@ -19,7 +17,7 @@ public class DebugManager : MonoBehaviour
         "Per dare un Power Up usare il tastierino numerico 7,8 o 9, verrà assegnato quello corrispondete al numero.")]
     private bool guardaQuestoTooltipPerLeIstruzioni = false;
 
-
+    [SerializeField] GameObject BossGameobject;
 
     private void Update()
     {
@@ -30,9 +28,9 @@ public class DebugManager : MonoBehaviour
                 UnlockUpgrade(AbilityUpgrade.Ability1);
             }
 
-            if (Input.GetKeyDown(KeyCode.Keypad2)) 
-            { 
-                UnlockUpgrade(AbilityUpgrade.Ability2); 
+            if (Input.GetKeyDown(KeyCode.Keypad2))
+            {
+                UnlockUpgrade(AbilityUpgrade.Ability2);
             }
 
             if (Input.GetKeyDown(KeyCode.Keypad3))
@@ -64,7 +62,10 @@ public class DebugManager : MonoBehaviour
             {
                 GivePowerUP(powerUpToGive_9);
             }
-
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                BossGameobject.SetActive(true);
+            }
         }
     }
 
@@ -86,7 +87,7 @@ public class DebugManager : MonoBehaviour
     private void UnlockUpgrade(AbilityUpgrade ability)
     {
         List<PlayerInputHandler> players = CoopManager.Instance.GetActiveHandlers();
-        if ( players != null && players.Count > 0)
+        if (players != null && players.Count > 0)
         {
             foreach (PlayerInputHandler player in players)
             {
