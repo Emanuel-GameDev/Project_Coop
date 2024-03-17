@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
+using UnityEngine.U2D.Animation;
 
 public class LabirintPlayer : DefaultInputReceiver
 {
@@ -19,6 +20,9 @@ public class LabirintPlayer : DefaultInputReceiver
 
     private SpriteRenderer spriteRenderer;
     private Animator animator;
+    [SerializeField]
+    private SpriteLibrary spriteLibrary;
+
 
     void Start()
     {
@@ -33,13 +37,33 @@ public class LabirintPlayer : DefaultInputReceiver
         grid = LabirintManager.Instance.Grid;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
+        spriteLibrary = GetComponentInChildren<SpriteLibrary>();
         LabirintManager.Instance.AddPlayer(this);
         previousPosition = grid.WorldToCell(transform.position);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         Move();
+        ManageAnimation();
+    }
+
+    private void ManageAnimation()
+    {
+        if (animator != null)
+        {
+            bool isMoving = moveDir.magnitude > 0; 
+            animator.SetBool("isMoving", isMoving); 
+
+            if (moveDir.x > 0)
+            {
+                spriteRenderer.flipX = true; 
+            }
+            else if (moveDir.x < 0)
+            {
+                spriteRenderer.flipX = false; 
+            }
+        }
     }
 
     public override void SetInputHandler(PlayerInputHandler inputHandler)
@@ -52,19 +76,19 @@ public class LabirintPlayer : DefaultInputReceiver
 
             if (inputHandler.currentCharacter != ePlayerCharacter.EmptyCharacter)
             {
-                spriteRenderer.sprite = GetSprite(inputHandler.currentCharacter);
+                spriteLibrary.spriteLibraryAsset = GetSpriteAnimations(inputHandler.currentCharacter);
             }
             else
             {
-                Sprite sprite = GetFreeSprite();
+                SpriteLibraryAsset sprite = GetFreeSpriteAnimation();
                 if (sprite != null)
-                    spriteRenderer.sprite = sprite;
+                    spriteLibrary.spriteLibraryAsset = sprite;
             }
 
         } 
     }
 
-    private Sprite GetFreeSprite()
+    private SpriteLibraryAsset GetFreeSpriteAnimation()
     {
         ePlayerCharacter free = ePlayerCharacter.EmptyCharacter;
         foreach (ePlayerCharacter character in Enum.GetValues(typeof(ePlayerCharacter)))
@@ -83,13 +107,13 @@ public class LabirintPlayer : DefaultInputReceiver
         }
         SetCharacter(free);
         playerInputHandler.SetCharacter(free);
-        return GetSprite(free);
+        return GetSpriteAnimations(free);
     }
 
-    private Sprite GetSprite(ePlayerCharacter character)
+    private SpriteLibraryAsset GetSpriteAnimations(ePlayerCharacter character)
     {
         if (character != ePlayerCharacter.EmptyCharacter)
-            return GameManager.Instance.GetCharacterData(character).PixelSprite;
+            return GameManager.Instance.GetCharacterData(character).PixelAnimations;
         else
             return null;
     }
@@ -207,12 +231,12 @@ public class LabirintPlayer : DefaultInputReceiver
     public override void SetCharacter(ePlayerCharacter character)
     {
         base.SetCharacter(character);
-        SetCharacterSprite(character);
+        SetCharacterSpriteAnimation(character);
     }
 
-    private void SetCharacterSprite(ePlayerCharacter character)
+    private void SetCharacterSpriteAnimation(ePlayerCharacter character)
     {
-        spriteRenderer.sprite = GameManager.Instance.GetCharacterData(character).PixelSprite;
+        spriteLibrary.spriteLibraryAsset = GameManager.Instance.GetCharacterData(character).PixelAnimations;
     }
     #endregion
 
