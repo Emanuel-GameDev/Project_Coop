@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
 
 [CreateAssetMenu(fileName = "PlayerCharacterData", menuName = "Character/PlayerCharacterData")]
 public class PlayerCharacterData : ScriptableObject
@@ -21,7 +22,7 @@ public class PlayerCharacterData : ScriptableObject
     [SerializeField]
     private Sprite dialogueSprite;
     [SerializeField]
-    private Sprite pixelSprite;
+    private SpriteLibraryAsset pixelAnimations;
     [SerializeField]
     private Sprite pixelFaceSprite;
 
@@ -32,7 +33,7 @@ public class PlayerCharacterData : ScriptableObject
     public Sprite HudHealthSprite => hudHealthSprite;
     public Sprite HudSprite => hudSprite;
     public Sprite DialogueSprite => dialogueSprite;
-    public Sprite PixelSprite => pixelSprite;
+    public SpriteLibraryAsset PixelAnimations => pixelAnimations;
     public Sprite PixelFaceSprite => pixelFaceSprite;
 
 }

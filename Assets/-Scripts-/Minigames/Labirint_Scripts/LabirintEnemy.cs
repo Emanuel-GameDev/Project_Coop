@@ -14,6 +14,8 @@ public class LabirintEnemy : MonoBehaviour
     private Vector2 finalDestination;
     private Vector2 currentDestination;
     private NavMeshPath navMeshPath;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
 
     private static int debugCountMax = 50;
     private int debugCount = 0;
@@ -28,6 +30,9 @@ public class LabirintEnemy : MonoBehaviour
     protected void Start()
     {
         targetDetection = GetComponentInChildren<EnemyTargetDetection>();
+        animator = GetComponentInChildren<Animator>();
+        animator.SetBool("isMoving", true);
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         grid = LabirintManager.Instance.Grid;
         currentDestination = transform.position;
         finalDestination = transform.position;
@@ -52,8 +57,9 @@ public class LabirintEnemy : MonoBehaviour
             transform.rotation = Quaternion.identity;
     }
 
-    protected void Update()
+    protected void FixedUpdate()
     {
+        HandleAnimationAndFlip();
         CheckTarget();
         HandlePathfindingAndMovement();
     }
@@ -79,13 +85,19 @@ public class LabirintEnemy : MonoBehaviour
     {
         bool founded = false;
 
-        while(!founded)
+        while(!founded || debugCount > debugCountMax)
         {
             float randomDistance = Random.Range(MinDistance, MaxDistance);
             Vector2 randomPoint = transform.position + Random.onUnitSphere * randomDistance;
             founded = NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, randomDistance, NavMesh.AllAreas);
             if(founded)
                 finalDestination = grid.GetCellCenterWorld(grid.WorldToCell(hit.position));
+            debugCount++;
+        }
+
+        if(debugCount > debugCountMax)
+        {
+            Debug.LogError("Error in SetRandomDestination");
         }
 
         debugCount = 0;
@@ -149,15 +161,36 @@ public class LabirintEnemy : MonoBehaviour
         //Debug.Log($"thisTarget: {this.target}, newTarget: {target}");
     }
 
+    private void HandleAnimationAndFlip()
+    {
+        if (animator != null && spriteRenderer != null)
+        {
+            //bool isMoving = (Vector2.Distance(transform.position, currentDestination) > 0.01f);
+
+            //animator.SetBool("isMoving", isMoving);
+
+            if (transform.position.x > currentDestination.x)
+            {
+                spriteRenderer.flipX = false;
+            }
+            else if (transform.position.x < currentDestination.x)
+            {
+                spriteRenderer.flipX = true;
+            }
+        }
+    }
+
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(finalDestination, 1.2f * grid.cellSize.x);
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(currentDestination, 1 * grid.cellSize.x);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position,  maxFollowDistance * grid.cellSize.x);
-
+        if(grid != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(finalDestination, 1.2f * grid.cellSize.x);
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(currentDestination, 1 * grid.cellSize.x);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, maxFollowDistance * grid.cellSize.x);
+        }      
     }
 
 
