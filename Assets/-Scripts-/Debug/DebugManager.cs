@@ -5,6 +5,10 @@ public class DebugManager : MonoBehaviour
 {
     [SerializeField] bool debugMode = false;
 
+    [SerializeField, Range(0,10), Tooltip("Se la debug mode è attiva premi T per attivare e disattivare il cambio di timescale")] 
+    float timescale = 1f;
+    private bool timeescaleChanged = false;
+
     [SerializeField] ePlayerCharacter targetCharacter;
 
     [SerializeField] PowerUp powerUpToGive_7;
@@ -65,6 +69,19 @@ public class DebugManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.B))
             {
                 BossGameobject.SetActive(true);
+            }
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                if (timeescaleChanged)
+                {
+                    timeescaleChanged = false;
+                    Time.timeScale = 1;
+                }
+                else
+                {
+                    timeescaleChanged = true;
+                    Time.timeScale = timescale;
+                }
             }
         }
     }
