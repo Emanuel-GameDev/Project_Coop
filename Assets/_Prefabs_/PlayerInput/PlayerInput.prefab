@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 8859933519440878773}
   - component: {fileID: 4906601360720262402}
   - component: {fileID: 7929319058598011305}
+  - component: {fileID: -391151478238999330}
+  - component: {fileID: -4144802191883361837}
   m_Layer: 0
   m_Name: PlayerInput
   m_TagString: Untagged
@@ -440,22 +442,6 @@ MonoBehaviour:
     m_ActionId: 63bd7206-cf1f-4add-b45d-40b3c3270131
     m_ActionName: Player/Dialogue[/Keyboard/space]
   - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: a9032ae6-28c0-4f35-b52c-a382cfd5e9da
-    m_ActionName: SlotMachine/Menu[/Keyboard/escape]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 637ea978-1692-4069-ad86-a3151b9a39d2
-    m_ActionName: SlotMachine/Dialogue[/Keyboard/space]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 956981ae-021b-49d3-9075-0d76962b939b
-    m_ActionName: SlotMachine/Interact[/Mouse/leftButton]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: d0cf36f8-99e9-49ec-9dd6-92fedb75787f
-    m_ActionName: SlotMachine/Restart[/Keyboard/space]
-  - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7929319058598011305}
         m_TargetAssemblyTypeName: PlayerInputHandler, Assembly-CSharp
@@ -535,6 +521,34 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 0ac5dfc6-9bb1-4663-9a77-cbf23b89205c
     m_ActionName: UI/Menu[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5886fdf8-6ed2-46fe-9576-4c4aeba951ae
+    m_ActionName: Player/SkipCutscene[/XInputControllerWindows/buttonSouth,/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 713b4152-0bdd-4634-a051-aac9edbe3ffc
+    m_ActionName: UI/MiddleClick[/Mouse/middleButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 17a6d57d-95cf-426c-8775-de51b3b93cd5
+    m_ActionName: UI/RightClick[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a6fa9959-924d-4dcd-ab21-99f6b5e79b99
+    m_ActionName: UI/TrackedDevicePosition
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c89444b8-d374-413e-96e4-a810b9c0939e
+    m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4e0ccb19-d00d-470c-9b5f-4a7ab683fddf
+    m_ActionName: UI/Click[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: dccccc3e-72f1-429d-ae7d-ac0e1e175b8e
+    m_ActionName: UI/Point[/Mouse/position]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -553,3 +567,61 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInput: {fileID: 4906601360720262402}
+  multiplayerEventSystem: {fileID: -391151478238999330}
+--- !u!114 &-391151478238999330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3146308965294970050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b16c6f78230fa4964a222622d8aae332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+  m_PlayerRoot: {fileID: 0}
+--- !u!114 &-4144802191883361837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3146308965294970050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca188dc33af58c24b803b26aab77e211,
+    type: 3}
+  m_PointAction: {fileID: -3779152363486472896, guid: ca188dc33af58c24b803b26aab77e211,
+    type: 3}
+  m_MoveAction: {fileID: -4340333985763062313, guid: ca188dc33af58c24b803b26aab77e211,
+    type: 3}
+  m_SubmitAction: {fileID: 1699659641304661283, guid: ca188dc33af58c24b803b26aab77e211,
+    type: 3}
+  m_CancelAction: {fileID: -8050879767749141465, guid: ca188dc33af58c24b803b26aab77e211,
+    type: 3}
+  m_LeftClickAction: {fileID: 4822073275605688200, guid: ca188dc33af58c24b803b26aab77e211,
+    type: 3}
+  m_MiddleClickAction: {fileID: -2260339892887606647, guid: ca188dc33af58c24b803b26aab77e211,
+    type: 3}
+  m_RightClickAction: {fileID: 75390821411847186, guid: ca188dc33af58c24b803b26aab77e211,
+    type: 3}
+  m_ScrollWheelAction: {fileID: -5800787886584805602, guid: ca188dc33af58c24b803b26aab77e211,
+    type: 3}
+  m_TrackedDevicePositionAction: {fileID: -1936594000409838221, guid: ca188dc33af58c24b803b26aab77e211,
+    type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 6566528978261240306, guid: ca188dc33af58c24b803b26aab77e211,
+    type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0

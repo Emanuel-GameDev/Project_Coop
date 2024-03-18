@@ -2,12 +2,17 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 
 public class PlayerInputHandler : MonoBehaviour
 {
     [SerializeField]
     private PlayerInput playerInput;
     public PlayerInput PlayerInput => playerInput;
+
+    [SerializeField]
+    private MultiplayerEventSystem multiplayerEventSystem;
+    public MultiplayerEventSystem MultiplayerEventSystem => multiplayerEventSystem;
 
     public ePlayerID playerID { private set; get; } = ePlayerID.NotSet;
 
@@ -21,7 +26,7 @@ public class PlayerInputHandler : MonoBehaviour
         {
             if (_currentReceiver == null)
             {
-                 _currentReceiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(this);
+                _currentReceiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(this);
             }
 
             return _currentReceiver;
@@ -33,11 +38,6 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (playerInput == null)
             playerInput = GetComponent<PlayerInput>();
-    }
-
-    public void SetActionMap(eInputMap map)
-    {
-        playerInput.SwitchCurrentActionMap(map.ToString());
     }
 
     public void SetReceiver(InputReceiver newReceiver)
@@ -54,15 +54,14 @@ public class PlayerInputHandler : MonoBehaviour
         currentCharacter = character;
     }
 
-   
-    public bool SetStartingCharacter(ePlayerCharacter character) 
+    public bool SetStartingCharacter(ePlayerCharacter character)
     {
         if (startingCharacter == ePlayerCharacter.EmptyCharacter)
         {
             startingCharacter = character;
             return true;
         }
-        else 
+        else
             return false;
     }
 
@@ -73,7 +72,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void SetPlayerID(List<PlayerInputHandler> playerInputHandlers)
     {
-        foreach(ePlayerID ID in Enum.GetValues(typeof(ePlayerID)))
+        foreach (ePlayerID ID in Enum.GetValues(typeof(ePlayerID)))
         {
             if (ID != ePlayerID.NotSet)
             {
@@ -90,7 +89,21 @@ public class PlayerInputHandler : MonoBehaviour
                     return;
                 }
             }
-        }  
+        }
+    }
+
+    #region Multiplayer
+    public void SetPlayerActiveMenu(GameObject menuRoot, GameObject firstSelection)
+    {
+        MultiplayerEventSystem.playerRoot = menuRoot;
+        MultiplayerEventSystem.firstSelectedGameObject = firstSelection;
+    }
+    #endregion
+
+    #region PlayerInput
+    public void SetActionMap(eInputMap map)
+    {
+        playerInput.SwitchCurrentActionMap(map.ToString());
     }
 
     public void OnDeviceLost(PlayerInput playerInput)
@@ -102,7 +115,7 @@ public class PlayerInputHandler : MonoBehaviour
     {
         CoopManager.Instance.OnDeviceRegained(playerInput);
     }
-
+    #endregion
     // La lista di tutti gli input di tutte le possibili mappe 
     #region MapInput
 
@@ -165,7 +178,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     public virtual void ScrollWheel(InputAction.CallbackContext context) => CurrentReceiver.ScrollWheel(context);
 
-    
+
     #endregion
 
     #endregion

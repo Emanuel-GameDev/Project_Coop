@@ -119,6 +119,10 @@ public class CoopManager : MonoBehaviour
             playerInputHandlers.Add(newPlayerInputHandler);
             newPlayerInputHandler.SetPlayerID(playerInputHandlers);
             newPlayerInputHandler.SetReceiver(SceneInputReceiverManager.Instance.GetSceneInputReceiver(newPlayerInputHandler));
+
+            if (newPlayerInputHandler.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>())
+                PubSub.Instance.Notify(EMessageType.characterJoined, newPlayerInputHandler.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>());
+                
         }
         else
             Debug.LogError("Missing PlayerInputHandler Component");

@@ -182,6 +182,12 @@ public class TutorialManager : MonoBehaviour
         ResetScene();
         DeactivateEnemyAI();
 
+        foreach (PlayerCharacter character in characters)
+        {
+            character.CharacterClass.currentHp = character.MaxHp - 5;
+            HPHandler.Instance.UpdateContainer(character);
+        }
+
         PlayDialogue(postIntroDialogue);
         dialogueBox.OnDialogueEnded += StartTutorial;
         
@@ -258,7 +264,9 @@ public class TutorialManager : MonoBehaviour
             dps=receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
 
             inputBindings.Add(dps, inputHandlers[inputHandlersID]);
+            HPHandler.Instance.AddContainer(dps);
             inputHandlersID++;
+
         }
 
         if (!healerPresent)
@@ -268,6 +276,7 @@ public class TutorialManager : MonoBehaviour
             healer = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
 
             inputBindings.Add(healer, inputHandlers[inputHandlersID]);
+            HPHandler.Instance.AddContainer(healer);
             inputHandlersID++;
         }
 
@@ -278,6 +287,7 @@ public class TutorialManager : MonoBehaviour
             ranged = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
 
             inputBindings.Add(ranged, inputHandlers[inputHandlersID]);
+            HPHandler.Instance.AddContainer(ranged);
             inputHandlersID++;
         }
 
@@ -288,6 +298,7 @@ public class TutorialManager : MonoBehaviour
             tank = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
 
             inputBindings.Add(tank, inputHandlers[inputHandlersID]);
+            HPHandler.Instance.AddContainer(tank);
             inputHandlersID++;
         }
 

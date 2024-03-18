@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     public PlayerInputManager playerInputManager { get; private set; }
     public CoopManager coopManager { get; private set; }
     public CameraManager cameraManager { get; private set; }
-    public GameObject BossGameobject; //Debug;
 
     private static GameManager _instance;
     public static GameManager Instance
@@ -65,17 +64,6 @@ public class GameManager : MonoBehaviour
             Debug.LogError("No player character datas found");
         }
 
-    }
-
-    private void Update()
-    {
-        //Debug start
-        
-        if (Input.GetKeyDown(KeyCode.B))
-            {
-            BossGameobject.SetActive(true);
-        }
-        //Debug End
     }
 
     public void PauseGame()

@@ -70,6 +70,7 @@ public class PlayerCharacter : Character, InputReceiver
         else
         {
             characterClass.TakeDamage(data);
+            PubSub.Instance.Notify(EMessageType.characterDamaged, this);
         }
         //Ricontrollare
         if (inLove && GetComponentInChildren<LoveCondition>().started && data.condition is LoveCondition)

@@ -76,6 +76,7 @@ public class CharacterPoolManager : MonoBehaviour
             playerCharacter.SwitchCharacterClass(searchedClass);
             freeCharacters.Remove(searchedClass);
             searchedClass.gameObject.SetActive(true);
+            PubSub.Instance.Notify(EMessageType.characterSwitched, playerCharacter);
             return;
         }
     }
