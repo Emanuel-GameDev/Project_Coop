@@ -84,6 +84,10 @@ public class DebugManager : MonoBehaviour
 
                 }
             }
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                Debug.Log(CoopManager.Instance.GetActiveHandlers().Find(x => x.CurrentReceiver.GetCharacter() == targetCharacter).PlayerInput.currentActionMap);
+            }
         }
     }
 
