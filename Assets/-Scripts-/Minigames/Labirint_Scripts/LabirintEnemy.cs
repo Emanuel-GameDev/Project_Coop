@@ -85,7 +85,7 @@ public class LabirintEnemy : MonoBehaviour
     {
         bool founded = false;
 
-        while(!founded || debugCount > debugCountMax)
+        while(!founded || debugCount < debugCountMax)
         {
             float randomDistance = Random.Range(MinDistance, MaxDistance);
             Vector2 randomPoint = transform.position + Random.onUnitSphere * randomDistance;
