@@ -21,6 +21,7 @@ public class EnemyCharacter : Character
     protected NavMeshAgent agent;
     protected PowerUpData powerUpData;
     public Transform target;
+    
 
     public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
     public float MoveSpeed => moveSpeed;
@@ -52,7 +53,12 @@ public class EnemyCharacter : Character
     {
         currentHp -= data.damage * damageReceivedMultiplier;
         Debug.Log(currentHp);
-
+        if(currentHp <= 0)
+        {
+            isDead = true;
+            animator.SetTrigger("isDead");
+            
+        }
         if (data.condition != null)
             data.condition.AddCondition(this);
     }

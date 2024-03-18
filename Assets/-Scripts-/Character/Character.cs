@@ -11,8 +11,8 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     [HideInInspector] public bool underAggro = false;
     [HideInInspector] public bool inLove = false;
     [HideInInspector] public bool bleeding = false;
-    
 
+    public bool isDead = false;
     protected Rigidbody2D rb;
     protected List<Condition> conditions;
 
