@@ -17,7 +17,7 @@ public class TutorialBossCharacter : BossCharacter
     public GameObject _pivot;
     public UnityEvent OnDie;
     public Animator anim => animator;
-    public GameObject objectToActivateOnDeath;
+    
 
     [Header("Raffica Di Pugni")]
     public float flurryDistance;
