@@ -67,6 +67,7 @@ public class DialogueBox : MonoBehaviour
         {
 
 
+            OnDialogueEnd[dialogueIndex]?.Invoke();
 
             dialogueIndex++;
 
@@ -85,7 +86,6 @@ public class DialogueBox : MonoBehaviour
             }
 
             //if(OnDialogueEnd.Count>0)
-            OnDialogueEnd[dialogueIndex-1]?.Invoke();
             OnDialogueEnded?.Invoke();
 
             //foreach (PlayerCharacter character in GameManager.Instance.coopManager.activePlayers)
