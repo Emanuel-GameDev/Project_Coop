@@ -50,6 +50,7 @@ public class LabirintManager : MonoBehaviour
 
     private StateMachine<LabirintState> stateMachine = new StateMachine<LabirintState>();
     private LabirintUI labirintUI;
+    private SceneChanger sceneChanger;
 
     private void Awake()
     {
@@ -67,6 +68,7 @@ public class LabirintManager : MonoBehaviour
     {
         //SetupLabirint();
         stateMachine.SetState(new StartLabirint());
+        sceneChanger = GetComponent<SceneChanger>();
         //Debug
         //StartGame();
     }
@@ -136,8 +138,8 @@ public class LabirintManager : MonoBehaviour
 
     public void ExitMinigame()
     {
-        //Da fare
-        Debug.Log("Teoricamente dovresti uscire dalla scena");
+        if(sceneChanger != null)
+            sceneChanger.ChangeScene();
     }
 
     #endregion

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TutorialBossCharacter : BossCharacter
 {
@@ -14,6 +15,7 @@ public class TutorialBossCharacter : BossCharacter
     public GameObject previewArrow;
     public GameObject visual;
     public GameObject _pivot;
+    public UnityEvent OnDie;
     public Animator anim => animator;
     public GameObject objectToActivateOnDeath;
 
@@ -113,7 +115,11 @@ public class TutorialBossCharacter : BossCharacter
         if (isDead)
         {
             gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("isDead").Value = true;
+
             gameObject.SetActive(true);
+
+            OnDie?.Invoke();
+
         }
 
     }

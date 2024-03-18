@@ -9,6 +9,9 @@ using UnityEngine.UI;
 
 public class DialogueBox : MonoBehaviour
 {
+
+
+
     //debug
     [SerializeField] bool startImmediatly = false;
 
@@ -28,7 +31,7 @@ public class DialogueBox : MonoBehaviour
 
     Dialogue.DialogueLine nextLine;
 
-    //[SerializeField] List<UnityEvent> OnDialogueEnd;
+    [SerializeField] List<UnityEvent> OnDialogueEnd;
     [SerializeField] public event Action OnDialogueEnded;
 
     private AudioSource audioSource;
@@ -63,8 +66,8 @@ public class DialogueBox : MonoBehaviour
         else
         {
 
-            //OnDialogueEnd[dialogueIndex]?.Invoke();
 
+            OnDialogueEnd[dialogueIndex]?.Invoke();
 
             dialogueIndex++;
 
@@ -83,7 +86,7 @@ public class DialogueBox : MonoBehaviour
             }
 
             //if(OnDialogueEnd.Count>0)
-            OnDialogueEnded.Invoke();
+            OnDialogueEnded?.Invoke();
 
             //foreach (PlayerCharacter character in GameManager.Instance.coopManager.activePlayers)
             //{
@@ -262,7 +265,7 @@ public class DialogueBox : MonoBehaviour
     bool oneTime = false;
     private void Update()
     {
-        if (startImmediatly && Input.GetKeyDown(KeyCode.Backspace) && !oneTime)
+        if (startImmediatly && !oneTime)
         {
             oneTime = true;
             StartDialogue();

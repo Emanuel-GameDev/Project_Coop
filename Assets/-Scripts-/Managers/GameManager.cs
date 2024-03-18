@@ -114,6 +114,9 @@ public class GameManager : MonoBehaviour
 
     public bool IsSceneLoaded()
     {
+        if(sceneLoadOperation == null)
+            return false;
+
         return sceneLoadOperation.progress >= 0.9f;
     }
 
