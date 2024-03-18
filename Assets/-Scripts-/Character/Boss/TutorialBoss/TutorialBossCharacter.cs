@@ -15,6 +15,7 @@ public class TutorialBossCharacter : BossCharacter
     public GameObject visual;
     public GameObject _pivot;
     public Animator anim => animator;
+    public GameObject objectToActivateOnDeath;
 
     [Header("Raffica Di Pugni")]
     public float flurryDistance;
@@ -112,6 +113,7 @@ public class TutorialBossCharacter : BossCharacter
         if (isDead)
         {
             gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("isDead").Value = true;
+            gameObject.SetActive(true);
         }
 
     }
