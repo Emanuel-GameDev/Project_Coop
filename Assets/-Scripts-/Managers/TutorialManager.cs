@@ -182,6 +182,12 @@ public class TutorialManager : MonoBehaviour
         ResetScene();
         DeactivateEnemyAI();
 
+        foreach (PlayerCharacter character in characters)
+        {
+            character.CharacterClass.currentHp = character.MaxHp - 5;
+            HPHandler.Instance.UpdateContainer(character);
+        }
+
         PlayDialogue(postIntroDialogue);
         dialogueBox.OnDialogueEnded += StartTutorial;
         

@@ -42,10 +42,7 @@ public class HealTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
-        foreach(PlayerCharacter character in playerHealed)
-        {
-            character.CharacterClass.currentHp = character.MaxHp - 5;
-        }
+        
 
         numberOfPlayerHealed = 0;
         tutorialManager.objectiveNumberToReach.text = numberOfPlayerHealed.ToString();
