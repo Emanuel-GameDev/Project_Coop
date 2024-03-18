@@ -37,52 +37,55 @@ namespace MBTExample
 
         public override NodeResult Execute()
         {
-           
-            if (bossCharacter.followDuration >= tempTimer)
-            {             
-                tempTimer += Time.deltaTime;
-               
-                //Follow target
-                targetPosition = targetTransform.Value.position;
-                bossCharacter.Agent.speed = bossCharacter.walkSpeed;               
-                bossCharacter.Agent.SetDestination(targetPosition);
-
-                //Check if a player enters in small range;
-                if (CheckForNearPlayer())
-                {
-                    playerFound.Value = true;
-                    bossCharacter.Agent.isStopped = true;
-                    bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
-                    bossCharacter.anim.SetTrigger("Return");
-                    return NodeResult.success;
-                }
-
-
-                float dist = Vector3.Distance(targetPosition, bossCharacter.transform.position);
-                
-
-                if (mustStop || dist <= bossCharacter.minDistance)
-                {
-                    bossCharacter.Agent.isStopped = true;
-                    bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
-                    bossCharacter.anim.SetTrigger("Return");
-                    return NodeResult.success;
-                }
-
-            }
-            else
+            if (!bossCharacter.isDead)
             {
-                
-                playerFound.Value = false;
-                bossCharacter.Agent.isStopped = true;
-                bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
-                bossCharacter.anim.SetTrigger("Return");
-                return NodeResult.failure;
-                
+                if (bossCharacter.followDuration >= tempTimer)
+                {
+                    tempTimer += Time.deltaTime;
+
+                    //Follow target
+                    targetPosition = targetTransform.Value.position;
+                    bossCharacter.Agent.speed = bossCharacter.walkSpeed;
+                    bossCharacter.Agent.SetDestination(targetPosition);
+
+                    //Check if a player enters in small range;
+                    if (CheckForNearPlayer())
+                    {
+                        playerFound.Value = true;
+                        bossCharacter.Agent.isStopped = true;
+                        bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
+                        bossCharacter.anim.SetTrigger("Return");
+                        return NodeResult.success;
+                    }
+
+
+                    float dist = Vector3.Distance(targetPosition, bossCharacter.transform.position);
+
+
+                    if (mustStop || dist <= bossCharacter.minDistance)
+                    {
+                        bossCharacter.Agent.isStopped = true;
+                        bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
+                        bossCharacter.anim.SetTrigger("Return");
+                        return NodeResult.success;
+                    }
+
+                }
+                else
+                {
+
+                    playerFound.Value = false;
+                    bossCharacter.Agent.isStopped = true;
+                    bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
+                    bossCharacter.anim.SetTrigger("Return");
+                    return NodeResult.failure;
+
+                }
+
+
+
+                return NodeResult.running;
             }
-
-
-
             return NodeResult.running;
         }
 

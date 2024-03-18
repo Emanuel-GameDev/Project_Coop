@@ -22,8 +22,8 @@ namespace MBTExample
 
         public override void OnEnter()
         {
-           
-            bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
+          
+                bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
            
             started = false;
             mustStop = false;
@@ -46,43 +46,46 @@ namespace MBTExample
            
 
         public override NodeResult Execute()
-        {           
-            
-            
-            if(tempTimer > bossCharacter.chargeTimer)
+        {
+
+            if (!bossCharacter.isDead)
             {
-                if (!started)
+                if (tempTimer > bossCharacter.chargeTimer)
                 {
-                    ShowAttackPreview(false);
-                    Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
-                    targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), (direction.y * bossCharacter.chargeDistance), 0) + bossCharacter.transform.position;
+                    if (!started)
+                    {
+                        ShowAttackPreview(false);
+                        Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
+                        targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), (direction.y * bossCharacter.chargeDistance), 0) + bossCharacter.transform.position;
 
-                    Debug.Log("partito");
-                    bossCharacter.Agent.isStopped = false;
-                    bossCharacter.Agent.speed = bossCharacter.chargeSpeed;
-                    bossCharacter.Agent.SetDestination(targetPosition);
-                    bossCharacter.anim.SetTrigger("Charge");
-                    started = true;
+                        Debug.Log("partito");
+                        bossCharacter.Agent.isStopped = false;
+                        bossCharacter.Agent.speed = bossCharacter.chargeSpeed;
+                        bossCharacter.Agent.SetDestination(targetPosition);
+                        bossCharacter.anim.SetTrigger("Charge");
+                        started = true;
 
+                    }
+
+                    float dist = Vector2.Distance(targetPosition, bossCharacter.transform.position);
+
+                    if (mustStop || dist <= bossCharacter.minDistance)
+                    {
+
+                        bossCharacter.Agent.isStopped = true;
+                        bossCharacter.anim.SetTrigger("Return");
+
+                        return NodeResult.success;
+                    }
                 }
 
-                float dist = Vector2.Distance(targetPosition, bossCharacter.transform.position);
-               
-                if(mustStop || dist <= bossCharacter.minDistance)
+                else
                 {
-                    
-                    bossCharacter.Agent.isStopped = true;
-                    bossCharacter.anim.SetTrigger("Return");
-                    
-                    return NodeResult.success;
+                    tempTimer += Time.deltaTime;
                 }
-            }
 
-            else
-            {
-                tempTimer += Time.deltaTime;               
+                return NodeResult.running;
             }
-
             return NodeResult.running;
         }
 
