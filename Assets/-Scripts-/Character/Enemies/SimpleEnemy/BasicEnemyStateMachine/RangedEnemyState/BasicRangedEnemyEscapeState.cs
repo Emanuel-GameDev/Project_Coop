@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEditor.PlayerSettings;
 
 public class BasicRangedEnemyEscapeState : BasicEnemyState
 {
