@@ -115,9 +115,6 @@ public class TutorialBossCharacter : BossCharacter
         if (isDead)
         {
             gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("isDead").Value = true;
-
-            gameObject.SetActive(true);
-
             OnDie?.Invoke();
 
         }
