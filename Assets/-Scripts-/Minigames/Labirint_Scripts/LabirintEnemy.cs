@@ -9,7 +9,6 @@ public class LabirintEnemy : MonoBehaviour
     public Grid grid;
 
     private EnemyTargetDetection targetDetection;
-    private Transform target;
     private NavMeshAgent agent;
     private Vector2 finalDestination;
     private Vector2 currentDestination;
@@ -20,8 +19,29 @@ public class LabirintEnemy : MonoBehaviour
     private static int debugCountMax = 50;
     private int debugCount = 0;
 
+    private Transform target;
+    private Transform Target
+    {
+        get => target;
+        set
+        {
+            target = value;
+            if (target)
+            {
+                alert.SetActive(true);
+            }
+            else
+            {
+                alert.SetActive(false);
+            }
+        }
+     }
+
     public float minRandomDestinationDistance = 2f;
     public float maxRandomDestinationDistance = 10f;
+
+    [SerializeField]
+    private GameObject alert;
 
     public float MaxDistance => maxRandomDestinationDistance * grid.cellSize.x;
     public float MinDistance => minRandomDestinationDistance * grid.cellSize.x;
@@ -66,16 +86,16 @@ public class LabirintEnemy : MonoBehaviour
 
     private void CheckTarget()
     {
-        if (target != null)
+        if (Target != null)
         {
-            if (NavMesh.SamplePosition(target.position, out NavMeshHit hit, 5.0f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(Target.position, out NavMeshHit hit, 5.0f, NavMesh.AllAreas))
             {
                 finalDestination = hit.position;
             }
 
-            if (Vector2.Distance(transform.position, target.position) > MaxFollowDistance)
+            if (Vector2.Distance(transform.position, Target.position) > MaxFollowDistance)
             {
-                target = null;
+                Target = null;
                 SetRandomDestination();
             }
         }
@@ -114,7 +134,7 @@ public class LabirintEnemy : MonoBehaviour
             //Debug.Log("Reach Final Destination");
         }
 
-        if (hasReachCurrentDestination)
+        if (hasReachCurrentDestination || Target != null)
         {
             CalculateCurrentDestination();
             //Debug.Log("Reach Current Destination");
@@ -148,16 +168,18 @@ public class LabirintEnemy : MonoBehaviour
         if (other.TryGetComponent<LabirintPlayer>(out var player))
         {
             player.Killed();
-            target = null;
+            Target = null;
         }
     }
 
 
     public void SetTarget(Transform target)
     {
-        if (this.target == null)
-            this.target = target;
-
+        if (this.Target == null)
+        {
+            this.Target = target;
+        }
+           
         //Debug.Log($"thisTarget: {this.target}, newTarget: {target}");
     }
 

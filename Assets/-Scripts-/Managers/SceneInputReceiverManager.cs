@@ -53,6 +53,7 @@ public class SceneInputReceiverManager : MonoBehaviour
     private void Start()
     {
         CoopManager.Instance.InitializePlayers();
+        GameManager.Instance.ResumeGame();
     }
 
     public InputReceiver GetSceneInputReceiver(PlayerInputHandler newPlayerInputHandler)
