@@ -28,21 +28,24 @@ namespace MBTExample
 
         public override NodeResult Execute()
         {
-            
-         
-            if (tempTimer > bossCharacter.crashTimer)
-            {
-               
-                bossCharacter.anim.SetTrigger("Return");
-                
-                return NodeResult.success;
-            }
 
-            else
+            if (!bossCharacter.isDead)
             {
-                tempTimer += Time.deltaTime;
-            }
+                if (tempTimer > bossCharacter.crashTimer)
+                {
 
+                    bossCharacter.anim.SetTrigger("Return");
+
+                    return NodeResult.success;
+                }
+
+                else
+                {
+                    tempTimer += Time.deltaTime;
+                }
+
+                return NodeResult.running;
+            }
             return NodeResult.running;
         }
 

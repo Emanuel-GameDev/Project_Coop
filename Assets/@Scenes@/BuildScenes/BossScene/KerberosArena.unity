@@ -321,12 +321,12 @@ PrefabInstance:
     - target: {fileID: 6993901663149319593, guid: 2fd7d6e04ece6c84e82b26ecf54c6b07,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: -1920
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6993901663149319593, guid: 2fd7d6e04ece6c84e82b26ecf54c6b07,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: -1080
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6993901663149319593, guid: 2fd7d6e04ece6c84e82b26ecf54c6b07,
         type: 3}
@@ -366,12 +366,12 @@ PrefabInstance:
     - target: {fileID: 6993901663149319593, guid: 2fd7d6e04ece6c84e82b26ecf54c6b07,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -960
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6993901663149319593, guid: 2fd7d6e04ece6c84e82b26ecf54c6b07,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -540
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6993901663149319593, guid: 2fd7d6e04ece6c84e82b26ecf54c6b07,
         type: 3}
@@ -1930,13 +1930,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
+      propertyPath: walkSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: crashTimer
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: chargeSpeed
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: chargeTimer
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
       propertyPath: flurrySpeed
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: minDistance
-      value: 0.6
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -1945,13 +1965,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
+      propertyPath: flurryDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
       propertyPath: followDuration
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: attackPreviewTimer
-      value: 3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5662076403326267862, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -1976,7 +2001,7 @@ PrefabInstance:
     - target: {fileID: 7153761786820462440, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7384835035709755658, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -2576,8 +2601,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.6368494, y: 11.5587, z: 0}
-    m_Extent: {x: 19.481651, y: 29.322498, z: 0}
+    m_Center: {x: 0.6371002, y: 11.558949, z: 0}
+    m_Extent: {x: 19.482, y: 29.322151, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0

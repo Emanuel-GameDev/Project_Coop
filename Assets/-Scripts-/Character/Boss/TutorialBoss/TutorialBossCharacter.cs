@@ -108,6 +108,12 @@ public class TutorialBossCharacter : BossCharacter
     public override void TakeDamage(DamageData data)
     {
         base.TakeDamage(data);
+
+        if (isDead)
+        {
+            gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("isDead").Value = true;
+        }
+
     }
     protected override void SetSpriteDirection(Vector2 direction)
     {
