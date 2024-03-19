@@ -36,8 +36,10 @@ public class Tank : CharacterClass
     public enum blockZone
     {
         none,
-        north,
-        sud
+        nordEst,
+        sudEst,
+        nordOvest,
+        sudOvest
     }
     private blockZone currentBlockZone;
 
@@ -292,30 +294,28 @@ public class Tank : CharacterClass
     {
         Character dealerMB = (Character)data.dealer;
 
-
-        
+      
         Vector2 dealerDirection = dealerMB.gameObject.transform.position - transform.position;
-        float crossProduct =0;
+        
         float angle = 0;
 
-        if (currentBlockZone is blockZone.north)
-        {
-             crossProduct = Vector3.Cross(new Vector2(1,1), dealerDirection).y;
-             angle = Vector2.Angle(dealerDirection, new Vector2(1,1));
-        }
-        else if(currentBlockZone is blockZone.sud)
-        {
-             crossProduct = Vector3.Cross(new Vector2(1,-1), dealerDirection).y;
-             angle = Vector2.Angle(dealerDirection, new Vector2(1,-1));
-        }
-
-        angle = crossProduct < 0 ? -angle : angle;
-
+        //if (currentBlockZone is blockZone.north)
+        //{
+            
+        //     angle = Vector2.Angle(dealerDirection, new Vector2(1,1));
+        //}
+        //else if(currentBlockZone is blockZone.sud)
+        //{
+             
+        //     angle = Vector2.Angle(dealerDirection, new Vector2(1,-1));
+        //}
+        //Debug.Log(angle);
+       
         return Mathf.Abs(angle) <= blockAngle / 2;
     }
     Vector3 RotateVectorAroundPivot(Vector3 vector, Vector3 pivot, float angle)
     {
-        Quaternion rotation = Quaternion.Euler(0, angle, 0);
+        Quaternion rotation = Quaternion.Euler(0, 0, angle);
         vector -= pivot;
         vector = rotation * vector;
         vector += pivot;
@@ -383,16 +383,25 @@ public class Tank : CharacterClass
     {
 
         //Nord 
-        if (lastNonZeroDirection.y > 0)
+        if (lastNonZeroDirection.y > 0 && GetComponentInChildren<SpriteRenderer>().flipX == true)
         {
-            return blockZone.north;
+            return blockZone.nordEst;
         }
-        //Sud 
+        else if (lastNonZeroDirection.y > 0 && GetComponentInChildren<SpriteRenderer>().flipX == false)
+        {
+            return blockZone.nordOvest;
+        }
+        else if (lastNonZeroDirection.y < 0 && GetComponentInChildren<SpriteRenderer>().flipX == true)
+        {
+            return blockZone.sudEst;
+        }
+        else if (lastNonZeroDirection.y < 0 && GetComponentInChildren<SpriteRenderer>().flipX == false)
+        {
+            return blockZone.sudOvest;
+        }
         else
-        {
-            return blockZone.sud;
-        }
-     
+            return blockZone.none;
+
     }
     private IEnumerator ToggleBlock()
     {
@@ -644,15 +653,29 @@ public class Tank : CharacterClass
         }
         if (mostraGizmoRangeParata)
         {
-            Vector3 temp = new Vector3((GetLastNonZeroDirection().x + transform.position.x), transform.position.y, GetLastNonZeroDirection().y + transform.position.z);
+            if(currentBlockZone is blockZone.nordEst)
+            {
+                Vector2 temp = transform.position + new Vector3(1,1,0);
 
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(transform.position, temp);
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
 
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, temp);
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
+            }else if (currentBlockZone is blockZone.sudEst)
+            {
+                Vector2 temp = transform.position + new Vector3(1, -1, 0);
+
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(transform.position, temp);
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
+
+            }
 
 
         }
