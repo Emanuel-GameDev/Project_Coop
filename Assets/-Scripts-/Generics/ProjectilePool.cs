@@ -4,7 +4,26 @@ using UnityEngine;
 
 public class ProjectilePool : MonoBehaviour
 {
-   public static ProjectilePool Instance { get; private set; }
+
+    private static ProjectilePool _instance;
+    public static ProjectilePool Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<ProjectilePool>();
+
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new("ProjectilePool");
+                    _instance = singletonObject.AddComponent<ProjectilePool>();
+                }
+            }
+
+            return _instance;
+        }
+    }
 
     [SerializeField] Projectile projectilePrefab;
     [SerializeField] int poolSize = 5;
@@ -14,19 +33,19 @@ public class ProjectilePool : MonoBehaviour
     private void Awake()
     {
         _projectilePool = new Stack<Projectile>();
+
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
     }
 
     private void Start()
     {
-        if(Instance== null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
         for(int i = 0; i < poolSize; i++)
         {
             CreateProjectile();

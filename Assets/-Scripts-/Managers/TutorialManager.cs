@@ -129,6 +129,7 @@ public class TutorialManager : MonoBehaviour
         if (playIntro)
         {
             introScreen.SetActive(true);
+            videoPlayer.time = 0;
             videoPlayer.Play();
             videoPlayer.loopPointReached += IntroEnded;
         }
