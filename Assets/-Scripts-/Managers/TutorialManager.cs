@@ -129,7 +129,6 @@ public class TutorialManager : MonoBehaviour
         if (playIntro)
         {
             introScreen.SetActive(true);
-            videoPlayer.time = 0;
             videoPlayer.Play();
             videoPlayer.loopPointReached += IntroEnded;
         }
@@ -285,6 +284,9 @@ public class TutorialManager : MonoBehaviour
         {
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Jude);
+            //
+            //receiver è null
+            //
             ranged = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
 
             inputBindings.Add(ranged, inputHandlers[inputHandlersID]);

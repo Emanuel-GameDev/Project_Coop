@@ -20,6 +20,8 @@ public class ObstacleEnemy : MonoBehaviour,IDamager
     Animator animator;
     public Transform dealerTransform => transform;
 
+    [SerializeField] protected AnimationCurve AnimationCurve;
+
     // Start is called before the first frame update
     void Start()
     {

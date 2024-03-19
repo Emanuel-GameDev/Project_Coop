@@ -158,12 +158,19 @@ public class PlayerCharacter : Character, InputReceiver
 
     public Vector2 ReadLook(InputAction.CallbackContext context)
     {
-        string gamepad = context.control.device.displayName;
+        //string gamepad = context.control.device.displayName;
+
+        string gamepad = playerInputHandler.PlayerInput.currentControlScheme;
+
 
         if (gamepad.Contains("Gamepad") || gamepad.Contains("Controller") || gamepad.Contains("Joystick"))
         {
             //perndo la look dal player.input utilizzando il gamepad
+
+            Debug.Log(lookDir);
             return new Vector2(lookDir.x, lookDir.y).normalized;
+
+            
         }
         else
         {
