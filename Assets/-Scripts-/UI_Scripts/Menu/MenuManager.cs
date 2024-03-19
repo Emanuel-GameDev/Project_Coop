@@ -37,6 +37,7 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+
     public void SetPlayerActiveMenu(PlayerInputHandler player, GameObject menuRoot, GameObject firstSelection)
     {
         player.SetPlayerActiveMenu(menuRoot, firstSelection);
