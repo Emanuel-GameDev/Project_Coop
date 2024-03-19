@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2549964661481762067}
   - component: {fileID: 5123877529961357649}
-  - component: {fileID: 8391140921567525469}
+  - component: {fileID: 8233589942139819295}
   - component: {fileID: 6385243841665395290}
   m_Layer: 5
   m_Name: CursorPrefab
@@ -46,7 +46,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2940939995183155301}
   m_CullTransparentMesh: 1
---- !u!114 &8391140921567525469
+--- !u!114 &8233589942139819295
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d0f41bae337150242824defc6d0ef800, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8505369e350c2c94d808f35265241959, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -88,9 +88,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 756d2fd90cf9b6f4f8111805d511b60c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infoText: {fileID: 0}
   objectsToOver:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   objectSelected: 0
+  player1Icon: {fileID: 21300000, guid: 8505369e350c2c94d808f35265241959, type: 3}
+  player2Icon: {fileID: 21300000, guid: 217861de4966c0d4da241cc115b7d808, type: 3}
+  player3Icon: {fileID: 21300000, guid: 2459b0e3f74278848acc3249d19eba6f, type: 3}
+  player4Icon: {fileID: 21300000, guid: 57646174948442a499e9ccee479d051b, type: 3}
+  offset: 25
