@@ -9,8 +9,8 @@ public class ChargeVisualHandler : MonoBehaviour
     RectTransform chargeVisual;
     [SerializeField]
     RectTransform barTransform;
-    private CharacterClass characterClass;
-    Vector2 Direction => characterClass.GetLastNonZeroDirection();
+    private PlayerCharacter character;
+    Vector2 Direction => character.LastDirection;
 
     float maxValue;
     float minValue;
@@ -18,13 +18,13 @@ public class ChargeVisualHandler : MonoBehaviour
     float startTime;
     bool mustEnd;
 
-    public void Inizialize(float min, float max, float time, CharacterClass character)
+    public void Inizialize(float min, float max, float time, PlayerCharacter character)
     {
         maxValue = max;
         minValue = min;
         maxTime = time;
         mustEnd = false;
-        characterClass = character;
+        this.character = character;
         SetBar();
         chargeVisual.gameObject.SetActive(false);
     }
