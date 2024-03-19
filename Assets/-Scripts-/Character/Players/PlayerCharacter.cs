@@ -158,7 +158,7 @@ public class PlayerCharacter : Character, InputReceiver
 
     public Vector2 ReadLook(InputAction.CallbackContext context)
     {
-        string gamepad = context.control.device.displayName;
+        string gamepad = playerInputHandler.PlayerInput.currentControlScheme;
 
         if (gamepad.Contains("Gamepad") || gamepad.Contains("Controller") || gamepad.Contains("Joystick"))
         {
