@@ -73,5 +73,5 @@ public class LabirintUI : MonoBehaviour
     {
         MinigameMenuManager.Instance.SetActiveMenu(loseScreen);
     }
-
+     //lul
 }
