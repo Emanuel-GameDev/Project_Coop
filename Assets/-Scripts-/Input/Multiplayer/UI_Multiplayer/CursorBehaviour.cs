@@ -17,11 +17,18 @@ public class CursorBehaviour : DefaultInputReceiver
 
     public bool objectSelected = false;
     private bool randomBtnSelected = false;
+    private ePlayerID playerID;
+    private Image icon;
+    public Sprite player1Icon;
+    public Sprite player2Icon;
+    public Sprite player3Icon;
+    public Sprite player4Icon;
+    public float offset = 25f;
 
     private void Start()
     {
         List<RectTransform> icons = CharacterSelectionMenu.Instance.GetCharacterIcons();
-
+        icon = GetComponent<Image>();
         //objectsToOver.Clear();
         objectsToOver = new List<RectTransform>();
 
@@ -35,6 +42,11 @@ public class CursorBehaviour : DefaultInputReceiver
         GetComponent<RectTransform>().localScale = new Vector2(1f, 1f);
 
         CharacterSelectionMenu.Instance.AssignInfoText(this);
+        if(playerInputHandler != null)
+        {
+            playerID = playerInputHandler.playerID;
+            ChangeIconOnPlayerID();
+        }
     }
 
     public override void Navigate(InputAction.CallbackContext context)
@@ -121,6 +133,33 @@ public class CursorBehaviour : DefaultInputReceiver
         base.SetCharacter(character);
 
         playerInputHandler.SetCharacter(character);
+    }
+
+    public override void SetInputHandler(PlayerInputHandler inputHandler)
+    {
+        base.SetInputHandler(inputHandler);
+    }
+
+    private void ChangeIconOnPlayerID()
+    {
+        if (playerID == ePlayerID.Player1)
+            icon.sprite = player1Icon;
+        if(playerID == ePlayerID.Player2)
+        {
+            icon.sprite = player2Icon;
+            transform.position = new Vector3(offset, 0, 0);
+        }
+        if (playerID == ePlayerID.Player3)
+        {
+            icon.sprite = player3Icon;
+            transform.position = new(offset*2, 0, 0);
+        }
+        if(playerID == ePlayerID.Player4)
+        {
+            icon.sprite = player4Icon;
+            transform.position = new(offset*3, 0, 0);
+        }
+
     }
 
     /// <summary>
