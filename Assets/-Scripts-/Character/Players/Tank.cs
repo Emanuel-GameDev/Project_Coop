@@ -33,10 +33,13 @@ public class Tank : CharacterClass
     [SerializeField, Tooltip("finestra di tempo nella quale appena viene colpito può parare per fare parata perfetta")]
     float perfectBlockTimeWindow = 0.4f;
 
-    private enum blockZone
+    public enum blockZone
     {
-        
+        none,
+        north,
+        sud
     }
+    private blockZone currentBlockZone;
 
     [Header("Unique Ability")]
 
@@ -289,24 +292,22 @@ public class Tank : CharacterClass
     {
         Character dealerMB = (Character)data.dealer;
 
-        Vector2 lastNonZeroDirection = GetLastNonZeroDirection();
 
         
-        Vector3 lastDirection = new Vector3(lastNonZeroDirection.x, 0f, lastNonZeroDirection.y);
+        Vector2 dealerDirection = dealerMB.gameObject.transform.position - transform.position;
+        float crossProduct =0;
+        float angle = 0;
 
-        Vector3 dealerDirection = dealerMB.gameObject.transform.position - transform.position;
-        //se proiettlie
-        //
-
-        //Da eliminare
-        dealerPosition = dealerMB.gameObject.transform.position;
-
-
-        float crossProduct = Vector3.Cross(lastDirection, dealerDirection).y;
-
-
-        float angle = Vector3.Angle(dealerDirection, lastDirection);
-
+        if (currentBlockZone is blockZone.north)
+        {
+             crossProduct = Vector3.Cross(new Vector2(1,1), dealerDirection).y;
+             angle = Vector2.Angle(dealerDirection, new Vector2(1,1));
+        }
+        else if(currentBlockZone is blockZone.sud)
+        {
+             crossProduct = Vector3.Cross(new Vector2(1,-1), dealerDirection).y;
+             angle = Vector2.Angle(dealerDirection, new Vector2(1,-1));
+        }
 
         angle = crossProduct < 0 ? -angle : angle;
 
@@ -327,7 +328,8 @@ public class Tank : CharacterClass
             SetCanMove(false, playerCharacter.GetRigidBody());
             if(isBlocking != true)
             {
-                isBlocking = true;               
+                isBlocking = true;
+                currentBlockZone = SetBlockZone(GetLastNonZeroDirection());
                 animator.SetTrigger("StartBlock");
 
             }
@@ -377,6 +379,21 @@ public class Tank : CharacterClass
         //se potenziamento 4 parata perfetta fa danno
     }
 
+    public blockZone SetBlockZone(Vector2 lastNonZeroDirection)
+    {
+
+        //Nord 
+        if (lastNonZeroDirection.y > 0)
+        {
+            return blockZone.north;
+        }
+        //Sud 
+        else
+        {
+            return blockZone.sud;
+        }
+     
+    }
     private IEnumerator ToggleBlock()
     {
         canBlock = false;
