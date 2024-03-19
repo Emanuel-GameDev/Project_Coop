@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AggroCondition : Condition
 {
-    private CharacterClass player;
+    private PlayerCharacter player;
     private Character target;
     private float duration;
     private bool started;
@@ -27,7 +27,7 @@ public class AggroCondition : Condition
         
     }
 
-    public void SetVariable(CharacterClass player, float duration)
+    public void SetVariable(PlayerCharacter player, float duration)
     {
         this.player = player;
         this.duration = duration;

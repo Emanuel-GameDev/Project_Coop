@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LoveCondition : Condition
 {
-    private CharacterClass player;
+    private PlayerCharacter player;
     private Character target;
     private float duration;
     public bool started;
@@ -43,7 +43,7 @@ public class LoveCondition : Condition
 
     }
 
-    public void SetVariable(CharacterClass player, float duration)
+    public void SetVariable(PlayerCharacter player, float duration)
     {
         this.player = player;
         this.duration = duration;

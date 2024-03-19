@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 //Unique = tasto nord,Q = Urlo
 //BossUpgrade = tasto est,E = attacco bossFight
-public class Tank : CharacterClass
+public class Tank : PlayerCharacter
 {
     [Header("Attack")]
     [SerializeField, Tooltip("Durata tempo pressione tasto attacco prima per decidere se attacco caricato o no")]
@@ -133,10 +133,10 @@ public class Tank : CharacterClass
 
     #region Attack
 
-    public override void Attack(Character parent, InputAction.CallbackContext context)
+    public override void AttackInput(InputAction.CallbackContext context)
     {
         //Cercar soluzione forse
-        if (Stunned) return;
+        if (stunned) return;
 
         if (context.performed && isBlocking == false)
         {
@@ -183,7 +183,7 @@ public class Tank : CharacterClass
     }
     public void CheckAttackToDo()
     {
-        SetCanMove(false, playerCharacter.GetRigidBody());
+        SetCanMove(false, rb);
 
         if (pressed && chargedAttack)
         {
@@ -256,7 +256,7 @@ public class Tank : CharacterClass
             comboIndex = 0;
             isAttacking = false;
             Debug.Log("Reset Variables");
-            SetCanMove(true, playerCharacter.GetRigidBody());
+            SetCanMove(true, rb);
 
         }
         else if (comboIndex == 2)
@@ -276,7 +276,7 @@ public class Tank : CharacterClass
                 if (Utility.IsInLayerMask(r.transform.gameObject, LayerMask.GetMask("Enemy")))
                 {
                     IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
-                    hittedDama.TakeDamage(new DamageData(chargedAttackDamage, playerCharacter, null));
+                    hittedDama.TakeDamage(new DamageData(chargedAttackDamage, this, null));
                     Debug.Log(r.transform.gameObject.name + " colpito con " + chargedAttackDamage + " damage di attacco ad area");
 
                 }
@@ -321,15 +321,15 @@ public class Tank : CharacterClass
         vector += pivot;
         return vector;
     }
-    public override void Defence(Character parent, InputAction.CallbackContext context)
+    public override void DefenseInput(InputAction.CallbackContext context)
     {
         if (context.performed && isAttacking == false && canCancelAttack == false && canBlock)
         {
-            SetCanMove(false, playerCharacter.GetRigidBody());
+            SetCanMove(false, rb);
             if(isBlocking != true)
             {
                 isBlocking = true;
-                currentBlockZone = SetBlockZone(GetLastNonZeroDirection());
+                currentBlockZone = SetBlockZone(lastNonZeroDirection);
                 animator.SetTrigger("StartBlock");
 
             }
@@ -338,7 +338,7 @@ public class Tank : CharacterClass
             
             //Rotate pivor Trigger per proteggere player
             pivotTriggerProtected.enabled = true;
-            pivotTriggerProtected.Rotate(GetLastNonZeroDirection());
+            pivotTriggerProtected.Rotate(lastNonZeroDirection);
             
 
             //Trigger che setta ai player protectedByTank a true;
@@ -352,7 +352,7 @@ public class Tank : CharacterClass
 
         else if (context.canceled && isBlocking == true)
         {
-            SetCanMove(true, playerCharacter.GetRigidBody());
+            SetCanMove(true, rb);
             if (isBlocking != false)
             {
                 
@@ -436,7 +436,7 @@ public class Tank : CharacterClass
             data.dealer.OnParryNotify();
             if (damageOnParry)
             {
-                dealerMB.TakeDamage(new DamageData(perfectBlockDamage, playerCharacter));
+                dealerMB.TakeDamage(new DamageData(perfectBlockDamage, this));
             }
         }
 
@@ -488,7 +488,7 @@ public class Tank : CharacterClass
             Debug.Log($"current stamina : {currentStamina}");
             if (currentStamina <= 0)
             {
-                SetCanMove(true, playerCharacter.GetRigidBody());
+                SetCanMove(true, rb);
                 isBlocking = false;
                 ShowStaminaBar(false);
                 Debug.Log("Parata Rotta");
@@ -508,7 +508,7 @@ public class Tank : CharacterClass
 
     #region UniqueAbility(Shout)
 
-    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
+    public override void UniqueAbilityInput(InputAction.CallbackContext context)
     {
 
         if (context.performed && uniqueAbilityReady)
@@ -544,14 +544,14 @@ public class Tank : CharacterClass
                     aggroCondition.SetVariable(this, aggroDuration);
                     
 
-                    hittedDama.TakeDamage(new DamageData(0, playerCharacter, aggroCondition));
+                    hittedDama.TakeDamage(new DamageData(0, this, aggroCondition));
                    
                 }
             }
         }
         //Incremento statistiche difesa e stamina
         statBoosted = true;
-        playerCharacter.damageReceivedMultiplier = healthDamageReductionMulty;
+        damageReceivedMultiplier = healthDamageReductionMulty;
         Invoke(nameof(SetStatToNormal), aggroDuration);
 
 
@@ -564,7 +564,7 @@ public class Tank : CharacterClass
     private void SetStatToNormal()
     {
         statBoosted = false;
-        playerCharacter.damageReceivedMultiplier = 1;
+        damageReceivedMultiplier = 1;
     }
 
 
@@ -572,12 +572,12 @@ public class Tank : CharacterClass
 
     #region ExtraAbility(BossAttack)
 
-    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context) //Tasto est
+    public override void ExtraAbilityInput(InputAction.CallbackContext context) //Tasto est
     {
         if (context.performed && !isAttacking && !isBlocking)
         {
             
-            SetCanMove(false, playerCharacter.GetRigidBody());
+            SetCanMove(false, rb);
 
             if (bossfightPowerUpUnlocked && isAttacking == false)
             {
@@ -596,11 +596,11 @@ public class Tank : CharacterClass
 
     #region Move
 
-    public override void Move(Vector2 direction, Rigidbody2D rb)
+    public override void Move(Vector2 direction)
     {
         if (canMove)
         {
-            base.Move(direction, rb);
+            base.Move(direction);
 
         }
         animator.SetBool("IsMoving", isMoving);
@@ -644,7 +644,7 @@ public class Tank : CharacterClass
         }
         if (mostraGizmoRangeParata)
         {
-            Vector3 temp = new Vector3((GetLastNonZeroDirection().x + transform.position.x), transform.position.y, GetLastNonZeroDirection().y + transform.position.z);
+            Vector3 temp = new Vector3((lastNonZeroDirection.x + transform.position.x), transform.position.y, lastNonZeroDirection.y + transform.position.z);
 
 
             Gizmos.color = Color.green;

@@ -7,14 +7,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerCharacter : Character, InputReceiver
 {
-    protected CharacterClass characterClass;
-    public CharacterClass CharacterClass => characterClass;
-
-    public float MaxHp => characterClass.MaxHp;
-    public float CurrentHp => characterClass.currentHp;
+    public float MaxHp;
+    public float CurrentHp => currentHp;
     public bool protectedByTank;
 
-    private ePlayerCharacter currentCharacter;
     private PlayerInputHandler playerInputHandler;
     private Vector3 screenPosition;
     private Vector3 worldPosition;
@@ -96,7 +92,7 @@ public class PlayerCharacter : Character, InputReceiver
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
 
 
-    public virtual void Move(Vector2 direction, Rigidbody2D rb)
+    public virtual void Move(Vector2 direction)
     {
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
@@ -141,8 +137,7 @@ public class PlayerCharacter : Character, InputReceiver
     protected override void InitialSetup()
     {
         base.InitialSetup();
-        if (characterClass != null)
-            InizializeClass(characterClass);
+            Inizialize();
     }
 
     private void Update()
@@ -150,29 +145,10 @@ public class PlayerCharacter : Character, InputReceiver
         Move(moveDir);
     }
 
-    #region CharacterClass Management
-    public void InizializeClass(CharacterClass newCharClass)
-    {
-        newCharClass.Enable(this);
-        SetCharacterClass(newCharClass);
-        SetCharacter(newCharClass.Character);
-    }
-    public void SetCharacterClass(CharacterClass cClass) => characterClass = cClass;
-    public void SwitchCharacterClass(CharacterClass newCharClass)
-    {
-        if (characterClass != null)
-            characterClass.Disable(this);
-
-        if (newCharClass != null)
-            InizializeClass(newCharClass);
-    }
-    #endregion
-
     #region Redirect To Class
-    protected virtual void Move(Vector2 direction) => characterClass.Move(direction, rb);
-    public override void AddPowerUp(PowerUp powerUp) => characterClass.AddPowerUp(powerUp);
-    public override void RemovePowerUp(PowerUp powerUp) => characterClass.RemovePowerUp(powerUp);
-    public override List<PowerUp> GetPowerUpList() => characterClass.GetPowerUpList();
+    public override void AddPowerUp(PowerUp powerUp) => powerUpData.Add(powerUp);
+    public override void RemovePowerUp(PowerUp powerUp) => powerUpData.Remove(powerUp);
+    public override List<PowerUp> GetPowerUpList() => powerUpData.powerUps;
     #endregion
 
     #region Damage
@@ -184,7 +160,6 @@ public class PlayerCharacter : Character, InputReceiver
         }
         else
         {
-            characterClass.TakeDamage(data);
             PubSub.Instance.Notify(EMessageType.characterDamaged, this);
         }
         //Ricontrollare
@@ -204,21 +179,20 @@ public class PlayerCharacter : Character, InputReceiver
     }
 
 
-    public override DamageData GetDamageData() => characterClass.GetDamageData();
-
+    public override DamageData GetDamageData()
+    {
+        DamageData data = new DamageData(Damage, this);
+        return data;
+    }
     #endregion
 
     #region Interface Implementation
 
     public void SetCharacter(ePlayerCharacter character)
     {
-        currentCharacter = character;
-        if (playerInputHandler != null)
-            playerInputHandler.SetCharacter(currentCharacter);
-        if (characterClass == null)
-            CharacterPoolManager.Instance.SwitchCharacter(this, character);
+       
     }
-    public ePlayerCharacter GetCharacter() => currentCharacter;
+    public ePlayerCharacter GetCharacter() => character;
 
     public virtual GameObject GetReceiverObject()
     {
@@ -243,9 +217,7 @@ public class PlayerCharacter : Character, InputReceiver
 
     public void Dismiss()
     {
-        if (characterClass != null)
-            characterClass.Disable(this);
-
+        //TODO
         CameraManager.Instance.RemoveTarget(this.transform);
         //characterClass.SaveClassData();
         Destroy(gameObject);
@@ -334,21 +306,21 @@ public class PlayerCharacter : Character, InputReceiver
     #region MainActions
     public virtual void AttackInput(InputAction.CallbackContext context)
     {
-        characterClass.Attack(this, context);
+        
     }
     public virtual void DefenseInput(InputAction.CallbackContext context)
     {
-        characterClass.Defence(this, context);
+        
     }
 
     public virtual void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-        characterClass.UseUniqueAbility(this, context);
+        
     }
 
     public  virtual void ExtraAbilityInput(InputAction.CallbackContext context)
     {
-        characterClass.UseExtraAbility(this, context);
+        
     }
 
     public void MoveInput(InputAction.CallbackContext context)
@@ -436,4 +408,13 @@ public class PlayerCharacter : Character, InputReceiver
 
     #endregion
 
+}
+
+public enum AbilityUpgrade
+{
+    Ability1,
+    Ability2,
+    Ability3,
+    Ability4,
+    Ability5
 }

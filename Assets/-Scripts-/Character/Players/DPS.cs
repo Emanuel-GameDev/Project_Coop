@@ -380,11 +380,11 @@ public class DPS : PlayerCharacter
     #endregion
 
 
-    public override void Move(Vector2 direction, Rigidbody2D rb)
+    public override void Move(Vector2 direction)
     {
         if (canMove)
         {
-            base.Move(direction, rb);
+            base.Move(direction);
         }
         else if (isDashingAttack)
         {

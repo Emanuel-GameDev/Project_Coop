@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Ranged : CharacterClass
+public class Ranged : PlayerCharacter
 {
     //ci deve essere il riferimento alla look qua, non al proiettile
     //aggiungere statistiche personaggio + schivata+invincibilità
@@ -135,13 +135,13 @@ public class Ranged : CharacterClass
 
     }
 
-    public override void Move(Vector2 direction, Rigidbody2D rb)
+    public override void Move(Vector2 direction)
     {
         if(!isDodging)
         {
             if(!isAttacking && !isDodging)
             {
-                base.Move(direction, rb);
+                base.Move(direction);
             }
             else
             {
@@ -172,7 +172,7 @@ public class Ranged : CharacterClass
 
     //sparo
     #region Attack
-    public override void Attack(Character parent, InputAction.CallbackContext context)
+    public override void AttackInput(InputAction.CallbackContext context)
     {
         if (context.performed && !isAttacking)
         {
@@ -186,7 +186,7 @@ public class Ranged : CharacterClass
 
             isAttacking = true;
 
-            Vector2 _look = parent.GetComponent<PlayerCharacter>().ReadLook(context);
+            Vector2 _look = ReadLook(context);
 
             //controllo che la look non sia zero, possibilità solo se si una il controller
             if (_look != Vector2.zero)
@@ -254,7 +254,7 @@ public class Ranged : CharacterClass
 
     //schivata
     #region Defence
-    public override void Defence(Character parent, InputAction.CallbackContext context)
+    public override void DefenseInput(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
@@ -264,7 +264,7 @@ public class Ranged : CharacterClass
                 return;
             }
 
-            StartCoroutine(Dodge(lastNonZeroDirection, parent.GetRigidBody()));
+            StartCoroutine(Dodge(lastNonZeroDirection, rb));
 
             Debug.Log(lastNonZeroDirection);
         }
@@ -324,7 +324,7 @@ public class Ranged : CharacterClass
 
     //mina
     #region ExtraAbility
-    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context) //E
+    public override void ExtraAbilityInput(InputAction.CallbackContext context) //E
     {
 
         if (context.performed)
@@ -397,7 +397,7 @@ public class Ranged : CharacterClass
       
     //sparo caricato
     #region Unique ability
-    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context) //Q
+    public override void UniqueAbilityInput(InputAction.CallbackContext context) //Q
     {
 
         if (context.performed)
@@ -425,7 +425,7 @@ public class Ranged : CharacterClass
             if (endTimer - empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
             {
 
-                Vector2 _look = parent.GetComponent<PlayerCharacter>().ReadLook(context);
+                Vector2 _look = ReadLook(context);
 
                 //controllo che la look non sia zero, possibilità solo se si una il controller
                 if (_look != Vector2.zero)

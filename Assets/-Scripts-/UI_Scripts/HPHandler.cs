@@ -73,7 +73,7 @@ public class HPHandler : MonoBehaviour
 
         hpContainer.referredPlayerID = (ePlayerID)id + 1;
 
-        hpContainer.SetCharacterContainer(GetSpriteContainerFromClass(players[id].CharacterClass));
+        hpContainer.SetCharacterContainer(GetSpriteContainerFromCharacter(players[id]));
         hpContainer.SetUpHp();
         hpContainer.UpdateHp(players[id].CurrentHp);
 
@@ -90,7 +90,7 @@ public class HPHandler : MonoBehaviour
             PlayerCharacter playerCharacter = (PlayerCharacter)obj;
             if (containersAssociations.ContainsKey(playerCharacter))
             {
-                containersAssociations[playerCharacter].SetCharacterContainer(GetSpriteContainerFromClass(playerCharacter.CharacterClass));
+                containersAssociations[playerCharacter].SetCharacterContainer(GetSpriteContainerFromCharacter(playerCharacter));
                 containersAssociations[playerCharacter].SetUpHp();
                 containersAssociations[playerCharacter].UpdateHp(playerCharacter.CurrentHp);
             }
@@ -106,9 +106,9 @@ public class HPHandler : MonoBehaviour
         }
     }
 
-    private Sprite GetSpriteContainerFromClass(CharacterClass characterClass)
+    private Sprite GetSpriteContainerFromCharacter(PlayerCharacter character)
     {
-        switch (characterClass)
+        switch (character)
         {
             case DPS:
                 return dpsContainerSprite;
