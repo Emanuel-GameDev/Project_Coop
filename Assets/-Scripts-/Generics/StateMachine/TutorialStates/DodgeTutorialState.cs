@@ -108,9 +108,9 @@ public class DodgeTutorialState : TutorialFase
             tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
             tutorialManager.objectiveText.text = faseData.faseObjectivePerfect.GetLocalizedString();
 
-            if (currentFaseCharacters[currentCharacterIndex].CharacterClass is DPS)
+            if (currentFaseCharacters[currentCharacterIndex] is DPS)
                 tutorialManager.PlayDialogue(faseData.dpsPerfectDodgeDialogue);
-            else if(currentFaseCharacters[currentCharacterIndex].CharacterClass is Ranged)
+            else if(currentFaseCharacters[currentCharacterIndex] is Ranged)
                 tutorialManager.PlayDialogue(faseData.rangedPerfectDodgeDialogue);
 
             tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
@@ -133,9 +133,9 @@ public class DodgeTutorialState : TutorialFase
         characterChange = false;
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         currentCharacterIndex++;
-        
 
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetReceiver(currentFaseCharacters[currentCharacterIndex]);
+        // DA RIVEDERE #MODIFICATO
+        //tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetReceiver(currentFaseCharacters[currentCharacterIndex]);
 
         tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();

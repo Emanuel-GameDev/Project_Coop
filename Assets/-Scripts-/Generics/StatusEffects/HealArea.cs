@@ -95,7 +95,8 @@ public class HealArea : MonoBehaviour
             //regene amici
             if (c is PlayerCharacter friends)
             {
-                friends.CharacterClass.currentHp += healPerTik;
+                //DA RIVEDERE #MODIFICATO
+                //friends.CurrentHp += healPerTik;
             }
 
             //EnemyCharacter al posto di dummy

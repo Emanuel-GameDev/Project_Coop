@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SlotPlayer : DefaultInputReceiver
+public class SlotPlayer : InputReceiver
 {
     [SerializeField] Slotmachine slotmachine;
 

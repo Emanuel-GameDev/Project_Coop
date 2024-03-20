@@ -101,7 +101,7 @@ public class PlayerInputHandler : MonoBehaviour
     #endregion
 
     #region PlayerInput
-    public void SetActionMap(eInputMap map)
+    public void SetActionMap(InputMap map)
     {
         playerInput.SwitchCurrentActionMap(map.ToString());
     }

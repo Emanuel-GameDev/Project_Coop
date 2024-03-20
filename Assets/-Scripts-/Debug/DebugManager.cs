@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DebugManager : MonoBehaviour
 {
     [SerializeField] bool debugMode = false;
 
-    [SerializeField, Range(0,10), Tooltip("Se la debug mode è attiva premi T per attivare e disattivare il cambio di timescale")] 
+    [SerializeField, Range(0, 10), Tooltip("Se la debug mode è attiva premi T per attivare e disattivare il cambio di timescale")]
     float timescale = 1f;
     private bool timeescaleChanged = false;
 
@@ -23,7 +22,7 @@ public class DebugManager : MonoBehaviour
 
     [SerializeField] GameObject BossGameobject;
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (debugMode)
         {
@@ -84,39 +83,29 @@ public class DebugManager : MonoBehaviour
 
                 }
             }
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                Debug.Log(CoopManager.Instance.GetActiveHandlers().Find(x => x.CurrentReceiver.GetCharacter() == targetCharacter).PlayerInput.currentActionMap);
-            }
+
         }
     }
 
     private void GivePowerUP(PowerUp powerUpToGive)
     {
-        List<PlayerInputHandler> players = CoopManager.Instance.GetActiveHandlers();
-        if (players != null && players.Count > 0)
+        foreach (PlayerCharacter character in CoopManager.Instance.ActivePlayerCharacters)
         {
-            foreach (PlayerInputHandler player in CoopManager.Instance.GetActiveHandlers())
+            if (character.Character == targetCharacter)
             {
-                if (player.currentCharacter == targetCharacter && player.CurrentReceiver is PlayerCharacter character)
-                {
-                    character.AddPowerUp(powerUpToGive);
-                }
+                character.AddPowerUp(powerUpToGive);
             }
         }
+
     }
 
     private void UnlockUpgrade(AbilityUpgrade ability)
     {
-        List<PlayerInputHandler> players = CoopManager.Instance.GetActiveHandlers();
-        if (players != null && players.Count > 0)
+        foreach (PlayerCharacter character in CoopManager.Instance.ActivePlayerCharacters)
         {
-            foreach (PlayerInputHandler player in players)
+            if (character.Character == targetCharacter)
             {
-                if (player.currentCharacter == targetCharacter && player.CurrentReceiver is PlayerCharacter character)
-                {
-                    character.UnlockUpgrade(ability);
-                }
+                character.UnlockUpgrade(ability);
             }
         }
     }

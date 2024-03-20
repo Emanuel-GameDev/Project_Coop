@@ -38,9 +38,7 @@ public class CharacterPoolManager : MonoBehaviour
         }
     }
 
-    private List<CharacterClass> characters = new List<CharacterClass>();
-
-    private List<CharacterClass> freeCharacters = new List<CharacterClass>();
+    private List<PlayerCharacter> freeCharacters = new List<PlayerCharacter>();
 
     private void Start()
     {
@@ -53,39 +51,36 @@ public class CharacterPoolManager : MonoBehaviour
     {
         foreach(PlayerCharacterData characterData in GameManager.Instance.GetCharacterDataList())
         {
-            characters.Add(characterData.CharacterClassPrefab.GetComponent<CharacterClass>());
-        }
-
-        foreach (CharacterClass character in characters)
-        {
-            CharacterClass characterClass = GameObject.Instantiate(character, transform);
-            freeCharacters.Add(characterClass);
-            characterClass.Inizialize();
-            characterClass.gameObject.SetActive(false);
+            PlayerCharacter playerCharacter = Instantiate(characterData.CharacterPrefab, transform).GetComponent<PlayerCharacter>();
+            freeCharacters.Add(playerCharacter);
+            playerCharacter.Inizialize(); //DA RIVEDERE #MODIFICATO
+            playerCharacter.gameObject.SetActive(false);
         }
     }
 
-    public void SwitchCharacter(PlayerCharacter playerCharacter, ePlayerCharacter targetClass)
+    public void SwitchCharacter(PlayerCharacter playerCharacter, ePlayerCharacter targetCharacter)
     {
-        if (SceneInputReceiverManager.Instance.CanSwitchCharacter)
+        if (!SceneInputReceiverManager.Instance.CanSwitchCharacter)
             return;
 
-        CharacterClass searchedClass = freeCharacters.Find(c => c.Character == targetClass);
-        if (searchedClass != null)
+        PlayerCharacter searchedCharacter = freeCharacters.Find(c => c.Character == targetCharacter);
+        if (searchedCharacter != null)
         {
-            playerCharacter.SwitchCharacterClass(searchedClass);
-            freeCharacters.Remove(searchedClass);
-            searchedClass.gameObject.SetActive(true);
-            PubSub.Instance.Notify(EMessageType.characterSwitched, playerCharacter);
-            return;
+            //DA RIVEDERE #MODIFICATO
+            //playerCharacter.SwitchCharacter(searchedCharacter);
+            //freeCharacters.Remove(searchedCharacter);
+            //searchedCharacter.gameObject.SetActive(true);
+            //PubSub.Instance.Notify(EMessageType.characterSwitched, playerCharacter);
+            //return;
         }
     }
 
-    public void ReturnCharacter(CharacterClass characterClass)
+    public void ReturnCharacter(PlayerCharacter playerCharacter)
     {
-        characterClass.gameObject.transform.parent = transform;
-        characterClass.gameObject.SetActive(false);
-        freeCharacters.Add(characterClass);
+        playerCharacter.gameObject.transform.parent = transform;
+        playerCharacter.gameObject.transform.localPosition = Vector3.zero; 
+        playerCharacter.gameObject.SetActive(false);
+        freeCharacters.Add(playerCharacter);
     }
 
     public void GetFreeRandomCharacter(PlayerCharacter playerCharacter)

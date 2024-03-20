@@ -52,8 +52,8 @@ public class HealTutorialState : TutorialFase
     private void WaitAfterDialogue()
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
-
-        tutorialManager.inputBindings[tutorialManager.healer].SetReceiver(tutorialManager.healer);
+        // DA RIVEDERE #MODIFICATO
+        //tutorialManager.inputBindings[tutorialManager.healer].SetReceiver(tutorialManager.healer);
 
         tutorialManager.DeactivateAllPlayerInputs();
 
@@ -69,7 +69,7 @@ public class HealTutorialState : TutorialFase
         {
             PlayerCharacter character = (PlayerCharacter)obj;
 
-            switch (character.CharacterClass)
+            switch (character)
             {
                 case DPS:
                     tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
@@ -112,7 +112,7 @@ public class HealTutorialState : TutorialFase
     {
         base.Update();
 
-        if (playerHealed.TrueForAll(p => p.CharacterClass.currentHp >= p.CharacterClass.MaxHp) && !dialoguePlaying)
+        if (playerHealed.TrueForAll(p => p.CurrentHp >= p.MaxHp) && !dialoguePlaying)
         {
             stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
         }

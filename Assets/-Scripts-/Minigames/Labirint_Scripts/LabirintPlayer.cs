@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using UnityEngine.U2D.Animation;
 
-public class LabirintPlayer : DefaultInputReceiver
+public class LabirintPlayer : InputReceiver
 {
     [SerializeField]
     private float moveSpeed = 10f;

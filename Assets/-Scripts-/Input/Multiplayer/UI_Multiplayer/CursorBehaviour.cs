@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class CursorBehaviour : DefaultInputReceiver
+public class CursorBehaviour : InputReceiver
 {
     private Vector2 movement;
     private GameObject selectionParent;

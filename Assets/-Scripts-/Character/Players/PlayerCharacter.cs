@@ -5,11 +5,13 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class PlayerCharacter : Character, InputReceiver
+public class PlayerCharacter : Character
 {
-    public float MaxHp;
+    public float MaxHp => maxHp;
     public float CurrentHp => currentHp;
+    public ePlayerCharacter Character => character;
     public bool protectedByTank;
+
 
     private PlayerInputHandler playerInputHandler;
     private Vector3 screenPosition;
@@ -132,6 +134,12 @@ public class PlayerCharacter : Character, InputReceiver
     }
     #endregion
 
+    #region NewFunctions
+    public void SetMaxHP(float value) => maxHp = value;
+    public void SetCurrentHP(float value) => currentHp = value;
+    #endregion
+
+
     #endregion
 
     protected override void InitialSetup()
@@ -145,7 +153,7 @@ public class PlayerCharacter : Character, InputReceiver
         Move(moveDir);
     }
 
-    #region Redirect To Class
+    #region PowerUp
     public override void AddPowerUp(PowerUp powerUp) => powerUpData.Add(powerUp);
     public override void RemovePowerUp(PowerUp powerUp) => powerUpData.Remove(powerUp);
     public override List<PowerUp> GetPowerUpList() => powerUpData.powerUps;
@@ -161,20 +169,6 @@ public class PlayerCharacter : Character, InputReceiver
         else
         {
             PubSub.Instance.Notify(EMessageType.characterDamaged, this);
-        }
-        //Ricontrollare
-        if (inLove && GetComponentInChildren<LoveCondition>().started && data.condition is LoveCondition)
-        {
-            foreach (PlayerCharacter p in GameManager.Instance.coopManager.ActivePlayers)
-            {
-                if (this != p)
-                {
-                    if (p.inLove)
-                    {
-                        //Mettere calcolo danno
-                    }
-                }
-            }
         }
     }
 

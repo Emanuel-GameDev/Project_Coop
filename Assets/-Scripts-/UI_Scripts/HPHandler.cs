@@ -51,8 +51,8 @@ public class HPHandler : MonoBehaviour
     {
         foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
-            if (inputHandler.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>() != null)
-                AddContainer(inputHandler.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>());
+            if (inputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>() != null)
+                AddContainer(inputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>());
         }
     }
 

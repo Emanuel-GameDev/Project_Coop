@@ -61,12 +61,13 @@ public class AttackTutorialState : TutorialFase
         tutorialManager.DeactivateAllPlayerInputs();
 
         currentCharacterIndex++;
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetReceiver(currentFaseCharacters[currentCharacterIndex]);
+        // DA RIVEDERE #MODIFICATO
+        //tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetReceiver(currentFaseCharacters[currentCharacterIndex]);
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);
 
-        if (currentFaseCharacters[currentCharacterIndex].CharacterClass is DPS)
+        if (currentFaseCharacters[currentCharacterIndex] is DPS)
             return;
 
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
@@ -95,7 +96,7 @@ public class AttackTutorialState : TutorialFase
 
     private void EnemyHitted()
     {
-        if (currentFaseCharacters[currentCharacterIndex].CharacterClass is DPS)
+        if (currentFaseCharacters[currentCharacterIndex] is DPS)
         {
             if (hitCounterTimer != null)
                 tutorialManager.StopCoroutine(hitCounterTimer);
