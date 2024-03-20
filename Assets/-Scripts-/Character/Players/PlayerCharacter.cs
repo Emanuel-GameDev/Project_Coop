@@ -100,11 +100,7 @@ public class PlayerCharacter : Character
             direction = direction.normalized;
 
         rb.velocity = direction * MoveSpeed;
-        //rb.velocity =new Vector2(direction.x,direction.y*0.7f)* MoveSpeed;
         isMoving = rb.velocity.magnitude > 0.2f;
-
-        if (direction != Vector2.zero)
-            lastNonZeroDirection = direction;
 
         SetSpriteDirection(lastNonZeroDirection);
     }
@@ -332,83 +328,6 @@ public class PlayerCharacter : Character
 
     #endregion
 
-    #region UnusedInput
-
-    public virtual void Navigate(InputAction.CallbackContext context)
-    {
-    }
-
-    public virtual void Submit(InputAction.CallbackContext context)
-    {
-    }
-
-    public virtual void RandomSelection(InputAction.CallbackContext context)
-    {
-    }
-
-    public virtual void Cancel(InputAction.CallbackContext context)
-    {
-    }
-
-    public virtual void Point(InputAction.CallbackContext context)
-    {
-    }
-
-    public virtual void ScrollWheel(InputAction.CallbackContext context)
-    {
-    }
-
-    public void JoinInput(InputAction.CallbackContext context)
-    {
-
-    }
-
-    public void MenuInput(InputAction.CallbackContext context)
-    {
-
-    }
-
-    public void OptionInput(InputAction.CallbackContext context)
-    {
-
-    }
-
-    public void MoveMinigameInput(InputAction.CallbackContext context)
-    {
-
-    }
-
-    public virtual void ButtonEast(InputAction.CallbackContext context)
-    {
-
-    }
-
-    public virtual void ButtonNorth(InputAction.CallbackContext context)
-    {
-
-    }
-
-    public virtual void ButtonWeast(InputAction.CallbackContext context)
-    {
-
-    }
-
-    public virtual void ButtonSouth(InputAction.CallbackContext context)
-    {
-
-    }
     #endregion
 
-
-    #endregion
-
-}
-
-public enum AbilityUpgrade
-{
-    Ability1,
-    Ability2,
-    Ability3,
-    Ability4,
-    Ability5
 }

@@ -84,10 +84,3 @@ public class SceneInputReceiverManager : MonoBehaviour
         return sceneInputMap;
     }
 }
-
-public enum InputMap
-{
-    Player,
-    UI,
-    Minigame
-}

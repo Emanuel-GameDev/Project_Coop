@@ -34,6 +34,23 @@ public class CoopManager : MonoBehaviour
     private PlayerInputManager inputManager;
     private List<PlayerInputHandler> playerInputHandlers;
 
+    public List<ePlayerCharacter> ActiveEPlayerCharacters
+    {
+        get
+        {
+            List<ePlayerCharacter> players = new();
+            if (playerInputHandlers != null)
+            {
+                foreach (PlayerInputHandler player in playerInputHandlers)
+                {
+                    if(player.currentCharacter != ePlayerCharacter.EmptyCharacter)
+                        players.Add(player.currentCharacter);
+                }
+            }
+            return players;
+        }
+    }
+
     public List<PlayerCharacter> ActivePlayerCharacters
     {
         get
@@ -43,7 +60,7 @@ public class CoopManager : MonoBehaviour
             {
                 foreach (PlayerInputHandler player in playerInputHandlers)
                 {
-                    if (player.CurrentReceiver != null && player.CurrentReceiver is CharacterController)
+                    if (player.CurrentReceiver is not null and CharacterController)
                     {
                         players.Add(((CharacterController)player.CurrentReceiver).ActualCharacter);
                     }

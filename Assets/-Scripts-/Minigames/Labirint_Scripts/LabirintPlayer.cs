@@ -106,7 +106,7 @@ public class LabirintPlayer : InputReceiver
             }
         }
         SetCharacter(free);
-        playerInputHandler.SetCharacter(free);
+        playerInputHandler.SetCurrentCharacter(free);
         return GetSpriteAnimations(free);
     }
 

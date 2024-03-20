@@ -132,7 +132,7 @@ public class CursorBehaviour : InputReceiver
     {
         base.SetCharacter(character);
 
-        playerInputHandler.SetCharacter(character);
+        playerInputHandler.SetCurrentCharacter(character);
     }
 
     public override void SetInputHandler(PlayerInputHandler inputHandler)
