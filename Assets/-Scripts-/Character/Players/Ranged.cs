@@ -126,8 +126,10 @@ public class Ranged : PlayerCharacter
     }
 
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+        
         CoolDownManager();
 
         minePickUpVisualizer.SetActive(mineNearby);

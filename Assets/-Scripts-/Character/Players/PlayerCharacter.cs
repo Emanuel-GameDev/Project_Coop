@@ -7,36 +7,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerCharacter : Character
 {
-    public float MaxHp => maxHp;
-    public float CurrentHp => currentHp;
-    public ePlayerCharacter Character => character;
-    public bool protectedByTank;
+    #region Variables
 
-    public CharacterController characterController;
-    private Vector3 screenPosition;
-    private Vector3 worldPosition;
-    Plane plane = new Plane(Vector3.back,0);
-
-    protected Vector2 lookDir;
-    protected Vector2 moveDir;
-    protected Vector2 lastNonZeroDirection;
-    public Vector2 MoveDirection => moveDir;
-    public Vector2 LastDirection => lastNonZeroDirection;
-
-    #region FromCharacterClass
-
-    protected Pivot pivot;
-    protected Damager damager;
-    protected Animator animator;
-    protected ExtraData extraData;
-    protected PowerUpData powerUpData;
-    protected UnityAction unityAction;
-    protected SpriteRenderer spriteRenderer;
-    protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
-
-    protected bool isMoving;
-    protected bool isInBossfight;
-    protected bool bossfightPowerUpUnlocked;
+    #region Stats
 
     [SerializeField, Tooltip("Identifica il personaggio.")]
     protected ePlayerCharacter character;
@@ -56,15 +29,71 @@ public class PlayerCharacter : Character
     protected float currentHp;
     protected float uniqueAbilityUses;
 
+    #endregion
+
+    #region References
+
+    protected Pivot pivot;
+    protected Damager damager;
+    protected Animator animator;
+    protected ExtraData extraData;
+    protected PowerUpData powerUpData;
+    protected UnityAction unityAction;
+    protected SpriteRenderer spriteRenderer;
+    protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
+    [HideInInspector] public PlayerCharacterController characterController;
+
+    #endregion
+
+    #region Misc
+
+    protected Vector3 screenPosition;
+    protected Vector3 worldPosition;
+    protected Plane plane = new Plane(Vector3.back, 0);
+
+    protected Vector2 lookDir;
+    protected Vector2 moveDir;
+    protected Vector2 lastNonZeroDirection;
+
+
+    protected bool isMoving;
+    protected bool isInBossfight;
+    protected bool bossfightPowerUpUnlocked;
+
+
+    public bool protectedByTank; //DA RIVEDERE 
+
+    #endregion
+
+    #region Propriety
+    public ePlayerCharacter Character => character;
+
+    public virtual float MaxHp => maxHp;
+    public virtual float CurrentHp => currentHp;
     public virtual float Damage => damage * powerUpData.damageIncrease;
     public virtual float MoveSpeed => moveSpeed * powerUpData.moveSpeedIncrease;
     public virtual float AttackSpeed => attackSpeed * powerUpData.attackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) * powerUpData.UniqueAbilityCooldownDecrease;
     public float DamageReceivedMultiplier => damageReceivedMultiplier;
 
-    #region Animation Variable
+    public Vector2 MoveDirection => moveDir;
+    public Vector2 LastDirection => lastNonZeroDirection;
+
+    #endregion
+
+    #region Animation
     private static string Y = "Y";
     #endregion
+
+    #endregion
+
+    #region Inizialization & Setup
+
+    protected override void InitialSetup()
+    {
+        base.InitialSetup();
+        Inizialize();
+    }
 
     public virtual void Inizialize()
     {
@@ -91,6 +120,18 @@ public class PlayerCharacter : Character
     }
 
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
+    public void SetMaxHP(float value) => maxHp = value;
+    public void SetCurrentHP(float value) => currentHp = value;
+
+    public PlayerInputHandler GetInputHandler() => characterController.GetInputHandler();
+    
+    #endregion
+
+    #region Movement
+    protected virtual void Update()
+    {
+        Move(moveDir);
+    }
 
 
     public virtual void Move(Vector2 direction)
@@ -115,6 +156,8 @@ public class PlayerCharacter : Character
         pivot.gameObject.transform.localScale = scale;
     }
 
+    #endregion
+
     #region Upgrades
     public virtual void UnlockUpgrade(AbilityUpgrade abilityUpgrade)
     {
@@ -128,25 +171,6 @@ public class PlayerCharacter : Character
             upgradeStatus[abilityUpgrade] = false;
     }
     #endregion
-
-    #region NewFunctions
-    public void SetMaxHP(float value) => maxHp = value;
-    public void SetCurrentHP(float value) => currentHp = value;
-    #endregion
-
-
-    #endregion
-
-    protected override void InitialSetup()
-    {
-        base.InitialSetup();
-            Inizialize();
-    }
-
-    private void Update()
-    {
-        Move(moveDir);
-    }
 
     #region PowerUp
     public override void AddPowerUp(PowerUp powerUp) => powerUpData.Add(powerUp);
@@ -173,26 +197,6 @@ public class PlayerCharacter : Character
         DamageData data = new DamageData(Damage, this);
         return data;
     }
-    #endregion
-
-    #region Interface Implementation
-
-    public ePlayerCharacter GetCharacter() => character;
-
-    public virtual GameObject GetReceiverObject()
-    {
-        return gameObject;
-    }
-
-   
-    public void Dismiss()
-    {
-        //TODO
-        CameraManager.Instance.RemoveTarget(this.transform);
-        //characterClass.SaveClassData();
-        Destroy(gameObject);
-    }
-
     #endregion
 
     #region Input
@@ -250,7 +254,6 @@ public class PlayerCharacter : Character
     {
         if (context.performed)
             PlayerCharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Brutus);
-
     }
 
     public void SwitchRightInput(InputAction.CallbackContext context)

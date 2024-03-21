@@ -54,7 +54,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         {
             PlayerCharacter playerCharacter = Instantiate(characterData.CharacterPrefab, transform).GetComponent<PlayerCharacter>();
             freeCharacters.Add(playerCharacter);
-            playerCharacter.Inizialize(); //DA RIVEDERE #MODIFICATO
+            //playerCharacter.Inizialize(); //DA RIVEDERE #MODIFICATO
             playerCharacter.gameObject.SetActive(false);
         }
     }
@@ -96,10 +96,13 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     }
 
     //DA RIVEDERE #MODIFICATO
-    //public void GetFreeRandomCharacter(CharacterController characterController)
-    //{
-    //    SwitchCharacter(playerCharacter , freeCharacters[Random.Range(0, freeCharacters.Count)].Character);
-    //}
+    public PlayerCharacter GetFreeRandomCharacter()
+    {
+        PlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)];
+        if(searchedCharacter == null) return null;
+        ActivateCharacter(searchedCharacter, searchedCharacter.transform);
+        return searchedCharacter;
+    }
 
     public PlayerCharacter GetCharacter(ePlayerCharacter targetCharacter, Transform position)
     {

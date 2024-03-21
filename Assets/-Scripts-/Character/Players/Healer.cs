@@ -184,8 +184,10 @@ public class Healer : PlayerCharacter
         smallHealTimer = singleHealCooldown;
     }
     float baseMoveSpeed = 0;
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         if (uniqueAbilityTimer < UniqueAbilityCooldown)
         {
             uniqueAbilityTimer += Time.deltaTime;

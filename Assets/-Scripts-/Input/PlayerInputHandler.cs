@@ -47,6 +47,7 @@ public class PlayerInputHandler : MonoBehaviour
         if (currentCharacter != ePlayerCharacter.EmptyCharacter)
             CurrentReceiver.SetCharacter(currentCharacter);
 
+        CurrentReceiver.SetInputHandler(this);
     }
 
     public void SetCurrentCharacter(ePlayerCharacter character)

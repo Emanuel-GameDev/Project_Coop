@@ -71,7 +71,6 @@ public class SceneInputReceiverManager : MonoBehaviour
                 Debug.LogError("No InputReceiver found in the Prefab. Please add one.");
                 return null;
             }
-            newInputReceiver.SetInputHandler(newPlayerInputHandler);
            
             return newInputReceiver;
         }

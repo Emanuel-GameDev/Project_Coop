@@ -60,9 +60,9 @@ public class CoopManager : MonoBehaviour
             {
                 foreach (PlayerInputHandler player in playerInputHandlers)
                 {
-                    if (player.CurrentReceiver is not null and CharacterController)
+                    if (player.CurrentReceiver is not null and PlayerCharacterController)
                     {
-                        players.Add(((CharacterController)player.CurrentReceiver).ActualPlayerCharacter);
+                        players.Add(((PlayerCharacterController)player.CurrentReceiver).ActualPlayerCharacter);
                     }
                 }
             }
@@ -137,8 +137,8 @@ public class CoopManager : MonoBehaviour
             newPlayerInputHandler.SetPlayerID(playerInputHandlers);
             newPlayerInputHandler.SetReceiver(SceneInputReceiverManager.Instance.GetSceneInputReceiver(newPlayerInputHandler));
 
-            if (newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<CharacterController>())
-                PubSub.Instance.Notify(EMessageType.characterJoined, newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<CharacterController>());
+            if (newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacterController>())
+                PubSub.Instance.Notify(EMessageType.characterJoined, newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacterController>());
                 
         }
         else

@@ -125,12 +125,7 @@ public class Tank : PlayerCharacter
         healthDamageReductionMulty = (1 - HealthDamageReduction / 100);
 
     }
-    private void Update()
-    {
-       
-    }
-
-
+   
     #region Attack
 
     public override void AttackInput(InputAction.CallbackContext context)
