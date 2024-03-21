@@ -32,6 +32,7 @@ public class CharacterClass : MonoBehaviour
     protected float uniqueAbilityUses;
 
     protected Vector2 lastNonZeroDirection;
+    protected float lastDirectionYValue;
 
     [SerializeField, Tooltip("Identifica il personaggio.")]
     protected ePlayerCharacter character;
@@ -166,6 +167,9 @@ public class CharacterClass : MonoBehaviour
 
         if (direction != Vector2.zero)
             lastNonZeroDirection = direction;
+         
+        if(direction.y != 0)
+            lastDirectionYValue = direction.y;
 
         SetSpriteDirection(lastNonZeroDirection);
     }
