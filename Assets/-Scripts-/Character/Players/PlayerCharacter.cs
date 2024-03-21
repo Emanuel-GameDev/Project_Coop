@@ -12,8 +12,7 @@ public class PlayerCharacter : Character
     public ePlayerCharacter Character => character;
     public bool protectedByTank;
 
-
-    private PlayerInputHandler playerInputHandler;
+    public CharacterController characterController;
     private Vector3 screenPosition;
     private Vector3 worldPosition;
     Plane plane = new Plane(Vector3.back,0);
@@ -178,10 +177,6 @@ public class PlayerCharacter : Character
 
     #region Interface Implementation
 
-    public void SetCharacter(ePlayerCharacter character)
-    {
-       
-    }
     public ePlayerCharacter GetCharacter() => character;
 
     public virtual GameObject GetReceiverObject()
@@ -189,22 +184,7 @@ public class PlayerCharacter : Character
         return gameObject;
     }
 
-    public void SetInputHandler(PlayerInputHandler inputHandler)
-    {
-        playerInputHandler = inputHandler;
-        if (playerInputHandler != null)
-        {
-            if (playerInputHandler.currentCharacter != ePlayerCharacter.EmptyCharacter)
-                SetCharacter(playerInputHandler.currentCharacter);
-            else
-                CharacterPoolManager.Instance.GetFreeRandomCharacter(this);
-        }
-    }
-    public PlayerInputHandler GetInputHandler()
-    {
-        return playerInputHandler;
-    }
-
+   
     public void Dismiss()
     {
         //TODO
@@ -235,7 +215,7 @@ public class PlayerCharacter : Character
 
     public Vector2 ReadLook(InputAction.CallbackContext context)
     {
-        string gamepad = playerInputHandler.PlayerInput.currentControlScheme;
+        string gamepad = characterController.GetInputHandler().PlayerInput.currentControlScheme;
 
         if (gamepad.Contains("Gamepad") || gamepad.Contains("Controller") || gamepad.Contains("Joystick"))
         {
@@ -269,26 +249,26 @@ public class PlayerCharacter : Character
     public void SwitchUpInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Brutus);
+            PlayerCharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Brutus);
 
     }
 
     public void SwitchRightInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Caina);
+            PlayerCharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Caina);
     }
 
     public void SwitchDownInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Cassius);
+            PlayerCharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Cassius);
     }
 
     public void SwitchLeftInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            CharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Jude);
+            PlayerCharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Jude);
     }
 
     #endregion

@@ -62,7 +62,7 @@ public class CoopManager : MonoBehaviour
                 {
                     if (player.CurrentReceiver is not null and CharacterController)
                     {
-                        players.Add(((CharacterController)player.CurrentReceiver).ActualCharacter);
+                        players.Add(((CharacterController)player.CurrentReceiver).ActualPlayerCharacter);
                     }
                 }
             }

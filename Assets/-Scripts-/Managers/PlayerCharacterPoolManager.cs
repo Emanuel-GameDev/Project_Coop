@@ -2,23 +2,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-public class CharacterPoolManager : MonoBehaviour
+public class PlayerCharacterPoolManager : MonoBehaviour
 {
-    private static CharacterPoolManager _instance;
-    public static CharacterPoolManager Instance
+    private static PlayerCharacterPoolManager _instance;
+    public static PlayerCharacterPoolManager Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<CharacterPoolManager>();
+                _instance = FindObjectOfType<PlayerCharacterPoolManager>();
 
                 if (_instance == null)
                 {
-                    GameObject singletonObject = new("CharacterPoolManager");
-                    _instance = singletonObject.AddComponent<CharacterPoolManager>();
+                    GameObject singletonObject = new("PlayerCharacterPoolManager");
+                    _instance = singletonObject.AddComponent<PlayerCharacterPoolManager>();
                 }
             }
 
@@ -66,13 +67,22 @@ public class CharacterPoolManager : MonoBehaviour
         PlayerCharacter searchedCharacter = freeCharacters.Find(c => c.Character == targetCharacter);
         if (searchedCharacter != null)
         {
-            //DA RIVEDERE #MODIFICATO
-            //playerCharacter.SwitchCharacter(searchedCharacter);
-            //freeCharacters.Remove(searchedCharacter);
-            //searchedCharacter.gameObject.SetActive(true);
-            //PubSub.Instance.Notify(EMessageType.characterSwitched, playerCharacter);
-            //return;
+            playerCharacter.characterController.SetPlayerCharacter(searchedCharacter);
+            playerCharacter.characterController = null;
+            ActivateCharacter(searchedCharacter, playerCharacter.transform);
+
+            ReturnCharacter(playerCharacter);
         }
+    }
+
+    private void ActivateCharacter(PlayerCharacter playerCharacter, Transform spawnPosition )
+    {
+        playerCharacter.gameObject.transform.parent = null;
+        playerCharacter.gameObject.transform.position = spawnPosition.position;
+        playerCharacter.gameObject.SetActive(true);
+        freeCharacters.Remove(playerCharacter);
+
+        CameraManager.Instance.AddTarget(playerCharacter.transform);
     }
 
     public void ReturnCharacter(PlayerCharacter playerCharacter)
@@ -81,12 +91,26 @@ public class CharacterPoolManager : MonoBehaviour
         playerCharacter.gameObject.transform.localPosition = Vector3.zero; 
         playerCharacter.gameObject.SetActive(false);
         freeCharacters.Add(playerCharacter);
+
+        CameraManager.Instance.RemoveTarget(playerCharacter.transform);
     }
 
-    public void GetFreeRandomCharacter(PlayerCharacter playerCharacter)
+    //DA RIVEDERE #MODIFICATO
+    //public void GetFreeRandomCharacter(CharacterController characterController)
+    //{
+    //    SwitchCharacter(playerCharacter , freeCharacters[Random.Range(0, freeCharacters.Count)].Character);
+    //}
+
+    public PlayerCharacter GetCharacter(ePlayerCharacter targetCharacter, Transform position)
     {
-        SwitchCharacter(playerCharacter , freeCharacters[Random.Range(0, freeCharacters.Count)].Character);
+        PlayerCharacter searchedCharacter = freeCharacters.Find(c => c.Character == targetCharacter);
+        if (searchedCharacter != null)
+        {
+            ActivateCharacter(searchedCharacter, position);
+        }
+        return searchedCharacter;
     }
+
 
     #endregion
 

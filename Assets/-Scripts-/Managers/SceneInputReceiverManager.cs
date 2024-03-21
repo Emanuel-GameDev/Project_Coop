@@ -47,7 +47,6 @@ public class SceneInputReceiverManager : MonoBehaviour
             _instance = this;
         }
 
-        //CoopManager.Instance.InitializePlayers();
     }
 
     private void Start()
@@ -67,7 +66,6 @@ public class SceneInputReceiverManager : MonoBehaviour
         {
             GameObject newGO = GameObject.Instantiate(currentSceneInputReceiverPrefab);
             newGO.transform.SetPositionAndRotation(receiverSpawnPoint.position, receiverSpawnPoint.rotation);
-            CameraManager.Instance.AddTarget(newGO.transform);
             if(!newGO.TryGetComponent<InputReceiver>(out var newInputReceiver))
             {
                 Debug.LogError("No InputReceiver found in the Prefab. Please add one.");

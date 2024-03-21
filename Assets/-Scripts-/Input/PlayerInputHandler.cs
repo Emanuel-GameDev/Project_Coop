@@ -59,6 +59,7 @@ public class PlayerInputHandler : MonoBehaviour
         if (startingCharacter == ePlayerCharacter.EmptyCharacter)
         {
             startingCharacter = character;
+            currentCharacter = character;
             return true;
         }
         else
