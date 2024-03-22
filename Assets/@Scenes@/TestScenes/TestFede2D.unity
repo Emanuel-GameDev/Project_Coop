@@ -368,7 +368,6 @@ GameObject:
   - component: {fileID: 302531057}
   - component: {fileID: 302531059}
   - component: {fileID: 302531058}
-  - component: {fileID: 302531061}
   m_Layer: 0
   m_Name: StaticObstacle
   m_TagString: Untagged
@@ -519,24 +518,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &302531061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 302531054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2de632904a0ecf48920e0fa6a2dcd65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  onTrigger:
-    m_PersistentCalls:
-      m_Calls: []
+  active: 0
 --- !u!1001 &329186572
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -623,7 +605,6 @@ GameObject:
   - component: {fileID: 333108782}
   - component: {fileID: 333108781}
   - component: {fileID: 333108780}
-  - component: {fileID: 333108779}
   m_Layer: 0
   m_Name: ExplosiveObstacle
   m_TagString: Untagged
@@ -631,24 +612,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &333108779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 333108778}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2de632904a0ecf48920e0fa6a2dcd65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  onTrigger:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!50 &333108780
 Rigidbody2D:
   serializedVersion: 4
@@ -750,15 +713,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 5
-  pushStrength: 10000
+  pushStrength: 3
   triggerArea: 1
   AnimationCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  explosionArea: 1
+  active: 0
+  explosionArea: 5
 --- !u!4 &333108784
 Transform:
   m_ObjectHideFlags: 0
@@ -773,6 +755,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 923755884}
+  - {fileID: 624967786}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &352705697
@@ -1115,6 +1098,114 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &624967785
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 624967786}
+  - component: {fileID: 624967788}
+  - component: {fileID: 624967787}
+  - component: {fileID: 624967789}
+  m_Layer: 0
+  m_Name: Detector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &624967786
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624967785}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 333108784}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &624967787
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624967785}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
+--- !u!114 &624967788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624967785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3defd5cc67813a54399603acd9abfae6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!50 &624967789
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624967785}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &641824374
 GameObject:
   m_ObjectHideFlags: 0
@@ -2324,7 +2415,7 @@ GameObject:
   - component: {fileID: 1901654720}
   - component: {fileID: 1901654719}
   - component: {fileID: 1901654718}
-  - component: {fileID: 1901654717}
+  - component: {fileID: 1901654723}
   m_Layer: 0
   m_Name: IntermittenceObstacle
   m_TagString: Untagged
@@ -2332,24 +2423,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1901654717
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1901654716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2de632904a0ecf48920e0fa6a2dcd65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  onTrigger:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!50 &1901654718
 Rigidbody2D:
   serializedVersion: 4
@@ -2420,7 +2493,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
 --- !u!208 &1901654720
 NavMeshObstacle:
@@ -2451,16 +2524,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 5
-  pushStrength: 10000
+  pushStrength: 5
   triggerArea: 1
   AnimationCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  active: 0
   idleTime: 5
   actionTime: 5
+  disableDetector: {fileID: 1901654723}
 --- !u!4 &1901654722
 Transform:
   m_ObjectHideFlags: 0
@@ -2477,6 +2570,18 @@ Transform:
   - {fileID: 1674766767}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1901654723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901654716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3defd5cc67813a54399603acd9abfae6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1922292193
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2878,6 +2983,6 @@ SceneRoots:
   - {fileID: 552043281}
   - {fileID: 786200040}
   - {fileID: 302531055}
-  - {fileID: 333108784}
   - {fileID: 1901654722}
+  - {fileID: 333108784}
   - {fileID: 352705701}
