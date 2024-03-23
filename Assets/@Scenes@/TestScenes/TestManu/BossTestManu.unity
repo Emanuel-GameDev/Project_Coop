@@ -231,7 +231,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 121620147}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -377,7 +377,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 336405231}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -704,7 +704,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1301450982}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -850,7 +850,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1339622474}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -996,7 +996,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1410045204}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -1143,7 +1143,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1439800031}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -1341,9 +1341,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1979835557}
   - component: {fileID: 1979835556}
+  - component: {fileID: 1979835560}
   - component: {fileID: 1979835558}
   - component: {fileID: 1979835559}
-  - component: {fileID: 1979835560}
   - component: {fileID: 1979835561}
   - component: {fileID: 1979835562}
   m_Layer: 0
@@ -1415,7 +1415,7 @@ Transform:
   m_GameObject: {fileID: 1979835554}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.64, y: 1.14, z: 0}
+  m_LocalPosition: {x: -2.44, y: -0.35, z: 0}
   m_LocalScale: {x: 0.37775, y: 0.37775, z: 0.37775}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1469,10 +1469,12 @@ MonoBehaviour:
   - {fileID: 1339622475}
   - {fileID: 121620148}
   - {fileID: 1301450983}
-  jumpSpeed: 3
+  jumpSpeed: 4
   jumpOffset: {x: 0, y: 3}
-  timeBetweenJumps: 0.1
-  breakTime: 0
+  timeBetweenJumps: 0.19
+  breakTime: 5
+  bounceForce: 6
+  randBounceRange: 1
 --- !u!195 &1979835559
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1518,7 +1520,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4

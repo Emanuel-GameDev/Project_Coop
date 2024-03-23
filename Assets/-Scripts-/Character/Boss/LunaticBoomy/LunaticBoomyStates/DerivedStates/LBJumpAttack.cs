@@ -25,7 +25,8 @@ public class LBJumpAttack : LBBaseState
         base.Enter();
 
         // Azzero la gravity scale per evitare spasmi sul trampolino
-        bossCharacter.gameObject.GetComponent<Rigidbody2D>().gravityScale = 0f;
+        bossCharacter.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+        bossCharacter.gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
 
         StartJump();
     }
@@ -60,7 +61,8 @@ public class LBJumpAttack : LBBaseState
     {
         base.Exit();
 
-        bossCharacter.gameObject.GetComponent<Rigidbody2D>().gravityScale = 1f;
+        bossCharacter.gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
+        bossCharacter.gameObject.GetComponent<CapsuleCollider2D>().enabled = true;
     }
 
     public override void Update()
@@ -97,7 +99,8 @@ public class LBJumpAttack : LBBaseState
                 jumpCount++;
                 CheckPhase();
 
-                currTrump.StartCoroutine(WaitBeforeJump(bossCharacter.TimeBetweenJumps));
+                //currTrump.StartCoroutine(WaitBeforeJump(bossCharacter.TimeBetweenJumps));
+                StartJump();
             }
         }
     }
@@ -139,8 +142,13 @@ public class LBJumpAttack : LBBaseState
     private IEnumerator WaitBeforeJump(float waitTime)
     {
         canJump = false;
+        bossCharacter.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
+        bossCharacter.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
 
         yield return new WaitForSeconds(waitTime);
+
+        bossCharacter.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+        bossCharacter.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
 
         StartJump();
     }

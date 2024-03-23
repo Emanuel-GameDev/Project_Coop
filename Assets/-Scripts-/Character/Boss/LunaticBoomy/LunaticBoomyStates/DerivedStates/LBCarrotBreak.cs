@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class LBCarrotBreak : LBBaseState
 {
     private TrumpOline trump;
+    private Rigidbody2D bossRB;
     
-    private bool bouncing = false;
+    private bool listenerAdded = false;
+    private bool canJump = false;
+    private float timer;
 
     public LBCarrotBreak(LunaticBoomyBossCharacter bossCharacter, TrumpOline trump) : base(bossCharacter)
     {
@@ -17,11 +21,38 @@ public class LBCarrotBreak : LBBaseState
     {
         base.Enter();
 
-        // Da in serir nel' update
-        bossCharacter.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 500f, ForceMode2D.Impulse);
+        bossRB = bossCharacter.gameObject.GetComponent<Rigidbody2D>();
+        timer = bossCharacter.BreakTime;
 
-        //trump.OnTriggerEnterEvent += OnCollisionWithTrump;
-        //trump.OnTriggerStayEvent += OnCollisionWithTrump;
+        canJump = true;
+        Jump();
+    }
+
+    void Jump()
+    {
+        if (!canJump)
+        {
+            // Cambio stato 
+
+            // Temp
+            trump.gameObject.GetComponent<BoxCollider2D>().isTrigger = false;
+            Debug.Log("CambioStato");
+            return;
+        }
+
+        // Applica una forza verso l'alto per simulare il salto
+        bossRB.velocity = Vector2.zero;
+
+        float randForce = Random.Range(bossCharacter.BounceForce - bossCharacter.RandBounceRange,
+                                                   bossCharacter.BounceForce + bossCharacter.RandBounceRange);
+
+        bossRB.AddForce(Vector2.up * randForce, ForceMode2D.Impulse);
+
+        if (!listenerAdded)
+        {
+            trump.OnTriggerEnterEvent += OnCollisionWithTrump;
+            listenerAdded = true;
+        }
     }
 
     public override void Exit()
@@ -32,15 +63,18 @@ public class LBCarrotBreak : LBBaseState
     public override void Update()
     {
         base.Update();
+
+        if (canJump)
+        {
+            timer -= Time.deltaTime;
+
+            if (timer <= 0f)
+                canJump = false;
+        }
     }
 
     private void OnCollisionWithTrump(Collider2D collision)
     {
-        Debug.Log("rimbalzo");
-
-        if (bouncing) return;
-
-        bouncing = true;
-        bossCharacter.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 100f, ForceMode2D.Impulse);
+        Jump();
     }
 }

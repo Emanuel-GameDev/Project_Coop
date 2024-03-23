@@ -48,9 +48,17 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
     [Header("CARROT_BREAK")]
 
-    [SerializeField]
+    [SerializeField, Tooltip("Durata della pausa carota")]
     private float breakTime;
     public float BreakTime { get { return breakTime; } private set { } }
+
+    [SerializeField, Tooltip("Potenza del rimbalzo")]
+    private float bounceForce = 10f;
+    public float BounceForce { get { return bounceForce; } private set { } }
+
+    [SerializeField, Tooltip("la forza effettiva del rimbalzo sarà un random compreso tra jumpForce - randomBounceRange e jumpForce + randomBounceRange")]
+    private float randBounceRange = 3f;
+    public float RandBounceRange { get { return randBounceRange; } private set { } }
 
     #endregion
 
@@ -88,9 +96,12 @@ public class LunaticBoomyBossCharacter : BossCharacter
         return trumps;
     }
 
-    public float GetJumpSpeed()
+    public void TriggerAgent(bool mode)
     {
-        return jumpSpeed;
+        if (mode)
+            GetComponent<NavMeshAgent>().enabled = true;
+        else
+            GetComponent<NavMeshAgent>().enabled = false;
     }
 
 }

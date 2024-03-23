@@ -50,6 +50,7 @@ public class LBSearchTrump : LBBaseState
 
         bossCharacter.Agent.isStopped = true;
         bossCharacter.Agent.ResetPath();
+        bossCharacter.TriggerAgent(false);
     }
 
     public override void Update()
