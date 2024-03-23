@@ -11,6 +11,9 @@ public class TrumpOline : MonoBehaviour, IDamageable
     public float currHp;
     private float _currHp;
 
+    public event System.Action<Collider2D> OnTriggerEnterEvent;
+    public event System.Action<Collider2D> OnTriggerStayEvent;
+
     private void Awake()
     {
         _currHp = maxHp;
@@ -40,5 +43,19 @@ public class TrumpOline : MonoBehaviour, IDamageable
     private void ResetTrumpOline()
     {
         UpdateCurrHp(maxHp);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (OnTriggerEnterEvent != null)
+        {
+            OnTriggerEnterEvent(collision);
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (OnTriggerStayEvent != null)
+            OnTriggerStayEvent(collision);
     }
 }
