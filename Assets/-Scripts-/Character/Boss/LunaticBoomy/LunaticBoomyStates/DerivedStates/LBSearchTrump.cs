@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+
 
 public class LBSearchTrump : LBBaseState
 {
@@ -13,6 +15,13 @@ public class LBSearchTrump : LBBaseState
     public override void Enter()
     {
         base.Enter();
+
+        if (!bossCharacter.gameObject.GetComponent<NavMeshAgent>().enabled)
+        {
+            bossCharacter.TriggerAgent(true);
+            bossCharacter.Agent.isStopped = false;
+            bossCharacter.Agent.ResetPath();
+        }
 
         SearchTrump(bossCharacter.GetTrumps());
     }
@@ -47,10 +56,6 @@ public class LBSearchTrump : LBBaseState
         base.Exit();
 
         nearestTrump = null;
-
-        bossCharacter.Agent.isStopped = true;
-        bossCharacter.Agent.ResetPath();
-        bossCharacter.TriggerAgent(false);
     }
 
     public override void Update()

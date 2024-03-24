@@ -1,7 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class LBJumpAttack : LBBaseState
 {
@@ -24,8 +24,13 @@ public class LBJumpAttack : LBBaseState
     {
         base.Enter();
 
-        // Azzero la gravity scale per evitare spasmi sul trampolino
-        bossCharacter.gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+        if (bossCharacter.gameObject.GetComponent<NavMeshAgent>().enabled)
+        {
+            bossCharacter.Agent.isStopped = true;
+            bossCharacter.Agent.ResetPath();
+            bossCharacter.TriggerAgent(false);
+        }
+
         bossCharacter.gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
 
         StartJump();
@@ -61,7 +66,6 @@ public class LBJumpAttack : LBBaseState
     {
         base.Exit();
 
-        bossCharacter.gameObject.GetComponent<Rigidbody2D>().isKinematic = false;
         bossCharacter.gameObject.GetComponent<CapsuleCollider2D>().enabled = true;
     }
 
@@ -78,7 +82,7 @@ public class LBJumpAttack : LBBaseState
             float fracJourney = distCovered / Vector2.Distance(currTrump.gameObject.transform.position, nextTrump.gameObject.transform.position);
 
             // Utilizziamo la curva di Bezier per ottenere la posizione intermedia
-            bossCharacter.gameObject.transform.position = CalculateBezierPoint(fracJourney, currTrump.gameObject.transform.position, 
+            bossCharacter.gameObject.transform.position = CalculateBezierPoint(fracJourney, currTrump.gameObject.transform.position,
                                                                                             controlPoint,
                                                                                             nextTrump.gameObject.transform.position);
 
@@ -90,17 +94,23 @@ public class LBJumpAttack : LBBaseState
                     nextTrump.StartCoroutine(JumpAttack(1f));
                 }
             }
-            
+
             if (fracJourney >= 1.0f)
             {
+                // Temporaneo 
+                if (nextTrump.destroyed)
+                {
+                    stateMachine.SetState(new LBPanic(bossCharacter, nextTrump));
+                    return;
+                }
+
                 //Debug.Log("Arrivato");
                 currTrump = nextTrump;
 
                 jumpCount++;
                 CheckPhase();
 
-                //currTrump.StartCoroutine(WaitBeforeJump(bossCharacter.TimeBetweenJumps));
-                StartJump();
+                currTrump.StartCoroutine(WaitBeforeJump(bossCharacter.JumpStep));
             }
         }
     }
@@ -119,7 +129,9 @@ public class LBJumpAttack : LBBaseState
         }
 
         if (jumpCount == activePhase.numJumps)
+        {
             stateMachine.SetState(new LBCarrotBreak(bossCharacter, currTrump));
+        }
     }
 
     private IEnumerator JumpAttack(float temp)
@@ -127,7 +139,7 @@ public class LBJumpAttack : LBBaseState
         canAttack = false;
 
         yield return new WaitForSeconds(temp);
-        
+
         canAttack = true;
     }
 

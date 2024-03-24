@@ -22,6 +22,10 @@ public class LBCarrotBreak : LBBaseState
         base.Enter();
 
         bossRB = bossCharacter.gameObject.GetComponent<Rigidbody2D>();
+        bossRB.bodyType = RigidbodyType2D.Dynamic;
+
+        bossRB.constraints = RigidbodyConstraints2D.FreezePositionX;
+
         timer = bossCharacter.BreakTime;
 
         canJump = true;
@@ -32,11 +36,11 @@ public class LBCarrotBreak : LBBaseState
     {
         if (!canJump)
         {
-            // Cambio stato 
-
-            // Temp
             trump.gameObject.GetComponent<BoxCollider2D>().isTrigger = false;
-            Debug.Log("CambioStato");
+
+            // Cambio stato 
+            stateMachine.SetState(new LBJumpAttack(bossCharacter, trump));
+
             return;
         }
 
@@ -58,6 +62,11 @@ public class LBCarrotBreak : LBBaseState
     public override void Exit()
     {
         base.Exit();
+
+        bossRB.constraints = RigidbodyConstraints2D.None;
+        bossRB.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        bossRB.bodyType = RigidbodyType2D.Kinematic;
     }
 
     public override void Update()
@@ -75,6 +84,16 @@ public class LBCarrotBreak : LBBaseState
 
     private void OnCollisionWithTrump(Collider2D collision)
     {
+        if (trump.destroyed)
+        {
+            trump.gameObject.GetComponent<BoxCollider2D>().isTrigger = false;
+
+            // Cambio stato
+            stateMachine.SetState(new LBPanic(bossCharacter, trump));
+
+            return;
+        }
+
         Jump();
     }
 }

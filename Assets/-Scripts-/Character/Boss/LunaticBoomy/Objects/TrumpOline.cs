@@ -11,6 +11,9 @@ public class TrumpOline : MonoBehaviour, IDamageable
     public float currHp;
     private float _currHp;
 
+    // Temporanea
+    public bool destroyed = false;
+
     public event System.Action<Collider2D> OnTriggerEnterEvent;
     public event System.Action<Collider2D> OnTriggerStayEvent;
 
