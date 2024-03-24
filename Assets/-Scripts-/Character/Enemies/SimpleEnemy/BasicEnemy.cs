@@ -324,7 +324,7 @@ public class BasicEnemy : EnemyCharacter
         }
         else 
         {
-            CharacterClass dealer= data.dealer as CharacterClass;
+            Character dealer = data.dealer as Character;
 
             if(dealer != null)
             {

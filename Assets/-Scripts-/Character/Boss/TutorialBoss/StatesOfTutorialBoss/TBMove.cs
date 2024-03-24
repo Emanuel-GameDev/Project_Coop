@@ -14,7 +14,7 @@ public class TBMove : TutorialBossState
         destination = bossCharacter.target.position;
         StartAgent(bossCharacter.MoveSpeed);
         duration = bossCharacter.moveDuration;
-        activePlayers = GameManager.Instance.coopManager.ActivePlayers;
+        activePlayers = GameManager.Instance.coopManager.ActivePlayerCharacters;
     }
 
     public override void Update()

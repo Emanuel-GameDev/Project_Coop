@@ -12,7 +12,7 @@ public class PlayerCharacterData : ScriptableObject
     [SerializeField]
     private Color characterColor;
     [SerializeField] 
-    private GameObject characterClassPrefab;
+    private GameObject characterPrefab;
     [SerializeField]
     private Sprite fullBodyArt;
     [SerializeField]
@@ -28,7 +28,7 @@ public class PlayerCharacterData : ScriptableObject
 
     public ePlayerCharacter Character => character;
     public Color CharacterColor => characterColor;
-    public GameObject CharacterClassPrefab => characterClassPrefab;
+    public GameObject CharacterPrefab => characterPrefab;
     public Sprite FullBodyArt => fullBodyArt;
     public Sprite HudHealthSprite => hudHealthSprite;
     public Sprite HudSprite => hudSprite;

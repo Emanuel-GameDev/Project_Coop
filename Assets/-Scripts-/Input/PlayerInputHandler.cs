@@ -47,9 +47,10 @@ public class PlayerInputHandler : MonoBehaviour
         if (currentCharacter != ePlayerCharacter.EmptyCharacter)
             CurrentReceiver.SetCharacter(currentCharacter);
 
+        CurrentReceiver.SetInputHandler(this);
     }
 
-    public void SetCharacter(ePlayerCharacter character)
+    public void SetCurrentCharacter(ePlayerCharacter character)
     {
         currentCharacter = character;
     }
@@ -59,6 +60,7 @@ public class PlayerInputHandler : MonoBehaviour
         if (startingCharacter == ePlayerCharacter.EmptyCharacter)
         {
             startingCharacter = character;
+            currentCharacter = character;
             return true;
         }
         else
@@ -101,7 +103,7 @@ public class PlayerInputHandler : MonoBehaviour
     #endregion
 
     #region PlayerInput
-    public void SetActionMap(eInputMap map)
+    public void SetActionMap(InputMap map)
     {
         playerInput.SwitchCurrentActionMap(map.ToString());
     }
@@ -116,6 +118,7 @@ public class PlayerInputHandler : MonoBehaviour
         CoopManager.Instance.OnDeviceRegained(playerInput);
     }
     #endregion
+
     // La lista di tutti gli input di tutte le possibili mappe 
     #region MapInput
 
@@ -184,21 +187,3 @@ public class PlayerInputHandler : MonoBehaviour
     #endregion
 }
 
-
-public enum ePlayerCharacter
-{
-    EmptyCharacter,
-    Brutus,
-    Caina,
-    Cassius,
-    Jude
-}
-
-public enum ePlayerID
-{
-    NotSet,
-    Player1,
-    Player2,
-    Player3,
-    Player4
-}

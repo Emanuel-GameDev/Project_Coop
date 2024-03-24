@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class GenericBarScript : MonoBehaviour
 {
+    [SerializeField]
     private Slider slider;
     private float maxValue;
     private void OnEnable()
@@ -16,6 +17,9 @@ public class GenericBarScript : MonoBehaviour
 
     public void Setvalue(float value)
     {                   
+        if(slider == null)
+            GetComponent<Slider>();
+
         slider.maxValue = value;
         maxValue = value;
         slider.value = value;

@@ -70,6 +70,9 @@ public class Projectile : MonoBehaviour, IDamager
         boostedProjectileDamage = damage;
         gameObject.layer = layer;
 
+        //momentaneo
+        transform.position=new Vector3(transform.position.x,transform.position.y, -1);
+
         //TODO cambiare sta roba asap
         if (gameObject.layer == LayerMask.NameToLayer("Player"))
         {

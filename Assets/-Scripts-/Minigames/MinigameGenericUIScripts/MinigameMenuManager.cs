@@ -96,7 +96,7 @@ public class MinigameMenuManager : MonoBehaviour
             currentActiveMenu = minigameMenu;
             currentActiveMenu.gameObject.SetActive(true);
             currentActiveMenu.Inizialize(activeReceiver);
-            SetPlayersActionMap(eInputMap.UI);
+            SetPlayersActionMap(InputMap.UI);
             GameManager.Instance.PauseGame();
         }
         else
@@ -104,7 +104,7 @@ public class MinigameMenuManager : MonoBehaviour
 
     }
 
-    private static void SetPlayersActionMap(eInputMap map)
+    private static void SetPlayersActionMap(InputMap map)
     {
         foreach (PlayerInputHandler player in CoopManager.Instance.GetActiveHandlers())
         {
