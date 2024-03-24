@@ -98,7 +98,7 @@ public class ObstacleEnemy : MonoBehaviour
             {
                 interpolationRatio = timer / 1;
                 timer += Time.deltaTime;
-                rb.MovePosition(Vector3.Lerp(startPoint, startPoint + (forceVector.normalized * pushStrength)+(forceVector.normalized * (forceFalloff <= 0 ? 0 : pushStrength) * forceFalloff), AnimationCurve.Evaluate(interpolationRatio)));
+                rb.MovePosition(Vector3.Lerp(startPoint, startPoint + (forceVector.normalized * pushStrength)+(forceVector.normalized * (forceFalloff <= 0 ? 0 : explosionRadius) * forceFalloff), AnimationCurve.Evaluate(interpolationRatio)));
                 yield return new WaitForFixedUpdate();
             }
 
