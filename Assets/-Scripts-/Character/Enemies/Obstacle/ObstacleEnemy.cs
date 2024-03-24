@@ -109,13 +109,4 @@ public class ObstacleEnemy : MonoBehaviour
 
 
     }
-
-    void AddExplosionForce2D(PlayerCharacter player, Vector3 explosionOrigin, float explosionForce, float explosionRadius)
-    {
-        Vector2 direction = player.transform.position - explosionOrigin;
-        float forceFalloff = 1 - (direction.magnitude / explosionRadius);
-        player.gameObject.GetComponent<Rigidbody2D>().AddForce(direction.normalized * (forceFalloff <= 0 ? 0 : explosionForce) * forceFalloff);
-
-
-    }
 }
