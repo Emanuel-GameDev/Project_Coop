@@ -3899,9 +3899,9 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnDown: {fileID: 711490767}
     m_SelectOnLeft: {fileID: 2133919418}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 591316535}
   m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -3927,7 +3927,21 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 383172229}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1508146356}
+        m_TargetAssemblyTypeName: CoinShopTable, Assembly-CSharp
+        m_MethodName: SetOnBuyButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  buttonImage: {fileID: 1141476619}
+  coinCostText: {fileID: 2105961330}
   powerUp: {fileID: 11400000, guid: 7f47c46e7999eb94c89272471fa44290, type: 2}
 --- !u!1 &392189895
 GameObject:
@@ -4233,22 +4247,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 427369720}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 1d1227bdc1544ab4ca11aaecfb5f963f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
+    m_SelectOnUp: {fileID: 383172231}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 711490767}
   m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 1, g: 0.6149694, b: 0.2396226, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 1, g: 0.6156863, b: 0.2392157, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -4268,7 +4282,22 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 427369722}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1508146356}
+        m_TargetAssemblyTypeName: CoinShopTable, Assembly-CSharp
+        m_MethodName: SetOnBuyButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  buttonImage: {fileID: 451993125}
+  coinCostText: {fileID: 1781863898}
+  powerUp: {fileID: 0}
 --- !u!1 &432823883
 GameObject:
   m_ObjectHideFlags: 0
@@ -6644,7 +6673,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 591316531}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 1d1227bdc1544ab4ca11aaecfb5f963f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -6652,14 +6681,14 @@ MonoBehaviour:
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 711490767}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnLeft: {fileID: 383172231}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 1, g: 0.6149694, b: 0.2396226, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 1, g: 0.6156863, b: 0.2392157, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -6679,7 +6708,22 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 591316533}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1508146356}
+        m_TargetAssemblyTypeName: CoinShopTable, Assembly-CSharp
+        m_MethodName: SetOnBuyButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  buttonImage: {fileID: 1837940463}
+  coinCostText: {fileID: 42111078}
+  powerUp: {fileID: 0}
 --- !u!1 &593838454
 GameObject:
   m_ObjectHideFlags: 0
@@ -7821,7 +7865,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 711490763}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 1d1227bdc1544ab4ca11aaecfb5f963f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -7834,9 +7878,9 @@ MonoBehaviour:
   m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 1, g: 0.6149694, b: 0.2396226, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 1, g: 0.6156863, b: 0.2392157, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -7856,7 +7900,22 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 711490765}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1508146356}
+        m_TargetAssemblyTypeName: CoinShopTable, Assembly-CSharp
+        m_MethodName: SetOnBuyButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  buttonImage: {fileID: 1154067375}
+  coinCostText: {fileID: 2083508393}
+  powerUp: {fileID: 0}
 --- !u!1 &711930955
 GameObject:
   m_ObjectHideFlags: 0
@@ -11696,7 +11755,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1034555759}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1508146356}
+        m_TargetAssemblyTypeName: CoinShopTable, Assembly-CSharp
+        m_MethodName: BuySouvenir
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1034555759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16783,8 +16854,7 @@ MonoBehaviour:
   - {fileID: 1508146355}
   - {fileID: 1152197081}
   shopGroup: {fileID: 703505859}
-  abilityDescriptionText: {fileID: 0}
-  descriptionStringEvent: {fileID: 521568371}
+  canClose: 0
 --- !u!1 &1405741330
 GameObject:
   m_ObjectHideFlags: 0
@@ -18488,18 +18558,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityNameText: {fileID: 1620735747}
+  abilityNameLocaleEvent: {fileID: 1620735749}
   abilityDescriptionText: {fileID: 521568369}
+  abilityDescriptionLocaleEvent: {fileID: 521568371}
   coinsNumberText: {fileID: 1405741332}
-  buttons:
-  - {fileID: 2133919418}
-  - {fileID: 383172231}
+  buyButton: {fileID: 1034555758}
   entrys:
-  - abilitys:
+  - button: {fileID: 2133919418}
+    abilitys:
     - {fileID: 11400000, guid: 8aa1929bf98fd9a41a156eb945f3ab82, type: 2}
     - {fileID: 11400000, guid: 502ee6cd2878cd84caacf32425571e3a, type: 2}
-  - abilitys:
+  - button: {fileID: 383172231}
+    abilitys:
     - {fileID: 11400000, guid: 7f47c46e7999eb94c89272471fa44290, type: 2}
     - {fileID: 11400000, guid: 172f6ed5392bb63449b336c94be49dfd, type: 2}
+  - button: {fileID: 591316535}
+    abilitys:
+    - {fileID: 11400000, guid: a0bed8955094ac44fb10c5d9064500d0, type: 2}
+    - {fileID: 11400000, guid: ca3640a7b1b257f448e73ee66a90b1bf, type: 2}
+  - button: {fileID: 427369724}
+    abilitys:
+    - {fileID: 11400000, guid: 7b73fabf79428e149816d857c60f9f00, type: 2}
+    - {fileID: 11400000, guid: 89cdbacb14e1bb4488f8df0333ba8cd4, type: 2}
+  - button: {fileID: 711490767}
+    abilitys:
+    - {fileID: 11400000, guid: 2ee0ff8390dbe3e48b7d00e973037177, type: 2}
+    - {fileID: 11400000, guid: deec5e4187e47434cb00eb81708d22ff, type: 2}
 --- !u!1 &1524175127
 GameObject:
   m_ObjectHideFlags: 0
@@ -19410,6 +19494,7 @@ GameObject:
   - component: {fileID: 1620735746}
   - component: {fileID: 1620735748}
   - component: {fileID: 1620735747}
+  - component: {fileID: 1620735749}
   m_Layer: 5
   m_Name: AbilityTitleText
   m_TagString: Untagged
@@ -19533,6 +19618,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1620735745}
   m_CullTransparentMesh: 1
+--- !u!114 &1620735749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1620735745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1620735747}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1623491642
 GameObject:
   m_ObjectHideFlags: 0
@@ -25624,7 +25749,21 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2133919416}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1508146356}
+        m_TargetAssemblyTypeName: CoinShopTable, Assembly-CSharp
+        m_MethodName: SetOnBuyButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  buttonImage: {fileID: 1708645738}
+  coinCostText: {fileID: 392189897}
   powerUp: {fileID: 11400000, guid: 8aa1929bf98fd9a41a156eb945f3ab82, type: 2}
 --- !u!1 &2136285173
 GameObject:

@@ -43,6 +43,9 @@ public class PlayerCharacter : Character
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
     [HideInInspector] public PlayerCharacterController characterController;
 
+    /*[HideInInspector]*/ public int coins;
+    /*[HideInInspector]*/ public int keys;
+
     #endregion
 
     #region Misc

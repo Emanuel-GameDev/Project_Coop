@@ -7,13 +7,25 @@ using UnityEngine.Localization.Components;
 
 public class CoinShopMenu : Menu
 {
-    [SerializeField] TextMeshProUGUI abilityDescriptionText;
-    [SerializeField] LocalizeStringEvent descriptionStringEvent;
+    [HideInInspector] public Dictionary<CoinShopTable, PlayerInputHandler> tableAssosiation = new();
 
-   
 
-    //public void ChangeDescription(LocalizedString localString)
-    //{
-    //    descriptionStringEvent.StringReference = localString;
-    //}
+    public override void OpenMenu()
+    {
+        base.OpenMenu();
+
+        tableAssosiation.Clear();
+
+        //CoinShopTable[] tables = GetComponentsInChildren<CoinShopTable>();
+
+        //for (int i = 0; i < GetComponentsInChildren<CoinShopTable>().Length; i++) 
+        //{ 
+        //    tableAssosiation.Add()
+        //}
+
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
+        {
+            tableAssosiation.Add(GetComponentInChildren<CoinShopTable>(true),ih);
+        }
+    }
 }

@@ -19,10 +19,10 @@ public class Menu : MonoBehaviour
         shopGroup.SetActive(false);
     }
 
-    public void OpenMenu()
+    public virtual void OpenMenu()
     {
         int i = 0;
-
+        canClose = true;
 
         shopGroup.SetActive(true);
 
@@ -43,10 +43,11 @@ public class Menu : MonoBehaviour
             i++;
         }
     }
-
+    [HideInInspector]public  bool canClose;
     private void Menu_performed(InputAction.CallbackContext obj)
     {
-        CloseMenu();
+        if(canClose)
+            CloseMenu();
     }
 
     public void CloseMenu()

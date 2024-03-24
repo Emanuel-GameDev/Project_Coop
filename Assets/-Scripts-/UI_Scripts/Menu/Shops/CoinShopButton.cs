@@ -20,6 +20,8 @@ public class CoinShopButton : Button
         shopTable= GetComponentInParent<CoinShopTable>();
     }
 
+   
+
     protected override void DoStateTransition(SelectionState state, bool instant)
     {
         base.DoStateTransition(state, instant);

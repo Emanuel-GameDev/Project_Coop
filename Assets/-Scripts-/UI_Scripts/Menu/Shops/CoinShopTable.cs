@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
@@ -25,8 +26,14 @@ public class CoinShopTable : MonoBehaviour
         [SerializeField] public List<PowerUp> abilitys;
     }
 
+
+    CoinShopMenu shopMenu;
+    GameObject lastSelected;
+
     private void Start()
     {
+        shopMenu = GetComponentInParent<CoinShopMenu>();
+
         InitializeButtons();
     }
 
@@ -45,8 +52,31 @@ public class CoinShopTable : MonoBehaviour
         abilityDescriptionLocaleEvent.StringReference = localStringDescription;
     }
 
-    public void SetOnBuyButton(int p)
+    public void SetOnBuyButton()
     {
+        lastSelected = shopMenu.tableAssosiation[this].MultiplayerEventSystem.currentSelectedGameObject;
+        shopMenu.tableAssosiation[this].MultiplayerEventSystem.SetSelectedGameObject(buyButton.gameObject);
+        shopMenu.canClose = false;
 
+        shopMenu.tableAssosiation[this].GetComponent<PlayerInput>().actions.FindAction("Menu").performed += CoinShopTable_performed;
+
+    }
+
+    private void CoinShopTable_performed(InputAction.CallbackContext obj)
+    {
+        shopMenu.canClose = false;
+        DesetOnBuyButton();
+        shopMenu.tableAssosiation[this].GetComponent<PlayerInput>().actions.FindAction("Menu").performed += CoinShopTable_performed;
+    }
+
+    public void BuySouvenir()
+    {
+        Debug.Log("buy");
+        DesetOnBuyButton();
+    }
+
+    public void DesetOnBuyButton()
+    {
+        shopMenu.tableAssosiation[this].MultiplayerEventSystem.SetSelectedGameObject(lastSelected);
     }
 }
