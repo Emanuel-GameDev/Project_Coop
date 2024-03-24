@@ -80,7 +80,8 @@ public class DialogueBox : MonoBehaviour
             foreach(PlayerInputHandler handler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
             {
                 handler.GetComponent<PlayerInput>().actions.Enable();
-                InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
+                InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
+                //InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
                 action.Disable();
                 action.performed -= NextLineInput;
             }

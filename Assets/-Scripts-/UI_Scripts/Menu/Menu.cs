@@ -8,25 +8,39 @@ using UnityEngine.UI;
 public class Menu : MonoBehaviour
 {
     [SerializeField] Selectable firstSelected;
+    [SerializeField] CanvasGroup tables;
+
+    [SerializeField] List<Canvas> table;
+
+    [SerializeField] GameObject shopGroup;
 
     private void Start()
     {
-        OpenMenu();
+        shopGroup.SetActive(false);
     }
 
     public void OpenMenu()
     {
-        CoopManager.Instance.GetComponentInChildren<PlayerInputHandler>().MultiplayerEventSystem.SetSelectedGameObject(firstSelected.gameObject);
+        int i = 0;
 
+
+        shopGroup.SetActive(true);
 
         foreach(PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
         {
+            
+            ih.SetPlayerActiveMenu(tables.gameObject, table[i].GetComponentInChildren<Selectable>().gameObject);
+
+            ih.MultiplayerEventSystem.SetSelectedGameObject(table[i].GetComponentInChildren<Selectable>().gameObject);
             InputActionAsset actions = ih.GetComponent<PlayerInput>().actions;
 
-            actions.Disable();
+            //actions.Disable();
+            actions.FindActionMap("Player").Disable();
             actions.FindActionMap("UI").Enable();
 
             actions.FindAction("Menu").performed += Menu_performed;
+
+            i++;
         }
     }
 
@@ -41,12 +55,12 @@ public class Menu : MonoBehaviour
         {
             InputActionAsset actions = ih.GetComponent<PlayerInput>().actions;
 
-            //actions.FindAction("Player").Enable();
-            actions.Enable();
+            actions.FindActionMap("Player").Enable();
+            //actions.Enable();
             actions.FindActionMap("UI").Disable();
 
             actions.FindAction("Menu").performed -= Menu_performed;
         }
-        gameObject.SetActive(false);
+        shopGroup.SetActive(false); 
     }
 }
