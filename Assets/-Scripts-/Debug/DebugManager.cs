@@ -84,12 +84,13 @@ public class DebugManager : MonoBehaviour
                 }
             }
 
+            if(guardaQuestoTooltipPerLeIstruzioni) guardaQuestoTooltipPerLeIstruzioni = false;
         }
     }
 
     private void GivePowerUP(PowerUp powerUpToGive)
     {
-        foreach (PlayerCharacter character in CoopManager.Instance.ActivePlayerCharacters)
+        foreach (PlayerCharacter character in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
         {
             if (character.Character == targetCharacter)
             {
@@ -101,7 +102,7 @@ public class DebugManager : MonoBehaviour
 
     private void UnlockUpgrade(AbilityUpgrade ability)
     {
-        foreach (PlayerCharacter character in CoopManager.Instance.ActivePlayerCharacters)
+        foreach (PlayerCharacter character in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
         {
             if (character.Character == targetCharacter)
             {
@@ -109,19 +110,5 @@ public class DebugManager : MonoBehaviour
             }
         }
     }
-
-
-
-    //[Header("Debug Items")]
-    //[SerializeField] GameObject debugCanvas;
-    //[SerializeField] TMP_Text debugText;
-
-
-
-    //public void PrintOnConsole(string text)
-    //{
-
-    //}
-
 
 }

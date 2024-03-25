@@ -94,7 +94,7 @@ public class PlayerInputHandler : MonoBehaviour
         }
     }
 
-    #region Multiplayer
+    #region MultiplayerMenu
     public void SetPlayerActiveMenu(GameObject menuRoot, GameObject firstSelection)
     {
         MultiplayerEventSystem.playerRoot = menuRoot;

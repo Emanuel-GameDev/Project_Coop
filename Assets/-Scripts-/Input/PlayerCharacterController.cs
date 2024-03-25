@@ -44,7 +44,6 @@ public class PlayerCharacterController : InputReceiver
 
     }
 
-
     #region Input
     public override void MoveInput(InputAction.CallbackContext context)
     {

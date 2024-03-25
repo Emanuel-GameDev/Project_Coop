@@ -40,6 +40,8 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     }
 
     private List<PlayerCharacter> freeCharacters = new List<PlayerCharacter>();
+    private List<PlayerCharacter> activeCharacters = new List<PlayerCharacter>();
+    public List<PlayerCharacter> ActivePlayerCharacters => activeCharacters;
 
     private void Start()
     {
@@ -81,6 +83,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         playerCharacter.gameObject.transform.position = spawnPosition.position;
         playerCharacter.gameObject.SetActive(true);
         freeCharacters.Remove(playerCharacter);
+        activeCharacters.Add(playerCharacter);
 
         CameraManager.Instance.AddTarget(playerCharacter.transform);
     }
@@ -91,6 +94,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         playerCharacter.gameObject.transform.localPosition = Vector3.zero; 
         playerCharacter.gameObject.SetActive(false);
         freeCharacters.Add(playerCharacter);
+        activeCharacters.Remove(playerCharacter);
 
         CameraManager.Instance.RemoveTarget(playerCharacter.transform);
     }

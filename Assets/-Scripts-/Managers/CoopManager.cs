@@ -27,9 +27,12 @@ public class CoopManager : MonoBehaviour
         }
     }
 
-    [SerializeField] private bool playerCanJoin = true;
-    [SerializeField] private float DelayBeforeRemoveDisconnectedPlayers = 30f;
-    [SerializeField] private GameObject playerInputPrefab;
+    [SerializeField, Tooltip("Imposta se i giocatori possono aggiungersi o meno")] 
+    private bool playerCanJoin = true;
+    [SerializeField, Tooltip("Imposta quanti secondi possono passare prima che dalla disconnessione del controller venga rimosso il player")] 
+    private float DelayBeforeRemoveDisconnectedPlayers = 30f;
+    [SerializeField,Tooltip("Imposta il prefab del PlayerInput")] 
+    private GameObject playerInputPrefab;
    
     private PlayerInputManager inputManager;
     private List<PlayerInputHandler> playerInputHandlers;
@@ -51,27 +54,7 @@ public class CoopManager : MonoBehaviour
         }
     }
 
-    public List<PlayerCharacter> ActivePlayerCharacters
-    {
-        get
-        {
-            List<PlayerCharacter> players = new();
-            if(playerInputHandlers != null)
-            {
-                foreach (PlayerInputHandler player in playerInputHandlers)
-                {
-                    if (player.CurrentReceiver is not null and PlayerCharacterController)
-                    {
-                        players.Add(((PlayerCharacterController)player.CurrentReceiver).ActualPlayerCharacter);
-                    }
-                }
-            }
-            return players;
-        }
-    }
-
-
-   
+    public List<PlayerCharacter> ActivePlayerCharacters => PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
 
     private void Awake()
     {
@@ -90,13 +73,6 @@ public class CoopManager : MonoBehaviour
     private void Start()
     {
         inputManager = GetComponent<PlayerInputManager>();
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        //InitializePlayers();
-        
     }
 
     public List<PlayerInputHandler> GetActiveHandlers()
@@ -124,6 +100,11 @@ public class CoopManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Metodo chiamato quando un nuovo giocatore si unisce al gioco. Crea un nuovo PlayerInputHandler,
+    /// imposta dell'ID del giocatore e configura l'InputReceiver prendendolo dallo SceneInputReceiverManager.
+    /// </summary>
+    /// <param name="playerInput">L'input del giocatore che si è unito al gioco.</param>
     public void OnPlayerJoined(PlayerInput playerInput)
     {
         if(playerInputHandlers == null)

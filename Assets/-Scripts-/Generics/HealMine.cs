@@ -55,7 +55,7 @@ public class HealMine : MonoBehaviour
                 foreach (PlayerCharacter character in characterInArea)
                 {
                     //DA RIVEDERE #MODIFICATO
-                    //character.CharacterClass.currentHp += heal;
+                    character.TakeHeal(new DamageData(heal, null));
                 }
 
                 if (spawner.GetComponent<Healer>() != null)
