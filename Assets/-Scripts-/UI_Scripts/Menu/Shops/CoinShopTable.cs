@@ -64,7 +64,6 @@ public class CoinShopTable : MonoBehaviour
 
     private void CoinShopTable_performed(InputAction.CallbackContext obj)
     {
-        shopMenu.canClose = false;
         DesetOnBuyButton();
         shopMenu.tableAssosiation[this].GetComponent<PlayerInput>().actions.FindAction("Menu").performed += CoinShopTable_performed;
     }
@@ -77,6 +76,7 @@ public class CoinShopTable : MonoBehaviour
 
     public void DesetOnBuyButton()
     {
+        shopMenu.canClose = true;
         shopMenu.tableAssosiation[this].MultiplayerEventSystem.SetSelectedGameObject(lastSelected);
     }
 }
