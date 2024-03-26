@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TrumpOline : MonoBehaviour, IDamageable
 {
@@ -14,8 +15,7 @@ public class TrumpOline : MonoBehaviour, IDamageable
     // Temporanea
     public bool destroyed = false;
 
-    public event System.Action<Collider2D> OnTriggerEnterEvent;
-    public event System.Action<Collider2D> OnTriggerStayEvent;
+    public event UnityAction<Collider2D> OnTriggerEnterEvent;
 
     private void Awake()
     {
@@ -50,15 +50,11 @@ public class TrumpOline : MonoBehaviour, IDamageable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (OnTriggerEnterEvent != null)
-        {
-            OnTriggerEnterEvent(collision);
-        }
+        OnTriggerEnterEvent?.Invoke(collision);
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    public void ClearEventData()
     {
-        if (OnTriggerStayEvent != null)
-            OnTriggerStayEvent(collision);
+        OnTriggerEnterEvent = null;
     }
 }

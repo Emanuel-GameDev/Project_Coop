@@ -92,6 +92,14 @@ public class CoopManager : MonoBehaviour
         return playerInputHandlers.Find(player => player.playerID == playerID);
     }
 
+    public PlayerCharacter GetRandomPlayer()
+    {
+        // Prendo pg a caso
+        int id = UnityEngine.Random.Range(0, ActivePlayers.Count);
+
+        return ActivePlayers[id];
+    }
+
     #region Player Management
 
     public void SetPlayerCanJoin(bool canJoin)

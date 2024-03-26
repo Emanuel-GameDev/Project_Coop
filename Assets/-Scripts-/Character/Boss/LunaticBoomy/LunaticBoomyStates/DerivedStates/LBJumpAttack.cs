@@ -10,6 +10,12 @@ public class LBJumpAttack : LBBaseState
     private TrumpOline nextTrump;
     private Vector2 controlPoint;
 
+    // Attack related
+    private GameObject[] projectilePool;
+
+    // Others
+    private LBPhase activePhase = null;
+
     private bool canJump = false;
     private bool canAttack = true;
     private float startTime = 0f;
@@ -24,6 +30,10 @@ public class LBJumpAttack : LBBaseState
     {
         base.Enter();
 
+        // Pool di proiettili
+        InitializePool();
+
+        // Accendo agent
         if (bossCharacter.gameObject.GetComponent<NavMeshAgent>().enabled)
         {
             bossCharacter.Agent.isStopped = true;
@@ -31,42 +41,16 @@ public class LBJumpAttack : LBBaseState
             bossCharacter.TriggerAgent(false);
         }
 
-        bossCharacter.gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
+        // Imposto speed sgent in base alla fase
+        activePhase = bossCharacter.GetActivePhase();
 
         StartJump();
-    }
-
-    private void StartJump()
-    {
-        // Prendo reference al punto di arrivo
-        nextTrump = GetRandomTrump(bossCharacter.GetTrumps());
-
-        canJump = true;
-        startTime = Time.time;
-
-        // Calcolo del control point dinamico
-        controlPoint = CalculateControlPoint();
-    }
-
-    private TrumpOline GetRandomTrump(List<TrumpOline> trumpOlines)
-    {
-        int randTrumpID = UnityEngine.Random.Range(0, trumpOlines.Count);
-        List<TrumpOline> tempTrumps = new List<TrumpOline>(trumpOlines);
-
-        while (tempTrumps[randTrumpID] == currTrump)
-        {
-            tempTrumps.RemoveAt(randTrumpID);
-            randTrumpID = UnityEngine.Random.Range(0, tempTrumps.Count);
-        }
-
-        return tempTrumps[randTrumpID];
+        
     }
 
     public override void Exit()
     {
         base.Exit();
-
-        bossCharacter.gameObject.GetComponent<CapsuleCollider2D>().enabled = true;
     }
 
     public override void Update()
@@ -75,13 +59,13 @@ public class LBJumpAttack : LBBaseState
 
         if (canJump)
         {
-            // Calcoliamo la distanza percorsa dall'inizio del movimento
-            float distCovered = (Time.time - startTime) * bossCharacter.JumpSpeed;
+            // Calcolo la distanza percorsa dall'inizio del movimento
+            float distCovered = (Time.time - startTime) * activePhase.jumpSpeed;
 
-            // Calcoliamo la percentuale completata del movimento
+            // Calcolo la percentuale completata del movimento
             float fracJourney = distCovered / Vector2.Distance(currTrump.gameObject.transform.position, nextTrump.gameObject.transform.position);
 
-            // Utilizziamo la curva di Bezier per ottenere la posizione intermedia
+            // Utilizzo la curva di Bezier per ottenere la posizione intermedia
             bossCharacter.gameObject.transform.position = CalculateBezierPoint(fracJourney, currTrump.gameObject.transform.position,
                                                                                             controlPoint,
                                                                                             nextTrump.gameObject.transform.position);
@@ -90,8 +74,8 @@ public class LBJumpAttack : LBBaseState
             {
                 if (canAttack)
                 {
-                    // Debug.Log("Attacco);
-                    nextTrump.StartCoroutine(JumpAttack(1f));
+                    //Debug.Log("Attacco");
+                    nextTrump.StartCoroutine(JumpAttack());
                 }
             }
 
@@ -108,48 +92,17 @@ public class LBJumpAttack : LBBaseState
                 currTrump = nextTrump;
 
                 jumpCount++;
-                CheckPhase();
+                if (jumpCount == activePhase.numJumps)
+                {
+                    stateMachine.SetState(new LBCarrotBreak(bossCharacter, currTrump));
+                }
 
                 currTrump.StartCoroutine(WaitBeforeJump(bossCharacter.JumpStep));
             }
         }
     }
 
-    private void CheckPhase()
-    {
-        LBPhase activePhase = null;
-
-        foreach (LBPhase phase in bossCharacter.BossPhases)
-        {
-            if (phase.active)
-            {
-                activePhase = phase;
-                break;
-            }
-        }
-
-        if (jumpCount == activePhase.numJumps)
-        {
-            stateMachine.SetState(new LBCarrotBreak(bossCharacter, currTrump));
-        }
-    }
-
-    private IEnumerator JumpAttack(float temp)
-    {
-        canAttack = false;
-
-        yield return new WaitForSeconds(temp);
-
-        canAttack = true;
-    }
-
-    //private void JumpAttack()
-    //{
-    //    // Reference ad un personaggio casuale
-    //    int randPlayerID = UnityEngine.Random.Range(0, CoopManager.Instance.ActivePlayers.Count);
-
-    //    canAttack = false;
-    //}
+    #region Jump
 
     private IEnumerator WaitBeforeJump(float waitTime)
     {
@@ -164,6 +117,9 @@ public class LBJumpAttack : LBBaseState
 
         StartJump();
     }
+
+    #region Bezier
+
 
     private Vector2 CalculateControlPoint()
     {
@@ -201,4 +157,105 @@ public class LBJumpAttack : LBBaseState
         p += tt * p2;
         return p;
     }
+
+    #endregion
+
+    #endregion
+
+    #region JumpAttack
+
+    // Da FINIRE
+    private IEnumerator JumpAttack()
+    {
+        canAttack = false;
+
+        GameObject projectile = GetPooledProjectile();
+        if (projectile != null)
+        {
+            // Prendo un personaggio random
+            PlayerCharacter randCharacter = GameManager.Instance.coopManager.GetRandomPlayer();
+
+            // La direzione di sparo
+            Vector2 direction = (randCharacter.gameObject.transform.position - bossCharacter.gameObject.transform.position).normalized;
+            projectile.transform.right = direction;
+            projectile.SetActive(true);
+
+            Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.velocity = direction * bossCharacter.BombSpeed;
+            }
+        }
+
+        yield return null;
+
+        canAttack = true;
+    }
+
+
+    #region Projectiles
+
+    private void InitializePool()
+    {
+        projectilePool = new GameObject[bossCharacter.gameObject.transform.GetChild(0).childCount];
+
+        for (int i = 0; i < bossCharacter.gameObject.transform.GetChild(0).childCount; i++)
+        {
+            projectilePool[i] = Object.Instantiate(bossCharacter.ProjectilePrefab,
+                                                          bossCharacter.gameObject.transform.position, Quaternion.identity);
+            projectilePool[i].SetActive(false);
+        }
+    }
+
+    private GameObject GetPooledProjectile()
+    {
+        for (int i = 0; i < projectilePool.Length; i++)
+        {
+            if (!projectilePool[i].activeInHierarchy)
+            {
+                return projectilePool[i];
+            }
+        }
+        return null;
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Utility
+
+    private void StartJump()
+    {
+        // Prendo reference al punto di arrivo, mi assicuro che il trampolino non sia distrutto
+        do {
+
+            nextTrump = GetRandomTrump(bossCharacter.GetTrumps());
+
+        } while (!nextTrump.destroyed);
+
+        canJump = true;
+        startTime = Time.time;
+
+        // Calcolo del control point dinamico
+        controlPoint = CalculateControlPoint();
+    }
+
+    private TrumpOline GetRandomTrump(List<TrumpOline> trumpOlines)
+    {
+        int randTrumpID = UnityEngine.Random.Range(0, trumpOlines.Count);
+        List<TrumpOline> tempTrumps = new List<TrumpOline>(trumpOlines);
+
+        while (tempTrumps[randTrumpID] == currTrump)
+        {
+            tempTrumps.RemoveAt(randTrumpID);
+            randTrumpID = UnityEngine.Random.Range(0, tempTrumps.Count);
+        }
+
+        return tempTrumps[randTrumpID];
+    }
+
+
+    #endregion
+
 }

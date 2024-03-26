@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class LBCarrotBreak : LBBaseState
 {
@@ -36,8 +37,6 @@ public class LBCarrotBreak : LBBaseState
     {
         if (!canJump)
         {
-            trump.gameObject.GetComponent<BoxCollider2D>().isTrigger = false;
-
             // Cambio stato 
             stateMachine.SetState(new LBJumpAttack(bossCharacter, trump));
 
@@ -63,6 +62,10 @@ public class LBCarrotBreak : LBBaseState
     {
         base.Exit();
 
+        trump.OnTriggerEnterEvent -= OnCollisionWithTrump;
+        trump.ClearEventData();
+        trump = null;
+
         bossRB.constraints = RigidbodyConstraints2D.None;
         bossRB.constraints = RigidbodyConstraints2D.FreezeRotation;
 
@@ -86,7 +89,6 @@ public class LBCarrotBreak : LBBaseState
     {
         if (trump.destroyed)
         {
-            trump.gameObject.GetComponent<BoxCollider2D>().isTrigger = false;
 
             // Cambio stato
             stateMachine.SetState(new LBPanic(bossCharacter, trump));

@@ -10,6 +10,7 @@ public class LBPhase
     public int phaseNum;
     public int minJumps;
     public int maxJumps;
+    public float jumpSpeed;
     
     public bool active = false;
 
@@ -36,16 +37,26 @@ public class LunaticBoomyBossCharacter : BossCharacter
     private List<TrumpOline> trumps;
 
     [Space]
-    [Title("JUMP")]
+    [Title("ATTACK")]
     [Space]
 
     [SerializeField]
-    private float jumpSpeed = 2f;
-    public float JumpSpeed { get { return jumpSpeed; } private set { } }
+    private GameObject projectilePrefab;
+    public GameObject ProjectilePrefab { get { return projectilePrefab; } private set { } }
 
     [SerializeField]
+    private float bombSpeed = 10f;
+    public float BombSpeed { get { return bombSpeed; } set { } }
+
+    [Space]
+    [Title("JUMP")]
+    [Space]
+
+    [SerializeField, Tooltip("Di quanto deve essere spostato il centro del salto da un trampolino all'altro")]
     private Vector2 jumpOffset;
     public Vector2 JumpOffset { get { return jumpOffset; } private set { } }
+
+    [Space]
 
     [SerializeField, Min(0.04f), Tooltip("un tempo di attesa tra un salto e l'altro")]
     private float jumpStep = 1.5f;
@@ -152,18 +163,22 @@ public class LunaticBoomyBossCharacter : BossCharacter
         return null;
     }
 
-    public void Attack()
-    {
-        // Spara una bomba ad un pg a caso
-
-        // Prendo pg a caso
-        int randCharID = UnityEngine.Random.Range(0, GameManager.Instance.coopManager.ActivePlayers.Count);
-
-    }
-
     public void DoubleAttack()
     {
         // Spara 2 bombe a 2 pg a caso, non può essere lo stesso a venir targettato 2 volte
+    }
+
+    public LBPhase GetActivePhase()
+    {
+        foreach (LBPhase phase in bossPhases)
+        {
+            if (phase.active)
+            {
+                return phase;
+            }
+        }
+
+        return null;
     }
 
 }
