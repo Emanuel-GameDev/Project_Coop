@@ -20,6 +20,7 @@ namespace MBTExample
           
             bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
             tempTimer = 0;
+            bossCharacter.parried = false;
 
             bossCharacter.SetCrashDirectDamageData();           
             bossCharacter.anim.SetTrigger("Crash");

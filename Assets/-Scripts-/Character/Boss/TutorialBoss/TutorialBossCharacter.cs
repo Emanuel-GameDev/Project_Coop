@@ -42,6 +42,7 @@ public class TutorialBossCharacter : BossCharacter
     public float crashWaveDamage;
     public float crashWaveStaminaDamage;
     public float crashTimer;
+    public GameObject crashwaveObject;
 
     [HideInInspector] public DamageData damageData;
     [HideInInspector] public bool canAttackAnim;
@@ -50,9 +51,30 @@ public class TutorialBossCharacter : BossCharacter
     [HideInInspector] public bool canLastAttackPunch;
     [HideInInspector] private bool canRotateInAnim;
     [HideInInspector] private Vector2 direction;
+    [HideInInspector] public bool parried = false;
+    [HideInInspector] public Character whoParried;
 
 
 
+    #region Crash
+    public void SetCrashDirectDamageData()
+    {
+        staminaDamage = crashDirectStaminaDamage;
+        damage = crashDirectDamage;
+        attackCondition = null;
+
+    }
+    public void SetCrashWaveDamageData()
+    {
+        staminaDamage = crashWaveStaminaDamage;
+        damage = crashWaveDamage;
+        attackCondition = null;
+    }
+    public void InstantiateCrashWave()
+    {
+        Instantiate(crashwaveObject, transform.position,Quaternion.identity,transform);
+    }
+    #endregion
 
     private void Update()
     {
@@ -79,19 +101,8 @@ public class TutorialBossCharacter : BossCharacter
         attackCondition = null;
 
     }
-    public void SetCrashDirectDamageData()
-    {
-        staminaDamage = crashDirectStaminaDamage;
-        damage = crashDirectDamage;
-        attackCondition = null;
-
-    }
-    public void SetCrashWaveDamageData()
-    {
-        staminaDamage = crashWaveStaminaDamage;
-        damage = crashWaveDamage;
-        attackCondition = null;
-    }
+   
+    
     public void SetFlurryOfBlowsDamageData(int attackNumber)
     {
 
@@ -166,6 +177,12 @@ public class TutorialBossCharacter : BossCharacter
     public void SetCanLastAttackPunch()
     {
         canLastAttackPunch = true;
+    }
+
+    public override void OnParryNotify(Character whoParried)
+    {
+        parried = true;
+        this.whoParried = whoParried;
     }
     
 }

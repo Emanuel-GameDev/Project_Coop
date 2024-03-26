@@ -383,10 +383,8 @@ public class Tank : PlayerCharacter
 
         //se potenziamento 4 parata perfetta fa danno
     }
-
     public blockZone SetBlockZone(float lastYValue)
     {
-
         
         if ((lastYValue > 0 && pivot.transform.localScale.x <0))
         {
@@ -419,7 +417,6 @@ public class Tank : PlayerCharacter
         canBlock = true;
 
     }
-
     private void ResetStamina()
     {
         currentStamina = maxStamina;
@@ -451,7 +448,7 @@ public class Tank : PlayerCharacter
             PubSub.Instance.Notify(EMessageType.perfectGuardExecuted, this);
 
 
-            data.dealer.OnParryNotify();
+            data.dealer.OnParryNotify(this);           
             if (damageOnParry)
             {
                 dealerMB.TakeDamage(new DamageData(perfectBlockDamage, this));
@@ -664,6 +661,7 @@ public class Tank : PlayerCharacter
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(transform.position, aggroRange);
         }
+
         if (mostraGizmoRangeParata)
         {
             if(currentBlockZone is blockZone.nordEst)

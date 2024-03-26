@@ -18,7 +18,7 @@ namespace MBTExample
         private bool mustStop = false;
         private float tempTimer;        
         private Vector3 targetPosition;
-        private IDamager bossDamager;
+        
 
         public override void OnEnter()
         {
@@ -27,6 +27,7 @@ namespace MBTExample
            
             started = false;
             mustStop = false;
+            bossCharacter.parried = false;
 
             Vector3 direction = (targetTransform.Value.position -bossCharacter.transform.position).normalized;
             targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), (direction.y * bossCharacter.chargeDistance),0) + bossCharacter.transform.position; 
@@ -47,9 +48,17 @@ namespace MBTExample
 
         public override NodeResult Execute()
         {
-
             if (!bossCharacter.isDead)
             {
+
+                if (bossCharacter.parried)
+                {                  
+                    mustStop = true;
+                    //funzione player spinta inetro
+                    Debug.Log("spinta indietro player");
+                    //bossCharacter.whoParried.
+                }
+
                 if (tempTimer > bossCharacter.chargeTimer)
                 {
                     if (!started)
@@ -71,7 +80,7 @@ namespace MBTExample
 
                     if (mustStop || dist <= bossCharacter.minDistance)
                     {
-
+                        
                         bossCharacter.Agent.isStopped = true;
                         bossCharacter.anim.SetTrigger("Return");
 
@@ -95,5 +104,7 @@ namespace MBTExample
             bossCharacter.previewArrow.SetActive(value);
             
         }
+        
+        
     }
 }

@@ -89,6 +89,11 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         canInteract = false;
     }
 
-  
+    public virtual void OnParryNotify(Character whoParried)
+    {
+        
+    }
+
+
     #endregion
 }

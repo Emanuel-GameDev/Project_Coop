@@ -112,4 +112,9 @@ public class LandMine : MonoBehaviour, IDamager
     {
         return new DamageData(landMineDamage, this);
     }
+
+    public void OnParryNotify(Character whoParried)
+    {
+        throw new System.NotImplementedException();
+    }
 }
