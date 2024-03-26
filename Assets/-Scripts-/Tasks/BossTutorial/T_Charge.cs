@@ -56,7 +56,8 @@ namespace MBTExample
                     mustStop = true;
                     //funzione player spinta inetro
                     Debug.Log("spinta indietro player");
-                    //bossCharacter.whoParried.
+                    bossCharacter.whoParried.StartCoroutine(bossCharacter.whoParried.PushCharacter(bossCharacter.transform.position,
+                        bossCharacter.ChargeOnParryPushForce, bossCharacter.ChargeOnParryDuration));
                 }
 
                 if (tempTimer > bossCharacter.chargeTimer)

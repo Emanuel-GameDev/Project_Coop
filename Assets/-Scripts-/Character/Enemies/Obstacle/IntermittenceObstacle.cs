@@ -36,8 +36,8 @@ public class IntermittenceObstacle : ObstacleEnemy
 
         foreach(PlayerCharacter character in disableDetector.GetPlayersDetected())
         {
-            StartCoroutine(player.PushCharacter(transform.position, pushStrength, 1));
-            player.GetComponent<IDamageable>().TakeDamage(GetDamageData());
+            StartCoroutine(character.PushCharacter(transform.position, pushStrength, 1));
+            character.GetComponent<IDamageable>().TakeDamage(GetDamageData());
         }
     }
 

@@ -32,6 +32,7 @@ namespace MBTExample
 
             if (!bossCharacter.isDead)
             {
+                
                 if (tempTimer > bossCharacter.crashTimer)
                 {
 

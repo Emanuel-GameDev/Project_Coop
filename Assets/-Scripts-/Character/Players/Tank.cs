@@ -289,9 +289,10 @@ public class Tank : PlayerCharacter
     #region Block
     private bool AttackInBlockAngle(DamageData data)
     {
-        Character dealerMB = (Character)data.dealer;
-
-      
+        Character dealerMB = null;
+        if (data.dealer is Character)
+            dealerMB = (Character)data.dealer;
+        
         Vector2 dealerDirection = dealerMB.gameObject.transform.position - transform.position;
         
         float angle = 0;
@@ -313,7 +314,7 @@ public class Tank : PlayerCharacter
             angle = Vector2.Angle(dealerDirection, new Vector2(-1, -1));
         }
 
-        Debug.Log(angle);
+        
 
         return Mathf.Abs(angle) <= blockAngle / 2;
     }
@@ -430,7 +431,10 @@ public class Tank : PlayerCharacter
     {
         canPerfectBlock = true;
         perfectBlockHandler.gameObject.SetActive(true);
-        Character dealerMB = (Character)data.dealer;
+        Character dealerMB = null;
+        if (data.dealer is Character)
+            dealerMB = (Character)data.dealer;
+
 
         yield return new WaitForSeconds(perfectBlockTimeWindow);
 
@@ -449,7 +453,7 @@ public class Tank : PlayerCharacter
 
 
             data.dealer.OnParryNotify(this);           
-            if (damageOnParry)
+            if (damageOnParry && dealerMB != null)
             {
                 dealerMB.TakeDamage(new DamageData(perfectBlockDamage, this));
             }

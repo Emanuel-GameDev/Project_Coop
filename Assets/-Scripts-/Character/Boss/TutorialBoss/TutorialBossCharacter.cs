@@ -35,6 +35,8 @@ public class TutorialBossCharacter : BossCharacter
     public float chargeSpeed;
     public float chargeDistance;
     public float ChargeStaminaDamage => chargeStaminaDamage + powerUpData.damageIncrease;
+    public float ChargeOnParryPushForce = 3;
+    public float ChargeOnParryDuration = 1;
 
     [Header("Schianto")]
     public float crashDirectDamage;
@@ -72,7 +74,11 @@ public class TutorialBossCharacter : BossCharacter
     }
     public void InstantiateCrashWave()
     {
-        Instantiate(crashwaveObject, transform.position,Quaternion.identity,transform);
+        if (!parried)
+        {
+            GameObject instantiatedWave = Instantiate(crashwaveObject, transform.position, Quaternion.identity, transform);
+            instantiatedWave.GetComponent<CrashWave>().SetVariables(crashWaveDamage, crashWaveStaminaDamage,this);
+        }
     }
     #endregion
 

@@ -126,7 +126,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 8.96, y: 8.96}
+  m_Size: {x: 11.2, y: 11.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -333,8 +333,8 @@ GameObject:
   - component: {fileID: 7009432983383867320}
   - component: {fileID: 1798352166390797721}
   - component: {fileID: 4857269045650847627}
-  - component: {fileID: 834482093106990951}
   - component: {fileID: 7227388949329810350}
+  - component: {fileID: 4478246079219584292}
   m_Layer: 7
   m_Name: BehaviorTree
   m_TagString: Untagged
@@ -404,7 +404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25af8627659c6949b60949c3aa8d91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedEditorNode: {fileID: 7227388949329810350}
+  selectedEditorNode: {fileID: 4478246079219584292}
   repeatOnFinish: 0
   maxExecutionsPerTick: 1000
   parent: {fileID: 0}
@@ -1085,7 +1085,7 @@ MonoBehaviour:
   rect:
     serializedVersion: 2
     x: 240
-    y: 400
+    y: 401
     width: 160
     height: 45
   parent: {fileID: 1112971196430991096}
@@ -2123,7 +2123,7 @@ MonoBehaviour:
   parent: {fileID: 5700576044789767738}
   children:
   - {fileID: 1798352166390797721}
-  - {fileID: 834482093106990951}
+  - {fileID: 4478246079219584292}
   - {fileID: 7227388949329810350}
   behaviourTree: {fileID: 0}
   runtimePriority: 0
@@ -2211,42 +2211,6 @@ MonoBehaviour:
     blackboard: {fileID: 2960433704655702723}
     key: targetTransform
     constantValue: {fileID: 0}
---- !u!114 &834482093106990951
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4413517995448248663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad65a1b017a15e64abcbb2c4045514d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: 'Attacco Carica '
-  rect:
-    serializedVersion: 2
-    x: 754
-    y: -18
-    width: 160
-    height: 45
-  parent: {fileID: 7009432983383867320}
-  children: []
-  behaviourTree: {fileID: 0}
-  runtimePriority: 0
-  breakpoint: 0
-  targetTransform:
-    useConstant: 0
-    mode: 0
-    blackboard: {fileID: 2960433704655702723}
-    key: targetTransform
-    constantValue: {fileID: 0}
-  parentGameObject:
-    useConstant: 0
-    mode: 0
-    blackboard: {fileID: 2960433704655702723}
-    key: BossParent
-    constantValue: {fileID: 0}
 --- !u!114 &7227388949329810350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2279,6 +2243,36 @@ MonoBehaviour:
     constantValue: 3
   randomDeviation: 0
   continueOnRestart: 0
+--- !u!114 &4478246079219584292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413517995448248663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b34b0865153e8454687b75d8a3ff2ee5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 'Attacco Schianto '
+  rect:
+    serializedVersion: 2
+    x: 721
+    y: -4
+    width: 160
+    height: 45
+  parent: {fileID: 7009432983383867320}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  parentGameObject:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 2960433704655702723}
+    key: BossParent
+    constantValue: {fileID: 0}
 --- !u!1 &6379799953282488539
 GameObject:
   m_ObjectHideFlags: 0
@@ -2432,6 +2426,12 @@ MonoBehaviour:
   bleeding: 0
   isDead: 0
   damageReceivedMultiplier: 1
+  pushAnimationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   maxHp: 50
   damage: 0
   staminaDamage: 0
@@ -2485,11 +2485,14 @@ MonoBehaviour:
   chargeTimer: 0.5
   chargeSpeed: 40
   chargeDistance: 15
+  ChargeOnParryPushForce: 3
+  ChargeOnParryDuration: 1
   crashDirectDamage: 50
   crashDirectStaminaDamage: 100
   crashWaveDamage: 15
   crashWaveStaminaDamage: 100
   crashTimer: 1.5
+  crashwaveObject: {fileID: 0}
   canAttackAnim: 0
   canShowPreview: 0
   previewStarted: 0
