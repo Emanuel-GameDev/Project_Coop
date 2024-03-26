@@ -99,6 +99,7 @@ public class Tank : CharacterClass
     private float blockAngleThreshold => (blockAngle - 180) / 180;
     private float staminaDamageReductionMulty;
     private float healthDamageReductionMulty;
+    private float lastDirectionYValue;
 
 
     private GenericBarScript staminaBar;
@@ -106,6 +107,7 @@ public class Tank : CharacterClass
     private PerfectTimingHandler perfectBlockHandler;
     private ProtectPlayers triggerProtectPlayer;
     private PivotTriggerProtected pivotTriggerProtected;
+   
 
 
     public override void Inizialize()
@@ -623,6 +625,10 @@ public class Tank : CharacterClass
         if (canMove)
         {
             base.Move(direction, rb);
+
+            if (direction.y != 0)
+                lastDirectionYValue = direction.y;
+
 
         }
         animator.SetBool("IsMoving", isMoving);
