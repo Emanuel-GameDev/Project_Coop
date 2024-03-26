@@ -71,6 +71,9 @@ public class CoinShopTable : MonoBehaviour
     public void BuySouvenir()
     {
         Debug.Log("buy");
+        PlayerCharacterController inputReceiver = (PlayerCharacterController)shopMenu.tableAssosiation[this].CurrentReceiver;
+        inputReceiver.ActualPlayerCharacter.AddPowerUp(lastSelected.GetComponent<CoinShopButton>().powerUp);
+
         DesetOnBuyButton();
     }
 
