@@ -17,13 +17,13 @@ public abstract class PlayerCharacter : Character
     protected float maxHp;
     [SerializeField, Tooltip("Il danno inflitto dal personaggio.")]
     protected float damage;
-    [SerializeField, Tooltip("La velocità di attacco del personaggio.")]
+    [SerializeField, Tooltip("La velocitï¿½ di attacco del personaggio.")]
     protected float attackSpeed;
-    [SerializeField, Tooltip("La velocità di movimento del personaggio.")]
+    [SerializeField, Tooltip("La velocitï¿½ di movimento del personaggio.")]
     protected float moveSpeed;
-    [SerializeField, Tooltip("Il tempo di attesa per l'abilità unica.")]
+    [SerializeField, Tooltip("Il tempo di attesa per l'abilitï¿½ unica.")]
     protected float uniqueAbilityCooldown;
-    [SerializeField, Tooltip("L'incremento del tempo di attesa dell'abilità unica dopo ogni uso.")]
+    [SerializeField, Tooltip("L'incremento del tempo di attesa dell'abilitï¿½ unica dopo ogni uso.")]
     protected float uniqueAbilityCooldownIncreaseAtUse;
 
     protected float currentHp;
@@ -236,12 +236,19 @@ public abstract class PlayerCharacter : Character
 
     public Vector2 ReadLook(InputAction.CallbackContext context)
     {
-        string gamepad = characterController.GetInputHandler().PlayerInput.currentControlScheme;
+        //string gamepad = context.control.device.displayName;
+
+        string gamepad = playerInputHandler.PlayerInput.currentControlScheme;
+
 
         if (gamepad.Contains("Gamepad") || gamepad.Contains("Controller") || gamepad.Contains("Joystick"))
         {
             //perndo la look dal player.input utilizzando il gamepad
+
+            Debug.Log(lookDir);
             return new Vector2(lookDir.x, lookDir.y).normalized;
+
+            
         }
         else
         {
