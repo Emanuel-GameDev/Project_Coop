@@ -26,7 +26,6 @@ public class PlayerCharacterController : InputReceiver
         {
             SetPlayerCharacter(playerCharacter);
         }
-
     }
 
     public override void SetInputHandler(PlayerInputHandler inputHandler)

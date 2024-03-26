@@ -9,9 +9,12 @@ public class CoinShopMenu : Menu
 {
     [HideInInspector] public Dictionary<CoinShopTable, PlayerInputHandler> tableAssosiation = new();
 
+    
 
     public override void OpenMenu()
     {
+        
+
         base.OpenMenu();
 
         tableAssosiation.Clear();

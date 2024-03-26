@@ -34,12 +34,12 @@ public class HPHandler : MonoBehaviour
 
 
     List<PlayerCharacter> players;
-    Dictionary<PlayerCharacter, CharacterHUDContainer> containersAssociations;
+    Dictionary<ePlayerID, CharacterHUDContainer> containersAssociations;
 
     private void OnEnable()
     {
         players = new List<PlayerCharacter>();
-        containersAssociations = new Dictionary<PlayerCharacter, CharacterHUDContainer>();
+        containersAssociations = new Dictionary<ePlayerID, CharacterHUDContainer>();
         PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, UpdateContainer);
         PubSub.Instance.RegisterFunction(EMessageType.characterJoined, AddContainer);
         PubSub.Instance.RegisterFunction(EMessageType.characterSwitched, SetCharacter);
@@ -69,7 +69,7 @@ public class HPHandler : MonoBehaviour
 
         CharacterHUDContainer hpContainer = hpContainerObject.GetComponent<CharacterHUDContainer>();
         hpContainer.referredCharacter = players[id];
-        containersAssociations.Add(players[id], hpContainer);
+        containersAssociations.Add(players[id].GetInputHandler().playerID, hpContainer);
 
         hpContainer.referredPlayerID = (ePlayerID)id + 1;
 
@@ -88,11 +88,12 @@ public class HPHandler : MonoBehaviour
         if (obj is PlayerCharacter)
         {
             PlayerCharacter playerCharacter = (PlayerCharacter)obj;
-            if (containersAssociations.ContainsKey(playerCharacter))
+            
+            if (containersAssociations.ContainsKey(playerCharacter.GetInputHandler().playerID))
             {
-                containersAssociations[playerCharacter].SetCharacterContainer(GetSpriteContainerFromCharacter(playerCharacter));
-                containersAssociations[playerCharacter].SetUpHp();
-                containersAssociations[playerCharacter].UpdateHp(playerCharacter.CurrentHp);
+                containersAssociations[playerCharacter.GetInputHandler().playerID].SetCharacterContainer(GetSpriteContainerFromCharacter(playerCharacter));
+                containersAssociations[playerCharacter.GetInputHandler().playerID].SetUpHp();
+                containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
             }
         }
     }
@@ -102,7 +103,7 @@ public class HPHandler : MonoBehaviour
         if (obj is PlayerCharacter)
         {
             PlayerCharacter playerCharacter = (PlayerCharacter)obj;
-            containersAssociations[playerCharacter].UpdateHp(playerCharacter.CurrentHp);
+            containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
         }
     }
 
