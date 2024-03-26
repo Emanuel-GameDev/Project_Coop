@@ -22,7 +22,7 @@ public class Tank : PlayerCharacter
 
     [Header("Block")]
 
-    [SerializeField, Tooltip("Quantità di danno parabile prima di rottura parata")]
+    [SerializeField, Tooltip("Quantitï¿½ di danno parabile prima di rottura parata")]
     float maxStamina;
     [SerializeField, Tooltip("timer tra una parata in altra")]
     float blockTimer;
@@ -30,20 +30,22 @@ public class Tank : PlayerCharacter
     float perfectBlockDamage;
     [SerializeField, Tooltip("Angolo parata frontale al tank")]
     float blockAngle = 90;
-    [SerializeField, Tooltip("finestra di tempo nella quale appena viene colpito può parare per fare parata perfetta")]
+    [SerializeField, Tooltip("finestra di tempo nella quale appena viene colpito puï¿½ parare per fare parata perfetta")]
     float perfectBlockTimeWindow = 0.4f;
 
     public enum blockZone
     {
         none,
-        north,
-        sud
+        nordEst,
+        sudEst,
+        nordOvest,
+        sudOvest
     }
     private blockZone currentBlockZone;
 
     [Header("Unique Ability")]
 
-    [SerializeField, Tooltip("cooldown abilità unica")]
+    [SerializeField, Tooltip("cooldown abilitï¿½ unica")]
     float cooldownUniqueAbility;
     [SerializeField, Tooltip("Range aggro")]
     float aggroRange;
@@ -287,30 +289,35 @@ public class Tank : PlayerCharacter
     {
         Character dealerMB = (Character)data.dealer;
 
-
-        
+      
         Vector2 dealerDirection = dealerMB.gameObject.transform.position - transform.position;
-        float crossProduct =0;
+        
         float angle = 0;
 
-        if (currentBlockZone is blockZone.north)
+        if (currentBlockZone is blockZone.nordEst)
         {
-             crossProduct = Vector3.Cross(new Vector2(1,1), dealerDirection).y;
-             angle = Vector2.Angle(dealerDirection, new Vector2(1,1));
+            angle = Vector2.Angle(dealerDirection, new Vector2(1, 1));
         }
-        else if(currentBlockZone is blockZone.sud)
+        else if (currentBlockZone is blockZone.sudEst)
         {
-             crossProduct = Vector3.Cross(new Vector2(1,-1), dealerDirection).y;
-             angle = Vector2.Angle(dealerDirection, new Vector2(1,-1));
+            angle = Vector2.Angle(dealerDirection, new Vector2(1, -1));
+        }
+        else if (currentBlockZone is blockZone.nordOvest)
+        {
+            angle = Vector2.Angle(dealerDirection, new Vector2(-1, 1));
+        }
+        else if (currentBlockZone is blockZone.sudOvest)
+        {
+            angle = Vector2.Angle(dealerDirection, new Vector2(-1, -1));
         }
 
-        angle = crossProduct < 0 ? -angle : angle;
+        Debug.Log(angle);
 
         return Mathf.Abs(angle) <= blockAngle / 2;
     }
     Vector3 RotateVectorAroundPivot(Vector3 vector, Vector3 pivot, float angle)
     {
-        Quaternion rotation = Quaternion.Euler(0, angle, 0);
+        Quaternion rotation = Quaternion.Euler(0, 0, angle);
         vector -= pivot;
         vector = rotation * vector;
         vector += pivot;
@@ -324,7 +331,7 @@ public class Tank : PlayerCharacter
             if(isBlocking != true)
             {
                 isBlocking = true;
-                currentBlockZone = SetBlockZone(lastNonZeroDirection);
+                currentBlockZone = SetBlockZone(lastNonZeroDirection.y);
                 animator.SetTrigger("StartBlock");
 
             }
@@ -352,6 +359,7 @@ public class Tank : PlayerCharacter
             {
                 
                 isBlocking = false;
+                currentBlockZone = blockZone.none;
                 StartCoroutine(nameof(ToggleBlock));               
                 animator.SetTrigger("ToggleBlock");
             }
@@ -374,20 +382,33 @@ public class Tank : PlayerCharacter
         //se potenziamento 4 parata perfetta fa danno
     }
 
-    public blockZone SetBlockZone(Vector2 lastNonZeroDirection)
+    public blockZone SetBlockZone(float lastYValue)
     {
 
-        //Nord 
-        if (lastNonZeroDirection.y > 0)
+        
+        if ((lastYValue > 0 && pivot.transform.localScale.x <0))
         {
-            return blockZone.north;
+            return blockZone.nordEst;
         }
-        //Sud 
+
+        else if (lastYValue > 0 && pivot.transform.localScale.x > 0)
+        {
+            return blockZone.nordOvest;
+        }
+
+        else if (lastYValue < 0 && pivot.transform.localScale.x < 0)
+        {
+            return blockZone.sudEst;
+        }
+
+        else if (lastYValue < 0 && pivot.transform.localScale.x > 0)
+        {
+            return blockZone.sudOvest;
+        }
+
         else
-        {
-            return blockZone.sud;
-        }
-     
+            return blockZone.none;
+
     }
     private IEnumerator ToggleBlock()
     {
@@ -639,15 +660,53 @@ public class Tank : PlayerCharacter
         }
         if (mostraGizmoRangeParata)
         {
-            Vector3 temp = new Vector3((lastNonZeroDirection.x + transform.position.x), transform.position.y, lastNonZeroDirection.y + transform.position.z);
+            if(currentBlockZone is blockZone.nordEst)
+            {
+                Vector2 temp = transform.position + new Vector3(1,1,0);
 
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(transform.position, temp);
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
 
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, temp);
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
+            }else if (currentBlockZone is blockZone.sudEst)
+            {
+                Vector2 temp = transform.position + new Vector3(1, -1, 0);
+
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(transform.position, temp);
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
+
+            }
+            else if (currentBlockZone is blockZone.nordOvest)
+            {
+                Vector2 temp = transform.position + new Vector3(-1, 1, 0);
+
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(transform.position, temp);
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
+
+            }
+            else if (currentBlockZone is blockZone.sudOvest)
+            {
+                Vector2 temp = transform.position + new Vector3(-1, -1, 0);
+
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(transform.position, temp);
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
+
+            }
 
 
         }

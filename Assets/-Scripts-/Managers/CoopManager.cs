@@ -54,8 +54,6 @@ public class CoopManager : MonoBehaviour
         }
     }
 
-    public List<PlayerCharacter> ActivePlayerCharacters => PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
-
     private void Awake()
     {
         if (_instance != null && _instance != this)
