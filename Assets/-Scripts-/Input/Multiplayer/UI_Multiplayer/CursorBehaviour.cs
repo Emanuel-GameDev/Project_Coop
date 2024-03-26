@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class CursorBehaviour : DefaultInputReceiver
+public class CursorBehaviour : InputReceiver
 {
     private Vector2 movement;
     private GameObject selectionParent;
@@ -17,6 +17,8 @@ public class CursorBehaviour : DefaultInputReceiver
 
     public bool objectSelected = false;
     private bool randomBtnSelected = false;
+
+    //DA RIVEDERE #MODIFICATO
     private ePlayerID playerID;
     private Image icon;
     public Sprite player1Icon;
@@ -42,7 +44,9 @@ public class CursorBehaviour : DefaultInputReceiver
         GetComponent<RectTransform>().localScale = new Vector2(1f, 1f);
 
         CharacterSelectionMenu.Instance.AssignInfoText(this);
-        if(playerInputHandler != null)
+
+        //DA RIVEDERE #MODIFICATO
+        if (playerInputHandler != null)
         {
             playerID = playerInputHandler.playerID;
             ChangeIconOnPlayerID();
@@ -131,8 +135,8 @@ public class CursorBehaviour : DefaultInputReceiver
     public override void SetCharacter(ePlayerCharacter character)
     {
         base.SetCharacter(character);
-
-        playerInputHandler.SetCharacter(character);
+        //DA RIVEDERE #MODIFICATO
+        //playerInputHandler.SetStartingCharacter(character);
     }
 
     public override void SetInputHandler(PlayerInputHandler inputHandler)
@@ -140,6 +144,13 @@ public class CursorBehaviour : DefaultInputReceiver
         base.SetInputHandler(inputHandler);
     }
 
+    //DA RIVEDERE #MODIFICATO
+    public void SetStartingCharacter()
+    {
+        playerInputHandler.SetStartingCharacter(character);
+    }
+
+    //DA RIVEDERE #MODIFICATO
     private void ChangeIconOnPlayerID()
     {
         if (playerID == ePlayerID.Player1)
@@ -175,6 +186,5 @@ public class CursorBehaviour : DefaultInputReceiver
         }
 
     }
-
 
 }

@@ -25,13 +25,13 @@ public class SceneInputReceiverManager : MonoBehaviour
     }
 
     [SerializeField, Tooltip("Imposta la mappatura di comandi da utilizzare per la scena corrente")]
-    eInputMap sceneInputMap;
+    InputMap sceneInputMap;
     [SerializeField, Tooltip("Imposta il Prefab che riceve gli input per la scena corrente")] 
     GameObject currentSceneInputReceiverPrefab;
     [SerializeField, Tooltip("Imposta il punto di spawn del Prefab nella scena")] 
     Transform receiverSpawnPoint;
-    [SerializeField, Tooltip("Determina se nella scena corrente è possibile cambiare personaggio")] 
-    bool canSwitchCharacter;
+    [SerializeField, Tooltip("Determina se nella scena corrente è possibile cambiare personaggio")]
+    bool canSwitchCharacter = true;
     public bool CanSwitchCharacter => canSwitchCharacter;
 
 
@@ -47,7 +47,6 @@ public class SceneInputReceiverManager : MonoBehaviour
             _instance = this;
         }
 
-        //CoopManager.Instance.InitializePlayers();
     }
 
     private void Start()
@@ -67,28 +66,18 @@ public class SceneInputReceiverManager : MonoBehaviour
         {
             GameObject newGO = GameObject.Instantiate(currentSceneInputReceiverPrefab);
             newGO.transform.SetPositionAndRotation(receiverSpawnPoint.position, receiverSpawnPoint.rotation);
-            CameraManager.Instance.AddTarget(newGO.transform);
-            InputReceiver newInputReceiver = newGO.GetComponent<InputReceiver>();
-            if(newInputReceiver == null)
+            if(!newGO.TryGetComponent<InputReceiver>(out var newInputReceiver))
             {
                 Debug.LogError("No InputReceiver found in the Prefab. Please add one.");
                 return null;
             }
-            newInputReceiver.SetInputHandler(newPlayerInputHandler);
            
             return newInputReceiver;
         }
     }
 
-    public eInputMap GetSceneActionMap()
+    public InputMap GetSceneActionMap()
     {
         return sceneInputMap;
     }
-}
-
-public enum eInputMap
-{
-    Player,
-    UI,
-    Minigame
 }

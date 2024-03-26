@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LoveCondition : Condition
 {
-    private CharacterClass player;
+    private PlayerCharacter player;
     private Character target;
     private float duration;
     public bool started;
@@ -17,7 +17,7 @@ public class LoveCondition : Condition
         //base.AddCondition(parent);
         Debug.Log(transform.parent.name + " sono sotto Innamoramento");       
         parent.inLove = true;
-        foreach(PlayerCharacter p in GameManager.Instance.coopManager.ActivePlayers) 
+        foreach(PlayerCharacter p in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters) 
         { 
             if(player != p)
             {
@@ -43,7 +43,7 @@ public class LoveCondition : Condition
 
     }
 
-    public void SetVariable(CharacterClass player, float duration)
+    public void SetVariable(PlayerCharacter player, float duration)
     {
         this.player = player;
         this.duration = duration;

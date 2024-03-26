@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class DPS : CharacterClass
+public class DPS : PlayerCharacter
 {
     [Header("Attack")]
     [SerializeField, Tooltip("Tempo tra una combo e l'altra.")]
@@ -163,7 +163,7 @@ public class DPS : CharacterClass
 
     //Attack: combo rapida di tre attacchi melee, ravvicinati. 
     #region Attack
-    public override void Attack(Character parent, InputAction.CallbackContext context)
+    public override void AttackInput(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
@@ -181,7 +181,7 @@ public class DPS : CharacterClass
         currentComboState = 1;
         nextComboState = currentComboState;
         DoMeleeAttack();
-        playerCharacter.GetRigidBody().velocity = Vector3.zero;
+        rb.velocity = Vector3.zero;
     }
     private void ContinueCombo()
     {
@@ -228,7 +228,7 @@ public class DPS : CharacterClass
 
     //Defense: fa una schivata, si sposta di tot distanza verso la direzione decisa dal giocatore con uno scatto
     #region Defense
-    public override void Defence(Character parent, InputAction.CallbackContext context)
+    public override void DefenseInput(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
@@ -237,7 +237,7 @@ public class DPS : CharacterClass
             {
                 ResetAttack();
                 lastDodgeTime = Time.time + dodgeDuration;
-                StartCoroutine(Dodge(lastNonZeroDirection, parent.GetRigidBody()));
+                StartCoroutine(Dodge(lastNonZeroDirection, rb));
             }
         }
     }
@@ -255,7 +255,7 @@ public class DPS : CharacterClass
 
     private IEnumerator Move(Vector2 direction, Rigidbody2D rb, float duration, float distance)
     {
-        Vector2 startPosition = playerCharacter.transform.position;
+        Vector2 startPosition = transform.position;
         rb.velocity = Vector2.zero;
 
         Vector2 destination = startPosition + direction.normalized * distance;
@@ -301,7 +301,7 @@ public class DPS : CharacterClass
 
     //UniqueAbility: immortalità per tot secondi
     #region UniqueAbility
-    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
+    public override void UniqueAbilityInput(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
@@ -328,7 +328,7 @@ public class DPS : CharacterClass
 
     //ExtraAbility: è l'ability upgrade 1
     #region ExtraAbility
-    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
+    public override void ExtraAbilityInput(InputAction.CallbackContext context)
     {
 
         if (context.performed && dashAttackUnlocked && canMove && (Time.time - lastDashAttackTime > dashAttackCooldown))
@@ -336,7 +336,7 @@ public class DPS : CharacterClass
             Utility.DebugTrace("Performed");
             isDashingAttack = true;
             dashAttackStartTime = Time.time;
-            parent.GetRigidBody().velocity = Vector2.zero;
+            rb.velocity = Vector2.zero;
             animator.SetTrigger(STARTDASHATTACK);
             chargeHandler.StartCharging(dashAttackStartTime);
         }
@@ -346,7 +346,7 @@ public class DPS : CharacterClass
             isDashingAttackStarted = true;
             Utility.DebugTrace("Canceled");
             chargeHandler.StopCharging();
-            StartCoroutine(DashAttack(lastNonZeroDirection, parent.GetRigidBody()));
+            StartCoroutine(DashAttack(lastNonZeroDirection, rb));
         }
 
     }
@@ -366,8 +366,8 @@ public class DPS : CharacterClass
 
     public void DashAttackTeleport()
     {
-        playerCharacter.GetRigidBody().MovePosition(startPosition);
-        Debug.Log($"Teleport at: {startPosition}, current position: {playerCharacter.transform.position}");
+        rb.MovePosition(startPosition);
+        Debug.Log($"Teleport at: {startPosition}, current position: {transform.position}");
     }
 
     public void EndDashAttack()
@@ -380,11 +380,11 @@ public class DPS : CharacterClass
     #endregion
 
 
-    public override void Move(Vector2 direction, Rigidbody2D rb)
+    public override void Move(Vector2 direction)
     {
         if (canMove)
         {
-            base.Move(direction, rb);
+            base.Move(direction);
         }
         else if (isDashingAttack)
         {
@@ -452,7 +452,7 @@ public class DPS : CharacterClass
 
         Debug.Log($"Damage Done: {damage}");
 
-        return new DamageData(damage, playerCharacter);
+        return new DamageData(damage, this);
 
     }
 

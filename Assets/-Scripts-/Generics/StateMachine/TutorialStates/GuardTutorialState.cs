@@ -48,8 +48,8 @@ public class GuardTutorialState : TutorialFase
     private void WaitAfterDialogue()
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
-
-        tutorialManager.inputBindings[tutorialManager.tank].SetReceiver(tutorialManager.tank);
+        // DA RIVEDERE #MODIFICATO
+        //tutorialManager.inputBindings[tutorialManager.tank].SetReceiver(tutorialManager.tank);
         tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         tutorialManager.inputBindings[tutorialManager.tank].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();

@@ -9,9 +9,69 @@ public class IntermittenceObstacle : ObstacleEnemy
     [SerializeField, Tooltip("Intervallo di tempo di idle")]
     [Min(0)]
     protected float idleTime = 5;
-    float idleTimer;
     [SerializeField, Tooltip("Intervallo di tempo di action")]
     [Min(0)]
     protected float actionTime = 5;
-    float actionTimer;
+
+    [SerializeField] Detector disableDetector;
+
+  
+
+    private void Start()
+    {
+        active = false;
+        StartCoroutine(WaitingForAction());
+    }
+
+    private IEnumerator WaitingForAction()
+    {
+        yield return new WaitForSeconds(idleTime);
+
+        StartCoroutine(WaitingForSleep());
+
+        active = true;
+
+        //momentaneo
+        GetComponentInChildren<SpriteRenderer>().color = Color.red;
+
+        foreach(PlayerCharacter character in disableDetector.GetPlayersDetected())
+        {
+            StartCoroutine(PushPlayer(character));
+        }
+    }
+
+    private IEnumerator WaitingForSleep()
+    {
+        yield return new WaitForSeconds(actionTime);
+
+        StartCoroutine(WaitingForAction());
+
+        active = false;
+
+        //momentaneo
+        GetComponentInChildren<SpriteRenderer>().color = Color.gray;
+
+        
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (active)
+        {
+            if (collision.gameObject.TryGetComponent(out PlayerCharacter player))
+            {
+                Debug.Log("sono entrato nelle spine");
+
+
+                StartCoroutine(PushPlayer(player));
+
+                //animazione player che si fa male
+            }
+        }
+       
+    }
+
+    
+
+    
 }

@@ -7,13 +7,13 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class PlayerSelection
+public class PlayerSelection //DA RIVEDERE #MODIFICATO (InputReceiver è direttamente settato a CursorBehavioiur)
 {
     public PlayerData data;
     public bool selected;
-    public InputReceiver whoSelected;
+    public CursorBehaviour whoSelected;
 
-    public PlayerSelection(PlayerData data, bool iconSelected, InputReceiver receiver)
+    public PlayerSelection(PlayerData data, bool iconSelected, CursorBehaviour receiver)
     {
         this.data = data;
         selected = iconSelected;
@@ -25,7 +25,7 @@ public class PlayerSelection
         selected = iconSelected;
     }
 
-    public void AssignReceiver(InputReceiver receiver)
+    public void AssignReceiver(CursorBehaviour receiver)
     {
         if (receiver == null) return;
 
@@ -90,7 +90,6 @@ public class CharacterSelectionMenu : MonoBehaviour
         InitialiazeSelections();
 
         privatePlayerTexts = playerInfoTexts;
-        //GameManager.Instance.LoadSceneInbackground("TestLeo2D");
     }
 
     public List<RectTransform> GetCharacterIcons()
@@ -153,7 +152,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     /// Aggiorna il bool all'interno della lista delle selezioni quando un personaggio clicca sull'icona
     /// </summary>
     /// <param name="iconToSelect"></param>
-    public void UpdatePlayerSelection(InputReceiver receiver, RectTransform iconToSelect, bool mode)
+    public void UpdatePlayerSelection(CursorBehaviour receiver, RectTransform iconToSelect, bool mode)
     {
         // Iter sulle selections
         foreach (PlayerSelection s in selectableCharacters)
@@ -248,7 +247,7 @@ public class CharacterSelectionMenu : MonoBehaviour
             while (selectableCharacters[rand].selected);
 
             selectableCharacters[rand].EditIcon(true);
-            selectableCharacters[rand].AssignReceiver(handler.CurrentReceiver);
+            selectableCharacters[rand].AssignReceiver(handler.CurrentReceiver as CursorBehaviour); //DA RIVEDERE #MODIFICATO
             selectableCharacters[rand].Select();
         }
 
@@ -260,8 +259,14 @@ public class CharacterSelectionMenu : MonoBehaviour
     public void EndSelection()
     {
         Debug.Log("Selezione completa");
+
+        foreach(PlayerSelection s in selectableCharacters)
+        {
+            if (s.whoSelected != null)
+                s.whoSelected.SetStartingCharacter();
+        }
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        //GameManager.Instance.ActivateLoadedScene();
     }
 
 

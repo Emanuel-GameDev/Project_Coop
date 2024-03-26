@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Localization.Settings;
@@ -324,7 +323,7 @@ public class BasicEnemy : EnemyCharacter
         }
         else 
         {
-            CharacterClass dealer= data.dealer as CharacterClass;
+            Character dealer = data.dealer as Character;
 
             if(dealer != null)
             {
