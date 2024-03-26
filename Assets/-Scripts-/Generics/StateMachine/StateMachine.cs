@@ -40,4 +40,11 @@ public class StateMachine<T> where T : State<T>
 
         currentState.Enter();
     }
+
+    public IEnumerator ChangeState(float waitTime, T state)
+    {
+        yield return new WaitForSeconds(waitTime);
+
+        SetState(state);
+    }
 }
