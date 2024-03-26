@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,7 +10,7 @@ public class SlotPlayer : InputReceiver
 
     private void Awake()
     {
-        slotmachine= FindAnyObjectByType(typeof(Slotmachine)).GetComponent<Slotmachine>();
+        slotmachine = FindAnyObjectByType<Slotmachine>();
         slotmachine.listOfCurrentPlayer.Add(this);
 
     }

@@ -17,7 +17,7 @@ public class LoveCondition : Condition
         //base.AddCondition(parent);
         Debug.Log(transform.parent.name + " sono sotto Innamoramento");       
         parent.inLove = true;
-        foreach(PlayerCharacter p in GameManager.Instance.coopManager.ActivePlayerCharacters) 
+        foreach(PlayerCharacter p in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters) 
         { 
             if(player != p)
             {

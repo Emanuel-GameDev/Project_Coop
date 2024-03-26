@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class PlayerCharacter : Character
+public abstract class PlayerCharacter : Character
 {
     #region Variables
 
@@ -184,6 +184,14 @@ public class PlayerCharacter : Character
     #region Damage
     public override void TakeDamage(DamageData data)
     {
+        if (data.condition != null)
+            AddToConditions(data.condition);
+
+        currentHp -= data.damage * DamageReceivedMultiplier;
+        damager.RemoveCondition();
+        Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
+
+
         if (protectedByTank && data.blockedByTank)
         {
             Debug.Log("Protetto da tank");
@@ -194,6 +202,15 @@ public class PlayerCharacter : Character
         }
     }
 
+    public virtual void TakeHeal(DamageData data)
+    {
+        if(data.condition != null)
+            RemoveFromConditions(data.condition);
+
+        currentHp += data.damage;
+        damager.RemoveCondition();
+        Debug.Log($"Healer: {data.dealer}, Heal: {data.damage}, Condition Removed: {data.condition}");
+    }
 
     public override DamageData GetDamageData()
     {

@@ -46,7 +46,7 @@ public class CameraManager : MonoBehaviour
 
     public void AddAllPlayers()
     {
-        List<PlayerCharacter> players = GameManager.Instance.coopManager.ActivePlayerCharacters;
+        List<PlayerCharacter> players = PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
 
         if(players.Count == 0)  
             return;

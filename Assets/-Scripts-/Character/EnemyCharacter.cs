@@ -65,7 +65,7 @@ public class EnemyCharacter : Character
 
     public virtual void TargetSelection() 
     {
-        List<PlayerCharacter> activePlayers = GameManager.Instance.coopManager.ActivePlayerCharacters;
+        List<PlayerCharacter> activePlayers = PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
 
         Transform target = activePlayers[0].transform;
         float distance = Vector3.Distance(transform.position, target.position);
