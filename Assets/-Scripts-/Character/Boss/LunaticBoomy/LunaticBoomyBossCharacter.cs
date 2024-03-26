@@ -50,7 +50,6 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
     [Space]
     [Title("JUMP")]
-    [Space]
 
     [SerializeField, Tooltip("Di quanto deve essere spostato il centro del salto da un trampolino all'altro")]
     private Vector2 jumpOffset;
@@ -79,16 +78,12 @@ public class LunaticBoomyBossCharacter : BossCharacter
     public float BreakTime { get { return breakTime; } private set { } }
 
     [SerializeField, Tooltip("Potenza del rimbalzo")]
-    private float bounceForce = 10f;
-    public float BounceForce { get { return bounceForce; } private set { } }
+    private float bounceHeight = 10f;
+    public float BounceHeight { get { return bounceHeight; } private set { } }
 
-    [SerializeField, Tooltip("la forza effettiva del rimbalzo sarà un random compreso tra jumpForce - randomBounceRange e jumpForce + randomBounceRange")]
+    [SerializeField, Tooltip("la forza effettiva del rimbalzo sarà un random compreso tra: \njumpForce - randomBounceRange \njumpForce + randomBounceRange")]
     private float randBounceRange = 3f;
     public float RandBounceRange { get { return randBounceRange; } private set { } }
-
-    [SerializeField, Tooltip("Tempo di attesa dopo la fine del giro durante PANIC per dare temo alle animazioni / migliorare la resa visiva")]
-    private float timeAfterBreak = 1f;
-    public float TimeAfterBreak { get { return timeAfterBreak; } private set { } }
 
     [Space]
     [Title("PANIC")]

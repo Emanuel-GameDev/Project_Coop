@@ -33,7 +33,7 @@ public class LBJumpAttack : LBBaseState
         // Pool di proiettili
         InitializePool();
 
-        // Accendo agent
+        // Spengo agent
         if (bossCharacter.gameObject.GetComponent<NavMeshAgent>().enabled)
         {
             bossCharacter.Agent.isStopped = true;
@@ -41,7 +41,7 @@ public class LBJumpAttack : LBBaseState
             bossCharacter.TriggerAgent(false);
         }
 
-        // Imposto speed sgent in base alla fase
+        // Imposto speed del salto in base alla fase
         activePhase = bossCharacter.GetActivePhase();
 
         StartJump();
@@ -70,6 +70,7 @@ public class LBJumpAttack : LBBaseState
                                                                                             controlPoint,
                                                                                             nextTrump.gameObject.transform.position);
 
+            // =========== ATTACCO ===========
             if (fracJourney >= 0.5f)
             {
                 if (canAttack)
@@ -79,30 +80,51 @@ public class LBJumpAttack : LBBaseState
                 }
             }
 
+            // =========== SALTO ===========
             if (fracJourney >= 1.0f)
             {
-                // Temporaneo 
+                // Temporaneo, controllo se il trampolino dove sono atterrato è distrutto
                 if (nextTrump.destroyed)
                 {
                     stateMachine.SetState(new LBPanic(bossCharacter, nextTrump));
                     return;
                 }
 
-                //Debug.Log("Arrivato");
+                // Aggiorno la destinazione del salto
                 currTrump = nextTrump;
 
+                // Controllo la quantità dei salti in base alla fase corrente
                 jumpCount++;
                 if (jumpCount == activePhase.numJumps)
                 {
                     stateMachine.SetState(new LBCarrotBreak(bossCharacter, currTrump));
                 }
 
-                currTrump.StartCoroutine(WaitBeforeJump(bossCharacter.JumpStep));
+                // Avvio l'attesa tra un salto e l'altro
+                if (bossCharacter.ActivateJumpStep)
+                    currTrump.StartCoroutine(WaitBeforeJump(bossCharacter.JumpStep));
             }
         }
     }
 
     #region Jump
+
+    private void StartJump()
+    {
+        // Prendo reference al punto di arrivo, mi assicuro che il trampolino non sia distrutto
+        do
+        {
+
+            nextTrump = GetRandomTrump(bossCharacter.GetTrumps());
+
+        } while (nextTrump.destroyed);
+
+        canJump = true;
+        startTime = Time.time;
+
+        // Calcolo del control point dinamico
+        controlPoint = CalculateControlPoint();
+    }
 
     private IEnumerator WaitBeforeJump(float waitTime)
     {
@@ -161,6 +183,8 @@ public class LBJumpAttack : LBBaseState
     #endregion
 
     #endregion
+
+    // DA FINIRE
 
     #region JumpAttack
 
@@ -224,22 +248,6 @@ public class LBJumpAttack : LBBaseState
     #endregion
 
     #region Utility
-
-    private void StartJump()
-    {
-        // Prendo reference al punto di arrivo, mi assicuro che il trampolino non sia distrutto
-        do {
-
-            nextTrump = GetRandomTrump(bossCharacter.GetTrumps());
-
-        } while (!nextTrump.destroyed);
-
-        canJump = true;
-        startTime = Time.time;
-
-        // Calcolo del control point dinamico
-        controlPoint = CalculateControlPoint();
-    }
 
     private TrumpOline GetRandomTrump(List<TrumpOline> trumpOlines)
     {

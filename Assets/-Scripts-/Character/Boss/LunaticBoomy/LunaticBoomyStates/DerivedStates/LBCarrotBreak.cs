@@ -43,11 +43,16 @@ public class LBCarrotBreak : LBBaseState
             return;
         }
 
+        // Trovo il punto di arrivo del salto
+
+
+
+
         // Applica una forza verso l'alto per simulare il salto
         bossRB.velocity = Vector2.zero;
 
-        float randForce = Random.Range(bossCharacter.BounceForce - bossCharacter.RandBounceRange,
-                                                   bossCharacter.BounceForce + bossCharacter.RandBounceRange);
+        float randForce = Random.Range(bossCharacter.BounceHeight - bossCharacter.RandBounceRange,
+                                                   bossCharacter.BounceHeight + bossCharacter.RandBounceRange);
 
         bossRB.AddForce(Vector2.up * randForce, ForceMode2D.Impulse);
 
