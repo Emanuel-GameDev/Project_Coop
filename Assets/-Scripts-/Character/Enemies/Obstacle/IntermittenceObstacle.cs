@@ -63,7 +63,8 @@ public class IntermittenceObstacle : ObstacleEnemy
                 Debug.Log("sono entrato nelle spine");
 
 
-                StartCoroutine(PushPlayer(player));
+                StartCoroutine(player.PushCharacter(transform.position, pushStrength, 1));
+                player.GetComponent<IDamageable>().TakeDamage(GetDamageData());
 
                 //animazione player che si fa male
             }

@@ -1,5 +1,6 @@
 using MBT;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -24,6 +25,8 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 
     public Transform dealerTransform => transform;
 
+    [SerializeField] private AnimationCurve pushAnimationCurve;
+
     //Lo uso per chimare tutte le funzioni iniziali
     protected virtual void Awake()
     {
@@ -44,6 +47,23 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     public abstract void TakeDamage(DamageData data);
 
     public abstract DamageData GetDamageData();
+
+    public IEnumerator PushCharacter(Vector3 pusherPosizion,float pushStrenght,float pushDuration)
+    {
+        float timer = 0;
+        float interpolationRatio;
+        Vector3 startPosition=rb.transform.position;
+
+        Vector3 pushDirection=(startPosition- pusherPosizion).normalized;
+
+        while (timer < pushDuration)
+        {
+            interpolationRatio = timer / 1;
+            timer += Time.deltaTime;
+            rb.MovePosition(Vector3.Lerp(startPosition, startPosition + (pushDirection * pushStrenght), pushAnimationCurve.Evaluate(interpolationRatio)));
+            yield return new WaitForFixedUpdate();
+        }
+    }
 
 
     #region PowerUp & Conditions

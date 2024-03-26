@@ -45,7 +45,7 @@ public class ObstacleEnemy : MonoBehaviour
         return new DamageData(damage, staminaDamage, null, false);
     }
 
-    protected IEnumerator PushPlayer(PlayerCharacter player)
+    protected IEnumerator PushPlayer(PlayerCharacter player) //transform dell'oggetto,la forza
     {
         float timer = 0;
         float interpolationRatio;
