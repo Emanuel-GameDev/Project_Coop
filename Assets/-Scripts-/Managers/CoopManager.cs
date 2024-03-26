@@ -54,8 +54,6 @@ public class CoopManager : MonoBehaviour
         }
     }
 
-    public List<PlayerCharacter> ActivePlayerCharacters => PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
-
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -83,14 +81,6 @@ public class CoopManager : MonoBehaviour
     public PlayerInputHandler GetPlayer(ePlayerID playerID)
     {
         return playerInputHandlers.Find(player => player.playerID == playerID);
-    }
-
-    public PlayerCharacter GetRandomPlayer()
-    {
-        // Prendo pg a caso
-        int id = UnityEngine.Random.Range(0, ActivePlayers.Count);
-
-        return ActivePlayers[id];
     }
 
     #region Player Management

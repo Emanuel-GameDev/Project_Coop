@@ -287,7 +287,7 @@ public class TutorialManager : MonoBehaviour
             //
             //receiver � null
             //
-            ranged = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+            ranged = receiver.gameObject.GetComponent<PlayerCharacter>();
 
             inputBindings.Add(ranged, inputHandlers[inputHandlersID]);
             HPHandler.Instance.AddContainer(ranged);

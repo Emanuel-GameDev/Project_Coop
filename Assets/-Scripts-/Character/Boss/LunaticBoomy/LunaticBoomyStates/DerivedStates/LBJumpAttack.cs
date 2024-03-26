@@ -197,7 +197,7 @@ public class LBJumpAttack : LBBaseState
         if (projectile != null)
         {
             // Prendo un personaggio random
-            PlayerCharacter randCharacter = GameManager.Instance.coopManager.GetRandomPlayer();
+            PlayerCharacter randCharacter = null; //GameManager.Instance.coopManager.GetRandomPlayer();
 
             // La direzione di sparo
             Vector2 direction = (randCharacter.gameObject.transform.position - bossCharacter.gameObject.transform.position).normalized;

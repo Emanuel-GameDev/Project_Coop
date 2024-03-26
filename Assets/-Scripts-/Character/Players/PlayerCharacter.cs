@@ -43,9 +43,6 @@ public abstract class PlayerCharacter : Character
     protected Dictionary<AbilityUpgrade, bool> upgradeStatus;
     [HideInInspector] public PlayerCharacterController characterController;
 
-    /*[HideInInspector]*/ public int coins;
-    /*[HideInInspector]*/ public int keys;
-
     #endregion
 
     #region Misc
@@ -241,7 +238,7 @@ public abstract class PlayerCharacter : Character
     {
         //string gamepad = context.control.device.displayName;
 
-        string gamepad = playerInputHandler.PlayerInput.currentControlScheme;
+        string gamepad = characterController.GetInputHandler().PlayerInput.currentControlScheme;
 
 
         if (gamepad.Contains("Gamepad") || gamepad.Contains("Controller") || gamepad.Contains("Joystick"))

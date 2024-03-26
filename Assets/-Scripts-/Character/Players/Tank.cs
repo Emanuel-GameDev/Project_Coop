@@ -331,7 +331,7 @@ public class Tank : PlayerCharacter
             if(isBlocking != true)
             {
                 isBlocking = true;
-                currentBlockZone = SetBlockZone(lastNonZeroDirection);
+                currentBlockZone = SetBlockZone(lastNonZeroDirection.y);
                 animator.SetTrigger("StartBlock");
 
             }
