@@ -64,10 +64,10 @@ public class Slotmachine : MonoBehaviour
     private void Start()
     {
         
-
+        StartCoroutine(WaitForPlayers());
     }
 
-    private void InitializeSlotMachineMinigame()
+    public void InitializeSlotMachineMinigame()
     {
         RandomReorder(listOfCurrentPlayer);
 
@@ -339,6 +339,12 @@ public class Slotmachine : MonoBehaviour
     public void InputStop(SlotPlayer player) 
     {
         StartCoroutine(InputStopRowSlot(player));
+    }
+
+    IEnumerator WaitForPlayers()
+    {
+        yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
+        MinigameMenuManager.Instance.StartFirstMenu();
     }
 
 
