@@ -6,6 +6,6 @@ public class CrashWave : MonoBehaviour
 {
     private void Start()
     {
-        
+        GetComponent<Animation>().Play();
     }
 }
