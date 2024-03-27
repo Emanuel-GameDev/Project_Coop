@@ -95,7 +95,7 @@ public class LBJumpAttack : LBBaseState
 
                 // Controllo la quantità dei salti in base alla fase corrente
                 jumpCount++;
-                if (jumpCount == activePhase.numJumps)
+                if (jumpCount == bossCharacter.GetRandomJumpNum(activePhase))
                 {
                     stateMachine.SetState(new LBCarrotBreak(bossCharacter, currTrump));
                 }
@@ -114,7 +114,6 @@ public class LBJumpAttack : LBBaseState
         // Prendo reference al punto di arrivo, mi assicuro che il trampolino non sia distrutto
         do
         {
-
             nextTrump = GetRandomTrump(bossCharacter.GetTrumps());
 
         } while (nextTrump.destroyed);

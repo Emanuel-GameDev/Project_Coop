@@ -114,11 +114,17 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
     private void InitializePhases()
     {
-        for (int i = 0; i < bossPhases.Count; i++)
-        {
-            int rand = UnityEngine.Random.Range(bossPhases[i].minJumps, bossPhases[i].maxJumps + 1);
-            bossPhases[i].numJumps = rand;
-        }
+        // Magar la funz serve la questo for è sbagliato
+        //for (int i = 0; i < bossPhases.Count; i++)
+        //{
+        //    int rand = UnityEngine.Random.Range(bossPhases[i].minJumps, bossPhases[i].maxJumps + 1);
+        //    bossPhases[i].numJumps = rand;
+        //}
+    }
+
+    public int GetRandomJumpNum(LBPhase activePhase)
+    {
+        return UnityEngine.Random.Range(activePhase.minJumps, activePhase.maxJumps + 1);
     }
 
     private void Update()
