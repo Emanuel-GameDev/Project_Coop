@@ -42,11 +42,17 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
     [SerializeField]
     private GameObject projectilePrefab;
-    public GameObject ProjectilePrefab => projectilePrefab;
+
+    [SerializeField]
+    private int poolSize = 3;
 
     [SerializeField]
     private float bombSpeed = 10f;
     public float BombSpeed => bombSpeed;
+
+
+    private GameObject[] projectilePool;
+    public GameObject[] ProjectilePool => projectilePool;
 
     [Space]
     [Title("JUMP")]
@@ -108,6 +114,7 @@ public class LunaticBoomyBossCharacter : BossCharacter
         Agent.updateRotation = false;
 
         InitializePhases();
+        InitializePool();
 
         stateMachine.SetState(new LBStart(this));
     }
@@ -121,6 +128,35 @@ public class LunaticBoomyBossCharacter : BossCharacter
         //    bossPhases[i].numJumps = rand;
         //}
     }
+
+    #region Projectiles
+
+    private void InitializePool()
+    {
+        projectilePool = new GameObject[poolSize];
+
+        for (int i = 0; i < projectilePool.Length; i++)
+        {
+            projectilePool[i] = Instantiate(projectilePrefab,
+                                                   gameObject.transform.position, Quaternion.identity);
+            projectilePool[i].transform.SetParent(transform.GetChild(0));
+            projectilePool[i].SetActive(false);
+        }
+    }
+
+    internal GameObject GetPooledProjectile()
+    {
+        for (int i = 0; i < projectilePool.Length; i++)
+        {
+            if (!projectilePool[i].activeInHierarchy)
+            {
+                return projectilePool[i];
+            }
+        }
+        return null;
+    }
+
+    #endregion
 
     private void Update()
     {
@@ -177,4 +213,10 @@ public class LunaticBoomyBossCharacter : BossCharacter
         return null;
     }
 
+    internal PlayerCharacter GetRandomPlayer()
+    {
+        int randPlayerID = UnityEngine.Random.Range(0, PlayerCharacterPoolManager.Instance.ActivePlayerCharacters.Count);
+
+        return PlayerCharacterPoolManager.Instance.ActivePlayerCharacters[randPlayerID];
+    }
 }

@@ -11,7 +11,7 @@ public class LBJumpAttack : LBBaseState
     private Vector2 controlPoint;
 
     // Attack related
-    private GameObject[] projectilePool;
+    private List<PlayerCharacter> targetsHit;
 
     // Others
     private LBPhase activePhase = null;
@@ -31,9 +31,6 @@ public class LBJumpAttack : LBBaseState
     {
         base.Enter();
 
-        // Pool di proiettili
-        InitializePool();
-
         // Spengo agent
         if (bossCharacter.gameObject.GetComponent<NavMeshAgent>().enabled)
         {
@@ -46,8 +43,10 @@ public class LBJumpAttack : LBBaseState
         activePhase = bossCharacter.GetActivePhase();
         maxJumps = activePhase.numJumps;
 
+        targetsHit = new List<PlayerCharacter>();
+
         StartJump();
-        
+
     }
 
     public override void Exit()
@@ -77,8 +76,23 @@ public class LBJumpAttack : LBBaseState
             {
                 if (canAttack)
                 {
-                    //Debug.Log("Attacco");
-                    nextTrump.StartCoroutine(JumpAttack());
+                    targetsHit.Clear();
+                    canAttack = false;
+
+                    // Ho scritto 3-1 per evitare fraintendimenti poiché jumpCount viene incrementatao dopo questo
+                    // controllo, avrei potuto scrivere tranquillamente 2
+                    if (activePhase.phaseNum == 3 && jumpCount == (3-1))
+                    {
+                        Debug.Log("Attacco 3à fase");
+                        Attack();
+                        Attack();
+                    }
+                    else
+                    {
+                        Debug.Log("Attacco normale");
+                        Attack();
+                    }
+
                 }
             }
 
@@ -101,6 +115,9 @@ public class LBJumpAttack : LBBaseState
                 {
                     stateMachine.SetState(new LBCarrotBreak(bossCharacter, currTrump));
                 }
+
+                // Reimposto il canAttack così può sparare quando arriva metà del prossimo salto
+                canAttack = true;
 
                 // Avvio l'attesa tra un salto e l'altro
                 if (bossCharacter.ActivateJumpStep)
@@ -190,61 +207,37 @@ public class LBJumpAttack : LBBaseState
     #region JumpAttack
 
     // Da FINIRE
-    private IEnumerator JumpAttack()
+    private void Attack()
     {
-        canAttack = false;
+        GameObject projectile = bossCharacter.GetPooledProjectile();
 
-        GameObject projectile = GetPooledProjectile();
+        // Prendo un personaggio random, se non è già stato colpito
+        PlayerCharacter randCharacter = null;
+
+        do
+        {
+            randCharacter = bossCharacter.GetRandomPlayer();
+
+        } while (targetsHit.Contains(randCharacter));
+
         if (projectile != null)
         {
-            // Prendo un personaggio random
-            PlayerCharacter randCharacter = null; //GameManager.Instance.coopManager.GetRandomPlayer();
+            // Set pos del proiettile
+            projectile.transform.position = bossCharacter.gameObject.transform.position;
 
             // La direzione di sparo
             Vector2 direction = (randCharacter.gameObject.transform.position - bossCharacter.gameObject.transform.position).normalized;
-            projectile.transform.right = direction;
+
             projectile.SetActive(true);
 
-            Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                rb.velocity = direction * bossCharacter.BombSpeed;
-            }
+            // Set velocità sul proiettile
+            projectile.GetComponent<Rigidbody2D>().velocity = direction * bossCharacter.BombSpeed;
         }
+        else
+            Debug.LogError("Error: projectile is null");
 
-        yield return null;
-
-        canAttack = true;
+        targetsHit.Add(randCharacter);
     }
-
-
-    #region Projectiles
-
-    private void InitializePool()
-    {
-        projectilePool = new GameObject[bossCharacter.gameObject.transform.GetChild(0).childCount];
-
-        for (int i = 0; i < bossCharacter.gameObject.transform.GetChild(0).childCount; i++)
-        {
-            projectilePool[i] = Object.Instantiate(bossCharacter.ProjectilePrefab,
-                                                          bossCharacter.gameObject.transform.position, Quaternion.identity);
-            projectilePool[i].SetActive(false);
-        }
-    }
-
-    private GameObject GetPooledProjectile()
-    {
-        for (int i = 0; i < projectilePool.Length; i++)
-        {
-            if (!projectilePool[i].activeInHierarchy)
-            {
-                return projectilePool[i];
-            }
-        }
-        return null;
-    }
-
-    #endregion
 
     #endregion
 
