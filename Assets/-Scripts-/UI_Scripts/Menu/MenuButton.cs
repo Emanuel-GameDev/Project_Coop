@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class MenuButton : Button
 {
-    GameObject highlight;
+    public GameObject highlight;
 
     protected override void Start()
     {
@@ -18,9 +18,9 @@ public class MenuButton : Button
     protected override void DoStateTransition(SelectionState state, bool instant)
     {
         base.DoStateTransition(state, instant);
-        if(state == SelectionState.Selected)
+        if(state == SelectionState.Highlighted)
         {
-            highlight.SetActive(true);
+            DoStateTransition(SelectionState.Selected, true);
         }
         if(state == SelectionState.Normal)
         {
@@ -30,7 +30,3 @@ public class MenuButton : Button
 
 
 }
-
-  
-
-
