@@ -20,6 +20,7 @@ public class LBJumpAttack : LBBaseState
     private bool canAttack = true;
     private float startTime = 0f;
     private int jumpCount = 0;
+    private int maxJumps;
 
     public LBJumpAttack(LunaticBoomyBossCharacter bossCharacter, TrumpOline firstTrump) : base(bossCharacter)
     {
@@ -43,6 +44,7 @@ public class LBJumpAttack : LBBaseState
 
         // Imposto speed del salto in base alla fase
         activePhase = bossCharacter.GetActivePhase();
+        maxJumps = activePhase.numJumps;
 
         StartJump();
         
@@ -95,7 +97,7 @@ public class LBJumpAttack : LBBaseState
 
                 // Controllo la quantità dei salti in base alla fase corrente
                 jumpCount++;
-                if (jumpCount == bossCharacter.GetRandomJumpNum(activePhase))
+                if (jumpCount == maxJumps)
                 {
                     stateMachine.SetState(new LBCarrotBreak(bossCharacter, currTrump));
                 }

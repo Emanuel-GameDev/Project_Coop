@@ -15,7 +15,7 @@ public class LBPhase
     public bool active = false;
 
     [HideInInspector]
-    public int numJumps;
+    public int numJumps => UnityEngine.Random.Range(minJumps, maxJumps + 1);
 }
 
 public class LunaticBoomyBossCharacter : BossCharacter
@@ -120,11 +120,6 @@ public class LunaticBoomyBossCharacter : BossCharacter
         //    int rand = UnityEngine.Random.Range(bossPhases[i].minJumps, bossPhases[i].maxJumps + 1);
         //    bossPhases[i].numJumps = rand;
         //}
-    }
-
-    public int GetRandomJumpNum(LBPhase activePhase)
-    {
-        return UnityEngine.Random.Range(activePhase.minJumps, activePhase.maxJumps + 1);
     }
 
     private void Update()
