@@ -13,7 +13,7 @@ namespace MBTExample
         public TransformReference targetTransform;
         public GameObjectReference parentGameObject;
 
-        private TutorialBossCharacter bossCharacter;
+        private KerberosBossCharacter bossCharacter;
         private bool started = false;
         private bool mustStop = false;
         private float tempTimer;        
@@ -23,7 +23,7 @@ namespace MBTExample
         public override void OnEnter()
         {
           
-                bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
+                bossCharacter = parentGameObject.Value.GetComponent<KerberosBossCharacter>();
            
             started = false;
             mustStop = false;
@@ -54,8 +54,8 @@ namespace MBTExample
                 if (bossCharacter.parried)
                 {                  
                     mustStop = true;
-                    //funzione player spinta inetro
-                    Debug.Log("spinta indietro player");
+
+                    //funzione player spinta inetro                    
                     bossCharacter.whoParried.StartCoroutine(bossCharacter.whoParried.PushCharacter(bossCharacter.transform.position,
                         bossCharacter.ChargeOnParryPushForce, bossCharacter.ChargeOnParryDuration));
                 }
@@ -102,7 +102,7 @@ namespace MBTExample
         public void ShowAttackPreview(bool value)
         {
             bossCharacter.canShowPreview = value;           
-            bossCharacter.previewArrow.SetActive(value);
+            bossCharacter.pivotPreviewArrow.SetActive(value);
             
         }
         

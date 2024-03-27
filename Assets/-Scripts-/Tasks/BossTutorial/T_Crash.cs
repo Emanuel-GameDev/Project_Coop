@@ -12,13 +12,13 @@ namespace MBTExample
     public class T_Crash : Leaf
     {       
         public GameObjectReference parentGameObject;
-        private TutorialBossCharacter bossCharacter;
+        private KerberosBossCharacter bossCharacter;
         private float tempTimer;
 
         public override void OnEnter()
         {
           
-            bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
+            bossCharacter = parentGameObject.Value.GetComponent<KerberosBossCharacter>();
             tempTimer = 0;
             bossCharacter.parried = false;
 

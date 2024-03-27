@@ -1,4 +1,5 @@
 using MBT;
+using System.Collections;
 using UnityEngine;
 
 namespace MBTExample
@@ -10,8 +11,10 @@ namespace MBTExample
         public TransformReference targetTransform;
         public GameObjectReference parentGameObject;
 
-        private TutorialBossCharacter bossCharacter;
+        private KerberosBossCharacter bossCharacter;
         private Vector3 targetPosition;
+        private bool parryStunned;
+        private bool canExit;
 
         private int attackCount;
         
@@ -19,10 +22,13 @@ namespace MBTExample
         public override void OnEnter()
         {
             
-            bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
+            bossCharacter = parentGameObject.Value.GetComponent<KerberosBossCharacter>();
             bossCharacter.Agent.isStopped = false;
             bossCharacter.previewStarted = false;
             bossCharacter.canLastAttackPunch = false;
+            parryStunned = false;
+            canExit = false;
+            bossCharacter.parried = false;
 
 
             bossCharacter.SetCanShowPreview();
@@ -41,8 +47,14 @@ namespace MBTExample
 
         public override NodeResult Execute()
         {
-            if (!bossCharacter.isDead) 
+            if (!bossCharacter.isDead && !parryStunned) 
             { 
+                if(bossCharacter.parried)
+                {
+                    parryStunned = true;
+                    StartCoroutine(UnstunFromParry());
+                }
+
             float dist = Vector2.Distance(targetPosition, bossCharacter.transform.position);
 
                 //esci da attacco
@@ -88,18 +100,26 @@ namespace MBTExample
 
                 }
             }
-
+            if(parryStunned)
+            {
+                if (canExit)
+                    return NodeResult.success;
+            }
             return NodeResult.running;
         }
 
         public void NextAttackPreview()
         {                       
             bossCharacter.previewStarted = true;
-            bossCharacter.previewArrow.SetActive(true);
+            bossCharacter.pivotPreviewArrow.SetActive(true);
             StartCoroutine(bossCharacter.StartAttackPunch());
         }
 
-
+        public IEnumerator UnstunFromParry()
+        {
+            yield return new WaitForSeconds(bossCharacter.parryStunTimer);
+            canExit = true;
+        }
 
     }
 
