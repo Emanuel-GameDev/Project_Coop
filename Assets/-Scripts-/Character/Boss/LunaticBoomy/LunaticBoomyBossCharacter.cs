@@ -30,7 +30,7 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
     [SerializeField]
     private List<LBPhase> bossPhases;
-    public List<LBPhase> BossPhases { get { return bossPhases; } private set { } }
+    public List<LBPhase> BossPhases => bossPhases;
 
 
     [SerializeField]
@@ -42,32 +42,32 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
     [SerializeField]
     private GameObject projectilePrefab;
-    public GameObject ProjectilePrefab { get { return projectilePrefab; } private set { } }
+    public GameObject ProjectilePrefab => projectilePrefab;
 
     [SerializeField]
     private float bombSpeed = 10f;
-    public float BombSpeed { get { return bombSpeed; } set { } }
+    public float BombSpeed => bombSpeed;
 
     [Space]
     [Title("JUMP")]
 
     [SerializeField, Tooltip("Di quanto deve essere spostato il centro del salto da un trampolino all'altro")]
     private Vector2 jumpOffset;
-    public Vector2 JumpOffset { get { return jumpOffset; } private set { } }
+    public Vector2 JumpOffset => jumpOffset;
 
     [Space]
 
     [SerializeField, Min(0.04f), Tooltip("un tempo di attesa tra un salto e l'altro")]
     private float jumpStep = 1.5f;
-    public float JumpStep { get { return jumpStep; } private set { } }
+    public float JumpStep => jumpStep;
 
     [SerializeField, Tooltip("Attiva o disattiva il jump step, se è disattivato significa che tra un salto e l'altro non c'è attesa")]
     private bool activateJumpStep = true;
-    public bool ActivateJumpStep { get { return activateJumpStep; } private set { } }
+    public bool ActivateJumpStep => activateJumpStep;
 
     [SerializeField, Tooltip("Tempo di attesa dopo la fine del giro durante PANIC per dare temo alle animazioni / migliorare la resa visiva")]
     private float timeAfterJump = 1f;
-    public float TimeAfterJump { get { return timeAfterJump; } private set { } }
+    public float TimeAfterJump => timeAfterJump;
 
     [Space]
     [Title("CARROT_BREAK")]
@@ -75,15 +75,15 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
     [SerializeField, Tooltip("Durata della pausa carota")]
     private float breakTime;
-    public float BreakTime { get { return breakTime; } private set { } }
+    public float BreakTime => breakTime;
 
     [SerializeField, Tooltip("Potenza del rimbalzo")]
-    private float bounceHeight = 10f;
-    public float BounceHeight { get { return bounceHeight; } private set { } }
+    private float bounceForce = 5f;
+    public float BounceForce => bounceForce;
 
-    [SerializeField, Tooltip("la forza effettiva del rimbalzo sarà un random compreso tra: \njumpForce - randomBounceRange \njumpForce + randomBounceRange")]
+    [SerializeField, Tooltip("la forza effettiva del rimbalzo sarà un random compreso tra: \nbounceForce - randomBounceRange \nbounceForce + randomBounceRange")]
     private float randBounceRange = 3f;
-    public float RandBounceRange { get { return randBounceRange; } private set { } }
+    public float RandBounceRange => randBounceRange;
 
     [Space]
     [Title("PANIC")]
@@ -91,15 +91,15 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
     [SerializeField]
     private List<TrumpOline> route1;
-    public List<TrumpOline> Route1 { get { return route1; } private set { } }
+    public List<TrumpOline> Route1 => route1;
 
     [SerializeField]
     private List<TrumpOline> route2;
-    public List<TrumpOline> Route2 { get { return route2; } private set { } }
+    public List<TrumpOline> Route2 => route2;
 
     [SerializeField, Tooltip("Tempo di attesa dopo la fine del giro durante PANIC per dare temo alle animazioni / migliorare la resa visiva")]
     private float timeAfterPanic = 1f;
-    public float TimeAfterPanic { get { return timeAfterPanic; } private set { } }
+    public float TimeAfterPanic => timeAfterPanic;
 
     #endregion
 
