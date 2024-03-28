@@ -86,6 +86,7 @@ public class CoinShopTable : MonoBehaviour
         if(lastEntry.id >= lastEntry.abilitys.Count)
         {
             Debug.Log("End");
+            
             lastEntry.id--;
         }    
         lastButton.SetPowerUp(lastEntry.abilitys[lastEntry.id]);

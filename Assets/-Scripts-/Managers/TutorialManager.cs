@@ -72,7 +72,7 @@ public class TutorialManager : MonoBehaviour
     [HideInInspector] public bool blockFaseChange = false;
     bool finale = false;
 
-    [HideInInspector] public Dictionary<PlayerCharacter, PlayerInputHandler> inputBindings;
+    [HideInInspector] public Dictionary<PlayerCharacter, PlayerCharacterController> inputBindings;
 
 
     PlayableDirector playableDirector;
@@ -102,7 +102,7 @@ public class TutorialManager : MonoBehaviour
 
     private void Awake()
     {
-        inputBindings = new Dictionary<PlayerCharacter, PlayerInputHandler>();
+        inputBindings = new Dictionary<PlayerCharacter, PlayerCharacterController>();
         playableDirector = gameObject.GetComponent<PlayableDirector>();
         videoPlayer = introScreen.GetComponent<VideoPlayer>();
     }
@@ -176,7 +176,7 @@ public class TutorialManager : MonoBehaviour
         }
 
         SetUpCharacters();
-        DeactivateAllPlayerInputs();
+        //DeactivateAllPlayerInputs();
 
         ResetScene();
         DeactivateEnemyAI();
@@ -185,7 +185,7 @@ public class TutorialManager : MonoBehaviour
         {
             //DA RIVEDERE #MODIFICATO
             character.SetCurrentHP(character.MaxHp - 5);
-            HPHandler.Instance.UpdateContainer(character);
+            //HPHandler.Instance.UpdateContainer(character);
         }
 
         PlayDialogue(postIntroDialogue);
@@ -227,43 +227,50 @@ public class TutorialManager : MonoBehaviour
             if(ih.currentCharacter == ePlayerCharacter.Brutus)
             {
                 dpsPresent = true;
-                dps=ih.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
-                inputBindings.Add(dps, ih);
+                PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
+                dps = receiver.ActualPlayerCharacter;
+                inputBindings.Add(dps, receiver);
                 startingCharacters.Add(ih, dps);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Cassius)
             {
                 healerPresent = true;
-                healer = ih.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
-                inputBindings.Add(healer, ih);
+                PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
+                healer = receiver.ActualPlayerCharacter;
+                inputBindings.Add(healer, receiver);
                 startingCharacters.Add(ih, healer);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Jude)
             {
                 rangedPresent = true;
-                ranged = ih.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
-                inputBindings.Add(ranged, ih);
+                PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
+                ranged = receiver.ActualPlayerCharacter;
+                inputBindings.Add(ranged, receiver);
                 startingCharacters.Add(ih, ranged);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Caina)
             {
                 tankPresent = true;
-                tank = ih.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
-                inputBindings.Add(tank, ih);
+                PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
+                tank = receiver.ActualPlayerCharacter;
+                inputBindings.Add(tank, receiver);
                 startingCharacters.Add(ih, tank);
             }
         }
 
         if (!dpsPresent)
         {
-            InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
-            receiver.SetCharacter(ePlayerCharacter.Brutus);
-            dps=receiver.GetGameObject().GetComponent<PlayerCharacter>();
-
-            inputBindings.Add(dps, inputHandlers[inputHandlersID]);
+            //PlayerCharacterController receiver =(PlayerCharacterController) SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
+            //PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Brutus, transform);
+            //PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
+            //Debug.Log(receiver.gameObject);
+            //receiver.SetCharacter(ePlayerCharacter.Brutus);
+            dps = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Brutus, transform);
+            PlayerCharacterController receiver =(PlayerCharacterController) inputHandlers[inputHandlersID].CurrentReceiver;
+            inputBindings.Add(dps, receiver);
             HPHandler.Instance.AddContainer(dps);
             inputHandlersID++;
 
@@ -271,36 +278,40 @@ public class TutorialManager : MonoBehaviour
 
         if (!healerPresent)
         {
-            InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
-            receiver.SetCharacter(ePlayerCharacter.Cassius);
-            healer = receiver.GetGameObject().GetComponent<PlayerCharacter>();
-
-            inputBindings.Add(healer, inputHandlers[inputHandlersID]);
+            //PlayerCharacterController receiver = (PlayerCharacterController)SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
+            //PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
+            //PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Cassius, transform);
+            //receiver.SetCharacter(ePlayerCharacter.Cassius);
+            healer = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Cassius, transform);
+            PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
+            inputBindings.Add(healer, receiver);
             HPHandler.Instance.AddContainer(healer);
             inputHandlersID++;
         }
 
         if (!rangedPresent)
         {
-            InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
-            receiver.SetCharacter(ePlayerCharacter.Jude);
+            //PlayerCharacterController receiver = (PlayerCharacterController)SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
+            //PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
+            //receiver.SetCharacter(ePlayerCharacter.Jude);
             //
             //receiver � null
             //
-            ranged = receiver.gameObject.GetComponent<PlayerCharacter>();
-
-            inputBindings.Add(ranged, inputHandlers[inputHandlersID]);
+            ranged = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Jude, transform);
+            PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
+            inputBindings.Add(ranged, receiver);
             HPHandler.Instance.AddContainer(ranged);
             inputHandlersID++;
         }
 
         if (!tankPresent)
         {
-            InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
-            receiver.SetCharacter(ePlayerCharacter.Caina);
-            tank = receiver.GetGameObject().GetComponent<PlayerCharacter>();
-
-            inputBindings.Add(tank, inputHandlers[inputHandlersID]);
+            //PlayerCharacterController receiver = (PlayerCharacterController)SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
+            //PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
+            //receiver.SetCharacter(ePlayerCharacter.Caina);
+            tank = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Caina, transform);
+            PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
+            inputBindings.Add(tank, receiver);
             HPHandler.Instance.AddContainer(tank);
             inputHandlersID++;
         }
@@ -369,9 +380,10 @@ public class TutorialManager : MonoBehaviour
     {
         if (inputHandler == null)
             return;
-
-        PlayerCharacter player = inputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
+        PlayerCharacterController receiver = (PlayerCharacterController)inputHandler.CurrentReceiver;
+        PlayerCharacter player = receiver.ActualPlayerCharacter;
         inputHandler.GetComponent<PlayerInput>().actions.Disable();
+        //inputHandler.GetComponent<PlayerInput>().actions.Disable();
         player.GetRigidBody().velocity = Vector3.zero;
 
     }
@@ -410,7 +422,8 @@ public class TutorialManager : MonoBehaviour
         foreach (PlayerInputHandler ih in inputHandlers)
         {
             // DA RIVEDERE #MODIFICATO
-            //ih.SetReceiver(startingCharacters[ih]);
+            PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
+            receiver.SetPlayerCharacter(startingCharacters[ih]);
         }
 
         dialogueBox.OnDialogueEnded += TutorialEnd;
