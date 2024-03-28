@@ -70,6 +70,17 @@ public class LBJumpAttack : LBBaseState
             bossCharacter.gameObject.transform.position = CalculateBezierPoint(fracJourney, currTrump.gameObject.transform.position,
                                                                                             controlPoint,
                                                                                             nextTrump.gameObject.transform.position);
+            // =========== CAN BE HIT ========
+            if (fracJourney <= bossCharacter.CanBeHitWindow || fracJourney >= (1f - bossCharacter.CanBeHitWindow))
+            {
+                if (!bossCharacter.Vulnerable)
+                    bossCharacter.Vulnerable = true;
+            }
+            else if (fracJourney >= bossCharacter.CanBeHitWindow || fracJourney <= (1f - bossCharacter.CanBeHitWindow))
+            {
+                if (bossCharacter.Vulnerable)
+                    bossCharacter.Vulnerable = false;
+            }
 
             // =========== ATTACCO ===========
             if (fracJourney >= 0.5f)

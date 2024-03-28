@@ -28,6 +28,8 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
     #region Variables
 
+    #region GENERAL
+
     [Space]
     [Title("GENERAL")]
     [Space]
@@ -43,6 +45,10 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
     [SerializeField, Tooltip("Il bordo dell'arena, serve a determinare il punto di sparo random durante la terza fase")]
     private Collider2D arenaCollider;
+
+    #endregion
+
+    #region ATTACK
 
     [Space]
     [Title("ATTACK")]
@@ -63,6 +69,9 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
     private GameObject[] projectilePool;
 
+    #endregion
+
+    #region JUMP
 
     [Space]
     [Title("JUMP")]
@@ -89,6 +98,23 @@ public class LunaticBoomyBossCharacter : BossCharacter
     private float destroyedJumpProb = 0.2f;
     public float DestroyedJumpProb => destroyedJumpProb;
 
+    [SerializeField, Tooltip("La finestra di tempo in cui tutti i pg possono colpire il boss, si applica all'inizio e alla fine di ogni salto")]
+    private float canBeHitWindow = 0.2f;
+    public float CanBeHitWindow => canBeHitWindow;
+
+
+    [HideInInspector, Tooltip("Indica se il boss può essere colpito da tutti i pg (true) o solo da RANGED (false)")]
+    private bool vulnerable = true;
+    public bool Vulnerable
+    {
+        get { return vulnerable; }
+        set { vulnerable = value; }
+    }
+
+    #endregion
+
+    #region CARROT_BREAK
+
     [Space]
     [Title("CARROT_BREAK")]
     [Space]
@@ -104,6 +130,10 @@ public class LunaticBoomyBossCharacter : BossCharacter
     [SerializeField, Tooltip("la forza effettiva del rimbalzo sarà un random compreso tra: \nbounceForce - randomBounceRange \nbounceForce + randomBounceRange")]
     private float randBounceRange = 3f;
     public float RandBounceRange => randBounceRange;
+
+    #endregion
+
+    #region PANIC
 
     [Space]
     [Title("PANIC")]
@@ -124,6 +154,8 @@ public class LunaticBoomyBossCharacter : BossCharacter
     [SerializeField, Tooltip("Tempo di attesa dopo la fine del giro durante PANIC per dare temo alle animazioni / migliorare la resa visiva")]
     private float timeAfterPanic = 1f;
     public float TimeAfterPanic => timeAfterPanic;
+
+    #endregion
 
     #endregion
 
