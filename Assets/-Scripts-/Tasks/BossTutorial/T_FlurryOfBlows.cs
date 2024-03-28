@@ -43,67 +43,73 @@ namespace MBTExample
             targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), (direction.y * bossCharacter.flurryDistance), 0) + bossCharacter.transform.position;
 
             bossCharacter.anim.ResetTrigger("Return");
+            bossCharacter.anim.ResetTrigger("Move");
+            
         }
 
         public override NodeResult Execute()
         {
-            if (!bossCharacter.isDead && !parryStunned) 
-            { 
-                if(bossCharacter.parried)
+            if (!bossCharacter.isDead)
+            {
+                if (bossCharacter.parried)
                 {
                     parryStunned = true;
                     StartCoroutine(UnstunFromParry());
                 }
 
-            float dist = Vector2.Distance(targetPosition, bossCharacter.transform.position);
-
-                //esci da attacco
-                if (attackCount >= bossCharacter.punchQuantity && bossCharacter.canLastAttackPunch)
+                if (!parryStunned)
                 {
-                    bossCharacter.anim.SetTrigger("Return");
-                    return NodeResult.success;
-                }
+                    float dist = Vector2.Distance(targetPosition, bossCharacter.transform.position);
 
-                else
-                {
-                    //attacco
-                    if (bossCharacter.canAttackAnim)
+                    //esci da attacco
+                    if (attackCount >= bossCharacter.punchQuantity && bossCharacter.canLastAttackPunch)
                     {
-
-                        attackCount++;
-                        bossCharacter.SetFlurryOfBlowsDamageData(attackCount);
-
-                        Debug.Log("inizio attacco " + attackCount);
-
-                        Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
-
-                        targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), (direction.y * bossCharacter.flurryDistance), 0) + bossCharacter.transform.position;
-
-                        bossCharacter.canAttackAnim = false;
-
-                        bossCharacter.anim.SetTrigger("FlurryOfBlows" + attackCount);
-
-                        bossCharacter.Agent.SetDestination(targetPosition);
-
-                        return NodeResult.running;
+                        bossCharacter.anim.SetTrigger("Return");
+                        return NodeResult.success;
                     }
 
-                    //preview attacco
                     else
                     {
-                        if (!bossCharacter.previewStarted)
+                        //attacco
+                        if (bossCharacter.canAttackAnim)
                         {
-                            NextAttackPreview();
 
+                            attackCount++;
+                            bossCharacter.SetFlurryOfBlowsDamageData(attackCount);
+
+                            Debug.Log("inizio attacco " + attackCount);
+
+                            Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
+
+                            targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), (direction.y * bossCharacter.flurryDistance), 0) + bossCharacter.transform.position;
+
+                            bossCharacter.canAttackAnim = false;
+
+                            bossCharacter.anim.SetTrigger("FlurryOfBlows" + attackCount);
+
+                            bossCharacter.Agent.SetDestination(targetPosition);
+
+                            return NodeResult.running;
+                        }
+
+                        //preview attacco
+                        else
+                        {
+                            if (!bossCharacter.previewStarted)
+                            {
+                                NextAttackPreview();
+
+                            }
                         }
                     }
 
                 }
-            }
-            if(parryStunned)
-            {
-                if (canExit)
-                    return NodeResult.success;
+
+                if (parryStunned)
+                {
+                    if (canExit)
+                        return NodeResult.success;
+                }
             }
             return NodeResult.running;
         }

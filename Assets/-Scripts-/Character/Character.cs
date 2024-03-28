@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 
 public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
 {
+    
 
     [HideInInspector] public bool stunned = false;
     [HideInInspector] public bool underAggro = false;
@@ -31,6 +32,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     protected virtual void Awake()
     {
         InitialSetup();
+             
     }
 
     //Tutto ciò che va fatto nello ad inizio
