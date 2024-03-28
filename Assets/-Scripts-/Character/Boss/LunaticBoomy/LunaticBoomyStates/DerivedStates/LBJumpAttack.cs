@@ -81,8 +81,19 @@ public class LBJumpAttack : LBBaseState
 
                     // Ho scritto 3-1 per evitare fraintendimenti poiché jumpCount viene incrementatao dopo questo
                     // controllo, avrei potuto scrivere tranquillamente 2
-                    if (activePhase.phaseNum == 3 && jumpCount == (3-1))
+                    if (activePhase.phaseNum == 3 && jumpCount == (3 - 1))
                     {
+                        if (PlayerCharacterPoolManager.Instance.ActivePlayerCharacters.Count > 1)
+                        {
+                            Attack();
+                            Attack();
+                        }
+                        else
+                        {
+                            RandomShoot();
+                            Attack();
+                        }
+
                         Debug.Log("Attacco 3à fase");
                         Attack();
                         Attack();
@@ -131,11 +142,26 @@ public class LBJumpAttack : LBBaseState
     private void StartJump()
     {
         // Prendo reference al punto di arrivo, mi assicuro che il trampolino non sia distrutto
+        bool trumpAccepted = false;
+
         do
         {
             nextTrump = GetRandomTrump(bossCharacter.GetTrumps());
 
-        } while (nextTrump.destroyed);
+            if (nextTrump.destroyed)
+            {
+                float randomValue = UnityEngine.Random.value;
+                bool canJumpOnDestroyed = randomValue < bossCharacter.DestroyedJumpProb;
+
+                if (canJumpOnDestroyed)
+                    trumpAccepted = true;
+                else
+                    trumpAccepted = false;
+            }
+            else
+                trumpAccepted = true;
+
+        } while (!trumpAccepted);
 
         canJump = true;
         startTime = Time.time;
@@ -202,11 +228,10 @@ public class LBJumpAttack : LBBaseState
 
     #endregion
 
-    // DA FINIRE
+    // DA TESTARE
 
     #region JumpAttack
 
-    // Da FINIRE
     private void Attack()
     {
         GameObject projectile = bossCharacter.GetPooledProjectile();
@@ -231,12 +256,57 @@ public class LBJumpAttack : LBBaseState
             projectile.SetActive(true);
 
             // Set velocità sul proiettile
-            projectile.GetComponent<Rigidbody2D>().velocity = direction * bossCharacter.BombSpeed;
+            projectile.GetComponent<Rigidbody2D>().velocity = direction * bossCharacter.ProjectileSpeed;
         }
         else
             Debug.LogError("Error: projectile is null");
 
         targetsHit.Add(randCharacter);
+    }
+
+    private void RandomShoot()
+    {
+        // Devo prendere una posizione random nell'arena
+
+        Vector2 randPoint = bossCharacter.GetRandomPointArena();
+
+        // Creo il proiettile
+
+        GameObject projectile = bossCharacter.GetPooledProjectile();
+
+        if (projectile != null)
+        {
+            // Set pos del proiettile
+            projectile.transform.position = bossCharacter.gameObject.transform.position;
+
+            // Initializee set a true
+            projectile.GetComponent<LBProjectile>().Initialize(bossCharacter);
+            projectile.SetActive(true);
+
+            // Avvia la coroutine per muovere il proiettile alla posizione casuale
+            bossCharacter.StartCoroutine(MoveProjectile(projectile, randPoint));
+
+        }
+        else
+            Debug.LogError("Error: projectile is null");
+    }
+
+    private IEnumerator MoveProjectile(GameObject projectile, Vector2 targetPosition)
+    {
+        Vector2 startPos = projectile.transform.position;
+
+        float distance = Vector2.Distance(startPos, targetPosition);
+        float duration = distance / bossCharacter.ProjectileSpeed;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < 1)
+        {
+            elapsedTime += Time.deltaTime / duration;
+            projectile.transform.position = Vector2.Lerp(startPos, targetPosition, elapsedTime);
+
+            yield return null;
+        }
     }
 
     #endregion

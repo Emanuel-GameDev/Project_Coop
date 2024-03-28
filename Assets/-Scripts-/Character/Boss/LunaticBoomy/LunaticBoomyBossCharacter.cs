@@ -1,8 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [Serializable]
 public class LBPhase
@@ -11,8 +14,9 @@ public class LBPhase
     public int minJumps;
     public int maxJumps;
     public float jumpSpeed;
-    
+
     public bool active = false;
+
 
     [HideInInspector]
     public int numJumps => UnityEngine.Random.Range(minJumps, maxJumps + 1);
@@ -25,34 +29,40 @@ public class LunaticBoomyBossCharacter : BossCharacter
     #region Variables
 
     [Space]
-    [Title("GENERAL")]  
+    [Title("GENERAL")]
     [Space]
 
-    [SerializeField]
+    [SerializeField, Tooltip("Lista per avere tutte le fasi del boss modificabili, non settare più di una fase ad active atrimenti verrà considerata attiva la più vicina all'inizio")]
     private List<LBPhase> bossPhases;
     public List<LBPhase> BossPhases => bossPhases;
-
 
     [SerializeField]
     private List<TrumpOline> trumps;
 
     [Space]
+
+    [SerializeField, Tooltip("Il bordo dell'arena, serve a determinare il punto di sparo random durante la terza fase")]
+    private Collider2D arenaCollider;
+
+    [Space]
     [Title("ATTACK")]
     [Space]
 
-    [SerializeField]
+    [SerializeField, Tooltip("Il prefab del proiettile")]
     private GameObject projectilePrefab;
 
     [SerializeField]
     private int poolSize = 3;
 
     [SerializeField]
-    private float bombSpeed = 10f;
-    public float BombSpeed => bombSpeed;
+    private float projectileSpeed = 10f;
+    public float ProjectileSpeed => projectileSpeed;
 
+    [SerializeField, Tooltip("Un'oggetto che avrà i proiettili come figli, se non è inserito nel prefab bisogna creare un'empty e metterlo qua")]
+    private GameObject projectilePoolGO;
 
     private GameObject[] projectilePool;
-    public GameObject[] ProjectilePool => projectilePool;
+
 
     [Space]
     [Title("JUMP")]
@@ -74,6 +84,10 @@ public class LunaticBoomyBossCharacter : BossCharacter
     [SerializeField, Tooltip("Tempo di attesa dopo la fine del giro durante PANIC per dare temo alle animazioni / migliorare la resa visiva")]
     private float timeAfterJump = 1f;
     public float TimeAfterJump => timeAfterJump;
+
+    [SerializeField, Range(0f, 1f), Tooltip("La probabilità che il boss salti su un trampolino distrutto, si applica ad ogni salto")]
+    private float destroyedJumpProb = 0.2f;
+    public float DestroyedJumpProb => destroyedJumpProb;
 
     [Space]
     [Title("CARROT_BREAK")]
@@ -103,31 +117,15 @@ public class LunaticBoomyBossCharacter : BossCharacter
     private List<TrumpOline> route2;
     public List<TrumpOline> Route2 => route2;
 
+    [SerializeField]
+    private float panicSpeed = 2.5f;
+    public float PanicSpeed => panicSpeed;
+
     [SerializeField, Tooltip("Tempo di attesa dopo la fine del giro durante PANIC per dare temo alle animazioni / migliorare la resa visiva")]
     private float timeAfterPanic = 1f;
     public float TimeAfterPanic => timeAfterPanic;
 
     #endregion
-
-    private void Start()
-    {
-        Agent.updateRotation = false;
-
-        InitializePhases();
-        InitializePool();
-
-        stateMachine.SetState(new LBStart(this));
-    }
-
-    private void InitializePhases()
-    {
-        // Magar la funz serve la questo for è sbagliato
-        //for (int i = 0; i < bossPhases.Count; i++)
-        //{
-        //    int rand = UnityEngine.Random.Range(bossPhases[i].minJumps, bossPhases[i].maxJumps + 1);
-        //    bossPhases[i].numJumps = rand;
-        //}
-    }
 
     #region Projectiles
 
@@ -137,9 +135,8 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
         for (int i = 0; i < projectilePool.Length; i++)
         {
-            projectilePool[i] = Instantiate(projectilePrefab,
-                                                   gameObject.transform.position, Quaternion.identity);
-            projectilePool[i].transform.SetParent(transform.GetChild(0));
+            projectilePool[i] = Instantiate(projectilePrefab, gameObject.transform.position, Quaternion.identity);
+            projectilePool[i].transform.SetParent(projectilePoolGO.transform);
             projectilePool[i].SetActive(false);
         }
     }
@@ -158,31 +155,69 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
     #endregion
 
+    #region Arena
+
+    internal Vector2 GetRandomPointArena()
+    {
+        Vector2 randomPoint = Vector2.zero;
+
+        // Generare un punto casuale all'interno del collider dell'arena
+        randomPoint.x = UnityEngine.Random.Range(arenaCollider.bounds.min.x, arenaCollider.bounds.max.x);
+        randomPoint.y = UnityEngine.Random.Range(arenaCollider.bounds.min.y, arenaCollider.bounds.max.y);
+
+        // Assicurarsi che il punto generato sia effettivamente sulla superficie dell'arena
+        while (!IsPointOnColliderSurface(randomPoint))
+        {
+            randomPoint.x = UnityEngine.Random.Range(arenaCollider.bounds.min.x, arenaCollider.bounds.max.x);
+            randomPoint.y = UnityEngine.Random.Range(arenaCollider.bounds.min.y, arenaCollider.bounds.max.y);
+        }
+
+        return randomPoint;
+    }
+
+    bool IsPointOnColliderSurface(Vector2 point)
+    {
+        // Controlla se il punto si trova all'interno del collider
+        if (!arenaCollider.OverlapPoint(point))
+            return false;
+
+        return true;
+    }
+
+    #endregion
+
+    #region UnityRelated
+
+    private void Start()
+    {
+        Agent.updateRotation = false;
+
+        InitializePool();
+
+        stateMachine.SetState(new LBStart(this));
+    }
+
     private void Update()
     {
         stateMachine.StateUpdate();
     }
 
-    public List<TrumpOline> GetTrumps()
+    #endregion
+
+    #region Getters
+
+    internal List<TrumpOline> GetTrumps()
     {
         if (trumps.Count <= 0)
         {
             Debug.LogError("Error in TrumpOline List");
-            return null;    
+            return null;
         }
 
         return trumps;
     }
 
-    public void TriggerAgent(bool mode)
-    {
-        if (mode)
-            GetComponent<NavMeshAgent>().enabled = true;
-        else
-            GetComponent<NavMeshAgent>().enabled = false;
-    }
-
-    public List<TrumpOline> FindPanicRoute(TrumpOline trump)
+    internal List<TrumpOline> GetPanicRoute(TrumpOline trump)
     {
         for (int i = 0; i < route1.Count; i++)
         {
@@ -195,12 +230,7 @@ public class LunaticBoomyBossCharacter : BossCharacter
         return null;
     }
 
-    public void DoubleAttack()
-    {
-        // Spara 2 bombe a 2 pg a caso, non può essere lo stesso a venir targettato 2 volte
-    }
-
-    public LBPhase GetActivePhase()
+    internal LBPhase GetActivePhase()
     {
         foreach (LBPhase phase in bossPhases)
         {
@@ -219,4 +249,30 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
         return PlayerCharacterPoolManager.Instance.ActivePlayerCharacters[randPlayerID];
     }
+
+    #endregion
+
+    #region Setters
+
+    internal void TriggerAgent(bool mode)
+    {
+        if (mode)
+            GetComponent<NavMeshAgent>().enabled = true;
+        else
+            GetComponent<NavMeshAgent>().enabled = false;
+    }
+
+    internal void IncreasePhase(int actualPhaseNum)
+    {
+        for (int i = 0; i < bossPhases.Count; i++)
+        {
+            if (bossPhases[i].phaseNum == actualPhaseNum)
+                bossPhases[i].active = true;
+            else
+                bossPhases[i].active = false;
+        }
+    }
+
+    #endregion
+
 }
