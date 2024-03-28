@@ -22,9 +22,7 @@ public class MenuInfo : MonoBehaviour
 
     private void Start()
     {
-        previosMenu = defaultPreviosMenu;
-        nextMenu = defaultNextMenu;
-        firstObjectSelected = defaultFirstObjectSelected;
+        ResetAll();
     }
 
     public void GoNextMenu(PlayerInputHandler player)
@@ -43,6 +41,28 @@ public class MenuInfo : MonoBehaviour
             return defaultFirstObjectSelected;
 
         return firstObjectSelected;
+    }
+
+    public void ResetNextMenu()
+    {
+        nextMenu = defaultNextMenu;
+    }
+
+    public void ResetPreviosMenu()
+    {
+        previosMenu = defaultPreviosMenu;
+    }
+
+    public void ResetFirstObjectSelected()
+    {
+        firstObjectSelected = defaultFirstObjectSelected;
+    }
+
+    public void ResetAll()
+    {
+        ResetNextMenu();
+        ResetPreviosMenu();
+        ResetFirstObjectSelected();
     }
 
 }
