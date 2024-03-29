@@ -70,7 +70,7 @@ public class HPHandler : MonoBehaviour
         CharacterHUDContainer hpContainer = hpContainerObject.GetComponent<CharacterHUDContainer>();
         hpContainer.referredCharacter = players[id];
         //if(players[id].GetInputHandler()!=null)
-        //containersAssociations.Add(players[id].GetInputHandler().playerID, hpContainer);
+        containersAssociations.Add(players[id].GetInputHandler().playerID, hpContainer);
 
         hpContainer.referredPlayerID = (ePlayerID)id + 1;
 
@@ -104,7 +104,7 @@ public class HPHandler : MonoBehaviour
         if (obj is PlayerCharacter )
         {
             PlayerCharacter playerCharacter = (PlayerCharacter)obj;
-            //containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
+            containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
         }
     }
 
