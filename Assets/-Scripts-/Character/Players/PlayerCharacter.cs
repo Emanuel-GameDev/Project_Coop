@@ -7,23 +7,10 @@ using UnityEngine.InputSystem;
 
 public abstract class PlayerCharacter : Character
 {
-    //shader
-    [Header("ProvaShaderGraph Hit e Parry")]
-    [SerializeField] private float fadeSpeed;
-    [SerializeField] private SpriteRenderer spriteRendererVisual;
-    [SerializeField] private Color _OnHitColor = Color.red;
-  
-    private Color  _materialTintColor;
-    private Material spriteMaterial;
+    
 
 
-
-    //Shader
-    public void SetHitMaterialColor(Color newColor)
-    {
-        _materialTintColor = newColor;
-        spriteMaterial.SetColor("_Tint", _materialTintColor);
-    }
+   
 
 
     #region Variables
@@ -112,8 +99,7 @@ public abstract class PlayerCharacter : Character
     {
         base.InitialSetup();
         Inizialize();
-        //Shader
-        spriteMaterial = spriteRendererVisual.material;
+        
     }
 
     public virtual void Inizialize()
@@ -152,12 +138,7 @@ public abstract class PlayerCharacter : Character
     protected virtual void Update()
     {
         Move(moveDir);
-        //Shader
-        if (_materialTintColor.a > 0)
-        {
-            _materialTintColor.a = Mathf.Clamp01(_materialTintColor.a - fadeSpeed * Time.deltaTime);
-            spriteMaterial.SetColor("_Tint", _materialTintColor);
-        }
+        
     }
 
 

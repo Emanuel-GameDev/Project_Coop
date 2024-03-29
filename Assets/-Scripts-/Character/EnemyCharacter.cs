@@ -53,7 +53,11 @@ public class EnemyCharacter : Character
     {
         currentHp -= data.damage * damageReceivedMultiplier;
         Debug.Log(currentHp);
-        if(currentHp <= 0)
+
+        //shader
+        SetHitMaterialColor(_OnHitColor);
+
+        if (currentHp <= 0)
         {
             isDead = true;
             animator.SetTrigger("isDead");

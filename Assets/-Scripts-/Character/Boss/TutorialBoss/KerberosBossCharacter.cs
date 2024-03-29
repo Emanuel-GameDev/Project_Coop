@@ -132,6 +132,7 @@ public class KerberosBossCharacter : BossCharacter
     }
     public override void TakeDamage(DamageData data)
     {
+        if (!isDead)      
         base.TakeDamage(data);
 
         if (isDead)
