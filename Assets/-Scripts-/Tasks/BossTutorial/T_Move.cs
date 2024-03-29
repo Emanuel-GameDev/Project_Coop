@@ -14,7 +14,7 @@ namespace MBTExample
         public FloatReference distanceToCheckforPlayer;
         public BoolReference playerFound = new BoolReference(VarRefMode.DisableConstant);
         
-        private TutorialBossCharacter bossCharacter;
+        private KerberosBossCharacter bossCharacter;
         private Vector3 targetPosition;
         private float tempTimer;
         private bool started;
@@ -23,7 +23,7 @@ namespace MBTExample
         public override void OnEnter()
         {
             
-            bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
+            bossCharacter = parentGameObject.Value.GetComponent<KerberosBossCharacter>();
             targetPosition = targetTransform.Value.position;
             activePlayers = PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
             bossCharacter.Agent.isStopped = false;

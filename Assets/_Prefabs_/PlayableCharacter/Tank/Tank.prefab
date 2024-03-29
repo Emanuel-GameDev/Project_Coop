@@ -53,7 +53,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 07178eaecc61e2f41af40334e42dfcc9, type: 2}
+  - {fileID: 2100000, guid: dd1eee4e715be4d41b25de58375ffd4f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: d3dce121024628c45bb9903f79c9afcd, type: 3}
-  m_Color: {r: 1, g: 0, b: 0.992157, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
@@ -920,6 +920,34 @@ MonoBehaviour:
   bleeding: 0
   isDead: 0
   damageReceivedMultiplier: 1
+  pushAnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  fadeSpeed: 2
+  spriteRendererVisual: {fileID: 3677896974153611461}
+  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
+  _OnParryColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   character: 2
   maxHp: 200
   damage: 10
