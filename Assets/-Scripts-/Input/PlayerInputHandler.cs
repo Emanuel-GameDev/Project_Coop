@@ -97,8 +97,18 @@ public class PlayerInputHandler : MonoBehaviour
     #region MultiplayerMenu
     public void SetPlayerActiveMenu(GameObject menuRoot, GameObject firstSelection)
     {
-        MultiplayerEventSystem.playerRoot = menuRoot;
         MultiplayerEventSystem.firstSelectedGameObject = firstSelection;
+        MultiplayerEventSystem.playerRoot = menuRoot;
+
+        if(firstSelection != null)
+            multiplayerEventSystem.SetSelectedGameObject(firstSelection);
+
+        if (menuRoot != null)
+            SetActionMap(InputMap.UI);
+        else
+            SetActionMap(InputMap.Player);
+
+        Debug.Log(playerInput.currentActionMap);
     }
     #endregion
 

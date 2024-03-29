@@ -50,20 +50,21 @@ public class MenuManager : MonoBehaviour
     public void SetPlayerActiveMenu(PlayerInputHandler player, GameObject menuRoot, GameObject firstSelection)
     {
         player.SetPlayerActiveMenu(menuRoot, firstSelection);
+        menuRoot.SetActive(true);
     }   
 
     public void OpenPauseMenu(PlayerInputHandler player)
     {
-        SetPlayerActiveMenu(player, pauseMenu, pauseMenu.GetComponent<MenuInfo>().firstObjectSelected);
+        SetPlayerActiveMenu(player, pauseMenu, pauseMenu.GetComponent<MenuInfo>().GetFirstObjectSelected());
     }
 
     public void OpenOptionMenu(PlayerInputHandler player)
     {
-        SetPlayerActiveMenu(player, optionMenu, optionMenu.GetComponent<MenuInfo>().firstObjectSelected);
+        SetPlayerActiveMenu(player, optionMenu, optionMenu.GetComponent<MenuInfo>().GetFirstObjectSelected());
     }
 
     public void OpenMenu(PlayerInputHandler player, GameObject menu)
     {
-        SetPlayerActiveMenu(player, menu, menu.GetComponent<MenuInfo>().firstObjectSelected);
+        SetPlayerActiveMenu(player, menu, menu.GetComponent<MenuInfo>().GetFirstObjectSelected());
     }
 }
