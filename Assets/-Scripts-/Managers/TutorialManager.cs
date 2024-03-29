@@ -25,6 +25,8 @@ public class TutorialManager : MonoBehaviour
 {
     public StateMachine<TutorialFase> stateMachine { get; } = new();
 
+    [SerializeField] GameObject exit;
+
     [Header("Notification")]
     [SerializeField] public GameObject currentFaseObjective;
     [SerializeField] public TextMeshProUGUI objectiveText;
@@ -111,6 +113,7 @@ public class TutorialManager : MonoBehaviour
 
     private void Start()
     {
+        exit.SetActive(false);
         objectiveText.enabled = false;
         objectiveNumbersGroup.SetActive(false);
         currentFaseObjective.SetActive(false);
@@ -436,8 +439,8 @@ public class TutorialManager : MonoBehaviour
     {
         dialogueBox.OnDialogueEnded -= TutorialEnd;
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        exit.SetActive(true);
         foreach (PlayerCharacter character in characters)
         {
             ActivatePlayerInput(character.GetInputHandler());
