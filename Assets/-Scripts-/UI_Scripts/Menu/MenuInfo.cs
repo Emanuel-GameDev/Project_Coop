@@ -6,63 +6,43 @@ using UnityEngine;
 public class MenuInfo : MonoBehaviour
 {
     [SerializeField]
-    private GameObject defaultPreviosMenu;
-    [HideInInspector]
-    public GameObject previosMenu;
-
-    [SerializeField]
-    private GameObject defaultNextMenu;
-    [HideInInspector]
-    public GameObject nextMenu;
+    private GameObject menuRoot;
+    public GameObject MenuRoot => menuRoot;
 
     [SerializeField]
     private GameObject defaultFirstObjectSelected;
-    [HideInInspector]
-    public GameObject firstObjectSelected;
-
-    private void Start()
+    private GameObject firstObjectSelected;
+    public GameObject FirstObjectSelected
     {
-        ResetAll();
+        get
+        {
+            if (firstObjectSelected == null)
+                return defaultFirstObjectSelected;
+            else
+                return firstObjectSelected;
+        }
+        set
+        {
+            firstObjectSelected = value;
+        }
     }
 
-    public void GoNextMenu(PlayerInputHandler player)
+    [SerializeField]
+    private MenuInfo defaultPreviosMenu;
+    private MenuInfo previousMenu;
+    public MenuInfo PreviousMenu
     {
-        MenuManager.Instance.OpenMenu(player, nextMenu);
-    }
-
-    public void GoPreviusMenu(PlayerInputHandler player)
-    {
-        MenuManager.Instance.OpenMenu(player, previosMenu);
-    }
-
-    public GameObject GetFirstObjectSelected()
-    {
-        if (firstObjectSelected == null)
-            return defaultFirstObjectSelected;
-
-        return firstObjectSelected;
-    }
-
-    public void ResetNextMenu()
-    {
-        nextMenu = defaultNextMenu;
-    }
-
-    public void ResetPreviosMenu()
-    {
-        previosMenu = defaultPreviosMenu;
-    }
-
-    public void ResetFirstObjectSelected()
-    {
-        firstObjectSelected = defaultFirstObjectSelected;
-    }
-
-    public void ResetAll()
-    {
-        ResetNextMenu();
-        ResetPreviosMenu();
-        ResetFirstObjectSelected();
+        get
+        {
+            if (previousMenu == null)
+                return defaultPreviosMenu;
+            else
+                return previousMenu;
+        }
+        set
+        {
+            previousMenu = value;
+        }
     }
 
 }

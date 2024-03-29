@@ -9,6 +9,5 @@ public class MenuButtonEditor : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-
     }
 }
