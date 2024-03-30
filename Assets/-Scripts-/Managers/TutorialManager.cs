@@ -188,7 +188,7 @@ public class TutorialManager : MonoBehaviour
         {
             //DA RIVEDERE #MODIFICATO
             character.SetCurrentHP(character.MaxHp - 5);
-            //HPHandler.Instance.UpdateContainer(character);
+            HPHandler.Instance.UpdateContainer(character);
         }
 
         PlayDialogue(postIntroDialogue);
