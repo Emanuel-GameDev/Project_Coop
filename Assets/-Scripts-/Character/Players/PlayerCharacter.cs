@@ -7,6 +7,12 @@ using UnityEngine.InputSystem;
 
 public abstract class PlayerCharacter : Character
 {
+    
+
+
+   
+
+
     #region Variables
 
     #region Stats
@@ -95,6 +101,7 @@ public abstract class PlayerCharacter : Character
     {
         base.InitialSetup();
         Inizialize();
+        
     }
 
     public virtual void Inizialize()
@@ -133,6 +140,7 @@ public abstract class PlayerCharacter : Character
     protected virtual void Update()
     {
         Move(moveDir);
+        
     }
 
 
@@ -190,6 +198,9 @@ public abstract class PlayerCharacter : Character
         damager.RemoveCondition();
         Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
 
+        //shader
+        SetHitMaterialColor(_OnHitColor);
+
 
         if (protectedByTank && data.blockedByTank)
         {
@@ -199,6 +210,8 @@ public abstract class PlayerCharacter : Character
         {
             PubSub.Instance.Notify(EMessageType.characterDamaged, this);
         }
+
+
     }
 
     public virtual void TakeHeal(DamageData data)

@@ -181,4 +181,9 @@ public class Projectile : MonoBehaviour, IDamager
         incrementalDamage = true;
     }
 
+    
+    public void OnParryNotify(Character whoParried)
+    {
+        throw new System.NotImplementedException();
+    }
 }

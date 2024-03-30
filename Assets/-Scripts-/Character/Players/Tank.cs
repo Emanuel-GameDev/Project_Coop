@@ -99,6 +99,7 @@ public class Tank : PlayerCharacter
     private float blockAngleThreshold => (blockAngle - 180) / 180;
     private float staminaDamageReductionMulty;
     private float healthDamageReductionMulty;
+    private float lastDirectionYValue;
 
 
     private GenericBarScript staminaBar;
@@ -106,6 +107,7 @@ public class Tank : PlayerCharacter
     private PerfectTimingHandler perfectBlockHandler;
     private ProtectPlayers triggerProtectPlayer;
     private PivotTriggerProtected pivotTriggerProtected;
+   
 
 
     public override void Inizialize()
@@ -287,9 +289,10 @@ public class Tank : PlayerCharacter
     #region Block
     private bool AttackInBlockAngle(DamageData data)
     {
-        Character dealerMB = (Character)data.dealer;
-
-      
+        Character dealerMB = null;
+        if (data.dealer is Character)
+            dealerMB = (Character)data.dealer;
+        
         Vector2 dealerDirection = dealerMB.gameObject.transform.position - transform.position;
         
         float angle = 0;
@@ -311,7 +314,7 @@ public class Tank : PlayerCharacter
             angle = Vector2.Angle(dealerDirection, new Vector2(-1, -1));
         }
 
-        Debug.Log(angle);
+        
 
         return Mathf.Abs(angle) <= blockAngle / 2;
     }
@@ -381,10 +384,8 @@ public class Tank : PlayerCharacter
 
         //se potenziamento 4 parata perfetta fa danno
     }
-
     public blockZone SetBlockZone(float lastYValue)
     {
-
         
         if ((lastYValue > 0 && pivot.transform.localScale.x <0))
         {
@@ -417,7 +418,6 @@ public class Tank : PlayerCharacter
         canBlock = true;
 
     }
-
     private void ResetStamina()
     {
         currentStamina = maxStamina;
@@ -431,7 +431,10 @@ public class Tank : PlayerCharacter
     {
         canPerfectBlock = true;
         perfectBlockHandler.gameObject.SetActive(true);
-        Character dealerMB = (Character)data.dealer;
+        Character dealerMB = null;
+        if (data.dealer is Character)
+            dealerMB = (Character)data.dealer;
+
 
         yield return new WaitForSeconds(perfectBlockTimeWindow);
 
@@ -449,8 +452,8 @@ public class Tank : PlayerCharacter
             PubSub.Instance.Notify(EMessageType.perfectGuardExecuted, this);
 
 
-            data.dealer.OnParryNotify();
-            if (damageOnParry)
+            data.dealer.OnParryNotify(this);           
+            if (damageOnParry && dealerMB != null)
             {
                 dealerMB.TakeDamage(new DamageData(perfectBlockDamage, this));
             }
@@ -618,6 +621,10 @@ public class Tank : PlayerCharacter
         {
             base.Move(direction);
 
+            if (direction.y != 0)
+                lastDirectionYValue = direction.y;
+
+
         }
         animator.SetBool("IsMoving", isMoving);
 
@@ -658,6 +665,7 @@ public class Tank : PlayerCharacter
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(transform.position, aggroRange);
         }
+
         if (mostraGizmoRangeParata)
         {
             if(currentBlockZone is blockZone.nordEst)
