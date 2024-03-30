@@ -6,9 +6,7 @@ public class DamageData
     public float staminaDamage = 0;
     public IDamager dealer;
     public Condition condition = null;
-    public bool bossAttack = false;
-
-
+    public bool bossAttack = false;  
     public bool blockedByTank;
 
     public DamageData(float damage, IDamager dealer)
