@@ -50,7 +50,11 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] Transform healerRespawn;
     [SerializeField] Transform tankRespawn;
     [SerializeField] Transform rangedRespawn;
+
+    [SerializeField] Transform postIntroEnemyRespawn;
     [SerializeField] Transform enemyRespawn;
+    [SerializeField] Transform postIntroLilithRespawn;
+    [SerializeField] Transform lilithRespawn;
 
     [Header("NPCs")]
     public TutorialEnemy tutorialEnemy;
@@ -117,7 +121,10 @@ public class TutorialManager : MonoBehaviour
         objectiveText.enabled = false;
         objectiveNumbersGroup.SetActive(false);
         currentFaseObjective.SetActive(false);
+
         tutorialEnemy.gameObject.SetActive(false);
+        lilith.gameObject.SetActive(true);
+        
 
       
 
@@ -192,21 +199,29 @@ public class TutorialManager : MonoBehaviour
         }
 
         PlayDialogue(postIntroDialogue);
-        dialogueBox.OnDialogueEnded += StartTutorial;
-        
+        dialogueBox.OnDialogueEnded += PostIntroDialogueEnd;
+
+        tutorialEnemy.gameObject.transform.SetPositionAndRotation(postIntroEnemyRespawn.transform.position, Quaternion.identity);
+        lilith.gameObject.transform.SetPositionAndRotation(postIntroLilithRespawn.transform.position, Quaternion.identity);
 
     }
 
-    private void StartTutorial()
+    private void PostIntroDialogueEnd()
     {
-        dialogueBox.OnDialogueEnded -= StartTutorial;
-        stateMachine.SetState(new IntermediateTutorialFase(this));
+        dialogueBox.OnDialogueEnded -= PostIntroDialogueEnd;
 
         tutorialEnemy.gameObject.SetActive(true);
         DeactivateEnemyAI();
+    }
+
+
+    public void StartTutorial()
+    {
+        stateMachine.SetState(new IntermediateTutorialFase(this));
+
+        lilith.gameObject.GetComponent<CircleCollider2D>().enabled = false;
 
         playableDirector.Play();
-       
     }
 
     private void SetUpCharacters()
@@ -266,25 +281,15 @@ public class TutorialManager : MonoBehaviour
 
         if (!dpsPresent)
         {
-            //PlayerCharacterController receiver =(PlayerCharacterController) SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
-            //PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Brutus, transform);
-            //PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
-            //Debug.Log(receiver.gameObject);
-            //receiver.SetCharacter(ePlayerCharacter.Brutus);
             dps = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Brutus, transform);
             PlayerCharacterController receiver =(PlayerCharacterController) inputHandlers[inputHandlersID].CurrentReceiver;
             inputBindings.Add(dps, receiver);
             HPHandler.Instance.AddContainer(dps);
             inputHandlersID++;
-
         }
 
         if (!healerPresent)
         {
-            //PlayerCharacterController receiver = (PlayerCharacterController)SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
-            //PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
-            //PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Cassius, transform);
-            //receiver.SetCharacter(ePlayerCharacter.Cassius);
             healer = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Cassius, transform);
             PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
             inputBindings.Add(healer, receiver);
@@ -294,12 +299,6 @@ public class TutorialManager : MonoBehaviour
 
         if (!rangedPresent)
         {
-            //PlayerCharacterController receiver = (PlayerCharacterController)SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
-            //PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
-            //receiver.SetCharacter(ePlayerCharacter.Jude);
-            //
-            //receiver � null
-            //
             ranged = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Jude, transform);
             PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
             inputBindings.Add(ranged, receiver);
@@ -309,9 +308,6 @@ public class TutorialManager : MonoBehaviour
 
         if (!tankPresent)
         {
-            //PlayerCharacterController receiver = (PlayerCharacterController)SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
-            //PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
-            //receiver.SetCharacter(ePlayerCharacter.Caina);
             tank = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Caina, transform);
             PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
             inputBindings.Add(tank, receiver);
@@ -327,8 +323,6 @@ public class TutorialManager : MonoBehaviour
         characters.Add(tank);
 
     }
-
-    
 
 
     [HideInInspector] public bool timerEnded = false;
@@ -526,7 +520,8 @@ public class TutorialManager : MonoBehaviour
 
     private void ResetEnemyPosition()
     {
-       
+        lilith.gameObject.transform.SetPositionAndRotation(lilithRespawn.transform.position, Quaternion.identity);
+
         tutorialEnemy.gameObject.SetActive(false);
         tutorialEnemy.gameObject.transform.SetPositionAndRotation(enemyRespawn.position, tutorialEnemy.gameObject.transform.rotation);
 
