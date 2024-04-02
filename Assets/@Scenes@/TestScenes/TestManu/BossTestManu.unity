@@ -987,7 +987,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1979835554}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.41, y: -3.05, z: 0}
   m_LocalScale: {x: 0.37775, y: 0.37774986, z: 0.37775}
   m_ConstrainProportionsScale: 0
@@ -1024,12 +1024,12 @@ MonoBehaviour:
     minJumps: 3
     maxJumps: 4
     jumpSpeed: 2
-    active: 0
+    active: 1
   - phaseNum: 2
     minJumps: 4
     maxJumps: 6
     jumpSpeed: 4
-    active: 1
+    active: 0
   - phaseNum: 3
     minJumps: 5
     maxJumps: 7
@@ -1052,7 +1052,8 @@ MonoBehaviour:
   jumpStep: 0.2
   activateJumpStep: 1
   timeAfterJump: 1
-  destroyedJumpProb: 0.413
+  destroyedJumpProb: 0.11
+  canBeHitWindow: 0.2
   breakTime: 5
   bounceForce: 5
   randBounceRange: 1
@@ -1064,6 +1065,7 @@ MonoBehaviour:
   - {fileID: 1001896770}
   - {fileID: 134344343}
   - {fileID: 130836774}
+  panicSpeed: 2.5
   timeAfterPanic: 1
 --- !u!195 &1979835559
 NavMeshAgent:

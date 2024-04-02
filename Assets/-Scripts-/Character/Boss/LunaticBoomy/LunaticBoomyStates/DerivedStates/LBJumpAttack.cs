@@ -124,6 +124,7 @@ public class LBJumpAttack : LBBaseState
                 // Temporaneo, controllo se il trampolino dove sono atterrato è distrutto
                 if (nextTrump.destroyed)
                 {
+                    // TODO: trovare il modo di capire se devo passare a LBPanic o LBExplosion in base a lla risposta di luca design
                     stateMachine.SetState(new LBPanic(bossCharacter, nextTrump));
                     return;
                 }

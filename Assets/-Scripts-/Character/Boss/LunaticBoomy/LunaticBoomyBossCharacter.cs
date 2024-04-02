@@ -216,6 +216,26 @@ public class LunaticBoomyBossCharacter : BossCharacter
         return true;
     }
 
+    internal void ChangePhase(LBPhase currentPhase)
+    {
+        // Aumento phase
+        for (int i = 0; i < bossPhases.Count; i++)
+        {
+            if (currentPhase.phaseNum == bossPhases[i].phaseNum)
+            {
+                // Controllo se la prossima fase esiste
+                if (bossPhases.IndexOf(bossPhases[i + 1]) >= bossPhases.Count) return;
+
+                // Disattivo la fase corrente
+                bossPhases[i].active = false;
+                // Attivo la fase dopo
+                bossPhases[i + 1].active = true;
+            }
+            else
+                bossPhases[i].active = false;
+        }
+    }
+
     #endregion
 
     #region UnityRelated
@@ -232,6 +252,9 @@ public class LunaticBoomyBossCharacter : BossCharacter
     private void Update()
     {
         stateMachine.StateUpdate();
+
+        if (Input.GetKeyDown(KeyCode.F))
+            ChangePhase(GetActivePhase());
     }
 
     #endregion
