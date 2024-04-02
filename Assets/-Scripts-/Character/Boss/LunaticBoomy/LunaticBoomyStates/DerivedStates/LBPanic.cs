@@ -27,7 +27,7 @@ public class LBPanic : LBBaseState
         bossCharacter.Agent.ResetPath();
 
         // Prende reference alla route che dovrà percorrere il boss
-        trumpRoute = bossCharacter.FindPanicRoute(startTrump);
+        trumpRoute = bossCharacter.GetPanicRoute(startTrump);
 
         // Prendo reference alla lista totale per il percorso verde
         trumps = bossCharacter.GetTrumps();
@@ -37,6 +37,9 @@ public class LBPanic : LBBaseState
 
         currPathID = trumpRoute.FindIndex(x => x == startTrump);
         startPointID = currPathID;
+
+        // Set sgent speed
+        bossCharacter.Agent.speed = bossCharacter.PanicSpeed;
 
         SetDestinationToNextPoint(trumpRoute);
 
