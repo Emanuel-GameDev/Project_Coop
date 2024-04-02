@@ -20,6 +20,8 @@ public class Ranged : PlayerCharacter
     float fireTimer=0;
 
     [Header("Variabili attacco")]
+    [SerializeField, Tooltip("Punto di sparo")]
+    GameObject shootingPoint;
     [SerializeField, Tooltip("velocità proiettile base")]
     float projectileSpeed = 30f;
     [SerializeField, Tooltip("gittata proiettile base")]
@@ -220,7 +222,7 @@ public class Ranged : PlayerCharacter
 
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
-        newProjectile.transform.position = transform.position;
+        newProjectile.transform.position = shootingPoint.transform.position;
 
         newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer);
 
@@ -455,7 +457,7 @@ public class Ranged : PlayerCharacter
     {
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
-        newProjectile.transform.position = transform.position;
+        newProjectile.transform.position =shootingPoint.transform.position;
 
         newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier,gameObject.layer);
 
