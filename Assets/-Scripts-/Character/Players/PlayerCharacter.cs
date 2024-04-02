@@ -225,6 +225,15 @@ public abstract class PlayerCharacter : Character
             lookDir = context.ReadValue<Vector2>();
     }
 
+    public void LookInputMouse(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Vector2 temp=context.ReadValue<Vector2>();
+            lookDir=(Camera.main.ScreenToWorldPoint(temp)-transform.position).normalized;
+        }
+    }
+
     public void DialogueInput(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -238,35 +247,37 @@ public abstract class PlayerCharacter : Character
     {
         //string gamepad = context.control.device.displayName;
 
-        string gamepad = characterController.GetInputHandler().PlayerInput.currentControlScheme;
+        //string gamepad = characterController.GetInputHandler().PlayerInput.currentControlScheme;
 
 
-        if (gamepad.Contains("Gamepad") || gamepad.Contains("Controller") || gamepad.Contains("Joystick"))
-        {
-            //perndo la look dal player.input utilizzando il gamepad
+        //if (gamepad.Contains("Gamepad") || gamepad.Contains("Controller") || gamepad.Contains("Joystick"))
+        //{
+        //    //perndo la look dal player.input utilizzando il gamepad
 
-            Debug.Log(lookDir);
-            return new Vector2(lookDir.x, lookDir.y).normalized;
+        //    Debug.Log(lookDir);
+        //    return new Vector2(lookDir.x, lookDir.y).normalized;
 
-            
-        }
-        else
-        {
-            //prendo la look con un raycast dal mouse
-            screenPosition = Input.mousePosition;
 
-            Ray ray = Camera.main.ScreenPointToRay(screenPosition);
+        //}
+        //else
+        //{
+        //    //prendo la look con un raycast dal mouse
+        //    screenPosition = Input.mousePosition;
 
-            if (plane.Raycast(ray, out float distance))
-            {
-                worldPosition = ray.GetPoint(distance);
+        //    Ray ray = Camera.main.ScreenPointToRay(screenPosition);
 
-                worldPosition = (worldPosition - transform.position).normalized;
-            }
+        //    if (plane.Raycast(ray, out float distance))
+        //    {
+        //        worldPosition = ray.GetPoint(distance);
 
-            //Debug.Log(worldPosition);
-            return new Vector2(worldPosition.x, worldPosition.y);
-        }
+        //        worldPosition = (worldPosition - transform.position).normalized;
+        //    }
+
+        //    //Debug.Log(worldPosition);
+        //    return new Vector2(worldPosition.x, worldPosition.y);
+        //}
+
+        return new Vector2(lookDir.x, lookDir.y).normalized;
 
     }
 
