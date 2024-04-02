@@ -50,4 +50,9 @@ public class LBProjectile : MonoBehaviour, IDamager
             charHit.TakeDamage(GetDamageData());
         }
     }
+
+    public void OnParryNotify(Character whoParried)
+    {
+        throw new System.NotImplementedException();
+    }
 }
