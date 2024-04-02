@@ -152,7 +152,7 @@ Transform:
   m_GameObject: {fileID: 60263078}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.63, y: -5.12, z: 0}
+  m_LocalPosition: {x: -7.58, y: -5.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -720,7 +720,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!4 &233489263
 Transform:
   m_ObjectHideFlags: 0
@@ -795,9 +795,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -8.833454, y: 0}
+  m_Offset: {x: -5.7541394, y: 10.997532}
   serializedVersion: 2
-  m_Radius: 21.370323
+  m_Radius: 18.291014
 --- !u!1 &250754319
 GameObject:
   m_ObjectHideFlags: 0
@@ -1100,7 +1100,7 @@ PrefabInstance:
     - target: {fileID: 1169905768434567888, guid: 8bc278fcdfbad674c8161998835298df,
         type: 3}
       propertyPath: canSwitchCharacter
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1169905768434567888, guid: 8bc278fcdfbad674c8161998835298df,
         type: 3}
@@ -1228,7 +1228,7 @@ GameObject:
   - component: {fileID: 435343607}
   - component: {fileID: 435343606}
   - component: {fileID: 435343608}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1282,15 +1282,15 @@ PolygonCollider2D:
     - - {x: -30.287895, y: -24.690348}
       - {x: -32.98437, y: 17.88028}
       - {x: 30.468958, y: 18.034184}
-      - {x: 21.459923, y: -2.4928863}
-      - {x: 13.251764, y: 1.9424573}
+      - {x: 21.919882, y: -2.7111719}
+      - {x: 13.569465, y: 1.8718574}
       - {x: 22.189405, y: 7.5003576}
       - {x: 17.061455, y: 9.391682}
       - {x: 8.763885, y: 4.959626}
       - {x: 0.62278855, y: 9.863393}
-      - {x: -22.108517, y: -3.0882828}
-      - {x: -0.77426016, y: -15.46055}
-      - {x: 21.686668, y: -2.499878}
+      - {x: -22.343266, y: -3.2727273}
+      - {x: -0.7284241, y: -16.010582}
+      - {x: 21.930645, y: -2.7438555}
       - {x: 30.47873, y: 17.969116}
       - {x: 29.570847, y: -24.289833}
   m_UseDelaunayMesh: 0
@@ -1319,7 +1319,7 @@ Rigidbody2D:
   m_GameObject: {fileID: 435343604}
   m_BodyType: 2
   m_Simulated: 1
-  m_UseFullKinematicContacts: 0
+  m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
@@ -3605,7 +3605,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1447696592
 MonoBehaviour:
   m_ObjectHideFlags: 0

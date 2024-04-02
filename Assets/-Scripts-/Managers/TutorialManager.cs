@@ -117,7 +117,7 @@ public class TutorialManager : MonoBehaviour
 
     private void Start()
     {
-        exit.SetActive(false);
+        exit.SetActive(true);
         objectiveText.enabled = false;
         objectiveNumbersGroup.SetActive(false);
         currentFaseObjective.SetActive(false);
@@ -218,7 +218,7 @@ public class TutorialManager : MonoBehaviour
     public void StartTutorial()
     {
         stateMachine.SetState(new IntermediateTutorialFase(this));
-
+        exit.SetActive(false);
         lilith.gameObject.GetComponent<CircleCollider2D>().enabled = false;
 
         playableDirector.Play();

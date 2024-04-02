@@ -126,6 +126,7 @@ public abstract class PlayerCharacter : Character
             damager.SetSource(this);
         }
         SetIsInBossfight(false);
+       
     }
 
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;

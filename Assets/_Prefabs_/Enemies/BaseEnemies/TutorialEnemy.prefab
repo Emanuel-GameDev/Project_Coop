@@ -80,6 +80,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3defd5cc67813a54399603acd9abfae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnAllPlayerInside:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &5047301388580239896
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,6 +161,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3defd5cc67813a54399603acd9abfae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnAllPlayerInside:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!58 &2023287047930503514
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -374,12 +380,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c69a7a9a69ac7354388b0b989826ef3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fadeSpeed: 2
+  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
+  _OnParryColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   stunned: 0
   underAggro: 0
   inLove: 0
   bleeding: 0
   isDead: 0
   damageReceivedMultiplier: 1
+  pushAnimationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   maxHp: 5000
   damage: 0
   staminaDamage: 5
@@ -463,8 +478,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 1.22}
+  m_Offset: {x: 0, y: 1.2143586}
+  m_Size: {x: 1.3219656, y: 3.1508517}
   m_Direction: 0
 --- !u!50 &5685418474842049650
 Rigidbody2D:
