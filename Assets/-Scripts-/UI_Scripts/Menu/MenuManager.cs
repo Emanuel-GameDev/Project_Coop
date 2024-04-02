@@ -128,4 +128,24 @@ public class MenuManager : MonoBehaviour
         }
         menu.gameObject.SetActive(false);
     }
+
+    private void GoNextTab()
+    {
+        ChangeTab(actualMenu.NextTab);
+    }
+    private void GoPreviousTab()
+    {
+        ChangeTab(actualMenu.PreviousTab);
+    }
+
+    private void ChangeTab(MenuInfo tab)
+    {
+        if (actualMenu.HaveTab)
+        {
+            MenuInfo tempMenu = actualMenu;
+            actualMenu = actualMenu.PreviousMenu;
+            OpenMenu(tab);
+            tempMenu.gameObject.SetActive(false);
+        }
+    }
 }

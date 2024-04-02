@@ -45,4 +45,14 @@ public class MenuInfo : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    private bool haveTab = false;
+    public bool HaveTab => haveTab;
+    [SerializeField]
+    private MenuInfo NextTabMenu;
+    public MenuInfo NextTab => NextTabMenu;
+    [SerializeField]
+    private MenuInfo PreviousTabMenu;
+    public MenuInfo PreviousTab => PreviousTabMenu;
+
 }
