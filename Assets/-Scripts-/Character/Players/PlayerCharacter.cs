@@ -290,6 +290,7 @@ public abstract class PlayerCharacter : Character
         //    return new Vector2(worldPosition.x, worldPosition.y);
         //}
 
+        Debug.Log(lookDir);
         return new Vector2(lookDir.x, lookDir.y).normalized;
 
     }

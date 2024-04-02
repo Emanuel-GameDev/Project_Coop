@@ -57,6 +57,12 @@ public class PlayerCharacterController : InputReceiver
             actualPlayerCharacter.LookInput(context);
     }
 
+    public override void MouseLookInput(InputAction.CallbackContext context)
+    {
+        if (actualPlayerCharacter != null)
+            actualPlayerCharacter.LookInputMouse(context);
+    }
+
     public override void AttackInput(InputAction.CallbackContext context)
     {
         if (actualPlayerCharacter != null)
