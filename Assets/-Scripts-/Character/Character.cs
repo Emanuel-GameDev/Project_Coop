@@ -8,6 +8,17 @@ using UnityEngine.InputSystem;
 public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
 {
 
+    //shader
+    [Header("ProvaShaderGraph Hit e Parry")]
+    [SerializeField] private float fadeSpeed =2f;    
+    [SerializeField] protected Color _OnHitColor = Color.red;
+    [SerializeField] protected Color _OnParryColor = Color.yellow;
+
+    private Color _materialTintColor;
+    private Material spriteMaterial;
+    private SpriteRenderer spriteRendererVisual;
+
+    [Header("Character Generics")]
     [HideInInspector] public bool stunned = false;
     [HideInInspector] public bool underAggro = false;
     [HideInInspector] public bool inLove = false;
@@ -31,6 +42,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     protected virtual void Awake()
     {
         InitialSetup();
+             
     }
 
     //Tutto ciò che va fatto nello ad inizio
@@ -40,6 +52,10 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         conditions = new();
         canInteract = false;
         damageReceivedMultiplier = 1;
+
+        //Shader
+        spriteRendererVisual = GetComponentInChildren<SpriteRotation>().GetComponent<SpriteRenderer>();
+        spriteMaterial = spriteRendererVisual.material;
     }
 
     public Rigidbody2D GetRigidBody() => rb;
@@ -109,6 +125,36 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         canInteract = false;
     }
 
-  
+    public virtual void OnParryNotify(Character whoParried)
+    {
+        
+    }
+
+
     #endregion
+
+    #region shader
+    //Shader
+    public void SetHitMaterialColor(Color newColor)
+    {
+        _materialTintColor = newColor;
+        spriteMaterial.SetColor("_Tint", _materialTintColor);
+        StartCoroutine(StartShaderFade());
+    }
+
+    public IEnumerator StartShaderFade()
+    {
+        while (_materialTintColor.a > 0)
+        {
+            _materialTintColor.a = Mathf.Clamp01(_materialTintColor.a - fadeSpeed * Time.deltaTime);
+            spriteMaterial.SetColor("_Tint", _materialTintColor);
+
+            yield return new WaitForEndOfFrame();
+        }
+    }
 }
+#endregion
+
+
+
+

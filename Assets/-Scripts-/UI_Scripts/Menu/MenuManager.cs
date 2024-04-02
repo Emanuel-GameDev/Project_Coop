@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.Universal.Internal;
 
 public class MenuManager : MonoBehaviour
 {
@@ -27,11 +23,14 @@ public class MenuManager : MonoBehaviour
     }
 
     [SerializeField]
-    private GameObject pauseMenu;
+    private MenuInfo pauseMenu;
 
     [SerializeField]
-    private GameObject optionMenu;
+    private MenuInfo optionMenu;
 
+    private MenuInfo actualMenu;
+
+    private PlayerInputHandler actualMenuOwner;
 
     private void Awake()
     {
@@ -46,24 +45,87 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-
-    public void SetPlayerActiveMenu(PlayerInputHandler player, GameObject menuRoot, GameObject firstSelection)
-    {
-        player.SetPlayerActiveMenu(menuRoot, firstSelection);
-    }   
-
+    #region Pause/Option Menu
     public void OpenPauseMenu(PlayerInputHandler player)
     {
-        SetPlayerActiveMenu(player, pauseMenu, pauseMenu.GetComponent<MenuInfo>().firstObjectSelected);
+        if (actualMenuOwner != null) return;
+        actualMenuOwner = player;
+        OpenMenu(pauseMenu);
     }
 
     public void OpenOptionMenu(PlayerInputHandler player)
     {
-        SetPlayerActiveMenu(player, optionMenu, optionMenu.GetComponent<MenuInfo>().firstObjectSelected);
+        if (actualMenuOwner != null) return;
+        actualMenuOwner = player;
+        OpenMenu(optionMenu);
     }
 
-    public void OpenMenu(PlayerInputHandler player, GameObject menu)
+    public void ClosePauseMenu()
     {
-        SetPlayerActiveMenu(player, menu, menu.GetComponent<MenuInfo>().firstObjectSelected);
+        if (actualMenu == pauseMenu)
+        {
+            CloseAllMenu(actualMenu);
+            ClearMenuEntries();
+        }
+    }
+
+    public void CloseOptionMenu()
+    {
+        if (actualMenu == optionMenu)
+        {
+            CloseAllMenu(actualMenu);
+            ClearMenuEntries();
+        }
+    }
+    #endregion
+
+    public void OpenMenu(MenuInfo menu, GameObject startingSelected)
+    {
+        menu.FirstObjectSelected = startingSelected;
+        OpenMenu(menu);
+    }
+
+    public void OpenMenu(MenuInfo menu)
+    {
+        actualMenuOwner.SetPlayerActiveMenu(menu.MenuRoot, menu.FirstObjectSelected);
+        menu.gameObject.SetActive(true);
+        if (actualMenu != null)
+        {
+            menu.PreviousMenu = actualMenu;
+        }
+        actualMenu = menu;
+    }
+
+    public void CloseMenu()
+    {
+        actualMenu.gameObject.SetActive(false);
+        if (actualMenu.PreviousMenu != null)
+        {
+            actualMenu = actualMenu.PreviousMenu;
+            actualMenuOwner.SetPlayerActiveMenu(actualMenu.MenuRoot, actualMenu.FirstObjectSelected);
+            actualMenu.gameObject.SetActive(true);
+        }
+        else
+        {
+            ClearMenuEntries();
+        }
+
+    }
+
+    private void ClearMenuEntries()
+    {
+        actualMenu = null;
+        actualMenuOwner.SetPlayerActiveMenu(null, null);
+        actualMenuOwner = null;
+    }
+
+    private void CloseAllMenu(MenuInfo menu)
+    {
+        if (menu.PreviousMenu != null)
+        {
+            CloseAllMenu(menu.PreviousMenu);
+            menu.PreviousMenu = null;
+        }
+        menu.gameObject.SetActive(false);
     }
 }

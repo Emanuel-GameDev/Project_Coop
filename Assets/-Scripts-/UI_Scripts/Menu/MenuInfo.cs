@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,35 +6,43 @@ using UnityEngine;
 public class MenuInfo : MonoBehaviour
 {
     [SerializeField]
-    private GameObject defaultPreviosMenu;
-    [HideInInspector]
-    public GameObject previosMenu;
-
-    [SerializeField]
-    private GameObject defaultNextMenu;
-    [HideInInspector]
-    public GameObject nextMenu;
+    private GameObject menuRoot;
+    public GameObject MenuRoot => menuRoot;
 
     [SerializeField]
     private GameObject defaultFirstObjectSelected;
-    [HideInInspector]
-    public GameObject firstObjectSelected;
-
-    private void Awake()
+    private GameObject firstObjectSelected;
+    public GameObject FirstObjectSelected
     {
-        previosMenu = defaultPreviosMenu;
-        nextMenu = defaultNextMenu;
-        firstObjectSelected = defaultFirstObjectSelected;
+        get
+        {
+            if (firstObjectSelected == null)
+                return defaultFirstObjectSelected;
+            else
+                return firstObjectSelected;
+        }
+        set
+        {
+            firstObjectSelected = value;
+        }
     }
 
-    public void GoNextMenu(PlayerInputHandler player)
+    [SerializeField]
+    private MenuInfo defaultPreviosMenu;
+    private MenuInfo previousMenu;
+    public MenuInfo PreviousMenu
     {
-        MenuManager.Instance.OpenMenu(player, nextMenu);
-    }
-
-    public void GoPreviusMenu(PlayerInputHandler player)
-    {
-        MenuManager.Instance.OpenMenu(player, previosMenu);
+        get
+        {
+            if (previousMenu == null)
+                return defaultPreviosMenu;
+            else
+                return previousMenu;
+        }
+        set
+        {
+            previousMenu = value;
+        }
     }
 
 }

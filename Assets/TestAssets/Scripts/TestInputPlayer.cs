@@ -8,7 +8,10 @@ public class TestInputPlayer : InputReceiver
 {
     public override void Cancel(InputAction.CallbackContext context)
     {
-        
+        if (context.performed)
+        {
+            MenuManager.Instance.CloseMenu();
+        }
     }
 
     public override void MenuInput(InputAction.CallbackContext context)
@@ -40,5 +43,15 @@ public class TestInputPlayer : InputReceiver
     public override void Submit(InputAction.CallbackContext context)
     {
         
+    }
+
+    public override void UIMenuInput(InputAction.CallbackContext context)
+    {
+        MenuManager.Instance.ClosePauseMenu();
+    }
+
+    public override void UIOptionInput(InputAction.CallbackContext context)
+    {
+        MenuManager.Instance.CloseOptionMenu();
     }
 }
