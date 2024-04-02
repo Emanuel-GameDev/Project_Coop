@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Events;
 
 public class Detector : MonoBehaviour
 {
+    public UnityEvent OnAllPlayerInside;
+
     List<PlayerCharacter> playersDetected;
     int playersInside;
 
@@ -20,6 +22,9 @@ public class Detector : MonoBehaviour
         {
             playersDetected.Add(character);
             playersInside++;
+
+            if (playersDetected.Count >= CoopManager.Instance.GetActiveHandlers().Count)
+                OnAllPlayerInside?.Invoke();
         }
     }
 
