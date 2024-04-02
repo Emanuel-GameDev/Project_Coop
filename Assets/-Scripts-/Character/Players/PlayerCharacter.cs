@@ -244,9 +244,11 @@ public abstract class PlayerCharacter : Character
     {
         if (context.performed)
         {
-            Vector2 temp=context.ReadValue<Vector2>();
-            lookDir=(Camera.main.ScreenToWorldPoint(temp)-transform.position).normalized;
+            Vector2 temp = context.ReadValue<Vector2>();
+            lookDir = (Camera.main.ScreenToWorldPoint(temp) - transform.position);
         }
+
+        
     }
 
     public void DialogueInput(InputAction.CallbackContext context)
@@ -256,6 +258,11 @@ public abstract class PlayerCharacter : Character
             PubSub.Instance.Notify(EMessageType.dialogueInput, this);
             Debug.Log("input");
         }
+    }
+
+    public Vector2 ReadLookdirCrosshair()
+    {
+        return lookDir;
     }
 
     public Vector2 ReadLook(InputAction.CallbackContext context)
