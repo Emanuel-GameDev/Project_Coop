@@ -17,6 +17,8 @@ public class CoinShopTable : MonoBehaviour
     [SerializeField] TextMeshProUGUI coinsNumberText;
     [SerializeField] Selectable buyButton;
 
+    [SerializeField] public ePlayerCharacter characterReference;
+
     [SerializeField] public List<CoinShopEntry> entrys;
 
     [Serializable]
@@ -24,6 +26,8 @@ public class CoinShopTable : MonoBehaviour
     {
         [SerializeField] public CoinShopButton button;
         [SerializeField] public List<PowerUp> abilitys;
+
+        [HideInInspector] public int id;
     }
 
 
@@ -71,6 +75,22 @@ public class CoinShopTable : MonoBehaviour
     public void BuySouvenir()
     {
         Debug.Log("buy");
+        PlayerCharacterController inputReceiver = (PlayerCharacterController)shopMenu.tableAssosiation[this].CurrentReceiver;
+
+        CoinShopButton lastButton = lastSelected.GetComponent<CoinShopButton>();
+        CoinShopEntry lastEntry = entrys.Find(b => b.button == lastButton);
+
+        inputReceiver.ActualPlayerCharacter.AddPowerUp(lastButton.powerUp);
+
+        lastEntry.id++;
+        if(lastEntry.id >= lastEntry.abilitys.Count)
+        {
+            Debug.Log("End");
+            
+            lastEntry.id--;
+        }    
+        lastButton.SetPowerUp(lastEntry.abilitys[lastEntry.id]);
+
         DesetOnBuyButton();
     }
 
@@ -78,5 +98,10 @@ public class CoinShopTable : MonoBehaviour
     {
         shopMenu.canClose = true;
         shopMenu.tableAssosiation[this].MultiplayerEventSystem.SetSelectedGameObject(lastSelected);
+    }
+
+    public void UpdateCoinCounter(int counter)
+    {
+        coinsNumberText.text = counter.ToString();
     }
 }

@@ -82,6 +82,8 @@ public abstract class PlayerCharacter : Character
     public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) * powerUpData.UniqueAbilityCooldownDecrease;
     public float DamageReceivedMultiplier => damageReceivedMultiplier;
 
+    public virtual ExtraData ExtraData => extraData;
+
     public Vector2 MoveDirection => moveDir;
     public Vector2 LastDirection => lastNonZeroDirection;
 
@@ -124,6 +126,7 @@ public abstract class PlayerCharacter : Character
             damager.SetSource(this);
         }
         SetIsInBossfight(false);
+       
     }
 
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;

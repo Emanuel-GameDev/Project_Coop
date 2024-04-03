@@ -14,7 +14,7 @@ public class Menu : MonoBehaviour
 
     [SerializeField] GameObject shopGroup;
 
-    private void Start()
+    public virtual void Start()
     {
         shopGroup.SetActive(false);
     }
