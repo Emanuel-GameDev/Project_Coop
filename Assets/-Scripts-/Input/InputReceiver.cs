@@ -95,6 +95,11 @@ public abstract class InputReceiver : MonoBehaviour
     {
         
     }
+
+    public virtual void MouseLookInput(InputAction.CallbackContext context)
+    {
+
+    }
     #endregion
 
     #region Minigame
