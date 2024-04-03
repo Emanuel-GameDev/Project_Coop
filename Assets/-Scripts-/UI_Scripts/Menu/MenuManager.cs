@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class MenuManager : MonoBehaviour
@@ -79,9 +80,10 @@ public class MenuManager : MonoBehaviour
     }
     #endregion
 
-    public void OpenMenu(MenuInfo menu, GameObject startingSelected)
+    public void OpenMenu(MenuInfo menu, TabInfo tabToOpen)
     {
-        menu.FirstObjectSelected = startingSelected;
+        if(menu.HaveTabs)
+            menu.GoToTab(tabToOpen);
         OpenMenu(menu);
     }
 
@@ -99,6 +101,9 @@ public class MenuManager : MonoBehaviour
     public void CloseMenu()
     {
         actualMenu.gameObject.SetActive(false);
+        if (actualMenu.HaveTabs)
+            actualMenu.CloseAllTab();
+
         if (actualMenu.PreviousMenu != null)
         {
             actualMenu = actualMenu.PreviousMenu;
@@ -129,23 +134,21 @@ public class MenuManager : MonoBehaviour
         menu.gameObject.SetActive(false);
     }
 
-    private void GoNextTab()
+    public void GoNextTab(PlayerInputHandler playerInputHandler)
     {
-        ChangeTab(actualMenu.NextTab);
-    }
-    private void GoPreviousTab()
-    {
-        ChangeTab(actualMenu.PreviousTab);
-    }
-
-    private void ChangeTab(MenuInfo tab)
-    {
-        if (actualMenu.HaveTab)
+        if (playerInputHandler == actualMenuOwner && actualMenu.HaveTabs)
         {
-            MenuInfo tempMenu = actualMenu;
-            actualMenu = actualMenu.PreviousMenu;
-            OpenMenu(tab);
-            tempMenu.gameObject.SetActive(false);
+            actualMenu.GoNextTab();
+            actualMenuOwner.SetPlayerActiveMenu(actualMenu.MenuRoot, actualMenu.FirstObjectSelected);
         }
+            
+    }
+    public void GoPreviousTab(PlayerInputHandler playerInputHandler)
+    {
+        if (playerInputHandler == actualMenuOwner && actualMenu.HaveTabs)
+        {
+            actualMenu.GoPreviousTab();
+            actualMenuOwner.SetPlayerActiveMenu(actualMenu.MenuRoot, actualMenu.FirstObjectSelected);
+        }  
     }
 }

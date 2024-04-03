@@ -197,6 +197,10 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void UIOptionInput(InputAction.CallbackContext context) => CurrentReceiver.UIOptionInput(context);
 
+    public virtual void NextInput(InputAction.CallbackContext context) => CurrentReceiver.NextInput(context);
+
+    public virtual void PreviousInput(InputAction.CallbackContext context) => CurrentReceiver.PreviousInput(context);
+
     #endregion
 
     #endregion

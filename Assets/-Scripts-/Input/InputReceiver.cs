@@ -155,10 +155,11 @@ public abstract class InputReceiver : MonoBehaviour
     {
     }
 
-    public virtual void UIOptionInput(InputAction.CallbackContext context)
-    {
-    }
+    public virtual void UIOptionInput(InputAction.CallbackContext context) { }
 
+    public virtual void NextInput(InputAction.CallbackContext context) { }
+
+    public virtual void PreviousInput(InputAction.CallbackContext context) { }
     #endregion
 
     #endregion
