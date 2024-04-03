@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -94,6 +95,11 @@ public abstract class InputReceiver : MonoBehaviour
     {
         
     }
+
+    public virtual void MouseLookInput(InputAction.CallbackContext context)
+    {
+
+    }
     #endregion
 
     #region Minigame
@@ -142,6 +148,14 @@ public abstract class InputReceiver : MonoBehaviour
     }
 
     public virtual void RandomSelection(InputAction.CallbackContext context)
+    {
+    }
+
+    public virtual void UIMenuInput(InputAction.CallbackContext context)
+    {
+    }
+
+    public virtual void UIOptionInput(InputAction.CallbackContext context)
     {
     }
 
