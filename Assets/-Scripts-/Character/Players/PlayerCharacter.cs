@@ -141,9 +141,8 @@ public abstract class PlayerCharacter : Character
     protected virtual void Update()
     {
         Move(moveDir);
-        
     }
-
+    
 
     public virtual void Move(Vector2 direction)
     {
