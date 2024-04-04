@@ -35,7 +35,7 @@ public class BasicEnemyStunState : BasicEnemyState
 
         stunTime -= Time.deltaTime ;
 
-        Debug.Log(stunTime);
+        //Debug.Log(stunTime);
         if(stunTime <= 0f)
         {
             

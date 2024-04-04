@@ -66,7 +66,7 @@ public class DialogueBox : MonoBehaviour
         else
         {
 
-
+            
             OnDialogueEnd[dialogueIndex]?.Invoke();
 
             dialogueIndex++;
@@ -274,7 +274,8 @@ public class DialogueBox : MonoBehaviour
 
         if (timer < 0.1)
         {
-            timer += Time.deltaTime;
+            //guardare se da problemi
+            timer += Time.realtimeSinceStartup;
         }
 
     }
@@ -306,5 +307,14 @@ public class DialogueBox : MonoBehaviour
     {
         dialogues = new Dialogue[1];
         dialogues[0] = newDialogues;
+    }
+
+    public void RemoveAllDialogueEnd()
+    {
+        OnDialogueEnd.Clear();
+    }
+    public void AddDialogueEnd(UnityEvent unityEvent)
+    {
+        OnDialogueEnd.Add(unityEvent);
     }
 }

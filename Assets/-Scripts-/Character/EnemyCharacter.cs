@@ -62,6 +62,7 @@ public class EnemyCharacter : Character
             isDead = true;
             animator.SetTrigger("isDead");
             
+            
         }
         if (data.condition != null)
             data.condition.AddCondition(this);

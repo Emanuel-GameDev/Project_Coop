@@ -11,7 +11,8 @@ public class ChallengeManager : MonoBehaviour
     private void Start()
     {
         selectedChallenge = SelectChallenge();
-        selectedChallenge.Initiate();
+        //DEBUG
+        //selectedChallenge.Initiate();
         
     }
    
