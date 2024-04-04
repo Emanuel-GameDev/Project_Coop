@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayersCollisionsHandler : MonoBehaviour
 {
-    private void Start()
+    private void OnEnable()
     {
         Physics2D.IgnoreCollision(gameObject.GetComponentInChildren<PlayersCollisionsHandler>().GetComponent<CircleCollider2D>(), gameObject.GetComponentInChildren<PlayersCollisionsHandler>().GetComponentInChildren<Rigidbody2D>().GetComponent<CircleCollider2D>());
     }
