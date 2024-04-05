@@ -48,7 +48,8 @@ public class EnemySpawner : MonoBehaviour
             GameObject tempObject = Instantiate(enemiesPrefab[Random.Range(0, enemiesPrefab.Count)], spawnPoint, Quaternion.identity,challengeParent.gameObject.transform);
             tempObject.TryGetComponent<EnemyCharacter>(out EnemyCharacter tempEnemy);
             if (tempEnemy != null)
-                challengeParent.spawnedEnemies.Add(tempEnemy);
+                challengeParent.AddToSpawned(tempEnemy);
+               
         }
     }
 

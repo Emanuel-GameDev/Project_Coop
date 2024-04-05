@@ -52,6 +52,7 @@ public class EnemyCharacter : Character
     public override void TakeDamage(DamageData data)
     {
         currentHp -= data.damage * damageReceivedMultiplier;
+        OnHit?.Invoke();
         Debug.Log(currentHp);
 
         //shader
@@ -60,6 +61,7 @@ public class EnemyCharacter : Character
         if (currentHp <= 0)
         {
             isDead = true;
+            OnDeath?.Invoke();
             animator.SetTrigger("isDead");
             
             

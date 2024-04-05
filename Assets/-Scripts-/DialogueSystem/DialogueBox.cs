@@ -66,7 +66,8 @@ public class DialogueBox : MonoBehaviour
         else
         {
 
-            
+            //controllare
+            if(OnDialogueEnd.Count > 0) 
             OnDialogueEnd[dialogueIndex]?.Invoke();
 
             dialogueIndex++;

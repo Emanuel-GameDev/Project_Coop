@@ -6,25 +6,29 @@ public class Challenge : MonoBehaviour
 {
     [Header("Generics")]
     public DialogueBox dialogueBox;
+
     [Header("OnStart")]
     public Dialogue dialogueOnStart;
-    
+
 
     [Header("OnSuccess")]
     public Dialogue dialogueOnSuccess;
     public UnityEvent onChallengeSuccessEvent;
-    
+
     [Header("OnFail")]
     public Dialogue dialogueOnFailure;
     public UnityEvent onChallengeFailEvent;
 
-   
-    public List<EnemyCharacter> spawnedEnemies;
+
+    [HideInInspector] public List<EnemyCharacter> spawnedEnemiesList;
     [HideInInspector] public bool enemySpawned;
-   
+    [HideInInspector] public UnityEvent onChallengeStartAction;
+    [HideInInspector] public bool challengeCompleted;
+
+
     public virtual void Initiate()
     {
-       
+        onChallengeStartAction.AddListener(StartChallenge);
     }
     public virtual void StartChallenge()
     {
@@ -39,6 +43,11 @@ public class Challenge : MonoBehaviour
     {
         Debug.Log("HAI VINTO");
         onChallengeSuccessEvent?.Invoke();
+    }
+
+    public virtual void AddToSpawned(EnemyCharacter tempEnemy)
+    {
+        spawnedEnemiesList.Add(tempEnemy);  
     }
 
 }
