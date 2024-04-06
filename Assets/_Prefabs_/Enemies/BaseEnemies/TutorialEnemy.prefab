@@ -80,9 +80,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3defd5cc67813a54399603acd9abfae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnOnePlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
   OnAllPlayerInside:
     m_PersistentCalls:
       m_Calls: []
+  playerInsideCount: {fileID: 0}
 --- !u!1 &5047301388580239896
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,7 +112,7 @@ Transform:
   m_GameObject: {fileID: 5047301388580239896}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -161,9 +165,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3defd5cc67813a54399603acd9abfae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnOnePlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
   OnAllPlayerInside:
     m_PersistentCalls:
       m_Calls: []
+  playerInsideCount: {fileID: 0}
 --- !u!58 &2023287047930503514
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -317,7 +325,7 @@ Transform:
   m_GameObject: {fileID: 6177594625496059516}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3525157, y: 5.281646, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -478,8 +486,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 1.2143586}
-  m_Size: {x: 1.3219656, y: 3.1508517}
+  m_Offset: {x: 0, y: 1.8047042}
+  m_Size: {x: 1.3219656, y: 1.9701605}
   m_Direction: 0
 --- !u!50 &5685418474842049650
 Rigidbody2D:
@@ -548,7 +556,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3949199778491864970}
@@ -604,7 +612,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!114 &7819423962522352399
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class Detector : MonoBehaviour
 {
-    public UnityEvent OnAllPlayerInside;
+    [SerializeField] UnityEvent OnOnePlayerEnter;
+    [SerializeField] UnityEvent OnAllPlayerInside;
+    [SerializeField] TextMeshProUGUI playerInsideCount;
 
     List<PlayerCharacter> playersDetected;
     int playersInside;
@@ -14,6 +17,9 @@ public class Detector : MonoBehaviour
     {
         GetComponent<Collider2D>().isTrigger = true;
         playersDetected = new List<PlayerCharacter>();
+
+        if (playerInsideCount != null)
+            playerInsideCount.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -23,8 +29,21 @@ public class Detector : MonoBehaviour
             playersDetected.Add(character);
             playersInside++;
 
+            OnOnePlayerEnter?.Invoke();
+
+            if (playerInsideCount != null)
+            {
+                playerInsideCount.gameObject.SetActive(true);
+                playerInsideCount.text = $"{playersInside}/{GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>().Length}";
+            }
+
             if (playersDetected.Count >= CoopManager.Instance.GetActiveHandlers().Count)
+            {
                 OnAllPlayerInside?.Invoke();
+
+                if (playerInsideCount != null)
+                    playerInsideCount.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -36,6 +55,18 @@ public class Detector : MonoBehaviour
             {
                 playersDetected.Remove(character);
                 playersInside--;
+
+                if (playerInsideCount != null)
+                {
+                    playerInsideCount.gameObject.SetActive(true);
+                    playerInsideCount.text = $"{playersInside}/{GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>().Length}";
+
+                    if (playersDetected.Count >= 0)
+                    {
+                        playerInsideCount.gameObject.SetActive(false);
+                    }
+                }
+
             }
         }
     }

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -80,7 +81,6 @@ public class Healer : PlayerCharacter
     private float lastUniqueAbilityUseTime;
     private int bossPowerUpHitCount;
 
-
     float bossAbilityChargeTimer = 0;
     float bossAbilityCharge = 3;
     float uniqueAbilityTimer;
@@ -93,7 +93,6 @@ public class Healer : PlayerCharacter
 
     bool mineInReach = false;
 
-    bool inputState = true;
 
     public override void Inizialize()
     {
@@ -107,13 +106,18 @@ public class Healer : PlayerCharacter
         healIcons = new Dictionary<PlayerCharacter, GameObject>();
 
         animator.SetFloat("Y", -1);
+        animator.SetBool("IsDead", false);
         baseMoveSpeed = MoveSpeed;
+        blockInput = false;
     }
 
 
     //Attack: colpo singolo, incremento colpi consecutivi senza subire danni contro boss
     public override void AttackInput(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
+        if (blockInput)
+            return;
+
         if (context.performed)
         {
             animator.SetTrigger("IsAttacking");
@@ -129,12 +133,12 @@ public class Healer : PlayerCharacter
 
     public void DeactivateInput()
     {
-        inputState = false;
+        blockInput = true;
     }
 
     public void ActivateInput()
     {
-        inputState = true;
+        blockInput = false;
     }
     
     private void OnTriggerEnter2D(Collider2D other)
@@ -184,9 +188,10 @@ public class Healer : PlayerCharacter
         smallHealTimer = singleHealCooldown;
     }
     float baseMoveSpeed = 0;
+    bool blockInput = false;
     protected override void Update()
     {
-        base.Update();
+        Move(moveDir);
 
         if (uniqueAbilityTimer < UniqueAbilityCooldown)
         {
@@ -228,13 +233,14 @@ public class Healer : PlayerCharacter
 
     public override void Move(Vector2 direction)
     {
-        if (!inputState)
+        if (blockInput)
         {
             base.Move(Vector2.zero);
-            return;
         }
+        else
+            base.Move(direction);
 
-        base.Move(direction);
+
 
         if (direction != Vector2.zero)
             animator.SetBool("IsMoving", true);
@@ -242,12 +248,12 @@ public class Healer : PlayerCharacter
             animator.SetBool("IsMoving", false);
     }
 
-
+    
 
     //Defense: cura ridotta singola
     public override void DefenseInput(InputAction.CallbackContext context)
     {
-        if (!inputState)
+        if (blockInput)
             return;
 
         if (context.performed)
@@ -289,14 +295,15 @@ public class Healer : PlayerCharacter
     //UniqueAbility: lancia area di cura
     public override void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-        if (!inputState)
+        if (blockInput)
             return;
 
         if (uniqueAbilityTimer < UniqueAbilityCooldown || !context.performed)
             return;
 
         animator.SetTrigger("CastHealArea");
-
+        StartCoroutine(InputReactivationDelay(animator.GetCurrentAnimatorClipInfo(0).Length));
+        
         uniqueAbilityTimer = 0;
     }
 
@@ -335,7 +342,7 @@ public class Healer : PlayerCharacter
     public override void ExtraAbilityInput(InputAction.CallbackContext context)
     {
 
-        if (!inputState)
+        if (blockInput)
             return;
 
         if (instantiatedHealMine == null)
@@ -370,6 +377,13 @@ public class Healer : PlayerCharacter
     public override void TakeDamage(DamageData data)
     {
         base.TakeDamage(data);
+
+        if (currentHp <= 0)
+        {
+            blockInput = true;
+            animator.SetBool("IsDead",true);
+        }
+
         bossPowerUpHitCount = 0;
     }
 
@@ -392,6 +406,13 @@ public class Healer : PlayerCharacter
 
         if (spriteIcon != null)
             gameObjectMineIcon.GetComponent<SpriteRenderer>().sprite = spriteIcon;
+    }
+
+    IEnumerator InputReactivationDelay(float delay)
+    {
+        blockInput = true;
+        yield return new WaitForSeconds(delay);
+        blockInput = false;
     }
 
 
