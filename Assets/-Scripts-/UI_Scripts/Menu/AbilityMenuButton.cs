@@ -8,7 +8,6 @@ public class AbilityMenuButton : MonoBehaviour
     [SerializeField]
     private GameObject abilityTent;
 
-
     public void Activate()
     {
         abilityTent.SetActive(true);

@@ -131,35 +131,29 @@ public abstract class InputReceiver : MonoBehaviour
 
     #region UI
 
-    public virtual void Navigate(InputAction.CallbackContext context)
-    {
-    }
+    public virtual void Navigate(InputAction.CallbackContext context) { }
 
-    public virtual void Submit(InputAction.CallbackContext context)
-    {
-    }
+    public virtual void Submit(InputAction.CallbackContext context) { }
 
-    public virtual void Cancel(InputAction.CallbackContext context)
-    {
-    }
+    public virtual void Cancel(InputAction.CallbackContext context) { }
 
-    public virtual void ScrollWheel(InputAction.CallbackContext context)
-    {
-    }
+    public virtual void ScrollWheel(InputAction.CallbackContext context) { }
 
-    public virtual void RandomSelection(InputAction.CallbackContext context)
-    {
-    }
+    public virtual void RandomSelection(InputAction.CallbackContext context) { }
 
-    public virtual void UIMenuInput(InputAction.CallbackContext context)
-    {
-    }
+    public virtual void UIMenuInput(InputAction.CallbackContext context) { }
 
     public virtual void UIOptionInput(InputAction.CallbackContext context) { }
 
     public virtual void NextInput(InputAction.CallbackContext context) { }
 
     public virtual void PreviousInput(InputAction.CallbackContext context) { }
+
+    public virtual void SubNextInput(InputAction.CallbackContext context) { }
+
+    public virtual void SubPreviousInput(InputAction.CallbackContext context) { }
+
+    public virtual void ChangeVisualizationInput(InputAction.CallbackContext context) { }
     #endregion
 
     #endregion

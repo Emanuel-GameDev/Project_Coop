@@ -201,6 +201,12 @@ public class PlayerInputHandler : MonoBehaviour
 
     public virtual void PreviousInput(InputAction.CallbackContext context) => CurrentReceiver.PreviousInput(context);
 
+    public virtual void SubNextInput(InputAction.CallbackContext context) => CurrentReceiver.SubNextInput(context);
+
+    public virtual void SubPreviousInput(InputAction.CallbackContext context) => CurrentReceiver.SubPreviousInput(context);
+    
+    public virtual void ChangeVisualizationInput(InputAction.CallbackContext context) => CurrentReceiver.ChangeVisualizationInput(context);
+
     #endregion
 
     #endregion

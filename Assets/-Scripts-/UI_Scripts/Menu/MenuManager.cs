@@ -1,5 +1,5 @@
-using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MenuManager : MonoBehaviour
 {
@@ -33,6 +33,9 @@ public class MenuManager : MonoBehaviour
 
     private PlayerInputHandler actualMenuOwner;
 
+    private GameObject lastSelectedObject;
+    private IVisualizatorChanger actualVisualizatorChanger;
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -45,6 +48,22 @@ public class MenuManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
+
+    private void Update()
+    {
+        if(EventSystem.current != null)
+        {
+            if (EventSystem.current.currentSelectedGameObject == null)
+            {
+                EventSystem.current.SetSelectedGameObject(lastSelectedObject);
+            }
+            else if (EventSystem.current.currentSelectedGameObject != lastSelectedObject)
+            {
+                lastSelectedObject = EventSystem.current.currentSelectedGameObject;
+            }
+        }
+    }
+
 
     #region Pause/Option Menu
     public void OpenPauseMenu(PlayerInputHandler player)
@@ -82,7 +101,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu(MenuInfo menu, TabInfo tabToOpen)
     {
-        if(menu.HaveTabs)
+        if (menu.HaveTabs)
             menu.GoToTab(tabToOpen);
         OpenMenu(menu);
     }
@@ -141,7 +160,7 @@ public class MenuManager : MonoBehaviour
             actualMenu.GoNextTab();
             actualMenuOwner.SetPlayerActiveMenu(actualMenu.MenuRoot, actualMenu.FirstObjectSelected);
         }
-            
+
     }
     public void GoPreviousTab(PlayerInputHandler playerInputHandler)
     {
@@ -149,6 +168,38 @@ public class MenuManager : MonoBehaviour
         {
             actualMenu.GoPreviousTab();
             actualMenuOwner.SetPlayerActiveMenu(actualMenu.MenuRoot, actualMenu.FirstObjectSelected);
-        }  
+        }
+    }
+
+    public void GoNextSubTab(PlayerInputHandler playerInputHandler)
+    {
+        if (playerInputHandler == actualMenuOwner && actualMenu.HaveSubTabs)
+        {
+            actualMenu.GoNextSubTab();
+            actualMenuOwner.SetPlayerActiveMenu(actualMenu.MenuRoot, actualMenu.FirstObjectSelected);
+        }
+    }
+
+    public void GoPreviousSubTab(PlayerInputHandler playerInputHandler)
+    {
+        if (playerInputHandler == actualMenuOwner && actualMenu.HaveSubTabs)
+        {
+            actualMenu.GoPreviousSubTab();
+            actualMenuOwner.SetPlayerActiveMenu(actualMenu.MenuRoot, actualMenu.FirstObjectSelected);
+        }
+    }
+
+    public void ChangeVisualization(PlayerInputHandler playerInputHandler)
+    {
+        Debug.Log($"ChangeVisualization: {actualVisualizatorChanger}");
+        if (playerInputHandler == actualMenuOwner && actualVisualizatorChanger != null)
+            if (actualVisualizatorChanger is MonoBehaviour changer)
+                if (changer.gameObject.activeInHierarchy)
+                    actualVisualizatorChanger.ChangeVisualization();
+    }
+
+    public void SetActiveVisualizationChanger(IVisualizatorChanger visualizatorChanger)
+    {
+        actualVisualizatorChanger = visualizatorChanger;
     }
 }

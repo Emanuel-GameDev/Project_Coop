@@ -69,8 +69,9 @@ public class MenuInfo : MonoBehaviour
     [SerializeField]
     private bool haveTabs = false;
     public bool HaveTabs => haveTabs;
+    public bool HaveSubTabs => tabs[ActualTabIndex].HaveSubTabs;
 
-    [SerializeField]
+    [SerializeField, Tooltip("Imposta se puoi passare dall'ultima tab alla prima e viceversa oppure no")]
     private bool continuosNavigation = true;
 
     [SerializeField]
@@ -138,4 +139,17 @@ public class MenuInfo : MonoBehaviour
             tab.TabRoot.SetActive(false);
         }
     }
+
+    public void GoNextSubTab()
+    {
+        tabs[ActualTabIndex].GoNextSubTab();
+    }
+
+    public void GoPreviousSubTab()
+    {
+        tabs[ActualTabIndex].GoPreviousSubTab();
+    }
+
+
+
 }

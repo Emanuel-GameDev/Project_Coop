@@ -69,5 +69,21 @@ public class TestInputPlayer : InputReceiver
             MenuManager.Instance.CloseOptionMenu();
     }
 
+    public override void SubNextInput(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+            MenuManager.Instance.GoNextSubTab(playerInputHandler);
+    }
 
+    public override void SubPreviousInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MenuManager.Instance.GoPreviousSubTab(playerInputHandler);
+    }
+
+    public override void ChangeVisualizationInput(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+            MenuManager.Instance.ChangeVisualization(playerInputHandler);
+    }
 }
