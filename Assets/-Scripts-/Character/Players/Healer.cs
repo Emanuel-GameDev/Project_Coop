@@ -19,7 +19,9 @@ public class Healer : PlayerCharacter
     [Tooltip("Tempo di ricarica dell'abilità di cura singola")]
     [SerializeField] float singleHealCooldown = 5f;
     [Tooltip("Distanza massima a cui può essere un alleato per essere curato")]
-    [SerializeField] float smallHealAreaRadius = 1f;
+    [SerializeField] float smallHealAreaRadius = 7f;
+    [Tooltip("Particellare della cura")]
+    [SerializeField] GameObject smallHealParticlePrefab;
 
 
     [Header("Heal mine ability information")]
@@ -273,7 +275,9 @@ public class Healer : PlayerCharacter
             {
                 if (smallHealTimer >= singleHealCooldown)
                 {
+                    
                     animator.SetTrigger("CastSmallHeal");
+                    StartCoroutine(InputReactivationDelay(animator.GetCurrentAnimatorClipInfo(0).Length));
                     TakeDamage(new DamageData(-smallHeal, null));
 
                     foreach (PlayerCharacter pc in smallHealTrigger.GetPlayersDetected())
@@ -290,6 +294,11 @@ public class Healer : PlayerCharacter
             defenceButtonPressed = false;
             bossAbilityChargeTimer = 0;
         }
+    }
+
+    public void PlaySmallHealParticles()
+    {
+        Instantiate(smallHealParticlePrefab,transform.position, Quaternion.identity);
     }
 
     //UniqueAbility: lancia area di cura
@@ -411,7 +420,7 @@ public class Healer : PlayerCharacter
     IEnumerator InputReactivationDelay(float delay)
     {
         blockInput = true;
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSecondsRealtime(delay);
         blockInput = false;
     }
 
