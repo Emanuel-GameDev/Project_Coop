@@ -1,6 +1,7 @@
 using Cinemachine.Utility;
 using System;
 using System.Collections.Generic;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -68,6 +69,10 @@ public abstract class PlayerCharacter : Character
 
 
     public bool protectedByTank; //DA RIVEDERE 
+
+    [Header("Crosshair distance multiplier")]
+
+    [SerializeField] float crosshairDistance=6f;
 
     #endregion
 
@@ -262,6 +267,7 @@ public abstract class PlayerCharacter : Character
 
     public Vector2 ReadLookdirCrosshair()
     {
+        
         return lookDir;
     }
 

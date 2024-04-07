@@ -206,12 +206,12 @@ public class Ranged : PlayerCharacter
             //in futuro inserire il colpo avanzato
             if (multiBaseAttackUnlocked)
             {
-                StartCoroutine(MultipleFireProjectile(lookDirection));
+                StartCoroutine(MultipleFireProjectile(ShootDirection));
             }
             else
             {
 
-                BasicFireProjectile(lookDirection);
+                BasicFireProjectile(ShootDirection);
 
                 fireTimer = AttackSpeed;
 
@@ -505,7 +505,11 @@ public class Ranged : PlayerCharacter
 
     private void SetShootDirection()
     {
-        ShootDirection = (lookDir - (Vector2)shootingPoint.transform.position).normalized;
+        Vector2 dummyTargetAimPosition = (Vector2)transform.position + lookDir;
+        
+        ShootDirection = (dummyTargetAimPosition-(Vector2)(shootingPoint.transform.position)).normalized;
+
+
     }
 
 
