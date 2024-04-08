@@ -24,9 +24,9 @@ public class Detector : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.TryGetComponent<PlayerCharacter>(out PlayerCharacter character))
+        if(other.gameObject.GetComponentInParent<PlayerCharacter>())
         {
-            playersDetected.Add(character);
+            playersDetected.Add(other.gameObject.GetComponentInParent<PlayerCharacter>());
             playersInside++;
 
             OnOnePlayerEnter?.Invoke();
@@ -49,11 +49,11 @@ public class Detector : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.TryGetComponent<PlayerCharacter>(out PlayerCharacter character))
+        if (other.gameObject.GetComponentInParent<PlayerCharacter>())
         {
-            if(playersDetected.Contains(character))
+            if(playersDetected.Contains(other.gameObject.GetComponentInParent<PlayerCharacter>()))
             {
-                playersDetected.Remove(character);
+                playersDetected.Remove(other.gameObject.GetComponentInParent<PlayerCharacter>());
                 playersInside--;
 
                 if (playerInsideCount != null)
