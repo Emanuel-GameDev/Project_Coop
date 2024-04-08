@@ -1,20 +1,44 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class PressInteractable : MonoBehaviour, IInteractable
 {
+    [SerializeField] UnityEvent OnOnePlayerInteract;
     [SerializeField] UnityEvent OnAllPlayersInteract;
+    [SerializeField] TextMeshProUGUI interactersCount;
 
     List<IInteracter> interacters = new List<IInteracter>();
 
+    private void Start()
+    {
+        if (interactersCount != null)
+            interactersCount.gameObject.SetActive(false);
+    }
+
+
     public void Interact(IInteracter interacter)
     {
-        if(!interacters.Contains(interacter))
+        if (!interacters.Contains(interacter))
+        {
             interacters.Add(interacter);
+            OnOnePlayerInteract?.Invoke();
+
+            if(interactersCount != null)
+            {
+                interactersCount.gameObject.SetActive(true);
+                interactersCount.text = $"{interacters.Count}/{GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>().Length}";
+            }
+        }
 
         if (interacters.Count >= CoopManager.Instance.GetActiveHandlers().Count)
+        {
             OnAllPlayersInteract?.Invoke();
+
+            if (interactersCount != null)
+                interactersCount.gameObject.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -30,6 +54,7 @@ public class PressInteractable : MonoBehaviour, IInteractable
         if (other.TryGetComponent<IInteracter>(out var interacter))
         {
             interacter.DisableInteraction(this);
+            
         }
     }
 

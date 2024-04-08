@@ -59,8 +59,9 @@ public class TutorialManager : MonoBehaviour
     [Header("NPCs")]
     public TutorialEnemy tutorialEnemy;
     [SerializeField] GameObject lilith;
+    [SerializeField] GameObject lilithBaloon;
 
-   
+
     [Serializable]
     public class Fase
     {
@@ -97,9 +98,9 @@ public class TutorialManager : MonoBehaviour
     {
         get { return _inputHandlerId; }
 
-        set 
-        { 
-            if(value<inputHandlers.Count)
+        set
+        {
+            if (value < inputHandlers.Count)
                 _inputHandlerId = value;
             else
                 _inputHandlerId = 0;
@@ -124,9 +125,9 @@ public class TutorialManager : MonoBehaviour
 
         tutorialEnemy.gameObject.SetActive(false);
         lilith.gameObject.SetActive(true);
-        
 
-      
+
+
 
         foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
@@ -143,16 +144,16 @@ public class TutorialManager : MonoBehaviour
         }
         else
         {
-            introScreen.SetActive(false) ;
+            introScreen.SetActive(false);
             PostIntro();
         }
-        
+
 
     }
 
     private void Update()
     {
-        if(!videoPlayer.isPlaying)
+        if (!videoPlayer.isPlaying)
             stateMachine.StateUpdate();
     }
 
@@ -176,7 +177,7 @@ public class TutorialManager : MonoBehaviour
 
     }
 
-     
+
     private void PostIntro()
     {
         foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
@@ -214,13 +215,13 @@ public class TutorialManager : MonoBehaviour
         DeactivateEnemyAI();
     }
 
-
     public void StartTutorial()
     {
         stateMachine.SetState(new IntermediateTutorialFase(this));
         exit.SetActive(false);
         lilith.gameObject.GetComponent<CircleCollider2D>().enabled = false;
-
+        lilith.gameObject.GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(false);
+       
         playableDirector.Play();
     }
 

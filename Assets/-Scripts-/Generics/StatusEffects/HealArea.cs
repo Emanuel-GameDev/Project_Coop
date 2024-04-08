@@ -82,7 +82,7 @@ public class HealArea : MonoBehaviour
         {
             characterInArea.Remove(other.gameObject.GetComponent<Character>());
             other.gameObject.GetComponent<Character>().damageReceivedMultiplier = 1f;
-            other.gameObject.GetComponent<Character>().RemovePowerUp(slowDown);
+            //other.gameObject.GetComponent<Character>().RemovePowerUp(slowDown);
         }
         //Deregistrati a lista character
     }
@@ -136,7 +136,7 @@ public class HealArea : MonoBehaviour
             foreach(Character c in characterInArea)
             {
                 c.damageReceivedMultiplier = 1f;
-                c.RemovePowerUp(slowDown);
+                //c.RemovePowerUp(slowDown);
             }
             Destroy(gameObject);
 
