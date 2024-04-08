@@ -35,6 +35,18 @@ public class TestInputPlayer : InputReceiver
         }
     }
 
+    public override void NextInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MenuManager.Instance.GoNextTab(playerInputHandler);
+    }
+
+    public override void PreviousInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MenuManager.Instance.GoPreviousTab(playerInputHandler);
+    }
+
     public override void ScrollWheel(InputAction.CallbackContext context)
     {
         
@@ -47,11 +59,31 @@ public class TestInputPlayer : InputReceiver
 
     public override void UIMenuInput(InputAction.CallbackContext context)
     {
-        MenuManager.Instance.ClosePauseMenu();
+        if (context.performed)
+            MenuManager.Instance.ClosePauseMenu();
     }
 
     public override void UIOptionInput(InputAction.CallbackContext context)
     {
-        MenuManager.Instance.CloseOptionMenu();
+        if (context.performed)
+            MenuManager.Instance.CloseOptionMenu();
+    }
+
+    public override void SubNextInput(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+            MenuManager.Instance.GoNextSubTab(playerInputHandler);
+    }
+
+    public override void SubPreviousInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MenuManager.Instance.GoPreviousSubTab(playerInputHandler);
+    }
+
+    public override void ChangeVisualizationInput(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+            MenuManager.Instance.ChangeVisualization(playerInputHandler);
     }
 }

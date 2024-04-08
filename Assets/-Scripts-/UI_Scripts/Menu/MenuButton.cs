@@ -10,14 +10,14 @@ public class MenuButton : MonoBehaviour
     [SerializeField]
     private MenuInfo nextMenu;
     [SerializeField]
-    private GameObject firstSelectedObject;
+    private TabInfo tabToOpen;
 
     public void GoNextMenu()
     {
         if(nextMenu == null) return;
-        if(firstSelectedObject == null)
+        if(tabToOpen == null)
             MenuManager.Instance.OpenMenu(nextMenu);
         else
-            MenuManager.Instance.OpenMenu(nextMenu, firstSelectedObject);
+            MenuManager.Instance.OpenMenu(nextMenu, tabToOpen);
     }
 }
