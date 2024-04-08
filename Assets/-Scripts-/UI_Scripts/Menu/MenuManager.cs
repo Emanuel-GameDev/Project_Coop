@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -34,7 +35,7 @@ public class MenuManager : MonoBehaviour
     private PlayerInputHandler actualMenuOwner;
 
     private GameObject lastSelectedObject;
-    private IVisualizatorChanger actualVisualizatorChanger;
+    private IVisualizationChanger actualVisualizatorChanger;
 
     private void Awake()
     {
@@ -46,7 +47,17 @@ public class MenuManager : MonoBehaviour
         {
             _instance = this;
             DontDestroyOnLoad(gameObject);
+            Inizialize();
         }
+    }
+
+    private void Inizialize()
+    {
+        pauseMenu.Inizialize();
+        optionMenu.Inizialize();
+
+        pauseMenu.gameObject.SetActive(false);
+        optionMenu.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -101,13 +112,16 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu(MenuInfo menu, TabInfo tabToOpen)
     {
+        OpenMenu(menu);
         if (menu.HaveTabs)
             menu.GoToTab(tabToOpen);
-        OpenMenu(menu);
     }
 
     public void OpenMenu(MenuInfo menu)
     {
+        if (menu.HaveTabs)
+            menu.GoDefaultTab();
+
         actualMenuOwner.SetPlayerActiveMenu(menu.MenuRoot, menu.FirstObjectSelected);
         menu.gameObject.SetActive(true);
         if (actualMenu != null)
@@ -151,6 +165,8 @@ public class MenuManager : MonoBehaviour
             menu.PreviousMenu = null;
         }
         menu.gameObject.SetActive(false);
+        if(menu.HaveTabs)
+            menu.CloseAllTab();
     }
 
     public void GoNextTab(PlayerInputHandler playerInputHandler)
@@ -191,14 +207,13 @@ public class MenuManager : MonoBehaviour
 
     public void ChangeVisualization(PlayerInputHandler playerInputHandler)
     {
-        Debug.Log($"ChangeVisualization: {actualVisualizatorChanger}");
         if (playerInputHandler == actualMenuOwner && actualVisualizatorChanger != null)
             if (actualVisualizatorChanger is MonoBehaviour changer)
                 if (changer.gameObject.activeInHierarchy)
                     actualVisualizatorChanger.ChangeVisualization();
     }
 
-    public void SetActiveVisualizationChanger(IVisualizatorChanger visualizatorChanger)
+    public void SetActiveVisualizationChanger(IVisualizationChanger visualizatorChanger)
     {
         actualVisualizatorChanger = visualizatorChanger;
     }
