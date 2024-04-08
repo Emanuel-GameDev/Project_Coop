@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SubTabInfo : MonoBehaviour
 {
@@ -8,8 +7,8 @@ public class SubTabInfo : MonoBehaviour
     public GameObject SubTabRoot => subTabRoot;
 
     [SerializeField]
-    private Button connectedButton;
-    public Button ConnectedButton => connectedButton;
+    private TabSelection connectedButton;
+    public TabSelection ConnectedButton => connectedButton;
 
     [SerializeField]
     private GameObject defaultFirstObjectSelected;
@@ -27,6 +26,22 @@ public class SubTabInfo : MonoBehaviour
         {
             firstObjectSelected = value;
         }
+    }
+
+    public void Inizialize()
+    {
+
+    }
+
+    public void SelectTabButton()
+    {
+        if (connectedButton != null)
+            connectedButton.Select();
+    }
+    public void DeselectTabButton()
+    {
+        if (connectedButton != null)
+            connectedButton.Deselect();
     }
 
 }

@@ -1,50 +1,72 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VisualizationChangerHandler : MonoBehaviour
+public class VisualizationChangerHandler : MonoBehaviour, IVisualizationChanger
 {
-    [SerializeField]
-    List<List<GameObject>> visualizationObjectsGroups;
+    [SerializeField, ReorderableList, Tooltip("Lista dei gruppi da cambiare ad ogni pressione del tasto")]
+    List<GameObject> visualizationObjects;
 
     int actualIndex = 0;
+    GameObject actualObject;
+
+    private void Awake()
+    {
+        foreach (GameObject visualizationObject in visualizationObjects)
+        {
+            Deactivate(visualizationObject);
+        }
+        Activate(visualizationObjects[actualIndex]);
+    }
+
 
     public void ChangeVisualization()
     {
-        if (visualizationObjectsGroups.Count > 0)
+        if (visualizationObjects.Count > 0)
         {
-            DeactivateAll(visualizationObjectsGroups[actualIndex]);
+            Deactivate(visualizationObjects[actualIndex]);
 
             actualIndex++;
 
-            if (actualIndex >= visualizationObjectsGroups.Count)
+            if (actualIndex >= visualizationObjects.Count)
             {
                 actualIndex = 0;
             }
 
-            ActivateAll(visualizationObjectsGroups[actualIndex]);
+            Activate(visualizationObjects[actualIndex]);
+
+            Debug.Log("ChangeVisualization: " + actualIndex);
         }
     }
 
-    void ActivateAll(List<GameObject> objects)
+    void Activate(GameObject objectToActivate)
     {
-        foreach (GameObject obj in objects)
+        objectToActivate.SetActive(true);
+        actualObject = objectToActivate;
+    }
+
+    void Deactivate(GameObject objectToActivate)
+    {
+        objectToActivate.SetActive(false);
+        actualObject = null;
+    }
+
+    public void ChangeToObject(GameObject objectToActivate)
+    {
+        if (actualObject != objectToActivate)
         {
-            if (obj != null)
+            if (visualizationObjects.Contains(actualObject))
             {
-                obj.SetActive(true);
+                while (actualObject != objectToActivate)
+                {
+                    ChangeVisualization();
+                }
             }
         }
     }
 
-    void DeactivateAll(List<GameObject> objects)
+    public void ChangeToDefault()
     {
-        foreach (GameObject obj in objects)
-        {
-            if (obj != null)
-            {
-                obj.SetActive(false);
-            }
-        }
+        ChangeToObject(visualizationObjects[0]);
     }
+
 }

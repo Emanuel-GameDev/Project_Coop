@@ -2,9 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class AbilityMenu : MonoBehaviour, IVisualizatorChanger
+public class AbilityMenu : MonoBehaviour, IVisualizationChanger
 {
-    [SerializeField] List<AbilityMenuButton> abilityButtons;
+    [SerializeField] 
+    List<AbilityMenuButton> abilityButtons;
+
+    [SerializeField]
+    VisualizationChangerHandler visualizationChangerHandler;
 
     private void Awake()
     {
@@ -22,13 +26,18 @@ public class AbilityMenu : MonoBehaviour, IVisualizatorChanger
 
     public void SetActiveVisualizationChanger()
     {
-        MenuManager.Instance.SetActiveVisualizationChanger(this);
+        MenuManager.Instance.SetActiveVisualizationChanger(visualizationChangerHandler);
     }
 
     public void ChangeVisualization()
     {
-        //TODO
-        Debug.Log($"Funziona? {transform.parent.parent.parent.name}");
+        if(visualizationChangerHandler == null)
+        {
+            Debug.LogError("VisualizationChangerHandler is null");
+            return;
+        }
+
+        visualizationChangerHandler.ChangeVisualization();
     }
 
 

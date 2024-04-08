@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TabInfo : MonoBehaviour
 {
@@ -16,14 +15,14 @@ public class TabInfo : MonoBehaviour
             }
             else
             {
-                return tabs[ActualSubTabIndex].SubTabRoot;
+                return subTabs[ActualSubTabIndex].SubTabRoot;
             }
         }
     }
 
     [SerializeField]
-    private Button connectedButton;
-    public Button ConnectedButton => connectedButton;
+    private TabSelection connectedButton;
+    public TabSelection ConnectedButton => connectedButton;
 
     [SerializeField]
     private GameObject defaultFirstObjectSelected;
@@ -41,7 +40,7 @@ public class TabInfo : MonoBehaviour
             }
             else
             {
-                return tabs[ActualSubTabIndex].FirstObjectSelected;
+                return subTabs[ActualSubTabIndex].FirstObjectSelected;
             }
         }
         set
@@ -56,8 +55,12 @@ public class TabInfo : MonoBehaviour
 
     [SerializeField, Tooltip("Imposta se puoi passare dall'ultima tab alla prima e viceversa oppure no")]
     private bool continuosNavigation = true;
+
     [SerializeField]
-    private List<SubTabInfo> tabs = new();
+    private int defaultSubTabIndex = 0;
+
+    [SerializeField]
+    private List<SubTabInfo> subTabs = new();
 
     private int actualSubTabIndex = 0;
     private int ActualSubTabIndex
@@ -69,16 +72,16 @@ public class TabInfo : MonoBehaviour
             if (value < 0)
             {
                 if (continuosNavigation)
-                    actualSubTabIndex = tabs.Count - 1;
+                    actualSubTabIndex = subTabs.Count - 1;
                 else
                     actualSubTabIndex = 0;
             }
-            else if (value >= tabs.Count)
+            else if (value >= subTabs.Count)
             {
                 if (continuosNavigation)
                     actualSubTabIndex = 0;
                 else
-                    actualSubTabIndex = tabs.Count - 1;
+                    actualSubTabIndex = subTabs.Count - 1;
             }
             else
             {
@@ -88,29 +91,71 @@ public class TabInfo : MonoBehaviour
         }
     }
 
+    public void Inizialize()
+    {
+        if (haveSubTabs)
+        {
+            foreach (SubTabInfo subTab in subTabs)
+            {
+                subTab.Inizialize();
+                subTab.SubTabRoot.SetActive(false);
+            }
+        }
+    }
+
     public void GoPreviousSubTab()
     {
-        tabs[ActualSubTabIndex].SubTabRoot.SetActive(false);
+        subTabs[ActualSubTabIndex].DeselectTabButton();
+        subTabs[ActualSubTabIndex].SubTabRoot.SetActive(false);
         ActualSubTabIndex--;
-        tabs[ActualSubTabIndex].SubTabRoot.SetActive(true);
+        subTabs[ActualSubTabIndex].SubTabRoot.SetActive(true);
+        subTabs[ActualSubTabIndex].SelectTabButton();
     }
 
     public void GoNextSubTab()
     {
-        tabs[ActualSubTabIndex].SubTabRoot.SetActive(false);
+        subTabs[ActualSubTabIndex].DeselectTabButton();
+        subTabs[ActualSubTabIndex].SubTabRoot.SetActive(false);
         ActualSubTabIndex++;
-        tabs[ActualSubTabIndex].SubTabRoot.SetActive(true);
+        subTabs[ActualSubTabIndex].SubTabRoot.SetActive(true);
+        subTabs[ActualSubTabIndex].SelectTabButton();
     }
 
     public void GoToSubTab(SubTabInfo subTab)
     {
-        int index = tabs.IndexOf(subTab);
+        int index = subTabs.IndexOf(subTab);
 
         if (index > -1)
         {
+            subTabs[ActualSubTabIndex].DeselectTabButton();
+            subTabs[ActualSubTabIndex].SubTabRoot.SetActive(false);
             ActualSubTabIndex = index;
-            tabs[ActualSubTabIndex].SubTabRoot.SetActive(true);
+            subTabs[ActualSubTabIndex].SubTabRoot.SetActive(true);
+            subTabs[ActualSubTabIndex].SelectTabButton();
         }
+    }
+
+    public void GoDefaultSubTab()
+    {
+        if (defaultSubTabIndex < subTabs.Count)
+        {
+            subTabs[ActualSubTabIndex].DeselectTabButton();
+            subTabs[ActualSubTabIndex].SubTabRoot.SetActive(false);
+            ActualSubTabIndex = defaultSubTabIndex;
+            subTabs[ActualSubTabIndex].SubTabRoot.SetActive(true);
+            subTabs[ActualSubTabIndex].SelectTabButton();
+        }
+    }
+
+    public void SelectTabButton()
+    {
+        if (connectedButton != null)
+            connectedButton.Select();
+    }
+    public void DeselectTabButton()
+    {
+        if (connectedButton != null)
+            connectedButton.Deselect();
     }
 
 }

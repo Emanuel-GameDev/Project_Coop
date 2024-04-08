@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IVisualizatorChanger
+public interface IVisualizationChanger
 {
     public void ChangeVisualization();
 }

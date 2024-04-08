@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +11,7 @@ public class MenuInfo : MonoBehaviour
         {
             if (!haveTabs)
             {
-                return menuRoot; 
+                return menuRoot;
             }
             else
             {
@@ -28,7 +27,7 @@ public class MenuInfo : MonoBehaviour
     {
         get
         {
-            if(!haveTabs)
+            if (!haveTabs)
             {
                 if (firstObjectSelected == null)
                     return defaultFirstObjectSelected;
@@ -40,7 +39,7 @@ public class MenuInfo : MonoBehaviour
                 return tabs[ActualTabIndex].FirstObjectSelected;
             }
 
-            
+
         }
         set
         {
@@ -75,6 +74,9 @@ public class MenuInfo : MonoBehaviour
     private bool continuosNavigation = true;
 
     [SerializeField]
+    private int defaultTabIndex = 0;
+
+    [SerializeField]
     private List<TabInfo> tabs = new();
 
     private int actualTabIndex = 0;
@@ -85,16 +87,16 @@ public class MenuInfo : MonoBehaviour
 
         set
         {
-            if(value < 0)
+            if (value < 0)
             {
-                if(continuosNavigation)
+                if (continuosNavigation)
                     actualTabIndex = tabs.Count - 1;
                 else
                     actualTabIndex = 0;
-            }   
+            }
             else if (value >= tabs.Count)
             {
-                if(continuosNavigation)
+                if (continuosNavigation)
                     actualTabIndex = 0;
                 else
                     actualTabIndex = tabs.Count - 1;
@@ -107,18 +109,34 @@ public class MenuInfo : MonoBehaviour
         }
     }
 
+    public void Inizialize() 
+    {
+        if (haveTabs)
+        {
+            foreach (TabInfo tab in tabs)
+            {
+                tab.Inizialize();
+                tab.TabRoot.SetActive(false);
+            }
+        }
+    }
+
     public void GoPreviousTab()
     {
         tabs[ActualTabIndex].TabRoot.SetActive(false);
+        tabs[ActualTabIndex].DeselectTabButton();
         ActualTabIndex--;
         tabs[ActualTabIndex].TabRoot.SetActive(true);
+        tabs[ActualTabIndex].SelectTabButton();
     }
 
     public void GoNextTab()
     {
         tabs[ActualTabIndex].TabRoot.SetActive(false);
+        tabs[ActualTabIndex].DeselectTabButton();
         ActualTabIndex++;
         tabs[ActualTabIndex].TabRoot.SetActive(true);
+        tabs[ActualTabIndex].SelectTabButton();
     }
 
     public void GoToTab(TabInfo tab)
@@ -127,15 +145,31 @@ public class MenuInfo : MonoBehaviour
 
         if (index > -1)
         {
+            tabs[ActualTabIndex].TabRoot.SetActive(false);
+            tabs[ActualTabIndex].DeselectTabButton();
             ActualTabIndex = index;
             tabs[ActualTabIndex].TabRoot.SetActive(true);
+            tabs[ActualTabIndex].SelectTabButton();
         }
     }
+
+    public void GoDefaultTab()
+    {
+        if (defaultTabIndex < tabs.Count)
+        {
+            tabs[ActualTabIndex].TabRoot.SetActive(false);
+            ActualTabIndex = defaultTabIndex;
+            tabs[ActualTabIndex].TabRoot.SetActive(true);
+            tabs[ActualTabIndex].SelectTabButton();
+        }
+    }
+
 
     public void CloseAllTab()
     {
         foreach (TabInfo tab in tabs)
         {
+            tab.DeselectTabButton();
             tab.TabRoot.SetActive(false);
         }
     }
