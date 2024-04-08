@@ -506,10 +506,18 @@ public class TutorialManager : MonoBehaviour
         ranged.transform.position = rangedRespawn.position;
         tank.transform.position = tankRespawn.position;
 
-        //dps.GetRigidBody().MovePosition(DPSRespawn.position);
-        //healer.GetRigidBody().MovePosition(healerRespawn.position);
-        //ranged.GetRigidBody().MovePosition(rangedRespawn.position);
-        //tank.GetRigidBody().MovePosition(tankRespawn.position);
+
+        dps.SetSpriteDirection(new Vector2(1,-1));
+        dps.ResetSpriteDirection();
+
+        healer.SetSpriteDirection(new Vector2(1, -1));
+        healer.ResetSpriteDirection();
+
+        tank.SetSpriteDirection(new Vector2(1, -1));
+        tank.ResetSpriteDirection();
+
+        ranged.SetSpriteDirection(new Vector2(1, -1));
+        ranged.ResetSpriteDirection();
 
         dps.GetRigidBody().velocity = Vector2.zero;
         healer.GetRigidBody().velocity = Vector2.zero;
@@ -525,6 +533,9 @@ public class TutorialManager : MonoBehaviour
 
         tutorialEnemy.gameObject.SetActive(false);
         tutorialEnemy.gameObject.transform.SetPositionAndRotation(enemyRespawn.position, tutorialEnemy.gameObject.transform.rotation);
+        
+        tutorialEnemy.SetSpriteDirection(new Vector2(-1,-1));
+        tutorialEnemy.ResetSpriteDirection();
 
         tutorialEnemy.viewTrigger.ClearList();
         tutorialEnemy.AttackRangeTrigger.ClearList();

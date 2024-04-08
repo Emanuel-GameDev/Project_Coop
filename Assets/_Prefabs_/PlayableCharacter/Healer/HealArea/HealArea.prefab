@@ -32,6 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2655279156566366098}
+  - {fileID: 2563590720685480231}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-2298050212040940269
@@ -104,7 +105,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2655279156566366098
 Transform:
   m_ObjectHideFlags: 0
@@ -160,7 +161,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b,
     type: 3}
   m_Color: {r: 0.754717, g: 0.12430633, b: 0, a: 1}
@@ -173,3 +174,77 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 2
   m_SpriteSortPoint: 1
+--- !u!1001 &3033345449351107716
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8462018584483107301}
+    m_Modifications:
+    - target: {fileID: 687695804997881251, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 687695804997881251, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 687695804997881251, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 687695804997881251, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.92387956
+      objectReference: {fileID: 0}
+    - target: {fileID: 687695804997881251, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.38268343
+      objectReference: {fileID: 0}
+    - target: {fileID: 687695804997881251, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 687695804997881251, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 687695804997881251, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 687695804997881251, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 687695804997881251, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1158537611086860071, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: m_Name
+      value: RippleParticleAreaHeal
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 31271410465292f4c97ad94ff91e630d, type: 3}
+--- !u!4 &2563590720685480231 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 687695804997881251, guid: 31271410465292f4c97ad94ff91e630d,
+    type: 3}
+  m_PrefabInstance: {fileID: 3033345449351107716}
+  m_PrefabAsset: {fileID: 0}

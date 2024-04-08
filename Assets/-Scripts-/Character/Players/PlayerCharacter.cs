@@ -155,7 +155,7 @@ public abstract class PlayerCharacter : Character
         SetSpriteDirection(lastNonZeroDirection);
     }
 
-    protected void SetSpriteDirection(Vector2 direction)
+    public void SetSpriteDirection(Vector2 direction)
     {
         if (direction.y != 0)
             animator.SetFloat(Y, direction.y);
@@ -164,6 +164,11 @@ public abstract class PlayerCharacter : Character
             scale.x *= -1;
 
         pivot.gameObject.transform.localScale = scale;
+    }
+
+    public void ResetSpriteDirection()
+    {
+        lastNonZeroDirection = new Vector2(0, 0);
     }
 
     #endregion
