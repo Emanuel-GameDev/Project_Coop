@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TrumpOline : MonoBehaviour, IDamageable
 {
@@ -10,6 +11,11 @@ public class TrumpOline : MonoBehaviour, IDamageable
     // variabile che si vede in inspector, per i designer
     public float currHp;
     private float _currHp;
+
+    // Temporanea
+    public bool destroyed = false;
+
+    public event UnityAction<Collider2D> OnTriggerEnterEvent;
 
     private void Awake()
     {
@@ -40,5 +46,15 @@ public class TrumpOline : MonoBehaviour, IDamageable
     private void ResetTrumpOline()
     {
         UpdateCurrHp(maxHp);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        OnTriggerEnterEvent?.Invoke(collision);
+    }
+
+    public void ClearEventData()
+    {
+        OnTriggerEnterEvent = null;
     }
 }

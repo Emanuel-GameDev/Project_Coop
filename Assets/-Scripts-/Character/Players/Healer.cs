@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Healer : CharacterClass
+public class Healer : PlayerCharacter
 {
     [SerializeField] float attackDelay = 1f;
     [SerializeField] GameObject visual;
@@ -112,7 +112,7 @@ public class Healer : CharacterClass
 
 
     //Attack: colpo singolo, incremento colpi consecutivi senza subire danni contro boss
-    public override void Attack(Character parent, UnityEngine.InputSystem.InputAction.CallbackContext context)
+    public override void AttackInput(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
         if (context.performed)
         {
@@ -184,8 +184,10 @@ public class Healer : CharacterClass
         smallHealTimer = singleHealCooldown;
     }
     float baseMoveSpeed = 0;
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         if (uniqueAbilityTimer < UniqueAbilityCooldown)
         {
             uniqueAbilityTimer += Time.deltaTime;
@@ -224,15 +226,15 @@ public class Healer : CharacterClass
     }
 
 
-    public override void Move(Vector2 direction, Rigidbody2D rb)
+    public override void Move(Vector2 direction)
     {
         if (!inputState)
         {
-            base.Move(Vector2.zero, rb);
+            base.Move(Vector2.zero);
             return;
         }
 
-        base.Move(direction, rb);
+        base.Move(direction);
 
         if (direction != Vector2.zero)
             animator.SetBool("IsMoving", true);
@@ -243,7 +245,7 @@ public class Healer : CharacterClass
 
 
     //Defense: cura ridotta singola
-    public override void Defence(Character parent, InputAction.CallbackContext context)
+    public override void DefenseInput(InputAction.CallbackContext context)
     {
         if (!inputState)
             return;
@@ -285,7 +287,7 @@ public class Healer : CharacterClass
     }
 
     //UniqueAbility: lancia area di cura
-    public override void UseUniqueAbility(Character parent, InputAction.CallbackContext context)
+    public override void UniqueAbilityInput(InputAction.CallbackContext context)
     {
         if (!inputState)
             return;
@@ -309,7 +311,7 @@ public class Healer : CharacterClass
             radius = healAreaRadius;
 
 
-        HealArea areaSpawned = Instantiate(healArea, new Vector2(playerCharacter.transform.position.x, playerCharacter.transform.position.y), Quaternion.identity).GetComponent<HealArea>();
+        HealArea areaSpawned = Instantiate(healArea, new Vector2(transform.position.x, transform.position.y), Quaternion.identity).GetComponent<HealArea>();
 
 
         areaSpawned.Initialize(
@@ -330,7 +332,7 @@ public class Healer : CharacterClass
 
 
     //ExtraAbility: piazza mina di cura
-    public override void UseExtraAbility(Character parent, InputAction.CallbackContext context)
+    public override void ExtraAbilityInput(InputAction.CallbackContext context)
     {
 
         if (!inputState)
@@ -345,7 +347,7 @@ public class Healer : CharacterClass
 
                 animator.SetTrigger("PlaceMine");
 
-                instantiatedHealMine = Instantiate(healMine, new Vector3(parent.transform.position.x, parent.transform.position.y), Quaternion.identity);
+                instantiatedHealMine = Instantiate(healMine, new Vector3(transform.position.x, transform.position.y), Quaternion.identity);
                 instantiatedHealMine.GetComponent<HealMine>().Initialize(gameObject, mineHealQuantity, healMineRadius, healMineActivationTime);
 
                 mineAbilityTimer = 0;

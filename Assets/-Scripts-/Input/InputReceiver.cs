@@ -1,77 +1,151 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public interface InputReceiver
+public abstract class InputReceiver : MonoBehaviour
 {
-    void SetCharacter(ePlayerCharacter character);
-    ePlayerCharacter GetCharacter();
+    protected ePlayerCharacter character;
+    protected PlayerInputHandler playerInputHandler;
+    
+    public virtual GameObject GetGameObject() => gameObject;
 
-    GameObject GetReceiverObject();
+    public virtual void SetCharacter(ePlayerCharacter character) => this.character = character;
 
-    void SetInputHandler(PlayerInputHandler inputHandler);
-    PlayerInputHandler GetInputHandler();
+    public virtual ePlayerCharacter GetCharacter() => character;
 
-    void Dismiss();
+    public virtual void SetInputHandler(PlayerInputHandler inputHandler) => playerInputHandler = inputHandler;
+
+    public virtual PlayerInputHandler GetInputHandler() => playerInputHandler;
+
+    public virtual void Dismiss()
+    {
+       
+    }
 
     // Lista di tutti gli input di tutte le possibili mappe 
     #region MapInput
 
     #region Player
-    void MoveInput(InputAction.CallbackContext context);
+    public virtual void MoveInput(InputAction.CallbackContext context)
+    {
+       
+    }
 
-    void LookInput(InputAction.CallbackContext context);
+    public virtual void LookInput(InputAction.CallbackContext context)
+    {
+        
+    }
 
-    void AttackInput(InputAction.CallbackContext context);
+    public virtual void AttackInput(InputAction.CallbackContext context)
+    {
+        
+    }
 
-    void DefenseInput(InputAction.CallbackContext context);
+    public virtual void DefenseInput(InputAction.CallbackContext context)
+    {
+        
+    }
 
-    void UniqueAbilityInput(InputAction.CallbackContext context);
+    public virtual void UniqueAbilityInput(InputAction.CallbackContext context)
+    {
+        
+    }
 
-    void ExtraAbilityInput(InputAction.CallbackContext context);
+    public virtual void ExtraAbilityInput(InputAction.CallbackContext context)
+    {
+        
+    }
 
-    void InteractInput(InputAction.CallbackContext context);
+    public virtual void InteractInput(InputAction.CallbackContext context)
+    {
+        
+    }
 
-    void JoinInput(InputAction.CallbackContext context);
+    public virtual void JoinInput(InputAction.CallbackContext context)
+    {
+        
+    }
 
-    void SwitchUpInput(InputAction.CallbackContext context);
+    public virtual void SwitchUpInput(InputAction.CallbackContext context)
+    {
+       
+    }
 
-    void SwitchRightInput(InputAction.CallbackContext context);
+    public virtual void SwitchRightInput(InputAction.CallbackContext context)
+    {
+       
+    }
 
-    void SwitchDownInput(InputAction.CallbackContext context);
+    public virtual void SwitchDownInput(InputAction.CallbackContext context)
+    {
+        
+    }
 
-    void SwitchLeftInput(InputAction.CallbackContext context);
+    public virtual void SwitchLeftInput(InputAction.CallbackContext context)
+    {
+        
+    }
 
-    void MenuInput(InputAction.CallbackContext context);
+    public virtual void MenuInput(InputAction.CallbackContext context)
+    {
+        
+    }
 
-    void OptionInput(InputAction.CallbackContext context);
-
+    public virtual void OptionInput(InputAction.CallbackContext context)
+    {
+        
+    }
     #endregion
 
     #region Minigame
-    void MoveMinigameInput(InputAction.CallbackContext context);
+    public virtual void MoveMinigameInput(InputAction.CallbackContext context)
+    {
+        
+    }
+    public virtual void ButtonEast(InputAction.CallbackContext context)
+    {
 
-    public void ButtonEast(InputAction.CallbackContext context);
+    }
 
-    public void ButtonNorth(InputAction.CallbackContext context);
+    public virtual void ButtonNorth(InputAction.CallbackContext context)
+    {
 
-    public void ButtonWeast(InputAction.CallbackContext context);
+    }
 
-    public void ButtonSouth(InputAction.CallbackContext context);
+    public virtual void ButtonWeast(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public virtual void ButtonSouth(InputAction.CallbackContext context)
+    {
+
+    }
+
     #endregion
 
     #region UI
 
-    void Navigate(InputAction.CallbackContext context);
+    public virtual void Navigate(InputAction.CallbackContext context)
+    {
+    }
 
-    void Submit(InputAction.CallbackContext context);
+    public virtual void Submit(InputAction.CallbackContext context)
+    {
+    }
 
-    void RandomSelection(InputAction.CallbackContext context);
+    public virtual void Cancel(InputAction.CallbackContext context)
+    {
+    }
 
-    void Cancel(InputAction.CallbackContext context);
+    public virtual void ScrollWheel(InputAction.CallbackContext context)
+    {
+    }
 
-    void ScrollWheel(InputAction.CallbackContext context);
-    
+    public virtual void RandomSelection(InputAction.CallbackContext context)
+    {
+    }
 
     #endregion
+
     #endregion
 }

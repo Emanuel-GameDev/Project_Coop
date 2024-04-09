@@ -41,7 +41,7 @@ public class TBCharacterSM : BossCharacter
 
     public override void TargetSelection()
     {
-        List<PlayerCharacter> activePlayers = GameManager.Instance.coopManager.ActivePlayers;
+        List<PlayerCharacter> activePlayers = PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
         selectFarPlayers = Random.Range(0f, 1f) > shortDistanceChancePercentage;
         List<PlayerCharacter> selectedPlayers = new();
         foreach (PlayerCharacter player in activePlayers)

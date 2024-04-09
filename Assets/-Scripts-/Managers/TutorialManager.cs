@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
@@ -129,7 +128,6 @@ public class TutorialManager : MonoBehaviour
         if (playIntro)
         {
             introScreen.SetActive(true);
-            videoPlayer.time = 0;
             videoPlayer.Play();
             videoPlayer.loopPointReached += IntroEnded;
         }
@@ -185,7 +183,8 @@ public class TutorialManager : MonoBehaviour
 
         foreach (PlayerCharacter character in characters)
         {
-            character.CharacterClass.currentHp = character.MaxHp - 5;
+            //DA RIVEDERE #MODIFICATO
+            character.SetCurrentHP(character.MaxHp - 5);
             HPHandler.Instance.UpdateContainer(character);
         }
 
@@ -228,7 +227,7 @@ public class TutorialManager : MonoBehaviour
             if(ih.currentCharacter == ePlayerCharacter.Brutus)
             {
                 dpsPresent = true;
-                dps=ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+                dps=ih.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
                 inputBindings.Add(dps, ih);
                 startingCharacters.Add(ih, dps);
             }
@@ -236,7 +235,7 @@ public class TutorialManager : MonoBehaviour
             if (ih.currentCharacter == ePlayerCharacter.Cassius)
             {
                 healerPresent = true;
-                healer = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+                healer = ih.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
                 inputBindings.Add(healer, ih);
                 startingCharacters.Add(ih, healer);
             }
@@ -244,7 +243,7 @@ public class TutorialManager : MonoBehaviour
             if (ih.currentCharacter == ePlayerCharacter.Jude)
             {
                 rangedPresent = true;
-                ranged = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+                ranged = ih.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
                 inputBindings.Add(ranged, ih);
                 startingCharacters.Add(ih, ranged);
             }
@@ -252,7 +251,7 @@ public class TutorialManager : MonoBehaviour
             if (ih.currentCharacter == ePlayerCharacter.Caina)
             {
                 tankPresent = true;
-                tank = ih.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+                tank = ih.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
                 inputBindings.Add(tank, ih);
                 startingCharacters.Add(ih, tank);
             }
@@ -262,7 +261,7 @@ public class TutorialManager : MonoBehaviour
         {
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Brutus);
-            dps=receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+            dps=receiver.GetGameObject().GetComponent<PlayerCharacter>();
 
             inputBindings.Add(dps, inputHandlers[inputHandlersID]);
             HPHandler.Instance.AddContainer(dps);
@@ -274,7 +273,7 @@ public class TutorialManager : MonoBehaviour
         {
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Cassius);
-            healer = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+            healer = receiver.GetGameObject().GetComponent<PlayerCharacter>();
 
             inputBindings.Add(healer, inputHandlers[inputHandlersID]);
             HPHandler.Instance.AddContainer(healer);
@@ -285,7 +284,10 @@ public class TutorialManager : MonoBehaviour
         {
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Jude);
-            ranged = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+            //
+            //receiver � null
+            //
+            ranged = receiver.gameObject.GetComponent<PlayerCharacter>();
 
             inputBindings.Add(ranged, inputHandlers[inputHandlersID]);
             HPHandler.Instance.AddContainer(ranged);
@@ -296,7 +298,7 @@ public class TutorialManager : MonoBehaviour
         {
             InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
             receiver.SetCharacter(ePlayerCharacter.Caina);
-            tank = receiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+            tank = receiver.GetGameObject().GetComponent<PlayerCharacter>();
 
             inputBindings.Add(tank, inputHandlers[inputHandlersID]);
             HPHandler.Instance.AddContainer(tank);
@@ -368,7 +370,7 @@ public class TutorialManager : MonoBehaviour
         if (inputHandler == null)
             return;
 
-        PlayerCharacter player = inputHandler.CurrentReceiver.GetReceiverObject().GetComponent<PlayerCharacter>();
+        PlayerCharacter player = inputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
         inputHandler.GetComponent<PlayerInput>().actions.Disable();
         player.GetRigidBody().velocity = Vector3.zero;
 
@@ -407,7 +409,8 @@ public class TutorialManager : MonoBehaviour
 
         foreach (PlayerInputHandler ih in inputHandlers)
         {
-            ih.SetReceiver(startingCharacters[ih]);
+            // DA RIVEDERE #MODIFICATO
+            //ih.SetReceiver(startingCharacters[ih]);
         }
 
         dialogueBox.OnDialogueEnded += TutorialEnd;

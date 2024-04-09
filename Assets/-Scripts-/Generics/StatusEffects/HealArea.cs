@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.TextCore.Text;
@@ -95,7 +94,8 @@ public class HealArea : MonoBehaviour
             //regene amici
             if (c is PlayerCharacter friends)
             {
-                friends.CharacterClass.currentHp += healPerTik;
+                //DA RIVEDERE #MODIFICATO
+                friends.TakeHeal(new DamageData(healPerTik, null));
             }
 
             //EnemyCharacter al posto di dummy

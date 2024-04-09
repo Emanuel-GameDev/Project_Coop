@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class LBStart : LBBaseState
 {
-    public LBStart(LunaticBoomy bossCharacter) : base(bossCharacter)
+    public LBStart(LunaticBoomyBossCharacter bossCharacter) : base(bossCharacter)
     {
     }
 
     public override void Enter()
     {
         base.Enter();
+
+        stateMachine.SetState(new LBSearchTrump(bossCharacter));
     }
 
     public override void Exit()

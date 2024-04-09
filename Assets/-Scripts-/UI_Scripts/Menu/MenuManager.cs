@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal.Internal;
 
 public class MenuManager : MonoBehaviour
 {
@@ -24,6 +26,13 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    private GameObject pauseMenu;
+
+    [SerializeField]
+    private GameObject optionMenu;
+
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -37,10 +46,24 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+
     public void SetPlayerActiveMenu(PlayerInputHandler player, GameObject menuRoot, GameObject firstSelection)
     {
         player.SetPlayerActiveMenu(menuRoot, firstSelection);
     }   
 
+    public void OpenPauseMenu(PlayerInputHandler player)
+    {
+        SetPlayerActiveMenu(player, pauseMenu, pauseMenu.GetComponent<MenuInfo>().firstObjectSelected);
+    }
 
+    public void OpenOptionMenu(PlayerInputHandler player)
+    {
+        SetPlayerActiveMenu(player, optionMenu, optionMenu.GetComponent<MenuInfo>().firstObjectSelected);
+    }
+
+    public void OpenMenu(PlayerInputHandler player, GameObject menu)
+    {
+        SetPlayerActiveMenu(player, menu, menu.GetComponent<MenuInfo>().firstObjectSelected);
+    }
 }

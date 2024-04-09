@@ -46,9 +46,10 @@ public class SaveManager : MonoBehaviour
 
     private void LoadPlayersData()
     {
-        foreach (PlayerCharacter player in GameManager.Instance.coopManager.ActivePlayers)
+        foreach (PlayerCharacter player in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
         {
-            player.CharacterClass.LoadClassData(saveData.players.Find(c => c.className == player.CharacterClass.GetType().ToString()));
+            //DA RIVEDERE #MODIFICATO
+            //player.CharacterClass.LoadClassData(saveData.players.Find(c => c.className == player.CharacterClass.GetType().ToString()));
         }
     }
 
@@ -56,9 +57,10 @@ public class SaveManager : MonoBehaviour
     {
         saveData.players.Clear();
 
-        foreach (PlayerCharacter player in GameManager.Instance.coopManager.ActivePlayers)
+        foreach (PlayerCharacter player in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
         {
-            saveData.players.Add(player.CharacterClass.SaveClassData());
+            //DA RIVEDERE #MODIFICATO
+            //saveData.players.Add(player.CharacterClass.SaveClassData());
         }
     }
 
