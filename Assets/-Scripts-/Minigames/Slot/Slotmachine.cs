@@ -53,7 +53,7 @@ public class Slotmachine : MonoBehaviour
     bool canInteract;
     public bool inGame = false;
 
-    private SceneChanger sceneChanger;
+    [SerializeField] private SceneChanger sceneChanger;
 
 
     //obsoleto
@@ -63,7 +63,7 @@ public class Slotmachine : MonoBehaviour
     {
         playerSprites = new List<Sprite>() { dpsSprite, tankSprite, rangedSprite, healerSprite };
 
-        sceneChanger = GetComponent<SceneChanger>();
+        //sceneChanger = GetComponent<SceneChanger>();
 
         // GameManager.Instance.coopManager.playerInputPrefab = GO;
     }
@@ -379,6 +379,7 @@ public class Slotmachine : MonoBehaviour
 
     public void ExitMinigame()
     {
+        
         if (sceneChanger != null)
         {
             sceneChanger.ChangeScene();
