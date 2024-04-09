@@ -14,19 +14,33 @@ public class C_KillAllInTimer : Challenge
     [Header("Enemies")]
     [SerializeField] private List<EnemySpawner> enemySpawnPoints;
 
+    [Header("Modifiers")]
+    [SerializeField] private bool noDamage;
+    [SerializeField] private bool noDash;
+
     private bool startTimer;
     private int enemyInt =0;
-   
+    public List<PlayerCharacter> players;
+
 
 
     public override void Initiate()
     {
-
         base.Initiate();     
             dialogueBox.gameObject.SetActive(true);
             dialogueBox.SetDialogue(dialogueOnStart);
             dialogueBox.AddDialogueEnd(onChallengeStartAction);
-            dialogueBox.StartDialogue();                            
+            dialogueBox.StartDialogue();
+
+        players = PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
+        foreach (PlayerCharacter p in players)
+        {
+            if(noDamage)
+            p.OnHit.AddListener(OnFailChallenge);
+
+            if(noDash)
+                p.OnDash.AddListener(OnFailChallenge);
+        }
     }
     public override void StartChallenge()
     {
@@ -72,7 +86,7 @@ public class C_KillAllInTimer : Challenge
             if (timerChallenge > 0)
             {
               
-                if(enemyInt ==0) 
+                if(enemySpawned && enemyInt ==0) 
                 { 
                     OnWinChallenge();
                 }

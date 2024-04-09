@@ -320,7 +320,8 @@ public abstract class PlayerCharacter : Character
     }
     public virtual void DefenseInput(InputAction.CallbackContext context)
     {
-        
+        onDash?.Invoke();
+
     }
 
     public virtual void UniqueAbilityInput(InputAction.CallbackContext context)

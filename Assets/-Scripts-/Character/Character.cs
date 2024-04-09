@@ -37,11 +37,14 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 
     [SerializeField] protected UnityEvent onHit;
     [SerializeField] protected UnityEvent onDeath;
+    [SerializeField] protected UnityEvent onDash;
 
 
     public UnityEvent OnDeath { get => onDeath; set => onDeath = value; }
 
     public UnityEvent OnHit { get => onHit; set => onHit = value; }
+
+    public UnityEvent OnDash { get => onDash; set => onDash = value; }
 
 
 
@@ -68,6 +71,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 
         onHit = new();
         onDeath = new();
+        onDash = new();
     }
 
     public Rigidbody2D GetRigidBody() => rb;

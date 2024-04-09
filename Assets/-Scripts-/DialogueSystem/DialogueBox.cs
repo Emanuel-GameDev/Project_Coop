@@ -245,7 +245,7 @@ public class DialogueBox : MonoBehaviour
             nextBox.contentText.text += c;
 
             if (!char.IsWhiteSpace(c))
-                yield return new WaitForSeconds(1 / characterPerSecond);
+                yield return new WaitForSecondsRealtime(1 / characterPerSecond);
                 
 
         }
@@ -276,7 +276,7 @@ public class DialogueBox : MonoBehaviour
         if (timer < 0.1)
         {
             //guardare se da problemi
-            timer += Time.realtimeSinceStartup;
+            timer += Time.deltaTime;
         }
 
     }

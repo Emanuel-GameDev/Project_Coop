@@ -114,10 +114,5 @@ public class C_Survive : Challenge
         TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
     }
-    private void PlayerHitted(object obj)
-    {
-
-    }
-    
    
 }

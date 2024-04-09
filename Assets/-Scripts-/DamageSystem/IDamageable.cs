@@ -13,5 +13,10 @@ public interface IDamageable
         get;
         set;
     }
+    public UnityEvent OnDash
+    {
+        get;
+        set;
+    }
 
 }

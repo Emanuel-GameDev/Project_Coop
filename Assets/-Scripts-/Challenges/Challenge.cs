@@ -6,6 +6,8 @@ public class Challenge : MonoBehaviour
 {
     [Header("Generics")]
     public DialogueBox dialogueBox;
+    public string challengeName;
+    public string challengeDescription;
 
     [Header("OnStart")]
     public Dialogue dialogueOnStart;
@@ -47,7 +49,8 @@ public class Challenge : MonoBehaviour
 
     public virtual void AddToSpawned(EnemyCharacter tempEnemy)
     {
-        spawnedEnemiesList.Add(tempEnemy);  
+        spawnedEnemiesList.Add(tempEnemy); 
+        enemySpawned = true;
     }
 
 }
