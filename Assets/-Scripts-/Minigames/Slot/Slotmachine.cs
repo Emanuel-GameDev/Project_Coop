@@ -327,6 +327,8 @@ public class Slotmachine : MonoBehaviour
         {
             canInteract = false;
 
+            //animazione premuta tasto
+
             rows[currentNumberOfTheSlot].StartSlowDown();
 
 
@@ -351,6 +353,8 @@ public class Slotmachine : MonoBehaviour
             lives--;
             slotMachineUI.UpdateRemainingTryText(lives);
             StartCoroutine(RestartSlotMachine());
+
+            //animazione manopola
             
 
         }
