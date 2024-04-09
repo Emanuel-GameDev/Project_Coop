@@ -140,7 +140,7 @@ public class Ranged : PlayerCharacter
 
         minePickUpVisualizer.SetActive(mineNearby);
 
-        UpdateCrosshair(ReadLookdirCrosshair());
+        UpdateCrosshair(ReadLookdirCrosshair(shootingPoint.transform.position));
     }
 
     public override void Move(Vector2 direction)
@@ -498,16 +498,18 @@ public class Ranged : PlayerCharacter
 
     private void UpdateCrosshair(Vector2 position)
     {
-        rangedCrossair.transform.localPosition=new Vector2 (position.x, position.y);
+        rangedCrossair.transform.position=new Vector2 (position.x,position.y);
     }
 
 
 
     private void SetShootDirection()
     {
-        Vector2 dummyTargetAimPosition = (Vector2)transform.position + lookDir;
+        //Vector2 dummyTargetAimPosition = (Vector2)transform.position + lookDir;
         
-        ShootDirection = (dummyTargetAimPosition-(Vector2)(shootingPoint.transform.position)).normalized;
+        //ShootDirection = (dummyTargetAimPosition-(Vector2)(shootingPoint.transform.position)).normalized;
+
+        ShootDirection=(rangedCrossair.transform.position- shootingPoint.transform.position).normalized;
 
 
     }
