@@ -9,6 +9,7 @@ using UnityEngine.InputSystem.Users;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
+using UnityEngine.UI;
 using UnityEngine.Video;
 
 public enum TutorialFaseType
@@ -36,6 +37,7 @@ public class TutorialManager : MonoBehaviour
 
     [Header("Intro")]
     [SerializeField] GameObject introScreen;
+    [SerializeField] Slider skipSlider;
     public bool playIntro = false;
     VideoPlayer videoPlayer;
 
@@ -127,13 +129,15 @@ public class TutorialManager : MonoBehaviour
         lilith.gameObject.SetActive(true);
 
 
-
+        skipSlider.gameObject.SetActive(false);
 
         foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             inputHandler.GetComponent<PlayerInput>().actions.Disable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Enable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed += SkipIntro;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").started += EnableSkipSlider;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").canceled += DisableSkipSlider;
         }
 
         if (playIntro)
@@ -151,10 +155,32 @@ public class TutorialManager : MonoBehaviour
 
     }
 
+    private void DisableSkipSlider(InputAction.CallbackContext context)
+    {
+        skipSlider.gameObject.SetActive(false);
+        updateSlider = false;
+    }
+
+    private void EnableSkipSlider(InputAction.CallbackContext context)
+    {
+        skipSlider.gameObject.SetActive(true);
+        updateSlider = true;
+    }
+
+    bool updateSlider = false;
     private void Update()
     {
         if (!videoPlayer.isPlaying)
             stateMachine.StateUpdate();
+
+        if (updateSlider)
+        {
+            skipSlider.value += Time.deltaTime/3;
+        }
+        else
+        {
+            skipSlider.value = 0;
+        }
     }
 
     private void IntroEnded(VideoPlayer source)
@@ -173,6 +199,8 @@ public class TutorialManager : MonoBehaviour
         {
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Disable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").started -= EnableSkipSlider;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").canceled -= DisableSkipSlider;
         }
 
     }
@@ -184,6 +212,8 @@ public class TutorialManager : MonoBehaviour
         {
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Disable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").started -= EnableSkipSlider;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").canceled -= DisableSkipSlider;
         }
 
         SetUpCharacters();
