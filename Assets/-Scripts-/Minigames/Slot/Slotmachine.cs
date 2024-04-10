@@ -36,9 +36,12 @@ public class Slotmachine : MonoBehaviour
     [SerializeField] private Sprite tankSprite;
     [SerializeField] private Sprite rangedSprite;
     [SerializeField] private Sprite healerSprite;
-    [SerializeField] private Sprite enemySprite;
+
+    [SerializeField] private List<Sprite> losingSpriteList = new List<Sprite>();
 
     List<Sprite> playerSprites;
+
+    
 
     [Header("Colonne")]
 
@@ -236,7 +239,7 @@ public class Slotmachine : MonoBehaviour
                 break;
         }
 
-        rows[index].SetRow(numberOfSlots, numberWinSlots, slotDistance, playerSprites, enemySprite, rotationSpeed, stabilizationSpeed);
+        rows[index].SetRow(numberOfSlots, numberWinSlots, slotDistance, playerSprites, losingSpriteList, rotationSpeed, stabilizationSpeed);
     }
 
     private void RandomReorder(List<SlotPlayer> currentPlayersList)

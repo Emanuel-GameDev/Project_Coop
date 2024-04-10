@@ -14,9 +14,10 @@ public class SlotRow : MonoBehaviour
      public SlotPlayer selectedPlayer;
 
      private Sprite playerSprite;
-     private Sprite mouseSprite;
+     private List<Sprite> losingSpriteList;
 
-     private List<GameObject> reorderSlots;
+
+    private List<GameObject> reorderSlots;
 
      public bool stopped { get; private set; }
      bool isSlowDown;
@@ -32,9 +33,11 @@ public class SlotRow : MonoBehaviour
     [SerializeField] private Slot selectedSlotImage;
     private Slotmachine mainMachine;
 
+
+
     private void Start()
     {
-        
+        losingSpriteList= new List<Sprite>();
     }
 
     public void Initialize()
@@ -57,13 +60,13 @@ public class SlotRow : MonoBehaviour
         stopped = false;
     }
 
-    public void SetRow(int slotNumber, int winNumber, float distance, Sprite playerSprite,Sprite enemySprite,float rotationSpeed,float stabilizationSpeed)
+    public void SetRow(int slotNumber, int winNumber, float distance, Sprite playerSprite,List<Sprite>  losingSpriteList,float rotationSpeed,float stabilizationSpeed)
     {
         numberOfSlots = slotNumber;
         numberWinSlots = winNumber;
         slotDistance = distance;
         this.playerSprite = playerSprite;
-        mouseSprite = enemySprite;
+        this.losingSpriteList = losingSpriteList;
         this.rotationSpeed = rotationSpeed;
         stabilitationTime = stabilizationSpeed;
         
@@ -90,8 +93,15 @@ public class SlotRow : MonoBehaviour
             }
             else
             {
-                slot.GetComponent<Slot>().Sprite = mouseSprite;
-                slot.GetComponent<Slot>().Type = slotType.Mouse;
+                int index=Random.Range(0,losingSpriteList.Count);
+
+                if (losingSpriteList[index] == null)
+                {
+                    Debug.LogError("Inserisci almeno uno sprite dentro la lista delle immagini perdenti");
+                }
+
+                slot.GetComponent<Slot>().Sprite = losingSpriteList[index];
+                slot.GetComponent<Slot>().Type = slotType.OtherCharacter;
             }
 
 
