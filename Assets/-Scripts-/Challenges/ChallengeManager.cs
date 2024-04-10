@@ -19,6 +19,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
             tempUI.challengeSelected = challengesList[i];
             tempUI.SetUpUI();
         }
+        
 
     }
     public static void Shuffle(List<Challenge> list)
@@ -36,7 +37,8 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     
     public void Interact(IInteracter interacter)
     {
-       canvaInfo.gameObject.SetActive(true);
+        MenuManager.Instance.OpenMenu(canvaInfo);
+       
        
     }
 

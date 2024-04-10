@@ -2632,8 +2632,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueBox: {fileID: 1701796867}
-  challengeName: ammmazza tutti
-  challengeDescription: devi ammazzare tutti senza schivare
+  challengeName:
+    m_TableReference:
+      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+    m_TableEntryReference:
+      m_KeyId: 21730794323775488
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  challengeDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+    m_TableEntryReference:
+      m_KeyId: 21730799096893440
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   dialogueOnStart: {fileID: 11400000, guid: d34080f862e1bb7428a5eae45ad7d4e3, type: 2}
   dialogueOnSuccess: {fileID: 11400000, guid: 30d7b7a79cefed942a78eabfb6acff5c, type: 2}
   onChallengeSuccessEvent:
@@ -2671,6 +2687,9 @@ MonoBehaviour:
   noDamage: 0
   noDash: 1
   players: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &719091984
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2963,8 +2982,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueBox: {fileID: 549828168}
-  challengeName: ammazza tutti
-  challengeDescription: devi ammazzare tutti senza subirer danno
+  challengeName:
+    m_TableReference:
+      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+    m_TableEntryReference:
+      m_KeyId: 21731047861063680
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  challengeDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+    m_TableEntryReference:
+      m_KeyId: 21731051791126528
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   dialogueOnStart: {fileID: 11400000, guid: d34080f862e1bb7428a5eae45ad7d4e3, type: 2}
   dialogueOnSuccess: {fileID: 11400000, guid: 30d7b7a79cefed942a78eabfb6acff5c, type: 2}
   onChallengeSuccessEvent:
@@ -3002,6 +3037,9 @@ MonoBehaviour:
   noDamage: 1
   noDash: 0
   players: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &778082202
 GameObject:
   m_ObjectHideFlags: 0
@@ -3082,13 +3120,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 778082202}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -6.40064, y: 4.40044, z: 0}
   m_LocalScale: {x: 2.7766, y: 2.7766, z: 2.7766}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1241250576}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1832766001}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &778082205
 MonoBehaviour:
@@ -3107,10 +3145,7 @@ MonoBehaviour:
   - {fileID: 573585576}
   - {fileID: 742193960}
   - {fileID: 1196853732}
-  challengePanelList:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  canvaInfo: {fileID: 1241250581}
   challengeUIPrefab: {fileID: 8814628488093020177, guid: b89dd99aca085d9469ebfc8ee6f4a4b9,
     type: 3}
 --- !u!61 &778082206
@@ -4185,8 +4220,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueBox: {fileID: 1966244945}
-  challengeName: sopravvivi
-  challengeDescription: devi sopravvivere
+  challengeName:
+    m_TableReference:
+      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+    m_TableEntryReference:
+      m_KeyId: 21727663053541376
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  challengeDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+    m_TableEntryReference:
+      m_KeyId: 21728015681261568
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   dialogueOnStart: {fileID: 11400000, guid: 5efa4c7a09dbe464c9b7ac9bdfa3bd89, type: 2}
   dialogueOnSuccess: {fileID: 11400000, guid: 30d7b7a79cefed942a78eabfb6acff5c, type: 2}
   onChallengeSuccessEvent:
@@ -4219,6 +4270,9 @@ MonoBehaviour:
   enemySpawnPoints:
   - {fileID: 479648825}
   players: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1241250575
 GameObject:
   m_ObjectHideFlags: 0
@@ -4232,13 +4286,14 @@ GameObject:
   - component: {fileID: 1241250578}
   - component: {fileID: 1241250577}
   - component: {fileID: 1241250580}
+  - component: {fileID: 1241250581}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1241250576
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4345,6 +4400,25 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 2
   m_ConstraintCount: 1
+--- !u!114 &1241250581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241250575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 548a68d77f8a90648af13e184d35608c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuRoot: {fileID: 1241250575}
+  defaultFirstObjectSelected: {fileID: 0}
+  defaultPreviosMenu: {fileID: 0}
+  haveTabs: 0
+  continuosNavigation: 1
+  defaultTabIndex: 0
+  tabs: []
 --- !u!1 &1273524337
 GameObject:
   m_ObjectHideFlags: 0
@@ -5801,8 +5875,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueBox: {fileID: 729977452}
-  challengeName: ammazza tutti
-  challengeDescription: devi ammazzare tutti
+  challengeName:
+    m_TableReference:
+      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+    m_TableEntryReference:
+      m_KeyId: 21730470502535168
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  challengeDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+    m_TableEntryReference:
+      m_KeyId: 21730567009275904
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   dialogueOnStart: {fileID: 11400000, guid: d34080f862e1bb7428a5eae45ad7d4e3, type: 2}
   dialogueOnSuccess: {fileID: 11400000, guid: 30d7b7a79cefed942a78eabfb6acff5c, type: 2}
   onChallengeSuccessEvent:
@@ -5840,6 +5930,9 @@ MonoBehaviour:
   noDamage: 0
   noDash: 0
   players: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1574892151
 GameObject:
   m_ObjectHideFlags: 0
@@ -6959,6 +7052,7 @@ Transform:
   - {fileID: 573585575}
   - {fileID: 742193959}
   - {fileID: 1196853730}
+  - {fileID: 778082204}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1838915679
@@ -7515,6 +7609,52 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b13adc5fff523554891e97c3538d2903, type: 3}
+--- !u!1 &1946265741
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1946265743}
+  - component: {fileID: 1946265742}
+  m_Layer: 0
+  m_Name: MenuManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1946265742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946265741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b53ea669992f54c4c80174889a042b27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseMenu: {fileID: 0}
+  optionMenu: {fileID: 0}
+--- !u!4 &1946265743
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946265741}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.916808, y: 7.5260806, z: -0.29502723}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1966244943
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8247,4 +8387,4 @@ SceneRoots:
   - {fileID: 1351625685}
   - {fileID: 791608673}
   - {fileID: 1832766001}
-  - {fileID: 778082204}
+  - {fileID: 1946265743}

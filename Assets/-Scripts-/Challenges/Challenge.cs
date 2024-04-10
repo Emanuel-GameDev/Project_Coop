@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Localization;
 
 public class Challenge : MonoBehaviour
 {
     [Header("Generics")]
-    public DialogueBox dialogueBox;
-    public string challengeName;
-    public string challengeDescription;
+    public DialogueBox dialogueBox;  
+    public LocalizedString challengeName;
+    public LocalizedString challengeDescription;
 
     [Header("OnStart")]
     public Dialogue dialogueOnStart;
