@@ -44,10 +44,9 @@ public class PlayerInputHandler : MonoBehaviour
     {
         CurrentReceiver = newReceiver;
         SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
+        CurrentReceiver.SetInputHandler(this);
         if (currentCharacter != ePlayerCharacter.EmptyCharacter)
             CurrentReceiver.SetCharacter(currentCharacter);
-
-        CurrentReceiver.SetInputHandler(this);
     }
 
     public void SetCurrentCharacter(ePlayerCharacter character)
@@ -196,6 +195,16 @@ public class PlayerInputHandler : MonoBehaviour
     public void UIMenuInput(InputAction.CallbackContext context) => CurrentReceiver.UIMenuInput(context);
 
     public void UIOptionInput(InputAction.CallbackContext context) => CurrentReceiver.UIOptionInput(context);
+
+    public virtual void NextInput(InputAction.CallbackContext context) => CurrentReceiver.NextInput(context);
+
+    public virtual void PreviousInput(InputAction.CallbackContext context) => CurrentReceiver.PreviousInput(context);
+
+    public virtual void SubNextInput(InputAction.CallbackContext context) => CurrentReceiver.SubNextInput(context);
+
+    public virtual void SubPreviousInput(InputAction.CallbackContext context) => CurrentReceiver.SubPreviousInput(context);
+    
+    public virtual void ChangeVisualizationInput(InputAction.CallbackContext context) => CurrentReceiver.ChangeVisualizationInput(context);
 
     #endregion
 
