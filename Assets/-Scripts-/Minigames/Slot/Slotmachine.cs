@@ -36,8 +36,14 @@ public class Slotmachine : MonoBehaviour
     [SerializeField] private Sprite tankSprite;
     [SerializeField] private Sprite rangedSprite;
     [SerializeField] private Sprite healerSprite;
-
     [SerializeField] private List<Sprite> losingSpriteList = new List<Sprite>();
+
+    [Header("Buttons")]
+    [SerializeField] private List<ButtonSlot> buttonSlots = new List<ButtonSlot>();
+
+    [Header("Manopola")]
+    [SerializeField] private GameObject manopola;
+    
 
     List<Sprite> playerSprites;
 
@@ -104,6 +110,8 @@ public class Slotmachine : MonoBehaviour
 
         canInteract = true;
         inGame = true;
+
+        buttonSlots[currentNumberOfTheSlot].Arrow.SetActive(true);
     }
 
     private void Update()
@@ -214,6 +222,8 @@ public class Slotmachine : MonoBehaviour
 
         currentNumberOfTheSlot = 0;
         canInteract = true;
+
+        buttonSlots[currentNumberOfTheSlot].Arrow.SetActive(true);
     }
 
     private void SetRowInIndex(int index, ePlayerCharacter characterEnum)
@@ -330,6 +340,8 @@ public class Slotmachine : MonoBehaviour
         {
             canInteract = false;
 
+            buttonSlots[currentNumberOfTheSlot].Arrow.SetActive(false);
+
             //animazione premuta tasto
 
             rows[currentNumberOfTheSlot].StartSlowDown();
@@ -340,6 +352,12 @@ public class Slotmachine : MonoBehaviour
 
             currentNumberOfTheSlot++;
             canInteract = true;
+
+            if(currentNumberOfTheSlot <= rows.Count - 1)
+            {
+                buttonSlots[currentNumberOfTheSlot].Arrow.SetActive(true);
+            }
+            
 
 
         }
@@ -358,6 +376,8 @@ public class Slotmachine : MonoBehaviour
             StartCoroutine(RestartSlotMachine());
 
             //animazione manopola
+
+            manopola.GetComponent<Animator>().SetTrigger("SpinTrigger");
             
 
         }
