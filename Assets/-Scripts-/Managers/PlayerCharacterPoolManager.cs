@@ -36,17 +36,13 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         else
         {
             _instance = this;
+            InizializeList();
         }
     }
 
     private List<PlayerCharacter> freeCharacters = new List<PlayerCharacter>();
     private List<PlayerCharacter> activeCharacters = new List<PlayerCharacter>();
     public List<PlayerCharacter> ActivePlayerCharacters => activeCharacters;
-
-    private void Start()
-    {
-        InizializeList();
-    }
 
     #region Switching Character
 

@@ -1,18 +1,42 @@
-using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 
 public class MenuSettingManager : MonoBehaviour
 {
-    List<Button> settingButtons = new List<Button>();
+    [SerializeField]
+    private LocalizeStringEvent settingDescriptionEvent;
+    [SerializeField]
+    private LocalizedString defaultString;
 
-   public void DisableAllButtons()
+    private LocalizeStringEvent currentLocalizationEvent;
+
+    [SerializeField, ReorderableList]
+    List<InteractableSetter> interactableSetters = new();
+
+    public void DisableAllSetters()
     {
-        foreach (Button button in settingButtons)
+        foreach (InteractableSetter setter in interactableSetters)
         {
-            button.interactable = false;
+            setter.DisableInteract();
         }
-    }   
+    }
+
+    public void SetCurrentLocalizationEvent(LocalizeStringEvent localizationString)
+    {
+        currentLocalizationEvent = localizationString;
+
+        if (currentLocalizationEvent == null)
+        {
+            settingDescriptionEvent.StringReference = defaultString;
+        }
+        else
+        {
+            settingDescriptionEvent.StringReference = currentLocalizationEvent.StringReference;
+        }
+    }
+
 
 }
