@@ -37,6 +37,10 @@ public class MenuManager : MonoBehaviour
     private GameObject lastSelectedObject;
     private IVisualizationChanger actualVisualizatorChanger;
 
+    private delegate void GoBackHandler();
+    private static event GoBackHandler OnGoBack;
+
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -73,6 +77,16 @@ public class MenuManager : MonoBehaviour
                 lastSelectedObject = EventSystem.current.currentSelectedGameObject;
             }
         }
+    }
+
+    public void GoBack(PlayerInputHandler playerInputHandler)
+    {
+        if(playerInputHandler != actualMenuOwner) return;
+
+        if (OnGoBack != null)
+            OnGoBack?.Invoke();
+        else
+            CloseMenu();
     }
 
 
@@ -217,4 +231,5 @@ public class MenuManager : MonoBehaviour
     {
         actualVisualizatorChanger = visualizatorChanger;
     }
+
 }

@@ -10,7 +10,7 @@ public class TestInputPlayer : InputReceiver
     {
         if (context.performed)
         {
-            MenuManager.Instance.CloseMenu();
+           MenuManager.Instance.GoBack(playerInputHandler);
         }
     }
 
