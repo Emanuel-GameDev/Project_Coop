@@ -36,9 +36,12 @@ public class Slotmachine : MonoBehaviour
     [SerializeField] private Sprite tankSprite;
     [SerializeField] private Sprite rangedSprite;
     [SerializeField] private Sprite healerSprite;
-    [SerializeField] private Sprite enemySprite;
+
+    [SerializeField] private List<Sprite> losingSpriteList = new List<Sprite>();
 
     List<Sprite> playerSprites;
+
+    
 
     [Header("Colonne")]
 
@@ -53,7 +56,7 @@ public class Slotmachine : MonoBehaviour
     bool canInteract;
     public bool inGame = false;
 
-    private SceneChanger sceneChanger;
+    [SerializeField] private SceneChanger sceneChanger;
 
 
     //obsoleto
@@ -63,7 +66,7 @@ public class Slotmachine : MonoBehaviour
     {
         playerSprites = new List<Sprite>() { dpsSprite, tankSprite, rangedSprite, healerSprite };
 
-        sceneChanger = GetComponent<SceneChanger>();
+        //sceneChanger = GetComponent<SceneChanger>();
 
         // GameManager.Instance.coopManager.playerInputPrefab = GO;
     }
@@ -236,7 +239,7 @@ public class Slotmachine : MonoBehaviour
                 break;
         }
 
-        rows[index].SetRow(numberOfSlots, numberWinSlots, slotDistance, playerSprites, enemySprite, rotationSpeed, stabilizationSpeed);
+        rows[index].SetRow(numberOfSlots, numberWinSlots, slotDistance, playerSprites, losingSpriteList, rotationSpeed, stabilizationSpeed);
     }
 
     private void RandomReorder(List<SlotPlayer> currentPlayersList)
@@ -327,6 +330,8 @@ public class Slotmachine : MonoBehaviour
         {
             canInteract = false;
 
+            //animazione premuta tasto
+
             rows[currentNumberOfTheSlot].StartSlowDown();
 
 
@@ -351,6 +356,8 @@ public class Slotmachine : MonoBehaviour
             lives--;
             slotMachineUI.UpdateRemainingTryText(lives);
             StartCoroutine(RestartSlotMachine());
+
+            //animazione manopola
             
 
         }
@@ -379,6 +386,7 @@ public class Slotmachine : MonoBehaviour
 
     public void ExitMinigame()
     {
+        
         if (sceneChanger != null)
         {
             sceneChanger.ChangeScene();

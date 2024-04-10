@@ -5,7 +5,7 @@ using UnityEngine;
 public enum slotType
 {
     Player,
-    Mouse       //col topo si perde
+    OtherCharacter       //con gli altri si perde
 }
 
 public class Slot : MonoBehaviour
