@@ -44,10 +44,9 @@ public class PlayerInputHandler : MonoBehaviour
     {
         CurrentReceiver = newReceiver;
         SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
+        CurrentReceiver.SetInputHandler(this);
         if (currentCharacter != ePlayerCharacter.EmptyCharacter)
             CurrentReceiver.SetCharacter(currentCharacter);
-
-        CurrentReceiver.SetInputHandler(this);
     }
 
     public void SetCurrentCharacter(ePlayerCharacter character)

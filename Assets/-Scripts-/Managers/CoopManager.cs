@@ -142,8 +142,8 @@ public class CoopManager : MonoBehaviour
 
     public void InitializePlayers()
     {
-        if (playerInputHandlers == null ||
-            playerInputHandlers.Count == 0) return;
+        if (playerInputHandlers == null || playerInputHandlers.Count == 0) 
+            return;
 
         foreach (PlayerInputHandler player in playerInputHandlers)
         {
