@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class Ranged : PlayerCharacter
 {
@@ -11,6 +12,9 @@ public class Ranged : PlayerCharacter
     //aggiungere vari timer(arma, schivata,cd vari)
 
     private Vector2 lookDirection = Vector2.up;
+    private Vector2 ShootDirection = Vector2.up;
+
+    
 
 
     //base Attack
@@ -20,6 +24,10 @@ public class Ranged : PlayerCharacter
     float fireTimer=0;
 
     [Header("Variabili attacco")]
+    [SerializeField, Tooltip("Punto di sparo")]
+    GameObject shootingPoint;
+    [SerializeField, Tooltip("Mirino")]
+    Crosshair rangedCrossair;
     [SerializeField, Tooltip("velocità proiettile base")]
     float projectileSpeed = 30f;
     [SerializeField, Tooltip("gittata proiettile base")]
@@ -132,7 +140,7 @@ public class Ranged : PlayerCharacter
 
         minePickUpVisualizer.SetActive(mineNearby);
 
-
+        UpdateCrosshair(ReadLookdirCrosshair());
     }
 
     public override void Move(Vector2 direction)
@@ -192,6 +200,7 @@ public class Ranged : PlayerCharacter
             if (_look != Vector2.zero)
             {
                 lookDirection = _look;
+                SetShootDirection();
             }
 
             //in futuro inserire il colpo avanzato
@@ -220,7 +229,7 @@ public class Ranged : PlayerCharacter
 
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
-        newProjectile.transform.position = transform.position;
+        newProjectile.transform.position = shootingPoint.transform.position;
 
         newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer);
 
@@ -431,10 +440,11 @@ public class Ranged : PlayerCharacter
                 if (_look != Vector2.zero)
                 {
                     lookDirection = _look;
+                    SetShootDirection();
                 }
 
                 //in futuro inserire il colpo avanzato
-                EmpowerFireProjectile(lookDirection);
+                EmpowerFireProjectile(ShootDirection);
 
                 empowerCoolDownTimer = UniqueAbilityCooldown;
 
@@ -455,7 +465,7 @@ public class Ranged : PlayerCharacter
     {
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
-        newProjectile.transform.position = transform.position;
+        newProjectile.transform.position =shootingPoint.transform.position;
 
         newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier,gameObject.layer);
 
@@ -484,6 +494,18 @@ public class Ranged : PlayerCharacter
         {
             dodgeTimer -= Time.deltaTime;
         }
+    }
+
+    private void UpdateCrosshair(Vector2 position)
+    {
+        rangedCrossair.transform.localPosition=new Vector2 (position.x, position.y);
+    }
+
+
+
+    private void SetShootDirection()
+    {
+        ShootDirection = (lookDir - (Vector2)shootingPoint.transform.position).normalized;
     }
 
 

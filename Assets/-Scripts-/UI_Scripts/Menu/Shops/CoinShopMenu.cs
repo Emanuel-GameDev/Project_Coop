@@ -9,9 +9,15 @@ public class CoinShopMenu : Menu
 {
     [HideInInspector] public Dictionary<CoinShopTable, PlayerInputHandler> tableAssosiation = new();
 
+    public override void Start()
+    {
+        base.Start();
+    }
 
     public override void OpenMenu()
     {
+        
+
         base.OpenMenu();
 
         tableAssosiation.Clear();
@@ -23,9 +29,12 @@ public class CoinShopMenu : Menu
         //    tableAssosiation.Add()
         //}
 
+        for(int i = 0; i < 4; i++) { }
+
         foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
         {
             tableAssosiation.Add(GetComponentInChildren<CoinShopTable>(true),ih);
+            
         }
     }
 }

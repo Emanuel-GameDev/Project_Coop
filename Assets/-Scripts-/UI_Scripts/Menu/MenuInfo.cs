@@ -1,39 +1,189 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MenuInfo : MonoBehaviour
 {
     [SerializeField]
-    private GameObject defaultPreviosMenu;
-    [HideInInspector]
-    public GameObject previosMenu;
-
-    [SerializeField]
-    private GameObject defaultNextMenu;
-    [HideInInspector]
-    public GameObject nextMenu;
+    private GameObject menuRoot;
+    public GameObject MenuRoot
+    {
+        get
+        {
+            if (!haveTabs)
+            {
+                return menuRoot;
+            }
+            else
+            {
+                return tabs[ActualTabIndex].TabRoot;
+            }
+        }
+    }
 
     [SerializeField]
     private GameObject defaultFirstObjectSelected;
-    [HideInInspector]
-    public GameObject firstObjectSelected;
-
-    private void Awake()
+    private GameObject firstObjectSelected;
+    public GameObject FirstObjectSelected
     {
-        previosMenu = defaultPreviosMenu;
-        nextMenu = defaultNextMenu;
-        firstObjectSelected = defaultFirstObjectSelected;
+        get
+        {
+            if (!haveTabs)
+            {
+                if (firstObjectSelected == null)
+                    return defaultFirstObjectSelected;
+                else
+                    return firstObjectSelected;
+            }
+            else
+            {
+                return tabs[ActualTabIndex].FirstObjectSelected;
+            }
+
+
+        }
+        set
+        {
+            firstObjectSelected = value;
+        }
     }
 
-    public void GoNextMenu(PlayerInputHandler player)
+    [SerializeField]
+    private MenuInfo defaultPreviosMenu;
+    private MenuInfo previousMenu;
+    public MenuInfo PreviousMenu
     {
-        MenuManager.Instance.OpenMenu(player, nextMenu);
+        get
+        {
+            if (previousMenu == null)
+                return defaultPreviosMenu;
+            else
+                return previousMenu;
+        }
+        set
+        {
+            previousMenu = value;
+        }
     }
 
-    public void GoPreviusMenu(PlayerInputHandler player)
+    [SerializeField]
+    private bool haveTabs = false;
+    public bool HaveTabs => haveTabs;
+    public bool HaveSubTabs => tabs[ActualTabIndex].HaveSubTabs;
+
+    [SerializeField, Tooltip("Imposta se puoi passare dall'ultima tab alla prima e viceversa oppure no")]
+    private bool continuosNavigation = true;
+
+    [SerializeField]
+    private int defaultTabIndex = 0;
+
+    [SerializeField]
+    private List<TabInfo> tabs = new();
+
+    private int actualTabIndex = 0;
+
+    private int ActualTabIndex
     {
-        MenuManager.Instance.OpenMenu(player, previosMenu);
+        get => actualTabIndex;
+
+        set
+        {
+            if (value < 0)
+            {
+                if (continuosNavigation)
+                    actualTabIndex = tabs.Count - 1;
+                else
+                    actualTabIndex = 0;
+            }
+            else if (value >= tabs.Count)
+            {
+                if (continuosNavigation)
+                    actualTabIndex = 0;
+                else
+                    actualTabIndex = tabs.Count - 1;
+            }
+            else
+            {
+                actualTabIndex = value;
+            }
+            Debug.Log($"Actual tab index: {actualTabIndex}, Value: {value}");
+        }
     }
+
+    public void Inizialize() 
+    {
+        if (haveTabs)
+        {
+            foreach (TabInfo tab in tabs)
+            {
+                tab.Inizialize();
+                tab.TabRoot.SetActive(false);
+            }
+        }
+    }
+
+    public void GoPreviousTab()
+    {
+        tabs[ActualTabIndex].TabRoot.SetActive(false);
+        tabs[ActualTabIndex].DeselectTabButton();
+        ActualTabIndex--;
+        tabs[ActualTabIndex].TabRoot.SetActive(true);
+        tabs[ActualTabIndex].SelectTabButton();
+    }
+
+    public void GoNextTab()
+    {
+        tabs[ActualTabIndex].TabRoot.SetActive(false);
+        tabs[ActualTabIndex].DeselectTabButton();
+        ActualTabIndex++;
+        tabs[ActualTabIndex].TabRoot.SetActive(true);
+        tabs[ActualTabIndex].SelectTabButton();
+    }
+
+    public void GoToTab(TabInfo tab)
+    {
+        int index = tabs.IndexOf(tab);
+
+        if (index > -1)
+        {
+            tabs[ActualTabIndex].TabRoot.SetActive(false);
+            tabs[ActualTabIndex].DeselectTabButton();
+            ActualTabIndex = index;
+            tabs[ActualTabIndex].TabRoot.SetActive(true);
+            tabs[ActualTabIndex].SelectTabButton();
+        }
+    }
+
+    public void GoDefaultTab()
+    {
+        if (defaultTabIndex < tabs.Count)
+        {
+            tabs[ActualTabIndex].TabRoot.SetActive(false);
+            ActualTabIndex = defaultTabIndex;
+            tabs[ActualTabIndex].TabRoot.SetActive(true);
+            tabs[ActualTabIndex].SelectTabButton();
+        }
+    }
+
+
+    public void CloseAllTab()
+    {
+        foreach (TabInfo tab in tabs)
+        {
+            tab.DeselectTabButton();
+            tab.TabRoot.SetActive(false);
+        }
+    }
+
+    public void GoNextSubTab()
+    {
+        tabs[ActualTabIndex].GoNextSubTab();
+    }
+
+    public void GoPreviousSubTab()
+    {
+        tabs[ActualTabIndex].GoPreviousSubTab();
+    }
+
+
 
 }

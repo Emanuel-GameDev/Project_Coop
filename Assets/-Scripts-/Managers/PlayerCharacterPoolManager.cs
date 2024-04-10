@@ -36,17 +36,13 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         else
         {
             _instance = this;
+            InizializeList();
         }
     }
 
     private List<PlayerCharacter> freeCharacters = new List<PlayerCharacter>();
     private List<PlayerCharacter> activeCharacters = new List<PlayerCharacter>();
     public List<PlayerCharacter> ActivePlayerCharacters => activeCharacters;
-
-    private void Start()
-    {
-        InizializeList();
-    }
 
     #region Switching Character
 
@@ -72,7 +68,8 @@ public class PlayerCharacterPoolManager : MonoBehaviour
             playerCharacter.characterController.SetPlayerCharacter(searchedCharacter);
             playerCharacter.characterController = null;
             ActivateCharacter(searchedCharacter, playerCharacter.transform);
-
+            PubSub.Instance.Notify(EMessageType.characterSwitched, searchedCharacter);
+            
             ReturnCharacter(playerCharacter);
         }
     }
@@ -84,7 +81,8 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         playerCharacter.gameObject.SetActive(true);
         freeCharacters.Remove(playerCharacter);
         activeCharacters.Add(playerCharacter);
-
+        //if (newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacterController>())
+        //PubSub.Instance.Notify(EMessageType.characterJoined, playerCharacter);
         CameraManager.Instance.AddTarget(playerCharacter.transform);
     }
 

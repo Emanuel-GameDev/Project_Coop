@@ -26,7 +26,6 @@ public class PlayerCharacterController : InputReceiver
         {
             SetPlayerCharacter(playerCharacter);
         }
-
     }
 
     public override void SetInputHandler(PlayerInputHandler inputHandler)
@@ -55,6 +54,12 @@ public class PlayerCharacterController : InputReceiver
     {
         if (actualPlayerCharacter != null)
             actualPlayerCharacter.LookInput(context);
+    }
+
+    public override void MouseLookInput(InputAction.CallbackContext context)
+    {
+        if (actualPlayerCharacter != null)
+            actualPlayerCharacter.LookInputMouse(context);
     }
 
     public override void AttackInput(InputAction.CallbackContext context)

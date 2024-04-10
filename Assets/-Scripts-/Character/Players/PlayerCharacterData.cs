@@ -25,6 +25,8 @@ public class PlayerCharacterData : ScriptableObject
     private SpriteLibraryAsset pixelAnimations;
     [SerializeField]
     private Sprite pixelFaceSprite;
+    [SerializeField, TextArea]
+    private string characterDescription;
 
     public ePlayerCharacter Character => character;
     public Color CharacterColor => characterColor;
