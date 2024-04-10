@@ -8,10 +8,10 @@ using UnityEngine.InputSystem;
 
 public abstract class PlayerCharacter : Character
 {
-    
 
 
-   
+
+
 
 
     #region Variables
@@ -80,7 +80,20 @@ public abstract class PlayerCharacter : Character
     public ePlayerCharacter Character => character;
 
     public virtual float MaxHp => maxHp;
-    public virtual float CurrentHp => currentHp;
+    public virtual float CurrentHp 
+    {
+        get {  return currentHp; }
+        set 
+        { 
+            currentHp = value;
+
+            if(currentHp<0)
+                currentHp = 0;
+
+            if(currentHp>maxHp)
+                currentHp = maxHp;
+        }
+    }
     public virtual float Damage => damage * powerUpData.damageIncrease;
     public virtual float MoveSpeed => moveSpeed * powerUpData.moveSpeedIncrease;
     public virtual float AttackSpeed => attackSpeed * powerUpData.attackSpeedIncrease;
@@ -114,7 +127,7 @@ public abstract class PlayerCharacter : Character
         powerUpData = new PowerUpData();
         extraData = new ExtraData();
         upgradeStatus = new();
-        currentHp = MaxHp;
+        CurrentHp = MaxHp;
         foreach (AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
         {
             upgradeStatus.Add(au, false);
@@ -136,7 +149,7 @@ public abstract class PlayerCharacter : Character
 
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
     public void SetMaxHP(float value) => maxHp = value;
-    public void SetCurrentHP(float value) => currentHp = value;
+    public void SetCurrentHP(float value) => CurrentHp = value;
 
     public PlayerInputHandler GetInputHandler() => characterController.GetInputHandler();
     
@@ -204,7 +217,7 @@ public abstract class PlayerCharacter : Character
         if (data.condition != null)
             AddToConditions(data.condition);
 
-        currentHp -= data.damage * DamageReceivedMultiplier;
+        CurrentHp -= data.damage * DamageReceivedMultiplier;
         damager.RemoveCondition();
         Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
 
@@ -229,7 +242,7 @@ public abstract class PlayerCharacter : Character
         if(data.condition != null)
             RemoveFromConditions(data.condition);
 
-        currentHp += data.damage;
+        CurrentHp += data.damage;
         damager.RemoveCondition();
         Debug.Log($"Healer: {data.dealer}, Heal: {data.damage}, Condition Removed: {data.condition}");
     }

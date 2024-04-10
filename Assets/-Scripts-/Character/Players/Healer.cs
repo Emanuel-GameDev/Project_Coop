@@ -278,13 +278,14 @@ public class Healer : PlayerCharacter
                     
                     animator.SetTrigger("CastSmallHeal");
                     StartCoroutine(InputReactivationDelay(animator.GetCurrentAnimatorClipInfo(0).Length));
-                    TakeDamage(new DamageData(-smallHeal, null));
+                    TakeHeal(new DamageData(smallHeal, null));
 
                     foreach (PlayerCharacter pc in smallHealTrigger.GetPlayersDetected())
                     {
-                        pc.TakeDamage(new DamageData(-smallHeal, null));
+                        pc.TakeHeal(new DamageData(smallHeal, null));
                         PubSub.Instance.Notify(EMessageType.characterHealed, pc);
                     }
+
 
 
                     smallHealTimer = 0;
@@ -387,7 +388,7 @@ public class Healer : PlayerCharacter
     {
         base.TakeDamage(data);
 
-        if (currentHp <= 0)
+        if (CurrentHp <= 0)
         {
             blockInput = true;
             animator.SetBool("IsDead",true);
