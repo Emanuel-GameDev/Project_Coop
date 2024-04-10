@@ -199,7 +199,7 @@ public class LabirintManager : MonoBehaviour
     {
         for (int i = 0; i < quantity; i++)
         {
-            if (i >= positions.Count)
+            if (positions.Count == 0)
                 return;
             else
             {

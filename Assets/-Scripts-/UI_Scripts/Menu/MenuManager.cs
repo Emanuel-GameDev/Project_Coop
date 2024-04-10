@@ -57,11 +57,17 @@ public class MenuManager : MonoBehaviour
 
     private void Inizialize()
     {
-        pauseMenu.Inizialize();
-        optionMenu.Inizialize();
-
-        pauseMenu.gameObject.SetActive(false);
-        optionMenu.gameObject.SetActive(false);
+        if(pauseMenu != null)
+        {
+            pauseMenu.Inizialize();
+            pauseMenu.gameObject.SetActive(false);
+        }
+            
+        if (optionMenu != null)
+        {
+            optionMenu.Inizialize();
+            optionMenu.gameObject.SetActive(false);
+        }
     }
 
     private void Update()
@@ -93,16 +99,12 @@ public class MenuManager : MonoBehaviour
     #region Pause/Option Menu
     public void OpenPauseMenu(PlayerInputHandler player)
     {
-        if (actualMenuOwner != null) return;
-        actualMenuOwner = player;
-        OpenMenu(pauseMenu);
+        OpenMenu(pauseMenu, player);
     }
 
     public void OpenOptionMenu(PlayerInputHandler player)
     {
-        if (actualMenuOwner != null) return;
-        actualMenuOwner = player;
-        OpenMenu(optionMenu);
+        OpenMenu(optionMenu, player);
     }
 
     public void ClosePauseMenu()
@@ -124,13 +126,6 @@ public class MenuManager : MonoBehaviour
     }
     #endregion
 
-    public void OpenMenu(MenuInfo menu, TabInfo tabToOpen)
-    {
-        OpenMenu(menu);
-        if (menu.HaveTabs)
-            menu.GoToTab(tabToOpen);
-    }
-
     public void OpenMenu(MenuInfo menu)
     {
         if (menu.HaveTabs)
@@ -143,6 +138,27 @@ public class MenuManager : MonoBehaviour
             menu.PreviousMenu = actualMenu;
         }
         actualMenu = menu;
+    }
+
+    public void OpenMenu(MenuInfo menu, TabInfo tabToOpen)
+    {
+        OpenMenu(menu);
+        if (menu.HaveTabs)
+            menu.GoToTab(tabToOpen);
+    }
+
+    public void OpenMenu(MenuInfo menu, PlayerInputHandler player)
+    {
+        if (actualMenuOwner != null) return;
+        actualMenuOwner = player;
+        OpenMenu(menu);
+    }
+
+    public void OpenMenu(MenuInfo menu, PlayerInputHandler player, TabInfo tabToOpen)
+    {
+        if (actualMenuOwner != null) return;
+        actualMenuOwner = player;
+        OpenMenu(menu, tabToOpen);
     }
 
     public void CloseMenu()
