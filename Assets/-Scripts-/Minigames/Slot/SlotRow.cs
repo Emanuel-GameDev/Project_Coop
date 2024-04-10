@@ -179,7 +179,7 @@ public class SlotRow : MonoBehaviour
 
             if (transform.localPosition.y >= -finalRowRotation.y)
             {
-                transform.localPosition = new Vector3(transform.position.x,startRowRotation.y);
+                transform.localPosition = new Vector3(transform.localPosition.x,startRowRotation.y);
                 
             }
         }

@@ -37,6 +37,12 @@ public class Slotmachine : MonoBehaviour
     [SerializeField] private Sprite rangedSprite;
     [SerializeField] private Sprite healerSprite;
 
+    [Header("Buttons")]
+    [SerializeField] private ButtonSlot Player1Button;
+    [SerializeField] private ButtonSlot Player2Button;
+    [SerializeField] private ButtonSlot Player3Button;
+    [SerializeField] private ButtonSlot Player4Button;
+
     [SerializeField] private List<Sprite> losingSpriteList = new List<Sprite>();
 
     List<Sprite> playerSprites;
