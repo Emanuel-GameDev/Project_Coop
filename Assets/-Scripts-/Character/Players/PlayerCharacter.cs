@@ -1,4 +1,3 @@
-using Cinemachine.Utility;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -95,7 +94,7 @@ public abstract class PlayerCharacter : Character
     {
         base.InitialSetup();
         Inizialize();
-        
+
     }
 
     public virtual void Inizialize()
@@ -120,7 +119,7 @@ public abstract class PlayerCharacter : Character
             damager.SetSource(this);
         }
         SetIsInBossfight(false);
-       
+
     }
 
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
@@ -128,14 +127,14 @@ public abstract class PlayerCharacter : Character
     public void SetCurrentHP(float value) => currentHp = value;
 
     public PlayerInputHandler GetInputHandler() => characterController.GetInputHandler();
-    
+
     #endregion
 
     #region Movement
     protected virtual void Update()
     {
         Move(moveDir);
-        
+
     }
 
 
@@ -211,7 +210,7 @@ public abstract class PlayerCharacter : Character
 
     public virtual void TakeHeal(DamageData data)
     {
-        if(data.condition != null)
+        if (data.condition != null)
             RemoveFromConditions(data.condition);
 
         currentHp += data.damage;
@@ -243,7 +242,7 @@ public abstract class PlayerCharacter : Character
             lookDir = (Camera.main.ScreenToWorldPoint(temp) - transform.position);
         }
 
-        
+
     }
 
     public void DialogueInput(InputAction.CallbackContext context)
@@ -332,21 +331,21 @@ public abstract class PlayerCharacter : Character
     #region MainActions
     public virtual void AttackInput(InputAction.CallbackContext context)
     {
-        
+
     }
     public virtual void DefenseInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public virtual void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
-    public  virtual void ExtraAbilityInput(InputAction.CallbackContext context)
+    public virtual void ExtraAbilityInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public void MoveInput(InputAction.CallbackContext context)
@@ -366,4 +365,35 @@ public abstract class PlayerCharacter : Character
 
     #endregion
 
+    #region
+
+    public CharacterSaveData GetSaveData()
+    {
+        CharacterSaveData saveData = new CharacterSaveData();
+        saveData.characterName = character;
+        saveData.powerUpsData = powerUpData;
+        saveData.extraData = extraData;
+        foreach (AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
+        {
+            if(upgradeStatus[au])
+                saveData.unlockedAbility.Add(au);
+        }
+
+        return saveData;
+    }
+
+    public void LoadSaveData(CharacterSaveData saveData)
+    {
+        if(saveData == null || saveData.characterName != character)
+            return;
+
+        powerUpData = saveData.powerUpsData;
+        extraData = saveData.extraData;
+        foreach (AbilityUpgrade au in saveData.unlockedAbility)
+        {
+            upgradeStatus[au] = true;
+        }
+    }
+
+    #endregion
 }

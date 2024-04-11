@@ -48,8 +48,7 @@ public class SaveManager : MonoBehaviour
     {
         foreach (PlayerCharacter player in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
         {
-            //DA RIVEDERE #MODIFICATO
-            //player.CharacterClass.LoadClassData(saveData.players.Find(c => c.className == player.CharacterClass.GetType().ToString()));
+            player.LoadSaveData(saveData.players.Find(c => c.characterName == player.Character));
         }
     }
 
@@ -59,8 +58,7 @@ public class SaveManager : MonoBehaviour
 
         foreach (PlayerCharacter player in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
         {
-            //DA RIVEDERE #MODIFICATO
-            //saveData.players.Add(player.CharacterClass.SaveClassData());
+            saveData.players.Add(player.GetSaveData());
         }
     }
 
@@ -74,7 +72,7 @@ public class SaveData
     public eMapName lastLevel;
 
     //Players
-    public List<ClassData> players;
+    public List<CharacterSaveData> players;
 
 }
 
@@ -94,10 +92,10 @@ public class EncounterData
 }
 
 [Serializable]
-public class ClassData
+public class CharacterSaveData
 {
     //Statistiche Base
-    public string className;
+    public ePlayerCharacter characterName;
     public PowerUpData powerUpsData;
     public ExtraData extraData;
     public List<AbilityUpgrade> unlockedAbility;
