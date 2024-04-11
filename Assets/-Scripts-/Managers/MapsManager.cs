@@ -3,24 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelsManager : MonoBehaviour
+public class MapsManager : MonoBehaviour
 {
     [SerializeField]
-    List<LevelData> levels = new List<LevelData>();
+    List<MapData> levels = new List<MapData>();
 
-    private static LevelsManager _instance;
-    public static LevelsManager Instance
+    private static MapsManager _instance;
+    public static MapsManager Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<LevelsManager>();
+                _instance = FindObjectOfType<MapsManager>();
 
                 if (_instance == null)
                 {
                     GameObject singletonObject = new("LevelsManager");
-                    _instance = singletonObject.AddComponent<LevelsManager>();
+                    _instance = singletonObject.AddComponent<MapsManager>();
                 }
             }
 
@@ -28,7 +28,7 @@ public class LevelsManager : MonoBehaviour
         }
     }
 
-    public eLevel currentLevel { get; private set; } = eLevel.Level1;
+    public eMapName currentLevel { get; private set; } = eMapName.Level1;
 
     private void Awake()
     {
@@ -43,25 +43,25 @@ public class LevelsManager : MonoBehaviour
         }
     }
 
-    private void SetCurrentLevel(eLevel level)
+    private void SetCurrentLevel(eMapName level)
     {
         currentLevel = level;
     }
 
-    public eHazardType LoadHazard(int i)
+    public eEncounterType LoadHazard(int i)
     {
-        List<HazardData> hazards = levels.Find(l => l.levelName == currentLevel).hazards;
+        List<EncounterData> hazards = levels.Find(l => l.mapName == currentLevel).hazards;
         return hazards.Find(h => h.position == i).hazardName;
     }
 
 
     #region SaveLoadGame
-    public List<LevelData> SaveLevelData()
+    public List<MapData> SaveLevelData()
     {
         return levels;
     }
 
-    public void LoadLevelData(List<LevelData> data, eLevel currentLevel)
+    public void LoadLevelData(List<MapData> data, eMapName currentLevel)
     {
         levels = data;
         this.currentLevel = currentLevel;
@@ -73,7 +73,7 @@ public class LevelsManager : MonoBehaviour
 }
 
 [Serializable]
-public enum eLevel
+public enum eMapName
 {
     Level1,
     Level2,
@@ -81,7 +81,7 @@ public enum eLevel
 }
 
 [Serializable]
-public enum eHazardType
+public enum eEncounterType
 {
     Trap1,
     Trap2,

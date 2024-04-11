@@ -12,7 +12,7 @@ public class SaveManager : MonoBehaviour
     {
         saveData = new SaveData();
 
-        UpdateLevelsData();
+        UpdateMapsData();
         UpdatePlayersData();
 
         string filePath = Application.persistentDataPath + "/SaveGames/SaveData.json";
@@ -28,20 +28,20 @@ public class SaveManager : MonoBehaviour
         string json = File.ReadAllText(filePath);
         saveData = JsonUtility.FromJson<SaveData>(json);
 
-        LoadLevelsData();
+        LoadMapsData();
         LoadPlayersData();
 
         Debug.Log("Dati PowerUp caricati con successo!");
     }
 
-    public void LoadLevelsData()
+    public void LoadMapsData()
     {
-        LevelsManager.Instance.LoadLevelData(saveData.levels, saveData.lastLevel);
+        MapsManager.Instance.LoadLevelData(saveData.levels, saveData.lastLevel);
     }
-    public void UpdateLevelsData()
+    public void UpdateMapsData()
     {
-        saveData.levels = LevelsManager.Instance.SaveLevelData();
-        saveData.lastLevel = LevelsManager.Instance.currentLevel;
+        saveData.levels = MapsManager.Instance.SaveLevelData();
+        saveData.lastLevel = MapsManager.Instance.currentLevel;
     }
 
     private void LoadPlayersData()
@@ -70,8 +70,8 @@ public class SaveManager : MonoBehaviour
 public class SaveData
 {
     //Livelli
-    public List<LevelData> levels;
-    public eLevel lastLevel;
+    public List<MapData> levels;
+    public eMapName lastLevel;
 
     //Players
     public List<ClassData> players;
@@ -79,16 +79,16 @@ public class SaveData
 }
 
 [Serializable]
-public  class LevelData
+public  class MapData
 {
-    public eLevel levelName;
-    public List<HazardData> hazards;
+    public eMapName mapName;
+    public List<EncounterData> hazards;
 }
 
 [Serializable]
-public class HazardData
+public class EncounterData
 {
-    public eHazardType hazardName;
+    public eEncounterType hazardName;
     public int position;
     public bool defeated;
 }
