@@ -199,8 +199,11 @@ public class LabirintManager : MonoBehaviour
     {
         for (int i = 0; i < quantity; i++)
         {
-            if (i >= positions.Count)
+            if (positions.Count == 0)
+            {
+                keyCount = i;
                 return;
+            }
             else
             {
                 int randomIndex = Random.Range(0, positions.Count);

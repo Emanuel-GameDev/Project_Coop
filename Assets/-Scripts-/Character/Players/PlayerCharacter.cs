@@ -7,7 +7,6 @@ using UnityEngine.InputSystem;
 
 public abstract class PlayerCharacter : Character
 {
-
     #region Variables
 
     #region Stats
@@ -190,10 +189,6 @@ public abstract class PlayerCharacter : Character
         if (data.condition != null)
             AddToConditions(data.condition);
 
-        //CONTROLLARE
-        OnHit?.Invoke();
-        
-
         currentHp -= data.damage * DamageReceivedMultiplier;
         damager.RemoveCondition();
         Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
@@ -209,7 +204,6 @@ public abstract class PlayerCharacter : Character
         else
         {
             PubSub.Instance.Notify(EMessageType.characterDamaged, this);
-
         }
 
 
@@ -342,8 +336,7 @@ public abstract class PlayerCharacter : Character
     }
     public virtual void DefenseInput(InputAction.CallbackContext context)
     {
-        onDash?.Invoke();
-
+        
     }
 
     public virtual void UniqueAbilityInput(InputAction.CallbackContext context)

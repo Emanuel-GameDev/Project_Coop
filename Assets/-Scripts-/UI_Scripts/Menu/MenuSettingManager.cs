@@ -13,7 +13,6 @@ public class MenuSettingManager : MonoBehaviour
 
     private LocalizeStringEvent currentLocalizationEvent;
 
-
     [SerializeField, ReorderableList]
     List<InteractableSetter> interactableSetters = new();
 
