@@ -5,10 +5,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CoinShopButton : Button
+public class LilithShopButton : Button
 {
     //CoinShopMenu shopMenu;
-    CoinShopTable shopTable;
+    LilithShopTable shopTable;
     [SerializeField] Image buttonImage;
     [SerializeField] TextMeshProUGUI coinCostText;
     [SerializeField] public PowerUp powerUp;
@@ -16,7 +16,7 @@ public class CoinShopButton : Button
     protected override void Awake()
     {
         //shopMenu = GetComponentInParent<CoinShopMenu>();
-        shopTable= GetComponentInParent<CoinShopTable>();
+        shopTable= GetComponentInParent<LilithShopTable>();
     }
 
    
@@ -34,7 +34,6 @@ public class CoinShopButton : Button
     private void ChangeDescription()
     {
         shopTable.ChangeDescriptionAndName(powerUp.powerUpName, powerUp.powerUpDescription);
-        
     }
 
     public void SetPowerUp(PowerUp powerUpToSet)

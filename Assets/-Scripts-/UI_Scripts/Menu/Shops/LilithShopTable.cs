@@ -8,7 +8,7 @@ using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
-public class CoinShopTable : MonoBehaviour
+public class LilithShopTable : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI abilityNameText;
     [SerializeField] LocalizeStringEvent abilityNameLocaleEvent;
@@ -24,19 +24,19 @@ public class CoinShopTable : MonoBehaviour
     [Serializable]
     public class CoinShopEntry
     {
-        [SerializeField] public CoinShopButton button;
+        [SerializeField] public LilithShopButton button;
         [SerializeField] public List<PowerUp> abilitys;
 
         [HideInInspector] public int id;
     }
 
 
-    CoinShopMenu shopMenu;
+    LilithShopMenu shopMenu;
     GameObject lastSelected;
 
     private void Start()
     {
-        shopMenu = GetComponentInParent<CoinShopMenu>();
+        shopMenu = GetComponentInParent<LilithShopMenu>();
 
         InitializeButtons();
     }
@@ -77,7 +77,7 @@ public class CoinShopTable : MonoBehaviour
         Debug.Log("buy");
         PlayerCharacterController inputReceiver = (PlayerCharacterController)shopMenu.tableAssosiation[this].CurrentReceiver;
 
-        CoinShopButton lastButton = lastSelected.GetComponent<CoinShopButton>();
+        LilithShopButton lastButton = lastSelected.GetComponent<LilithShopButton>();
         CoinShopEntry lastEntry = entrys.Find(b => b.button == lastButton);
 
         inputReceiver.ActualPlayerCharacter.AddPowerUp(lastButton.powerUp);

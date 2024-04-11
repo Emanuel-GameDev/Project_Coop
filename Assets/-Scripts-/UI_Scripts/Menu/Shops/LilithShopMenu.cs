@@ -4,22 +4,25 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
+using UnityEngine.Localization.Settings;
 
-public class CoinShopMenu : Menu
+public class LilithShopMenu : Menu
 {
-    [HideInInspector] public Dictionary<CoinShopTable, PlayerInputHandler> tableAssosiation = new();
+    [HideInInspector] public Dictionary<LilithShopTable, PlayerInputHandler> tableAssosiation = new();
 
     public override void Start()
     {
         base.Start();
     }
 
+    
+
     public override void OpenMenu()
     {
         
 
         base.OpenMenu();
-
+        
         tableAssosiation.Clear();
 
         //CoinShopTable[] tables = GetComponentsInChildren<CoinShopTable>();
@@ -33,7 +36,7 @@ public class CoinShopMenu : Menu
 
         foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
         {
-            tableAssosiation.Add(GetComponentInChildren<CoinShopTable>(true),ih);
+            tableAssosiation.Add(GetComponentInChildren<LilithShopTable>(true),ih);
             
         }
     }
