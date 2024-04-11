@@ -147,6 +147,11 @@ public class MenuInfo : MonoBehaviour
 
     public void GoToTab(TabInfo tab)
     {
+        if(tab == null)
+        {
+            GoDefaultTab();
+        }
+
         int index = tabs.IndexOf(tab);
 
         if (index > -1)
