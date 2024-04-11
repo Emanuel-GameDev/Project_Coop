@@ -7,12 +7,6 @@ using UnityEngine.InputSystem;
 
 public abstract class PlayerCharacter : Character
 {
-    
-
-
-   
-
-
     #region Variables
 
     #region Stats

@@ -66,6 +66,12 @@ public class MenuInfo : MonoBehaviour
     }
 
     [SerializeField]
+    private InteractableSetter interactableSetter;
+    public InteractableSetter InteractableSetter => interactableSetter;
+
+    [Header("Tabs Settings")]
+
+    [SerializeField]
     private bool haveTabs = false;
     public bool HaveTabs => haveTabs;
     public bool HaveSubTabs => tabs[ActualTabIndex].HaveSubTabs;
@@ -183,7 +189,4 @@ public class MenuInfo : MonoBehaviour
     {
         tabs[ActualTabIndex].GoPreviousSubTab();
     }
-
-
-
 }
