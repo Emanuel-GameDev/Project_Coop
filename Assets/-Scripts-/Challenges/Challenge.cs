@@ -28,7 +28,10 @@ public class Challenge : MonoBehaviour
     [HideInInspector] public UnityEvent onChallengeStartAction;
     [HideInInspector] public bool challengeCompleted;
 
-
+    public void ActivateGameobject()
+    {
+        gameObject.SetActive(true);
+    }
     public virtual void Initiate()
     {
         onChallengeStartAction.AddListener(StartChallenge);

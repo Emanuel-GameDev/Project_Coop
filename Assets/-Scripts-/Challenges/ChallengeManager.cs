@@ -4,7 +4,8 @@ using UnityEngine;
 public class ChallengeManager : MonoBehaviour, IInteractable
 {
     [SerializeField] private List<Challenge> challengesList;
-    [SerializeField] private MenuInfo canvaInfo;
+    [SerializeField] private MenuInfo menuInfo;
+    [SerializeField] private GameObject panel;
     [SerializeField] private GameObject challengeUIPrefab;
     private Challenge selectedChallenge;
 
@@ -14,7 +15,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
         Shuffle(challengesList);
         for (int i = 0; i < 3; ++i)
         {
-            GameObject tempObj = Instantiate(challengeUIPrefab, canvaInfo.gameObject.transform);
+            GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
             ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();
             tempUI.challengeSelected = challengesList[i];
             tempUI.SetUpUI();
@@ -37,12 +38,12 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     
     public void Interact(IInteracter interacter)
     {
-        MenuManager.Instance.OpenMenu(canvaInfo);
+        MenuManager.Instance.OpenMenu(menuInfo,CoopManager.Instance.GetPlayer(ePlayerID.Player1));
        
        
     }
 
-    
+   
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.TryGetComponent<IInteracter>(out var interacter))
