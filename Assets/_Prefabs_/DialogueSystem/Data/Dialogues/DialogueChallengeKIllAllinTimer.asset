@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 94336eb9df9a40f44a6d7e4ef6e6fd43, type: 3}
-  m_Name: TankHealedDialogueTutorial
+  m_Name: DialogueChallengeKIllAllinTimer
   m_EditorClassIdentifier: 
   lines:
-  - character: {fileID: 11400000, guid: 0e91698fd1bdd5e4d86045955efd7bc1, type: 2}
+  - character: {fileID: 11400000, guid: ca23e7a9a0c76b44cb6642a0f8731d65, type: 2}
     localizedLine:
       m_TableReference:
         m_TableCollectionName: Dialogue
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: TankHealedDialogueTutorialLineID:0
+        m_Key: DialogueChallengeKIllAllinTimerLineID:0
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
@@ -27,8 +27,8 @@ MonoBehaviour:
     nameColor: {r: 0, g: 0, b: 0, a: 0}
     overrideNameFont: 0
     nameFont: {fileID: 0}
-    overrideDialogueColor: 0
-    dialogueColor: {r: 0, g: 0, b: 0, a: 0}
+    overrideDialogueColor: 1
+    dialogueColor: {r: 1, g: 1, b: 1, a: 1}
     overrideDialogueFont: 0
     dialogueFont: {fileID: 0}
     overrideDialogueVoice: 0
@@ -37,7 +37,7 @@ MonoBehaviour:
     characterPerSecond: 20
     dialogueType: 0
     openInEditor: 1
-    overrideOptionsOpenInEditor: 0
+    overrideOptionsOpenInEditor: 1
   references:
     version: 2
     RefIds: []

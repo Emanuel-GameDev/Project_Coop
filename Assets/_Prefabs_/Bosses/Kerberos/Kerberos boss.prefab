@@ -2543,12 +2543,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: def3422e6527aa146a3cd425ba54ff55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fadeSpeed: 2
+  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
+  _OnParryColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   stunned: 0
   underAggro: 0
   inLove: 0
   bleeding: 0
   isDead: 0
   damageReceivedMultiplier: 1
+  onHit:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
   pushAnimationCurve:
     serializedVersion: 2
     m_Curve: []
