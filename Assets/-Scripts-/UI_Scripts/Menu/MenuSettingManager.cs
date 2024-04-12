@@ -16,6 +16,11 @@ public class MenuSettingManager : MonoBehaviour
     [SerializeField, ReorderableList]
     List<InteractableSetter> interactableSetters = new();
 
+    private void OnDisable()
+    {
+        DisableAllSetters();
+    }
+
     public void DisableAllSetters()
     {
         foreach (InteractableSetter setter in interactableSetters)

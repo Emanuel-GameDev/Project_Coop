@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class DebugManager : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class DebugManager : MonoBehaviour
 
     [SerializeField] GameObject BossGameobject;
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (debugMode)
         {
@@ -83,6 +84,16 @@ public class DebugManager : MonoBehaviour
 
                 }
             }
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                LoadGame();
+            }
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                SaveGame();
+            }
+
+
 
             if(guardaQuestoTooltipPerLeIstruzioni) guardaQuestoTooltipPerLeIstruzioni = false;
         }
@@ -109,6 +120,18 @@ public class DebugManager : MonoBehaviour
                 character.UnlockUpgrade(ability);
             }
         }
+    }
+
+    private void SaveGame()
+    {
+        Debug.Log("CallSave");
+        SaveManager.Instance.SaveAllData();
+    }
+
+    private void LoadGame()
+    {
+        Debug.Log("CallLoad");
+        SaveManager.Instance.LoadAllData();
     }
 
 }

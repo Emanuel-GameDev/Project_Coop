@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -10,9 +12,16 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<PlayerCharacterData> playerCharacterDatas;
 
-    public PlayerInputManager playerInputManager { get; private set; }
-    public CoopManager coopManager { get; private set; }
-    public CameraManager cameraManager { get; private set; }
+    private PlayerInputManager playerInputManager;
+    private CoopManager coopManager;
+    private CameraManager cameraManager;
+    private SaveManager saveManager;
+    private AsyncOperation sceneLoadOperation;
+
+    public CoopManager CoopManager => coopManager;
+    public CameraManager CameraManager => cameraManager;
+    public PlayerInputManager PlayerInputManager => playerInputManager;
+    public SaveManager SaveManager => saveManager;
 
     private static GameManager _instance;
     public static GameManager Instance
@@ -34,8 +43,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private AsyncOperation sceneLoadOperation;
-
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -54,9 +61,10 @@ public class GameManager : MonoBehaviour
         playerInputManager = PlayerInputManager.instance;
         coopManager = CoopManager.Instance;
         cameraManager = CameraManager.Instance;
+        saveManager = SaveManager.Instance;
 
-        if (cameraManager != null && coopManager != null)
-            cameraManager.AddAllPlayers();
+        if (CameraManager != null && CoopManager != null)
+            CameraManager.AddAllPlayers();
 
         if (playerCharacterDatas == null || playerCharacterDatas.Count <= 0)
         {
@@ -150,6 +158,7 @@ public class GameManager : MonoBehaviour
 
     public void ExitGame()
     {
+        Debug.Log("Exit Game");
         Application.Quit();
     }
 
@@ -167,6 +176,50 @@ public class GameManager : MonoBehaviour
 
         Debug.LogError($"Character {character} not found");
         return null;
+    }
+
+    public void ChangeLanguage(string language)
+    {
+        Locale selectedLocale = LocalizationSettings.AvailableLocales.Locales.Find(x => x.LocaleName == language);
+
+        if (selectedLocale != null)
+        {
+            LocalizationSettings.SelectedLocale = selectedLocale;
+        }
+        else
+        {
+            Debug.LogWarning("Lingua non trovata: " + language);
+        }
+
+    }
+
+    public void NextLanguage()
+    {
+        int currentIndex = LocalizationSettings.AvailableLocales.Locales.FindIndex(x => x.LocaleName == LocalizationSettings.SelectedLocale.LocaleName);
+
+        if (currentIndex == -1 || currentIndex == LocalizationSettings.AvailableLocales.Locales.Count - 1)
+        {
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[0];
+        }
+        else
+        {
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[currentIndex + 1];
+        }
+
+
+    }
+    public void PreviousLanguage()
+    {
+        int currentIndex = LocalizationSettings.AvailableLocales.Locales.FindIndex(x => x.LocaleName == LocalizationSettings.SelectedLocale.LocaleName);
+
+        if (currentIndex == -1 || currentIndex == 0)
+        {
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[LocalizationSettings.AvailableLocales.Locales.Count - 1];
+        }
+        else
+        {
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[currentIndex - 1];
+        }
     }
 
 }
