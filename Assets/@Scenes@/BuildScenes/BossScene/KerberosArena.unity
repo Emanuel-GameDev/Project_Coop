@@ -2539,6 +2539,16 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 2163374793563572926, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: rect.x
+      value: 280
+      objectReference: {fileID: 0}
+    - target: {fileID: 2163374793563572926, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: rect.y
+      value: -0
+      objectReference: {fileID: 0}
     - target: {fileID: 2312809786650951938, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: m_Layer
@@ -2940,6 +2950,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 711c3e5ac3c1db94a97f176b35df3654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnOnePlayerInteract:
+    m_PersistentCalls:
+      m_Calls: []
   OnAllPlayersInteract:
     m_PersistentCalls:
       m_Calls:
@@ -2955,6 +2968,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  interactersCount: {fileID: 0}
 --- !u!58 &1678543166
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3207,8 +3221,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.63724995, y: 11.558351, z: 0}
-    m_Extent: {x: 19.482151, y: 29.322052, z: 0}
+    m_Center: {x: 0.6373997, y: 11.559751, z: 0}
+    m_Extent: {x: 19.4816, y: 29.322151, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0

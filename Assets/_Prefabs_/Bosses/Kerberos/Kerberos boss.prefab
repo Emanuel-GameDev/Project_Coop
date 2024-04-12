@@ -404,7 +404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25af8627659c6949b60949c3aa8d91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedEditorNode: {fileID: 7009432983383867320}
+  selectedEditorNode: {fileID: 2163374793563572926}
   repeatOnFinish: 0
   maxExecutionsPerTick: 1000
   parent: {fileID: 0}
@@ -504,8 +504,8 @@ MonoBehaviour:
   title: Repeater
   rect:
     serializedVersion: 2
-    x: 281
-    y: -122
+    x: 280
+    y: -120
     width: 160
     height: 45
   parent: {fileID: 7125834032434093057}
@@ -1461,11 +1461,11 @@ MonoBehaviour:
   title: Sequence
   rect:
     serializedVersion: 2
-    x: 280
-    y: 0
+    x: 290
+    y: 11
     width: 160
     height: 45
-  parent: {fileID: 0}
+  parent: {fileID: 5700576044789767738}
   children:
   - {fileID: 1148828877330473255}
   - {fileID: 3430550109142413045}
@@ -2057,12 +2057,12 @@ MonoBehaviour:
   rect:
     serializedVersion: 2
     x: 280
-    y: -61
+    y: -60
     width: 160
     height: 45
   parent: {fileID: 2347805989210274344}
   children:
-  - {fileID: 7009432983383867320}
+  - {fileID: 2163374793563572926}
   behaviourTree: {fileID: 0}
   runtimePriority: 0
   breakpoint: 0
@@ -2120,7 +2120,7 @@ MonoBehaviour:
     y: -118
     width: 160
     height: 45
-  parent: {fileID: 5700576044789767738}
+  parent: {fileID: 0}
   children:
   - {fileID: 1798352166390797721}
   - {fileID: 922571251660012493}
@@ -2564,7 +2564,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxHp: 50
+  maxHp: 10
   damage: 0
   staminaDamage: 0
   attackSpeed: 50
@@ -2572,9 +2572,9 @@ MonoBehaviour:
   target: {fileID: 0}
   currentHp: 0
   minDistance: 0.4
-  followDuration: 5
+  followDuration: 3
   walkSpeed: 20
-  attackPreviewTimer: 3
+  attackPreviewTimer: 0.5
   pivotPreviewArrow: {fileID: 2109936022544078718}
   visual: {fileID: 1636597113684329488}
   _pivot: {fileID: 707992863352827762}
