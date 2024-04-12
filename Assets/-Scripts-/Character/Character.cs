@@ -37,6 +37,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     public Transform dealerTransform => transform;
 
     [SerializeField] private AnimationCurve pushAnimationCurve;
+    [SerializeField] private SoundsDatabase soundsDatabase;
 
     //Lo uso per chimare tutte le funzioni iniziali
     protected virtual void Awake()
