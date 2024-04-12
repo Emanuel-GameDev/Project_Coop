@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -61,6 +62,10 @@ public abstract class PlayerCharacter : Character
 
 
     public bool protectedByTank; //DA RIVEDERE 
+
+    [Header("Crosshair distance multiplier")]
+
+    [SerializeField] float crosshairDistance=6f;
 
     #endregion
 
@@ -256,7 +261,7 @@ public abstract class PlayerCharacter : Character
         if (context.performed)
         {
             Vector2 temp = context.ReadValue<Vector2>();
-            lookDir = (Camera.main.ScreenToWorldPoint(temp) - transform.position);
+            lookDir = ((Camera.main.ScreenToWorldPoint(temp) - transform.position)).normalized;
         }
 
 
@@ -271,9 +276,18 @@ public abstract class PlayerCharacter : Character
         }
     }
 
-    public Vector2 ReadLookdirCrosshair()
+    public Vector2 ReadLookdirCrosshair(Vector2 shootSource)
     {
-        return lookDir;
+        if(lookDir.magnitude <= 1)
+        {
+            lookDir.Normalize();
+            lookDir *= crosshairDistance;
+        }
+
+        
+        
+        
+        return (lookDir+shootSource);
     }
 
     public Vector2 ReadLook(InputAction.CallbackContext context)
