@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class Detector : MonoBehaviour
 {
-    public UnityEvent OnAllPlayerInside;
+    [SerializeField] UnityEvent OnOnePlayerEnter;
+    [SerializeField] UnityEvent OnAllPlayerInside;
+    [SerializeField] TextMeshProUGUI playerInsideCount;
 
     List<PlayerCharacter> playersDetected;
     int playersInside;
@@ -14,28 +17,56 @@ public class Detector : MonoBehaviour
     {
         GetComponent<Collider2D>().isTrigger = true;
         playersDetected = new List<PlayerCharacter>();
+
+        if (playerInsideCount != null)
+            playerInsideCount.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.TryGetComponent<PlayerCharacter>(out PlayerCharacter character))
+        if(other.gameObject.GetComponentInParent<PlayerCharacter>())
         {
-            playersDetected.Add(character);
+            playersDetected.Add(other.gameObject.GetComponentInParent<PlayerCharacter>());
             playersInside++;
 
+            OnOnePlayerEnter?.Invoke();
+
+            if (playerInsideCount != null)
+            {
+                playerInsideCount.gameObject.SetActive(true);
+                playerInsideCount.text = $"{playersInside}/{GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>().Length}";
+            }
+
             if (playersDetected.Count >= CoopManager.Instance.GetActiveHandlers().Count)
+            {
                 OnAllPlayerInside?.Invoke();
+
+                if (playerInsideCount != null)
+                    playerInsideCount.gameObject.SetActive(false);
+            }
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.TryGetComponent<PlayerCharacter>(out PlayerCharacter character))
+        if (other.gameObject.GetComponentInParent<PlayerCharacter>())
         {
-            if(playersDetected.Contains(character))
+            if(playersDetected.Contains(other.gameObject.GetComponentInParent<PlayerCharacter>()))
             {
-                playersDetected.Remove(character);
+                playersDetected.Remove(other.gameObject.GetComponentInParent<PlayerCharacter>());
                 playersInside--;
+
+                if (playerInsideCount != null)
+                {
+                    playerInsideCount.gameObject.SetActive(true);
+                    playerInsideCount.text = $"{playersInside}/{GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>().Length}";
+
+                    if (playersDetected.Count >= 0)
+                    {
+                        playerInsideCount.gameObject.SetActive(false);
+                    }
+                }
+
             }
         }
     }

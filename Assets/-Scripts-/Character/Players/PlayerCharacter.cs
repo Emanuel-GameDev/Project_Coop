@@ -68,10 +68,23 @@ public abstract class PlayerCharacter : Character
     public ePlayerCharacter Character => character;
 
     public virtual float MaxHp => maxHp;
-    public virtual float CurrentHp => currentHp;
-    public virtual float Damage => damage * powerUpData.DamageIncrease;
-    public virtual float MoveSpeed => moveSpeed * powerUpData.MoveSpeedIncrease;
-    public virtual float AttackSpeed => attackSpeed * powerUpData.AttackSpeedIncrease;
+    public virtual float CurrentHp 
+    {
+        get {  return currentHp; }
+        set 
+        { 
+            currentHp = value;
+
+            if(currentHp<0)
+                currentHp = 0;
+
+            if(currentHp>maxHp)
+                currentHp = maxHp;
+        }
+    }
+    public virtual float Damage => damage * powerUpData.damageIncrease;
+    public virtual float MoveSpeed => moveSpeed * powerUpData.moveSpeedIncrease;
+    public virtual float AttackSpeed => attackSpeed * powerUpData.attackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) * powerUpData.UniqueAbilityCooldownDecrease;
     public float DamageReceivedMultiplier => damageReceivedMultiplier;
 
@@ -102,7 +115,7 @@ public abstract class PlayerCharacter : Character
         powerUpData = new PowerUpData();
         extraData = new ExtraData();
         upgradeStatus = new();
-        currentHp = MaxHp;
+        CurrentHp = MaxHp;
         foreach (AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
         {
             upgradeStatus.Add(au, false);
@@ -124,7 +137,7 @@ public abstract class PlayerCharacter : Character
 
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
     public void SetMaxHP(float value) => maxHp = value;
-    public void SetCurrentHP(float value) => currentHp = value;
+    public void SetCurrentHP(float value) => CurrentHp = value;
 
     public PlayerInputHandler GetInputHandler() => characterController.GetInputHandler();
 
@@ -134,9 +147,8 @@ public abstract class PlayerCharacter : Character
     protected virtual void Update()
     {
         Move(moveDir);
-
     }
-
+    
 
     public virtual void Move(Vector2 direction)
     {
@@ -149,7 +161,7 @@ public abstract class PlayerCharacter : Character
         SetSpriteDirection(lastNonZeroDirection);
     }
 
-    protected void SetSpriteDirection(Vector2 direction)
+    public void SetSpriteDirection(Vector2 direction)
     {
         if (direction.y != 0)
             animator.SetFloat(Y, direction.y);
@@ -158,6 +170,11 @@ public abstract class PlayerCharacter : Character
             scale.x *= -1;
 
         pivot.gameObject.transform.localScale = scale;
+    }
+
+    public void ResetSpriteDirection()
+    {
+        lastNonZeroDirection = new Vector2(0, 0);
     }
 
     #endregion
@@ -188,7 +205,7 @@ public abstract class PlayerCharacter : Character
         if (data.condition != null)
             AddToConditions(data.condition);
 
-        currentHp -= data.damage * DamageReceivedMultiplier;
+        CurrentHp -= data.damage * DamageReceivedMultiplier;
         damager.RemoveCondition();
         Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
 
@@ -213,7 +230,7 @@ public abstract class PlayerCharacter : Character
         if (data.condition != null)
             RemoveFromConditions(data.condition);
 
-        currentHp += data.damage;
+        CurrentHp += data.damage;
         damager.RemoveCondition();
         Debug.Log($"Healer: {data.dealer}, Heal: {data.damage}, Condition Removed: {data.condition}");
     }

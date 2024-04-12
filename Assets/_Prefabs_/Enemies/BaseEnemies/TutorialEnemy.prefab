@@ -80,9 +80,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3defd5cc67813a54399603acd9abfae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnOnePlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
   OnAllPlayerInside:
     m_PersistentCalls:
       m_Calls: []
+  playerInsideCount: {fileID: 0}
 --- !u!1 &5047301388580239896
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,9 +165,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3defd5cc67813a54399603acd9abfae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnOnePlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
   OnAllPlayerInside:
     m_PersistentCalls:
       m_Calls: []
+  playerInsideCount: {fileID: 0}
 --- !u!58 &2023287047930503514
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -176,11 +184,11 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
+    m_Bits: 1535
+  m_LayerOverridePriority: 1
   m_ForceSendLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -225,13 +233,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6149537241379566375}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.55571526, w: 0.8313726}
+  m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
   m_LocalPosition: {x: -0.8, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3949199778491864970}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -67.52}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
 --- !u!114 &1194334778424170457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,8 +290,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.38950592, y: 0.17290352}
-  m_Size: {x: 2.7021613, y: 4.3049564}
+  m_Offset: {x: 0.07, y: -0.18}
+  m_Size: {x: 2.9, y: 3.97}
   m_Direction: 0
 --- !u!1 &6177594625496059516
 GameObject:
@@ -317,7 +325,7 @@ Transform:
   m_GameObject: {fileID: 6177594625496059516}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3525157, y: 5.281646, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -478,8 +486,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 1.2143586}
-  m_Size: {x: 1.3219656, y: 3.1508517}
+  m_Offset: {x: 0, y: 1.8047042}
+  m_Size: {x: 1.3219656, y: 1.9701605}
   m_Direction: 0
 --- !u!50 &5685418474842049650
 Rigidbody2D:
@@ -548,7 +556,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3949199778491864970}
@@ -604,7 +612,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!114 &7819423962522352399
 MonoBehaviour:
   m_ObjectHideFlags: 0

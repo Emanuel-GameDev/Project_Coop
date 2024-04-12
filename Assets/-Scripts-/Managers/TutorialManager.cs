@@ -9,6 +9,7 @@ using UnityEngine.InputSystem.Users;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
+using UnityEngine.UI;
 using UnityEngine.Video;
 
 public enum TutorialFaseType
@@ -36,6 +37,7 @@ public class TutorialManager : MonoBehaviour
 
     [Header("Intro")]
     [SerializeField] GameObject introScreen;
+    [SerializeField] Slider skipSlider;
     public bool playIntro = false;
     VideoPlayer videoPlayer;
 
@@ -59,8 +61,9 @@ public class TutorialManager : MonoBehaviour
     [Header("NPCs")]
     public TutorialEnemy tutorialEnemy;
     [SerializeField] GameObject lilith;
+    [SerializeField] GameObject lilithBaloon;
 
-   
+
     [Serializable]
     public class Fase
     {
@@ -97,9 +100,9 @@ public class TutorialManager : MonoBehaviour
     {
         get { return _inputHandlerId; }
 
-        set 
-        { 
-            if(value<inputHandlers.Count)
+        set
+        {
+            if (value < inputHandlers.Count)
                 _inputHandlerId = value;
             else
                 _inputHandlerId = 0;
@@ -124,15 +127,17 @@ public class TutorialManager : MonoBehaviour
 
         tutorialEnemy.gameObject.SetActive(false);
         lilith.gameObject.SetActive(true);
-        
 
-      
+
+        skipSlider.gameObject.SetActive(false);
 
         foreach (PlayerInputHandler inputHandler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             inputHandler.GetComponent<PlayerInput>().actions.Disable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Enable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed += SkipIntro;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").started += EnableSkipSlider;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").canceled += DisableSkipSlider;
         }
 
         if (playIntro)
@@ -143,17 +148,39 @@ public class TutorialManager : MonoBehaviour
         }
         else
         {
-            introScreen.SetActive(false) ;
+            introScreen.SetActive(false);
             PostIntro();
         }
-        
+
 
     }
 
+    private void DisableSkipSlider(InputAction.CallbackContext context)
+    {
+        skipSlider.gameObject.SetActive(false);
+        updateSlider = false;
+    }
+
+    private void EnableSkipSlider(InputAction.CallbackContext context)
+    {
+        skipSlider.gameObject.SetActive(true);
+        updateSlider = true;
+    }
+
+    bool updateSlider = false;
     private void Update()
     {
-        if(!videoPlayer.isPlaying)
+        if (!videoPlayer.isPlaying)
             stateMachine.StateUpdate();
+
+        if (updateSlider)
+        {
+            skipSlider.value += Time.deltaTime/3;
+        }
+        else
+        {
+            skipSlider.value = 0;
+        }
     }
 
     private void IntroEnded(VideoPlayer source)
@@ -172,17 +199,21 @@ public class TutorialManager : MonoBehaviour
         {
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Disable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").started -= EnableSkipSlider;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").canceled -= DisableSkipSlider;
         }
 
     }
 
-     
+
     private void PostIntro()
     {
         foreach (PlayerInputHandler inputHandler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Disable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").started -= EnableSkipSlider;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").canceled -= DisableSkipSlider;
         }
 
         SetUpCharacters();
@@ -214,13 +245,13 @@ public class TutorialManager : MonoBehaviour
         DeactivateEnemyAI();
     }
 
-
     public void StartTutorial()
     {
         stateMachine.SetState(new IntermediateTutorialFase(this));
         exit.SetActive(false);
         lilith.gameObject.GetComponent<CircleCollider2D>().enabled = false;
-
+        lilith.gameObject.GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(false);
+       
         playableDirector.Play();
     }
 
@@ -505,10 +536,18 @@ public class TutorialManager : MonoBehaviour
         ranged.transform.position = rangedRespawn.position;
         tank.transform.position = tankRespawn.position;
 
-        //dps.GetRigidBody().MovePosition(DPSRespawn.position);
-        //healer.GetRigidBody().MovePosition(healerRespawn.position);
-        //ranged.GetRigidBody().MovePosition(rangedRespawn.position);
-        //tank.GetRigidBody().MovePosition(tankRespawn.position);
+
+        dps.SetSpriteDirection(new Vector2(1,-1));
+        dps.ResetSpriteDirection();
+
+        healer.SetSpriteDirection(new Vector2(1, -1));
+        healer.ResetSpriteDirection();
+
+        tank.SetSpriteDirection(new Vector2(1, -1));
+        tank.ResetSpriteDirection();
+
+        ranged.SetSpriteDirection(new Vector2(1, -1));
+        ranged.ResetSpriteDirection();
 
         dps.GetRigidBody().velocity = Vector2.zero;
         healer.GetRigidBody().velocity = Vector2.zero;
@@ -524,6 +563,9 @@ public class TutorialManager : MonoBehaviour
 
         tutorialEnemy.gameObject.SetActive(false);
         tutorialEnemy.gameObject.transform.SetPositionAndRotation(enemyRespawn.position, tutorialEnemy.gameObject.transform.rotation);
+        
+        tutorialEnemy.SetSpriteDirection(new Vector2(-1,-1));
+        tutorialEnemy.ResetSpriteDirection();
 
         tutorialEnemy.viewTrigger.ClearList();
         tutorialEnemy.AttackRangeTrigger.ClearList();
