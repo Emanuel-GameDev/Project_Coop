@@ -73,12 +73,13 @@ public class PlayersReady : MinigameMenu
         float startTime = Time.realtimeSinceStartup;
         float timeLeft = duration + 0.99f;
 
-        while (timeLeft >= 0)
+        while (timeLeft > 0)
         {
             float elapsedTime = Time.realtimeSinceStartup - startTime;
 
             timeLeft -= elapsedTime;
             int secondsLeft = Mathf.FloorToInt(timeLeft);
+            secondsLeft = secondsLeft < 0 ? 0 : secondsLeft;
             countdownText.text = secondsLeft.ToString();
             startTime = Time.realtimeSinceStartup;
             yield return null;
