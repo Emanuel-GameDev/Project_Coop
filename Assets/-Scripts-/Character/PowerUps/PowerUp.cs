@@ -1,11 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization;
 
-[Serializable]
-public enum StatsType
+public enum eStatsType
 {
     Damage,
     Health,
@@ -14,10 +12,10 @@ public enum StatsType
     AttackSpeed
 }
 
-[CreateAssetMenu(menuName = "Character/PowerUp"), Serializable]
+[CreateAssetMenu(menuName = "Character/PowerUp")]
 public class PowerUp : ScriptableObject
 {
-    public StatsType powerUpType;
+    public eStatsType powerUpType;
 
     public Sprite powerUpSprite;
     public LocalizedString powerUpName;

@@ -123,12 +123,6 @@ public class TabInfo : MonoBehaviour
 
     public void GoToSubTab(SubTabInfo subTab)
     {
-        if(subTab == null)
-        {
-            GoDefaultSubTab();
-            return;
-        }
-
         int index = subTabs.IndexOf(subTab);
 
         if (index > -1)

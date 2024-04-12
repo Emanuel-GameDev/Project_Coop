@@ -7,106 +7,60 @@ using UnityEngine;
 public class SaveManager : MonoBehaviour
 {
     SaveData saveData;
-
-    private static SaveManager _instance;
-    public static SaveManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<SaveManager>();
-
-                if (_instance == null)
-                {
-                    GameObject singletonObject = new("SaveManager");
-                    _instance = singletonObject.AddComponent<SaveManager>();
-                }
-            }
-
-            return _instance;
-        }
-    }
-
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-    }
-
+    
     public void SaveAllData()
     {
         saveData = new SaveData();
 
-        //UpdateMapsData();
+        UpdateLevelsData();
         UpdatePlayersData();
 
-        string saveFolderPath = Application.persistentDataPath + "/SaveGames";
-        string filePath = saveFolderPath + "/SaveData.json";
-
-        if (!Directory.Exists(saveFolderPath))
-        {
-            Directory.CreateDirectory(saveFolderPath);
-        }
-
+        string filePath = Application.persistentDataPath + "/SaveGames/SaveData.json";
         string json = JsonUtility.ToJson(saveData);
         File.WriteAllText(filePath, json);
 
-        Debug.Log("Dati salvati con successo!");
+        Debug.Log("Dati PowerUp salvati con successo!");
     }
 
     public void LoadAllData()
     {
         string filePath = Application.persistentDataPath + "/SaveGames/SaveData.json";
+        string json = File.ReadAllText(filePath);
+        saveData = JsonUtility.FromJson<SaveData>(json);
 
-        if (File.Exists(filePath))
-        {
-            string json = File.ReadAllText(filePath);
-            saveData = JsonUtility.FromJson<SaveData>(json);
+        LoadLevelsData();
+        LoadPlayersData();
 
-            // LoadMapsData();
-            LoadPlayersData();
-
-            Debug.Log("Dati caricati con successo!");
-        }
-        else
-        {
-            Debug.LogWarning("Il file di salvataggio non esiste.");
-        }
+        Debug.Log("Dati PowerUp caricati con successo!");
     }
 
-    public void LoadMapsData()
+    public void LoadLevelsData()
     {
-        MapsManager.Instance.LoadMapData(saveData.maps, saveData.lastMap);
+        LevelsManager.Instance.LoadLevelData(saveData.levels, saveData.lastLevel);
     }
-    public void UpdateMapsData()
+    public void UpdateLevelsData()
     {
-        saveData.maps = MapsManager.Instance.SaveMapData();
-        saveData.lastMap = MapsManager.Instance.currentMap;
+        saveData.levels = LevelsManager.Instance.SaveLevelData();
+        saveData.lastLevel = LevelsManager.Instance.currentLevel;
     }
 
     private void LoadPlayersData()
     {
-        foreach (PlayerCharacter player in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
+        foreach (PlayerCharacter player in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
         {
-            player.LoadSaveData(saveData.players.Find(c => c.characterName == player.Character));
+            //DA RIVEDERE #MODIFICATO
+            //player.CharacterClass.LoadClassData(saveData.players.Find(c => c.className == player.CharacterClass.GetType().ToString()));
         }
     }
 
     private void UpdatePlayersData()
     {
-        saveData.players?.Clear();
+        saveData.players.Clear();
 
-        foreach (PlayerCharacter player in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
+        foreach (PlayerCharacter player in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
         {
-            saveData.players.Add(player.GetSaveData());
+            //DA RIVEDERE #MODIFICATO
+            //saveData.players.Add(player.CharacterClass.SaveClassData());
         }
     }
 
@@ -115,36 +69,36 @@ public class SaveManager : MonoBehaviour
 [Serializable]
 public class SaveData
 {
-    //Mappe
-    public List<MapData> maps;
-    public eMapName lastMap;
+    //Livelli
+    public List<LevelData> levels;
+    public eLevel lastLevel;
 
     //Players
-    public List<CharacterSaveData> players = new();
+    public List<ClassData> players;
 
 }
 
 [Serializable]
-public  class MapData
+public  class LevelData
 {
-    public eMapName mapName;
-    public List<EncounterData> encounter = new();
+    public eLevel levelName;
+    public List<HazardData> hazards;
 }
 
 [Serializable]
-public class EncounterData
+public class HazardData
 {
-    public eEncounterType encounterName;
+    public eHazardType hazardName;
     public int position;
     public bool defeated;
 }
 
 [Serializable]
-public class CharacterSaveData
+public class ClassData
 {
     //Statistiche Base
-    public ePlayerCharacter characterName;
-    public List<PowerUp> powerUps = new();
+    public string className;
+    public PowerUpData powerUpsData;
     public ExtraData extraData;
-    public List<AbilityUpgrade> unlockedAbility = new();
+    public List<AbilityUpgrade> unlockedAbility;
 }

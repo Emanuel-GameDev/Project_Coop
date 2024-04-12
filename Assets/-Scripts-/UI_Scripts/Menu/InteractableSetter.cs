@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class InteractableSetter : MonoBehaviour
 {
-    [SerializeField, ReorderableList]
+    [SerializeField]
     List<Selectable> interactables = new();
 
     public void EnableInteract()
