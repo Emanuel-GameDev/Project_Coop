@@ -34,7 +34,7 @@ public class Detector : MonoBehaviour
             if (playerInsideCount != null)
             {
                 playerInsideCount.gameObject.SetActive(true);
-                playerInsideCount.text = $"{playersInside}/{GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>().Length}";
+                playerInsideCount.text = $"{playersInside}/{GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>().Length}";
             }
 
             if (playersDetected.Count >= CoopManager.Instance.GetActiveHandlers().Count)
@@ -59,7 +59,7 @@ public class Detector : MonoBehaviour
                 if (playerInsideCount != null)
                 {
                     playerInsideCount.gameObject.SetActive(true);
-                    playerInsideCount.text = $"{playersInside}/{GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>().Length}";
+                    playerInsideCount.text = $"{playersInside}/{GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>().Length}";
 
                     if (playersDetected.Count >= 0)
                     {

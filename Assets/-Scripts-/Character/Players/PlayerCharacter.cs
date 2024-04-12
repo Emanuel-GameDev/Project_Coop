@@ -87,9 +87,9 @@ public abstract class PlayerCharacter : Character
                 currentHp = maxHp;
         }
     }
-    public virtual float Damage => damage * powerUpData.damageIncrease;
-    public virtual float MoveSpeed => moveSpeed * powerUpData.moveSpeedIncrease;
-    public virtual float AttackSpeed => attackSpeed * powerUpData.attackSpeedIncrease;
+    public virtual float Damage => damage * powerUpData.DamageIncrease;
+    public virtual float MoveSpeed => moveSpeed * powerUpData.MoveSpeedIncrease;
+    public virtual float AttackSpeed => attackSpeed * powerUpData.AttackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) * powerUpData.UniqueAbilityCooldownDecrease;
     public float DamageReceivedMultiplier => damageReceivedMultiplier;
 
