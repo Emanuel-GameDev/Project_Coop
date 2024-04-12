@@ -4,26 +4,28 @@ using System.Collections.Generic;
 [Serializable]
 public class PowerUpData
 {
-   public List<PowerUp> powerUps { get; private set; } = new List<PowerUp>();
+    private List<PowerUp> powerUps = new();
+    public List<PowerUp> PowerUps => powerUps;
 
     // Damage
-    public float damageIncrease { get; private set; } = 1;
+    private float damageIncrease = 1;
+    public float DamageIncrease => damageIncrease;
 
     // Health
-    public float maxHpIncrease { get; private set; } = 1;
+    private float maxHpIncrease = 1;
+    public float MaxHpIncrease => maxHpIncrease;
 
     // Speed
-    public float moveSpeedIncrease { get; private set; } = 1;
+    private float moveSpeedIncrease = 1;
+    public float MoveSpeedIncrease => moveSpeedIncrease;
 
     // Cooldown
-    public float UniqueAbilityCooldownDecrease => 1 - uniqueAbilityCooldownDecrease > 0 ? 1 - uniqueAbilityCooldownDecrease : 0 ;
+    public float UniqueAbilityCooldownDecrease => 1 - uniqueAbilityCooldownDecrease > 0 ? 1 - uniqueAbilityCooldownDecrease : 0;
     private float uniqueAbilityCooldownDecrease = 1;
 
-
-
-    // Stamina
-    public float attackSpeedIncrease { get; private set; } = 1;
-
+    // AttackSpeed
+    private float attackSpeedIncrease = 1;
+    public float AttackSpeedIncrease => attackSpeedIncrease;
 
 
     //Aggiunge a lista powerUp e calcolo statistiche
@@ -32,23 +34,23 @@ public class PowerUpData
         powerUps.Add(powerUp);
         switch (powerUp.powerUpType)
         {
-            case eStatsType.Damage:
+            case StatsType.Damage:
                 damageIncrease += powerUp.value;
                 break;
 
-            case eStatsType.Health:
+            case StatsType.Health:
                 maxHpIncrease += powerUp.value;
                 break;
 
-            case eStatsType.MoveSpeed:
+            case StatsType.MoveSpeed:
                 moveSpeedIncrease += powerUp.value;
                 break;
 
-            case eStatsType.UniqueAbilityCooldown:
+            case StatsType.UniqueAbilityCooldown:
                 uniqueAbilityCooldownDecrease += powerUp.value;
                 break;
 
-            case eStatsType.AttackSpeed:
+            case StatsType.AttackSpeed:
                 attackSpeedIncrease += powerUp.value;
                 break;
         }
@@ -63,23 +65,23 @@ public class PowerUpData
 
             switch (powerUp.powerUpType)
             {
-                case eStatsType.Damage:
+                case StatsType.Damage:
                     damageIncrease -= powerUp.value;
                     break;
 
-                case eStatsType.Health:
+                case StatsType.Health:
                     maxHpIncrease -= powerUp.value;
                     break;
 
-                case eStatsType.MoveSpeed:
+                case StatsType.MoveSpeed:
                     moveSpeedIncrease -= powerUp.value;
                     break;
 
-                case eStatsType.UniqueAbilityCooldown:
+                case StatsType.UniqueAbilityCooldown:
                     uniqueAbilityCooldownDecrease -= powerUp.value;
                     break;
 
-                case eStatsType.AttackSpeed:
+                case StatsType.AttackSpeed:
                     attackSpeedIncrease -= powerUp.value;
                     break;
             }

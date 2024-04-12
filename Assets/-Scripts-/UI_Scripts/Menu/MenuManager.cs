@@ -32,6 +32,10 @@ public class MenuManager : MonoBehaviour
 
     private MenuInfo actualMenu;
 
+    [SerializeField]
+    private HPHandler hPHandler;
+
+
     private PlayerInputHandler actualMenuOwner;
 
     private GameObject lastSelectedObject;
@@ -50,7 +54,6 @@ public class MenuManager : MonoBehaviour
         else
         {
             _instance = this;
-            DontDestroyOnLoad(gameObject);
             Inizialize();
         }
     }
@@ -99,67 +102,111 @@ public class MenuManager : MonoBehaviour
     #region Pause/Option Menu
     public void OpenPauseMenu(PlayerInputHandler player)
     {
-        OpenMenu(pauseMenu, player);
+        OpenMenu(pauseMenu, player, true);
+        if(hPHandler != null)
+            hPHandler.gameObject.SetActive(false);
     }
 
     public void OpenOptionMenu(PlayerInputHandler player)
     {
-        OpenMenu(optionMenu, player);
+        if(optionMenu != null)
+        {
+            OpenMenu(optionMenu, player, true);
+            if (hPHandler != null)
+                hPHandler.gameObject.SetActive(false);
+        }
+        else
+            OpenPauseMenu(player);
     }
 
     public void ClosePauseMenu()
     {
         if (actualMenu == pauseMenu)
-        {
-            CloseAllMenu(actualMenu);
-            ClearMenuEntries();
-        }
+            CloseAllMenu();
     }
 
     public void CloseOptionMenu()
     {
         if (actualMenu == optionMenu)
-        {
-            CloseAllMenu(actualMenu);
-            ClearMenuEntries();
-        }
+            CloseAllMenu();
     }
+
     #endregion
+
+    #region OpenMenu
 
     public void OpenMenu(MenuInfo menu)
     {
-        if (menu.HaveTabs)
-            menu.GoDefaultTab();
+        OpenMenu(menu, null, null, false);
+    }
 
-        actualMenuOwner.SetPlayerActiveMenu(menu.MenuRoot, menu.FirstObjectSelected);
-        menu.gameObject.SetActive(true);
-        if (actualMenu != null)
-        {
-            menu.PreviousMenu = actualMenu;
-        }
-        actualMenu = menu;
+    public void OpenMenu(MenuInfo menu, bool pauseGame)
+    {
+        OpenMenu(menu, null, null, pauseGame);
     }
 
     public void OpenMenu(MenuInfo menu, TabInfo tabToOpen)
     {
-        OpenMenu(menu);
-        if (menu.HaveTabs)
-            menu.GoToTab(tabToOpen);
+        OpenMenu(menu, tabToOpen, false);
+    }
+
+    public void OpenMenu(MenuInfo menu, TabInfo tabToOpen, bool pauseGame)
+    {
+        OpenMenu(menu, null, tabToOpen, pauseGame);
     }
 
     public void OpenMenu(MenuInfo menu, PlayerInputHandler player)
     {
-        if (actualMenuOwner != null) return;
-        actualMenuOwner = player;
-        OpenMenu(menu);
+      OpenMenu(menu, player, false);
     }
 
-    public void OpenMenu(MenuInfo menu, PlayerInputHandler player, TabInfo tabToOpen)
+    public void OpenMenu(MenuInfo menu, PlayerInputHandler player, bool pauseGame)
     {
-        if (actualMenuOwner != null) return;
-        actualMenuOwner = player;
-        OpenMenu(menu, tabToOpen);
+        OpenMenu(menu, player, null, pauseGame);
     }
+
+    public void OpenMenu(MenuInfo menu, PlayerInputHandler player, TabInfo tabToOpen, bool pauseGame)
+    {
+        if (actualMenuOwner != null && player != null && actualMenuOwner != player)
+            return;
+
+        if (menu == null)
+        {
+            Debug.LogError("Menu is null!");
+            return;
+        }
+
+        if(pauseGame)
+            GameManager.Instance.PauseGame();
+
+        if(player != null)
+            actualMenuOwner = player;
+
+        if (menu.HaveTabs)
+        {
+            if(tabToOpen != null)
+                menu.GoToTab(tabToOpen);
+            else
+                menu.GoDefaultTab();
+        }
+
+        if (menu.InteractableSetter != null)
+            menu.InteractableSetter.EnableInteract();
+
+        actualMenuOwner.SetPlayerActiveMenu(menu.MenuRoot, menu.FirstObjectSelected);
+
+        menu.gameObject.SetActive(true);
+
+        if (actualMenu != null)
+        {
+            menu.PreviousMenu = actualMenu;
+        }
+
+        actualMenu = menu;
+
+    }
+
+    #endregion
 
     public void CloseMenu()
     {
@@ -172,10 +219,15 @@ public class MenuManager : MonoBehaviour
             actualMenu = actualMenu.PreviousMenu;
             actualMenuOwner.SetPlayerActiveMenu(actualMenu.MenuRoot, actualMenu.FirstObjectSelected);
             actualMenu.gameObject.SetActive(true);
+            if(actualMenu.InteractableSetter != null)
+                actualMenu.InteractableSetter.EnableInteract();
         }
         else
         {
             ClearMenuEntries();
+            GameManager.Instance.ResumeGame();
+            if (hPHandler != null)
+                hPHandler.gameObject.SetActive(true);
         }
 
     }
@@ -187,11 +239,20 @@ public class MenuManager : MonoBehaviour
         actualMenuOwner = null;
     }
 
-    private void CloseAllMenu(MenuInfo menu)
+    private void CloseAllMenu()
+    {
+        CloseAllMenuRecursive(actualMenu);
+        ClearMenuEntries();
+        GameManager.Instance.ResumeGame();
+        if (hPHandler != null)
+            hPHandler.gameObject.SetActive(true);
+    }
+
+    private void CloseAllMenuRecursive(MenuInfo menu)
     {
         if (menu.PreviousMenu != null)
         {
-            CloseAllMenu(menu.PreviousMenu);
+            CloseAllMenuRecursive(menu.PreviousMenu);
             menu.PreviousMenu = null;
         }
         menu.gameObject.SetActive(false);
