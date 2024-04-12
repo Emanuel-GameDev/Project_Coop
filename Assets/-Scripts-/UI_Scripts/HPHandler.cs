@@ -49,7 +49,7 @@ public class HPHandler : MonoBehaviour
     int id = 0;
     public void SetActivePlayers()
     {
-        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             if (inputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>() != null)
                 AddContainer(inputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>());

@@ -69,9 +69,9 @@ public abstract class PlayerCharacter : Character
 
     public virtual float MaxHp => maxHp;
     public virtual float CurrentHp => currentHp;
-    public virtual float Damage => damage * powerUpData.damageIncrease;
-    public virtual float MoveSpeed => moveSpeed * powerUpData.moveSpeedIncrease;
-    public virtual float AttackSpeed => attackSpeed * powerUpData.attackSpeedIncrease;
+    public virtual float Damage => damage * powerUpData.DamageIncrease;
+    public virtual float MoveSpeed => moveSpeed * powerUpData.MoveSpeedIncrease;
+    public virtual float AttackSpeed => attackSpeed * powerUpData.AttackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) * powerUpData.UniqueAbilityCooldownDecrease;
     public float DamageReceivedMultiplier => damageReceivedMultiplier;
 
@@ -179,7 +179,7 @@ public abstract class PlayerCharacter : Character
     #region PowerUp
     public override void AddPowerUp(PowerUp powerUp) => powerUpData.Add(powerUp);
     public override void RemovePowerUp(PowerUp powerUp) => powerUpData.Remove(powerUp);
-    public override List<PowerUp> GetPowerUpList() => powerUpData.powerUps;
+    public override List<PowerUp> GetPowerUpList() => powerUpData.PowerUps;
     #endregion
 
     #region Damage
@@ -371,7 +371,7 @@ public abstract class PlayerCharacter : Character
     {
         CharacterSaveData saveData = new CharacterSaveData();
         saveData.characterName = character;
-        saveData.powerUpsData = powerUpData;
+        saveData.powerUps = powerUpData.PowerUps;
         saveData.extraData = extraData;
         foreach (AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
         {
@@ -387,7 +387,11 @@ public abstract class PlayerCharacter : Character
         if(saveData == null || saveData.characterName != character)
             return;
 
-        powerUpData = saveData.powerUpsData;
+        foreach (PowerUp pu in saveData.powerUps)
+        {
+            powerUpData.Add(pu);
+        }
+
         extraData = saveData.extraData;
         foreach (AbilityUpgrade au in saveData.unlockedAbility)
         {

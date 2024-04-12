@@ -34,7 +34,7 @@ public class KerberosBossCharacter : BossCharacter
     public float chargeTimer;
     public float chargeSpeed;
     public float chargeDistance;
-    public float ChargeStaminaDamage => chargeStaminaDamage + powerUpData.damageIncrease;
+    public float ChargeStaminaDamage => chargeStaminaDamage + powerUpData.DamageIncrease;
     public float ChargeOnParryPushForce = 3;
     public float ChargeOnParryDuration = 1;
 

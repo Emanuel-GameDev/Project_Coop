@@ -12,9 +12,16 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<PlayerCharacterData> playerCharacterDatas;
 
-    public PlayerInputManager playerInputManager { get; private set; }
-    public CoopManager coopManager { get; private set; }
-    public CameraManager cameraManager { get; private set; }
+    private PlayerInputManager playerInputManager;
+    private CoopManager coopManager;
+    private CameraManager cameraManager;
+    private SaveManager saveManager;
+    private AsyncOperation sceneLoadOperation;
+
+    public CoopManager CoopManager => coopManager;
+    public CameraManager CameraManager => cameraManager;
+    public PlayerInputManager PlayerInputManager => playerInputManager;
+    public SaveManager SaveManager => saveManager;
 
     private static GameManager _instance;
     public static GameManager Instance
@@ -36,8 +43,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private AsyncOperation sceneLoadOperation;
-
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -56,9 +61,10 @@ public class GameManager : MonoBehaviour
         playerInputManager = PlayerInputManager.instance;
         coopManager = CoopManager.Instance;
         cameraManager = CameraManager.Instance;
+        saveManager = SaveManager.Instance;
 
-        if (cameraManager != null && coopManager != null)
-            cameraManager.AddAllPlayers();
+        if (CameraManager != null && CoopManager != null)
+            CameraManager.AddAllPlayers();
 
         if (playerCharacterDatas == null || playerCharacterDatas.Count <= 0)
         {

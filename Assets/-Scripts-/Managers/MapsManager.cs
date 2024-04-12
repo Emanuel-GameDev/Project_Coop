@@ -6,7 +6,7 @@ using UnityEngine;
 public class MapsManager : MonoBehaviour
 {
     [SerializeField]
-    List<MapData> levels = new List<MapData>();
+    List<MapData> maps = new List<MapData>();
 
     private static MapsManager _instance;
     public static MapsManager Instance
@@ -28,7 +28,7 @@ public class MapsManager : MonoBehaviour
         }
     }
 
-    public eMapName currentLevel { get; private set; } = eMapName.Level1;
+    public eMapName currentMap { get; private set; } = eMapName.Map1;
 
     private void Awake()
     {
@@ -43,28 +43,28 @@ public class MapsManager : MonoBehaviour
         }
     }
 
-    private void SetCurrentLevel(eMapName level)
+    private void SetCurrentLevel(eMapName map)
     {
-        currentLevel = level;
+        currentMap = map;
     }
 
-    public eEncounterType LoadHazard(int i)
+    public eEncounterType Loadencounter(int i)
     {
-        List<EncounterData> hazards = levels.Find(l => l.mapName == currentLevel).hazards;
-        return hazards.Find(h => h.position == i).hazardName;
+        List<EncounterData> encounter = maps.Find(l => l.mapName == currentMap).encounter;
+        return encounter.Find(h => h.position == i).encounterName;
     }
 
 
     #region SaveLoadGame
-    public List<MapData> SaveLevelData()
+    public List<MapData> SaveMapData()
     {
-        return levels;
+        return maps;
     }
 
-    public void LoadLevelData(List<MapData> data, eMapName currentLevel)
+    public void LoadMapData(List<MapData> data, eMapName currentLevel)
     {
-        levels = data;
-        this.currentLevel = currentLevel;
+        maps = data;
+        this.currentMap = currentLevel;
     }
 
     #endregion
@@ -75,18 +75,18 @@ public class MapsManager : MonoBehaviour
 [Serializable]
 public enum eMapName
 {
-    Level1,
-    Level2,
-    Level3
+    Map1,
+    Map2,
+    Map3
 }
 
 [Serializable]
 public enum eEncounterType
 {
-    Trap1,
-    Trap2,
-    Enemies1,
-    Enemies2,
-    Boss1,
-    Boss2,
+    MinigameStonkMachine,
+    MinigamePassepartout,
+    Challenge1,
+    Challenge2,
+    Challenge3,
+    Challenge4
 }

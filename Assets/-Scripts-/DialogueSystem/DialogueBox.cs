@@ -77,7 +77,7 @@ public class DialogueBox : MonoBehaviour
             }
 
 
-            foreach(PlayerInputHandler handler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+            foreach(PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
             {
                 handler.GetComponent<PlayerInput>().actions.Enable();
                 InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
@@ -210,7 +210,7 @@ public class DialogueBox : MonoBehaviour
     public void StartDialogue()
     {
 
-        foreach (PlayerInputHandler handler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             handler.GetComponent<PlayerInput>().actions.Disable();
 
