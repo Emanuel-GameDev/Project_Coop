@@ -28,7 +28,7 @@ public class PressInteractable : MonoBehaviour, IInteractable
             if(interactersCount != null)
             {
                 interactersCount.gameObject.SetActive(true);
-                interactersCount.text = $"{interacters.Count}/{GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>().Length}";
+                interactersCount.text = $"{interacters.Count}/{GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>().Length}";
             }
         }
 
