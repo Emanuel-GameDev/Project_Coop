@@ -19,7 +19,6 @@ public class LilithShopButton : Button
         shopTable= GetComponentInParent<LilithShopTable>();
     }
 
-   
 
     protected override void DoStateTransition(SelectionState state, bool instant)
     {

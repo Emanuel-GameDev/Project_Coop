@@ -10,19 +10,17 @@ using UnityEngine.UI;
 
 public class LilithShopTable : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI abilityNameText;
     [SerializeField] LocalizeStringEvent abilityNameLocaleEvent;
-    [SerializeField] TextMeshProUGUI abilityDescriptionText;
     [SerializeField] LocalizeStringEvent abilityDescriptionLocaleEvent;
     [SerializeField] TextMeshProUGUI coinsNumberText;
     [SerializeField] Selectable buyButton;
 
     [SerializeField] public ePlayerCharacter characterReference;
 
-    [SerializeField] public List<CoinShopEntry> entrys;
+    [SerializeField] public List<AbilityShopEntry> entrys;
 
     [Serializable]
-    public class CoinShopEntry
+    public class AbilityShopEntry
     {
         [SerializeField] public LilithShopButton button;
         [SerializeField] public List<PowerUp> abilitys;
@@ -44,7 +42,7 @@ public class LilithShopTable : MonoBehaviour
     private void InitializeButtons()
     {
         //da cambiare con i salvataggi
-        foreach(CoinShopEntry entry in entrys)
+        foreach(AbilityShopEntry entry in entrys)
         {
             entry.button.SetPowerUp(entry.abilitys[0]);
         }
@@ -78,7 +76,7 @@ public class LilithShopTable : MonoBehaviour
         PlayerCharacterController inputReceiver = (PlayerCharacterController)shopMenu.tableAssosiation[this].CurrentReceiver;
 
         LilithShopButton lastButton = lastSelected.GetComponent<LilithShopButton>();
-        CoinShopEntry lastEntry = entrys.Find(b => b.button == lastButton);
+        AbilityShopEntry lastEntry = entrys.Find(b => b.button == lastButton);
 
         inputReceiver.ActualPlayerCharacter.AddPowerUp(lastButton.powerUp);
 

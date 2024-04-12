@@ -125,6 +125,11 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         canInteract = false;
     }
 
+    public GameObject GetInteracterObject()
+    {
+        return gameObject;
+    }
+
     public virtual void OnParryNotify(Character whoParried)
     {
         
@@ -152,6 +157,8 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
             yield return new WaitForEndOfFrame();
         }
     }
+
+   
 }
 #endregion
 
