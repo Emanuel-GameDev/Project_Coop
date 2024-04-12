@@ -230,8 +230,11 @@ public class DPS : PlayerCharacter
     #region Defense
     public override void DefenseInput(InputAction.CallbackContext context)
     {
+        //CONTROLLARE
+        base.DefenseInput(context);
         if (context.performed)
         {
+            
             Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
             if (Time.time > lastDodgeTime + dodgeCooldown && !isDodging && !isDashingAttack)
             {

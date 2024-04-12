@@ -15,6 +15,10 @@ public class TrumpOline : MonoBehaviour, IDamageable
     // Temporanea
     public bool destroyed = false;
 
+    public UnityEvent OnHit { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public UnityEvent OnDeath { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public UnityEvent OnDash { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
     public event UnityAction<Collider2D> OnTriggerEnterEvent;
 
     private void Awake()

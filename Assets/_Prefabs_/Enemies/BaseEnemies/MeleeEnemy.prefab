@@ -90,6 +90,7 @@ GameObject:
   m_Component:
   - component: {fileID: 652590778980211774}
   - component: {fileID: 6443569851992376941}
+  - component: {fileID: 4276010199675700157}
   m_Layer: 7
   m_Name: Visual
   m_TagString: Untagged
@@ -132,7 +133,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: -876546973899608171, guid: 102c204a20e754948b4e1ba3769f6387, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -164,6 +165,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4276010199675700157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2588656445530842505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35b2ddf7b708cb84cab5a3f51b163aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shouldUpdate: 0
 --- !u!1 &2791117155888583798
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,7 +208,7 @@ Transform:
   m_GameObject: {fileID: 2791117155888583798}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.99399996, y: 1.118, z: 14.87}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -314,13 +328,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b41f803478156e045bd4d13ca95728db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fadeSpeed: 2
+  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
+  _OnParryColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   stunned: 0
   underAggro: 0
   inLove: 0
   bleeding: 0
   isDead: 0
   damageReceivedMultiplier: 1
-  maxHp: 100
+  pushAnimationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxHp: 20
   damage: 5
   staminaDamage: 5
   attackSpeed: 1

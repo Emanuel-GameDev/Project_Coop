@@ -131,7 +131,7 @@ public class TutorialManager : MonoBehaviour
 
         skipSlider.gameObject.SetActive(false);
 
-        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             inputHandler.GetComponent<PlayerInput>().actions.Disable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Enable();
@@ -195,7 +195,7 @@ public class TutorialManager : MonoBehaviour
         introScreen.SetActive(false);
         PostIntro();
 
-        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Disable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
@@ -208,7 +208,7 @@ public class TutorialManager : MonoBehaviour
 
     private void PostIntro()
     {
-        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Disable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
@@ -261,7 +261,7 @@ public class TutorialManager : MonoBehaviour
         inputHandlers = new List<PlayerInputHandler>();
         startingCharacters = new Dictionary<PlayerInputHandler, PlayerCharacter>();
 
-        foreach (PlayerInputHandler ih in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        foreach (PlayerInputHandler ih in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             inputHandlers.Add(ih);
         }

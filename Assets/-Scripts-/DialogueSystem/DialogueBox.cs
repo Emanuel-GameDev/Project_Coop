@@ -66,7 +66,8 @@ public class DialogueBox : MonoBehaviour
         else
         {
 
-
+            //controllare
+            if(OnDialogueEnd.Count > 0) 
             OnDialogueEnd[dialogueIndex]?.Invoke();
 
             dialogueIndex++;
@@ -77,7 +78,7 @@ public class DialogueBox : MonoBehaviour
             }
 
 
-            foreach(PlayerInputHandler handler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+            foreach(PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
             {
                 handler.GetComponent<PlayerInput>().actions.Enable();
                 InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
@@ -210,7 +211,7 @@ public class DialogueBox : MonoBehaviour
     public void StartDialogue()
     {
 
-        foreach (PlayerInputHandler handler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             handler.GetComponent<PlayerInput>().actions.Disable();
 
@@ -244,7 +245,7 @@ public class DialogueBox : MonoBehaviour
             nextBox.contentText.text += c;
 
             if (!char.IsWhiteSpace(c))
-                yield return new WaitForSeconds(1 / characterPerSecond);
+                yield return new WaitForSecondsRealtime(1 / characterPerSecond);
                 
 
         }
@@ -274,6 +275,7 @@ public class DialogueBox : MonoBehaviour
 
         if (timer < 0.1)
         {
+            //guardare se da problemi
             timer += Time.deltaTime;
         }
 
@@ -306,5 +308,14 @@ public class DialogueBox : MonoBehaviour
     {
         dialogues = new Dialogue[1];
         dialogues[0] = newDialogues;
+    }
+
+    public void RemoveAllDialogueEnd()
+    {
+        OnDialogueEnd.Clear();
+    }
+    public void AddDialogueEnd(UnityEvent unityEvent)
+    {
+        OnDialogueEnd.Add(unityEvent);
     }
 }

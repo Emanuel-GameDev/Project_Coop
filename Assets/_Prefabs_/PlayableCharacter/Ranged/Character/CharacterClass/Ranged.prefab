@@ -38,7 +38,6 @@ Transform:
   - {fileID: 8072905203897853891}
   - {fileID: 2426701991772030537}
   - {fileID: 7626594674274175064}
-  - {fileID: 4927968739253904545}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2114854076154468116
@@ -95,6 +94,7 @@ MonoBehaviour:
   uniqueAbilityCooldownIncreaseAtUse: 2
   characterController: {fileID: 0}
   protectedByTank: 0
+  crosshairDistance: 6
   shootingPoint: {fileID: 8080496547097694991}
   rangedCrossair: {fileID: 3846686444972524612}
   projectileSpeed: 30
@@ -800,12 +800,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6468027041814379304}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4524359331327323632}
+  m_Father: {fileID: 7626594674274175064}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!222 &6676142963353789124
 CanvasRenderer:
@@ -1007,10 +1007,11 @@ Transform:
   m_GameObject: {fileID: 8080496547097694991}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4927968739253904545}
   m_Father: {fileID: 4524359331327323632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8834474816674775768

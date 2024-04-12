@@ -1,3 +1,6 @@
+using System;
+
+[Serializable]
 public enum AbilityUpgrade
 {
     Ability1,
@@ -14,6 +17,7 @@ public enum InputMap
     Minigame
 }
 
+[Serializable]
 public enum ePlayerCharacter
 {
     EmptyCharacter,

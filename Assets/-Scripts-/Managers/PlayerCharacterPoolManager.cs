@@ -27,6 +27,22 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         }
     }
 
+    private List<PlayerCharacter> freeCharacters = new List<PlayerCharacter>();
+    private List<PlayerCharacter> activeCharacters = new List<PlayerCharacter>();
+    public List<PlayerCharacter> ActivePlayerCharacters => activeCharacters;
+    public List<PlayerCharacter> FreePlayerCharacters => freeCharacters;
+    public List<PlayerCharacter> AllPlayerCharacters
+    {
+        get
+        {
+            List<PlayerCharacter> allCharacters = new List<PlayerCharacter>();
+            allCharacters.AddRange(activeCharacters);
+            allCharacters.AddRange(freeCharacters);
+            return allCharacters;
+        }
+
+    }
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -39,10 +55,6 @@ public class PlayerCharacterPoolManager : MonoBehaviour
             InizializeList();
         }
     }
-
-    private List<PlayerCharacter> freeCharacters = new List<PlayerCharacter>();
-    private List<PlayerCharacter> activeCharacters = new List<PlayerCharacter>();
-    public List<PlayerCharacter> ActivePlayerCharacters => activeCharacters;
 
     #region Switching Character
 

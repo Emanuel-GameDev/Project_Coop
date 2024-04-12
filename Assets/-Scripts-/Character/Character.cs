@@ -1,8 +1,7 @@
-using MBT;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
@@ -10,7 +9,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 
     //shader
     [Header("ProvaShaderGraph Hit e Parry")]
-    [SerializeField] private float fadeSpeed =2f;    
+    [SerializeField] private float fadeSpeed = 2f;
     [SerializeField] protected Color _OnHitColor = Color.red;
     [SerializeField] protected Color _OnParryColor = Color.yellow;
 
@@ -36,13 +35,27 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 
     public Transform dealerTransform => transform;
 
+    [SerializeField] protected UnityEvent onHit;
+    [SerializeField] protected UnityEvent onDeath;
+    [SerializeField] protected UnityEvent onDash;
+
+
+    public UnityEvent OnDeath { get => onDeath; set => onDeath = value; }
+
+    public UnityEvent OnHit { get => onHit; set => onHit = value; }
+
+    public UnityEvent OnDash { get => onDash; set => onDash = value; }
+
+
+
     [SerializeField] private AnimationCurve pushAnimationCurve;
+    [SerializeField] private SoundsDatabase soundsDatabase;
 
     //Lo uso per chimare tutte le funzioni iniziali
     protected virtual void Awake()
     {
         InitialSetup();
-             
+
     }
 
     //Tutto ciò che va fatto nello ad inizio
@@ -56,21 +69,22 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         //Shader
         spriteRendererVisual = GetComponentInChildren<SpriteRotation>().GetComponent<SpriteRenderer>();
         spriteMaterial = spriteRendererVisual.material;
+
+        onHit = new();
+        onDeath = new();
+        onDash = new();
     }
 
     public Rigidbody2D GetRigidBody() => rb;
 
-    public abstract void TakeDamage(DamageData data);
 
-    public abstract DamageData GetDamageData();
-
-    public IEnumerator PushCharacter(Vector3 pusherPosizion,float pushStrenght,float pushDuration)
+    public IEnumerator PushCharacter(Vector3 pusherPosizion, float pushStrenght, float pushDuration)
     {
         float timer = 0;
         float interpolationRatio;
-        Vector3 startPosition=rb.transform.position;
+        Vector3 startPosition = rb.transform.position;
 
-        Vector3 pushDirection=(startPosition- pusherPosizion).normalized;
+        Vector3 pushDirection = (startPosition - pusherPosizion).normalized;
 
         while (timer < pushDuration)
         {
@@ -125,14 +139,9 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         canInteract = false;
     }
 
-    public GameObject GetInteracterObject()
-    {
-        return gameObject;
-    }
-
     public virtual void OnParryNotify(Character whoParried)
     {
-        
+
     }
 
 
@@ -158,9 +167,20 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         }
     }
 
-   
+
+
+    #endregion
+
+
+    #region Damage
+
+
+    public abstract void TakeDamage(DamageData data);
+
+    public abstract DamageData GetDamageData();
+
+    #endregion
 }
-#endregion
 
 
 

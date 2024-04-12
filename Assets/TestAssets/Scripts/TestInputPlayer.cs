@@ -22,11 +22,6 @@ public class TestInputPlayer : InputReceiver
         }
     }
 
-    public override void Navigate(InputAction.CallbackContext context)
-    {
-        
-    }
-
     public override void OptionInput(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -45,16 +40,6 @@ public class TestInputPlayer : InputReceiver
     {
         if (context.performed)
             MenuManager.Instance.GoPreviousTab(playerInputHandler);
-    }
-
-    public override void ScrollWheel(InputAction.CallbackContext context)
-    {
-        
-    }
-
-    public override void Submit(InputAction.CallbackContext context)
-    {
-        
     }
 
     public override void UIMenuInput(InputAction.CallbackContext context)
