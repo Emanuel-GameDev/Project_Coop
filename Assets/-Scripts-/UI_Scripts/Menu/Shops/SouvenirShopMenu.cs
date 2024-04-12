@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+using UnityEngine.UI;
 
 public class SouvenirShopMenu : Menu
 {
@@ -21,11 +23,27 @@ public class SouvenirShopMenu : Menu
     //    [HideInInspector] public int souvenirID;
     //}
 
+
+
     public void OpenMenu(IInteracter interacter)
     {
         if(interacter.GetInteracterObject().TryGetComponent<PlayerCharacter>(out PlayerCharacter playerInShop))
         {
-            base.OpenMenu();
+            shopGroup.SetActive(true);
+
+            PlayerInputHandler ih = interacter.GetInteracterObject().GetComponent<PlayerCharacter>().GetInputHandler();
+                //ih.SetPlayerActiveMenu(tables.gameObject, table[i].GetComponentInChildren<Selectable>().gameObject);
+
+                ih.MultiplayerEventSystem.SetSelectedGameObject(firstSelected.GetComponentInChildren<Selectable>().gameObject);
+                InputActionAsset actions = ih.GetComponent<PlayerInput>().actions;
+
+                //actions.Disable();
+                actions.FindActionMap("Player").Disable();
+                actions.FindActionMap("UI").Enable();
+
+                actions.FindAction("Menu").performed += Menu_performed;
+
+            
 
             foreach (SouvenirShopTable table in shopTables)
             {

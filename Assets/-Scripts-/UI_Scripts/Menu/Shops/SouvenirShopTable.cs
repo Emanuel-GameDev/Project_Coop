@@ -45,6 +45,8 @@ public class SouvenirShopTable : MonoBehaviour
             if(entry.character == currentCharacterInShop.Character)
             {
                 SetCurrentEntry(entry);
+                //da cambiare quando ci saranno i salvataggi
+                //currentSouvenirEntry.souvenirID = 0;
                 break;
             }
         }
@@ -52,14 +54,14 @@ public class SouvenirShopTable : MonoBehaviour
 
     private void SetCurrentEntry(SouvenirEntry entry)
     {
-        CheckForSouvenir();
         currentSouvenirEntry = entry;
+        CheckForSouvenir();
     }
 
     public void BuySouvenir()
     {
         currentPlayerInShop.AddPowerUp(currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID]);
-
+        
         currentSouvenirEntry.souvenirID++;
         CheckForSouvenir();
 
@@ -67,10 +69,14 @@ public class SouvenirShopTable : MonoBehaviour
 
     private void CheckForSouvenir()
     {
+        if (currentSouvenirEntry == null)
+            return;
+
         if (currentSouvenirEntry.souvenirID < currentSouvenirEntry.souvenirs.Length)
             ChangeTableItem(currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID]);
         else
         {
+            //finiti souvenir
             soldoutSign.SetActive(true);
         }
     }
