@@ -11,7 +11,7 @@ public class LilithShopButton : Button
     LilithShopTable shopTable;
     [SerializeField] Image buttonImage;
     [SerializeField] TextMeshProUGUI coinCostText;
-    [SerializeField] public PowerUp powerUp;
+    [SerializeField] public PlayerAbility ability;
 
     protected override void Awake()
     {
@@ -30,15 +30,18 @@ public class LilithShopButton : Button
         }
     }
 
-    private void ChangeDescription()
+    internal void SetAbility(PlayerAbility playerAbility)
     {
-        shopTable.ChangeDescriptionAndName(powerUp.powerUpName, powerUp.powerUpDescription);
+        ability = playerAbility;
+        buttonImage.sprite = playerAbility.abilitySprite;
+        coinCostText.text = playerAbility.keyCost.ToString();
     }
 
-    public void SetPowerUp(PowerUp powerUpToSet)
+    private void ChangeDescription()
     {
-        powerUp=powerUpToSet;
-        buttonImage.sprite = powerUp.powerUpSprite;
-        coinCostText.text = powerUp.moneyCost.ToString();
+        //if(!string.IsNullOrEmpty(ability.abilityName.GetLocalizedString()) && !string.IsNullOrEmpty(ability.abilityDescription.GetLocalizedString()))
+        //    shopTable.ChangeDescriptionAndName(ability.abilityName, ability.abilityDescription);
     }
+
+
 }

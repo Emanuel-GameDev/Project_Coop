@@ -38,19 +38,19 @@ public class Menu : MonoBehaviour
             actions.FindActionMap("Player").Disable();
             actions.FindActionMap("UI").Enable();
 
-            actions.FindAction("Menu").performed += Menu_performed;
+            actions.FindAction("Cancel").performed += Menu_performed;
 
             i++;
         }
     }
     [HideInInspector]public  bool canClose;
-    protected void Menu_performed(InputAction.CallbackContext obj)
+    protected virtual void Menu_performed(InputAction.CallbackContext obj)
     {
         if(canClose)
             CloseMenu();
     }
 
-    public void CloseMenu()
+    public virtual void CloseMenu()
     {
         foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
         {
@@ -60,7 +60,7 @@ public class Menu : MonoBehaviour
             //actions.Enable();
             actions.FindActionMap("UI").Disable();
 
-            actions.FindAction("Menu").performed -= Menu_performed;
+            actions.FindAction("Cancel").performed -= Menu_performed;
         }
         shopGroup.SetActive(false); 
     }
