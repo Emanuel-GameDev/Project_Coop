@@ -112,12 +112,12 @@ public class KerberosBossCharacter : BossCharacter
         attackCondition = null;
 
     }
-   
-    
+
+    #region flurryOfBlows
     public void SetFlurryOfBlowsDamageData(int attackNumber)
     {
 
-        if(attackNumber >= punchQuantity) 
+        if (attackNumber >= punchQuantity)
         {
             staminaDamage = normalPunchStaminaDamage;
             damage = normalPunchDamage;
@@ -130,6 +130,12 @@ public class KerberosBossCharacter : BossCharacter
             attackCondition = null;
         }
     }
+    public void SetCanLastAttackPunch()
+    {
+        canLastAttackPunch = true;
+    }
+    #endregion
+
     public override void TakeDamage(DamageData data)
     {
         if (!isDead)      
@@ -186,14 +192,11 @@ public class KerberosBossCharacter : BossCharacter
             canRotateInAnim = true;
         }
     }
-    public void SetCanLastAttackPunch()
-    {
-        canLastAttackPunch = true;
-    }
-
+    
     public override void OnParryNotify(Character whoParried)
     {
         parried = true;
+        gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("parried").Value = true;
         this.whoParried = whoParried;
     }
     

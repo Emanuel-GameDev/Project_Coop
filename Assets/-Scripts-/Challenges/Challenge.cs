@@ -17,6 +17,7 @@ public class Challenge : MonoBehaviour
     [Header("OnSuccess")]
     public Dialogue dialogueOnSuccess;
     public UnityEvent onChallengeSuccessEvent;
+    public int coinsOnSuccess;
 
     [Header("OnFail")]
     public Dialogue dialogueOnFailure;

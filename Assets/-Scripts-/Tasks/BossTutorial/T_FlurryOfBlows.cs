@@ -54,6 +54,7 @@ namespace MBTExample
                 if (bossCharacter.parried)
                 {
                     parryStunned = true;
+                    bossCharacter.anim.SetTrigger("Parried");
                     StartCoroutine(UnstunFromParry());
                 }
 
@@ -107,6 +108,7 @@ namespace MBTExample
 
                 if (parryStunned)
                 {
+                    
                     if (canExit)
                         return NodeResult.success;
                 }
@@ -125,6 +127,7 @@ namespace MBTExample
         {
             yield return new WaitForSeconds(bossCharacter.parryStunTimer);
             canExit = true;
+            bossCharacter.anim.SetTrigger("Return");
         }
 
     }
