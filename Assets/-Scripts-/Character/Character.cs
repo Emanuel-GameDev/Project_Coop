@@ -139,6 +139,11 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         canInteract = false;
     }
 
+    public GameObject GetInteracterObject()
+    {
+        return gameObject;
+    }
+
     public virtual void OnParryNotify(Character whoParried)
     {
 
@@ -178,6 +183,8 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     public abstract void TakeDamage(DamageData data);
 
     public abstract DamageData GetDamageData();
+
+    
 
     #endregion
 }

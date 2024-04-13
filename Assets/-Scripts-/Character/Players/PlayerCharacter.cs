@@ -236,6 +236,8 @@ public abstract class PlayerCharacter : Character
             RemoveFromConditions(data.condition);
 
         CurrentHp += data.damage;
+        PubSub.Instance.Notify(EMessageType.characterDamaged, this);
+
         damager.RemoveCondition();
         Debug.Log($"Healer: {data.dealer}, Heal: {data.damage}, Condition Removed: {data.condition}");
     }

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class PressInteractable : MonoBehaviour, IInteractable
 {
-    [SerializeField] UnityEvent OnOnePlayerInteract;
+    [SerializeField] UnityEvent<IInteracter> OnOnePlayerInteract;
     [SerializeField] UnityEvent OnAllPlayersInteract;
     [SerializeField] TextMeshProUGUI interactersCount;
 
@@ -23,13 +23,14 @@ public class PressInteractable : MonoBehaviour, IInteractable
         if (!interacters.Contains(interacter))
         {
             interacters.Add(interacter);
-            OnOnePlayerInteract?.Invoke();
+        }
 
-            if(interactersCount != null)
-            {
-                interactersCount.gameObject.SetActive(true);
-                interactersCount.text = $"{interacters.Count}/{GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>().Length}";
-            }
+        OnOnePlayerInteract?.Invoke(interacter);
+
+        if(interactersCount != null)
+        {
+            interactersCount.gameObject.SetActive(true);
+            interactersCount.text = $"{interacters.Count}/{GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>().Length}";
         }
 
         if (interacters.Count >= CoopManager.Instance.GetActiveHandlers().Count)

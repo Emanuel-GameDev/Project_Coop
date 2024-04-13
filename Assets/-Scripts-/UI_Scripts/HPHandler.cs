@@ -79,7 +79,7 @@ public class HPHandler : MonoBehaviour
             containersAssociations.Add((ePlayerID)id+1, hpContainer);
             hpContainer.referredPlayerID = (ePlayerID)id + 1;
         }
-
+        hpContainer.referredCharacter=player;
         hpContainer.SetCharacterContainer(GetSpriteContainerFromCharacter(player));
         hpContainer.SetUpHp();
         hpContainer.UpdateHp(player.CurrentHp);
@@ -95,6 +95,7 @@ public class HPHandler : MonoBehaviour
             
             if (containersAssociations.ContainsKey(playerCharacter.GetInputHandler().playerID))
             {
+                containersAssociations[playerCharacter.GetInputHandler().playerID].referredCharacter = playerCharacter;
                 containersAssociations[playerCharacter.GetInputHandler().playerID].SetCharacterContainer(GetSpriteContainerFromCharacter(playerCharacter));
                 containersAssociations[playerCharacter.GetInputHandler().playerID].SetUpHp();
                 containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
