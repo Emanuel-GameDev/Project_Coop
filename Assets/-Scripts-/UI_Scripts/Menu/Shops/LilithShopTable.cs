@@ -12,18 +12,18 @@ public class LilithShopTable : MonoBehaviour
 {
     [SerializeField] LocalizeStringEvent abilityNameLocaleEvent;
     [SerializeField] LocalizeStringEvent abilityDescriptionLocaleEvent;
-    [SerializeField] TextMeshProUGUI coinsNumberText;
+    [SerializeField] TextMeshProUGUI keysNumberText;
     [SerializeField] Selectable buyButton;
 
     [SerializeField] public ePlayerCharacter characterReference;
 
-    [SerializeField] public List<AbilityShopEntry> entrys;
+    [SerializeField] public AbilityShopEntry[] entrys = new AbilityShopEntry[5];
 
     [Serializable]
     public class AbilityShopEntry
     {
         [SerializeField] public LilithShopButton button;
-        [SerializeField] public List<PowerUp> abilitys;
+        [SerializeField] public PlayerAbility[] abilitys = new PlayerAbility[1];
 
         [HideInInspector] public int id;
     }
@@ -44,7 +44,7 @@ public class LilithShopTable : MonoBehaviour
         //da cambiare con i salvataggi
         foreach(AbilityShopEntry entry in entrys)
         {
-            entry.button.SetPowerUp(entry.abilitys[0]);
+            entry.button.SetAbility(entry.abilitys[0]);
         }
     }
 
@@ -70,26 +70,27 @@ public class LilithShopTable : MonoBehaviour
         shopMenu.tableAssosiation[this].GetComponent<PlayerInput>().actions.FindAction("Menu").performed += CoinShopTable_performed;
     }
 
-    public void BuySouvenir()
+    public void BuyAbility()
     {
-        Debug.Log("buy");
-        PlayerCharacterController inputReceiver = (PlayerCharacterController)shopMenu.tableAssosiation[this].CurrentReceiver;
+        //PlayerCharacterController inputReceiver = (PlayerCharacterController)shopMenu.tableAssosiation[this].CurrentReceiver;
+        //inputReceiver.ActualPlayerCharacter.UnlockUpgrade(abilityUpgrade);
+        //Debug.Log("buy");
 
-        LilithShopButton lastButton = lastSelected.GetComponent<LilithShopButton>();
-        AbilityShopEntry lastEntry = entrys.Find(b => b.button == lastButton);
+        //LilithShopButton lastButton = lastSelected.GetComponent<LilithShopButton>();
+        //AbilityShopEntry lastEntry = entrys.Find(b => b.button == lastButton);
 
-        inputReceiver.ActualPlayerCharacter.AddPowerUp(lastButton.powerUp);
+        //inputReceiver.ActualPlayerCharacter.AddPowerUp(lastButton.powerUp);
 
-        lastEntry.id++;
-        if(lastEntry.id >= lastEntry.abilitys.Count)
-        {
-            Debug.Log("End");
+        //lastEntry.id++;
+        //if(lastEntry.id >= lastEntry.abilitys.Count)
+        //{
+        //    Debug.Log("End");
             
-            lastEntry.id--;
-        }    
-        lastButton.SetPowerUp(lastEntry.abilitys[lastEntry.id]);
+        //    lastEntry.id--;
+        //}    
+        //lastButton.SetPowerUp(lastEntry.abilitys[lastEntry.id]);
 
-        DesetOnBuyButton();
+        //DesetOnBuyButton();
     }
 
     public void DesetOnBuyButton()
@@ -98,8 +99,8 @@ public class LilithShopTable : MonoBehaviour
         shopMenu.tableAssosiation[this].MultiplayerEventSystem.SetSelectedGameObject(lastSelected);
     }
 
-    public void UpdateCoinCounter(int counter)
+    public void UpdateKeyCounter(int counter)
     {
-        coinsNumberText.text = counter.ToString();
+        keysNumberText.text = counter.ToString();
     }
 }

@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Localization;
-using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 public class SouvenirShopMenu : Menu
@@ -27,24 +22,29 @@ public class SouvenirShopMenu : Menu
 
     public void OpenMenu(IInteracter interacter)
     {
-        if(interacter.GetInteracterObject().TryGetComponent<PlayerCharacter>(out PlayerCharacter playerInShop))
+        if (interacter.GetInteracterObject().TryGetComponent<PlayerCharacter>(out PlayerCharacter playerInShop))
         {
             shopGroup.SetActive(true);
+            canClose = true;
+            currentPlayerInShop = interacter.GetInteracterObject().GetComponent<PlayerCharacter>();
 
-            PlayerInputHandler ih = interacter.GetInteracterObject().GetComponent<PlayerCharacter>().GetInputHandler();
-                //ih.SetPlayerActiveMenu(tables.gameObject, table[i].GetComponentInChildren<Selectable>().gameObject);
+            PlayerInputHandler inputHandler = currentPlayerInShop.GetInputHandler();
+            inputHandler.MultiplayerEventSystem.SetSelectedGameObject(firstSelected.GetComponentInChildren<Selectable>().gameObject);
 
-                ih.MultiplayerEventSystem.SetSelectedGameObject(firstSelected.GetComponentInChildren<Selectable>().gameObject);
-                InputActionAsset actions = ih.GetComponent<PlayerInput>().actions;
+            foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
+            {
+                InputActionAsset actionAsset = ih.GetComponent<PlayerInput>().actions;
+                actionAsset.FindActionMap("Player").Disable();
+                actionAsset.FindActionMap("UI").Disable();
 
-                //actions.Disable();
-                actions.FindActionMap("Player").Disable();
-                actions.FindActionMap("UI").Enable();
+            }
 
-                actions.FindAction("Menu").performed += Menu_performed;
+            InputActionAsset actions = inputHandler.GetComponent<PlayerInput>().actions;
+            actions.FindActionMap("UI").Enable();
+            actions.FindAction("Cancel").performed += Menu_performed;
 
-            
 
+            Debug.Log("Open");
             foreach (SouvenirShopTable table in shopTables)
             {
                 table.SetTableCurrentCharacter(playerInShop);
@@ -52,6 +52,22 @@ public class SouvenirShopMenu : Menu
         }
     }
 
+    public override void CloseMenu()
+    {
+        InputActionAsset actions = currentPlayerInShop.GetInputHandler().GetComponent<PlayerInput>().actions;
+        actions.FindAction("Cancel").performed -= Menu_performed;
 
-  
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
+        {
+            ih.MultiplayerEventSystem.SetSelectedGameObject(null);
+            InputActionAsset actionAsset = ih.GetComponent<PlayerInput>().actions;
+            actionAsset.FindActionMap("Player").Enable();
+            actionAsset.FindActionMap("UI").Disable();
+        }
+        Debug.Log("Close");
+
+        currentPlayerInShop = null;
+        shopGroup.SetActive(false);
+    }
+
 }
