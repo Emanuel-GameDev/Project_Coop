@@ -13,12 +13,13 @@ public class LilithShopButton : Button
     [SerializeField] TextMeshProUGUI coinCostText;
     [SerializeField] public PlayerAbility ability;
 
+    [HideInInspector] public bool isActive = true;
+
     protected override void Awake()
     {
         //shopMenu = GetComponentInParent<CoinShopMenu>();
         shopTable= GetComponentInParent<LilithShopTable>();
     }
-
 
     protected override void DoStateTransition(SelectionState state, bool instant)
     {
@@ -35,13 +36,33 @@ public class LilithShopButton : Button
         ability = playerAbility;
         buttonImage.sprite = playerAbility.abilitySprite;
         coinCostText.text = playerAbility.keyCost.ToString();
+        KeyRequiredCheck();
     }
 
     private void ChangeDescription()
     {
-        //if(!string.IsNullOrEmpty(ability.abilityName.GetLocalizedString()) && !string.IsNullOrEmpty(ability.abilityDescription.GetLocalizedString()))
-        //    shopTable.ChangeDescriptionAndName(ability.abilityName, ability.abilityDescription);
+        if(ability != null)
+           shopTable.ChangeDescriptionAndName(ability.abilityName, ability.abilityDescription);
     }
 
+    public void ActivateButton()
+    {
+        isActive = true;
+        buttonImage.color = Color.white;
+    }
+
+    public void DeactivateButton()
+    {
+        isActive = false;
+        buttonImage.color = Color.gray;
+    }
+
+    public void KeyRequiredCheck()
+    {
+        if (shopTable.playerCharacterReference.ExtraData.unusedKey < ability.keyCost)
+            DeactivateButton();
+        else
+            ActivateButton();
+    }
 
 }

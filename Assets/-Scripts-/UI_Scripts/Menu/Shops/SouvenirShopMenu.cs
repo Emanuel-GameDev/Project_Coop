@@ -8,7 +8,7 @@ public class SouvenirShopMenu : Menu
 
     [SerializeField] public SouvenirShopTable[] shopTables = new SouvenirShopTable[4];
 
-
+    [SerializeField] AudioClip openingAudioClip;
 
     //[Serializable]
     //public class SouvenirShopEntry
@@ -36,7 +36,7 @@ public class SouvenirShopMenu : Menu
                 InputActionAsset actionAsset = ih.GetComponent<PlayerInput>().actions;
                 actionAsset.FindActionMap("Player").Disable();
                 actionAsset.FindActionMap("UI").Disable();
-
+                actionAsset.FindActionMap("UI").FindAction("Menu").Disable();
             }
 
             InputActionAsset actions = inputHandler.GetComponent<PlayerInput>().actions;
@@ -44,11 +44,12 @@ public class SouvenirShopMenu : Menu
             actions.FindAction("Cancel").performed += Menu_performed;
 
 
-            Debug.Log("Open");
             foreach (SouvenirShopTable table in shopTables)
             {
                 table.SetTableCurrentCharacter(playerInShop);
             }
+
+            AudioManager.Instance.PlayAudioClip(openingAudioClip,transform);
         }
     }
 
@@ -62,9 +63,10 @@ public class SouvenirShopMenu : Menu
             ih.MultiplayerEventSystem.SetSelectedGameObject(null);
             InputActionAsset actionAsset = ih.GetComponent<PlayerInput>().actions;
             actionAsset.FindActionMap("Player").Enable();
+            actionAsset.FindActionMap("UI").FindAction("Menu").Enable();
             actionAsset.FindActionMap("UI").Disable();
         }
-        Debug.Log("Close");
+        AudioManager.Instance.PlayAudioClip(openingAudioClip, transform);
 
         currentPlayerInShop = null;
         shopGroup.SetActive(false);
