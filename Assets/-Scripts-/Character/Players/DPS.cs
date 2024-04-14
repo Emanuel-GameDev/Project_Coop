@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class DPS : PlayerCharacter
+public class DPS : PlayerCharacter, IPerfectTimeReceiver
 {
     [Header("Attack")]
     [SerializeField, Tooltip("Tempo tra una combo e l'altra.")]
@@ -152,7 +152,6 @@ public class DPS : PlayerCharacter
         chargeHandler = GetComponentInChildren<ChargeVisualHandler>();
         chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
         perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
-        perfectTimingHandler.gameObject.SetActive(false);
         character = ePlayerCharacter.Brutus;
 
         //Debug
@@ -477,6 +476,22 @@ public class DPS : PlayerCharacter
         currentBossfightTotalDamageDone += damage;
         if (currentBossfightTotalDamageDone > bossPowerUpTotalDamageToUnlock)
             bossfightPowerUpUnlocked = true;
+    }
+
+    public void SetPerfectTimingHandler(PerfectTimingHandler handler) => perfectTimingHandler = handler;
+    
+
+    public void PerfectTimeStarted()
+    {
+        if(true) //Condizioni da aggiungere
+        {
+            perfectTimingHandler.ActivateAlert();
+        }
+    }
+
+    public void PerfectTimeEnded()
+    {
+        perfectTimingHandler.DeactivateAlert();
     }
 
 
