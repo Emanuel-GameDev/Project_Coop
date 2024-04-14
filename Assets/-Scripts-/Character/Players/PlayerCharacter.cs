@@ -247,6 +247,7 @@ public abstract class PlayerCharacter : Character
         DamageData data = new DamageData(Damage, this);
         return data;
     }
+
     #endregion
 
     #region Input
