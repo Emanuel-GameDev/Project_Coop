@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class DPS : PlayerCharacter, IPerfectTimeReceiver
@@ -53,8 +54,8 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     [Header("Other")]
     [SerializeField, Tooltip("I Layer da guardare quando ha sbloccato il power up per deflettere i proiettili")]
     LayerMask projectileLayer;
-
-
+    [SerializeField, Tooltip("Gli eventi da chiamare in caso di schivata perfetta")]
+    UnityEvent onPerfectDodgeExecuted = new();
     private float ExtraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
 
     private float ExtraDamage()
@@ -95,6 +96,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private bool isDodging;
     private bool isDashingAttack;
     private bool isDashingAttackStarted;
+    private bool perfectTimingEnabled;
     private bool canMove => !isDodging && !IsAttacking && !isDashingAttack;
 
     private bool IsAttacking
@@ -149,14 +151,11 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         IsAttacking = false;
         isDashingAttack = false;
         isDashingAttackStarted = false;
+        perfectTimingEnabled = false;
         chargeHandler = GetComponentInChildren<ChargeVisualHandler>();
         chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
         perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
         character = ePlayerCharacter.Brutus;
-
-        //Debug
-        //UnlockUpgrade(AbilityUpgrade.Ability1);
-
     }
 
 
@@ -233,12 +232,21 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         base.DefenseInput(context);
         if (context.performed)
         {
-            
             Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
             if (Time.time > lastDodgeTime + dodgeCooldown && !isDodging && !isDashingAttack)
             {
                 ResetAttack();
                 lastDodgeTime = Time.time + dodgeDuration;
+
+                if (perfectTimingEnabled)
+                {
+                    perfectDodgeCounter++;
+                    lastPerfectDodgeTime = Time.time;
+                    PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
+                    PerfectTimeEnded();
+                    Utility.DebugTrace($"PerfectDodge: {isDodging}, Count: {perfectDodgeCounter}");
+                }
+
                 StartCoroutine(Dodge(lastNonZeroDirection, rb));
             }
         }
@@ -272,32 +280,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
         rb.velocity = Vector2.zero;
     }
-
-    protected IEnumerator PerfectDodgeHandler(DamageData data)
-    {
-        perfectTimingHandler.gameObject.SetActive(true);
-        yield return new WaitForSeconds(perfectDodgeDurarion);
-        if (isDodging)
-        {
-            perfectDodgeCounter++;
-            lastPerfectDodgeTime = Time.time;
-            PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
-        }
-        else
-        {
-            base.TakeDamage(data);
-            if (!isDashingAttack)
-            {
-                animator.SetTrigger(HIT);
-
-            }
-                
-        }
-        perfectTimingHandler.gameObject.SetActive(false);
-        
-        Debug.Log($"PerfectDodge: {isDodging}, Count: {perfectDodgeCounter}");
-    }
-
 
     #endregion
 
@@ -402,8 +384,17 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (!isInvulnerable || !isDodging)
         {
-            StartCoroutine(PerfectDodgeHandler(data));
+            base.TakeDamage(data);
+            if (!isDashingAttack)
+                animator.SetTrigger(HIT);
+
+            if(IsAttacking)
+                ResetAttack();
         }
+
+        if (perfectTimingEnabled)
+            PerfectTimeEnded();
+
     }
 
 
@@ -412,7 +403,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         base.UnlockUpgrade(abilityUpgrade);
         if (abilityUpgrade == AbilityUpgrade.Ability3)
             AddDeflect();
-        Debug.Log("Unlock" + abilityUpgrade.ToString());
+        Utility.DebugTrace("Unlock " + abilityUpgrade.ToString());
     }
 
     
@@ -420,7 +411,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     public override void LockUpgrade(AbilityUpgrade abilityUpgrade)
     {
         base.LockUpgrade(abilityUpgrade);
-        if (abilityUpgrade == AbilityUpgrade.Ability3)
+        if (abilityUpgrade == AbilityUpgrade.Ability3 && projectileDeflectionUnlocked)
             RemoveDeflect();
     }
 
@@ -428,7 +419,10 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (Utility.IsInLayerMask(collider.gameObject.layer, projectileLayer))
         {
-            //Defletti il proiettile
+            if(TryGetComponent(out Projectile projectile))
+            {
+                projectile.ReflectProjectile(this.gameObject, 1);
+            }
         }
 
     }
@@ -452,7 +446,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
         TotalDamageUpdate(damage);
 
-        Debug.Log($"Damage Done: {damage}");
+        Utility.DebugTrace($"Damage Done: {damage}");
 
         return new DamageData(damage, this);
 
@@ -483,15 +477,17 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     public void PerfectTimeStarted()
     {
-        if(true) //Condizioni da aggiungere
+        if(!isDodging)
         {
             perfectTimingHandler.ActivateAlert();
+            perfectTimingEnabled = true;
         }
     }
 
     public void PerfectTimeEnded()
     {
         perfectTimingHandler.DeactivateAlert();
+        perfectTimingEnabled = false;
     }
 
 
