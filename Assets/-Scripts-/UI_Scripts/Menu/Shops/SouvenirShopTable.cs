@@ -13,6 +13,7 @@ public class SouvenirShopTable : MonoBehaviour
     [SerializeField] TextMeshProUGUI coinsNumberText;
 
     [SerializeField] GameObject soldoutSign;
+    [SerializeField] Image soldoutSouvenirImage;
 
     PlayerCharacter currentPlayerInShop;
     SouvenirEntry currentSouvenirEntry;
@@ -33,6 +34,8 @@ public class SouvenirShopTable : MonoBehaviour
         souvenirDescriptionLocaleEvent.StringReference = souvenirToSell.powerUpDescription;
         souvenirImage.sprite = souvenirToSell.powerUpSprite;
         coinsNumberText.text = souvenirToSell.moneyCost.ToString();
+
+        soldoutSouvenirImage.sprite = souvenirToSell.powerUpSprite;
     }
 
     public void SetTableCurrentCharacter(PlayerCharacter currentCharacterInShop)
