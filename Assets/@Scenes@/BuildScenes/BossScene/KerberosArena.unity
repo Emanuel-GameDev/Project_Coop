@@ -1892,7 +1892,7 @@ SpriteRenderer:
   m_Size: {x: 8.96, y: 8.96}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1212960136
@@ -2569,6 +2569,11 @@ PrefabInstance:
       propertyPath: rect.y
       value: 268
       objectReference: {fileID: 0}
+    - target: {fileID: 5158109664855224704, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: invert
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5633511273928634180, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: attacksDelay
@@ -2940,6 +2945,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 711c3e5ac3c1db94a97f176b35df3654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnOnePlayerInteract:
+    m_PersistentCalls:
+      m_Calls: []
   OnAllPlayersInteract:
     m_PersistentCalls:
       m_Calls:
@@ -2955,6 +2963,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  interactersCount: {fileID: 0}
 --- !u!58 &1678543166
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3207,8 +3216,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.63724995, y: 11.558351, z: 0}
-    m_Extent: {x: 19.482151, y: 29.322052, z: 0}
+    m_Center: {x: 0.6378498, y: 11.559299, z: 0}
+    m_Extent: {x: 19.48205, y: 29.321499, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
