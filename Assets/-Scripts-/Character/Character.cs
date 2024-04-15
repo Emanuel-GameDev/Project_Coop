@@ -49,7 +49,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
    
 
     [SerializeField] private AnimationCurve pushAnimationCurve;
-    [SerializeField] private SoundsDatabase soundsDatabase;
+    [SerializeField] protected SoundsDatabase soundsDatabase;
 
     //Lo uso per chimare tutte le funzioni iniziali
     protected virtual void Awake()

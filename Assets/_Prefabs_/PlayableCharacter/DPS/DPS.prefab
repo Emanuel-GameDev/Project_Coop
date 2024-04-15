@@ -538,6 +538,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alertObject: {fileID: 7269066134680689657}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!70 &3680253186587908975
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -567,7 +570,7 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -0.35}
@@ -825,7 +828,7 @@ MonoBehaviour:
   dodgeCooldown: 1
   perfectDodgeExtraDamageDuration: 5
   perfectDodgeExtraDamage: 0.15
-  perfectDodgeDurarion: 0.5
+  perfectDodgeDuration: 0.5
   invulnerabilityDuration: 5
   invulnerabilitySpeedUp: 0.05
   minDashAttackDistance: 5
