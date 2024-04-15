@@ -10,6 +10,7 @@ namespace MBTExample
     {
         public TransformReference targetTransform;
         public GameObjectReference parentGameObject;
+        public BoolReference parriedBool;
 
         private KerberosBossCharacter bossCharacter;
         private Vector3 targetPosition;
@@ -54,7 +55,10 @@ namespace MBTExample
                 if (bossCharacter.parried)
                 {
                     parryStunned = true;
-                    StartCoroutine(UnstunFromParry());
+                    bossCharacter.anim.SetTrigger("Parried");
+                    parriedBool.Value = true;
+                    StartCoroutine(bossCharacter.UnstunFromParry());
+                    return NodeResult.success;
                 }
 
                 if (!parryStunned)
@@ -107,6 +111,7 @@ namespace MBTExample
 
                 if (parryStunned)
                 {
+                    
                     if (canExit)
                         return NodeResult.success;
                 }
@@ -121,11 +126,7 @@ namespace MBTExample
             StartCoroutine(bossCharacter.StartAttackPunch());
         }
 
-        public IEnumerator UnstunFromParry()
-        {
-            yield return new WaitForSeconds(bossCharacter.parryStunTimer);
-            canExit = true;
-        }
+        
 
     }
 
