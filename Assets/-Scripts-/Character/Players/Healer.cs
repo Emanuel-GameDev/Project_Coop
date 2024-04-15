@@ -111,6 +111,10 @@ public class Healer : PlayerCharacter
         animator.SetBool("IsDead", false);
         baseMoveSpeed = MoveSpeed;
         blockInput = false;
+
+        //prova
+
+        extraData.unusedKey = 3;
     }
 
 

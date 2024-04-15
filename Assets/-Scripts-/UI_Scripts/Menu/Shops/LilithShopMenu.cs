@@ -23,19 +23,12 @@ public class LilithShopMenu : Menu
         
         tableAssosiation.Clear();
 
-        //CoinShopTable[] tables = GetComponentsInChildren<CoinShopTable>();
-
-        //for (int i = 0; i < GetComponentsInChildren<CoinShopTable>().Length; i++) 
-        //{ 
-        //    tableAssosiation.Add()
-        //}
-
-        for(int i = 0; i < 4; i++) { }
-
-        foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
+        
+        foreach(LilithShopTable table in GetComponentsInChildren<LilithShopTable>(true))
         {
-            tableAssosiation.Add(GetComponentInChildren<LilithShopTable>(true),ih);
-            
+            //da sistemare
+            tableAssosiation.Add(table, CoopManager.Instance.GetPlayer(ePlayerID.Player1));
+            table.UpdateKeyCounter(PlayerCharacterPoolManager.Instance.AllPlayerCharacters.Find(c => c.Character == table.characterReference).ExtraData.unusedKey);
         }
     }
 }
