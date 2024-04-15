@@ -63,6 +63,8 @@ public class SouvenirShopTable : MonoBehaviour
 
     public void BuySouvenir()
     {
+        if (currentPlayerInShop.ExtraData.money < currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost) return;
+
         currentPlayerInShop.AddPowerUp(currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID]);
         
         currentSouvenirEntry.souvenirID++;
