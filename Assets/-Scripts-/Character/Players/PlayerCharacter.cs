@@ -217,6 +217,7 @@ public abstract class PlayerCharacter : Character
         //shader
         SetHitMaterialColor(_OnHitColor);
 
+        OnHit?.Invoke();
 
         if (protectedByTank && data.blockedByTank)
         {
