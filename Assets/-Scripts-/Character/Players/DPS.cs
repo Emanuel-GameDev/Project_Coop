@@ -363,7 +363,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     #endregion
 
-
     public override void Move(Vector2 direction)
     {
         if (canMove)
