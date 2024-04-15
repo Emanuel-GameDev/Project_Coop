@@ -19,8 +19,6 @@ public class LilithShopMenu : Menu
 
     public override void OpenMenu()
     {
-        
-
         base.OpenMenu();
         
         tableAssosiation.Clear();
