@@ -97,6 +97,7 @@ public class KerberosBossCharacter : BossCharacter
             if (canRotateInAnim)
             {               
                 SetSpriteDirection(direction);
+                Debug.Log("RUOTO");
             }
 
             if (canShowPreview)
@@ -195,9 +196,14 @@ public class KerberosBossCharacter : BossCharacter
     
     public override void OnParryNotify(Character whoParried)
     {
-        parried = true;
-        gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("parried").Value = true;
+        parried = true;        
         this.whoParried = whoParried;
     }
-    
+    public IEnumerator UnstunFromParry()
+    {
+        yield return new WaitForSeconds(parryStunTimer);
+        gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("parried").Value = false;
+        anim.SetTrigger("Return");
+    }
+
 }
