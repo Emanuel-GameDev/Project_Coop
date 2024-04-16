@@ -641,6 +641,15 @@ MonoBehaviour:
   bleeding: 0
   isDead: 0
   damageReceivedMultiplier: 1
+  onHit:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  onDash:
+    m_PersistentCalls:
+      m_Calls: []
   pushAnimationCurve:
     serializedVersion: 2
     m_Curve:
@@ -665,6 +674,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  soundsDatabase: {fileID: 0}
   character: 3
   maxHp: 33
   damage: 1
@@ -674,6 +684,7 @@ MonoBehaviour:
   uniqueAbilityCooldownIncreaseAtUse: 2
   characterController: {fileID: 0}
   protectedByTank: 0
+  crosshairDistance: 6
   attackDelay: 1
   visual: {fileID: 3501642758352954326}
   healIcon: {fileID: 1667381298283499555, guid: 81008e70013cfa54fa69a382d51da323,
