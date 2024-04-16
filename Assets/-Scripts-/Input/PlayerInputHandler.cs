@@ -19,6 +19,8 @@ public class PlayerInputHandler : MonoBehaviour
     public ePlayerCharacter startingCharacter { private set; get; } = ePlayerCharacter.EmptyCharacter;
     public ePlayerCharacter currentCharacter { private set; get; }
 
+    private InputMap previousInputMap = InputMap.UI;
+
     public InputReceiver _currentReceiver;
     public InputReceiver CurrentReceiver
     {
@@ -103,9 +105,14 @@ public class PlayerInputHandler : MonoBehaviour
             multiplayerEventSystem.SetSelectedGameObject(firstSelection);
 
         if (menuRoot != null)
+        {
             SetActionMap(InputMap.UI);
+        }
         else
-            SetActionMap(InputMap.Player);
+        {
+            SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
+        }
+            
 
         Debug.Log(playerInput.currentActionMap);
     }

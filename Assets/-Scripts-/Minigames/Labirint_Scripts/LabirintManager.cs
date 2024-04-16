@@ -48,6 +48,13 @@ public class LabirintManager : MonoBehaviour
     int pickedKey;
     public Grid Grid => grid;
 
+
+    //TEMP FOR TEST
+    [SerializeField]
+    public GameObject dialogueObject;
+
+
+
     private StateMachine<LabirintState> stateMachine = new StateMachine<LabirintState>();
     private LabirintUI labirintUI;
     private SceneChanger sceneChanger;
@@ -71,14 +78,6 @@ public class LabirintManager : MonoBehaviour
         sceneChanger = GetComponent<SceneChanger>();
         //Debug
         //StartGame();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            StartPlay();
-        }
     }
 
     public void StartPlay()
