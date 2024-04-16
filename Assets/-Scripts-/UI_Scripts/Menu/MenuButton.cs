@@ -5,32 +5,19 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class MenuButton : Button
+public class MenuButton : MonoBehaviour
 {
-    GameObject highlight;
+    [SerializeField]
+    private MenuInfo nextMenu;
+    [SerializeField]
+    private TabInfo tabToOpen;
 
-    protected override void Start()
+    public void GoNextMenu()
     {
-        base.Start();
-        highlight = GetComponentInChildren<Highlight>().gameObject;
+        if(nextMenu == null) return;
+        if(tabToOpen == null)
+            MenuManager.Instance.OpenMenu(nextMenu);
+        else
+            MenuManager.Instance.OpenMenu(nextMenu, tabToOpen);
     }
-
-    protected override void DoStateTransition(SelectionState state, bool instant)
-    {
-        base.DoStateTransition(state, instant);
-        if(state == SelectionState.Selected)
-        {
-            highlight.SetActive(true);
-        }
-        if(state == SelectionState.Normal)
-        {
-            highlight.SetActive(false);
-        }
-    }
-
-
 }
-
-  
-
-

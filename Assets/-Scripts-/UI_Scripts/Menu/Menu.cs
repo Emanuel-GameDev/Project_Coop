@@ -7,14 +7,14 @@ using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
-    [SerializeField] Selectable firstSelected;
+    [SerializeField] protected Selectable firstSelected;
     [SerializeField] CanvasGroup tables;
 
     [SerializeField] List<Canvas> table;
 
-    [SerializeField] GameObject shopGroup;
+    [SerializeField] protected GameObject shopGroup;
 
-    private void Start()
+    public virtual void Start()
     {
         shopGroup.SetActive(false);
     }
@@ -44,7 +44,7 @@ public class Menu : MonoBehaviour
         }
     }
     [HideInInspector]public  bool canClose;
-    private void Menu_performed(InputAction.CallbackContext obj)
+    protected void Menu_performed(InputAction.CallbackContext obj)
     {
         if(canClose)
             CloseMenu();

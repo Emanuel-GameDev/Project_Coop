@@ -23,8 +23,10 @@ public class EnemyCharacter : Character
     public Transform target;
     
 
-    public virtual float MaxHp => maxHp + powerUpData.maxHpIncrease;
+    public virtual float MaxHp => maxHp + powerUpData.MaxHpIncrease;
     public float MoveSpeed => moveSpeed;
+    public float Damage => damage;
+    public float StaminaDamage => staminaDamage;
     public NavMeshAgent Agent => agent;
     public Transform Target => target;
 
@@ -42,7 +44,7 @@ public class EnemyCharacter : Character
 
     #region PowerUp
     public override void AddPowerUp(PowerUp powerUp) => powerUpData.Add(powerUp);
-    public override List<PowerUp> GetPowerUpList() => powerUpData.powerUps;
+    public override List<PowerUp> GetPowerUpList() => powerUpData.PowerUps;
     public override void RemovePowerUp(PowerUp powerUp) => powerUpData.Remove(powerUp);
     #endregion
     public override DamageData GetDamageData()
@@ -52,11 +54,18 @@ public class EnemyCharacter : Character
     public override void TakeDamage(DamageData data)
     {
         currentHp -= data.damage * damageReceivedMultiplier;
+        OnHit?.Invoke();
         Debug.Log(currentHp);
-        if(currentHp <= 0)
+
+        //shader
+        SetHitMaterialColor(_OnHitColor);
+
+        if (currentHp <= 0)
         {
             isDead = true;
+            OnDeath?.Invoke();
             animator.SetTrigger("isDead");
+            
             
         }
         if (data.condition != null)

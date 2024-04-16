@@ -1,4 +1,3 @@
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerCharacterController : InputReceiver
@@ -26,7 +25,6 @@ public class PlayerCharacterController : InputReceiver
         {
             SetPlayerCharacter(playerCharacter);
         }
-
     }
 
     public override void SetInputHandler(PlayerInputHandler inputHandler)
@@ -55,6 +53,12 @@ public class PlayerCharacterController : InputReceiver
     {
         if (actualPlayerCharacter != null)
             actualPlayerCharacter.LookInput(context);
+    }
+
+    public override void MouseLookInput(InputAction.CallbackContext context)
+    {
+        if (actualPlayerCharacter != null)
+            actualPlayerCharacter.LookInputMouse(context);
     }
 
     public override void AttackInput(InputAction.CallbackContext context)
@@ -111,21 +115,73 @@ public class PlayerCharacterController : InputReceiver
             actualPlayerCharacter.SwitchLeftInput(context);
     }
 
+    #region UI
+    public override void Cancel(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            MenuManager.Instance.GoBack(playerInputHandler);
+        }
+    }
+
     public override void MenuInput(InputAction.CallbackContext context)
     {
-        //if (actualCharacter != null)
-        //    actualCharacter.MenuInput(context);
-
-        //APRIRE IL MENU SENZA PASSARE DAL PLAYERCHARACTER
+        if (context.performed)
+        {
+            MenuManager.Instance.OpenPauseMenu(playerInputHandler);
+        }
     }
 
     public override void OptionInput(InputAction.CallbackContext context)
     {
-        //if (actualCharacter != null)
-        //    actualCharacter.OptionInput(context);
-
-        //APRIRE LE OPZIONI SENZA PASSARE DAL PLAYERCHARACTER
+        if (context.performed)
+        {
+            MenuManager.Instance.OpenOptionMenu(playerInputHandler);
+        }
     }
+
+    public override void NextInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MenuManager.Instance.GoNextTab(playerInputHandler);
+    }
+
+    public override void PreviousInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MenuManager.Instance.GoPreviousTab(playerInputHandler);
+    }
+
+    public override void UIMenuInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MenuManager.Instance.ClosePauseMenu();
+    }
+
+    public override void UIOptionInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MenuManager.Instance.CloseOptionMenu();
+    }
+
+    public override void SubNextInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MenuManager.Instance.GoNextSubTab(playerInputHandler);
+    }
+
+    public override void SubPreviousInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MenuManager.Instance.GoPreviousSubTab(playerInputHandler);
+    }
+
+    public override void ChangeVisualizationInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MenuManager.Instance.ChangeVisualization(playerInputHandler);
+    }
+    #endregion
 
     #endregion
 }

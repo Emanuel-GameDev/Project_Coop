@@ -53,12 +53,12 @@ public class HealTutorialState : TutorialFase
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         // DA RIVEDERE #MODIFICATO
-        //tutorialManager.inputBindings[tutorialManager.healer].SetReceiver(tutorialManager.healer);
+        tutorialManager.inputBindings[tutorialManager.healer].SetPlayerCharacter(tutorialManager.healer);
 
         tutorialManager.DeactivateAllPlayerInputs();
 
-        tutorialManager.inputBindings[tutorialManager.healer].GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.inputBindings[tutorialManager.healer].GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+        tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
         dialoguePlaying = false;
     }

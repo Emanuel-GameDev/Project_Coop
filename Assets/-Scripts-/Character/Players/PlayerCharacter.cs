@@ -1,6 +1,6 @@
-using Cinemachine.Utility;
 using System;
 using System.Collections.Generic;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -63,18 +63,37 @@ public abstract class PlayerCharacter : Character
 
     public bool protectedByTank; //DA RIVEDERE 
 
+    [Header("Crosshair distance multiplier")]
+
+    [SerializeField] float crosshairDistance=6f;
+
     #endregion
 
     #region Propriety
     public ePlayerCharacter Character => character;
 
     public virtual float MaxHp => maxHp;
-    public virtual float CurrentHp => currentHp;
-    public virtual float Damage => damage * powerUpData.damageIncrease;
-    public virtual float MoveSpeed => moveSpeed * powerUpData.moveSpeedIncrease;
-    public virtual float AttackSpeed => attackSpeed * powerUpData.attackSpeedIncrease;
+    public virtual float CurrentHp 
+    {
+        get {  return currentHp; }
+        set 
+        { 
+            currentHp = value;
+
+            if(currentHp<0)
+                currentHp = 0;
+
+            if(currentHp>maxHp)
+                currentHp = maxHp;
+        }
+    }
+    public virtual float Damage => damage * powerUpData.DamageIncrease;
+    public virtual float MoveSpeed => moveSpeed * powerUpData.MoveSpeedIncrease;
+    public virtual float AttackSpeed => attackSpeed * powerUpData.AttackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) * powerUpData.UniqueAbilityCooldownDecrease;
     public float DamageReceivedMultiplier => damageReceivedMultiplier;
+
+    public virtual ExtraData ExtraData => extraData;
 
     public Vector2 MoveDirection => moveDir;
     public Vector2 LastDirection => lastNonZeroDirection;
@@ -93,6 +112,7 @@ public abstract class PlayerCharacter : Character
     {
         base.InitialSetup();
         Inizialize();
+
     }
 
     public virtual void Inizialize()
@@ -100,7 +120,7 @@ public abstract class PlayerCharacter : Character
         powerUpData = new PowerUpData();
         extraData = new ExtraData();
         upgradeStatus = new();
-        currentHp = MaxHp;
+        CurrentHp = MaxHp;
         foreach (AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
         {
             upgradeStatus.Add(au, false);
@@ -117,14 +137,15 @@ public abstract class PlayerCharacter : Character
             damager.SetSource(this);
         }
         SetIsInBossfight(false);
+
     }
 
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
     public void SetMaxHP(float value) => maxHp = value;
-    public void SetCurrentHP(float value) => currentHp = value;
+    public void SetCurrentHP(float value) => CurrentHp = value;
 
     public PlayerInputHandler GetInputHandler() => characterController.GetInputHandler();
-    
+
     #endregion
 
     #region Movement
@@ -132,7 +153,7 @@ public abstract class PlayerCharacter : Character
     {
         Move(moveDir);
     }
-
+    
 
     public virtual void Move(Vector2 direction)
     {
@@ -145,7 +166,7 @@ public abstract class PlayerCharacter : Character
         SetSpriteDirection(lastNonZeroDirection);
     }
 
-    protected void SetSpriteDirection(Vector2 direction)
+    public void SetSpriteDirection(Vector2 direction)
     {
         if (direction.y != 0)
             animator.SetFloat(Y, direction.y);
@@ -154,6 +175,11 @@ public abstract class PlayerCharacter : Character
             scale.x *= -1;
 
         pivot.gameObject.transform.localScale = scale;
+    }
+
+    public void ResetSpriteDirection()
+    {
+        lastNonZeroDirection = new Vector2(0, 0);
     }
 
     #endregion
@@ -175,7 +201,7 @@ public abstract class PlayerCharacter : Character
     #region PowerUp
     public override void AddPowerUp(PowerUp powerUp) => powerUpData.Add(powerUp);
     public override void RemovePowerUp(PowerUp powerUp) => powerUpData.Remove(powerUp);
-    public override List<PowerUp> GetPowerUpList() => powerUpData.powerUps;
+    public override List<PowerUp> GetPowerUpList() => powerUpData.PowerUps;
     #endregion
 
     #region Damage
@@ -184,9 +210,12 @@ public abstract class PlayerCharacter : Character
         if (data.condition != null)
             AddToConditions(data.condition);
 
-        currentHp -= data.damage * DamageReceivedMultiplier;
+        CurrentHp -= data.damage * DamageReceivedMultiplier;
         damager.RemoveCondition();
         Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
+
+        //shader
+        SetHitMaterialColor(_OnHitColor);
 
 
         if (protectedByTank && data.blockedByTank)
@@ -197,14 +226,18 @@ public abstract class PlayerCharacter : Character
         {
             PubSub.Instance.Notify(EMessageType.characterDamaged, this);
         }
+
+
     }
 
     public virtual void TakeHeal(DamageData data)
     {
-        if(data.condition != null)
+        if (data.condition != null)
             RemoveFromConditions(data.condition);
 
-        currentHp += data.damage;
+        CurrentHp += data.damage;
+        PubSub.Instance.Notify(EMessageType.characterDamaged, this);
+
         damager.RemoveCondition();
         Debug.Log($"Healer: {data.dealer}, Heal: {data.damage}, Condition Removed: {data.condition}");
     }
@@ -225,6 +258,17 @@ public abstract class PlayerCharacter : Character
             lookDir = context.ReadValue<Vector2>();
     }
 
+    public void LookInputMouse(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Vector2 temp = context.ReadValue<Vector2>();
+            lookDir = ((Camera.main.ScreenToWorldPoint(temp) - transform.position)).normalized;
+        }
+
+
+    }
+
     public void DialogueInput(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -234,39 +278,56 @@ public abstract class PlayerCharacter : Character
         }
     }
 
+    public Vector2 ReadLookdirCrosshair(Vector2 shootSource)
+    {
+        if(lookDir.magnitude <= 1)
+        {
+            lookDir.Normalize();
+            lookDir *= crosshairDistance;
+        }
+
+        
+        
+        
+        return (lookDir+shootSource);
+    }
+
     public Vector2 ReadLook(InputAction.CallbackContext context)
     {
         //string gamepad = context.control.device.displayName;
 
-        string gamepad = characterController.GetInputHandler().PlayerInput.currentControlScheme;
+        //string gamepad = characterController.GetInputHandler().PlayerInput.currentControlScheme;
 
 
-        if (gamepad.Contains("Gamepad") || gamepad.Contains("Controller") || gamepad.Contains("Joystick"))
-        {
-            //perndo la look dal player.input utilizzando il gamepad
+        //if (gamepad.Contains("Gamepad") || gamepad.Contains("Controller") || gamepad.Contains("Joystick"))
+        //{
+        //    //perndo la look dal player.input utilizzando il gamepad
 
-            Debug.Log(lookDir);
-            return new Vector2(lookDir.x, lookDir.y).normalized;
+        //    Debug.Log(lookDir);
+        //    return new Vector2(lookDir.x, lookDir.y).normalized;
 
-            
-        }
-        else
-        {
-            //prendo la look con un raycast dal mouse
-            screenPosition = Input.mousePosition;
 
-            Ray ray = Camera.main.ScreenPointToRay(screenPosition);
+        //}
+        //else
+        //{
+        //    //prendo la look con un raycast dal mouse
+        //    screenPosition = Input.mousePosition;
 
-            if (plane.Raycast(ray, out float distance))
-            {
-                worldPosition = ray.GetPoint(distance);
+        //    Ray ray = Camera.main.ScreenPointToRay(screenPosition);
 
-                worldPosition = (worldPosition - transform.position).normalized;
-            }
+        //    if (plane.Raycast(ray, out float distance))
+        //    {
+        //        worldPosition = ray.GetPoint(distance);
 
-            //Debug.Log(worldPosition);
-            return new Vector2(worldPosition.x, worldPosition.y);
-        }
+        //        worldPosition = (worldPosition - transform.position).normalized;
+        //    }
+
+        //    //Debug.Log(worldPosition);
+        //    return new Vector2(worldPosition.x, worldPosition.y);
+        //}
+
+        Debug.Log(lookDir);
+        return new Vector2(lookDir.x, lookDir.y).normalized;
 
     }
 
@@ -303,21 +364,21 @@ public abstract class PlayerCharacter : Character
     #region MainActions
     public virtual void AttackInput(InputAction.CallbackContext context)
     {
-        
+
     }
     public virtual void DefenseInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public virtual void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
-    public  virtual void ExtraAbilityInput(InputAction.CallbackContext context)
+    public virtual void ExtraAbilityInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public void MoveInput(InputAction.CallbackContext context)
@@ -337,4 +398,39 @@ public abstract class PlayerCharacter : Character
 
     #endregion
 
+    #region
+
+    public CharacterSaveData GetSaveData()
+    {
+        CharacterSaveData saveData = new CharacterSaveData();
+        saveData.characterName = character;
+        saveData.powerUps = powerUpData.PowerUps;
+        saveData.extraData = extraData;
+        foreach (AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
+        {
+            if(upgradeStatus[au])
+                saveData.unlockedAbility.Add(au);
+        }
+
+        return saveData;
+    }
+
+    public void LoadSaveData(CharacterSaveData saveData)
+    {
+        if(saveData == null || saveData.characterName != character)
+            return;
+
+        foreach (PowerUp pu in saveData.powerUps)
+        {
+            powerUpData.Add(pu);
+        }
+
+        extraData = saveData.extraData;
+        foreach (AbilityUpgrade au in saveData.unlockedAbility)
+        {
+            upgradeStatus[au] = true;
+        }
+    }
+
+    #endregion
 }

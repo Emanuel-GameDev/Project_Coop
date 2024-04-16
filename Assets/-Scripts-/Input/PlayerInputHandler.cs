@@ -44,10 +44,9 @@ public class PlayerInputHandler : MonoBehaviour
     {
         CurrentReceiver = newReceiver;
         SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
+        CurrentReceiver.SetInputHandler(this);
         if (currentCharacter != ePlayerCharacter.EmptyCharacter)
             CurrentReceiver.SetCharacter(currentCharacter);
-
-        CurrentReceiver.SetInputHandler(this);
     }
 
     public void SetCurrentCharacter(ePlayerCharacter character)
@@ -97,8 +96,18 @@ public class PlayerInputHandler : MonoBehaviour
     #region MultiplayerMenu
     public void SetPlayerActiveMenu(GameObject menuRoot, GameObject firstSelection)
     {
-        MultiplayerEventSystem.playerRoot = menuRoot;
         MultiplayerEventSystem.firstSelectedGameObject = firstSelection;
+        MultiplayerEventSystem.playerRoot = menuRoot;
+
+        if(firstSelection != null)
+            multiplayerEventSystem.SetSelectedGameObject(firstSelection);
+
+        if (menuRoot != null)
+            SetActionMap(InputMap.UI);
+        else
+            SetActionMap(InputMap.Player);
+
+        Debug.Log(playerInput.currentActionMap);
     }
     #endregion
 
@@ -152,6 +161,8 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void OptionInput(InputAction.CallbackContext context) => CurrentReceiver.OptionInput(context);
 
+    public void MouseLookInput(InputAction.CallbackContext context) => CurrentReceiver.MouseLookInput(context);
+
 
     #endregion
 
@@ -181,6 +192,19 @@ public class PlayerInputHandler : MonoBehaviour
 
     public virtual void ScrollWheel(InputAction.CallbackContext context) => CurrentReceiver.ScrollWheel(context);
 
+    public void UIMenuInput(InputAction.CallbackContext context) => CurrentReceiver.UIMenuInput(context);
+
+    public void UIOptionInput(InputAction.CallbackContext context) => CurrentReceiver.UIOptionInput(context);
+
+    public virtual void NextInput(InputAction.CallbackContext context) => CurrentReceiver.NextInput(context);
+
+    public virtual void PreviousInput(InputAction.CallbackContext context) => CurrentReceiver.PreviousInput(context);
+
+    public virtual void SubNextInput(InputAction.CallbackContext context) => CurrentReceiver.SubNextInput(context);
+
+    public virtual void SubPreviousInput(InputAction.CallbackContext context) => CurrentReceiver.SubPreviousInput(context);
+    
+    public virtual void ChangeVisualizationInput(InputAction.CallbackContext context) => CurrentReceiver.ChangeVisualizationInput(context);
 
     #endregion
 

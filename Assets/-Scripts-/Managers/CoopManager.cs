@@ -115,8 +115,11 @@ public class CoopManager : MonoBehaviour
             newPlayerInputHandler.SetPlayerID(playerInputHandlers);
             newPlayerInputHandler.SetReceiver(SceneInputReceiverManager.Instance.GetSceneInputReceiver(newPlayerInputHandler));
 
-            if (newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacterController>())
-                PubSub.Instance.Notify(EMessageType.characterJoined, newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacterController>());
+            if (newPlayerInputHandler.CurrentReceiver is PlayerCharacterController)
+            {
+                PlayerCharacterController receiver = (PlayerCharacterController)newPlayerInputHandler.CurrentReceiver;
+                PubSub.Instance.Notify(EMessageType.characterJoined, receiver.ActualPlayerCharacter);
+            }
                 
         }
         else
@@ -139,8 +142,8 @@ public class CoopManager : MonoBehaviour
 
     public void InitializePlayers()
     {
-        if (playerInputHandlers == null ||
-            playerInputHandlers.Count == 0) return;
+        if (playerInputHandlers == null || playerInputHandlers.Count == 0) 
+            return;
 
         foreach (PlayerInputHandler player in playerInputHandlers)
         {

@@ -8,4 +8,6 @@ public interface IInteracter
 
     void EnableInteraction(IInteractable interactable);
     void DisableInteraction(IInteractable interactable);
+
+    GameObject GetInteracterObject();
 }

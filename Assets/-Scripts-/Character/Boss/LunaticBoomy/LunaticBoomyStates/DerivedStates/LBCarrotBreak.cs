@@ -9,7 +9,6 @@ public class LBCarrotBreak : LBBaseState
     private TrumpOline trump;
     private Rigidbody2D bossRB;
     
-    private bool listenerAdded = false;
     private bool canJump = false;
     private float timer;
 
@@ -24,13 +23,12 @@ public class LBCarrotBreak : LBBaseState
 
         bossRB = bossCharacter.gameObject.GetComponent<Rigidbody2D>();
         bossRB.bodyType = RigidbodyType2D.Dynamic;
-
         bossRB.constraints = RigidbodyConstraints2D.FreezePositionX;
 
         timer = bossCharacter.BreakTime;
 
         canJump = true;
-        Jump();
+        trump.OnTriggerEnterEvent += OnTrumpTriggered;
     }
 
     void Jump()
@@ -42,32 +40,21 @@ public class LBCarrotBreak : LBBaseState
 
             return;
         }
-
-        // Trovo il punto di arrivo del salto
-
-
-
-
+        
         // Applica una forza verso l'alto per simulare il salto
         bossRB.velocity = Vector2.zero;
 
-        float randForce = Random.Range(bossCharacter.BounceHeight - bossCharacter.RandBounceRange,
-                                                   bossCharacter.BounceHeight + bossCharacter.RandBounceRange);
+        float randForce = Random.Range(bossCharacter.BounceForce - bossCharacter.RandBounceRange,
+                                                   bossCharacter.BounceForce + bossCharacter.RandBounceRange);
 
-        bossRB.AddForce(Vector2.up * randForce, ForceMode2D.Impulse);
-
-        if (!listenerAdded)
-        {
-            trump.OnTriggerEnterEvent += OnCollisionWithTrump;
-            listenerAdded = true;
-        }
+        bossRB.AddForce(new Vector2(0f, randForce), ForceMode2D.Impulse);
     }
 
     public override void Exit()
     {
         base.Exit();
 
-        trump.OnTriggerEnterEvent -= OnCollisionWithTrump;
+        trump.OnTriggerEnterEvent -= OnTrumpTriggered;
         trump.ClearEventData();
         trump = null;
 
@@ -90,11 +77,10 @@ public class LBCarrotBreak : LBBaseState
         }
     }
 
-    private void OnCollisionWithTrump(Collider2D collision)
+    private void OnTrumpTriggered(Collider2D collision)
     {
         if (trump.destroyed)
         {
-
             // Cambio stato
             stateMachine.SetState(new LBPanic(bossCharacter, trump));
 

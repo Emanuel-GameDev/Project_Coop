@@ -1,12 +1,23 @@
-using MBT;
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
 {
 
+    //shader
+    [Header("ProvaShaderGraph Hit e Parry")]
+    [SerializeField] private float fadeSpeed = 2f;
+    [SerializeField] protected Color _OnHitColor = Color.red;
+    [SerializeField] protected Color _OnParryColor = Color.yellow;
+
+    private Color _materialTintColor;
+    private Material spriteMaterial;
+    private SpriteRenderer spriteRendererVisual;
+
+    [Header("Character Generics")]
     [HideInInspector] public bool stunned = false;
     [HideInInspector] public bool underAggro = false;
     [HideInInspector] public bool inLove = false;
@@ -24,10 +35,27 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 
     public Transform dealerTransform => transform;
 
+    [SerializeField] protected UnityEvent onHit;
+    [SerializeField] protected UnityEvent onDeath;
+    [SerializeField] protected UnityEvent onDash;
+
+
+    public UnityEvent OnDeath { get => onDeath; set => onDeath = value; }
+
+    public UnityEvent OnHit { get => onHit; set => onHit = value; }
+
+    public UnityEvent OnDash { get => onDash; set => onDash = value; }
+
+
+
+    [SerializeField] private AnimationCurve pushAnimationCurve;
+    [SerializeField] private SoundsDatabase soundsDatabase;
+
     //Lo uso per chimare tutte le funzioni iniziali
     protected virtual void Awake()
     {
         InitialSetup();
+
     }
 
     //Tutto ciò che va fatto nello ad inizio
@@ -37,13 +65,35 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         conditions = new();
         canInteract = false;
         damageReceivedMultiplier = 1;
+
+        //Shader
+        spriteRendererVisual = GetComponentInChildren<SpriteRotation>().GetComponent<SpriteRenderer>();
+        spriteMaterial = spriteRendererVisual.material;
+
+        onHit = new();
+        onDeath = new();
+        onDash = new();
     }
 
     public Rigidbody2D GetRigidBody() => rb;
 
-    public abstract void TakeDamage(DamageData data);
 
-    public abstract DamageData GetDamageData();
+    public IEnumerator PushCharacter(Vector3 pusherPosizion, float pushStrenght, float pushDuration)
+    {
+        float timer = 0;
+        float interpolationRatio;
+        Vector3 startPosition = rb.transform.position;
+
+        Vector3 pushDirection = (startPosition - pusherPosizion).normalized;
+
+        while (timer < pushDuration)
+        {
+            interpolationRatio = timer / 1;
+            timer += Time.deltaTime;
+            rb.MovePosition(Vector3.Lerp(startPosition, startPosition + (pushDirection * pushStrenght), pushAnimationCurve.Evaluate(interpolationRatio)));
+            yield return new WaitForFixedUpdate();
+        }
+    }
 
 
     #region PowerUp & Conditions
@@ -89,6 +139,56 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         canInteract = false;
     }
 
-  
+    public GameObject GetInteracterObject()
+    {
+        return gameObject;
+    }
+
+    public virtual void OnParryNotify(Character whoParried)
+    {
+
+    }
+
+
+    #endregion
+
+    #region shader
+    //Shader
+    public void SetHitMaterialColor(Color newColor)
+    {
+        _materialTintColor = newColor;
+        spriteMaterial.SetColor("_Tint", _materialTintColor);
+        StartCoroutine(StartShaderFade());
+    }
+
+    public IEnumerator StartShaderFade()
+    {
+        while (_materialTintColor.a > 0)
+        {
+            _materialTintColor.a = Mathf.Clamp01(_materialTintColor.a - fadeSpeed * Time.deltaTime);
+            spriteMaterial.SetColor("_Tint", _materialTintColor);
+
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+
+
+    #endregion
+
+
+    #region Damage
+
+
+    public abstract void TakeDamage(DamageData data);
+
+    public abstract DamageData GetDamageData();
+
+    
+
     #endregion
 }
+
+
+
+

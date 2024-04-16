@@ -13,20 +13,21 @@ namespace MBTExample
         public TransformReference targetTransform;
         public GameObjectReference parentGameObject;
 
-        private TutorialBossCharacter bossCharacter;
+        private KerberosBossCharacter bossCharacter;
         private bool started = false;
         private bool mustStop = false;
         private float tempTimer;        
         private Vector3 targetPosition;
-        private IDamager bossDamager;
+        
 
         public override void OnEnter()
         {
           
-                bossCharacter = parentGameObject.Value.GetComponent<TutorialBossCharacter>();
+                bossCharacter = parentGameObject.Value.GetComponent<KerberosBossCharacter>();
            
             started = false;
             mustStop = false;
+            bossCharacter.parried = false;
 
             Vector3 direction = (targetTransform.Value.position -bossCharacter.transform.position).normalized;
             targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), (direction.y * bossCharacter.chargeDistance),0) + bossCharacter.transform.position; 
@@ -47,9 +48,18 @@ namespace MBTExample
 
         public override NodeResult Execute()
         {
-
             if (!bossCharacter.isDead)
             {
+
+                if (bossCharacter.parried)
+                {                  
+                    mustStop = true;
+
+                    //funzione player spinta inetro                    
+                    bossCharacter.whoParried.StartCoroutine(bossCharacter.whoParried.PushCharacter(bossCharacter.transform.position,
+                        bossCharacter.ChargeOnParryPushForce, bossCharacter.ChargeOnParryDuration));
+                }
+
                 if (tempTimer > bossCharacter.chargeTimer)
                 {
                     if (!started)
@@ -71,7 +81,7 @@ namespace MBTExample
 
                     if (mustStop || dist <= bossCharacter.minDistance)
                     {
-
+                        
                         bossCharacter.Agent.isStopped = true;
                         bossCharacter.anim.SetTrigger("Return");
 
@@ -92,8 +102,10 @@ namespace MBTExample
         public void ShowAttackPreview(bool value)
         {
             bossCharacter.canShowPreview = value;           
-            bossCharacter.previewArrow.SetActive(value);
+            bossCharacter.pivotPreviewArrow.SetActive(value);
             
         }
+        
+        
     }
 }

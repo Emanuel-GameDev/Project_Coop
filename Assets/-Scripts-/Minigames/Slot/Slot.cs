@@ -5,13 +5,15 @@ using UnityEngine;
 public enum slotType
 {
     Player,
-    Mouse       //col topo si perde
+    OtherCharacter       //con gli altri si perde
 }
 
 public class Slot : MonoBehaviour
 {
     [SerializeField] private Sprite sprite;
     [SerializeField] private slotType slotType;
+
+   
 
     //didindi
     public Sprite Sprite 
@@ -36,5 +38,7 @@ public class Slot : MonoBehaviour
     private void Start()
     {
         gameObject.AddComponent<SpriteRenderer>().sprite=sprite;
+
+        GetComponent<SpriteRenderer>().maskInteraction= SpriteMaskInteraction.VisibleInsideMask;
     }
 }

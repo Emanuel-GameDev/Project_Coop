@@ -20,10 +20,38 @@ public class SlotPlayer : InputReceiver
         
     }
 
+    public override void MenuInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MinigameMenuManager.Instance.MenuButton(playerInputHandler.playerID);
+    }
+
+    public override void Navigate(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MinigameMenuManager.Instance.NavigateButton(context.ReadValue<Vector2>(), playerInputHandler.playerID);
+    }
+
+    public override void Submit(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MinigameMenuManager.Instance.SubmitButton(playerInputHandler.playerID);
+    }
+
+    public override void Cancel(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            MinigameMenuManager.Instance.CancelButton(playerInputHandler.playerID);
+    }
+
 
     public override void ButtonSouth(InputAction.CallbackContext context)
     {
-        slotmachine.InputStop(this);
+        if(slotmachine.inGame)
+        {
+            slotmachine.InputFromPlayer(this);
+        }
+        
 
         
     }

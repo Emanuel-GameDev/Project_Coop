@@ -9,6 +9,7 @@ using UnityEngine.InputSystem.Users;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
+using UnityEngine.UI;
 using UnityEngine.Video;
 
 public enum TutorialFaseType
@@ -25,6 +26,8 @@ public class TutorialManager : MonoBehaviour
 {
     public StateMachine<TutorialFase> stateMachine { get; } = new();
 
+    [SerializeField] GameObject exit;
+
     [Header("Notification")]
     [SerializeField] public GameObject currentFaseObjective;
     [SerializeField] public TextMeshProUGUI objectiveText;
@@ -34,6 +37,7 @@ public class TutorialManager : MonoBehaviour
 
     [Header("Intro")]
     [SerializeField] GameObject introScreen;
+    [SerializeField] Slider skipSlider;
     public bool playIntro = false;
     VideoPlayer videoPlayer;
 
@@ -48,13 +52,18 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] Transform healerRespawn;
     [SerializeField] Transform tankRespawn;
     [SerializeField] Transform rangedRespawn;
+
+    [SerializeField] Transform postIntroEnemyRespawn;
     [SerializeField] Transform enemyRespawn;
+    [SerializeField] Transform postIntroLilithRespawn;
+    [SerializeField] Transform lilithRespawn;
 
     [Header("NPCs")]
     public TutorialEnemy tutorialEnemy;
     [SerializeField] GameObject lilith;
+    [SerializeField] GameObject lilithBaloon;
 
-   
+
     [Serializable]
     public class Fase
     {
@@ -72,7 +81,7 @@ public class TutorialManager : MonoBehaviour
     [HideInInspector] public bool blockFaseChange = false;
     bool finale = false;
 
-    [HideInInspector] public Dictionary<PlayerCharacter, PlayerInputHandler> inputBindings;
+    [HideInInspector] public Dictionary<PlayerCharacter, PlayerCharacterController> inputBindings;
 
 
     PlayableDirector playableDirector;
@@ -91,9 +100,9 @@ public class TutorialManager : MonoBehaviour
     {
         get { return _inputHandlerId; }
 
-        set 
-        { 
-            if(value<inputHandlers.Count)
+        set
+        {
+            if (value < inputHandlers.Count)
                 _inputHandlerId = value;
             else
                 _inputHandlerId = 0;
@@ -102,7 +111,7 @@ public class TutorialManager : MonoBehaviour
 
     private void Awake()
     {
-        inputBindings = new Dictionary<PlayerCharacter, PlayerInputHandler>();
+        inputBindings = new Dictionary<PlayerCharacter, PlayerCharacterController>();
         playableDirector = gameObject.GetComponent<PlayableDirector>();
         videoPlayer = introScreen.GetComponent<VideoPlayer>();
     }
@@ -111,18 +120,24 @@ public class TutorialManager : MonoBehaviour
 
     private void Start()
     {
+        exit.SetActive(true);
         objectiveText.enabled = false;
         objectiveNumbersGroup.SetActive(false);
         currentFaseObjective.SetActive(false);
+
         tutorialEnemy.gameObject.SetActive(false);
+        lilith.gameObject.SetActive(true);
 
-      
 
-        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        skipSlider.gameObject.SetActive(false);
+
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             inputHandler.GetComponent<PlayerInput>().actions.Disable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Enable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed += SkipIntro;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").started += EnableSkipSlider;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").canceled += DisableSkipSlider;
         }
 
         if (playIntro)
@@ -133,17 +148,39 @@ public class TutorialManager : MonoBehaviour
         }
         else
         {
-            introScreen.SetActive(false) ;
+            introScreen.SetActive(false);
             PostIntro();
         }
-        
+
 
     }
 
+    private void DisableSkipSlider(InputAction.CallbackContext context)
+    {
+        skipSlider.gameObject.SetActive(false);
+        updateSlider = false;
+    }
+
+    private void EnableSkipSlider(InputAction.CallbackContext context)
+    {
+        skipSlider.gameObject.SetActive(true);
+        updateSlider = true;
+    }
+
+    bool updateSlider = false;
     private void Update()
     {
-        if(!videoPlayer.isPlaying)
+        if (!videoPlayer.isPlaying)
             stateMachine.StateUpdate();
+
+        if (updateSlider)
+        {
+            skipSlider.value += Time.deltaTime/3;
+        }
+        else
+        {
+            skipSlider.value = 0;
+        }
     }
 
     private void IntroEnded(VideoPlayer source)
@@ -158,25 +195,29 @@ public class TutorialManager : MonoBehaviour
         introScreen.SetActive(false);
         PostIntro();
 
-        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Disable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").started -= EnableSkipSlider;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").canceled -= DisableSkipSlider;
         }
 
     }
 
-     
+
     private void PostIntro()
     {
-        foreach (PlayerInputHandler inputHandler in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        foreach (PlayerInputHandler inputHandler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").Disable();
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").performed -= SkipIntro;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").started -= EnableSkipSlider;
+            inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").canceled -= DisableSkipSlider;
         }
 
         SetUpCharacters();
-        DeactivateAllPlayerInputs();
+        //DeactivateAllPlayerInputs();
 
         ResetScene();
         DeactivateEnemyAI();
@@ -189,21 +230,29 @@ public class TutorialManager : MonoBehaviour
         }
 
         PlayDialogue(postIntroDialogue);
-        dialogueBox.OnDialogueEnded += StartTutorial;
-        
+        dialogueBox.OnDialogueEnded += PostIntroDialogueEnd;
+
+        tutorialEnemy.gameObject.transform.SetPositionAndRotation(postIntroEnemyRespawn.transform.position, Quaternion.identity);
+        lilith.gameObject.transform.SetPositionAndRotation(postIntroLilithRespawn.transform.position, Quaternion.identity);
 
     }
 
-    private void StartTutorial()
+    private void PostIntroDialogueEnd()
     {
-        dialogueBox.OnDialogueEnded -= StartTutorial;
-        stateMachine.SetState(new IntermediateTutorialFase(this));
+        dialogueBox.OnDialogueEnded -= PostIntroDialogueEnd;
 
         tutorialEnemy.gameObject.SetActive(true);
         DeactivateEnemyAI();
+    }
 
-        playableDirector.Play();
+    public void StartTutorial()
+    {
+        stateMachine.SetState(new IntermediateTutorialFase(this));
+        exit.SetActive(false);
+        lilith.gameObject.GetComponent<CircleCollider2D>().enabled = false;
+        lilith.gameObject.GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(false);
        
+        playableDirector.Play();
     }
 
     private void SetUpCharacters()
@@ -212,7 +261,7 @@ public class TutorialManager : MonoBehaviour
         inputHandlers = new List<PlayerInputHandler>();
         startingCharacters = new Dictionary<PlayerInputHandler, PlayerCharacter>();
 
-        foreach (PlayerInputHandler ih in GameManager.Instance.coopManager.GetComponentsInChildren<PlayerInputHandler>())
+        foreach (PlayerInputHandler ih in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             inputHandlers.Add(ih);
         }
@@ -227,80 +276,72 @@ public class TutorialManager : MonoBehaviour
             if(ih.currentCharacter == ePlayerCharacter.Brutus)
             {
                 dpsPresent = true;
-                dps=ih.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
-                inputBindings.Add(dps, ih);
+                PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
+                dps = receiver.ActualPlayerCharacter;
+                inputBindings.Add(dps, receiver);
                 startingCharacters.Add(ih, dps);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Cassius)
             {
                 healerPresent = true;
-                healer = ih.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
-                inputBindings.Add(healer, ih);
+                PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
+                healer = receiver.ActualPlayerCharacter;
+                inputBindings.Add(healer, receiver);
                 startingCharacters.Add(ih, healer);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Jude)
             {
                 rangedPresent = true;
-                ranged = ih.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
-                inputBindings.Add(ranged, ih);
+                PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
+                ranged = receiver.ActualPlayerCharacter;
+                inputBindings.Add(ranged, receiver);
                 startingCharacters.Add(ih, ranged);
             }
 
             if (ih.currentCharacter == ePlayerCharacter.Caina)
             {
                 tankPresent = true;
-                tank = ih.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
-                inputBindings.Add(tank, ih);
+                PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
+                tank = receiver.ActualPlayerCharacter;
+                inputBindings.Add(tank, receiver);
                 startingCharacters.Add(ih, tank);
             }
         }
 
         if (!dpsPresent)
         {
-            InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
-            receiver.SetCharacter(ePlayerCharacter.Brutus);
-            dps=receiver.GetGameObject().GetComponent<PlayerCharacter>();
-
-            inputBindings.Add(dps, inputHandlers[inputHandlersID]);
+            dps = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Brutus, transform);
+            PlayerCharacterController receiver =(PlayerCharacterController) inputHandlers[inputHandlersID].CurrentReceiver;
+            inputBindings.Add(dps, receiver);
             HPHandler.Instance.AddContainer(dps);
             inputHandlersID++;
-
         }
 
         if (!healerPresent)
         {
-            InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
-            receiver.SetCharacter(ePlayerCharacter.Cassius);
-            healer = receiver.GetGameObject().GetComponent<PlayerCharacter>();
-
-            inputBindings.Add(healer, inputHandlers[inputHandlersID]);
+            healer = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Cassius, transform);
+            PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
+            inputBindings.Add(healer, receiver);
             HPHandler.Instance.AddContainer(healer);
             inputHandlersID++;
         }
 
         if (!rangedPresent)
         {
-            InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
-            receiver.SetCharacter(ePlayerCharacter.Jude);
-            //
-            //receiver � null
-            //
-            ranged = receiver.gameObject.GetComponent<PlayerCharacter>();
-
-            inputBindings.Add(ranged, inputHandlers[inputHandlersID]);
+            ranged = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Jude, transform);
+            PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
+            inputBindings.Add(ranged, receiver);
             HPHandler.Instance.AddContainer(ranged);
             inputHandlersID++;
         }
 
         if (!tankPresent)
         {
-            InputReceiver receiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(null);
-            receiver.SetCharacter(ePlayerCharacter.Caina);
-            tank = receiver.GetGameObject().GetComponent<PlayerCharacter>();
-
-            inputBindings.Add(tank, inputHandlers[inputHandlersID]);
+            tank = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Caina, transform);
+            PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
+            inputBindings.Add(tank, receiver);
             HPHandler.Instance.AddContainer(tank);
             inputHandlersID++;
         }
@@ -313,8 +354,6 @@ public class TutorialManager : MonoBehaviour
         characters.Add(tank);
 
     }
-
-    
 
 
     [HideInInspector] public bool timerEnded = false;
@@ -369,9 +408,10 @@ public class TutorialManager : MonoBehaviour
     {
         if (inputHandler == null)
             return;
-
-        PlayerCharacter player = inputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>();
+        PlayerCharacterController receiver = (PlayerCharacterController)inputHandler.CurrentReceiver;
+        PlayerCharacter player = receiver.ActualPlayerCharacter;
         inputHandler.GetComponent<PlayerInput>().actions.Disable();
+        //inputHandler.GetComponent<PlayerInput>().actions.Disable();
         player.GetRigidBody().velocity = Vector3.zero;
 
     }
@@ -410,7 +450,8 @@ public class TutorialManager : MonoBehaviour
         foreach (PlayerInputHandler ih in inputHandlers)
         {
             // DA RIVEDERE #MODIFICATO
-            //ih.SetReceiver(startingCharacters[ih]);
+            PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
+            receiver.SetPlayerCharacter(startingCharacters[ih]);
         }
 
         dialogueBox.OnDialogueEnded += TutorialEnd;
@@ -423,8 +464,8 @@ public class TutorialManager : MonoBehaviour
     {
         dialogueBox.OnDialogueEnded -= TutorialEnd;
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        exit.SetActive(true);
         foreach (PlayerCharacter character in characters)
         {
             ActivatePlayerInput(character.GetInputHandler());
@@ -495,10 +536,18 @@ public class TutorialManager : MonoBehaviour
         ranged.transform.position = rangedRespawn.position;
         tank.transform.position = tankRespawn.position;
 
-        //dps.GetRigidBody().MovePosition(DPSRespawn.position);
-        //healer.GetRigidBody().MovePosition(healerRespawn.position);
-        //ranged.GetRigidBody().MovePosition(rangedRespawn.position);
-        //tank.GetRigidBody().MovePosition(tankRespawn.position);
+
+        dps.SetSpriteDirection(new Vector2(1,-1));
+        dps.ResetSpriteDirection();
+
+        healer.SetSpriteDirection(new Vector2(1, -1));
+        healer.ResetSpriteDirection();
+
+        tank.SetSpriteDirection(new Vector2(1, -1));
+        tank.ResetSpriteDirection();
+
+        ranged.SetSpriteDirection(new Vector2(1, -1));
+        ranged.ResetSpriteDirection();
 
         dps.GetRigidBody().velocity = Vector2.zero;
         healer.GetRigidBody().velocity = Vector2.zero;
@@ -510,9 +559,13 @@ public class TutorialManager : MonoBehaviour
 
     private void ResetEnemyPosition()
     {
-       
+        lilith.gameObject.transform.SetPositionAndRotation(lilithRespawn.transform.position, Quaternion.identity);
+
         tutorialEnemy.gameObject.SetActive(false);
         tutorialEnemy.gameObject.transform.SetPositionAndRotation(enemyRespawn.position, tutorialEnemy.gameObject.transform.rotation);
+        
+        tutorialEnemy.SetSpriteDirection(new Vector2(-1,-1));
+        tutorialEnemy.ResetSpriteDirection();
 
         tutorialEnemy.viewTrigger.ClearList();
         tutorialEnemy.AttackRangeTrigger.ClearList();
