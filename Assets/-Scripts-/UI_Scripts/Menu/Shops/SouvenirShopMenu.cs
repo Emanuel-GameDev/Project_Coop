@@ -49,7 +49,16 @@ public class SouvenirShopMenu : Menu
                 table.SetTableCurrentCharacter(playerInShop);
             }
 
+            CheckForMoney();
             AudioManager.Instance.PlayAudioClip(openingAudioClip,transform);
+        }
+    }
+
+    public void CheckForMoney()
+    {
+        foreach(SouvenirShopTable table in shopTables)
+        {
+            table.MoneyCheck();
         }
     }
 

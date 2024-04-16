@@ -19,6 +19,7 @@ public class LilithShopButton : Button
     {
         //shopMenu = GetComponentInParent<CoinShopMenu>();
         shopTable= GetComponentInParent<LilithShopTable>();
+        //buttonImage = GetComponent<Image>();
     }
 
     protected override void DoStateTransition(SelectionState state, bool instant)
@@ -48,13 +49,22 @@ public class LilithShopButton : Button
     public void ActivateButton()
     {
         isActive = true;
-        buttonImage.color = Color.white;
+
+        foreach (Image i in  GetComponentsInChildren<Image>())
+        {
+            i.color = Color.white;
+        }
     }
 
     public void DeactivateButton()
     {
         isActive = false;
-        buttonImage.color = Color.gray;
+        foreach(Image i in GetComponentsInChildren<Image>())
+        {
+            i.color = Color.gray;
+            Debug.Log("grey");
+        }
+
     }
 
     public void KeyRequiredCheck()
@@ -64,5 +74,6 @@ public class LilithShopButton : Button
         else
             ActivateButton();
     }
+
 
 }

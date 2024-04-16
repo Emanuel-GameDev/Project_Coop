@@ -7,7 +7,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class LilithShopTable : MonoBehaviour
 {
@@ -27,7 +26,7 @@ public class LilithShopTable : MonoBehaviour
         [SerializeField] public LilithShopButton button;
         [SerializeField] public PlayerAbility[] abilitys = new PlayerAbility[1];
 
-        [HideInInspector] public int id;
+        /*[HideInInspector]*/ public int id;
     }
 
 
@@ -49,6 +48,7 @@ public class LilithShopTable : MonoBehaviour
         foreach (AbilityShopEntry entry in entrys)
         {
             entry.button.SetAbility(entry.abilitys[0]);
+
         }
     }
 
@@ -57,11 +57,11 @@ public class LilithShopTable : MonoBehaviour
         abilityNameLocaleEvent.StringReference = localStringName;
         abilityDescriptionLocaleEvent.StringReference = localStringDescription;
     }
-
+    LilithShopButton lastButton;
     public void SetOnBuyButton()
     {
         lastSelected = shopMenu.tableAssosiation[this].MultiplayerEventSystem.currentSelectedGameObject;
-        LilithShopButton lastButton = lastSelected.GetComponent<LilithShopButton>();
+        lastButton = lastSelected.GetComponent<LilithShopButton>();
 
         if (!lastButton.isActive)
             return;
@@ -81,26 +81,27 @@ public class LilithShopTable : MonoBehaviour
 
     public void BuyAbility()
     {
-        LilithShopButton lastButton = lastSelected.GetComponent<LilithShopButton>();
+       lastButton = lastSelected.GetComponent<LilithShopButton>();
 
         AbilityShopEntry lastEntry = entrys.Find(b => b.button == lastButton);
-
+        //PlayerCharacterPoolManager.Instance.AllPlayerCharacters.Find(p=>p == playerCharacterReference).UnlockUpgrade(lastEntry.abilitys[lastEntry.id].abilityUpgrade);
         playerCharacterReference.UnlockUpgrade(lastEntry.abilitys[lastEntry.id].abilityUpgrade);
 
         lastEntry.id++;
+
         if (lastEntry.id >= lastEntry.abilitys.Length)
         {
             lastButton.DeactivateButton();
+            Debug.Log("wer");
         }
         else
             lastButton.SetAbility(lastEntry.abilitys[lastEntry.id]);
 
-        
-        
+
         UpdateKeyCounter(--playerCharacterReference.ExtraData.unusedKey);
         KeyRequirementChecks();
-
         DesetOnBuyButton();
+
 
 
     }
