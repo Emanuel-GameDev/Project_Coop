@@ -1,30 +1,41 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CrashWave : MonoBehaviour, IDamager
 {
 
-    [SerializeField] ParticleSystem particle;
+   
+    [SerializeField] ParticleSystem particle1;
+    [SerializeField] ParticleSystem particle2;
     float damage;
     float staminaDamage;
     Character dealer;
-    ParticleSystem.ShapeModule sh;
+
+  
+    ParticleSystem.ShapeModule sh1;
+    ParticleSystem.ShapeModule sh2;
+
+
 
     public Transform dealerTransform => throw new NotImplementedException();
 
     private void OnEnable()
     {
-        particle = GetComponentInChildren<ParticleSystem>();
-        sh = particle.shape;
+        sh1 = particle1.shape;
+        sh2 = particle2.shape;
+      
     }
     private void Update()
     {
-        sh.scale = transform.localScale;
+       
+        sh1.scale = transform.localScale;
+        sh2.scale = transform.localScale;
     }
 
     public void DestroyWave()
     {
-        particle.Stop();
+       
         Destroy(gameObject);
     }
 
