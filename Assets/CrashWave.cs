@@ -1,30 +1,36 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CrashWave : MonoBehaviour, IDamager
 {
-    public Damager damager;
+
+    [SerializeField] ParticleSystem particle;
     float damage;
     float staminaDamage;
     Character dealer;
+    ParticleSystem.ShapeModule sh;
 
     public Transform dealerTransform => throw new NotImplementedException();
 
-    private void Start()
+    private void OnEnable()
     {
-        GetComponent<Animation>().Play();
+        particle = GetComponentInChildren<ParticleSystem>();
+        sh = particle.shape;
+    }
+    private void Update()
+    {
+        sh.scale = transform.localScale;
     }
 
     public void DestroyWave()
     {
+        particle.Stop();
         Destroy(gameObject);
     }
 
     internal void SetVariables(float crashWaveDamage, float crashWaveStaminaDamage, Character dealer)
     {
-       damage = crashWaveDamage;
+        damage = crashWaveDamage;
         staminaDamage = crashWaveStaminaDamage;
         this.dealer = dealer;
     }
@@ -36,6 +42,6 @@ public class CrashWave : MonoBehaviour, IDamager
 
     public void OnParryNotify(Character whoParried)
     {
-        
+        Debug.Log("AAAAAAAAAAAAAAAA");
     }
 }
