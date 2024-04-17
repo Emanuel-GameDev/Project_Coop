@@ -9,7 +9,7 @@ public class LilithShopButton : Button
 {
     //CoinShopMenu shopMenu;
     LilithShopTable shopTable;
-    [SerializeField] Image buttonImage;
+    [SerializeField] public Image buttonImage;
     [SerializeField] TextMeshProUGUI coinCostText;
     [SerializeField] public PlayerAbility ability;
 
@@ -62,7 +62,6 @@ public class LilithShopButton : Button
         foreach(Image i in GetComponentsInChildren<Image>())
         {
             i.color = Color.gray;
-            Debug.Log("grey");
         }
 
     }
@@ -71,8 +70,7 @@ public class LilithShopButton : Button
     {
         if (shopTable.playerCharacterReference.ExtraData.unusedKey < ability.keyCost)
             DeactivateButton();
-        else
-            ActivateButton();
+        
     }
 
 
