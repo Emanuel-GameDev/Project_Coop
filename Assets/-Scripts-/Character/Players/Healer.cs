@@ -115,6 +115,7 @@ public class Healer : PlayerCharacter
         //prova
 
         extraData.unusedKey = 3;
+        extraData.money = 2;
     }
 
 
@@ -331,7 +332,7 @@ public class Healer : PlayerCharacter
         else
             radius = healAreaRadius;
 
-
+        Debug.Log(healAreaRadius.ToString());
         HealArea areaSpawned = Instantiate(healArea, new Vector2(transform.position.x, transform.position.y), Quaternion.identity).GetComponent<HealArea>();
 
 
