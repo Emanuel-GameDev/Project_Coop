@@ -38,6 +38,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     [SerializeField] protected UnityEvent onHit;
     [SerializeField] protected UnityEvent onDeath;
     [SerializeField] protected UnityEvent onDash;
+    [SerializeField] protected UnityEvent onParried;
 
 
     public UnityEvent OnDeath { get => onDeath; set => onDeath = value; }
@@ -45,11 +46,10 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     public UnityEvent OnHit { get => onHit; set => onHit = value; }
 
     public UnityEvent OnDash { get => onDash; set => onDash = value; }
-
-
+   
 
     [SerializeField] private AnimationCurve pushAnimationCurve;
-    [SerializeField] private SoundsDatabase soundsDatabase;
+    [SerializeField] protected SoundsDatabase soundsDatabase;
 
     //Lo uso per chimare tutte le funzioni iniziali
     protected virtual void Awake()

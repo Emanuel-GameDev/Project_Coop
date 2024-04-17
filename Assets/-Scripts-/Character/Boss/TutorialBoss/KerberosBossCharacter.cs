@@ -97,6 +97,7 @@ public class KerberosBossCharacter : BossCharacter
             if (canRotateInAnim)
             {               
                 SetSpriteDirection(direction);
+                Debug.Log("RUOTO");
             }
 
             if (canShowPreview)
@@ -112,12 +113,12 @@ public class KerberosBossCharacter : BossCharacter
         attackCondition = null;
 
     }
-   
-    
+
+    #region flurryOfBlows
     public void SetFlurryOfBlowsDamageData(int attackNumber)
     {
 
-        if(attackNumber >= punchQuantity) 
+        if (attackNumber >= punchQuantity)
         {
             staminaDamage = normalPunchStaminaDamage;
             damage = normalPunchDamage;
@@ -130,6 +131,12 @@ public class KerberosBossCharacter : BossCharacter
             attackCondition = null;
         }
     }
+    public void SetCanLastAttackPunch()
+    {
+        canLastAttackPunch = true;
+    }
+    #endregion
+
     public override void TakeDamage(DamageData data)
     {
         if (!isDead)      
@@ -186,15 +193,17 @@ public class KerberosBossCharacter : BossCharacter
             canRotateInAnim = true;
         }
     }
-    public void SetCanLastAttackPunch()
-    {
-        canLastAttackPunch = true;
-    }
-
+    
     public override void OnParryNotify(Character whoParried)
     {
-        parried = true;
+        parried = true;        
         this.whoParried = whoParried;
     }
-    
+    public IEnumerator UnstunFromParry()
+    {
+        yield return new WaitForSeconds(parryStunTimer);
+        gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("parried").Value = false;
+        anim.SetTrigger("Return");
+    }
+
 }

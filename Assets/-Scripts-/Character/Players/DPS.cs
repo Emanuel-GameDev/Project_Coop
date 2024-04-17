@@ -21,7 +21,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     [SerializeField, Tooltip("Danno extra in % dopo una schivata perfetta."), Range(0, 1)]
     float perfectDodgeExtraDamage = 0.15f;
     [SerializeField, Tooltip("Durata del tempo utile per poter fare la schivata perfetta")]
-    float perfectDodgeDurarion = 0.5f;
+    float perfectDodgeDuration = 0.5f;
     [Header("Unique Ability")]
     [SerializeField, Tooltip("Durata dell'invulnerabilità.")]
     float invulnerabilityDuration = 5f;
@@ -244,7 +244,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
                     lastPerfectDodgeTime = Time.time;
                     PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
                     PerfectTimeEnded();
-                    Utility.DebugTrace($"PerfectDodge: {isDodging}, Count: {perfectDodgeCounter}");
+                    Utility.DebugTrace($"PerfectDodge: {true}, Count: {perfectDodgeCounter}");
                 }
 
                 StartCoroutine(Dodge(lastNonZeroDirection, rb));
@@ -362,7 +362,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     }
 
     #endregion
-
 
     public override void Move(Vector2 direction)
     {
@@ -482,6 +481,9 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
             perfectTimingHandler.ActivateAlert();
             perfectTimingEnabled = true;
         }
+
+        Debug.Log(!isDodging);
+        StartCoroutine(DisablePerfectTimeAfter(perfectDodgeDuration));
     }
 
     public void PerfectTimeEnded()
@@ -491,6 +493,14 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     }
 
 
+    protected IEnumerator DisablePerfectTimeAfter(float time)
+    {
+        yield return new WaitForSeconds(time);
+        if(perfectTimingEnabled)
+            PerfectTimeEnded();
+    }
+
+    
     #endregion
     //Potenziamento boss fight: gli attacchi consecutivi aumentano il danno del personaggio a ogni colpo andato a segno.
     //Dopo tot tempo (es: 1.5 secondi) senza colpire, il danno torna al valore standard.
