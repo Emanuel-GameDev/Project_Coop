@@ -50,7 +50,7 @@ public class LilithShopButton : Button
     {
         isActive = true;
 
-        foreach (Image i in  GetComponentsInChildren<Image>())
+        foreach (Image i in  GetComponentsInChildren<Image>(true))
         {
             i.color = Color.white;
         }
@@ -59,7 +59,7 @@ public class LilithShopButton : Button
     public void DeactivateButton()
     {
         isActive = false;
-        foreach(Image i in GetComponentsInChildren<Image>())
+        foreach(Image i in GetComponentsInChildren<Image>(true))
         {
             i.color = Color.gray;
         }
@@ -68,6 +68,7 @@ public class LilithShopButton : Button
 
     public void KeyRequiredCheck()
     {
+        shopTable = GetComponentInParent<LilithShopTable>(true);
         if (shopTable.playerCharacterReference.ExtraData.unusedKey < ability.keyCost)
             DeactivateButton();
         

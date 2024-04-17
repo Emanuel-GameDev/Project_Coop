@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -19,12 +20,15 @@ public class SouvenirShopMenu : Menu
     //}
 
 
+    
+
 
     public void OpenMenu(IInteracter interacter)
     {
         if (interacter.GetInteracterObject().TryGetComponent<PlayerCharacter>(out PlayerCharacter playerInShop))
         {
             shopGroup.SetActive(true);
+            shopGroup.GetComponent<Animation>().Play("SouvenirEntrance");
             canClose = true;
             currentPlayerInShop = interacter.GetInteracterObject().GetComponent<PlayerCharacter>();
 
@@ -47,6 +51,8 @@ public class SouvenirShopMenu : Menu
             foreach (SouvenirShopTable table in shopTables)
             {
                 table.SetTableCurrentCharacter(playerInShop);
+                //int delayInt = Random.value;
+                table.StartIdleAnimationIn(Random.value);
             }
 
             CheckForMoney();
@@ -78,7 +84,13 @@ public class SouvenirShopMenu : Menu
         AudioManager.Instance.PlayAudioClip(openingAudioClip, transform);
 
         currentPlayerInShop = null;
-        shopGroup.SetActive(false);
+        shopGroup.GetComponent<Animation>().Play("SouvenirExit");
+        StartCoroutine(CloseMenuWithDelay(shopGroup.GetComponent<Animation>().clip.length));
     }
 
+    IEnumerator CloseMenuWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        shopGroup.SetActive(false);
+    }
 }
