@@ -30,7 +30,7 @@ public class PlayersReady : MinigameMenu
         if (!countdownStarted)
         {
             base.SubmitButton(player);
-            multiplayerConfirmationHandler.GiveInput(player, true);
+            //multiplayerConfirmationHandler.GiveInput(player, true);
         }
     }
 
@@ -39,7 +39,7 @@ public class PlayersReady : MinigameMenu
         if (!countdownStarted)
         {
             base.CancelButton(player);
-            multiplayerConfirmationHandler.GiveInput(player, false);
+            //multiplayerConfirmationHandler.GiveInput(player, false);
         }
     }
 

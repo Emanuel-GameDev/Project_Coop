@@ -1,65 +1,64 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 public class MultiplayerConfirmationHandler : MonoBehaviour
 {
     [SerializeField]
-    private GameObject confirmButton;
+    private GameObject readyButtonPrefab;
 
     [SerializeField]
-    private RectTransform confirmationButtonCenter;
+    private RectTransform readyButtonsPosition;
 
-    [SerializeField, Tooltip("Distanza tra gli elementi")]
-    float spacing = 10f;
+    [SerializeField]
+    private UnityEvent onAllReady;
 
-    public UnityEvent onAllReady;
+    [SerializeField]
+    private GameObject backgroundImage;
+
+    [Header("Countdown Settings")]
+
+    [SerializeField, Tooltip("Durata del countdown in secondi"), Range(0f, 10f)]
+    private int countdownDuration = 3;
+
+    [SerializeField]
+    private TMP_Text countdownText;
+
+    [SerializeField]
+    private UnityEvent onCooldownEnded;
+
+    private bool countdownStarted = false;
 
     private int readyCount = 0;
 
     private int playerCount = 0;
 
-    List<MultiplayerButton> buttons = new();
+    List<ReadyButton> readyButtons = new();
 
     public void PlaceButtons()
     {
         playerCount = CoopManager.Instance.GetActiveHandlers().Count;
         readyCount = 0;
-        float panelWidth = confirmButton.GetComponent<RectTransform>().rect.width + spacing;
-        float initialPos = -panelWidth * (playerCount - 1) / 2;
-        int i = 0;
         foreach (PlayerInputHandler player in CoopManager.Instance.GetActiveHandlers())
         {
-            GameObject newButton = Instantiate(confirmButton);
+            GameObject newButton = Instantiate(readyButtonPrefab, readyButtonsPosition);
 
             newButton.SetActive(true);
 
-            MultiplayerButton button = newButton.GetComponent<MultiplayerButton>();
-            button.InitialSetup(this, player.playerID);
-            buttons.Add(button);
+            ReadyButton readyButton = newButton.GetComponent<ReadyButton>();
+            readyButton.InitialSetup(this, player);
 
-            RectTransform buttonTransform = newButton.GetComponent<RectTransform>();
+            player.SetPlayerActiveMenu(newButton, newButton);
 
-            buttonTransform.SetParent(confirmationButtonCenter);
-
-            float xPos = initialPos + (i * panelWidth);
-
-            buttonTransform.localPosition = new Vector2(xPos, 0);
-
-            i++;
+            readyButtons.Add(readyButton);
         }
 
     }
 
-    public void GiveInput(ePlayerID playerID, bool isReady)
-    {
-        MultiplayerButton button = buttons.Find(x => x.playerID == playerID);
-        if(button != null)
-            button.SetReady(isReady);
-    }
 
-
-    public void ChangeReady(MultiplayerButton button)
+    public void ChangeReady(ReadyButton button)
     {
         if (button.ready)
         {
@@ -78,9 +77,48 @@ public class MultiplayerConfirmationHandler : MonoBehaviour
 
     public void ResetButtons()
     {
-        foreach (MultiplayerButton b in buttons)
+        foreach (ReadyButton b in readyButtons)
         {
-            b.SetReady(false);
+            b.player.SetPlayerActiveMenu(null, null);
+            Destroy(b.gameObject);
         }
     }
+
+    public void StartCountdown()
+    {
+        if (!countdownStarted)
+        {
+            countdownStarted = true;
+            StartCoroutine(CountdownCoroutine(countdownDuration));
+        }
+    }
+
+    IEnumerator CountdownCoroutine(float duration)
+    {
+        float startTime = Time.realtimeSinceStartup;
+        float timeLeft = duration + 0.99f;
+
+        while (timeLeft > 0)
+        {
+            float elapsedTime = Time.realtimeSinceStartup - startTime;
+
+            timeLeft -= elapsedTime;
+            int secondsLeft = Mathf.FloorToInt(timeLeft);
+            secondsLeft = secondsLeft < 0 ? 0 : secondsLeft;
+            countdownText.text = secondsLeft.ToString();
+            startTime = Time.realtimeSinceStartup;
+            yield return null;
+        }
+
+        onCooldownEnded?.Invoke();
+        countdownText.text = "";
+        ResetButtons();
+        countdownStarted = false;
+    }
+
+    public void SetBackgroundActive(bool active)
+    {
+        backgroundImage.SetActive(active);
+    }
+
 }

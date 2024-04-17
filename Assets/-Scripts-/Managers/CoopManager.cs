@@ -171,4 +171,9 @@ public class CoopManager : MonoBehaviour
         OnPlayerLeft(playerInput);
     }
 
+    public PlayerInputHandler GetFirstPlayer()
+    {
+        return playerInputHandlers[0];
+    }
+
 }
