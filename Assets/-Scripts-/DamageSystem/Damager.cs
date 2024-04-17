@@ -18,6 +18,7 @@ public class Damager : MonoBehaviour
 
     //decidere se tenere ConditionToApply
 
+   
     private void OnTriggerEnter2D(Collider2D other)
     {
         onTrigger.Invoke(other);
