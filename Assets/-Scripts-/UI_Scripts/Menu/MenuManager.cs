@@ -31,6 +31,7 @@ public class MenuManager : MonoBehaviour
     private MenuInfo optionMenu;
 
     private MenuInfo actualMenu;
+    public MenuInfo ActualMenu => actualMenu;
 
     [SerializeField]
     private HPHandler hPHandler;
@@ -193,7 +194,8 @@ public class MenuManager : MonoBehaviour
         if (menu.InteractableSetter != null)
             menu.InteractableSetter.EnableInteract();
 
-        actualMenuOwner.SetPlayerActiveMenu(menu.MenuRoot, menu.FirstObjectSelected);
+        if(actualMenuOwner != null)
+            actualMenuOwner.SetPlayerActiveMenu(menu.MenuRoot, menu.FirstObjectSelected);
 
         menu.gameObject.SetActive(true);
 
@@ -235,7 +237,8 @@ public class MenuManager : MonoBehaviour
     private void ClearMenuEntries()
     {
         actualMenu = null;
-        actualMenuOwner.SetPlayerActiveMenu(null, null);
+        if(actualMenuOwner != null)
+            actualMenuOwner.SetPlayerActiveMenu(null, null);
         actualMenuOwner = null;
     }
 

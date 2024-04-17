@@ -2,31 +2,40 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 
-public class MultiplayerButton : MonoBehaviour
+public class ReadyButton : MonoBehaviour
 {
     [SerializeField]
     private Color ReadyColor = Color.green;
     [SerializeField]
     private Color NotReadyColor = Color.red;
     [SerializeField]
-    string defaultText = "Not Ready";
+    LocalizedString pressToReadyTextAsset;
     [SerializeField]
-    string readyText = "Ready!";
+    LocalizedString readyTextAsset;
+
 
     MultiplayerConfirmationHandler multiplayerConfirmationHandler;
     Image buttonImage;
-    TMP_Text buttonText;
+    LocalizeStringEvent localizeStringEvent;
     
-    public ePlayerID playerID { get; private set; }
+    public PlayerInputHandler player { get; private set; }
 
     public bool ready { get; private set; } = false;
 
     private void Start()
     {
         buttonImage = GetComponent<Image>();
-        buttonText = GetComponentInChildren<TMP_Text>();
+        localizeStringEvent = GetComponentInChildren<LocalizeStringEvent>();
         ChangeToNotReady();
+    }
+
+    public void SetReady()
+    {
+        SetReady(!ready);
+        Utility.DebugTrace(ready.ToString());
     }
 
     public void SetReady(bool ready)
@@ -47,19 +56,19 @@ public class MultiplayerButton : MonoBehaviour
     private void ChangeToNotReady()
     {
         buttonImage.color = NotReadyColor;
-        buttonText.text = defaultText;
+        localizeStringEvent.StringReference = pressToReadyTextAsset;
     }
 
     private void ChangeToReady()
     {
         buttonImage.color = ReadyColor;
-        buttonText.text = readyText;
+        localizeStringEvent.StringReference = readyTextAsset;
     }
 
-    public void InitialSetup(MultiplayerConfirmationHandler multiplayerConfirmationHandler, ePlayerID playerID)
+    public void InitialSetup(MultiplayerConfirmationHandler multiplayerConfirmationHandler, PlayerInputHandler player)
     {
         this.multiplayerConfirmationHandler = multiplayerConfirmationHandler;
-        this.playerID = playerID;
+        this.player = player;
     }
 
 }

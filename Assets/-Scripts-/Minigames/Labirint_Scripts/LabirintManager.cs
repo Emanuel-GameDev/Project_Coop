@@ -103,9 +103,8 @@ public class LabirintManager : MonoBehaviour
             EndGame(false);
     }
 
-    private void StartGame()
+    public void StartGame()
     {
-        currentLabirint.DisableObjectMap();
         labirintUI.UpdateRemainingKeyCount(keyCount);
         labirintUI.SetAllPlayer(CoopManager.Instance.GetActiveHandlers());
 
@@ -144,7 +143,7 @@ public class LabirintManager : MonoBehaviour
     #endregion
 
     #region Labirint Setup
-    private void SetupLabirint()
+    public void SetupLabirint()
     {
         ResetLabirint();
         currentLabirint = Labirints[Random.Range(0, Labirints.Count)];
@@ -158,6 +157,7 @@ public class LabirintManager : MonoBehaviour
         SetPlayers(currentLabirint.GetPlayerSpawnPoints());
         pickedKey = 0;
         deadPlayerCount = 0;
+        currentLabirint.DisableObjectMap();
     }
 
     private void ResetLabirint()
