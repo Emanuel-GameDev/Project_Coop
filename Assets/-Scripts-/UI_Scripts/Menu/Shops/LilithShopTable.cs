@@ -39,21 +39,23 @@ public class LilithShopTable : MonoBehaviour
 
     public void InitializeButtons()
     {
-        shopMenu = GetComponentInParent<LilithShopMenu>();
+        shopMenu = GetComponentInParent<LilithShopMenu>(true);
         playerCharacterReference = PlayerCharacterPoolManager.Instance.AllPlayerCharacters.Find(c => c.Character == characterReference);
         
         if(playerCharacterReference != null)
         {
             if(playerCharacterReference.GetInputHandler() != null)
-            playerCharacterReference.GetInputHandler().MultiplayerEventSystem.SetSelectedGameObject(firstSelected.gameObject);
+                playerCharacterReference.GetInputHandler().MultiplayerEventSystem.SetSelectedGameObject(firstSelected.gameObject);
+
         }
 
         //da cambiare con i salvataggi
-        foreach (AbilityShopEntry entry in entrys)
-        {
-            entry.button.buttonImage = entry.abilityImage;
-            entry.button.SetAbility(entry.abilitys[0]);
-        }
+            foreach (AbilityShopEntry entry in entrys)
+            {
+                entry.button.buttonImage = entry.abilityImage;
+                entry.button.SetAbility(entry.abilitys[0]);
+            }
+        
     }
 
     public void ChangeDescriptionAndName(LocalizedString localStringName, LocalizedString localStringDescription)

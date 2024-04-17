@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Components;
@@ -28,6 +29,17 @@ public class SouvenirShopTable : MonoBehaviour
         [SerializeField] public ePlayerCharacter character;
         [SerializeField] public PowerUp[] souvenirs = new PowerUp[2];
         [HideInInspector] public int souvenirID;
+    }
+
+    public void StartIdleAnimationIn(float delay)
+    {
+        StartCoroutine(PlayIdle(delay));
+    }
+
+    IEnumerator PlayIdle(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GetComponent<Animation>().Play();
     }
 
     private void ChangeTableItem(PowerUp souvenirToSell)
@@ -107,4 +119,6 @@ public class SouvenirShopTable : MonoBehaviour
             soldoutSign.SetActive(true);
         }
     }
+
+  
 }
