@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &514127932976187958
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4165788649552481299}
+  m_Layer: 0
+  m_Name: CrashPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4165788649552481299
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514127932976187958}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.5327557, y: 0.10872422, z: 0.0468828}
+  m_LocalScale: {x: 0.5555556, y: 0.5555556, z: 0.5555556}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7171072998376235493}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &707992863352827762
 GameObject:
   m_ObjectHideFlags: 0
@@ -33,6 +64,7 @@ Transform:
   - {fileID: 2957815417332490815}
   - {fileID: 3679722225858389049}
   - {fileID: 6765491392667053844}
+  - {fileID: 4165788649552481299}
   m_Father: {fileID: 1720486994485155886}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &772682740373608012
@@ -3203,6 +3235,7 @@ MonoBehaviour:
   crashTimer: 1.5
   crashwaveObject: {fileID: 7920591660957696306, guid: 3d2c4220d6ebc554fa41d8c66b654446,
     type: 3}
+  crashwaveTransform: {fileID: 6765491392667053844}
   parryStunTimer: 3
   canAttackAnim: 0
   canShowPreview: 0

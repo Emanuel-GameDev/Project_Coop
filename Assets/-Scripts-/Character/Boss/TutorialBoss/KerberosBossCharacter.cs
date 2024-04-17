@@ -46,6 +46,7 @@ public class KerberosBossCharacter : BossCharacter
     public float crashWaveStaminaDamage;
     public float crashTimer;
     public GameObject crashwaveObject;
+    public Transform crashwaveTransform;
     
 
     [Header("IfParried")]
@@ -83,7 +84,7 @@ public class KerberosBossCharacter : BossCharacter
     {
         if (!parried)
         {
-            GameObject instantiatedWave = Instantiate(crashwaveObject, transform.position, Quaternion.identity, transform);
+            GameObject instantiatedWave = Instantiate(crashwaveObject, crashwaveTransform.position, Quaternion.identity, transform);
             instantiatedWave.GetComponentInChildren<CrashWave>().SetVariables(crashWaveDamage, crashWaveStaminaDamage, this);
 
         }
