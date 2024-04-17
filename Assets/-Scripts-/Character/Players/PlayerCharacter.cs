@@ -144,7 +144,13 @@ public abstract class PlayerCharacter : Character
     public void SetMaxHP(float value) => maxHp = value;
     public void SetCurrentHP(float value) => CurrentHp = value;
 
-    public PlayerInputHandler GetInputHandler() => characterController.GetInputHandler();
+    public PlayerInputHandler GetInputHandler()
+    { 
+        if(characterController != null)
+            return characterController.GetInputHandler();
+        else
+            return null;
+    }
 
     #endregion
 

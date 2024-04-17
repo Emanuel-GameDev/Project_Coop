@@ -15,6 +15,8 @@ public class LilithShopTable : MonoBehaviour
     [SerializeField] TextMeshProUGUI keysNumberText;
     [SerializeField] Selectable buyButton;
 
+    [SerializeField] Selectable firstSelected;
+
     [SerializeField] public ePlayerCharacter characterReference;
     internal PlayerCharacter playerCharacterReference;
 
@@ -24,6 +26,7 @@ public class LilithShopTable : MonoBehaviour
     public class AbilityShopEntry
     {
         [SerializeField] public LilithShopButton button;
+        [SerializeField] public Image abilityImage;
         [SerializeField] public PlayerAbility[] abilitys = new PlayerAbility[1];
 
         /*[HideInInspector]*/ public int id;
@@ -33,22 +36,23 @@ public class LilithShopTable : MonoBehaviour
     LilithShopMenu shopMenu;
     GameObject lastSelected;
 
-    private void Start()
+
+    public void InitializeButtons()
     {
         shopMenu = GetComponentInParent<LilithShopMenu>();
-
-        InitializeButtons();
-    }
-
-    private void InitializeButtons()
-    {
         playerCharacterReference = PlayerCharacterPoolManager.Instance.AllPlayerCharacters.Find(c => c.Character == characterReference);
+        
+        if(playerCharacterReference != null)
+        {
+            if(playerCharacterReference.GetInputHandler() != null)
+            playerCharacterReference.GetInputHandler().MultiplayerEventSystem.SetSelectedGameObject(firstSelected.gameObject);
+        }
 
         //da cambiare con i salvataggi
         foreach (AbilityShopEntry entry in entrys)
         {
+            entry.button.buttonImage = entry.abilityImage;
             entry.button.SetAbility(entry.abilitys[0]);
-
         }
     }
 
@@ -60,23 +64,23 @@ public class LilithShopTable : MonoBehaviour
     LilithShopButton lastButton;
     public void SetOnBuyButton()
     {
-        lastSelected = shopMenu.tableAssosiation[this].MultiplayerEventSystem.currentSelectedGameObject;
+        lastSelected = playerCharacterReference.GetInputHandler().MultiplayerEventSystem.currentSelectedGameObject;
         lastButton = lastSelected.GetComponent<LilithShopButton>();
 
         if (!lastButton.isActive)
             return;
 
         shopMenu.canClose = false;
-        shopMenu.tableAssosiation[this].MultiplayerEventSystem.SetSelectedGameObject(buyButton.gameObject);
+        playerCharacterReference.GetInputHandler().MultiplayerEventSystem.SetSelectedGameObject(buyButton.gameObject);
 
-        shopMenu.tableAssosiation[this].GetComponent<PlayerInput>().actions.FindAction("Cancel").performed += CoinShopTable_performed;
+        playerCharacterReference.GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Cancel").performed += CoinShopTable_performed;
 
     }
 
     private void CoinShopTable_performed(InputAction.CallbackContext obj)
     {
         DesetOnBuyButton();
-        shopMenu.tableAssosiation[this].GetComponent<PlayerInput>().actions.FindAction("Cancel").performed -= CoinShopTable_performed;
+        playerCharacterReference.GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Cancel").performed -= CoinShopTable_performed;
     }
 
     public void BuyAbility()
@@ -92,7 +96,6 @@ public class LilithShopTable : MonoBehaviour
         if (lastEntry.id >= lastEntry.abilitys.Length)
         {
             lastButton.DeactivateButton();
-            Debug.Log("wer");
         }
         else
             lastButton.SetAbility(lastEntry.abilitys[lastEntry.id]);
@@ -109,7 +112,7 @@ public class LilithShopTable : MonoBehaviour
     public void DesetOnBuyButton()
     {
         shopMenu.canClose = true;
-        shopMenu.tableAssosiation[this].MultiplayerEventSystem.SetSelectedGameObject(lastSelected);
+        playerCharacterReference.GetInputHandler().MultiplayerEventSystem.SetSelectedGameObject(lastSelected);
     }
 
     public void UpdateKeyCounter(int counter)
