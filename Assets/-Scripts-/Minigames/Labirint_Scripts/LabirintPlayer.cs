@@ -263,13 +263,13 @@ public class LabirintPlayer : InputReceiver
     public override void UIMenuInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            MenuManager.Instance.ClosePauseMenu();
+            MenuManager.Instance.ClosePauseMenu(playerInputHandler);
     }
 
     public override void UIOptionInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            MenuManager.Instance.CloseOptionMenu();
+            MenuManager.Instance.CloseOptionMenu(playerInputHandler);
     }
 
     #endregion

@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using TMPro;
 
 public class MultiplayerConfirmationHandler : MonoBehaviour
 {
@@ -39,6 +39,8 @@ public class MultiplayerConfirmationHandler : MonoBehaviour
 
     public void PlaceButtons()
     {
+        SetBackgroundActive(true);
+
         playerCount = CoopManager.Instance.GetActiveHandlers().Count;
         readyCount = 0;
         foreach (PlayerInputHandler player in CoopManager.Instance.GetActiveHandlers())
@@ -54,7 +56,6 @@ public class MultiplayerConfirmationHandler : MonoBehaviour
 
             readyButtons.Add(readyButton);
         }
-
     }
 
 
@@ -82,6 +83,7 @@ public class MultiplayerConfirmationHandler : MonoBehaviour
             b.player.SetPlayerActiveMenu(null, null);
             Destroy(b.gameObject);
         }
+        readyButtons.Clear();
     }
 
     public void StartCountdown()
@@ -112,7 +114,7 @@ public class MultiplayerConfirmationHandler : MonoBehaviour
 
         onCooldownEnded?.Invoke();
         countdownText.text = "";
-        ResetButtons();
+
         countdownStarted = false;
     }
 

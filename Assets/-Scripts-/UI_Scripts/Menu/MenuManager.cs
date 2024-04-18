@@ -34,6 +34,11 @@ public class MenuManager : MonoBehaviour
     public MenuInfo ActualMenu => actualMenu;
 
     [SerializeField]
+    private GameObject emptyRoot;
+    [SerializeField] 
+    private GameObject emptyRootSelected;
+
+    [SerializeField]
     private HPHandler hPHandler;
 
 
@@ -120,15 +125,15 @@ public class MenuManager : MonoBehaviour
             OpenPauseMenu(player);
     }
 
-    public void ClosePauseMenu()
+    public void ClosePauseMenu(PlayerInputHandler player)
     {
-        if (actualMenu == pauseMenu)
+        if (actualMenu == pauseMenu && player == actualMenuOwner)
             CloseAllMenu();
     }
 
-    public void CloseOptionMenu()
+    public void CloseOptionMenu(PlayerInputHandler player)
     {
-        if (actualMenu == optionMenu)
+        if (actualMenu == optionMenu && player == actualMenuOwner)
             CloseAllMenu();
     }
 
@@ -181,7 +186,11 @@ public class MenuManager : MonoBehaviour
             GameManager.Instance.PauseGame();
 
         if(player != null)
+        {
+            DisableOtherPlayerInteraction(player);
             actualMenuOwner = player;
+        }
+            
 
         if (menu.HaveTabs)
         {
@@ -196,6 +205,9 @@ public class MenuManager : MonoBehaviour
 
         if(actualMenuOwner != null)
             actualMenuOwner.SetPlayerActiveMenu(menu.MenuRoot, menu.FirstObjectSelected);
+            
+        
+            
 
         menu.gameObject.SetActive(true);
 
@@ -206,6 +218,18 @@ public class MenuManager : MonoBehaviour
 
         actualMenu = menu;
 
+    }
+
+    private void DisableOtherPlayerInteraction(PlayerInputHandler player)
+    {
+        foreach (PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
+        {
+            if(player != null && handler != player)
+            {
+                handler.SetPlayerActiveMenu(emptyRoot, emptyRootSelected);
+            }
+        }
+        
     }
 
     #endregion

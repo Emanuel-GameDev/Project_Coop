@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -53,9 +54,6 @@ public class LabirintManager : MonoBehaviour
     [SerializeField]
     public GameObject dialogueObject;
 
-
-
-    private StateMachine<LabirintState> stateMachine = new StateMachine<LabirintState>();
     private LabirintUI labirintUI;
     private SceneChanger sceneChanger;
 
@@ -73,11 +71,8 @@ public class LabirintManager : MonoBehaviour
 
     private void Start()
     {
-        //SetupLabirint();
-        stateMachine.SetState(new StartLabirint());
+        StartCoroutine(WaitForPlayers());
         sceneChanger = GetComponent<SceneChanger>();
-        //Debug
-        //StartGame();
     }
 
     public void StartPlay()
@@ -118,12 +113,16 @@ public class LabirintManager : MonoBehaviour
     {
         if (playerWin)
         {
-            labirintUI.ActivateWinScreen();
+            //labirintUI.ActivateWinScreen();
+            dialogueObject.GetComponent<DialogueBox>().StartDialogue();
+            dialogueObject.SetActive(true);
             Debug.Log("End Game: You Win");
         }
         else
         {
-            labirintUI.ActivateLoseScreen();
+            //labirintUI.ActivateLoseScreen();
+            dialogueObject.GetComponent<DialogueBox>().StartDialogue();
+            dialogueObject.SetActive(true);
             Debug.Log("End Game: You Lose");
         }
 
@@ -138,6 +137,12 @@ public class LabirintManager : MonoBehaviour
     {
         if(sceneChanger != null)
             sceneChanger.ChangeScene();
+    }
+
+    IEnumerator WaitForPlayers()
+    {
+        yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
+        dialogueObject.SetActive(true);
     }
 
     #endregion

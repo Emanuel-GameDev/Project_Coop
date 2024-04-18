@@ -155,13 +155,13 @@ public class PlayerCharacterController : InputReceiver
     public override void UIMenuInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            MenuManager.Instance.ClosePauseMenu();
+            MenuManager.Instance.ClosePauseMenu(playerInputHandler);
     }
 
     public override void UIOptionInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            MenuManager.Instance.CloseOptionMenu();
+            MenuManager.Instance.CloseOptionMenu(playerInputHandler);
     }
 
     public override void SubNextInput(InputAction.CallbackContext context)
