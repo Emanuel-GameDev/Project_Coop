@@ -30208,7 +30208,9 @@ MonoBehaviour:
   - {fileID: 1343718211}
   - {fileID: 667500347}
   - {fileID: 546953460}
-  dialogueObject: {fileID: 2078918885}
+  dialogueBox: {fileID: 2078918885}
+  winDialogue: {fileID: 11400000, guid: 99aa65db3257b344499407452d3c1dcb, type: 2}
+  loseDialogue: {fileID: 11400000, guid: e0b29cf941f19a34b8b78b899613d5e5, type: 2}
 --- !u!4 &955289491
 Transform:
   m_ObjectHideFlags: 0
@@ -53553,12 +53555,12 @@ PrefabInstance:
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: startImmediatly
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: dialogues.Array.size
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
@@ -53581,7 +53583,7 @@ PrefabInstance:
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: OnDialogueEnd.Array.size
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
