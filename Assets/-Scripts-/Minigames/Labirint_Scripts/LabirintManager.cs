@@ -50,9 +50,14 @@ public class LabirintManager : MonoBehaviour
     public Grid Grid => grid;
 
 
-    //TEMP FOR TEST
+    [Header("Dialogue")]
     [SerializeField]
-    public GameObject dialogueObject;
+    private GameObject dialogueBox;
+    [SerializeField]
+    private Dialogue winDialogue;
+    [SerializeField]
+    private Dialogue loseDialogue;
+
 
     private LabirintUI labirintUI;
     private SceneChanger sceneChanger;
@@ -114,16 +119,16 @@ public class LabirintManager : MonoBehaviour
         if (playerWin)
         {
             //labirintUI.ActivateWinScreen();
-            dialogueObject.GetComponent<DialogueBox>().StartDialogue();
-            dialogueObject.SetActive(true);
-            Debug.Log("End Game: You Win");
+            dialogueBox.SetActive(true);
+            dialogueBox.GetComponent<DialogueBox>().SetDialogue(winDialogue);
+            dialogueBox.GetComponent<DialogueBox>().StartDialogue();
         }
         else
         {
             //labirintUI.ActivateLoseScreen();
-            dialogueObject.GetComponent<DialogueBox>().StartDialogue();
-            dialogueObject.SetActive(true);
-            Debug.Log("End Game: You Lose");
+            dialogueBox.SetActive(true);
+            dialogueBox.GetComponent<DialogueBox>().SetDialogue(loseDialogue);
+            dialogueBox.GetComponent<DialogueBox>().StartDialogue();
         }
 
         foreach (GameObject obj in objectsForTheGame)
@@ -142,7 +147,8 @@ public class LabirintManager : MonoBehaviour
     IEnumerator WaitForPlayers()
     {
         yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
-        dialogueObject.SetActive(true);
+        dialogueBox.SetActive(true);
+        dialogueBox.GetComponent<DialogueBox>().StartDialogue();
     }
 
     #endregion
