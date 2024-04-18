@@ -71,4 +71,11 @@ public class ReadyButton : MonoBehaviour
         this.player = player;
     }
 
+    public void ResetButton()
+    {
+        this.multiplayerConfirmationHandler = null;
+        this.player = null;
+        ready = false;
+        ChangeToNotReady();
+    }
 }

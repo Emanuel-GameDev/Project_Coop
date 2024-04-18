@@ -22,28 +22,27 @@ public class SlotPlayer : InputReceiver
 
     public override void MenuInput(InputAction.CallbackContext context)
     {
-        if (context.performed)
-            MinigameMenuManager.Instance.MenuButton(playerInputHandler.playerID);
+        if (context.performed && MenuManager.Instance.ActualMenu == null)
+            MenuManager.Instance.OpenPauseMenu(playerInputHandler);
     }
 
-    public override void Navigate(InputAction.CallbackContext context)
+    public override void OptionInput(InputAction.CallbackContext context)
+    {
+        if (context.performed && MenuManager.Instance.ActualMenu == null)
+            MenuManager.Instance.OpenOptionMenu(playerInputHandler);
+    }
+
+    public override void UIMenuInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            MinigameMenuManager.Instance.NavigateButton(context.ReadValue<Vector2>(), playerInputHandler.playerID);
+            MenuManager.Instance.ClosePauseMenu(playerInputHandler);
     }
 
-    public override void Submit(InputAction.CallbackContext context)
+    public override void UIOptionInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            MinigameMenuManager.Instance.SubmitButton(playerInputHandler.playerID);
+            MenuManager.Instance.CloseOptionMenu(playerInputHandler);
     }
-
-    public override void Cancel(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-            MinigameMenuManager.Instance.CancelButton(playerInputHandler.playerID);
-    }
-
 
     public override void ButtonSouth(InputAction.CallbackContext context)
     {
