@@ -60,7 +60,7 @@ public class KerberosBossCharacter : BossCharacter
     [HideInInspector] public bool canLastAttackPunch;
     [HideInInspector] private bool canRotateInAnim;   
     [HideInInspector] private Vector2 direction;
-    [HideInInspector] public bool parried = false;
+    public bool parried = false;
     [HideInInspector] public Character whoParried;
     [HideInInspector] public Animator anim => animator;
 
@@ -82,7 +82,7 @@ public class KerberosBossCharacter : BossCharacter
     }
     public void InstantiateCrashWave()
     {
-        if (!parried)
+        if (parried == false)
         {
             GameObject instantiatedWave = Instantiate(crashwaveObject, crashwaveTransform.position, Quaternion.identity, transform);
             instantiatedWave.GetComponentInChildren<CrashWave>().SetVariables(crashWaveDamage, crashWaveStaminaDamage, this);
