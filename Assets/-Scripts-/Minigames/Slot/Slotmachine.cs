@@ -427,7 +427,8 @@ public class Slotmachine : MonoBehaviour
     IEnumerator WaitForPlayers()
     {
         yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
-        MinigameMenuManager.Instance.StartFirstMenu();
+        //dialogueObject.SetActive(true);
+        //DA RIVEDERE #MODIFICATO
     }
 
     public void ExitMinigame()

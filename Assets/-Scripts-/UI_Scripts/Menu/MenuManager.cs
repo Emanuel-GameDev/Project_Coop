@@ -31,6 +31,12 @@ public class MenuManager : MonoBehaviour
     private MenuInfo optionMenu;
 
     private MenuInfo actualMenu;
+    public MenuInfo ActualMenu => actualMenu;
+
+    [SerializeField]
+    private GameObject emptyRoot;
+    [SerializeField] 
+    private GameObject emptyRootSelected;
 
     [SerializeField]
     private HPHandler hPHandler;
@@ -119,15 +125,15 @@ public class MenuManager : MonoBehaviour
             OpenPauseMenu(player);
     }
 
-    public void ClosePauseMenu()
+    public void ClosePauseMenu(PlayerInputHandler player)
     {
-        if (actualMenu == pauseMenu)
+        if (actualMenu == pauseMenu && player == actualMenuOwner)
             CloseAllMenu();
     }
 
-    public void CloseOptionMenu()
+    public void CloseOptionMenu(PlayerInputHandler player)
     {
-        if (actualMenu == optionMenu)
+        if (actualMenu == optionMenu && player == actualMenuOwner)
             CloseAllMenu();
     }
 
@@ -180,7 +186,11 @@ public class MenuManager : MonoBehaviour
             GameManager.Instance.PauseGame();
 
         if(player != null)
+        {
+            DisableOtherPlayerInteraction(player);
             actualMenuOwner = player;
+        }
+            
 
         if (menu.HaveTabs)
         {
@@ -193,7 +203,11 @@ public class MenuManager : MonoBehaviour
         if (menu.InteractableSetter != null)
             menu.InteractableSetter.EnableInteract();
 
-        actualMenuOwner.SetPlayerActiveMenu(menu.MenuRoot, menu.FirstObjectSelected);
+        if(actualMenuOwner != null)
+            actualMenuOwner.SetPlayerActiveMenu(menu.MenuRoot, menu.FirstObjectSelected);
+            
+        
+            
 
         menu.gameObject.SetActive(true);
 
@@ -204,6 +218,18 @@ public class MenuManager : MonoBehaviour
 
         actualMenu = menu;
 
+    }
+
+    private void DisableOtherPlayerInteraction(PlayerInputHandler player)
+    {
+        foreach (PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
+        {
+            if(player != null && handler != player)
+            {
+                handler.SetPlayerActiveMenu(emptyRoot, emptyRootSelected);
+            }
+        }
+        
     }
 
     #endregion
@@ -235,7 +261,8 @@ public class MenuManager : MonoBehaviour
     private void ClearMenuEntries()
     {
         actualMenu = null;
-        actualMenuOwner.SetPlayerActiveMenu(null, null);
+        if(actualMenuOwner != null)
+            actualMenuOwner.SetPlayerActiveMenu(null, null);
         actualMenuOwner = null;
     }
 

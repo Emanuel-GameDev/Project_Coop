@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class KerberosBossCharacter : BossCharacter
 {
     [Header("Generics")]
+    public float lowHpPhaseTreshold;
     public float minDistance;
     public float followDuration;
     public float walkSpeed;
@@ -45,6 +46,8 @@ public class KerberosBossCharacter : BossCharacter
     public float crashWaveStaminaDamage;
     public float crashTimer;
     public GameObject crashwaveObject;
+    public Transform crashwaveTransform;
+    
 
     [Header("IfParried")]
     public float parryStunTimer = 3;
@@ -81,8 +84,9 @@ public class KerberosBossCharacter : BossCharacter
     {
         if (!parried)
         {
-            GameObject instantiatedWave = Instantiate(crashwaveObject, transform.position, Quaternion.identity, transform);
-            instantiatedWave.GetComponent<CrashWave>().SetVariables(crashWaveDamage, crashWaveStaminaDamage,this);
+            GameObject instantiatedWave = Instantiate(crashwaveObject, crashwaveTransform.position, Quaternion.identity, transform);
+            instantiatedWave.GetComponentInChildren<CrashWave>().SetVariables(crashWaveDamage, crashWaveStaminaDamage, this);
+
         }
     }
     #endregion
@@ -97,7 +101,7 @@ public class KerberosBossCharacter : BossCharacter
             if (canRotateInAnim)
             {               
                 SetSpriteDirection(direction);
-                Debug.Log("RUOTO");
+               
             }
 
             if (canShowPreview)
@@ -142,6 +146,12 @@ public class KerberosBossCharacter : BossCharacter
         if (!isDead)      
         base.TakeDamage(data);
 
+        float currentPercentage = (currentHp/maxHp) * 100;
+        if(currentPercentage <= lowHpPhaseTreshold)
+        {
+            gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("lowHp").Value = true;
+        }
+
         if (isDead)
         {
             gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("isDead").Value = true;
@@ -182,9 +192,15 @@ public class KerberosBossCharacter : BossCharacter
     }
     public void SetCanRotateInAnim(int value)
     {
-        SetSpriteDirection(direction);
+       
+        
 
         if (value == 0)
+        {
+            canRotateInAnim = false;
+            SetSpriteDirection(direction);
+        }
+        if(value == 3)
         {
             canRotateInAnim = false;
         }
@@ -192,8 +208,7 @@ public class KerberosBossCharacter : BossCharacter
         {
             canRotateInAnim = true;
         }
-    }
-    
+    }  
     public override void OnParryNotify(Character whoParried)
     {
         parried = true;        

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -49,13 +50,15 @@ public class LabirintManager : MonoBehaviour
     public Grid Grid => grid;
 
 
-    //TEMP FOR TEST
+    [Header("Dialogue")]
     [SerializeField]
-    public GameObject dialogueObject;
+    private GameObject dialogueBox;
+    [SerializeField]
+    private Dialogue winDialogue;
+    [SerializeField]
+    private Dialogue loseDialogue;
 
 
-
-    private StateMachine<LabirintState> stateMachine = new StateMachine<LabirintState>();
     private LabirintUI labirintUI;
     private SceneChanger sceneChanger;
 
@@ -73,11 +76,8 @@ public class LabirintManager : MonoBehaviour
 
     private void Start()
     {
-        //SetupLabirint();
-        stateMachine.SetState(new StartLabirint());
+        StartCoroutine(WaitForPlayers());
         sceneChanger = GetComponent<SceneChanger>();
-        //Debug
-        //StartGame();
     }
 
     public void StartPlay()
@@ -103,9 +103,8 @@ public class LabirintManager : MonoBehaviour
             EndGame(false);
     }
 
-    private void StartGame()
+    public void StartGame()
     {
-        currentLabirint.DisableObjectMap();
         labirintUI.UpdateRemainingKeyCount(keyCount);
         labirintUI.SetAllPlayer(CoopManager.Instance.GetActiveHandlers());
 
@@ -119,13 +118,17 @@ public class LabirintManager : MonoBehaviour
     {
         if (playerWin)
         {
-            labirintUI.ActivateWinScreen();
-            Debug.Log("End Game: You Win");
+            //labirintUI.ActivateWinScreen();
+            dialogueBox.SetActive(true);
+            dialogueBox.GetComponent<DialogueBox>().SetDialogue(winDialogue);
+            dialogueBox.GetComponent<DialogueBox>().StartDialogue();
         }
         else
         {
-            labirintUI.ActivateLoseScreen();
-            Debug.Log("End Game: You Lose");
+            //labirintUI.ActivateLoseScreen();
+            dialogueBox.SetActive(true);
+            dialogueBox.GetComponent<DialogueBox>().SetDialogue(loseDialogue);
+            dialogueBox.GetComponent<DialogueBox>().StartDialogue();
         }
 
         foreach (GameObject obj in objectsForTheGame)
@@ -141,10 +144,17 @@ public class LabirintManager : MonoBehaviour
             sceneChanger.ChangeScene();
     }
 
+    IEnumerator WaitForPlayers()
+    {
+        yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
+        dialogueBox.SetActive(true);
+        dialogueBox.GetComponent<DialogueBox>().StartDialogue();
+    }
+
     #endregion
 
     #region Labirint Setup
-    private void SetupLabirint()
+    public void SetupLabirint()
     {
         ResetLabirint();
         currentLabirint = Labirints[Random.Range(0, Labirints.Count)];
@@ -158,6 +168,7 @@ public class LabirintManager : MonoBehaviour
         SetPlayers(currentLabirint.GetPlayerSpawnPoints());
         pickedKey = 0;
         deadPlayerCount = 0;
+        currentLabirint.DisableObjectMap();
     }
 
     private void ResetLabirint()
