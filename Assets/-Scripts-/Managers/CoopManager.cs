@@ -118,7 +118,7 @@ public class CoopManager : MonoBehaviour
             if (newPlayerInputHandler.CurrentReceiver is PlayerCharacterController)
             {
                 PlayerCharacterController receiver = (PlayerCharacterController)newPlayerInputHandler.CurrentReceiver;
-                PubSub.Instance.Notify(EMessageType.characterJoined, receiver.ActualPlayerCharacter);
+                //PubSub.Instance.Notify(EMessageType.characterJoined, receiver.ActualPlayerCharacter);
             }
                 
         }
