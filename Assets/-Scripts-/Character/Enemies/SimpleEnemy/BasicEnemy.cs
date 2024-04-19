@@ -86,7 +86,7 @@ public class BasicEnemy : EnemyCharacter
     [HideInInspector] public NavMeshObstacle obstacle;
     [HideInInspector] public PlayerCharacter currentTarget;
 
-
+    
     protected override void Awake()
     {
         base.Awake();
@@ -190,7 +190,7 @@ public class BasicEnemy : EnemyCharacter
             rb.velocity = Vector2.zero;
         }
     }
-
+    
     public virtual void Move(Vector2 direction, Rigidbody2D rb)
     {
         if (obstacle.enabled)
