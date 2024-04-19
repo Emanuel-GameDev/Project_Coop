@@ -116,6 +116,12 @@ public class Healer : PlayerCharacter
 
         extraData.unusedKey = 3;
         extraData.money = 2;
+
+        if (upgradeStatus[AbilityUpgrade.Ability2])
+        {
+            Debug.Log("2");
+        }
+        else Debug.Log("no");
     }
 
 
@@ -328,11 +334,13 @@ public class Healer : PlayerCharacter
 
         //calcolo raggio area
         if (upgradeStatus[AbilityUpgrade.Ability2])
+        {
             radius = healAreaRadius + healAreaIncrementedRadious;
+            Debug.Log("2");
+        }
         else
             radius = healAreaRadius;
 
-        Debug.Log(healAreaRadius.ToString());
         HealArea areaSpawned = Instantiate(healArea, new Vector2(transform.position.x, transform.position.y), Quaternion.identity).GetComponent<HealArea>();
 
 
