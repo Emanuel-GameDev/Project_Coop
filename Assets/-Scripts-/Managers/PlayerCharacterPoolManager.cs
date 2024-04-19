@@ -94,7 +94,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         freeCharacters.Remove(playerCharacter);
         activeCharacters.Add(playerCharacter);
         //if (newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacterController>())
-        //PubSub.Instance.Notify(EMessageType.characterJoined, playerCharacter);
+        PubSub.Instance.Notify(EMessageType.characterJoined, playerCharacter);
         CameraManager.Instance.AddTarget(playerCharacter.transform);
     }
 
@@ -124,6 +124,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         if (searchedCharacter != null)
         {
             ActivateCharacter(searchedCharacter, position);
+            //PubSub.Instance.Notify(EMessageType.characterJoined, searchedCharacter);
         }
         return searchedCharacter;
     }

@@ -250,8 +250,8 @@ public class TutorialManager : MonoBehaviour
         stateMachine.SetState(new IntermediateTutorialFase(this));
         exit.SetActive(false);
         lilith.gameObject.GetComponent<CircleCollider2D>().enabled = false;
-        lilith.gameObject.GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(false);
-       
+        
+        lilithBaloon.SetActive(false);
         playableDirector.Play();
     }
 
@@ -575,6 +575,10 @@ public class TutorialManager : MonoBehaviour
         
 
         tutorialEnemy.gameObject.SetActive(true);
+
+
+        lilith.gameObject.transform.SetPositionAndRotation(lilithRespawn.position, lilith.gameObject.transform.rotation);
+        lilith.gameObject.GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(true);
     }
 
     public void DeactivateEnemyAI()
