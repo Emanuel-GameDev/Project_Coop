@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class LabirintManager : MonoBehaviour
 {
@@ -24,7 +27,7 @@ public class LabirintManager : MonoBehaviour
             return _instance;
         }
     }
-
+    [Header("Labirint Settings")]
     [SerializeField]
     int enemyCount = 4;
     [SerializeField]
@@ -50,14 +53,32 @@ public class LabirintManager : MonoBehaviour
     public Grid Grid => grid;
 
 
-    [Header("Dialogue")]
+    [Header("Dialogue Settings")]
     [SerializeField]
     private GameObject dialogueBox;
     [SerializeField]
     private Dialogue winDialogue;
     [SerializeField]
     private Dialogue loseDialogue;
+    [SerializeField]
+    private UnityEvent onWinDialogueEnd;
+    [SerializeField]
+    private UnityEvent onLoseDialogueEnd;
 
+    private DialogueBox _dialogueBox;
+    
+
+    [Header("Rewards Settings")]
+    [SerializeField]
+    private int coinForEachPlayer;
+    [SerializeField]
+    private int coinForFirstPlayer;
+    [SerializeField]
+    private int keyForEachPlayer;
+    [SerializeField]
+    private int keyForFirstPlayer;
+    [SerializeField]
+    private WinScreenHandler winScreenHandler;
 
     private LabirintUI labirintUI;
     private SceneChanger sceneChanger;
@@ -72,6 +93,14 @@ public class LabirintManager : MonoBehaviour
         {
             _instance = this;
         }
+
+        if(dialogueBox != null)
+        {
+            _dialogueBox = dialogueBox.GetComponent<DialogueBox>();
+        }
+        else
+            Debug.LogError("DialogueBox is null");
+
     }
 
     private void Start()
@@ -116,26 +145,28 @@ public class LabirintManager : MonoBehaviour
 
     private void EndGame(bool playerWin)
     {
+        _dialogueBox.RemoveAllDialogueEnd();
+
         if (playerWin)
         {
-            //labirintUI.ActivateWinScreen();
-            dialogueBox.SetActive(true);
-            dialogueBox.GetComponent<DialogueBox>().SetDialogue(winDialogue);
-            dialogueBox.GetComponent<DialogueBox>().StartDialogue();
+            _dialogueBox.SetDialogue(winDialogue);
+            _dialogueBox.AddDialogueEnd(onWinDialogueEnd);
         }
         else
         {
-            //labirintUI.ActivateLoseScreen();
-            dialogueBox.SetActive(true);
-            dialogueBox.GetComponent<DialogueBox>().SetDialogue(loseDialogue);
-            dialogueBox.GetComponent<DialogueBox>().StartDialogue();
+            _dialogueBox.SetDialogue(loseDialogue);
+            _dialogueBox.AddDialogueEnd(onLoseDialogueEnd);
         }
+
+        dialogueBox.SetActive(true);
+        _dialogueBox.StartDialogue();
 
         foreach (GameObject obj in objectsForTheGame)
         {
             obj.SetActive(false);
         }
 
+        MakeRankList();
     }
 
     public void ExitMinigame()
@@ -148,7 +179,7 @@ public class LabirintManager : MonoBehaviour
     {
         yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
         dialogueBox.SetActive(true);
-        dialogueBox.GetComponent<DialogueBox>().StartDialogue();
+        _dialogueBox.StartDialogue();
     }
 
     #endregion
@@ -244,6 +275,51 @@ public class LabirintManager : MonoBehaviour
     {
         players.Add(labirintPlayer);
     }
+
+    private void MakeRankList()
+    {
+        List<LabirintPlayer> winOrder = new();
+
+        foreach (LabirintPlayer player in players)
+        {
+            winOrder.Add(player);
+        }
+
+        winOrder.Sort((x, y) => y.pickedKeys.CompareTo(x.pickedKeys));
+
+        List<ePlayerCharacter> ranking = new();
+
+        foreach (LabirintPlayer player in winOrder)
+        {
+            ranking.Add(player.GetCharacter());
+        }
+
+        foreach(ePlayerCharacter c in Enum.GetValues(typeof(ePlayerCharacter)))
+        {
+            if(c != ePlayerCharacter.EmptyCharacter)
+            {
+                if (!ranking.Contains(c))
+                {
+                    ranking.Add(c);
+                }
+            }
+        }
+
+        for (int i = 0; i < ranking.Count; i++)
+        {
+            if (i == 0)
+            {
+                //DA RIVEDERE
+                winScreenHandler.SetCharacterValues(ranking[i], Rank.First, coinForFirstPlayer, coinForEachPlayer + coinForFirstPlayer, keyForFirstPlayer, keyForFirstPlayer + keyForEachPlayer);
+            }
+            else if(Enum.TryParse<Rank>(i.ToString(), out Rank rank))
+            {
+                winScreenHandler.SetCharacterValues(ranking[i], rank, coinForEachPlayer, coinForEachPlayer + coinForEachPlayer, keyForEachPlayer, keyForEachPlayer + keyForEachPlayer);
+            }
+            
+        }
+    }
+
     #endregion
 
 }
