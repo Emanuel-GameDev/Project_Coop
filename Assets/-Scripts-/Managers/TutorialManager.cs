@@ -300,7 +300,7 @@ public class TutorialManager : MonoBehaviour
                 startingCharacters.Add(ih, ranged);
             }
 
-            if (ih.currentCharacter == ePlayerCharacter.Caina)
+            if (ih.currentCharacter == ePlayerCharacter.Kaina)
             {
                 tankPresent = true;
                 PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
@@ -339,7 +339,7 @@ public class TutorialManager : MonoBehaviour
 
         if (!tankPresent)
         {
-            tank = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Caina, transform);
+            tank = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Kaina, transform);
             PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
             inputBindings.Add(tank, receiver);
             HPHandler.Instance.AddContainer(tank);

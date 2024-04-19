@@ -352,7 +352,7 @@ public abstract class PlayerCharacter : Character
     public void SwitchRightInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            PlayerCharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Caina);
+            PlayerCharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Kaina);
     }
 
     public void SwitchDownInput(InputAction.CallbackContext context)

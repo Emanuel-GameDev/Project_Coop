@@ -232,6 +232,11 @@ public class MenuManager : MonoBehaviour
         
     }
 
+    public void FirstPlayerOpenMenu(MenuInfo menu)
+    {
+        OpenMenu(menu, CoopManager.Instance.GetFirstPlayer());
+    }
+
     #endregion
 
     public void CloseMenu()
