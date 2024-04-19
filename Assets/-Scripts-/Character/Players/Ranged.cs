@@ -309,6 +309,10 @@ public class Ranged : PlayerCharacter
             rb.velocity = Vector2.zero;
 
             isDodging = false;
+
+            dodgeTimer = dodgeCoolDown;
+
+
         }
         
     }
