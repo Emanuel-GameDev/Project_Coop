@@ -27,10 +27,10 @@ public class BasicMeleeEnemy : BasicEnemy
     {
         base.Start();
 
-       
-        stateMachine.SetState(idleState);
+        //CONTROLLARE
+        //stateMachine.SetState(idleState);
     }
 
-    //CONTROLLARE
-   
+
+
 }

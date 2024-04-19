@@ -51,8 +51,9 @@ public class EnemySpawner : MonoBehaviour
             {
                 challengeParent.AddToSpawned(tempEnemy);                
                 Vector2 randomSpawnDestination = new Vector2(Random.Range(spawnDestination.position.x - destinationRange, spawnDestination.position.x + destinationRange), Random.Range(spawnDestination.position.y - destinationRange, spawnDestination.position.y + destinationRange));
-                
-                tempEnemy.stateMachine.SetState(tempEnemy.moveState);
+                tempEnemy.entryDestination = randomSpawnDestination;
+                tempEnemy.canGoIdle = false;
+                tempEnemy.stateMachine.SetState(tempEnemy.entryState);
 
 
             }
