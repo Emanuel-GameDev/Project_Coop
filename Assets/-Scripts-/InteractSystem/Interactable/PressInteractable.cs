@@ -22,6 +22,8 @@ public class PressInteractable : MonoBehaviour, IInteractable
     
     List<IInteracter> interacters = new List<IInteracter>();
 
+    private int triggerCount;
+
     private void Start()
     {
         if (interacterVisualization != null)
@@ -66,6 +68,7 @@ public class PressInteractable : MonoBehaviour, IInteractable
             if (interacterVisualization != null)
             {
                 interacterVisualization.SetActive(true);
+                triggerCount++;
             }
         }
     }
@@ -78,7 +81,9 @@ public class PressInteractable : MonoBehaviour, IInteractable
 
             if (interacterVisualization != null)
             {
-                interacterVisualization.SetActive(false);
+                triggerCount--;
+                if(triggerCount <= 0)
+                    interacterVisualization.SetActive(false);
             }
 
         }
