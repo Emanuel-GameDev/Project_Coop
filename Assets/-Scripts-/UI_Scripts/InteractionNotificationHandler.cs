@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,15 +59,36 @@ public class InteractionNotificationHandler : MonoBehaviour
         else
         {
             GameObject newNotification = Instantiate(notificationPrefab, notificationParent);
+            newNotification.SetActive(true);
+
             interaction = newNotification.GetComponent<InteractionNotification>();
             interaction.SetDescription(localizedString);
-            if (interacter is PlayerCharacter character)
-                interaction.SetCharacterSprite(GameManager.Instance.GetCharacterData(character.Character).DialogueSprite);
+            interaction.ChangeFirstInteracter(interacter, interactable);
+
+            notifications.Add(interactable, interaction);
         }
 
         interaction.AddToCount();
 
-        
     }
+
+    public void CancelNotification(IInteracter interacter, IInteractable interactable)
+    {
+        if (notifications.ContainsKey(interactable))
+        {
+            notifications[interactable].RemoveFromCount();
+            notifications[interactable].ChangeFirstInteracter(interacter, interactable);
+        }
+    }
+
+    public void DeactivateNotification(IInteractable interactable)
+    {
+        if (notifications.ContainsKey(interactable))
+        {
+            Destroy(notifications[interactable].gameObject);
+            notifications.Remove(interactable);
+        }
+    }
+
 
 }
