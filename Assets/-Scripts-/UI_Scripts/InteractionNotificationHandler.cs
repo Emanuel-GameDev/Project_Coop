@@ -12,14 +12,28 @@ public class InteractionNotificationHandler : MonoBehaviour
     [SerializeField]
     private Transform notificationParent;
 
-    public void ActivateNotification(IInteracter interacter, LocalizedString localizedString)
+    private Dictionary<IInteractable, InteractionNotification> notifications = new();
+
+    public void ActivateNotification(IInteracter interacter, LocalizedString localizedString, IInteractable interactable)
     {
-        GameObject newNotification = Instantiate(notificationPrefab, notificationParent);
-        InteractionNotification interaction = newNotification.GetComponent<InteractionNotification>();
-        interaction.SetDescription(localizedString);
-        if (interacter is PlayerCharacter character)
-            interaction.SetCharacterSprite(GameManager.Instance.GetCharacterData(character.Character).DialogueSprite);
-        interaction.SetCount("pop");
+        InteractionNotification interaction;
+
+        if (notifications.ContainsKey(interactable))
+        {
+            interaction = notifications[interactable];
+        }
+        else
+        {
+            GameObject newNotification = Instantiate(notificationPrefab, notificationParent);
+            interaction = newNotification.GetComponent<InteractionNotification>();
+            interaction.SetDescription(localizedString);
+            if (interacter is PlayerCharacter character)
+                interaction.SetCharacterSprite(GameManager.Instance.GetCharacterData(character.Character).DialogueSprite);
+        }
+
+        interaction.AddToCount();
+
+        
     }
 
 }

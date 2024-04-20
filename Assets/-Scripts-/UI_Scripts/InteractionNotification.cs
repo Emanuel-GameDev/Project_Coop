@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -17,6 +18,7 @@ public class InteractionNotification : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI countText;
 
+    private int Count = 0;
     public void SetBackgroundSprite(Sprite sprite)
     {
         backgroundImage.sprite = sprite;
@@ -32,8 +34,23 @@ public class InteractionNotification : MonoBehaviour
         this.description.StringReference = descriptionString;
     }
 
-    public void SetCount(string countText)
+    private void SetCount()
     {
+        string players = CoopManager.Instance.GetActiveHandlers().Count.ToString();
+
+        string countText = Count.ToString() + "/" +players;
         this.countText.text = countText;
+    }
+
+    public void AddToCount()
+    {
+        Count++;
+        SetCount();
+    }
+
+    public void RemoveFromCount()
+    {
+        Count--;
+        SetCount();
     }
 }
