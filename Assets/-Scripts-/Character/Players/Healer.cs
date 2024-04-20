@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
 
 public class Healer : PlayerCharacter
 {
@@ -114,14 +115,14 @@ public class Healer : PlayerCharacter
 
         //prova
 
-        extraData.unusedKey = 3;
-        extraData.money = 2;
+        
 
         if (upgradeStatus[AbilityUpgrade.Ability2])
         {
             Debug.Log("2");
         }
         else Debug.Log("no");
+        //LoadSaveData(GetSaveData());
     }
 
 
@@ -143,6 +144,7 @@ public class Healer : PlayerCharacter
 
 
     }
+    
 
     public void DeactivateInput()
     {
@@ -205,6 +207,12 @@ public class Healer : PlayerCharacter
     protected override void Update()
     {
         Move(moveDir);
+
+        if(Input.GetKeyDown(KeyCode.L))
+        {
+            extraData.unusedKey += 3;
+            extraData.money += 2;
+        }
 
         if (uniqueAbilityTimer < UniqueAbilityCooldown)
         {

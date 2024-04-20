@@ -84,8 +84,6 @@ public class HPHandler : MonoBehaviour
         
         if(id < HpContainerTransform.Length)
         {
-           
-
             GameObject hpContainerObject = Instantiate(HPContainer, HpContainerTransform[id]);
             hpContainerObject.GetComponent<RectTransform>().SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
 
