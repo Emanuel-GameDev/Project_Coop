@@ -36,7 +36,7 @@ public class LBCarrotBreak : LBBaseState
         if (!canJump)
         {
             // Cambio stato 
-            stateMachine.SetState(new LBJumpAttack(bossCharacter, trump));
+            stateMachine.SetState(new LBJumpAttackV2(bossCharacter, trump));
 
             return;
         }
