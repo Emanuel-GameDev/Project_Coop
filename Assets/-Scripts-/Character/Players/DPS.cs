@@ -384,11 +384,11 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         if (!isInvulnerable || !isDodging)
         {
             base.TakeDamage(data);
-            if (!isDashingAttack)
-                animator.SetTrigger(HIT);
+            //if (!isDashingAttack)
+            //    animator.SetTrigger(HIT);
 
-            if(IsAttacking)
-                ResetAttack();
+            //if(IsAttacking)
+            //    ResetAttack();
         }
 
         if (perfectTimingEnabled)

@@ -9,5 +9,7 @@ public interface IInteracter
     void EnableInteraction(IInteractable interactable);
     void DisableInteraction(IInteractable interactable);
 
+    //void DisableOtherActions();
+
     GameObject GetInteracterObject();
 }

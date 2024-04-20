@@ -87,9 +87,9 @@ public class SouvenirShopTable : MonoBehaviour
 
     public void BuySouvenir()
     {
-        if (currentPlayerInShop.ExtraData.money < currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost) return;
+        if (currentPlayerInShop.ExtraData.coin < currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost) return;
 
-        currentPlayerInShop.ExtraData.money -= currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost;
+        currentPlayerInShop.ExtraData.coin -= currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost;
         currentPlayerInShop.AddPowerUp(currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID]);
         
         currentSouvenirEntry.souvenirID++;
@@ -100,7 +100,7 @@ public class SouvenirShopTable : MonoBehaviour
 
     public void MoneyCheck()
     {
-        if (currentPlayerInShop.ExtraData.money < currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost)
+        if (currentPlayerInShop.ExtraData.coin < currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost)
             buyButton.GetComponent<Image>().color = Color.gray;
         else
             buyButton.GetComponent<Image>().color = Color.white;

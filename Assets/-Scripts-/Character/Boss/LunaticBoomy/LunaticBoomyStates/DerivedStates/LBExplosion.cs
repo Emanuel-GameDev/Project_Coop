@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class LBExplosion : LBBaseState
 {
+    private TrumpOline currTrump;
 
-    public LBExplosion(LunaticBoomyBossCharacter bossCharacter) : base(bossCharacter)
+    private float timer;
+    public LBExplosion(LunaticBoomyBossCharacter bossCharacter, TrumpOline currTrump) : base(bossCharacter)
     {
+        this.currTrump = currTrump;
     }
 
     public override void Enter()
     {
         base.Enter();
+
+        Debug.Log("BOOOOOOOOOOOOM");
+
+        timer = 0f;
     }
 
     public override void Exit()
@@ -22,5 +29,13 @@ public class LBExplosion : LBBaseState
     public override void Update()
     {
         base.Update();
+
+        timer += Time.deltaTime;
+
+        if (timer >= bossCharacter.StunTime)
+        {
+            Debug.Log("stun finito");
+            stateMachine.SetState(new LBPanic(bossCharacter, currTrump));
+        }
     }
 }

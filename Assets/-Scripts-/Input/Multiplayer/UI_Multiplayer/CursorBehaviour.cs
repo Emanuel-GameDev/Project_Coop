@@ -1,76 +1,42 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class CursorBehaviour : InputReceiver
 {
-    private Vector2 movement;
-    private GameObject selectionParent;
-    public TextMeshProUGUI infoText;
-
     // Gli oggetti su cui il cursore potrà muoversi
-    [HideInInspector] public List<RectTransform> objectsToOver;
-    private int currentIndex = 0;
+    [HideInInspector] public List<RectTransform> objectsToOver = new List<RectTransform>();
+    private int currentIndex = -1;
 
-    public bool objectSelected = false;
-    private bool randomBtnSelected = false;
-
-    //DA RIVEDERE #MODIFICATO
     private ePlayerID playerID;
-    private Image icon;
-    public Sprite player1Icon;
-    public Sprite player2Icon;
-    public Sprite player3Icon;
-    public Sprite player4Icon;
-    public float offset = 25f;
+    internal ePlayerID PlayerID => playerID;
+
+    private Button confirmBtn;
+    private bool onlyConfirmationRequired = false;
+    private Vector2 movement;
+    internal bool objectSelected = false;
 
     private void Start()
     {
-        List<RectTransform> icons = CharacterSelectionMenu.Instance.GetCharacterIcons();
-        icon = GetComponent<Image>();
-        //objectsToOver.Clear();
-        objectsToOver = new List<RectTransform>();
+        CharacterSelectionMenu.Instance.AddToActiveCursors(this);
 
-        foreach (RectTransform icon in icons)
-        {
-            objectsToOver.Add(icon);
-        }
-
-        GetComponent<RectTransform>().SetParent(icons[0].gameObject.GetComponent<RectTransform>());
-        GetComponent<RectTransform>().localPosition = Vector3.zero;
-        GetComponent<RectTransform>().localScale = new Vector2(1f, 1f);
-
-        CharacterSelectionMenu.Instance.AssignInfoText(this);
-
-        //DA RIVEDERE #MODIFICATO
         if (playerInputHandler != null)
         {
             playerID = playerInputHandler.playerID;
-            ChangeIconOnPlayerID();
         }
+
+        objectsToOver = CharacterSelectionMenu.Instance.GetCharacterSelectors(playerID);
     }
 
     public override void Navigate(InputAction.CallbackContext context)
     {
-        if (context.started && randomBtnSelected)
-        {
-            Debug.LogWarning($"Player {context.control.device.deviceId} non può muoversi poiché ha" +
-                $" avviato una votazione per la selezione random");
+        movement = context.ReadValue<Vector2>();
 
-            infoText.text = $"Player {context.control.device.deviceId} non può muoversi poiché ha" +
-                $" avviato una votazione per la selezione random";
-
-            return;
-        }    
-
-        // Bottone premuto
         if (context.started && !objectSelected)
         {
-            movement = context.ReadValue<Vector2>();
-
             if (movement.x > 0)
             {
                 // Premuto "D", spostati all'oggetto successivo
@@ -81,11 +47,35 @@ public class CursorBehaviour : InputReceiver
                 // Premuto "A", spostati all'oggetto precedente
                 currentIndex = (currentIndex - 1 + objectsToOver.Count) % objectsToOver.Count;
             }
+            else if (movement.y > 0)
+                return;
+            else if (movement.y < 0)
+                return;
 
-            // Aggiorna la posizione del cursore in base all'oggetto corrente nella lista
-            GetComponent<RectTransform>().position = objectsToOver[currentIndex].position;
-            transform.SetParent(objectsToOver[currentIndex]);
+            Select(currentIndex);
         }
+    }
+
+    internal void Select(int id)
+    {
+        int actualID;
+
+        if (id != currentIndex)
+            actualID = id;
+        else
+            actualID = currentIndex;
+
+        // Spengo il P che prima era acceso
+        CharacterSelectionMenu.Instance.PlayerOvered(false, gameObject);
+
+        // Sposto il cursore e resetto pos
+        if (currentIndex < 0) return;
+
+        GetComponent<RectTransform>().SetParent(objectsToOver[actualID]);
+        GetComponent<RectTransform>().position = GetComponent<RectTransform>().parent.position;
+
+        // Accendo il P relativo
+        CharacterSelectionMenu.Instance.PlayerOvered(true, gameObject);
     }
 
     /// <summary>
@@ -95,96 +85,77 @@ public class CursorBehaviour : InputReceiver
     /// <param name="context"></param>
     public override void Submit(InputAction.CallbackContext context)
     {
-        if (CharacterSelectionMenu.Instance.randomVoteActive && context.started)
+        //if (context.started && confirmBtn != null)
+        //{
+        //    // Aggiungi la funzione SelectionOver come listener all'evento onClick del pulsante
+        //    confirmBtn.onClick.RemoveAllListeners();
+        //    confirmBtn.onClick.AddListener(() => CharacterSelectionMenuV2.Instance.SelectionOver(playerID));
+
+        //    // Esegui il comportamento di selezione normale del pulsante
+        //    confirmBtn.onClick.Invoke();
+        //}
+
+        if (context.started && onlyConfirmationRequired)
+            CharacterSelectionMenu.Instance.SelectionOver(PlayerID);
+
+        if (context.started && GetComponent<RectTransform>().parent != null)
         {
-            Debug.LogWarning($"Player {context.control.device.deviceId} non può selezionare poiché ha avviato" +
-                $" una votazione per la selezione random");
-            infoText.text = $"Player {context.control.device.deviceId} non può selezionare poiché ha avviato" +
-                $" una votazione per la selezione random";
-
-            return;
-        }
-
-        if (context.started)
-        {
-            selectionParent = transform.parent.gameObject;
-
             // Se un'altro personaggio ha già selezionato un'oggetto return
-            if (CharacterSelectionMenu.Instance.AlreadySelected(this, selectionParent.GetComponent<RectTransform>()))
+            if (CharacterSelectionMenu.Instance.AlreadySelected(this))
                 return;
 
             // Se non ho selezionato niente, seleziono
             if (!objectSelected)
             {
-                objectSelected = true;
-                Debug.Log("selected");
-                infoText.text = "selected";
-            }
-            // Se ho già selezionato, deseleziono
-            else
-            {
-                objectSelected = false;
-                Debug.Log("Deselected");
-                infoText.text = "deselected";
-            }
+                bool response = CharacterSelectionMenu.Instance.TriggerPlayerSelection(true, gameObject);
 
-            CharacterSelectionMenu.Instance.UpdatePlayerSelection(this, selectionParent.GetComponent<RectTransform>(), objectSelected);
+                if (response)
+                    objectSelected = true;
+            }
+        }
+
+        CheckAllReady();
+    }
+
+    public override void Cancel(InputAction.CallbackContext context)
+    {
+        if (objectSelected)
+        {
+            bool response = CharacterSelectionMenu.Instance.TriggerPlayerSelection(false, gameObject);
+
+            if (response)
+                objectSelected = false;
+        }
+        
+        CheckAllReady();
+    }
+
+    internal void CheckAllReady()
+    {
+        if (CharacterSelectionMenu.Instance.AllReady())
+        {
+            CharacterSelectionMenu.Instance.TriggerFasciaReady(true);
+            onlyConfirmationRequired = true;
+        }
+        else
+        {
+            CharacterSelectionMenu.Instance.TriggerFasciaReady(false);
+            onlyConfirmationRequired = false;
+        }
+    }
+
+    public override void RandomSelection(InputAction.CallbackContext context)
+    {
+        if (context.started && !objectSelected && GetComponent<RectTransform>().parent != null)
+        {
+            CharacterSelectionMenu.Instance.SelectRandom(this);
         }
     }
 
     public override void SetCharacter(ePlayerCharacter character)
     {
         base.SetCharacter(character);
-        //DA RIVEDERE #MODIFICATO
-        //playerInputHandler.SetStartingCharacter(character);
-    }
 
-    public override void SetInputHandler(PlayerInputHandler inputHandler)
-    {
-        base.SetInputHandler(inputHandler);
-    }
-
-    //DA RIVEDERE #MODIFICATO
-    public void SetStartingCharacter()
-    {
         playerInputHandler.SetStartingCharacter(character);
     }
-
-    //DA RIVEDERE #MODIFICATO
-    private void ChangeIconOnPlayerID()
-    {
-        if (playerID == ePlayerID.Player1)
-            icon.sprite = player1Icon;
-        if(playerID == ePlayerID.Player2)
-        {
-            icon.sprite = player2Icon;
-            transform.position = new Vector3(offset, 0, 0);
-        }
-        if (playerID == ePlayerID.Player3)
-        {
-            icon.sprite = player3Icon;
-            transform.position = new(offset*2, 0, 0);
-        }
-        if(playerID == ePlayerID.Player4)
-        {
-            icon.sprite = player4Icon;
-            transform.position = new(offset*3, 0, 0);
-        }
-
-    }
-
-    /// <summary>
-    /// Chiede al menu di aggiornare il numero degli utenti che hanno dato il consenso ad usare la selezione random
-    /// </summary>
-    /// <param name="context"></param>
-    public override void RandomSelection(InputAction.CallbackContext context)
-    {
-        if (context.started && !objectSelected)
-        {
-            randomBtnSelected = !randomBtnSelected;
-            CharacterSelectionMenu.Instance.TriggerRandomSelection(randomBtnSelected);
-        }
-
-    }
-
 }
