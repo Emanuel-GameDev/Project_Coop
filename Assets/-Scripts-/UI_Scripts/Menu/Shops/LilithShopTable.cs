@@ -114,7 +114,7 @@ public class LilithShopTable : MonoBehaviour
             lastButton.SetAbility(lastEntry.abilitys[lastEntry.id]);
 
 
-        UpdateKeyCounter(--playerCharacterReference.ExtraData.unusedKey);
+        UpdateKeyCounter(--playerCharacterReference.ExtraData.key);
         KeyRequirementChecks();
         DesetOnBuyButton();
 

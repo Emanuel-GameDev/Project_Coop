@@ -307,16 +307,36 @@ public class LabirintManager : MonoBehaviour
 
         for (int i = 0; i < ranking.Count; i++)
         {
+            int totalCoin = 0;
+            int totalKey = 0;
+            CharacterSaveData saveData = SaveManager.Instance.GetPlayerSaveData(ranking[i]);
+            if (saveData != null)
+            {
+                totalCoin = saveData.extraData.coin;
+                totalKey = saveData.extraData.key;
+            }
+
             if (i == 0)
             {
-                //DA RIVEDERE
-                winScreenHandler.SetCharacterValues(ranking[i], Rank.First, coinForFirstPlayer, coinForEachPlayer + coinForFirstPlayer, keyForFirstPlayer, keyForFirstPlayer + keyForEachPlayer);
+                totalCoin += coinForFirstPlayer;
+                totalKey += keyForFirstPlayer;
+                
+                winScreenHandler.SetCharacterValues(ranking[i], Rank.First, coinForFirstPlayer, totalCoin, keyForFirstPlayer, totalKey);
             }
             else if(Enum.TryParse<Rank>(i.ToString(), out Rank rank))
             {
-                winScreenHandler.SetCharacterValues(ranking[i], rank, coinForEachPlayer, coinForEachPlayer + coinForEachPlayer, keyForEachPlayer, keyForEachPlayer + keyForEachPlayer);
+                totalCoin += coinForEachPlayer;
+                totalKey += keyForEachPlayer;
+
+                winScreenHandler.SetCharacterValues(ranking[i], rank, coinForEachPlayer, totalCoin, keyForEachPlayer, totalKey);
             }
-            
+
+            if (saveData != null)
+            {
+                saveData.extraData.coin = totalCoin;
+                saveData.extraData.key = totalKey;
+            }
+
         }
     }
 
