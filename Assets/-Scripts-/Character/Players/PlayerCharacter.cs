@@ -427,7 +427,7 @@ public abstract class PlayerCharacter : Character
     {
         if(saveData == null || saveData.characterName != character)
             return;
-
+        Debug.Log("load");
         foreach (PowerUp pu in saveData.powerUps)
         {
             powerUpData.Add(pu);

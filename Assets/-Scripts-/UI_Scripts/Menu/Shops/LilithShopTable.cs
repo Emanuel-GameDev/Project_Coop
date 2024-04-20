@@ -119,7 +119,7 @@ public class LilithShopTable : MonoBehaviour
         KeyRequirementChecks();
         DesetOnBuyButton();
 
-        //SaveManager.Instance.SaveAllData();
+        SaveManager.Instance.SaveAllData();
 
     }
 
