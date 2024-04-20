@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -18,6 +15,8 @@ public class InteractionNotification : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI countText;
 
+    private IInteracter firstInteracter;
+
     private int Count = 0;
     public void SetBackgroundSprite(Sprite sprite)
     {
@@ -27,6 +26,7 @@ public class InteractionNotification : MonoBehaviour
     public void SetCharacterSprite(Sprite sprite)
     {
         chracterImage.sprite = sprite;
+
     }
 
     public void SetDescription(LocalizedString descriptionString)
@@ -38,7 +38,7 @@ public class InteractionNotification : MonoBehaviour
     {
         string players = CoopManager.Instance.GetActiveHandlers().Count.ToString();
 
-        string countText = Count.ToString() + "/" +players;
+        string countText = Count.ToString() + "/" + players;
         this.countText.text = countText;
     }
 
@@ -53,4 +53,22 @@ public class InteractionNotification : MonoBehaviour
         Count--;
         SetCount();
     }
+
+    public void ChangeFirstInteracter(IInteracter interacter, IInteractable interactable)
+    {
+        if (firstInteracter == null)
+            SetFirstInteracter(interacter);
+        else if (firstInteracter == interacter)
+            SetFirstInteracter(interactable.GetFirstInteracter());
+
+
+    }
+
+    private void SetFirstInteracter(IInteracter interacter)
+    {
+        firstInteracter = interacter;
+        if (interacter is PlayerCharacter character)
+            SetCharacterSprite(GameManager.Instance.GetCharacterData(character.Character).DialogueSprite);
+    }
+
 }

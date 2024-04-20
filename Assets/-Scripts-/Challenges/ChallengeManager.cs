@@ -59,4 +59,14 @@ public class ChallengeManager : MonoBehaviour, IInteractable
             interacter.DisableInteraction(this);
         }
     }
+
+    public void CancelInteraction(IInteracter interacter)
+    {
+        
+    }
+
+    public IInteracter GetFirstInteracter()
+    {
+        return null;
+    }
 }

@@ -401,6 +401,10 @@ public abstract class PlayerCharacter : Character
         Interact(context);
     }
 
+    public void CancelInteractInput(InputAction.CallbackContext context)
+    {
+        CancelInteraction(context);
+    }
 
     #endregion
 
@@ -441,4 +445,21 @@ public abstract class PlayerCharacter : Character
     }
 
     #endregion
+
+    public override void DisableOtherActions()
+    {
+        base.DisableOtherActions();
+
+        characterController.GetInputHandler().PlayerInput.actions.Disable();
+        characterController.GetInputHandler().PlayerInput.actions.FindAction("Menu").Enable();
+        characterController.GetInputHandler().PlayerInput.actions.FindAction("Option").Enable();
+        characterController.GetInputHandler().PlayerInput.actions.FindAction("CancelInteract").Enable();
+    }
+
+    public override void EnableAllActions()
+    {
+        base.EnableAllActions();
+        characterController.GetInputHandler().PlayerInput.actions.Enable();
+    }
+
 }
