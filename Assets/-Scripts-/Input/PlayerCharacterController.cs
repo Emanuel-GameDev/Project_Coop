@@ -91,6 +91,12 @@ public class PlayerCharacterController : InputReceiver
             actualPlayerCharacter.InteractInput(context);
     }
 
+    public override void CancelInteractInput(InputAction.CallbackContext context)
+    {
+        if (actualPlayerCharacter != null)
+            actualPlayerCharacter.CancelInteractInput(context);
+    }
+
     public override void SwitchUpInput(InputAction.CallbackContext context)
     {
         if (actualPlayerCharacter != null)
