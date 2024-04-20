@@ -78,7 +78,8 @@ public class CharacterSelectionMenuV2 : MonoBehaviour
             cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.SetActive(true);
 
             // Setto la classe
-            cursor.GetComponent<CursorBehaviourV2>().SetCharacter();
+            ePlayerCharacter charToAssign = cursor.GetComponentInParent<CharacterIdentifier>().character;
+            cursor.GetComponent<CursorBehaviourV2>().SetCharacter(charToAssign);
 
             // Controllo non necessario sullo sprite del ready per impostare il bool del cursore
             if (cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.activeSelf)
@@ -104,9 +105,19 @@ public class CharacterSelectionMenuV2 : MonoBehaviour
 
     internal void SelectRandom(CursorBehaviourV2 cursor)
     {
-        int randContainerID = UnityEngine.Random.Range(0, cursor.objectsToOver.Count);
-        cursor.Select(randContainerID);
-        TriggerPlayerSelection(true, cursor.gameObject);
+        do
+        {
+            int randContainerID = UnityEngine.Random.Range(0, cursor.objectsToOver.Count);
+            cursor.Select(randContainerID);
+
+        } while (AlreadySelected(cursor));
+
+        bool response = TriggerPlayerSelection(true, cursor.gameObject);
+
+        if (response)
+            cursor.objectSelected = true;
+
+        cursor.CheckAllReady();
     }
 
     internal bool AlreadySelected(CursorBehaviourV2 cursor)

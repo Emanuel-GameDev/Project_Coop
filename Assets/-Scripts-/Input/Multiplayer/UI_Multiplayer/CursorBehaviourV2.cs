@@ -16,7 +16,6 @@ public class CursorBehaviourV2 : InputReceiver
 
     private Button confirmBtn;
     private Vector2 movement;
-    private bool canMove = false;
     internal bool objectSelected = false;
 
     private void Start()
@@ -29,14 +28,10 @@ public class CursorBehaviourV2 : InputReceiver
         }
 
         objectsToOver = CharacterSelectionMenuV2.Instance.GetCharacterSelectors(playerID);
-
-        canMove = true;
     }
 
     public override void Navigate(InputAction.CallbackContext context)
     {
-        if (!canMove) return;
-
         movement = context.ReadValue<Vector2>();
 
         if (context.started && !objectSelected)
@@ -114,15 +109,7 @@ public class CursorBehaviourV2 : InputReceiver
             }
         }
 
-        //Check se tutti sono ready
-        if (CharacterSelectionMenuV2.Instance.AllReady())
-        {
-            confirmBtn = CharacterSelectionMenuV2.Instance.TriggerFasciaReady(true);
-        }
-        else
-        {
-            confirmBtn = CharacterSelectionMenuV2.Instance.TriggerFasciaReady(false);
-        }
+        CheckAllReady();
     }
 
     public override void Cancel(InputAction.CallbackContext context)
@@ -134,8 +121,12 @@ public class CursorBehaviourV2 : InputReceiver
             if (response)
                 objectSelected = false;
         }
+        
+        CheckAllReady();
+    }
 
-        //Check se tutti sono ready (serve per sicurezza, per spegnere la fascia)
+    internal void CheckAllReady()
+    {
         if (CharacterSelectionMenuV2.Instance.AllReady())
         {
             confirmBtn = CharacterSelectionMenuV2.Instance.TriggerFasciaReady(true);
@@ -148,7 +139,7 @@ public class CursorBehaviourV2 : InputReceiver
 
     public override void RandomSelection(InputAction.CallbackContext context)
     {
-        if (context.started && !objectSelected)
+        if (context.started && !objectSelected && GetComponent<RectTransform>().parent != null)
         {
             CharacterSelectionMenuV2.Instance.SelectRandom(this);
         }
