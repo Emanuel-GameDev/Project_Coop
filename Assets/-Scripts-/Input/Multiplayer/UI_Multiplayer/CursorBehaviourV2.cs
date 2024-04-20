@@ -155,5 +155,7 @@ public class CursorBehaviourV2 : InputReceiver
     public override void SetCharacter(ePlayerCharacter character)
     {
         base.SetCharacter(character);
+
+        playerInputHandler.SetStartingCharacter(character);
     }
 }
