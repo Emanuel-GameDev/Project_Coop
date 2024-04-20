@@ -162,17 +162,17 @@ public class CharacterSelectionMenuV2 : MonoBehaviour
         return allReady;
     }
 
-    internal Button TriggerFasciaReady(bool mode)
+    internal void TriggerFasciaReady(bool mode)
     {
         if (mode)
         {
             fasciaReady.SetActive(true);
-            return fasciaReady.GetComponentInChildren<Button>();
+            //return fasciaReady.GetComponentInChildren<Button>();
         }
         else
         {
             fasciaReady.SetActive(false);
-            return null;
+            //return null;
         }
     }
 
@@ -182,6 +182,8 @@ public class CharacterSelectionMenuV2 : MonoBehaviour
         if (ID == ePlayerID.Player1)
         {
             Debug.Log("Selection Over");
+
+            GameManager.Instance.LoadScene("TutorialScene");
         }
     }
 }

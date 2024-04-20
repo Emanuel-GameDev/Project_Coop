@@ -15,6 +15,7 @@ public class CursorBehaviourV2 : InputReceiver
     internal ePlayerID PlayerID => playerID;
 
     private Button confirmBtn;
+    private bool onlyConfirmationRequired = false;
     private Vector2 movement;
     internal bool objectSelected = false;
 
@@ -84,14 +85,18 @@ public class CursorBehaviourV2 : InputReceiver
     /// <param name="context"></param>
     public override void Submit(InputAction.CallbackContext context)
     {
-        if (context.started && confirmBtn != null)
-        {
-            // Aggiungi la funzione SelectionOver come listener all'evento onClick del pulsante
-            confirmBtn.onClick.AddListener(() => CharacterSelectionMenuV2.Instance.SelectionOver(playerID));
+        //if (context.started && confirmBtn != null)
+        //{
+        //    // Aggiungi la funzione SelectionOver come listener all'evento onClick del pulsante
+        //    confirmBtn.onClick.RemoveAllListeners();
+        //    confirmBtn.onClick.AddListener(() => CharacterSelectionMenuV2.Instance.SelectionOver(playerID));
 
-            // Esegui il comportamento di selezione normale del pulsante
-            confirmBtn.onClick.Invoke();
-        }
+        //    // Esegui il comportamento di selezione normale del pulsante
+        //    confirmBtn.onClick.Invoke();
+        //}
+
+        if (context.started && onlyConfirmationRequired)
+            CharacterSelectionMenuV2.Instance.SelectionOver(PlayerID);
 
         if (context.started && GetComponent<RectTransform>().parent != null)
         {
@@ -129,11 +134,13 @@ public class CursorBehaviourV2 : InputReceiver
     {
         if (CharacterSelectionMenuV2.Instance.AllReady())
         {
-            confirmBtn = CharacterSelectionMenuV2.Instance.TriggerFasciaReady(true);
+            CharacterSelectionMenuV2.Instance.TriggerFasciaReady(true);
+            onlyConfirmationRequired = true;
         }
         else
         {
-            confirmBtn = CharacterSelectionMenuV2.Instance.TriggerFasciaReady(false);
+            CharacterSelectionMenuV2.Instance.TriggerFasciaReady(false);
+            onlyConfirmationRequired = false;
         }
     }
 
