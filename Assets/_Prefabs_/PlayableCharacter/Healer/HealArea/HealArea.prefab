@@ -66,10 +66,10 @@ CapsuleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1535
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -86,8 +86,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 6.81, y: 5.69}
+  m_Offset: {x: 0, y: -0.1}
+  m_Size: {x: 1.44, y: 1.94}
   m_Direction: 1
 --- !u!1 &7800268923911797398
 GameObject:
@@ -190,7 +190,7 @@ PrefabInstance:
     - target: {fileID: 687695804997881251, guid: 31271410465292f4c97ad94ff91e630d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.22
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 687695804997881251, guid: 31271410465292f4c97ad94ff91e630d,
         type: 3}
@@ -236,6 +236,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: RippleParticleAreaHeal
+      objectReference: {fileID: 0}
+    - target: {fileID: 7344850117178144745, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7344850117178144745, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: InitialModule.startColor.minColor.b
+      value: 0.01760149
+      objectReference: {fileID: 0}
+    - target: {fileID: 7344850117178144745, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: InitialModule.startColor.minColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7344850117178144745, guid: 31271410465292f4c97ad94ff91e630d,
+        type: 3}
+      propertyPath: InitialModule.startColor.minColor.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
