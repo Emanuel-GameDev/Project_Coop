@@ -461,5 +461,4 @@ public abstract class PlayerCharacter : Character
         base.EnableAllActions();
         characterController.GetInputHandler().PlayerInput.actions.Enable();
     }
-
 }
