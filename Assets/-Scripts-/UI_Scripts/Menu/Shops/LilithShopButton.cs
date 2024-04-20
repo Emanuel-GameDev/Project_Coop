@@ -69,7 +69,7 @@ public class LilithShopButton : Button
     public void KeyRequiredCheck()
     {
         shopTable = GetComponentInParent<LilithShopTable>(true);
-        if (shopTable.playerCharacterReference.ExtraData.unusedKey < ability.keyCost)
+        if (shopTable.playerCharacterReference.ExtraData.key < ability.keyCost)
             DeactivateButton();
         
     }

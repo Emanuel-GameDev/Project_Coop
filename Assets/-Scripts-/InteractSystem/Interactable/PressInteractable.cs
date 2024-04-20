@@ -23,9 +23,9 @@ public class PressInteractable : MonoBehaviour, IInteractable
         if (!interacters.Contains(interacter))
         {
             interacters.Add(interacter);
-        }
 
-        OnOnePlayerInteract?.Invoke(interacter);
+            OnOnePlayerInteract?.Invoke(interacter);
+        }
 
         if(interactersCount != null)
         {
