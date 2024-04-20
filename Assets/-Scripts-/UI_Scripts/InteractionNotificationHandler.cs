@@ -6,6 +6,27 @@ using UnityEngine.Localization.Components;
 
 public class InteractionNotificationHandler : MonoBehaviour
 {
+    private static InteractionNotificationHandler _instance;
+    public static InteractionNotificationHandler Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<InteractionNotificationHandler>();
+
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new("InteractionNotificationHandler");
+                    _instance = singletonObject.AddComponent<InteractionNotificationHandler>();
+                }
+            }
+
+            return _instance;
+        }
+    }
+
+
     [SerializeField] 
     private GameObject notificationPrefab;
 
@@ -13,6 +34,18 @@ public class InteractionNotificationHandler : MonoBehaviour
     private Transform notificationParent;
 
     private Dictionary<IInteractable, InteractionNotification> notifications = new();
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
 
     public void ActivateNotification(IInteracter interacter, LocalizedString localizedString, IInteractable interactable)
     {
