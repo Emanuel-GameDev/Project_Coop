@@ -176,4 +176,19 @@ public class CoopManager : MonoBehaviour
         return playerInputHandlers[0];
     }
 
+    public void DisableAllInput()
+    {
+        foreach(PlayerInputHandler player in playerInputHandlers)
+        {
+            player.PlayerInput.actions.Disable();
+        }
+    }
+
+    public void EnableAllInput()
+    {
+        foreach (PlayerInputHandler player in playerInputHandlers) 
+        { 
+            player.PlayerInput.actions.Enable();
+        }
+    }
 }

@@ -10,6 +10,9 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
+    private GameObject loadScreen;
+
+    [SerializeField]
     private List<PlayerCharacterData> playerCharacterDatas;
 
     private PlayerInputManager playerInputManager;
@@ -71,6 +74,8 @@ public class GameManager : MonoBehaviour
             Debug.LogError("No player character datas found");
         }
 
+        if(loadScreen != null)
+            DontDestroyOnLoad(loadScreen);
     }
 
     public void PauseGame()
@@ -142,16 +147,21 @@ public class GameManager : MonoBehaviour
 
     public void StartLoadScreen()
     {
-        //Codice per attivare la loading Screen
         StartCoroutine(LoadScreen());
     }
 
     IEnumerator LoadScreen()
     {
-        Debug.Log("Load");
+        float loadTime = Time.time;
+        Debug.Log($"Start Load Time: {Time.time}");
+        CoopManager.Instance.DisableAllInput();
+        loadScreen.SetActive(true);
         yield return new WaitUntil(() => IsSceneLoaded());
-        Debug.Log("Ended");
+        Debug.Log($"End Load Time: {Time.time}");
+        loadScreen.SetActive(false);
+        CoopManager.Instance.EnableAllInput();
         ActivateScene();
+        Debug.Log($"Total Load Time: {Time.time - loadTime}");
     }
 
     #endregion
