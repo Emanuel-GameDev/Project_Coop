@@ -86,6 +86,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private int comboStateMax = 3;
     private int consecutiveHitsCount;
 
+    private bool mustContinueCombo = false;
     private AttackComboState currentAttackComboState;
     private AttackComboState NextAttackComboState
     {
@@ -190,11 +191,12 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
             if (IsAttacking)
             {
-
+                ContinueCombo();
             }
-            else if (canMove && CanStartCombo())
+            else if (CanStartCombo())
             {
-
+                ResetAttack();
+                StartCombo();
             }
 
             Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n CurrentComboState: {currentComboState}, NextComboState: {nextComboState}");
@@ -214,12 +216,13 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     private void ContinueCombo()
     {
-        if (currentComboState == nextComboState)
-        {
-            nextComboState = ++nextComboState > comboStateMax ? 0 : nextComboState;
-            if (CanContinueCombo())
-                DoMeleeAttack();
-        }
+        //if (currentComboState == nextComboState)
+        //{
+        //    nextComboState = ++nextComboState > comboStateMax ? 0 : nextComboState;
+        //    if (CanContinueCombo())
+        //        DoMeleeAttack();
+        //}
+        mustContinueCombo = true;
     }
     private void DoMeleeAttack()
     {
@@ -232,10 +235,25 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         AdjustLastAttackTime();
 
-        if (currentComboState == nextComboState || nextComboState == 0)
-            IsAttacking = false;
+        //if (currentComboState == nextComboState || nextComboState == 0)
+        //    IsAttacking = false;
 
-        currentComboState = nextComboState;
+        //currentComboState = nextComboState;
+        
+        if (mustContinueCombo)
+        {
+            mustContinueCombo = false;
+            currentAttackComboState = NextAttackComboState;
+
+            if (currentAttackComboState == AttackComboState.NotAttaking)
+                ResetAttack();
+            else
+                DoMeleeAttack();
+        }
+        else
+        {
+            ResetAttack();
+        }
     }
 
     private void AdjustLastAttackTime()
@@ -245,12 +263,14 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         lastAttackTime = Time.time; // - reductionFactor;
     }
 
-    private bool CanStartCombo() => (unlimitedComboUnlocked || Time.time > lastAttackTime + timeBetweenCombo) && currentComboState != 1;
+    private bool CanStartCombo() => (unlimitedComboUnlocked || (canMove && Time.time > lastAttackTime + timeBetweenCombo && currentAttackComboState == AttackComboState.NotAttaking)); // && currentComboState != 1;
     private bool CanContinueCombo() => nextComboState != 0;
     private void ResetAttack()
     {
         IsAttacking = false;
-        currentComboState = 0;
+        //currentComboState = 0;
+        currentAttackComboState = AttackComboState.NotAttaking;
+        mustContinueCombo = false;
     }
     #endregion
 
@@ -522,6 +542,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         perfectTimingHandler.DeactivateAlert();
         perfectTimingEnabled = false;
+        Utility.DebugTrace("Perfect Time Ended");
     }
 
 

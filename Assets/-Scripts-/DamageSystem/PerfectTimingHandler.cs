@@ -12,7 +12,7 @@ public class PerfectTimingHandler : MonoBehaviour
     {
         receiver ??= GetComponentInParent<IPerfectTimeReceiver>();
         if(receiver == null)
-            Debug.LogError("No receiver set on perfect timing handler");
+            Debug.LogWarning("No receiver set on perfect timing handler");
         else
             receiver.SetPerfectTimingHandler(this);
 
@@ -20,7 +20,7 @@ public class PerfectTimingHandler : MonoBehaviour
         DeactivateAlert();
 
         if(alertObject == null)
-            Debug.LogError("No alert object set on perfect timing handler");
+            Debug.LogWarning("No alert object set on perfect timing handler");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
