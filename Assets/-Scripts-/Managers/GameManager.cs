@@ -21,12 +21,14 @@ public class GameManager : MonoBehaviour
     private CoopManager coopManager;
     private CameraManager cameraManager;
     private SaveManager saveManager;
+    private SpawnPosManager spawnPosManager;
     private AsyncOperation sceneLoadOperation;
 
     public CoopManager CoopManager => coopManager;
     public CameraManager CameraManager => cameraManager;
     public PlayerInputManager PlayerInputManager => playerInputManager;
     public SaveManager SaveManager => saveManager;
+    public SpawnPosManager SpawnPosManager => spawnPosManager;
 
     private static GameManager _instance;
     public static GameManager Instance
@@ -67,6 +69,7 @@ public class GameManager : MonoBehaviour
         coopManager = CoopManager.Instance;
         cameraManager = CameraManager.Instance;
         saveManager = SaveManager.Instance;
+        spawnPosManager = SpawnPosManager.Instance;
 
         if (CameraManager != null && CoopManager != null)
             CameraManager.AddAllPlayers();
