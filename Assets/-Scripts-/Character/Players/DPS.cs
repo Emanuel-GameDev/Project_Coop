@@ -87,6 +87,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private int consecutiveHitsCount;
 
     private bool mustContinueCombo = false;
+    private bool alreadyCalled = false;
     private AttackComboState currentAttackComboState;
     private AttackComboState NextAttackComboState
     {
@@ -189,6 +190,8 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
             //else if (IsAttacking)
             //    ContinueCombo();
 
+            alreadyCalled = false;
+
             if (IsAttacking)
             {
                 ContinueCombo();
@@ -199,7 +202,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
                 StartCombo();
             }
 
-            Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n CurrentComboState: {currentComboState}, NextComboState: {nextComboState}");
+            Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n MustContinueCombo: {mustContinueCombo},  CurrentComboState: {currentAttackComboState}, NextComboState: {NextAttackComboState}");
         }
     }
 
@@ -229,32 +232,42 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         IsAttacking = true;
         string triggerName = currentAttackComboState.ToString();   //ATTACK + (nextComboState).ToString();
         animator.SetTrigger(triggerName);
-
     }
     public void OnAttackAnimationEnd()
     {
-        AdjustLastAttackTime();
-
-        //if (currentComboState == nextComboState || nextComboState == 0)
-        //    IsAttacking = false;
-
-        //currentComboState = nextComboState;
-        
-        if (mustContinueCombo)
+        if (!alreadyCalled)
         {
-            mustContinueCombo = false;
-            currentAttackComboState = NextAttackComboState;
+            AdjustLastAttackTime();
 
-            if (currentAttackComboState == AttackComboState.NotAttaking)
-                ResetAttack();
+            //if (currentComboState == nextComboState || nextComboState == 0)
+            //    IsAttacking = false;
+            //currentComboState = nextComboState;
+            if (mustContinueCombo)
+            {
+                mustContinueCombo = false;
+                currentAttackComboState = NextAttackComboState;
+
+                if (currentAttackComboState == AttackComboState.NotAttaking)
+                    ResetAttack();
+                else
+                    DoMeleeAttack();
+            }
             else
-                DoMeleeAttack();
+            {
+                ResetAttack();
+            }
+
+            Utility.DebugTrace($"EndAttakMustContinue: {mustContinueCombo}, Current State: {currentAttackComboState}");
+            alreadyCalled = true;
         }
-        else
-        {
-            ResetAttack();
-        }
+        else Debug.Log("Chiamata2");
     }
+
+    public void OnAttackAnimationStart()
+    {
+        alreadyCalled = false;
+    }
+
 
     private void AdjustLastAttackTime()
     {
@@ -271,6 +284,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         //currentComboState = 0;
         currentAttackComboState = AttackComboState.NotAttaking;
         mustContinueCombo = false;
+        alreadyCalled = false;
     }
     #endregion
 
