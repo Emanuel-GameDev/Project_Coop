@@ -38,6 +38,10 @@ public class AudioManager : MonoBehaviour
 
     private Stack<AudioSource> audioSourcesPool = new();
 
+    public static readonly string MasterVolume = "MasterVolume";
+    public static readonly string MusicVolume = "MusicVolume";
+    public static readonly string SoundFXVolume = "SoundFXVolume";
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -53,17 +57,18 @@ public class AudioManager : MonoBehaviour
 
     public void SetMasterVolume(float level)
     {
-        audioMixer.SetFloat("MasterVolume", Mathf.Log10(level) * 20);
+        audioMixer.SetFloat(MasterVolume, Mathf.Log10(level) * 20);
+        Debug.Log(Mathf.Log10(level) * 20);
     }
 
     public void SetMusicVolume(float level)
     {
-        audioMixer.SetFloat("MasterVolume", Mathf.Log10(level) * 20);
+        audioMixer.SetFloat(MusicVolume, Mathf.Log10(level) * 20);
     }
 
     public void SetSoundFXVolume(float level)
     {
-        audioMixer.SetFloat("MasterVolume", Mathf.Log10(level) * 20);
+        audioMixer.SetFloat(SoundFXVolume, Mathf.Log10(level) * 20);
     }
 
     public void PlayAudioClip(AudioClip clip, Transform spawnPoint)

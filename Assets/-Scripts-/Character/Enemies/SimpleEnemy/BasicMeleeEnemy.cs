@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BasicMeleeEnemy : BasicEnemy
 {
+   
     protected override void Awake()
     {
         base.Awake();
@@ -26,6 +27,10 @@ public class BasicMeleeEnemy : BasicEnemy
     {
         base.Start();
 
-        stateMachine.SetState(idleState);
+        //CONTROLLARE
+        //stateMachine.SetState(idleState);
     }
+
+
+
 }

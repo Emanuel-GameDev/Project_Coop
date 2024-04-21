@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class KerberosBossCharacter : BossCharacter
 {
     [Header("Generics")]
+    public float lowHpPhaseTreshold;
     public float minDistance;
     public float followDuration;
     public float walkSpeed;
@@ -45,6 +46,8 @@ public class KerberosBossCharacter : BossCharacter
     public float crashWaveStaminaDamage;
     public float crashTimer;
     public GameObject crashwaveObject;
+    public Transform crashwaveTransform;
+    
 
     [Header("IfParried")]
     public float parryStunTimer = 3;
@@ -57,7 +60,7 @@ public class KerberosBossCharacter : BossCharacter
     [HideInInspector] public bool canLastAttackPunch;
     [HideInInspector] private bool canRotateInAnim;   
     [HideInInspector] private Vector2 direction;
-    [HideInInspector] public bool parried = false;
+    public bool parried = false;
     [HideInInspector] public Character whoParried;
     [HideInInspector] public Animator anim => animator;
 
@@ -79,10 +82,11 @@ public class KerberosBossCharacter : BossCharacter
     }
     public void InstantiateCrashWave()
     {
-        if (!parried)
+        if (parried == false)
         {
-            GameObject instantiatedWave = Instantiate(crashwaveObject, transform.position, Quaternion.identity, transform);
-            instantiatedWave.GetComponent<CrashWave>().SetVariables(crashWaveDamage, crashWaveStaminaDamage,this);
+            GameObject instantiatedWave = Instantiate(crashwaveObject, crashwaveTransform.position, Quaternion.identity, transform);
+            instantiatedWave.GetComponentInChildren<CrashWave>().SetVariables(crashWaveDamage, crashWaveStaminaDamage, this);
+
         }
     }
     #endregion
@@ -97,6 +101,7 @@ public class KerberosBossCharacter : BossCharacter
             if (canRotateInAnim)
             {               
                 SetSpriteDirection(direction);
+               
             }
 
             if (canShowPreview)
@@ -112,12 +117,12 @@ public class KerberosBossCharacter : BossCharacter
         attackCondition = null;
 
     }
-   
-    
+
+    #region flurryOfBlows
     public void SetFlurryOfBlowsDamageData(int attackNumber)
     {
 
-        if(attackNumber >= punchQuantity) 
+        if (attackNumber >= punchQuantity)
         {
             staminaDamage = normalPunchStaminaDamage;
             damage = normalPunchDamage;
@@ -130,10 +135,22 @@ public class KerberosBossCharacter : BossCharacter
             attackCondition = null;
         }
     }
+    public void SetCanLastAttackPunch()
+    {
+        canLastAttackPunch = true;
+    }
+    #endregion
+
     public override void TakeDamage(DamageData data)
     {
         if (!isDead)      
         base.TakeDamage(data);
+
+        float currentPercentage = (currentHp/maxHp) * 100;
+        if(currentPercentage <= lowHpPhaseTreshold)
+        {
+            gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("lowHp").Value = true;
+        }
 
         if (isDead)
         {
@@ -175,9 +192,15 @@ public class KerberosBossCharacter : BossCharacter
     }
     public void SetCanRotateInAnim(int value)
     {
-        SetSpriteDirection(direction);
+       
+        
 
         if (value == 0)
+        {
+            canRotateInAnim = false;
+            SetSpriteDirection(direction);
+        }
+        if(value == 3)
         {
             canRotateInAnim = false;
         }
@@ -185,16 +208,17 @@ public class KerberosBossCharacter : BossCharacter
         {
             canRotateInAnim = true;
         }
-    }
-    public void SetCanLastAttackPunch()
-    {
-        canLastAttackPunch = true;
-    }
-
+    }  
     public override void OnParryNotify(Character whoParried)
     {
-        parried = true;
+        parried = true;        
         this.whoParried = whoParried;
     }
-    
+    public IEnumerator UnstunFromParry()
+    {
+        yield return new WaitForSeconds(parryStunTimer);
+        gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("parried").Value = false;
+        anim.SetTrigger("Return");
+    }
+
 }

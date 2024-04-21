@@ -78,6 +78,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "CancelInteract",
+                    "type": "Button",
+                    "id": "74d2dae1-7244-4e81-804b-168a69706e8f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Join",
                     "type": "Button",
                     "id": "2bf89b73-9e71-4a6a-bb6e-7fea20474b85",
@@ -328,7 +337,7 @@
                 {
                     "name": "",
                     "id": "e0742a2a-8d57-4226-a05b-20210cdc9fe0",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -481,17 +490,6 @@
                 },
                 {
                     "name": "",
-                    "id": "6d891704-7729-4d97-8e1e-9ed2ea6d2e55",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Interact",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "1780e213-8ce3-4131-8998-2ad6c32c91e2",
                     "path": "<Keyboard>/f",
                     "interactions": "",
@@ -551,7 +549,18 @@
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard",
+                    "action": "Dialogue",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "83581489-70d9-43c3-a07f-e35b507089d6",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
                     "action": "Dialogue",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -562,7 +571,7 @@
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "Dialogue",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -597,6 +606,61 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "LookMouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a95bfb79-d1e0-4a7c-ba8d-8057995efc43",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Dialogue",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "238c3d0c-8234-478b-ba9e-200db0df052a",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "SkipCutscene",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c64598a5-79f2-4677-84e3-9cdcf0c77abf",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "788462b3-5592-45a1-a2ef-8cfb71b843b5",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "CancelInteract",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "94d5a1a6-c134-49c3-be04-89278f728d81",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "CancelInteract",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -664,6 +728,15 @@
                     "name": "Option",
                     "type": "Button",
                     "id": "6730f1b7-9659-4eab-8ae2-968211cbf3ea",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Dialogue",
+                    "type": "Button",
+                    "id": "97205535-bdd3-4832-9646-9189f9edea96",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -965,6 +1038,28 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "ButtonWest",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "67997d13-9157-4f49-ad24-e1f4c2f826e0",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dialogue",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e2f3efc1-aac7-4823-9372-325981efe884",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dialogue",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -1464,7 +1559,7 @@
                 {
                     "name": "",
                     "id": "5a1f1087-6eda-4570-a721-9a9354903df1",
-                    "path": "<Keyboard>/backspace",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",

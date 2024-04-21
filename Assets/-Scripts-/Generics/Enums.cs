@@ -22,7 +22,7 @@ public enum ePlayerCharacter
 {
     EmptyCharacter,
     Brutus,
-    Caina,
+    Kaina,
     Cassius,
     Jude
 }

@@ -20,7 +20,11 @@ public class PlayerCharacterController : InputReceiver
     public override void SetCharacter(ePlayerCharacter character)
     {
         base.SetCharacter(character);
-        PlayerCharacter playerCharacter = PlayerCharacterPoolManager.Instance.GetCharacter(character, transform);
+
+        // Set pos del personaggio effettivo
+        PlayerCharacter playerCharacter = PlayerCharacterPoolManager.Instance.GetCharacter(character,
+                                          SpawnPosManager.Instance.GetFreePos().spawnPos);
+
         if (playerCharacter != null)
         {
             SetPlayerCharacter(playerCharacter);
@@ -91,6 +95,12 @@ public class PlayerCharacterController : InputReceiver
             actualPlayerCharacter.InteractInput(context);
     }
 
+    public override void CancelInteractInput(InputAction.CallbackContext context)
+    {
+        if (actualPlayerCharacter != null)
+            actualPlayerCharacter.CancelInteractInput(context);
+    }
+
     public override void SwitchUpInput(InputAction.CallbackContext context)
     {
         if (actualPlayerCharacter != null)
@@ -155,13 +165,13 @@ public class PlayerCharacterController : InputReceiver
     public override void UIMenuInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            MenuManager.Instance.ClosePauseMenu();
+            MenuManager.Instance.ClosePauseMenu(playerInputHandler);
     }
 
     public override void UIOptionInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            MenuManager.Instance.CloseOptionMenu();
+            MenuManager.Instance.CloseOptionMenu(playerInputHandler);
     }
 
     public override void SubNextInput(InputAction.CallbackContext context)

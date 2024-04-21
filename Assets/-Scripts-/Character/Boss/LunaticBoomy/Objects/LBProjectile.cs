@@ -18,6 +18,7 @@ public class LBProjectile : MonoBehaviour, IDamager
     public DamageData GetDamageData()
     {
         // é giusto così?
+ 
         return new DamageData(bossDealer.Damage, bossDealer.StaminaDamage, this, true);
     }
 
@@ -34,8 +35,11 @@ public class LBProjectile : MonoBehaviour, IDamager
 
         if (timer > aliveTime)
         {
-            gameObject.SetActive(false);
-            timer = 0f;
+            if (gameObject.activeSelf)
+            {
+                gameObject.SetActive(false);
+                timer = 0f;
+            }
         }
     }
 
@@ -47,7 +51,11 @@ public class LBProjectile : MonoBehaviour, IDamager
 
         if (PlayerCharacterPoolManager.Instance.ActivePlayerCharacters.Contains(charHit))
         {
-            charHit.TakeDamage(GetDamageData());
+            // il take damage lo ha il player
+            //charHit.TakeDamage(GetDamageData());
+
+            // Lo spengo
+            gameObject.SetActive(false);
         }
     }
 

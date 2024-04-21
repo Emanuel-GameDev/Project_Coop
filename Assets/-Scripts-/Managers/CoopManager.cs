@@ -114,13 +114,13 @@ public class CoopManager : MonoBehaviour
             playerInputHandlers.Add(newPlayerInputHandler);
             newPlayerInputHandler.SetPlayerID(playerInputHandlers);
             newPlayerInputHandler.SetReceiver(SceneInputReceiverManager.Instance.GetSceneInputReceiver(newPlayerInputHandler));
-
+                        
             if (newPlayerInputHandler.CurrentReceiver is PlayerCharacterController)
             {
                 PlayerCharacterController receiver = (PlayerCharacterController)newPlayerInputHandler.CurrentReceiver;
-                PubSub.Instance.Notify(EMessageType.characterJoined, receiver.ActualPlayerCharacter);
+                //PubSub.Instance.Notify(EMessageType.characterJoined, receiver.ActualPlayerCharacter);
             }
-                
+
         }
         else
             Debug.LogError("Missing PlayerInputHandler Component");
@@ -171,4 +171,24 @@ public class CoopManager : MonoBehaviour
         OnPlayerLeft(playerInput);
     }
 
+    public PlayerInputHandler GetFirstPlayer()
+    {
+        return playerInputHandlers[0];
+    }
+
+    public void DisableAllInput()
+    {
+        foreach(PlayerInputHandler player in playerInputHandlers)
+        {
+            player.PlayerInput.actions.Disable();
+        }
+    }
+
+    public void EnableAllInput()
+    {
+        foreach (PlayerInputHandler player in playerInputHandlers) 
+        { 
+            player.PlayerInput.actions.Enable();
+        }
+    }
 }

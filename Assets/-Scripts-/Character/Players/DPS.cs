@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class DPS : PlayerCharacter
+public class DPS : PlayerCharacter, IPerfectTimeReceiver
 {
     [Header("Attack")]
     [SerializeField, Tooltip("Tempo tra una combo e l'altra.")]
@@ -20,7 +21,7 @@ public class DPS : PlayerCharacter
     [SerializeField, Tooltip("Danno extra in % dopo una schivata perfetta."), Range(0, 1)]
     float perfectDodgeExtraDamage = 0.15f;
     [SerializeField, Tooltip("Durata del tempo utile per poter fare la schivata perfetta")]
-    float perfectDodgeDurarion = 0.5f;
+    float perfectDodgeDuration = 0.5f;
     [Header("Unique Ability")]
     [SerializeField, Tooltip("Durata dell'invulnerabilità.")]
     float invulnerabilityDuration = 5f;
@@ -53,8 +54,8 @@ public class DPS : PlayerCharacter
     [Header("Other")]
     [SerializeField, Tooltip("I Layer da guardare quando ha sbloccato il power up per deflettere i proiettili")]
     LayerMask projectileLayer;
-
-
+    [SerializeField, Tooltip("Gli eventi da chiamare in caso di schivata perfetta")]
+    UnityEvent onPerfectDodgeExecuted = new();
     private float ExtraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
 
     private float ExtraDamage()
@@ -85,6 +86,23 @@ public class DPS : PlayerCharacter
     private int comboStateMax = 3;
     private int consecutiveHitsCount;
 
+    private bool mustContinueCombo = false;
+    private AttackComboState currentAttackComboState;
+    private AttackComboState NextAttackComboState
+    {
+        get
+        {
+            return currentAttackComboState switch
+            {
+                AttackComboState.NotAttaking => AttackComboState.Attack1,
+                AttackComboState.Attack1 => AttackComboState.Attack2,
+                AttackComboState.Attack2 => AttackComboState.Attack3,
+                AttackComboState.Attack3 => unlimitedComboUnlocked ? AttackComboState.Attack1 : AttackComboState.NotAttaking,
+                _ => AttackComboState.NotAttaking
+            };
+        }
+    }
+
     private bool dashAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
     private bool unlimitedComboUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
     private bool projectileDeflectionUnlocked => upgradeStatus[AbilityUpgrade.Ability3];
@@ -95,6 +113,7 @@ public class DPS : PlayerCharacter
     private bool isDodging;
     private bool isDashingAttack;
     private bool isDashingAttackStarted;
+    private bool perfectTimingEnabled;
     private bool canMove => !isDodging && !IsAttacking && !isDashingAttack;
 
     private bool IsAttacking
@@ -149,15 +168,11 @@ public class DPS : PlayerCharacter
         IsAttacking = false;
         isDashingAttack = false;
         isDashingAttackStarted = false;
+        perfectTimingEnabled = false;
         chargeHandler = GetComponentInChildren<ChargeVisualHandler>();
         chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
         perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
-        perfectTimingHandler.gameObject.SetActive(false);
         character = ePlayerCharacter.Brutus;
-
-        //Debug
-        //UnlockUpgrade(AbilityUpgrade.Ability1);
-
     }
 
 
@@ -167,35 +182,52 @@ public class DPS : PlayerCharacter
     {
         if (context.performed)
         {
-            if (canMove && CanStartCombo())
+            //if (canMove && CanStartCombo())
+            //{
+            //    StartCombo();
+            //}
+            //else if (IsAttacking)
+            //    ContinueCombo();
+
+            if (IsAttacking)
             {
+                ContinueCombo();
+            }
+            else if (CanStartCombo())
+            {
+                ResetAttack();
                 StartCombo();
             }
-            else if (IsAttacking)
-                ContinueCombo();
+
             Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n CurrentComboState: {currentComboState}, NextComboState: {nextComboState}");
         }
     }
+
+    #region OldComboSystem
+
     private void StartCombo()
     {
-        currentComboState = 1;
-        nextComboState = currentComboState;
+        currentAttackComboState = AttackComboState.Attack1;
+        //currentComboState = 1;
+        //nextComboState = currentComboState;
         DoMeleeAttack();
         rb.velocity = Vector3.zero;
     }
+
     private void ContinueCombo()
     {
-        if (currentComboState == nextComboState)
-        {
-            nextComboState = ++nextComboState > comboStateMax ? 0 : nextComboState;
-            if (CanContinueCombo())
-                DoMeleeAttack();
-        }
+        //if (currentComboState == nextComboState)
+        //{
+        //    nextComboState = ++nextComboState > comboStateMax ? 0 : nextComboState;
+        //    if (CanContinueCombo())
+        //        DoMeleeAttack();
+        //}
+        mustContinueCombo = true;
     }
     private void DoMeleeAttack()
     {
         IsAttacking = true;
-        string triggerName = ATTACK + (nextComboState).ToString();
+        string triggerName = currentAttackComboState.ToString();   //ATTACK + (nextComboState).ToString();
         animator.SetTrigger(triggerName);
 
     }
@@ -203,26 +235,44 @@ public class DPS : PlayerCharacter
     {
         AdjustLastAttackTime();
 
-        if (currentComboState == nextComboState || nextComboState == 0)
-            IsAttacking = false;
+        //if (currentComboState == nextComboState || nextComboState == 0)
+        //    IsAttacking = false;
 
-        currentComboState = nextComboState;
+        //currentComboState = nextComboState;
+        
+        if (mustContinueCombo)
+        {
+            mustContinueCombo = false;
+            currentAttackComboState = NextAttackComboState;
+
+            if (currentAttackComboState == AttackComboState.NotAttaking)
+                ResetAttack();
+            else
+                DoMeleeAttack();
+        }
+        else
+        {
+            ResetAttack();
+        }
     }
 
     private void AdjustLastAttackTime()
     {
         float comboCompletionValue = (float)currentComboState / (float)comboStateMax;
         float reductionFactor = (1 - comboCompletionValue) * timeBetweenCombo;
-        lastAttackTime = Time.time - reductionFactor;
+        lastAttackTime = Time.time; // - reductionFactor;
     }
 
-    private bool CanStartCombo() => (unlimitedComboUnlocked || Time.time > lastAttackTime + timeBetweenCombo) && currentComboState != 1;
+    private bool CanStartCombo() => (unlimitedComboUnlocked || (canMove && Time.time > lastAttackTime + timeBetweenCombo && currentAttackComboState == AttackComboState.NotAttaking)); // && currentComboState != 1;
     private bool CanContinueCombo() => nextComboState != 0;
     private void ResetAttack()
     {
         IsAttacking = false;
-        currentComboState = 0;
+        //currentComboState = 0;
+        currentAttackComboState = AttackComboState.NotAttaking;
+        mustContinueCombo = false;
     }
+    #endregion
 
     #endregion
 
@@ -234,12 +284,21 @@ public class DPS : PlayerCharacter
         base.DefenseInput(context);
         if (context.performed)
         {
-            
             Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
             if (Time.time > lastDodgeTime + dodgeCooldown && !isDodging && !isDashingAttack)
             {
                 ResetAttack();
                 lastDodgeTime = Time.time + dodgeDuration;
+
+                if (perfectTimingEnabled)
+                {
+                    perfectDodgeCounter++;
+                    lastPerfectDodgeTime = Time.time;
+                    PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
+                    PerfectTimeEnded();
+                    Utility.DebugTrace($"PerfectDodge: {true}, Count: {perfectDodgeCounter}");
+                }
+
                 StartCoroutine(Dodge(lastNonZeroDirection, rb));
             }
         }
@@ -273,32 +332,6 @@ public class DPS : PlayerCharacter
 
         rb.velocity = Vector2.zero;
     }
-
-    protected IEnumerator PerfectDodgeHandler(DamageData data)
-    {
-        perfectTimingHandler.gameObject.SetActive(true);
-        yield return new WaitForSeconds(perfectDodgeDurarion);
-        if (isDodging)
-        {
-            perfectDodgeCounter++;
-            lastPerfectDodgeTime = Time.time;
-            PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
-        }
-        else
-        {
-            base.TakeDamage(data);
-            if (!isDashingAttack)
-            {
-                animator.SetTrigger(HIT);
-
-            }
-                
-        }
-        perfectTimingHandler.gameObject.SetActive(false);
-        
-        Debug.Log($"PerfectDodge: {isDodging}, Count: {perfectDodgeCounter}");
-    }
-
 
     #endregion
 
@@ -382,7 +415,6 @@ public class DPS : PlayerCharacter
 
     #endregion
 
-
     public override void Move(Vector2 direction)
     {
         if (canMove)
@@ -403,8 +435,17 @@ public class DPS : PlayerCharacter
     {
         if (!isInvulnerable || !isDodging)
         {
-            StartCoroutine(PerfectDodgeHandler(data));
+            base.TakeDamage(data);
+            //if (!isDashingAttack)
+            //    animator.SetTrigger(HIT);
+
+            //if(IsAttacking)
+            //    ResetAttack();
         }
+
+        if (perfectTimingEnabled)
+            PerfectTimeEnded();
+
     }
 
 
@@ -413,15 +454,15 @@ public class DPS : PlayerCharacter
         base.UnlockUpgrade(abilityUpgrade);
         if (abilityUpgrade == AbilityUpgrade.Ability3)
             AddDeflect();
-        Debug.Log("Unlock" + abilityUpgrade.ToString());
+        Utility.DebugTrace("Unlock " + abilityUpgrade.ToString());
     }
 
-    
+
 
     public override void LockUpgrade(AbilityUpgrade abilityUpgrade)
     {
         base.LockUpgrade(abilityUpgrade);
-        if (abilityUpgrade == AbilityUpgrade.Ability3)
+        if (abilityUpgrade == AbilityUpgrade.Ability3 && projectileDeflectionUnlocked)
             RemoveDeflect();
     }
 
@@ -429,7 +470,10 @@ public class DPS : PlayerCharacter
     {
         if (Utility.IsInLayerMask(collider.gameObject.layer, projectileLayer))
         {
-            //Defletti il proiettile
+            if (TryGetComponent(out Projectile projectile))
+            {
+                projectile.ReflectProjectile(this.gameObject, 1);
+            }
         }
 
     }
@@ -453,7 +497,7 @@ public class DPS : PlayerCharacter
 
         TotalDamageUpdate(damage);
 
-        Debug.Log($"Damage Done: {damage}");
+        Utility.DebugTrace($"Damage Done: {damage}");
 
         return new DamageData(damage, this);
 
@@ -479,6 +523,36 @@ public class DPS : PlayerCharacter
             bossfightPowerUpUnlocked = true;
     }
 
+    public void SetPerfectTimingHandler(PerfectTimingHandler handler) => perfectTimingHandler = handler;
+
+
+    public void PerfectTimeStarted()
+    {
+        if (!isDodging)
+        {
+            perfectTimingHandler.ActivateAlert();
+            perfectTimingEnabled = true;
+        }
+
+        Debug.Log(!isDodging);
+        StartCoroutine(DisablePerfectTimeAfter(perfectDodgeDuration));
+    }
+
+    public void PerfectTimeEnded()
+    {
+        perfectTimingHandler.DeactivateAlert();
+        perfectTimingEnabled = false;
+        Utility.DebugTrace("Perfect Time Ended");
+    }
+
+
+    protected IEnumerator DisablePerfectTimeAfter(float time)
+    {
+        yield return new WaitForSeconds(time);
+        if (perfectTimingEnabled)
+            PerfectTimeEnded();
+    }
+
 
     #endregion
     //Potenziamento boss fight: gli attacchi consecutivi aumentano il danno del personaggio a ogni colpo andato a segno.
@@ -495,4 +569,12 @@ public class DPS : PlayerCharacter
     //4: quando il personaggio usa l’abilità unica(i secondi di immortalità) i suoi movimenti diventano più rapidi(attacchi, schivate e spostamenti)
     //5: Effettuare una schivata perfetta aumenta i danni per tot tempo(cumulabile con il bonus ai danni del potenziamento).
 
+}
+
+public enum AttackComboState
+{
+    NotAttaking,
+    Attack1,
+    Attack2,
+    Attack3
 }

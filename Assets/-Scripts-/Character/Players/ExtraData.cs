@@ -3,8 +3,8 @@ using System;
 [Serializable]
 public class ExtraData
 {
-    public int unusedKey = 0;
-    public int money = 0;
+    public int key = 0;
+    public int coin = 0;
 
     public int enemysKilled = 0;
     public int perfectDodgeDone = 0;

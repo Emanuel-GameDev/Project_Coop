@@ -511,7 +511,10 @@ public class Tank : PlayerCharacter
                 isBlocking = false;
                 ShowStaminaBar(false);
                 Debug.Log("Parata Rotta");
-                //Stun per 2 secondi dopo reset stamina
+                animator.SetTrigger("ShieldBroken");
+                //CONTROLLARE
+                stunned = true;
+               
             }
         }
 
@@ -521,7 +524,11 @@ public class Tank : PlayerCharacter
         }
     }
 
-
+    public void Unstun()
+    {
+        stunned = false;
+       
+    }
 
     #endregion
 

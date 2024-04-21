@@ -18,5 +18,5 @@ public interface IDamageable
         get;
         set;
     }
-
+    
 }

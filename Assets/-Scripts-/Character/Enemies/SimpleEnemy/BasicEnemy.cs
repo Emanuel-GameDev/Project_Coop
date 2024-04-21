@@ -55,7 +55,7 @@ public class BasicEnemy : EnemyCharacter
     Vector2 lastNonZeroDirection;
 
 
-
+    
     [HideInInspector] public BasicEnemyIdleState idleState;
     [HideInInspector] public BasicEnemyMoveState moveState;
     [HideInInspector] public BasicEnemyActionState actionState;
@@ -86,6 +86,30 @@ public class BasicEnemy : EnemyCharacter
     [HideInInspector] public NavMeshObstacle obstacle;
     [HideInInspector] public PlayerCharacter currentTarget;
 
+    //CONTROLLARE
+    [HideInInspector] public BasicEnemyEntryState entryState;
+    [HideInInspector] public Vector2 entryDestination;
+    [HideInInspector] public bool canGoIdle = true;
+
+    public void GoToPosition(Vector2 pos)
+    {
+        if (!canMove)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+
+        ActivateAgent();
+
+        if (pos != null)
+        {         
+            Move((Vector3)pos -transform.position,rb);          
+        }
+        else
+        {
+            rb.velocity = Vector2.zero;
+        }
+    }
 
     protected override void Awake()
     {
@@ -101,6 +125,7 @@ public class BasicEnemy : EnemyCharacter
         idleState = new BasicEnemyIdleState(this);
         moveState = new BasicEnemyMoveState(this);
         actionState = new BasicEnemyActionState(this);
+        entryState = new BasicEnemyEntryState(this);
 
         path = new NavMeshPath();
 
@@ -124,6 +149,7 @@ public class BasicEnemy : EnemyCharacter
             EscapeTrigger.GetComponent<CircleCollider2D>().radius = escapeRange;
         }
 
+        if(canGoIdle)
         stateMachine.SetState(idleState);       
     }
 
@@ -190,7 +216,7 @@ public class BasicEnemy : EnemyCharacter
             rb.velocity = Vector2.zero;
         }
     }
-
+    
     public virtual void Move(Vector2 direction, Rigidbody2D rb)
     {
         if (obstacle.enabled)

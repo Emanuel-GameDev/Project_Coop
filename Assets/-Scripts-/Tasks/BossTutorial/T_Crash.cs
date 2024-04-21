@@ -26,7 +26,7 @@ namespace MBTExample
             bossCharacter.anim.SetTrigger("Crash");
             bossCharacter.anim.ResetTrigger("Return");
         }
-
+        
         public override NodeResult Execute()
         {
 

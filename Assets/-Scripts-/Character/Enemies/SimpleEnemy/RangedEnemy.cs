@@ -30,6 +30,7 @@ public class RangedEnemy : BasicEnemy
     {
         base.Start();
 
+        //CONTROLLARE
         //stateMachine.SetState(idleState);
     }
 
