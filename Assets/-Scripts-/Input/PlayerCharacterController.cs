@@ -22,8 +22,8 @@ public class PlayerCharacterController : InputReceiver
         base.SetCharacter(character);
 
         // Set pos del personaggio effettivo
-        PlayerCharacter playerCharacter = PlayerCharacterPoolManager.Instance.GetCharacter(character, 
-                                          GameManager.Instance.SpawnPosManager.GetFreePos().spawnPos);
+        PlayerCharacter playerCharacter = PlayerCharacterPoolManager.Instance.GetCharacter(character,
+                                          SpawnPosManager.Instance.GetFreePos().spawnPos);
 
         if (playerCharacter != null)
         {

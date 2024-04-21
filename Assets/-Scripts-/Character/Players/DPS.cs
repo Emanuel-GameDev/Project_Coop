@@ -181,14 +181,21 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (context.performed)
         {
-            if (canMove && CanStartCombo())
+            //if (canMove && CanStartCombo())
+            //{
+            //    StartCombo();
+            //}
+            //else if (IsAttacking)
+            //    ContinueCombo();
+
+            if (IsAttacking)
             {
-                StartCombo();
+
             }
-            else if (IsAttacking)
-                ContinueCombo();
+            else if (canMove && CanStartCombo())
+            {
 
-
+            }
 
             Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n CurrentComboState: {currentComboState}, NextComboState: {nextComboState}");
         }
