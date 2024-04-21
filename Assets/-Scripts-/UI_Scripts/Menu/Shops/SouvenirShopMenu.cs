@@ -25,6 +25,8 @@ public class SouvenirShopMenu : Menu
 
     public void OpenMenu(IInteracter interacter)
     {
+        if (shopGroup.activeSelf) return;
+
         if (interacter.GetInteracterObject().TryGetComponent<PlayerCharacter>(out PlayerCharacter playerInShop))
         {
             shopGroup.SetActive(true);
@@ -51,7 +53,6 @@ public class SouvenirShopMenu : Menu
             foreach (SouvenirShopTable table in shopTables)
             {
                 table.SetTableCurrentCharacter(playerInShop);
-                //int delayInt = Random.value;
                 table.StartIdleAnimationIn(Random.value);
             }
 

@@ -58,6 +58,17 @@ public class LilithShopTable : MonoBehaviour
         
     }
 
+    public void StartIdleAnimationIn(float delay)
+    {
+        StartCoroutine(PlayIdle(delay));
+    }
+
+    IEnumerator PlayIdle(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GetComponent<Animation>().Play();
+    }
+
     public void ChangeDescriptionAndName(LocalizedString localStringName, LocalizedString localStringDescription)
     {
         abilityNameLocaleEvent.StringReference = localStringName;

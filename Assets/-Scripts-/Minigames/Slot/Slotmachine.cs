@@ -252,7 +252,7 @@ public class Slotmachine : MonoBehaviour
                 buttonSprite = dpsButtonSprite;
                 libraryButton = dpsSpriteLibrary;
                 break;
-            case ePlayerCharacter.Caina:
+            case ePlayerCharacter.Kaina:
                 playerSprites = tankSprite;
                 buttonSprite = tankButtonSprite;
                 libraryButton = tankSpriteLibrary;
@@ -281,7 +281,7 @@ public class Slotmachine : MonoBehaviour
         List<SlotPlayer> notRandomPlayers = new List<SlotPlayer>(currentPlayersList);
 
         //TODO guardare se si puoò fare in modo dinamico
-        List<ePlayerCharacter> characterEnum = new List<ePlayerCharacter>() { ePlayerCharacter.Brutus, ePlayerCharacter.Caina, ePlayerCharacter.Cassius, ePlayerCharacter.Jude };
+        List<ePlayerCharacter> characterEnum = new List<ePlayerCharacter>() { ePlayerCharacter.Brutus, ePlayerCharacter.Kaina, ePlayerCharacter.Cassius, ePlayerCharacter.Jude };
 
         if (notRandomPlayers.Count == 0)
         {
