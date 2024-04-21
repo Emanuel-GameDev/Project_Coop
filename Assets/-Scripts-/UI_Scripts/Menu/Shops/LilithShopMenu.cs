@@ -29,7 +29,7 @@ public class LilithShopMenu : Menu
             //da sistemare
             table.InitializeButtons();
             //tableAssosiation.Add(table, CoopManager.Instance.GetPlayer(ePlayerID.Player1));
-            table.UpdateKeyCounter(PlayerCharacterPoolManager.Instance.AllPlayerCharacters.Find(c => c.Character == table.characterReference).ExtraData.unusedKey);
+            table.UpdateKeyCounter(PlayerCharacterPoolManager.Instance.AllPlayerCharacters.Find(c => c.Character == table.characterReference).ExtraData.key);
             table.StartIdleAnimationIn(Random.value);
         }
 

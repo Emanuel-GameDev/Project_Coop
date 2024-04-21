@@ -86,6 +86,7 @@ public class SaveManager : MonoBehaviour
     {
         MapsManager.Instance.LoadMapData(saveData.maps, saveData.lastMap);
     }
+
     public void UpdateMapsData()
     {
         saveData.maps = MapsManager.Instance.SaveMapData();
@@ -109,6 +110,26 @@ public class SaveManager : MonoBehaviour
             saveData.players.Add(player.GetSaveData());
         }
     }
+
+    public CharacterSaveData GetPlayerSaveData(ePlayerCharacter character)
+    {
+        if (saveData != null)
+        {
+            foreach (CharacterSaveData player in saveData.players)
+            {
+                if (player.characterName == character)
+                {
+                    return player;
+                }
+            }
+        }
+
+        CharacterSaveData newSaveData = new();
+        newSaveData.characterName = character;
+        
+        return newSaveData;
+    }
+
 
 }
 
@@ -145,6 +166,6 @@ public class CharacterSaveData
     //Statistiche Base
     public ePlayerCharacter characterName;
     public List<PowerUp> powerUps = new();
-    public ExtraData extraData;
+    public ExtraData extraData = new();
     public List<AbilityUpgrade> unlockedAbility = new();
 }

@@ -1,79 +1,26 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
-
-public class PlayerSelection //DA RIVEDERE #MODIFICATO (InputReceiver Ã¨ direttamente settato a CursorBehavioiur)
-{
-    public PlayerData data;
-    public bool selected;
-    public CursorBehaviour whoSelected;
-
-    public PlayerSelection(PlayerData data, bool iconSelected, CursorBehaviour receiver)
-    {
-        this.data = data;
-        selected = iconSelected;
-        this.whoSelected = receiver;
-    }
-
-    public void EditIcon(bool iconSelected)
-    {
-        selected = iconSelected;
-    }
-
-    public void AssignReceiver(CursorBehaviour receiver)
-    {
-        if (receiver == null) return;
-
-        whoSelected = receiver;
-    }
-
-    public void Select()
-    {
-        if(whoSelected == null) return;
-
-        whoSelected.SetCharacter(data._class);
-    }
-
-}
 
 [Serializable]
-public class PlayerData
+public class PlayerIconSelection
 {
-    public RectTransform _icon;
-    public ePlayerCharacter _class;
+    public ePlayerID playerID;
+    public List<RectTransform> selectors;
 }
 
 public class CharacterSelectionMenu : MonoBehaviour
 {
-    // Le icone che vanno inserite da Inspector
-    public List<PlayerData> characterIcons = new List<PlayerData>();
-
-    // la struct che verrï¿½ usata per capire se un personaggio ï¿½ stato selezionato
-    private List<PlayerSelection> selectableCharacters = new List<PlayerSelection>();
-
-    private int randomSelectionCounter = 0;
-    public bool randomVoteActive
-    {
-        get { 
-
-            if (randomSelectionCounter == 0) return false;
-            else return true;
-        }
-        private set { }
-    }
+    [SerializeField]
+    private List<PlayerIconSelection> playerIconSelections = new List<PlayerIconSelection>();
 
     [SerializeField]
-    private List<TextMeshProUGUI> playerInfoTexts = new List<TextMeshProUGUI>();
+    private GameObject fasciaReady;
 
-    private List<TextMeshProUGUI> privatePlayerTexts;
-
-    [SerializeField]
-    private TextMeshProUGUI displayInfo;
+    private List<CursorBehaviour> activeCursors = new List<CursorBehaviour>();
 
     public static CharacterSelectionMenu Instance;
 
@@ -87,187 +34,156 @@ public class CharacterSelectionMenu : MonoBehaviour
 
     private void Start()
     {
-        InitialiazeSelections();
-
-        privatePlayerTexts = playerInfoTexts;
     }
 
-    public List<RectTransform> GetCharacterIcons()
+    internal void AddToActiveCursors(CursorBehaviour cursor)
     {
-        List<RectTransform> icons = new List<RectTransform>();
+        activeCursors.Add(cursor);
+    }
 
-        for (int i = 0; i < selectableCharacters.Count; i++)
+    internal List<RectTransform> GetCharacterSelectors(ePlayerID ID)
+    {
+        List<RectTransform> selectors = new List<RectTransform>();
+
+        foreach (PlayerIconSelection selection in playerIconSelections)
         {
-            icons.Add(selectableCharacters[i].data._icon);
+            if (selection.playerID == ID)
+                selectors = selection.selectors;
         }
 
-        return icons;
+        return selectors;
     }
 
-    public void AssignInfoText(CursorBehaviour cursor)
-    {
-        cursor.infoText = privatePlayerTexts[privatePlayerTexts.Count - 1];
-        privatePlayerTexts.Remove(cursor.infoText);
-    }
-
-    /// <summary>
-    /// Aggiungo alla lista di player selections delle player selection vuote che andranno riempite
-    /// man mano che un utente sceglie il personaggio
-    /// </summary>
-    private void InitialiazeSelections()
-    {
-        for (int i = 0; i < characterIcons.Count; i++)
-        {
-            PlayerSelection selection = new PlayerSelection(characterIcons[i], false, null);
-            selectableCharacters.Add(selection);
-        }
-    }
-
-    /// <summary>
-    /// Controlla se un'icona ï¿½ stata selezionata da un'altro player
-    /// </summary>
-    /// <param name="iconToCheck"></param>
-    public bool AlreadySelected(InputReceiver receiver, RectTransform iconToCheck)
-    {
-        foreach (PlayerSelection s in selectableCharacters)
-        {
-            if (iconToCheck == s.data._icon)
-            {
-                if (receiver != null)
-                {
-                    if (receiver == s.whoSelected) return false;
-                }
-
-                if (s.selected)
-                    return true;
-                else
-                    return false;
-            }
-        }
-
-        return false;
-    }
-
-    /// <summary>
-    /// Aggiorna il bool all'interno della lista delle selezioni quando un personaggio clicca sull'icona
-    /// </summary>
-    /// <param name="iconToSelect"></param>
-    public void UpdatePlayerSelection(CursorBehaviour receiver, RectTransform iconToSelect, bool mode)
-    {
-        // Iter sulle selections
-        foreach (PlayerSelection s in selectableCharacters)
-        {
-            // Check sull'icona
-            if (iconToSelect == s.data._icon)
-            {
-                s.EditIcon(mode);
-                s.AssignReceiver(receiver);
-                s.Select();
-            }
-        }
-
-        if (PlayersDoneSelecting() == PlayerInputManager.instance.playerCount)
-        {
-            EndSelection();
-        }
-    }
-
-    private int PlayersDoneSelecting()
-    {
-        int count = 0;
-
-        foreach (PlayerSelection player in selectableCharacters)
-        {
-            if (AlreadySelected(null, player.data._icon))
-                count++;
-
-        }
-
-        return count;
-    }
-
-    #region RandomSelection
-
-    /// <summary>
-    /// Serve ad incrementare o decrementare il conto degli utenti che hanno premuto il tasto random
-    /// </summary>
-    /// <param name="mode"></param>
-    public void TriggerRandomSelection(bool mode)
+    internal void PlayerOvered(bool mode, GameObject cursor)
     {
         if (mode)
         {
-            randomSelectionCounter++;
-
-            Debug.Log($"Player_NUM vuole avviare la selezione random");
-            displayInfo.text = "Player_NUM vuole avviare la selezione random, selezione personaggi disattivata (solo chi ha fatto la richiesta puï¿½ annullarla)";
-
+            cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(true);
         }
         else
         {
-            randomSelectionCounter--;
-
-            Debug.Log($"Player_NUM ha rimosso il consenso alla selezione random");
-            displayInfo.text = "Consenso rimosso";
+            if (cursor.GetComponent<RectTransform>().parent != null)
+                cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(false);
         }
-
-        UpdateRandomBtnSelection();
     }
 
-    public void UpdateRandomBtnSelection()
+    internal bool TriggerPlayerSelection(bool mode, GameObject cursor)
     {
-        int totalPlayerCount = PlayerInputManager.instance.playerCount;
-
-        if (randomSelectionCounter == totalPlayerCount)
+        if (mode)
         {
-            Debug.Log("selezione random attivata");
-            displayInfo.text = "Selezione confermata da tutti i giocatori";
+            // Spengo lo sprite del P overed
+            cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(false);
 
-            RandomSelection();
+            // Accendo lo sprite del P ready
+            cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.SetActive(true);
+
+            // Setto la classe
+            ePlayerCharacter charToAssign = cursor.GetComponentInParent<CharacterIdentifier>().character;
+            cursor.GetComponent<CursorBehaviour>().SetCharacter(charToAssign);
+
+            // Controllo non necessario sullo sprite del ready per impostare il bool del cursore
+            if (cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.activeSelf)
+                return true;
+            else
+                return false;
         }
         else
         {
-            Debug.Log("Non abbastanza consensi per attivare selezione random");
+            // Spengo lo sprite del P ready
+            cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.SetActive(false);
+
+            // Accendo lo sprite del P overed
+            cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(true);
+
+            // Controllo non necessario sullo sprite del ready per impostare il bool del cursore
+            if (cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.activeSelf)
+                return true;
+            else
+                return false;
         }
     }
 
-    /// <summary>
-    /// Prende una lista di tutti i dispositivi connessi, e li assegna ad un player selection
-    /// </summary>
-    private void RandomSelection()
+    internal void SelectRandom(CursorBehaviour cursor)
     {
-        List<PlayerInputHandler> handlers = CoopManager.Instance.GetActiveHandlers();
-        
-        foreach (PlayerInputHandler handler in handlers)
+        do
         {
-            int rand = 0;
-            do
+            int randContainerID = UnityEngine.Random.Range(0, cursor.objectsToOver.Count);
+            cursor.Select(randContainerID);
+
+        } while (AlreadySelected(cursor));
+
+        bool response = TriggerPlayerSelection(true, cursor.gameObject);
+
+        if (response)
+            cursor.objectSelected = true;
+
+        cursor.CheckAllReady();
+    }
+
+    internal bool AlreadySelected(CursorBehaviour cursor)
+    {
+        RectTransform cursorParent = cursor.gameObject.GetComponent<RectTransform>().parent.parent.gameObject.GetComponent<RectTransform>();
+        bool occupied = false;
+
+        foreach (CursorBehaviour item in activeCursors)
+        {
+            RectTransform itemParent = item.gameObject.GetComponent<RectTransform>().parent.parent.gameObject.GetComponent<RectTransform>();
+
+            // Check per assicurarmi di non star controllando lo stesso cursore del paramentro
+            if (cursor == item) continue;
+
+            // Check per vedere se, in un personaggio sono attivi più cursori
+            if (cursorParent == itemParent)
             {
-                rand = Random.Range(0, selectableCharacters.Count);
+                // Check per vedere se qualche altro cursore ha selezionato il pg
+                if (item.objectSelected)
+                {
+                    occupied = true;
+                    return occupied;
+                }
+                else
+                    occupied = false;
             }
-            while (selectableCharacters[rand].selected);
-
-            selectableCharacters[rand].EditIcon(true);
-            selectableCharacters[rand].AssignReceiver(handler.CurrentReceiver as CursorBehaviour); //DA RIVEDERE #MODIFICATO
-            selectableCharacters[rand].Select();
         }
 
-        EndSelection();
+        return occupied;
     }
 
-    #endregion
-
-    public void EndSelection()
+    internal bool AllReady()
     {
-        Debug.Log("Selezione completa");
+        bool allReady = true;
 
-        foreach(PlayerSelection s in selectableCharacters)
+        foreach (CursorBehaviour cursor in activeCursors)
         {
-            if (s.whoSelected != null)
-                s.whoSelected.SetStartingCharacter();
+            if (!cursor.objectSelected)
+                allReady = false;
         }
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        return allReady;
     }
 
+    internal void TriggerFasciaReady(bool mode)
+    {
+        if (mode)
+        {
+            fasciaReady.SetActive(true);
+            //return fasciaReady.GetComponentInChildren<Button>();
+        }
+        else
+        {
+            fasciaReady.SetActive(false);
+            //return null;
+        }
+    }
 
+    public void SelectionOver(ePlayerID ID)
+    {
+        // Check se è il player 1 a premere
+        if (ID == ePlayerID.Player1)
+        {
+            Debug.Log("Selection Over");
+
+            GameManager.Instance.LoadScene("TutorialScene");
+        }
+    }
 }

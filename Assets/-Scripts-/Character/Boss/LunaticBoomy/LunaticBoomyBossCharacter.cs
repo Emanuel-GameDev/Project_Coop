@@ -71,6 +71,20 @@ public class LunaticBoomyBossCharacter : BossCharacter
 
     #endregion
 
+    #region AlternativeJump
+
+    [Space]
+    [Title("ALTERNATIVE_JUMP")]
+    [Space]
+
+    [SerializeField]
+    private AnimationCurve curveY;
+    public AnimationCurve CurveY => curveY;
+
+
+
+    #endregion
+
     #region JUMP
 
     [Space]
@@ -154,6 +168,18 @@ public class LunaticBoomyBossCharacter : BossCharacter
     [SerializeField, Tooltip("Tempo di attesa dopo la fine del giro durante PANIC per dare temo alle animazioni / migliorare la resa visiva")]
     private float timeAfterPanic = 1f;
     public float TimeAfterPanic => timeAfterPanic;
+
+    #endregion
+
+    #region Explosion
+
+    [Space]
+    [Title("EXPLOSION")]
+    [Space]
+
+    [SerializeField]
+    private float stunTime = 1f;
+    public float StunTime => stunTime;
 
     #endregion
 

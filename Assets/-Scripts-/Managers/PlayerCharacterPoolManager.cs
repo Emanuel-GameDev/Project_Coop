@@ -86,15 +86,20 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         }
     }
 
-    private void ActivateCharacter(PlayerCharacter playerCharacter, Transform spawnPosition )
+    private void ActivateCharacter(PlayerCharacter playerCharacter, Transform spawnPosition)
+    {
+        ActivateCharacter(playerCharacter, spawnPosition.position);
+    }
+
+    private void ActivateCharacter(PlayerCharacter playerCharacter, Vector3 spawnPosition)
     {
         playerCharacter.gameObject.transform.parent = null;
-        playerCharacter.gameObject.transform.position = spawnPosition.position;
+        playerCharacter.gameObject.transform.position = spawnPosition;
         playerCharacter.gameObject.SetActive(true);
         freeCharacters.Remove(playerCharacter);
         activeCharacters.Add(playerCharacter);
         //if (newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacterController>())
-        //PubSub.Instance.Notify(EMessageType.characterJoined, playerCharacter);
+        PubSub.Instance.Notify(EMessageType.characterJoined, playerCharacter);
         CameraManager.Instance.AddTarget(playerCharacter.transform);
     }
 
@@ -114,20 +119,26 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     {
         PlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)];
         if(searchedCharacter == null) return null;
-        ActivateCharacter(searchedCharacter, searchedCharacter.transform);
+
+        ActivateCharacter(searchedCharacter, GameManager.Instance.SpawnPosManager.GetFreePos().spawnPos);
         return searchedCharacter;
     }
 
     public PlayerCharacter GetCharacter(ePlayerCharacter targetCharacter, Transform position)
     {
+        return GetCharacter(targetCharacter, position.position);
+    }
+
+    public PlayerCharacter GetCharacter(ePlayerCharacter targetCharacter, Vector3 position)
+    {
         PlayerCharacter searchedCharacter = freeCharacters.Find(c => c.Character == targetCharacter);
         if (searchedCharacter != null)
         {
             ActivateCharacter(searchedCharacter, position);
+            //PubSub.Instance.Notify(EMessageType.characterJoined, searchedCharacter);
         }
         return searchedCharacter;
     }
-
 
     #endregion
 

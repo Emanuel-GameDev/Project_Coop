@@ -45,6 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3defd5cc67813a54399603acd9abfae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnOnePlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAllPlayerInside:
+    m_PersistentCalls:
+      m_Calls: []
+  playerInsideCount: {fileID: 0}
 --- !u!58 &5824581510585159210
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -125,6 +132,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3defd5cc67813a54399603acd9abfae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnOnePlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAllPlayerInside:
+    m_PersistentCalls:
+      m_Calls: []
+  playerInsideCount: {fileID: 0}
 --- !u!58 &809646731302532818
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -231,7 +245,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1822292781
+  m_SortingLayerID: 1726692205
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1c81660d2f0377e42b6efe181851cdd0, type: 3}
@@ -436,6 +450,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3defd5cc67813a54399603acd9abfae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnOnePlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAllPlayerInside:
+    m_PersistentCalls:
+      m_Calls: []
+  playerInsideCount: {fileID: 0}
 --- !u!58 &59260226593194542
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -552,23 +573,36 @@ MonoBehaviour:
   bleeding: 0
   isDead: 0
   damageReceivedMultiplier: 1
+  onHit:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  onDash:
+    m_PersistentCalls:
+      m_Calls: []
+  onParried:
+    m_PersistentCalls:
+      m_Calls: []
   pushAnimationCurve:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxHp: 10
-  damage: 20
+  soundsDatabase: {fileID: 0}
+  maxHp: 2
+  damage: 2
   staminaDamage: 20
-  attackSpeed: 1
+  attackSpeed: 3
   moveSpeed: 5
   target: {fileID: 0}
   currentHp: 0
   groundLevel: {fileID: 4631380387903047295}
   viewRange: 12
   attackRange: 20
-  attackDelay: 0.3
+  attackDelay: 2
   despawnTime: 1
   enemyType: 1
   escapeRange: 8
@@ -591,6 +625,8 @@ MonoBehaviour:
   CarvingMoveThreshold: 0.1
   obstacle: {fileID: 0}
   currentTarget: {fileID: 0}
+  entryDestination: {x: 0, y: 0}
+  canGoIdle: 1
 --- !u!208 &6888633107115628428
 NavMeshObstacle:
   m_ObjectHideFlags: 0

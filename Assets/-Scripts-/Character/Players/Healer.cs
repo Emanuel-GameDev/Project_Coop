@@ -114,14 +114,16 @@ public class Healer : PlayerCharacter
 
         //prova
 
-        extraData.unusedKey = 3;
-        extraData.money = 2;
+        extraData.key = 3;
+        extraData.coin = 2;
+        SaveManager.Instance.LoadAllData();
 
         if (upgradeStatus[AbilityUpgrade.Ability2])
         {
             Debug.Log("2");
         }
         else Debug.Log("no");
+       
     }
 
 

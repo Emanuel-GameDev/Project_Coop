@@ -86,6 +86,24 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private int comboStateMax = 3;
     private int consecutiveHitsCount;
 
+    private bool mustContinueCombo = false;
+    private bool alreadyCalled = false;
+    private AttackComboState currentAttackComboState;
+    private AttackComboState NextAttackComboState
+    {
+        get
+        {
+            return currentAttackComboState switch
+            {
+                AttackComboState.NotAttaking => AttackComboState.Attack1,
+                AttackComboState.Attack1 => AttackComboState.Attack2,
+                AttackComboState.Attack2 => AttackComboState.Attack3,
+                AttackComboState.Attack3 => unlimitedComboUnlocked ? AttackComboState.Attack1 : AttackComboState.NotAttaking,
+                _ => AttackComboState.NotAttaking
+            };
+        }
+    }
+
     private bool dashAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
     private bool unlimitedComboUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
     private bool projectileDeflectionUnlocked => upgradeStatus[AbilityUpgrade.Ability3];
@@ -128,7 +146,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private static string STARTDASHATTACK = "StartDashAttack";
     private static string MOVEDASHATTACK = "MoveDashAttack";
     private static string ENDDASHATTACK = "EndDashAttack";
-    //private static string DEATH = "Death";
+    private static string DEATH = "Death";
     private static string ISMOVING = "IsMoving";
     #endregion
 
@@ -165,62 +183,110 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (context.performed)
         {
-            if (canMove && CanStartCombo())
+            //if (canMove && CanStartCombo())
+            //{
+            //    StartCombo();
+            //}
+            //else if (IsAttacking)
+            //    ContinueCombo();
+
+            alreadyCalled = false;
+
+            if (IsAttacking)
             {
+                ContinueCombo();
+            }
+            else if (CanStartCombo())
+            {
+                ResetAttack();
                 StartCombo();
             }
-            else if (IsAttacking)
-                ContinueCombo();
-            Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n CurrentComboState: {currentComboState}, NextComboState: {nextComboState}");
+
+            Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n MustContinueCombo: {mustContinueCombo},  CurrentComboState: {currentAttackComboState}, NextComboState: {NextAttackComboState}");
         }
     }
+
+    #region OldComboSystem
+
     private void StartCombo()
     {
-        currentComboState = 1;
-        nextComboState = currentComboState;
+        currentAttackComboState = AttackComboState.Attack1;
+        //currentComboState = 1;
+        //nextComboState = currentComboState;
         DoMeleeAttack();
         rb.velocity = Vector3.zero;
     }
+
     private void ContinueCombo()
     {
-        if (currentComboState == nextComboState)
-        {
-            nextComboState = ++nextComboState > comboStateMax ? 0 : nextComboState;
-            if (CanContinueCombo())
-                DoMeleeAttack();
-        }
+        //if (currentComboState == nextComboState)
+        //{
+        //    nextComboState = ++nextComboState > comboStateMax ? 0 : nextComboState;
+        //    if (CanContinueCombo())
+        //        DoMeleeAttack();
+        //}
+        mustContinueCombo = true;
     }
     private void DoMeleeAttack()
     {
         IsAttacking = true;
-        string triggerName = ATTACK + (nextComboState).ToString();
+        string triggerName = currentAttackComboState.ToString();   //ATTACK + (nextComboState).ToString();
         animator.SetTrigger(triggerName);
-
     }
     public void OnAttackAnimationEnd()
     {
-        AdjustLastAttackTime();
+        if (!alreadyCalled)
+        {
+            AdjustLastAttackTime();
 
-        if (currentComboState == nextComboState || nextComboState == 0)
-            IsAttacking = false;
+            //if (currentComboState == nextComboState || nextComboState == 0)
+            //    IsAttacking = false;
+            //currentComboState = nextComboState;
+            if (mustContinueCombo)
+            {
+                mustContinueCombo = false;
+                currentAttackComboState = NextAttackComboState;
 
-        currentComboState = nextComboState;
+                if (currentAttackComboState == AttackComboState.NotAttaking)
+                    ResetAttack();
+                else
+                    DoMeleeAttack();
+            }
+            else
+            {
+                ResetAttack();
+            }
+
+            Utility.DebugTrace($"EndAttakMustContinue: {mustContinueCombo}, Current State: {currentAttackComboState}");
+            alreadyCalled = true;
+        }
+        else Debug.Log("Chiamata2");
     }
+
+    public void OnAttackAnimationStart()
+    {
+        alreadyCalled = false;
+    }
+
 
     private void AdjustLastAttackTime()
     {
         float comboCompletionValue = (float)currentComboState / (float)comboStateMax;
         float reductionFactor = (1 - comboCompletionValue) * timeBetweenCombo;
-        lastAttackTime = Time.time - reductionFactor;
+        lastAttackTime = Time.time; // - reductionFactor;
     }
 
-    private bool CanStartCombo() => (unlimitedComboUnlocked || Time.time > lastAttackTime + timeBetweenCombo) && currentComboState != 1;
+    private bool CanStartCombo() => (unlimitedComboUnlocked || (canMove && Time.time > lastAttackTime + timeBetweenCombo && currentAttackComboState == AttackComboState.NotAttaking)); // && currentComboState != 1;
     private bool CanContinueCombo() => nextComboState != 0;
     private void ResetAttack()
     {
         IsAttacking = false;
-        currentComboState = 0;
+        //currentComboState = 0;
+        currentAttackComboState = AttackComboState.NotAttaking;
+        mustContinueCombo = false;
+        alreadyCalled = false;
     }
+    #endregion
 
     #endregion
 
@@ -384,11 +450,11 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         if (!isInvulnerable || !isDodging)
         {
             base.TakeDamage(data);
-            if (!isDashingAttack)
-                animator.SetTrigger(HIT);
+            //if (!isDashingAttack)
+            //    animator.SetTrigger(HIT);
 
-            if(IsAttacking)
-                ResetAttack();
+            //if(IsAttacking)
+            //    ResetAttack();
         }
 
         if (perfectTimingEnabled)
@@ -405,7 +471,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         Utility.DebugTrace("Unlock " + abilityUpgrade.ToString());
     }
 
-    
+
 
     public override void LockUpgrade(AbilityUpgrade abilityUpgrade)
     {
@@ -418,7 +484,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (Utility.IsInLayerMask(collider.gameObject.layer, projectileLayer))
         {
-            if(TryGetComponent(out Projectile projectile))
+            if (TryGetComponent(out Projectile projectile))
             {
                 projectile.ReflectProjectile(this.gameObject, 1);
             }
@@ -451,6 +517,12 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     }
 
+    public override void Die()
+    {
+        base.Die();
+        animator.SetTrigger(DEATH);
+    }
+
 
     private void BossDamageCheck()
     {
@@ -472,11 +544,11 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     }
 
     public void SetPerfectTimingHandler(PerfectTimingHandler handler) => perfectTimingHandler = handler;
-    
+
 
     public void PerfectTimeStarted()
     {
-        if(!isDodging)
+        if (!isDodging)
         {
             perfectTimingHandler.ActivateAlert();
             perfectTimingEnabled = true;
@@ -490,17 +562,18 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         perfectTimingHandler.DeactivateAlert();
         perfectTimingEnabled = false;
+        Utility.DebugTrace("Perfect Time Ended");
     }
 
 
     protected IEnumerator DisablePerfectTimeAfter(float time)
     {
         yield return new WaitForSeconds(time);
-        if(perfectTimingEnabled)
+        if (perfectTimingEnabled)
             PerfectTimeEnded();
     }
 
-    
+
     #endregion
     //Potenziamento boss fight: gli attacchi consecutivi aumentano il danno del personaggio a ogni colpo andato a segno.
     //Dopo tot tempo (es: 1.5 secondi) senza colpire, il danno torna al valore standard.
@@ -516,4 +589,12 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     //4: quando il personaggio usa l’abilità unica(i secondi di immortalità) i suoi movimenti diventano più rapidi(attacchi, schivate e spostamenti)
     //5: Effettuare una schivata perfetta aumenta i danni per tot tempo(cumulabile con il bonus ai danni del potenziamento).
 
+}
+
+public enum AttackComboState
+{
+    NotAttaking,
+    Attack1,
+    Attack2,
+    Attack3
 }

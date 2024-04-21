@@ -20,7 +20,10 @@ public class PlayerCharacterController : InputReceiver
     public override void SetCharacter(ePlayerCharacter character)
     {
         base.SetCharacter(character);
-        PlayerCharacter playerCharacter = PlayerCharacterPoolManager.Instance.GetCharacter(character, transform);
+
+        // Set pos del personaggio effettivo
+        PlayerCharacter playerCharacter = PlayerCharacterPoolManager.Instance.GetCharacter(character, SpawnPosManager.Instance.GetFreePos().spawnPos);
+
         if (playerCharacter != null)
         {
             SetPlayerCharacter(playerCharacter);
@@ -89,6 +92,12 @@ public class PlayerCharacterController : InputReceiver
     {
         if (actualPlayerCharacter != null)
             actualPlayerCharacter.InteractInput(context);
+    }
+
+    public override void CancelInteractInput(InputAction.CallbackContext context)
+    {
+        if (actualPlayerCharacter != null)
+            actualPlayerCharacter.CancelInteractInput(context);
     }
 
     public override void SwitchUpInput(InputAction.CallbackContext context)

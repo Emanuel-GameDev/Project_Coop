@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -25,6 +24,8 @@ public abstract class PlayerCharacter : Character
     protected float uniqueAbilityCooldown;
     [SerializeField, Tooltip("L'incremento del tempo di attesa dell'abilit� unica dopo ogni uso.")]
     protected float uniqueAbilityCooldownIncreaseAtUse;
+    [SerializeField, Tooltip("Reference per l'interactable del ress")]
+    protected GameObject ressInteracter;
 
     protected float currentHp;
     protected float uniqueAbilityUses;
@@ -234,8 +235,29 @@ public abstract class PlayerCharacter : Character
             PubSub.Instance.Notify(EMessageType.characterDamaged, this);
         }
 
+        if (CurrentHp <= 0)
+        {
+            onDeath?.Invoke();
+            Die();
+        }
 
     }
+
+    public virtual void Die()
+    {
+        characterController.GetInputHandler().PlayerInput.actions.Disable();
+        characterController.GetInputHandler().PlayerInput.actions.FindAction("Menu").Enable();
+        characterController.GetInputHandler().PlayerInput.actions.FindAction("Option").Enable();
+        ressInteracter.gameObject.SetActive(true);
+    }
+
+    public virtual void Ress()
+    {
+        characterController.GetInputHandler().PlayerInput.actions.Enable();
+        TakeHeal(new DamageData(MaxHp/2, this));
+        ressInteracter.gameObject.SetActive(false);
+    }
+
 
     public virtual void TakeHeal(DamageData data)
     {
@@ -401,12 +423,16 @@ public abstract class PlayerCharacter : Character
         Interact(context);
     }
 
+    public void CancelInteractInput(InputAction.CallbackContext context)
+    {
+        CancelInteraction(context);
+    }
 
     #endregion
 
     #endregion
 
-    #region
+    #region SaveGame
 
     public CharacterSaveData GetSaveData()
     {
@@ -427,7 +453,7 @@ public abstract class PlayerCharacter : Character
     {
         if(saveData == null || saveData.characterName != character)
             return;
-
+        Debug.Log("load");
         foreach (PowerUp pu in saveData.powerUps)
         {
             powerUpData.Add(pu);
@@ -441,4 +467,20 @@ public abstract class PlayerCharacter : Character
     }
 
     #endregion
+
+    public override void DisableOtherActions()
+    {
+        base.DisableOtherActions();
+
+        characterController.GetInputHandler().PlayerInput.actions.Disable();
+        characterController.GetInputHandler().PlayerInput.actions.FindAction("Menu").Enable();
+        characterController.GetInputHandler().PlayerInput.actions.FindAction("Option").Enable();
+        characterController.GetInputHandler().PlayerInput.actions.FindAction("CancelInteract").Enable();
+    }
+
+    public override void EnableAllActions()
+    {
+        base.EnableAllActions();
+        characterController.GetInputHandler().PlayerInput.actions.Enable();
+    }
 }

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6526236197221207987}
   - component: {fileID: 8134535348122979301}
   - component: {fileID: 4949923205537460715}
+  - component: {fileID: 8870824034324483685}
   m_Layer: 0
   m_Name: Projectile_LB
   m_TagString: Untagged
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.29320365, y: 0.29320365, z: 0.29320365}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -100,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecbfe28c80deca746ae291a2b69dcfd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aliveTime: 2
+  aliveTime: 4
 --- !u!58 &8134535348122979301
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -163,3 +164,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &8870824034324483685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2582524821269639192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2de632904a0ecf48920e0fa6a2dcd65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  onTrigger:
+    m_PersistentCalls:
+      m_Calls: []

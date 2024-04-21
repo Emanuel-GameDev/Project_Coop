@@ -154,6 +154,8 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void InteractInput(InputAction.CallbackContext context) => CurrentReceiver.InteractInput(context);
 
+    public void CancelInteractInput(InputAction.CallbackContext context) => CurrentReceiver.CancelInteractInput(context);
+
     public void JoinInput(InputAction.CallbackContext context) => CurrentReceiver.JoinInput(context);
 
     public void SwitchUpInput(InputAction.CallbackContext context) => CurrentReceiver.SwitchUpInput(context);

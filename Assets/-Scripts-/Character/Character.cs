@@ -46,7 +46,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     public UnityEvent OnHit { get => onHit; set => onHit = value; }
 
     public UnityEvent OnDash { get => onDash; set => onDash = value; }
-   
+
 
     [SerializeField] private AnimationCurve pushAnimationCurve;
     [SerializeField] protected SoundsDatabase soundsDatabase;
@@ -120,11 +120,35 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
             if (canInteract)
                 InteractWith(activeInteractable);
         }
+        if (context.canceled)
+        {
+            if (canInteract)
+                AbortInteraction(activeInteractable);
+        }
+    }
+
+    public void CancelInteraction(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (canInteract)
+                CancelInteract(activeInteractable);
+        }
     }
 
     public void InteractWith(IInteractable interactable)
     {
         activeInteractable.Interact(this);
+    }
+
+    public void AbortInteraction(IInteractable interactable)
+    {
+        activeInteractable.AbortInteraction(this);
+    }
+
+    public void CancelInteract(IInteractable interactable)
+    {
+        activeInteractable.CancelInteraction(this);
     }
 
     public void EnableInteraction(IInteractable interactable)
@@ -138,6 +162,17 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         activeInteractable = interactable;
         canInteract = false;
     }
+
+    public virtual void DisableOtherActions()
+    {
+
+    }
+
+    public virtual void EnableAllActions()
+    {
+
+    }
+
 
     public GameObject GetInteracterObject()
     {
@@ -184,7 +219,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 
     public abstract DamageData GetDamageData();
 
-    
+
 
     #endregion
 }
