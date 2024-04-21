@@ -120,7 +120,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         PlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)];
         if(searchedCharacter == null) return null;
 
-        ActivateCharacter(searchedCharacter, GameManager.Instance.SpawnPosManager.GetFreePos().spawnPos);
+        ActivateCharacter(searchedCharacter, SpawnPosManager.Instance.GetFreePos().spawnPos);
         return searchedCharacter;
     }
 
