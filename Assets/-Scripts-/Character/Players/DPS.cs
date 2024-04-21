@@ -187,9 +187,15 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
             }
             else if (IsAttacking)
                 ContinueCombo();
+
+
+
             Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n CurrentComboState: {currentComboState}, NextComboState: {nextComboState}");
         }
     }
+
+    #region OldComboSystem
+
     private void StartCombo()
     {
         currentComboState = 1;
@@ -238,6 +244,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         IsAttacking = false;
         currentComboState = 0;
     }
+    #endregion
 
     #endregion
 
