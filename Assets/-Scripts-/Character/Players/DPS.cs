@@ -198,8 +198,9 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     private void StartCombo()
     {
-        currentComboState = 1;
-        nextComboState = currentComboState;
+        currentAttackComboState = AttackComboState.Attack1;
+        //currentComboState = 1;
+        //nextComboState = currentComboState;
         DoMeleeAttack();
         rb.velocity = Vector3.zero;
     }
@@ -216,7 +217,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private void DoMeleeAttack()
     {
         IsAttacking = true;
-        string triggerName = ATTACK + (nextComboState).ToString();
+        string triggerName = currentAttackComboState.ToString();   //ATTACK + (nextComboState).ToString();
         animator.SetTrigger(triggerName);
 
     }
