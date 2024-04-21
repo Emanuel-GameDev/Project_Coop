@@ -1287,6 +1287,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7105769451914681717, guid: 3707b86cc32c817419e6020bd2c2272b,
         type: 3}
+      propertyPath: defaultSpawnPos
+      value: 
+      objectReference: {fileID: 1326588282}
+    - target: {fileID: 7105769451914681717, guid: 3707b86cc32c817419e6020bd2c2272b,
+        type: 3}
       propertyPath: defaultSpawnPos.entranceReferencePoint
       value: 
       objectReference: {fileID: 1326588281}
@@ -1591,6 +1596,11 @@ PrefabInstance:
         type: 3}
       propertyPath: debugMode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
+        type: 3}
+      propertyPath: timescale
+      value: 0.72
       objectReference: {fileID: 0}
     - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
         type: 3}
@@ -1933,6 +1943,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326588281}
+  - component: {fileID: 1326588282}
   m_Layer: 0
   m_Name: StartReferenceSpawnPoint
   m_TagString: Untagged
@@ -1959,6 +1970,20 @@ Transform:
   - {fileID: 98501267}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1326588282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326588280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76dd56251dde7ea419d51e0bfb729de1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entranceReferencePoint: {fileID: 1326588281}
+  posData: []
 --- !u!1 &1360288330
 GameObject:
   m_ObjectHideFlags: 0
@@ -1985,7 +2010,7 @@ Transform:
   m_GameObject: {fileID: 1360288330}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.400012, y: 9.350122, z: -6.859762}
+  m_LocalPosition: {x: -15.70157, y: 19.40194, z: -6.859762}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3703,6 +3728,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5480735105393077391, guid: a008ce07630c4bf4d8e9de332c2f2a16,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
