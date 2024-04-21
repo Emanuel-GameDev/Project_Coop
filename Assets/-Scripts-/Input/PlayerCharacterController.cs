@@ -20,7 +20,11 @@ public class PlayerCharacterController : InputReceiver
     public override void SetCharacter(ePlayerCharacter character)
     {
         base.SetCharacter(character);
-        PlayerCharacter playerCharacter = PlayerCharacterPoolManager.Instance.GetCharacter(character, transform);
+
+        // Set pos del personaggio effettivo
+        PlayerCharacter playerCharacter = PlayerCharacterPoolManager.Instance.GetCharacter(character, 
+                                          GameManager.Instance.SpawnPosManager.GetFreePos().spawnPos);
+
         if (playerCharacter != null)
         {
             SetPlayerCharacter(playerCharacter);
