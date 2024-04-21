@@ -120,6 +120,11 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
             if (canInteract)
                 InteractWith(activeInteractable);
         }
+        if (context.canceled)
+        {
+            if (canInteract)
+                AbortInteraction(activeInteractable);
+        }
     }
 
     public void CancelInteraction(InputAction.CallbackContext context)
@@ -134,6 +139,11 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     public void InteractWith(IInteractable interactable)
     {
         activeInteractable.Interact(this);
+    }
+
+    public void AbortInteraction(IInteractable interactable)
+    {
+        activeInteractable.AbortInteraction(this);
     }
 
     public void CancelInteract(IInteractable interactable)

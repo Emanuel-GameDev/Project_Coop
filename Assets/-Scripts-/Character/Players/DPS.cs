@@ -146,7 +146,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private static string STARTDASHATTACK = "StartDashAttack";
     private static string MOVEDASHATTACK = "MoveDashAttack";
     private static string ENDDASHATTACK = "EndDashAttack";
-    //private static string DEATH = "Death";
+    private static string DEATH = "Death";
     private static string ISMOVING = "IsMoving";
     #endregion
 
@@ -515,6 +515,12 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
         return new DamageData(damage, this);
 
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        animator.SetTrigger(DEATH);
     }
 
 
