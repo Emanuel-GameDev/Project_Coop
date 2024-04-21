@@ -14,6 +14,8 @@ public class Menu : MonoBehaviour
 
     [SerializeField] protected GameObject shopGroup;
 
+    [HideInInspector]public  bool canClose;
+
     public virtual void Start()
     {
         shopGroup.SetActive(false);
@@ -34,33 +36,32 @@ public class Menu : MonoBehaviour
             ih.MultiplayerEventSystem.SetSelectedGameObject(table[i].GetComponentInChildren<Selectable>().gameObject);
             InputActionAsset actions = ih.GetComponent<PlayerInput>().actions;
 
-            //actions.Disable();
             actions.FindActionMap("Player").Disable();
             actions.FindActionMap("UI").Enable();
-
-            actions.FindAction("Menu").performed += Menu_performed;
+            actions.FindActionMap("UI").FindAction("Menu").Disable();
+            actions.FindAction("Cancel").performed += Menu_performed;
 
             i++;
         }
     }
-    [HideInInspector]public  bool canClose;
-    protected void Menu_performed(InputAction.CallbackContext obj)
+    protected virtual void Menu_performed(InputAction.CallbackContext obj)
     {
         if(canClose)
             CloseMenu();
     }
 
-    public void CloseMenu()
+    public virtual void CloseMenu()
     {
         foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
         {
             InputActionAsset actions = ih.GetComponent<PlayerInput>().actions;
 
             actions.FindActionMap("Player").Enable();
-            //actions.Enable();
+            
             actions.FindActionMap("UI").Disable();
+            actions.FindActionMap("UI").FindAction("Menu").Enable();
 
-            actions.FindAction("Menu").performed -= Menu_performed;
+            actions.FindAction("Cancel").performed -= Menu_performed;
         }
         shopGroup.SetActive(false); 
     }

@@ -111,6 +111,19 @@ public class Healer : PlayerCharacter
         animator.SetBool("IsDead", false);
         baseMoveSpeed = MoveSpeed;
         blockInput = false;
+
+        //prova
+
+        extraData.key = 3;
+        extraData.coin = 2;
+        SaveManager.Instance.LoadAllData();
+
+        if (upgradeStatus[AbilityUpgrade.Ability2])
+        {
+            Debug.Log("2");
+        }
+        else Debug.Log("no");
+       
     }
 
 
@@ -323,10 +336,12 @@ public class Healer : PlayerCharacter
 
         //calcolo raggio area
         if (upgradeStatus[AbilityUpgrade.Ability2])
+        {
             radius = healAreaRadius + healAreaIncrementedRadious;
+            Debug.Log("2");
+        }
         else
             radius = healAreaRadius;
-
 
         HealArea areaSpawned = Instantiate(healArea, new Vector2(transform.position.x, transform.position.y), Quaternion.identity).GetComponent<HealArea>();
 

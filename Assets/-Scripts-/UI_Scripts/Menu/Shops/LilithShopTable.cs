@@ -12,40 +12,61 @@ public class LilithShopTable : MonoBehaviour
 {
     [SerializeField] LocalizeStringEvent abilityNameLocaleEvent;
     [SerializeField] LocalizeStringEvent abilityDescriptionLocaleEvent;
-    [SerializeField] TextMeshProUGUI coinsNumberText;
+    [SerializeField] TextMeshProUGUI keysNumberText;
     [SerializeField] Selectable buyButton;
 
-    [SerializeField] public ePlayerCharacter characterReference;
+    [SerializeField] Selectable firstSelected;
 
-    [SerializeField] public List<AbilityShopEntry> entrys;
+    [SerializeField] public ePlayerCharacter characterReference;
+    internal PlayerCharacter playerCharacterReference;
+
+   [SerializeField] public List<AbilityShopEntry> entrys = new List<AbilityShopEntry>(5);
 
     [Serializable]
     public class AbilityShopEntry
     {
         [SerializeField] public LilithShopButton button;
-        [SerializeField] public List<PowerUp> abilitys;
+        [SerializeField] public Image abilityImage;
+        [SerializeField] public PlayerAbility[] abilitys = new PlayerAbility[1];
 
-        [HideInInspector] public int id;
+        /*[HideInInspector]*/ public int id;
     }
 
 
     LilithShopMenu shopMenu;
     GameObject lastSelected;
 
-    private void Start()
-    {
-        shopMenu = GetComponentInParent<LilithShopMenu>();
 
-        InitializeButtons();
+    public void InitializeButtons()
+    {
+        shopMenu = GetComponentInParent<LilithShopMenu>(true);
+        playerCharacterReference = PlayerCharacterPoolManager.Instance.AllPlayerCharacters.Find(c => c.Character == characterReference);
+        
+        if(playerCharacterReference != null)
+        {
+            if(playerCharacterReference.GetInputHandler() != null)
+                playerCharacterReference.GetInputHandler().MultiplayerEventSystem.SetSelectedGameObject(firstSelected.gameObject);
+
+        }
+
+        //da cambiare con i salvataggi
+            foreach (AbilityShopEntry entry in entrys)
+            {
+                entry.button.buttonImage = entry.abilityImage;
+                entry.button.SetAbility(entry.abilitys[0]);
+            }
+        
     }
 
-    private void InitializeButtons()
+    public void StartIdleAnimationIn(float delay)
     {
-        //da cambiare con i salvataggi
-        foreach(AbilityShopEntry entry in entrys)
-        {
-            entry.button.SetPowerUp(entry.abilitys[0]);
-        }
+        StartCoroutine(PlayIdle(delay));
+    }
+
+    IEnumerator PlayIdle(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GetComponent<Animation>().Play();
     }
 
     public void ChangeDescriptionAndName(LocalizedString localStringName, LocalizedString localStringDescription)
@@ -54,52 +75,75 @@ public class LilithShopTable : MonoBehaviour
         abilityDescriptionLocaleEvent.StringReference = localStringDescription;
     }
 
+    LilithShopButton lastButton;
     public void SetOnBuyButton()
     {
-        lastSelected = shopMenu.tableAssosiation[this].MultiplayerEventSystem.currentSelectedGameObject;
-        shopMenu.tableAssosiation[this].MultiplayerEventSystem.SetSelectedGameObject(buyButton.gameObject);
-        shopMenu.canClose = false;
+        lastSelected = playerCharacterReference.GetInputHandler().MultiplayerEventSystem.currentSelectedGameObject;
+        lastButton = lastSelected.GetComponent<LilithShopButton>();
 
-        shopMenu.tableAssosiation[this].GetComponent<PlayerInput>().actions.FindAction("Menu").performed += CoinShopTable_performed;
+        if (!lastButton.isActive)
+            return;
+
+        shopMenu.canClose = false;
+        playerCharacterReference.GetInputHandler().MultiplayerEventSystem.SetSelectedGameObject(buyButton.gameObject);
+
+        playerCharacterReference.GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Cancel").performed += CoinShopTable_performed;
 
     }
 
     private void CoinShopTable_performed(InputAction.CallbackContext obj)
     {
         DesetOnBuyButton();
-        shopMenu.tableAssosiation[this].GetComponent<PlayerInput>().actions.FindAction("Menu").performed += CoinShopTable_performed;
+        playerCharacterReference.GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Cancel").performed -= CoinShopTable_performed;
     }
 
-    public void BuySouvenir()
+    public void BuyAbility()
     {
-        Debug.Log("buy");
-        PlayerCharacterController inputReceiver = (PlayerCharacterController)shopMenu.tableAssosiation[this].CurrentReceiver;
+       lastButton = lastSelected.GetComponent<LilithShopButton>();
 
-        LilithShopButton lastButton = lastSelected.GetComponent<LilithShopButton>();
         AbilityShopEntry lastEntry = entrys.Find(b => b.button == lastButton);
-
-        inputReceiver.ActualPlayerCharacter.AddPowerUp(lastButton.powerUp);
+        //PlayerCharacterPoolManager.Instance.AllPlayerCharacters.Find(p=>p == playerCharacterReference).UnlockUpgrade(lastEntry.abilitys[lastEntry.id].abilityUpgrade);
+        playerCharacterReference.UnlockUpgrade(lastEntry.abilitys[lastEntry.id].abilityUpgrade);
 
         lastEntry.id++;
-        if(lastEntry.id >= lastEntry.abilitys.Count)
-        {
-            Debug.Log("End");
-            
-            lastEntry.id--;
-        }    
-        lastButton.SetPowerUp(lastEntry.abilitys[lastEntry.id]);
 
+        if (lastEntry.id >= lastEntry.abilitys.Length)
+        {
+            lastButton.DeactivateButton();
+        }
+        else
+            lastButton.SetAbility(lastEntry.abilitys[lastEntry.id]);
+
+
+        UpdateKeyCounter(--playerCharacterReference.ExtraData.key);
+        KeyRequirementChecks();
         DesetOnBuyButton();
+
+        SaveManager.Instance.SaveAllData();
+
     }
 
     public void DesetOnBuyButton()
     {
         shopMenu.canClose = true;
-        shopMenu.tableAssosiation[this].MultiplayerEventSystem.SetSelectedGameObject(lastSelected);
+        playerCharacterReference.GetInputHandler().MultiplayerEventSystem.SetSelectedGameObject(lastSelected);
     }
 
-    public void UpdateCoinCounter(int counter)
+    public void UpdateKeyCounter(int counter)
     {
-        coinsNumberText.text = counter.ToString();
+        if (counter < 0) return;
+
+        if(counter < 10)
+            keysNumberText.text =$"0{counter}";
+        else
+            keysNumberText.text = counter.ToString();
+    }
+
+    public void KeyRequirementChecks()
+    {
+        foreach(AbilityShopEntry entry in entrys)
+        {
+            entry.button.KeyRequiredCheck();
+        }
     }
 }

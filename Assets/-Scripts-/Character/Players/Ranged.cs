@@ -176,6 +176,13 @@ public class Ranged : PlayerCharacter
         {
             StartCoroutine(PerfectDodgeHandler(data));
         }
+
+        if (currentHp <= 0)
+        {
+            currentHp = 0;
+
+            animator.SetBool("isDeath", true);
+        }
     }
 
     //sparo
@@ -227,6 +234,7 @@ public class Ranged : PlayerCharacter
     private void BasicFireProjectile(Vector2 direction)
     {
 
+        animator.SetTrigger("SimpleShoot");
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
         newProjectile.transform.position = shootingPoint.transform.position;
@@ -284,6 +292,7 @@ public class Ranged : PlayerCharacter
         if (!isDodging)
         {
             isDodging = true;
+            isAttacking = false;
 
 
             //animazione
@@ -300,6 +309,10 @@ public class Ranged : PlayerCharacter
             rb.velocity = Vector2.zero;
 
             isDodging = false;
+
+            dodgeTimer = dodgeCoolDown;
+
+
         }
         
     }
@@ -411,7 +424,7 @@ public class Ranged : PlayerCharacter
 
         if (context.performed)
         {
-            if (empowerCoolDownTimer > 0)
+            if (!canUseUniqueAbility)
             {
                 Debug.Log("In ricarica...(abilità unica)");
 
@@ -422,37 +435,45 @@ public class Ranged : PlayerCharacter
             {
                 empowerStartTimer = Time.time;
                 isAttacking = true;
+
+                animator.SetBool("isCharging",true);
+                animator.SetTrigger("StartCharging");
             }
 
             
 
         }
-        else if (context.canceled && canUseUniqueAbility)
+        else if (context.canceled)
         {
-            float endTimer = Time.time;
 
-            if (endTimer - empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
+            if (canUseUniqueAbility && isAttacking)
             {
+                float endTimer = Time.time;
 
-                Vector2 _look = ReadLook(context);
-
-                //controllo che la look non sia zero, possibilità solo se si una il controller
-                if (_look != Vector2.zero)
+                if (endTimer - empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
                 {
-                    lookDirection = _look;
-                    SetShootDirection();
+
+                    Vector2 _look = ReadLook(context);
+
+                    //controllo che la look non sia zero, possibilità solo se si una il controller
+                    if (_look != Vector2.zero)
+                    {
+                        lookDirection = _look;
+                        SetShootDirection();
+                    }
+
+                    //in futuro inserire il colpo avanzato
+                    EmpowerFireProjectile(ShootDirection);
+
+                    empowerCoolDownTimer = UniqueAbilityCooldown;
+
+                    Debug.Log("colpo potenziato");
+
+
                 }
-
-                //in futuro inserire il colpo avanzato
-                EmpowerFireProjectile(ShootDirection);
-
-                empowerCoolDownTimer = UniqueAbilityCooldown;
-
-                Debug.Log("colpo potenziato");
-
-                
             }
 
+            animator.SetBool("isCharging", false);
             isAttacking = false;
         }
 
@@ -463,6 +484,9 @@ public class Ranged : PlayerCharacter
     //sparo caricato (abilità unica)
     private void EmpowerFireProjectile(Vector2 direction)
     {
+        animator.SetTrigger("EmpowerShoot");
+        
+
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
         newProjectile.transform.position =shootingPoint.transform.position;

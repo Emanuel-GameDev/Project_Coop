@@ -9,16 +9,18 @@ public class LilithShopButton : Button
 {
     //CoinShopMenu shopMenu;
     LilithShopTable shopTable;
-    [SerializeField] Image buttonImage;
+    [SerializeField] public Image buttonImage;
     [SerializeField] TextMeshProUGUI coinCostText;
-    [SerializeField] public PowerUp powerUp;
+    [SerializeField] public PlayerAbility ability;
+
+    [HideInInspector] public bool isActive = true;
 
     protected override void Awake()
     {
         //shopMenu = GetComponentInParent<CoinShopMenu>();
         shopTable= GetComponentInParent<LilithShopTable>();
+        //buttonImage = GetComponent<Image>();
     }
-
 
     protected override void DoStateTransition(SelectionState state, bool instant)
     {
@@ -30,15 +32,47 @@ public class LilithShopButton : Button
         }
     }
 
-    private void ChangeDescription()
+    internal void SetAbility(PlayerAbility playerAbility)
     {
-        shopTable.ChangeDescriptionAndName(powerUp.powerUpName, powerUp.powerUpDescription);
+        ability = playerAbility;
+        buttonImage.sprite = playerAbility.abilitySprite;
+        coinCostText.text = playerAbility.keyCost.ToString();
+        KeyRequiredCheck();
     }
 
-    public void SetPowerUp(PowerUp powerUpToSet)
+    private void ChangeDescription()
     {
-        powerUp=powerUpToSet;
-        buttonImage.sprite = powerUp.powerUpSprite;
-        coinCostText.text = powerUp.moneyCost.ToString();
+        if(ability != null)
+           shopTable.ChangeDescriptionAndName(ability.abilityName, ability.abilityDescription);
     }
+
+    public void ActivateButton()
+    {
+        isActive = true;
+
+        foreach (Image i in  GetComponentsInChildren<Image>(true))
+        {
+            i.color = Color.white;
+        }
+    }
+
+    public void DeactivateButton()
+    {
+        isActive = false;
+        foreach(Image i in GetComponentsInChildren<Image>(true))
+        {
+            i.color = Color.gray;
+        }
+
+    }
+
+    public void KeyRequiredCheck()
+    {
+        shopTable = GetComponentInParent<LilithShopTable>(true);
+        if (shopTable.playerCharacterReference.ExtraData.key < ability.keyCost)
+            DeactivateButton();
+        
+    }
+
+
 }

@@ -1,6 +1,10 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class LabirintManager : MonoBehaviour
 {
@@ -23,7 +27,7 @@ public class LabirintManager : MonoBehaviour
             return _instance;
         }
     }
-
+    [Header("Labirint Settings")]
     [SerializeField]
     int enemyCount = 4;
     [SerializeField]
@@ -48,7 +52,34 @@ public class LabirintManager : MonoBehaviour
     int pickedKey;
     public Grid Grid => grid;
 
-    private StateMachine<LabirintState> stateMachine = new StateMachine<LabirintState>();
+
+    [Header("Dialogue Settings")]
+    [SerializeField]
+    private GameObject dialogueBox;
+    [SerializeField]
+    private Dialogue winDialogue;
+    [SerializeField]
+    private Dialogue loseDialogue;
+    [SerializeField]
+    private UnityEvent onWinDialogueEnd;
+    [SerializeField]
+    private UnityEvent onLoseDialogueEnd;
+
+    private DialogueBox _dialogueBox;
+    
+
+    [Header("Rewards Settings")]
+    [SerializeField]
+    private int coinForEachPlayer;
+    [SerializeField]
+    private int coinForFirstPlayer;
+    [SerializeField]
+    private int keyForEachPlayer;
+    [SerializeField]
+    private int keyForFirstPlayer;
+    [SerializeField]
+    private WinScreenHandler winScreenHandler;
+
     private LabirintUI labirintUI;
     private SceneChanger sceneChanger;
 
@@ -62,23 +93,20 @@ public class LabirintManager : MonoBehaviour
         {
             _instance = this;
         }
+
+        if(dialogueBox != null)
+        {
+            _dialogueBox = dialogueBox.GetComponent<DialogueBox>();
+        }
+        else
+            Debug.LogError("DialogueBox is null");
+
     }
 
     private void Start()
     {
-        //SetupLabirint();
-        stateMachine.SetState(new StartLabirint());
+        StartCoroutine(WaitForPlayers());
         sceneChanger = GetComponent<SceneChanger>();
-        //Debug
-        //StartGame();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            StartPlay();
-        }
     }
 
     public void StartPlay()
@@ -104,9 +132,8 @@ public class LabirintManager : MonoBehaviour
             EndGame(false);
     }
 
-    private void StartGame()
+    public void StartGame()
     {
-        currentLabirint.DisableObjectMap();
         labirintUI.UpdateRemainingKeyCount(keyCount);
         labirintUI.SetAllPlayer(CoopManager.Instance.GetActiveHandlers());
 
@@ -118,22 +145,28 @@ public class LabirintManager : MonoBehaviour
 
     private void EndGame(bool playerWin)
     {
+        _dialogueBox.RemoveAllDialogueEnd();
+
         if (playerWin)
         {
-            labirintUI.ActivateWinScreen();
-            Debug.Log("End Game: You Win");
+            _dialogueBox.SetDialogue(winDialogue);
+            _dialogueBox.AddDialogueEnd(onWinDialogueEnd);
         }
         else
         {
-            labirintUI.ActivateLoseScreen();
-            Debug.Log("End Game: You Lose");
+            _dialogueBox.SetDialogue(loseDialogue);
+            _dialogueBox.AddDialogueEnd(onLoseDialogueEnd);
         }
+
+        dialogueBox.SetActive(true);
+        _dialogueBox.StartDialogue();
 
         foreach (GameObject obj in objectsForTheGame)
         {
             obj.SetActive(false);
         }
 
+        MakeRankList();
     }
 
     public void ExitMinigame()
@@ -142,10 +175,17 @@ public class LabirintManager : MonoBehaviour
             sceneChanger.ChangeScene();
     }
 
+    IEnumerator WaitForPlayers()
+    {
+        yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
+        dialogueBox.SetActive(true);
+        _dialogueBox.StartDialogue();
+    }
+
     #endregion
 
     #region Labirint Setup
-    private void SetupLabirint()
+    public void SetupLabirint()
     {
         ResetLabirint();
         currentLabirint = Labirints[Random.Range(0, Labirints.Count)];
@@ -159,6 +199,7 @@ public class LabirintManager : MonoBehaviour
         SetPlayers(currentLabirint.GetPlayerSpawnPoints());
         pickedKey = 0;
         deadPlayerCount = 0;
+        currentLabirint.DisableObjectMap();
     }
 
     private void ResetLabirint()
@@ -234,6 +275,71 @@ public class LabirintManager : MonoBehaviour
     {
         players.Add(labirintPlayer);
     }
+
+    private void MakeRankList()
+    {
+        List<LabirintPlayer> winOrder = new();
+
+        foreach (LabirintPlayer player in players)
+        {
+            winOrder.Add(player);
+        }
+
+        winOrder.Sort((x, y) => y.pickedKeys.CompareTo(x.pickedKeys));
+
+        List<ePlayerCharacter> ranking = new();
+
+        foreach (LabirintPlayer player in winOrder)
+        {
+            ranking.Add(player.GetCharacter());
+        }
+
+        foreach(ePlayerCharacter c in Enum.GetValues(typeof(ePlayerCharacter)))
+        {
+            if(c != ePlayerCharacter.EmptyCharacter)
+            {
+                if (!ranking.Contains(c))
+                {
+                    ranking.Add(c);
+                }
+            }
+        }
+
+        for (int i = 0; i < ranking.Count; i++)
+        {
+            int totalCoin = 0;
+            int totalKey = 0;
+            CharacterSaveData saveData = SaveManager.Instance.GetPlayerSaveData(ranking[i]);
+            if (saveData != null)
+            {
+                totalCoin = saveData.extraData.coin;
+                totalKey = saveData.extraData.key;
+            }
+
+            if (i == 0)
+            {
+                totalCoin += coinForFirstPlayer;
+                totalKey += keyForFirstPlayer;
+                
+                winScreenHandler.SetCharacterValues(ranking[i], Rank.First, coinForFirstPlayer, totalCoin, keyForFirstPlayer, totalKey);
+            }
+            else if(Enum.TryParse<Rank>(i.ToString(), out Rank rank))
+            {
+                totalCoin += coinForEachPlayer;
+                totalKey += keyForEachPlayer;
+
+                winScreenHandler.SetCharacterValues(ranking[i], rank, coinForEachPlayer, totalCoin, keyForEachPlayer, totalKey);
+            }
+
+            if (saveData != null)
+            {
+                saveData.extraData.coin = totalCoin;
+                saveData.extraData.key = totalKey;
+            }
+
+        }
+    }
+
     #endregion
 
 }

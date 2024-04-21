@@ -8,9 +8,6 @@ public class LabirintUI : MonoBehaviour
 
     [SerializeField] private TMP_Text remainingKeyCount;
 
-    [SerializeField] private MinigameMenu winScreen;
-    [SerializeField] private MinigameMenu loseScreen;
-
     private Dictionary<ePlayerCharacter, PlayerBoxUI> playerBox = new Dictionary<ePlayerCharacter, PlayerBoxUI>();
 
     public void SetAllPlayer(List<PlayerInputHandler> players)
@@ -64,14 +61,4 @@ public class LabirintUI : MonoBehaviour
         }
     }
 
-    public void ActivateWinScreen()
-    {
-        MinigameMenuManager.Instance.SetActiveMenu(winScreen);
-    }
-
-    public void ActivateLoseScreen()
-    {
-        MinigameMenuManager.Instance.SetActiveMenu(loseScreen);
-    }
-     //lul
 }

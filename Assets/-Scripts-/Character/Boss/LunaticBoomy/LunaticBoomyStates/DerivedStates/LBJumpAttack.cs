@@ -105,9 +105,9 @@ public class LBJumpAttack : LBBaseState
                             Attack();
                         }
 
-                        Debug.Log("Attacco 3à fase");
-                        Attack();
-                        Attack();
+                        //Debug.Log("Attacco 3à fase");
+                        //Attack();
+                        //Attack();
                     }
                     else
                     {
@@ -124,8 +124,7 @@ public class LBJumpAttack : LBBaseState
                 // Temporaneo, controllo se il trampolino dove sono atterrato è distrutto
                 if (nextTrump.destroyed)
                 {
-                    // TODO: trovare il modo di capire se devo passare a LBPanic o LBExplosion in base a lla risposta di luca design
-                    stateMachine.SetState(new LBPanic(bossCharacter, nextTrump));
+                    stateMachine.SetState(new LBExplosion(bossCharacter, nextTrump));
                     return;
                 }
 
@@ -149,8 +148,14 @@ public class LBJumpAttack : LBBaseState
         }
     }
 
-    #region Jump
+    #region AlternativeJump
 
+
+
+    #endregion
+
+    #region Jump
+    //TODO: comprendere il jumpstep nel tempo in cui può essere  colpito
     private void StartJump()
     {
         // Prendo reference al punto di arrivo, mi assicuro che il trampolino non sia distrutto
@@ -207,7 +212,7 @@ public class LBJumpAttack : LBBaseState
         // Trovo l'angolo tra partenza e arrivo
         float angle = Mathf.Atan2(nextTrump.gameObject.transform.position.y - currTrump.gameObject.transform.position.y,
                                     nextTrump.gameObject.transform.position.x - currTrump.gameObject.transform.position.x) * Mathf.Rad2Deg;
-
+        // Unity.MAthematics Lib
         // Ruoto l'offset in base all'angolo
         Vector2 rotatedOffset = Quaternion.Euler(0f, 0f, angle) * bossCharacter.JumpOffset;
 
@@ -261,6 +266,8 @@ public class LBJumpAttack : LBBaseState
         {
             // Set pos del proiettile
             projectile.transform.position = bossCharacter.gameObject.transform.position;
+
+            projectile.GetComponent<LBProjectile>().Initialize(bossCharacter);
 
             // La direzione di sparo
             Vector2 direction = (randCharacter.gameObject.transform.position - bossCharacter.gameObject.transform.position).normalized;

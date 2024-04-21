@@ -250,8 +250,8 @@ public class TutorialManager : MonoBehaviour
         stateMachine.SetState(new IntermediateTutorialFase(this));
         exit.SetActive(false);
         lilith.gameObject.GetComponent<CircleCollider2D>().enabled = false;
-        lilith.gameObject.GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(false);
-       
+        
+        lilithBaloon.SetActive(false);
         playableDirector.Play();
     }
 
@@ -300,7 +300,7 @@ public class TutorialManager : MonoBehaviour
                 startingCharacters.Add(ih, ranged);
             }
 
-            if (ih.currentCharacter == ePlayerCharacter.Caina)
+            if (ih.currentCharacter == ePlayerCharacter.Kaina)
             {
                 tankPresent = true;
                 PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
@@ -339,7 +339,7 @@ public class TutorialManager : MonoBehaviour
 
         if (!tankPresent)
         {
-            tank = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Caina, transform);
+            tank = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Kaina, transform);
             PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
             inputBindings.Add(tank, receiver);
             HPHandler.Instance.AddContainer(tank);
@@ -575,6 +575,10 @@ public class TutorialManager : MonoBehaviour
         
 
         tutorialEnemy.gameObject.SetActive(true);
+
+
+        lilith.gameObject.transform.SetPositionAndRotation(lilithRespawn.position, lilith.gameObject.transform.rotation);
+        lilith.gameObject.GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(true);
     }
 
     public void DeactivateEnemyAI()

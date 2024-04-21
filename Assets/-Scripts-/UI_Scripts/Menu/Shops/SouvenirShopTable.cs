@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Components;
@@ -6,13 +7,16 @@ using UnityEngine.UI;
 
 public class SouvenirShopTable : MonoBehaviour
 {
+    [SerializeField] GameObject buyButton;
     [SerializeField] LocalizeStringEvent souvenirNameLocaleEvent;
     [SerializeField] LocalizeStringEvent souvenirDescriptionLocaleEvent;
     [SerializeField] Image souvenirImage;
+    [SerializeField] Image souvenirIcon;
 
     [SerializeField] TextMeshProUGUI coinsNumberText;
 
     [SerializeField] GameObject soldoutSign;
+    [SerializeField] Image soldoutSouvenirImage;
 
     PlayerCharacter currentPlayerInShop;
     SouvenirEntry currentSouvenirEntry;
@@ -27,12 +31,35 @@ public class SouvenirShopTable : MonoBehaviour
         [HideInInspector] public int souvenirID;
     }
 
+    public void StartIdleAnimationIn(float delay)
+    {
+        StartCoroutine(PlayIdle(delay));
+    }
+
+    IEnumerator PlayIdle(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GetComponent<Animation>().Play();
+    }
+
     private void ChangeTableItem(PowerUp souvenirToSell)
     {
         souvenirNameLocaleEvent.StringReference = souvenirToSell.powerUpName;
         souvenirDescriptionLocaleEvent.StringReference = souvenirToSell.powerUpDescription;
         souvenirImage.sprite = souvenirToSell.powerUpSprite;
         coinsNumberText.text = souvenirToSell.moneyCost.ToString();
+
+        if (souvenirToSell.powerUpExtraIcon != null)
+        {
+            souvenirIcon.color = new Color(1,1,1,1);
+            souvenirIcon.sprite = souvenirToSell.powerUpExtraIcon;
+        }
+        else
+        {
+            souvenirIcon.color = new Color(1, 1, 1, 0);
+        }
+
+        soldoutSouvenirImage.sprite = souvenirToSell.powerUpSprite;
     }
 
     public void SetTableCurrentCharacter(PlayerCharacter currentCharacterInShop)
@@ -60,11 +87,23 @@ public class SouvenirShopTable : MonoBehaviour
 
     public void BuySouvenir()
     {
+        if (currentPlayerInShop.ExtraData.coin < currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost) return;
+
+        currentPlayerInShop.ExtraData.coin -= currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost;
         currentPlayerInShop.AddPowerUp(currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID]);
         
         currentSouvenirEntry.souvenirID++;
+        
         CheckForSouvenir();
+        GetComponentInParent<SouvenirShopMenu>().CheckForMoney();
+    }
 
+    public void MoneyCheck()
+    {
+        if (currentPlayerInShop.ExtraData.coin < currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost)
+            buyButton.GetComponent<Image>().color = Color.gray;
+        else
+            buyButton.GetComponent<Image>().color = Color.white;
     }
 
     private void CheckForSouvenir()
@@ -80,4 +119,6 @@ public class SouvenirShopTable : MonoBehaviour
             soldoutSign.SetActive(true);
         }
     }
+
+  
 }

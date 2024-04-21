@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -144,7 +143,13 @@ public abstract class PlayerCharacter : Character
     public void SetMaxHP(float value) => maxHp = value;
     public void SetCurrentHP(float value) => CurrentHp = value;
 
-    public PlayerInputHandler GetInputHandler() => characterController.GetInputHandler();
+    public PlayerInputHandler GetInputHandler()
+    { 
+        if(characterController != null)
+            return characterController.GetInputHandler();
+        else
+            return null;
+    }
 
     #endregion
 
@@ -217,6 +222,7 @@ public abstract class PlayerCharacter : Character
         //shader
         SetHitMaterialColor(_OnHitColor);
 
+        OnHit?.Invoke();
 
         if (protectedByTank && data.blockedByTank)
         {
@@ -247,6 +253,7 @@ public abstract class PlayerCharacter : Character
         DamageData data = new DamageData(Damage, this);
         return data;
     }
+
     #endregion
 
     #region Input
@@ -344,7 +351,7 @@ public abstract class PlayerCharacter : Character
     public void SwitchRightInput(InputAction.CallbackContext context)
     {
         if (context.performed)
-            PlayerCharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Caina);
+            PlayerCharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Kaina);
     }
 
     public void SwitchDownInput(InputAction.CallbackContext context)
@@ -393,12 +400,16 @@ public abstract class PlayerCharacter : Character
         Interact(context);
     }
 
+    public void CancelInteractInput(InputAction.CallbackContext context)
+    {
+        CancelInteraction(context);
+    }
 
     #endregion
 
     #endregion
 
-    #region
+    #region SaveGame
 
     public CharacterSaveData GetSaveData()
     {
@@ -419,7 +430,7 @@ public abstract class PlayerCharacter : Character
     {
         if(saveData == null || saveData.characterName != character)
             return;
-
+        Debug.Log("load");
         foreach (PowerUp pu in saveData.powerUps)
         {
             powerUpData.Add(pu);
@@ -433,4 +444,20 @@ public abstract class PlayerCharacter : Character
     }
 
     #endregion
+
+    public override void DisableOtherActions()
+    {
+        base.DisableOtherActions();
+
+        characterController.GetInputHandler().PlayerInput.actions.Disable();
+        characterController.GetInputHandler().PlayerInput.actions.FindAction("Menu").Enable();
+        characterController.GetInputHandler().PlayerInput.actions.FindAction("Option").Enable();
+        characterController.GetInputHandler().PlayerInput.actions.FindAction("CancelInteract").Enable();
+    }
+
+    public override void EnableAllActions()
+    {
+        base.EnableAllActions();
+        characterController.GetInputHandler().PlayerInput.actions.Enable();
+    }
 }

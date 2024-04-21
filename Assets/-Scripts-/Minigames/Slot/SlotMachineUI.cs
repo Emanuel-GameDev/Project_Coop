@@ -8,8 +8,10 @@ public class SlotMachineUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI remainingTryText;
 
-    [SerializeField] private MinigameMenu winScreen;
-    [SerializeField] private MinigameMenu loseScreen;
+    //DA RIVEDERE #MODIFICATO
+
+    //[SerializeField] private MinigameMenu winScreen;
+    //[SerializeField] private MinigameMenu loseScreen;
 
     public void UpdateRemainingTryText(int value)
     {
@@ -18,11 +20,11 @@ public class SlotMachineUI : MonoBehaviour
 
     public void ShowWin()
     {
-        winScreen.gameObject.SetActive(true);
+       // winScreen.gameObject.SetActive(true);
     }
 
     public void Showlose()
     {
-        loseScreen.gameObject.SetActive(true);
+        //loseScreen.gameObject.SetActive(true);
     }
 }

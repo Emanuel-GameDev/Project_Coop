@@ -65,8 +65,11 @@ public class SceneInputReceiverManager : MonoBehaviour
         else
         {
             GameObject newGO = GameObject.Instantiate(currentSceneInputReceiverPrefab);
+
+            // Set pos e rot del handler (non il player)
             newGO.transform.SetPositionAndRotation(receiverSpawnPoint.position, receiverSpawnPoint.rotation);
-            if(!newGO.TryGetComponent<InputReceiver>(out var newInputReceiver))
+
+            if (!newGO.TryGetComponent<InputReceiver>(out var newInputReceiver))
             {
                 Debug.LogError("No InputReceiver found in the Prefab. Please add one.");
                 return null;

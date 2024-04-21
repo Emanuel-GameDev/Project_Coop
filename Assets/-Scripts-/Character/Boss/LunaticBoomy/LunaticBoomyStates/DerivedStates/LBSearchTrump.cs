@@ -66,7 +66,7 @@ public class LBSearchTrump : LBBaseState
         {
             if (nearestTrump != null)
             {
-                stateMachine.SetState(new LBJumpAttack(bossCharacter, nearestTrump));
+                stateMachine.SetState(new LBJumpAttackV2(bossCharacter, nearestTrump));
             }
         }
     }

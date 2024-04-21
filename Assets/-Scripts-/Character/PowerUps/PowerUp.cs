@@ -20,6 +20,7 @@ public class PowerUp : ScriptableObject
     public StatsType powerUpType;
 
     public Sprite powerUpSprite;
+    public Sprite powerUpExtraIcon;
     public LocalizedString powerUpName;
     public LocalizedString powerUpDescription;
 
