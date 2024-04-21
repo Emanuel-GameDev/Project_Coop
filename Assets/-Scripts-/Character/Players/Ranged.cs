@@ -100,6 +100,9 @@ public class Ranged : PlayerCharacter
     [Min(1)]
     float maxDamageMultiplier = 2.5f;
 
+    [Header("VFX")]
+    [SerializeField] TrailRenderer trailDodgeVFX;
+
     
 
     private bool reduceEmpowerFireCoolDownUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
@@ -299,6 +302,8 @@ public class Ranged : PlayerCharacter
 
             animator.SetTrigger("Dodge");
 
+            trailDodgeVFX.gameObject.SetActive(true);
+
             Vector2 dodgeDirection = direction.normalized;
 
             rb.velocity = dodgeDirection * (dodgeDistance / dodgeDuration);
@@ -309,6 +314,8 @@ public class Ranged : PlayerCharacter
             rb.velocity = Vector2.zero;
 
             isDodging = false;
+
+            trailDodgeVFX.gameObject.SetActive(false);
 
             dodgeTimer = dodgeCoolDown;
 
