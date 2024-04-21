@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject loadScreen;
+    [SerializeField]
+    private float fakeLoadSceenTime = 3f;
 
     [SerializeField]
     private List<PlayerCharacterData> playerCharacterDatas;
@@ -75,7 +77,11 @@ public class GameManager : MonoBehaviour
         }
 
         if(loadScreen != null)
+        {
+            loadScreen = Instantiate(loadScreen);
             DontDestroyOnLoad(loadScreen);
+        }
+            
     }
 
     public void PauseGame()
@@ -157,10 +163,12 @@ public class GameManager : MonoBehaviour
         CoopManager.Instance.DisableAllInput();
         loadScreen.SetActive(true);
         yield return new WaitUntil(() => IsSceneLoaded());
+        ActivateScene();
         Debug.Log($"End Load Time: {Time.time}");
+        if(Time.time - loadTime < fakeLoadSceenTime)
+            yield return new WaitForSeconds(fakeLoadSceenTime - (Time.time - loadTime));
         loadScreen.SetActive(false);
         CoopManager.Instance.EnableAllInput();
-        ActivateScene();
         Debug.Log($"Total Load Time: {Time.time - loadTime}");
     }
 
