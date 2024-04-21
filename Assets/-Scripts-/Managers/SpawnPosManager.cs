@@ -81,13 +81,20 @@ public class SpawnPosManager : MonoBehaviour
 
     internal SpawnPosData GetFreePos()
     {
+        SpawnPosData spawnPos;
+
         if (currentSpawnPos != null)
         {
-            Debug.Log(currentSpawnPos.entranceReferencePoint.ToString());
-            return currentSpawnPos.posData.Find(x => x.free == true);
+            spawnPos = currentSpawnPos.posData.Find(x => x.free == true);
+            spawnPos.free = false;
+            return spawnPos;
         }
         else
-            return defaultSpawnPos.posData.Find(x => x.free == true);
+        {
+            spawnPos = defaultSpawnPos.posData.Find(x => x.free == true);
+            spawnPos.free = false;
+            return spawnPos;
+        }
     }
 
     //private void OnDrawGizmos()
