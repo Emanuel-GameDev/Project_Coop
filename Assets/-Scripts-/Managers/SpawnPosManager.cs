@@ -22,8 +22,9 @@ public class SpawnPosData
 public class SpawnPosManager : MonoBehaviour
 {
     [SerializeField]
-    private EntranceSpawnPos defaultSpawnPos;
+    private Transform startingSpawnPos;
 
+    private EntranceSpawnPos defaultSpawnPos;
     private EntranceSpawnPos currentSpawnPos;
 
     public static SpawnPosManager Instance;
@@ -49,9 +50,7 @@ public class SpawnPosManager : MonoBehaviour
 
     private void Start()
     {
-        CheckDefaultPos();
-
-        defaultSpawnPos.Initialize();
+        CheckStartingPos();
     }
 
     internal SpawnPosData GetFreePos()
@@ -66,7 +65,7 @@ public class SpawnPosManager : MonoBehaviour
         }
         else
         {
-            CheckDefaultPos();
+            CheckStartingPos();
 
             spawnPos = defaultSpawnPos.posData.Find(x => x.free == true);
             spawnPos.free = false;
@@ -74,26 +73,20 @@ public class SpawnPosManager : MonoBehaviour
         }
     }
 
-    private void CheckDefaultPos()
+    private void CheckStartingPos()
     {
-        if (defaultSpawnPos == null)
+        if (startingSpawnPos == null)
         {
             GameObject newGO = new GameObject("StartSpawnPos_Added");
             defaultSpawnPos = newGO.AddComponent<EntranceSpawnPos>();
+
+            defaultSpawnPos.Initialize();
+        }
+        else if (defaultSpawnPos == null)
+        {
+            defaultSpawnPos = startingSpawnPos.gameObject.AddComponent<EntranceSpawnPos>();
+            defaultSpawnPos.entranceReferencePoint = startingSpawnPos;
+            defaultSpawnPos.Initialize();
         }
     }
-
-    //private void OnDrawGizmos()
-    //{
-    //    foreach (EntranceSpawnPos data in entrancesBasePos)
-    //    {
-    //        foreach (SpawnPosData pos in data.posData)
-    //        {
-    //            Gizmos.color = Color.magenta;
-    //            Gizmos.DrawWireSphere(pos.spawnPos, 1f);
-    //        }
-    //    }
-
-    //    foreach ()
-    //}
 }
