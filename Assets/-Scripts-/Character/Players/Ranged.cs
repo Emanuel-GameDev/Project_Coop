@@ -28,6 +28,7 @@ public class Ranged : PlayerCharacter
     GameObject shootingPoint;
     [SerializeField, Tooltip("Mirino")]
     Crosshair rangedCrossair;
+    float alphaCrosshair = 1;
     [SerializeField, Tooltip("velocità proiettile base")]
     float projectileSpeed = 30f;
     [SerializeField, Tooltip("gittata proiettile base")]
@@ -146,6 +147,28 @@ public class Ranged : PlayerCharacter
         UpdateCrosshair(ReadLookdirCrosshair(shootingPoint.transform.position));
     }
 
+    private void FixedUpdate()
+    {
+        if (!isRightInputRecently)
+        {
+            if(alphaCrosshair> 0)
+            {
+                alphaCrosshair-=Time.deltaTime;
+                rangedCrossair.gameObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, alphaCrosshair);
+            }
+            
+        }
+        else
+        {
+            alphaCrosshair = 1;
+            rangedCrossair.gameObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, alphaCrosshair);
+        }
+
+        
+
+
+    }
+
     public override void Move(Vector2 direction)
     {
         if(!isDodging)
@@ -229,6 +252,8 @@ public class Ranged : PlayerCharacter
 
                 isAttacking = false;
             }
+
+            rightInputTimer = recentlyInputTimer;
 
         }
     }
@@ -508,6 +533,12 @@ public class Ranged : PlayerCharacter
     //vari coolDown del personaggio
     private void CoolDownManager()
     {
+        //timer visualizzazione mirino
+        if (isRightInputRecently)
+        {
+            rightInputTimer -= Time.deltaTime;
+        }       
+
         //sparo normale
         if (fireTimer > 0)
         {
@@ -525,11 +556,15 @@ public class Ranged : PlayerCharacter
         {
             dodgeTimer -= Time.deltaTime;
         }
+
+       
     }
 
     private void UpdateCrosshair(Vector2 position)
     {
         rangedCrossair.transform.position=new Vector2 (position.x,position.y);
+
+       
     }
 
 
