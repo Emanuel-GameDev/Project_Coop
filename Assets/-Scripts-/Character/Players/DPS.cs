@@ -181,6 +181,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         DoMeleeAttack();
         rb.velocity = Vector3.zero;
     }
+
     private void ContinueCombo()
     {
         if (currentComboState == nextComboState)
@@ -211,7 +212,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         float comboCompletionValue = (float)currentComboState / (float)comboStateMax;
         float reductionFactor = (1 - comboCompletionValue) * timeBetweenCombo;
-        lastAttackTime = Time.time - reductionFactor;
+        lastAttackTime = Time.time; // - reductionFactor;
     }
 
     private bool CanStartCombo() => (unlimitedComboUnlocked || Time.time > lastAttackTime + timeBetweenCombo) && currentComboState != 1;
@@ -516,4 +517,11 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     //4: quando il personaggio usa l’abilità unica(i secondi di immortalità) i suoi movimenti diventano più rapidi(attacchi, schivate e spostamenti)
     //5: Effettuare una schivata perfetta aumenta i danni per tot tempo(cumulabile con il bonus ai danni del potenziamento).
 
+}
+
+public enum AttackComboState
+{
+    Attack1,
+    Attack2, 
+    Attack3
 }
