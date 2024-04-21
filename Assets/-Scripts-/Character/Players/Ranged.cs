@@ -28,6 +28,7 @@ public class Ranged : PlayerCharacter
     GameObject shootingPoint;
     [SerializeField, Tooltip("Mirino")]
     Crosshair rangedCrossair;
+    float alphaCrosshair = 1;
     [SerializeField, Tooltip("velocità proiettile base")]
     float projectileSpeed = 30f;
     [SerializeField, Tooltip("gittata proiettile base")]
@@ -100,6 +101,9 @@ public class Ranged : PlayerCharacter
     [Min(1)]
     float maxDamageMultiplier = 2.5f;
 
+    [Header("VFX")]
+    [SerializeField] TrailRenderer trailDodgeVFX;
+
     
 
     private bool reduceEmpowerFireCoolDownUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
@@ -141,6 +145,28 @@ public class Ranged : PlayerCharacter
         minePickUpVisualizer.SetActive(mineNearby);
 
         UpdateCrosshair(ReadLookdirCrosshair(shootingPoint.transform.position));
+    }
+
+    private void FixedUpdate()
+    {
+        if (!isRightInputRecently)
+        {
+            if(alphaCrosshair> 0)
+            {
+                alphaCrosshair-=Time.deltaTime;
+                rangedCrossair.gameObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, alphaCrosshair);
+            }
+            
+        }
+        else
+        {
+            alphaCrosshair = 1;
+            rangedCrossair.gameObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, alphaCrosshair);
+        }
+
+        
+
+
     }
 
     public override void Move(Vector2 direction)
@@ -227,6 +253,8 @@ public class Ranged : PlayerCharacter
                 isAttacking = false;
             }
 
+            rightInputTimer = recentlyInputTimer;
+
         }
     }
 
@@ -299,6 +327,8 @@ public class Ranged : PlayerCharacter
 
             animator.SetTrigger("Dodge");
 
+            trailDodgeVFX.gameObject.SetActive(true);
+
             Vector2 dodgeDirection = direction.normalized;
 
             rb.velocity = dodgeDirection * (dodgeDistance / dodgeDuration);
@@ -309,6 +339,8 @@ public class Ranged : PlayerCharacter
             rb.velocity = Vector2.zero;
 
             isDodging = false;
+
+            trailDodgeVFX.gameObject.SetActive(false);
 
             dodgeTimer = dodgeCoolDown;
 
@@ -501,6 +533,12 @@ public class Ranged : PlayerCharacter
     //vari coolDown del personaggio
     private void CoolDownManager()
     {
+        //timer visualizzazione mirino
+        if (isRightInputRecently)
+        {
+            rightInputTimer -= Time.deltaTime;
+        }       
+
         //sparo normale
         if (fireTimer > 0)
         {
@@ -518,11 +556,15 @@ public class Ranged : PlayerCharacter
         {
             dodgeTimer -= Time.deltaTime;
         }
+
+       
     }
 
     private void UpdateCrosshair(Vector2 position)
     {
         rangedCrossair.transform.position=new Vector2 (position.x,position.y);
+
+       
     }
 
 

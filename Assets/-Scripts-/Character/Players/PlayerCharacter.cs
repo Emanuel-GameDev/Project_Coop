@@ -61,6 +61,10 @@ public abstract class PlayerCharacter : Character
     protected bool isInBossfight;
     protected bool bossfightPowerUpUnlocked;
 
+    protected bool isRightInputRecently => rightInputTimer>0;
+    [SerializeField] protected float recentlyInputTimer = 3f;
+    protected float rightInputTimer = 0;
+
 
     public bool protectedByTank; //DA RIVEDERE 
 
@@ -285,7 +289,11 @@ public abstract class PlayerCharacter : Character
     public void LookInput(InputAction.CallbackContext context)
     {
         if (context.performed)
+        {
             lookDir = context.ReadValue<Vector2>();
+            rightInputTimer = recentlyInputTimer;
+        }
+            
     }
 
     public void LookInputMouse(InputAction.CallbackContext context)
@@ -294,6 +302,7 @@ public abstract class PlayerCharacter : Character
         {
             Vector2 temp = context.ReadValue<Vector2>();
             lookDir = ((Camera.main.ScreenToWorldPoint(temp) - transform.position)).normalized;
+            rightInputTimer = recentlyInputTimer;
         }
 
 
