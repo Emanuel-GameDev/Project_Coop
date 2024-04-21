@@ -86,6 +86,22 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private int comboStateMax = 3;
     private int consecutiveHitsCount;
 
+    private AttackComboState currentAttackComboState;
+    private AttackComboState NextAttackComboState
+    {
+        get
+        {
+            return currentAttackComboState switch
+            {
+                AttackComboState.NotAttaking => AttackComboState.Attack1,
+                AttackComboState.Attack1 => AttackComboState.Attack2,
+                AttackComboState.Attack2 => AttackComboState.Attack3,
+                AttackComboState.Attack3 => unlimitedComboUnlocked ? AttackComboState.Attack1 : AttackComboState.NotAttaking,
+                _ => AttackComboState.NotAttaking
+            };
+        }
+    }
+
     private bool dashAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
     private bool unlimitedComboUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
     private bool projectileDeflectionUnlocked => upgradeStatus[AbilityUpgrade.Ability3];
@@ -406,7 +422,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         Utility.DebugTrace("Unlock " + abilityUpgrade.ToString());
     }
 
-    
+
 
     public override void LockUpgrade(AbilityUpgrade abilityUpgrade)
     {
@@ -419,7 +435,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (Utility.IsInLayerMask(collider.gameObject.layer, projectileLayer))
         {
-            if(TryGetComponent(out Projectile projectile))
+            if (TryGetComponent(out Projectile projectile))
             {
                 projectile.ReflectProjectile(this.gameObject, 1);
             }
@@ -473,11 +489,11 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     }
 
     public void SetPerfectTimingHandler(PerfectTimingHandler handler) => perfectTimingHandler = handler;
-    
+
 
     public void PerfectTimeStarted()
     {
-        if(!isDodging)
+        if (!isDodging)
         {
             perfectTimingHandler.ActivateAlert();
             perfectTimingEnabled = true;
@@ -497,11 +513,11 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     protected IEnumerator DisablePerfectTimeAfter(float time)
     {
         yield return new WaitForSeconds(time);
-        if(perfectTimingEnabled)
+        if (perfectTimingEnabled)
             PerfectTimeEnded();
     }
 
-    
+
     #endregion
     //Potenziamento boss fight: gli attacchi consecutivi aumentano il danno del personaggio a ogni colpo andato a segno.
     //Dopo tot tempo (es: 1.5 secondi) senza colpire, il danno torna al valore standard.
@@ -521,7 +537,8 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
 public enum AttackComboState
 {
+    NotAttaking,
     Attack1,
-    Attack2, 
+    Attack2,
     Attack3
 }
