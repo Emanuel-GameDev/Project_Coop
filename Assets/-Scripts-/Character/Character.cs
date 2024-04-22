@@ -35,17 +35,16 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 
     public Transform dealerTransform => transform;
 
-    [SerializeField] protected UnityEvent onHit;
-    [SerializeField] protected UnityEvent onDeath;
-    [SerializeField] protected UnityEvent onDash;
-    [SerializeField] protected UnityEvent onParried;
+    [SerializeField] protected UnityEvent onHit = new();
+    [SerializeField] protected UnityEvent onDeath = new();
+    [SerializeField] protected UnityEvent onDash = new();
+    [SerializeField] protected UnityEvent onParried = new();
 
 
-    public UnityEvent OnDeath { get => onDeath; set => onDeath = value; }
+    public UnityEvent OnDeath { get => onDeath; set => onDeath = value; } 
+    public UnityEvent OnHit { get => onHit; set => onHit = value; } 
 
-    public UnityEvent OnHit { get => onHit; set => onHit = value; }
-
-    public UnityEvent OnDash { get => onDash; set => onDash = value; }
+    public UnityEvent OnDash { get => onDash; set => onDash = value; } 
 
 
     [SerializeField] private AnimationCurve pushAnimationCurve;
@@ -70,9 +69,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         spriteRendererVisual = GetComponentInChildren<SpriteRotation>().GetComponent<SpriteRenderer>();
         spriteMaterial = spriteRendererVisual.material;
 
-        onHit = new();
-        onDeath = new();
-        onDash = new();
+        
     }
 
     public Rigidbody2D GetRigidBody() => rb;
