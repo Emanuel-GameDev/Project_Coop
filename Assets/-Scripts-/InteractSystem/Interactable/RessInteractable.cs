@@ -29,7 +29,6 @@ public class RessInteractable : MonoBehaviour, IInteractable
 
     private void Update()
     {
-        
         if (updateSlider)
         {
             float speedMultiplier = 1f + (ressSpeedUp * (ressCount - 1));
@@ -53,6 +52,11 @@ public class RessInteractable : MonoBehaviour, IInteractable
         character.Ress();
     }
 
+    private void Start()
+    {
+        interacterVisualization.SetActive(false);
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.TryGetComponent<IInteracter>(out var interacter))
@@ -64,7 +68,10 @@ public class RessInteractable : MonoBehaviour, IInteractable
                 interacterVisualization.SetActive(true);
                 triggerCount++;
             }
+
+            
         }
+        Debug.Log("Entra?");
     }
 
     private void OnTriggerExit2D(Collider2D other)

@@ -117,7 +117,7 @@ public abstract class PlayerCharacter : Character
     {
         base.InitialSetup();
         Inizialize();
-
+        ressInteracter.SetActive(false);
     }
 
     public virtual void Inizialize()
