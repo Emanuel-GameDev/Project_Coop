@@ -456,7 +456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25af8627659c6949b60949c3aa8d91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedEditorNode: {fileID: 0}
+  selectedEditorNode: {fileID: 1446723254842101227}
   repeatOnFinish: 0
   maxExecutionsPerTick: 1000
   parent: {fileID: 0}
@@ -1523,7 +1523,7 @@ MonoBehaviour:
     y: -10
     width: 160
     height: 45
-  parent: {fileID: 5158109664855224704}
+  parent: {fileID: 0}
   children:
   - {fileID: 1148828877330473255}
   - {fileID: 3430550109142413045}
@@ -2184,11 +2184,9 @@ MonoBehaviour:
     y: -172
     width: 160
     height: 45
-  parent: {fileID: 0}
+  parent: {fileID: 5158109664855224704}
   children:
   - {fileID: 8882034116243969058}
-  - {fileID: 475070459522448609}
-  - {fileID: 1446723254842101227}
   - {fileID: 5204962948192916370}
   - {fileID: 3773384853017051992}
   behaviourTree: {fileID: 0}
@@ -2404,7 +2402,7 @@ MonoBehaviour:
     height: 45
   parent: {fileID: 2964838816114862029}
   children:
-  - {fileID: 2163374793563572926}
+  - {fileID: 980519578998525205}
   behaviourTree: {fileID: 0}
   runtimePriority: 0
   breakpoint: 0
@@ -2854,11 +2852,11 @@ MonoBehaviour:
   title: 'Attacco Carica '
   rect:
     serializedVersion: 2
-    x: 1010
+    x: 1009
     y: 61
     width: 160
     height: 45
-  parent: {fileID: 980519578998525205}
+  parent: {fileID: 0}
   children: []
   behaviourTree: {fileID: 0}
   runtimePriority: 0
@@ -2894,7 +2892,7 @@ MonoBehaviour:
     y: -22
     width: 160
     height: 45
-  parent: {fileID: 980519578998525205}
+  parent: {fileID: 0}
   children: []
   behaviourTree: {fileID: 0}
   runtimePriority: 0
@@ -2916,6 +2914,7 @@ GameObject:
   - component: {fileID: 6765491392667053844}
   - component: {fileID: 258780143395842380}
   - component: {fileID: 5674559070049272963}
+  - component: {fileID: 1945327766014450332}
   m_Layer: 7
   m_Name: Damager
   m_TagString: Untagged
@@ -2955,7 +2954,19 @@ MonoBehaviour:
     m_Bits: 64
   onTrigger:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6737167571196966536}
+        m_TargetAssemblyTypeName: KerberosBossCharacter, Assembly-CSharp
+        m_MethodName: PALLE
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!61 &5674559070049272963
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3001,6 +3012,41 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.68569845}
   m_EdgeRadius: 0
+--- !u!58 &1945327766014450332
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6379799953282488539}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &7153761786820462440
 GameObject:
   m_ObjectHideFlags: 0

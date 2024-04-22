@@ -11,9 +11,7 @@ public class C_KillAllInTimer : Challenge
     [SerializeField] private TextMeshProUGUI TimerText;
     [SerializeField] private float timerChallenge;
 
-    [Header("Enemies")]
-    [SerializeField] private List<EnemySpawner> enemySpawnPoints;
-
+    
     [Header("Modifiers")]
     [SerializeField] private bool noDamage;
     [SerializeField] private bool noDash;
@@ -55,14 +53,9 @@ public class C_KillAllInTimer : Challenge
     }
     public override void OnFailChallenge()
     {
-      base.OnFailChallenge();
-
         startTimer = false;
-        Time.timeScale = 0;
+        base.OnFailChallenge();
 
-        dialogueBox.SetDialogue(dialogueOnFailure);
-        dialogueBox.RemoveAllDialogueEnd();
-        dialogueBox.StartDialogue();
     }
     public override void OnWinChallenge()
     {

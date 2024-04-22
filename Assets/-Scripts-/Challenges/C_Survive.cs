@@ -49,15 +49,9 @@ public class C_Survive : Challenge
     }
     public override void OnFailChallenge()
     {
-        base.OnFailChallenge();
-
-        challengeCompleted = false;
         startTimer = false;
-        Time.timeScale = 0;
-
-        dialogueBox.SetDialogue(dialogueOnFailure);
-        dialogueBox.RemoveAllDialogueEnd();
-        dialogueBox.StartDialogue();
+        base.OnFailChallenge();
+        
     }
     public override void OnWinChallenge()
     {

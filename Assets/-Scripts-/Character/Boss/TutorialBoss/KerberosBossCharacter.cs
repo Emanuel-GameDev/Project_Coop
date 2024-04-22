@@ -66,6 +66,10 @@ public class KerberosBossCharacter : BossCharacter
 
 
 
+    public void PALLE(Collider2D other)
+    {
+        Debug.Log(other.name);
+    }
     #region Crash
     public void SetCrashDirectDamageData()
     {
