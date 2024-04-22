@@ -118,13 +118,18 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     }
 
     //DA RIVEDERE #MODIFICATO
-    public PlayerCharacter GetFreeRandomCharacter()
+    public ePlayerCharacter GetFreeRandomCharacter()
     {
-        PlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)];
-        if(searchedCharacter == null) return null;
-
-        ActivateCharacter(searchedCharacter, SpawnPosManager.Instance.GetFreePos().spawnPos);
+        ePlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)].Character;
+        
         return searchedCharacter;
+
+
+        //PlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)];
+        //if(searchedCharacter == null) return null;
+
+        //ActivateCharacter(searchedCharacter, SpawnPositionManager.Instance.GetFreePos().spawnPos); //transform.position); 
+        //return searchedCharacter;
     }
 
     public PlayerCharacter GetCharacter(ePlayerCharacter targetCharacter, Transform position)
