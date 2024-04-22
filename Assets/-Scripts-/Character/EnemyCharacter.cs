@@ -65,8 +65,9 @@ public class EnemyCharacter : Character
             isDead = true;
             OnDeath?.Invoke();
             animator.SetTrigger("isDead");
-            
-            
+            TargetManager.Instance.RemoveEnemy(this);
+
+
         }
         if (data.condition != null)
             data.condition.AddCondition(this);
