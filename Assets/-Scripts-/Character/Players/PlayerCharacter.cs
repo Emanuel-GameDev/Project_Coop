@@ -24,9 +24,12 @@ public abstract class PlayerCharacter : Character
     protected float uniqueAbilityCooldown;
     [SerializeField, Tooltip("L'incremento del tempo di attesa dell'abilit� unica dopo ogni uso.")]
     protected float uniqueAbilityCooldownIncreaseAtUse;
+    [SerializeField, Tooltip("Tempo che deve trascorrere prima di poter cambiare di nuovo personaggio")]
+    protected float switchCharacterCooldown;
     [SerializeField, Tooltip("Reference per l'interactable del ress")]
     protected GameObject ressInteracter;
 
+    protected float lastestCharacterSwitch;
     protected float currentHp;
     protected float uniqueAbilityUses;
 
@@ -103,6 +106,8 @@ public abstract class PlayerCharacter : Character
     public Vector2 MoveDirection => moveDir;
     public Vector2 LastDirection => lastNonZeroDirection;
 
+    protected bool CanSwitch => !isDead && Time.time - lastestCharacterSwitch > switchCharacterCooldown;
+
     #endregion
 
     #region Animation
@@ -117,7 +122,6 @@ public abstract class PlayerCharacter : Character
     {
         base.InitialSetup();
         Inizialize();
-
     }
 
     public virtual void Inizialize()
@@ -126,6 +130,7 @@ public abstract class PlayerCharacter : Character
         extraData = new ExtraData();
         upgradeStatus = new();
         CurrentHp = MaxHp;
+        ressInteracter.SetActive(false);
         foreach (AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
         {
             upgradeStatus.Add(au, false);
@@ -142,7 +147,7 @@ public abstract class PlayerCharacter : Character
             damager.SetSource(this);
         }
         SetIsInBossfight(false);
-
+        lastestCharacterSwitch = Time.time;
     }
 
     public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
@@ -376,27 +381,32 @@ public abstract class PlayerCharacter : Character
 
     #region SwitchCharacters
 
+    public void SetSwitchCooldown()
+    {
+        lastestCharacterSwitch = Time.time;
+    }
+
     public void SwitchUpInput(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && CanSwitch)
             PlayerCharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Brutus);
     }
 
     public void SwitchRightInput(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && CanSwitch)
             PlayerCharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Kaina);
     }
 
     public void SwitchDownInput(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && CanSwitch)
             PlayerCharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Cassius);
     }
 
     public void SwitchLeftInput(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && CanSwitch)
             PlayerCharacterPoolManager.Instance.SwitchCharacter(this, ePlayerCharacter.Jude);
     }
 

@@ -80,9 +80,11 @@ public class PlayerCharacterPoolManager : MonoBehaviour
             playerCharacter.characterController.SetPlayerCharacter(searchedCharacter);
             playerCharacter.characterController = null;
             ActivateCharacter(searchedCharacter, playerCharacter.transform);
-            //PubSub.Instance.Notify(EMessageType.characterSwitched, searchedCharacter);
-            
+            PubSub.Instance.Notify(EMessageType.characterSwitched, searchedCharacter);
+
             ReturnCharacter(playerCharacter);
+
+            TargetManager.Instance.ChangeTarget(playerCharacter, searchedCharacter);
         }
     }
 
@@ -96,6 +98,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         playerCharacter.gameObject.transform.parent = null;
         playerCharacter.gameObject.transform.position = spawnPosition;
         playerCharacter.gameObject.SetActive(true);
+        playerCharacter.SetSwitchCooldown();
         freeCharacters.Remove(playerCharacter);
         activeCharacters.Add(playerCharacter);
         //if (newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacterController>())
