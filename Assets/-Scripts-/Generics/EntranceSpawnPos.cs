@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class EntranceSpawnPos : MonoBehaviour
 {
+    [HideInInspector]
     public Transform entranceReferencePoint;
 
-    //[HideInInspector]
+    [HideInInspector]
     public List<SpawnPosData> posData;
 
     public EntranceSpawnPos(Transform basePos)
