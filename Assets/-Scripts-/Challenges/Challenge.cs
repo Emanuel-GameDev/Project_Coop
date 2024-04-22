@@ -74,8 +74,13 @@ public class Challenge : MonoBehaviour
     }
     public virtual void AddToSpawned(EnemyCharacter tempEnemy)
     {
+        TargetManager.Instance.AddEnemy(tempEnemy);
         spawnedEnemiesList.Add(tempEnemy); 
         enemySpawned = true;
+    }
+    public virtual void OnEnemyDeath()
+    {
+       
     }
 
     public void ResetScene()

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,13 +38,14 @@ public class TargetManager : MonoBehaviour
 
     public void ChangeTarget(PlayerCharacter oldTarget, PlayerCharacter newTarget)
     {
-        foreach( EnemyCharacter enemy in enemyInScene )
+        foreach (EnemyCharacter enemy in enemyInScene)
         {
-            if(enemy.Target.TryGetComponent<PlayerCharacter>(out PlayerCharacter player))
-            {
-                if(player == oldTarget)
-                    enemy.target = newTarget.transform;
-            }
+            if (enemy.Target != null)
+                if (enemy.Target.TryGetComponent<PlayerCharacter>(out PlayerCharacter player))
+                {
+                    if (player == oldTarget)
+                        enemy.target = newTarget.transform;
+                }
         }
     }
 
