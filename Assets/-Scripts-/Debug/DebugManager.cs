@@ -22,11 +22,12 @@ public class DebugManager : MonoBehaviour
     const string text = "DebugMode attiva e disattiva la modalità di Debug i comandi successivi funzionano solo se è abilitata.\n" +
         "TargetCharacter è il personaggio a cui verrnno dati gli Ability Upgrade o PowerUp.\n" +
         "Per dare un Ability Upgrade, selezionare il targetCharacter a cui darlo e premere il tastierino numerico da 1 a 5.\n" +
-        "Per dare un Power Up usare il tastierino numerico 7,8 o 9, verrà assegnato quello corrispondete al numero.";
+        "Per dare un Power Up usare il tastierino numerico 7,8 o 9, verrà assegnato quello corrispondete al numero.\n" + 
+        "Con il tasto M si infliggono 1000 danni al personaggio selezionato uccidendolo";
 
     [SerializeField] GameObject BossGameobject;
 
-    [SerializeField, TextArea]
+    [SerializeField, TextArea(5, 20)]
     private string istructions = text;
 
     private void Update()
