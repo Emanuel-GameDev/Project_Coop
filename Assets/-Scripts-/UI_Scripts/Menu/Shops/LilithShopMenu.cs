@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.Localization.Settings;
+using UnityEngine.UI;
 
 public class LilithShopMenu : Menu
 {
@@ -20,11 +21,35 @@ public class LilithShopMenu : Menu
     {
         if (shopGroup.activeSelf) return;
         base.OpenMenu();
-        
+
         //tableAssosiation.Clear();
 
-        
-        foreach(LilithShopTable table in GetComponentsInChildren<LilithShopTable>(true))
+        //int i = 0;
+        //canClose = true;
+
+        //shopGroup.SetActive(true);
+
+        //foreach (PlayerCharacter pc in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
+        //{
+
+        //    pc.GetInputHandler().SetPlayerActiveMenu(gameObject, table[i].GetComponentInChildren<Selectable>().gameObject);
+
+        //    InputActionAsset actions = pc.GetInputHandler().PlayerInput.actions;
+            
+
+        //    actions.FindActionMap("Player").Disable();
+        //    actions.FindActionMap("UI").Enable();
+        //    actions.FindActionMap("UI").FindAction("Menu").Disable();
+        //    actions.FindAction("Cancel").performed += Menu_performed;
+        //    if (actions.FindActionMap("UI").FindAction("Menu").enabled)
+        //        Debug.Log("true");
+
+        //    i++;
+        //}
+
+
+
+        foreach (LilithShopTable table in GetComponentsInChildren<LilithShopTable>(true))
         {
             //da sistemare
             table.InitializeButtons();
@@ -35,6 +60,9 @@ public class LilithShopMenu : Menu
 
         shopGroup.GetComponent<Animation>().Play("LilithShopEntrance");
     }
+
+
+
 
     public override void CloseMenu()
     {

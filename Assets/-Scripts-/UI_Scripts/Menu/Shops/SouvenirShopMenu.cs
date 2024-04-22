@@ -61,6 +61,14 @@ public class SouvenirShopMenu : Menu
         }
     }
 
+    protected override void Menu_performed(InputAction.CallbackContext obj)
+    {
+        if (canClose)
+        {
+             CloseMenu();
+        }
+    }
+
     public void CheckForMoney()
     {
         foreach(SouvenirShopTable table in shopTables)
