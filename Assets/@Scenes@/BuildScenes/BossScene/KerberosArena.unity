@@ -1806,6 +1806,7 @@ GameObject:
   m_Component:
   - component: {fileID: 886338831}
   - component: {fileID: 886338832}
+  - component: {fileID: 886338833}
   m_Layer: 5
   m_Name: Video Player
   m_TagString: Untagged
@@ -1867,6 +1868,29 @@ VideoPlayer:
   m_WaitForFirstFrame: 1
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
+--- !u!320 &886338833
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 886338830}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 3c0107caca362e347861866d0eeea8a7, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -1047193932054921177, guid: 3c0107caca362e347861866d0eeea8a7, type: 2}
+    value: {fileID: 886338830}
+  - key: {fileID: -1697875511355376423, guid: 3c0107caca362e347861866d0eeea8a7, type: 2}
+    value: {fileID: 1543284217}
+  - key: {fileID: -5076795007224135874, guid: 3c0107caca362e347861866d0eeea8a7, type: 2}
+    value: {fileID: 1212960133}
+  m_ExposedReferences:
+    m_References: []
 --- !u!1001 &934107815
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4324,8 +4348,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.63724995, y: 11.55845, z: 0}
-    m_Extent: {x: 19.48285, y: 29.32175, z: 0}
+    m_Center: {x: 0.6370001, y: 11.559001, z: 0}
+    m_Extent: {x: 19.4814, y: 29.3219, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
