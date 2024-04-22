@@ -34,10 +34,10 @@ public class C_KillAllInTimer : Challenge
         foreach (PlayerCharacter p in players)
         {
             if(noDamage)
-            p.OnHit.AddListener(OnFailChallenge);
+             p.OnHit.AddListener(OnFailChallenge);
 
             if(noDash)
-                p.OnDash.AddListener(OnFailChallenge);
+             p.OnDash.AddListener(OnFailChallenge);
         }
     }
     public override void StartChallenge()
@@ -70,7 +70,7 @@ public class C_KillAllInTimer : Challenge
     {
         base.AddToSpawned(enemyCharacter);
         enemyInt++;
-        enemyCharacter.OnDeath.AddListener(onEnemyDeath);
+        enemyCharacter.OnDeath.AddListener(OnEnemyDeath);
     }
     private void Update()
     {     
@@ -109,8 +109,9 @@ public class C_KillAllInTimer : Challenge
         TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
     }
-    private void onEnemyDeath()
+    public override void OnEnemyDeath()
     {
+        base.OnEnemyDeath();
         enemyInt--;
     }
 }
