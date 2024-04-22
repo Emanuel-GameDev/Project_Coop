@@ -402,14 +402,19 @@ public class Healer : PlayerCharacter
     public override void TakeDamage(DamageData data)
     {
         base.TakeDamage(data);
-
-        if (CurrentHp <= 0)
-        {
-            blockInput = true;
-            animator.SetBool("IsDead",true);
-        }
-
         bossPowerUpHitCount = 0;
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        animator.SetBool("IsDead", true);
+    }
+
+    public override void Ress()
+    {
+        base.Ress();
+        animator.SetBool("IsDead", false);
     }
 
 
