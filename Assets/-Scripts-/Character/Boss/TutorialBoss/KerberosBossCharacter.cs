@@ -16,10 +16,9 @@ public class KerberosBossCharacter : BossCharacter
     public GameObject pivotPreviewArrow;
     public GameObject visual;
     public GameObject _pivot;
-    public UnityEvent OnDie;
+   
     
-    
-
+   
     [Header("Raffica Di Pugni")]
     public float flurryDistance;
     public float flurrySpeed;
@@ -159,7 +158,7 @@ public class KerberosBossCharacter : BossCharacter
         if (isDead)
         {
             gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("isDead").Value = true;
-            OnDie?.Invoke();
+            OnDeath?.Invoke();
 
         }
 
