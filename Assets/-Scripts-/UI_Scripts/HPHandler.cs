@@ -44,7 +44,7 @@ public class HPHandler : MonoBehaviour
         containersAssociations = new Dictionary<ePlayerID, CharacterHUDContainer>();
         PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, UpdateContainer);
         PubSub.Instance.RegisterFunction(EMessageType.characterJoined, AddContainer);
-        PubSub.Instance.RegisterFunction(EMessageType.characterSwitched, SetCharacter);
+        //PubSub.Instance.RegisterFunction(EMessageType.characterSwitched, SetCharacter);
     }
 
 

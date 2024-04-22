@@ -315,7 +315,7 @@ public class TutorialManager : MonoBehaviour
             dps = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Brutus, transform);
             PlayerCharacterController receiver =(PlayerCharacterController) inputHandlers[inputHandlersID].CurrentReceiver;
             inputBindings.Add(dps, receiver);
-            HPHandler.Instance.AddContainer(dps);
+            //HPHandler.Instance.AddContainer(dps);
             inputHandlersID++;
         }
 
@@ -324,7 +324,7 @@ public class TutorialManager : MonoBehaviour
             healer = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Cassius, transform);
             PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
             inputBindings.Add(healer, receiver);
-            HPHandler.Instance.AddContainer(healer);
+            //HPHandler.Instance.AddContainer(healer);
             inputHandlersID++;
         }
 
@@ -333,7 +333,7 @@ public class TutorialManager : MonoBehaviour
             ranged = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Jude, transform);
             PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
             inputBindings.Add(ranged, receiver);
-            HPHandler.Instance.AddContainer(ranged);
+            //HPHandler.Instance.AddContainer(ranged);
             inputHandlersID++;
         }
 
@@ -342,7 +342,7 @@ public class TutorialManager : MonoBehaviour
             tank = PlayerCharacterPoolManager.Instance.GetCharacter(ePlayerCharacter.Kaina, transform);
             PlayerCharacterController receiver = (PlayerCharacterController)inputHandlers[inputHandlersID].CurrentReceiver;
             inputBindings.Add(tank, receiver);
-            HPHandler.Instance.AddContainer(tank);
+            //HPHandler.Instance.AddContainer(tank);
             inputHandlersID++;
         }
 
