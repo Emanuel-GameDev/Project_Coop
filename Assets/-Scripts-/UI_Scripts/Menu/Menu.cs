@@ -10,7 +10,7 @@ public class Menu : MonoBehaviour
     [SerializeField] protected Selectable firstSelected;
     [SerializeField] CanvasGroup tables;
 
-    [SerializeField] List<Canvas> table;
+    [SerializeField] internal List<Canvas> table;
 
     [SerializeField] protected GameObject shopGroup;
 
@@ -23,12 +23,13 @@ public class Menu : MonoBehaviour
 
     public virtual void OpenMenu()
     {
+        closeQueueInt = 0;
         int i = 0;
         canClose = true;
 
         shopGroup.SetActive(true);
 
-        foreach(PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
+        foreach(PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
         {
             
             ih.SetPlayerActiveMenu(tables.gameObject, table[i].GetComponentInChildren<Selectable>().gameObject);
@@ -44,10 +45,21 @@ public class Menu : MonoBehaviour
             i++;
         }
     }
+
+    internal List<PlayerInputHandler> closeQueue;
+    internal int closeQueueInt = 0;
     protected virtual void Menu_performed(InputAction.CallbackContext obj)
     {
-        if(canClose)
-            CloseMenu();
+        if (canClose)
+        {
+            closeQueueInt++;
+
+            if (closeQueueInt >= CoopManager.Instance.GetActiveHandlers().Count)
+            {
+                CloseMenu();
+            }
+
+        }
     }
 
     public virtual void CloseMenu()
