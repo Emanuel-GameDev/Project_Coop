@@ -4,33 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class EntranceSpawnPos
-{
-    public Transform entranceReferencePoint;
-
-    [HideInInspector]
-    public List<SpawnPosData> posData;
-
-    public EntranceSpawnPos(Transform basePos)
-    {
-        entranceReferencePoint = basePos;
-        Initialize();
-    }
-
-    internal void Initialize()
-    {
-        posData = new List<SpawnPosData>();
-
-        for (int i = 0; i < entranceReferencePoint.transform.childCount; i++)
-        {
-            SpawnPosData newSpawnPos = new SpawnPosData(entranceReferencePoint.transform.GetChild(i), true);
-
-            posData.Add(newSpawnPos);
-        }
-    }
-}
-
-[Serializable]
 public class SpawnPosData
 {
     [HideInInspector]
@@ -38,9 +11,9 @@ public class SpawnPosData
 
     public bool free = true;
 
-    public SpawnPosData(Transform spawnPos, bool free)
+    public SpawnPosData(Vector3 spawnPos, bool free)
     {
-        this.spawnPos = spawnPos.position;
+        this.spawnPos = spawnPos;
 
         this.free = free;
     }
@@ -76,6 +49,8 @@ public class SpawnPosManager : MonoBehaviour
 
     private void Start()
     {
+        CheckDefaultPos();
+
         defaultSpawnPos.Initialize();
     }
 
@@ -91,9 +66,20 @@ public class SpawnPosManager : MonoBehaviour
         }
         else
         {
+            CheckDefaultPos();
+
             spawnPos = defaultSpawnPos.posData.Find(x => x.free == true);
             spawnPos.free = false;
             return spawnPos;
+        }
+    }
+
+    private void CheckDefaultPos()
+    {
+        if (defaultSpawnPos == null)
+        {
+            GameObject newGO = new GameObject("StartSpawnPos_Added");
+            defaultSpawnPos = newGO.AddComponent<EntranceSpawnPos>();
         }
     }
 
