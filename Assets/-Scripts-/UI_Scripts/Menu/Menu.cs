@@ -52,12 +52,12 @@ public class Menu : MonoBehaviour
     {
         if (canClose)
         {
-            closeQueueInt++;
+            //closeQueueInt++;
 
-            if (closeQueueInt >= CoopManager.Instance.GetActiveHandlers().Count)
-            {
+            //if (closeQueueInt >= CoopManager.Instance.GetActiveHandlers().Count)
+            //{
                 CloseMenu();
-            }
+            //}
 
         }
     }
