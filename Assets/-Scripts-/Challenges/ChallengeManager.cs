@@ -69,4 +69,9 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     {
         return null;
     }
+
+    public void AbortInteraction(IInteracter interacter)
+    {
+        
+    }
 }

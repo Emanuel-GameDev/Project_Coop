@@ -125,4 +125,8 @@ public class PressInteractable : MonoBehaviour, IInteractable
         return interacters[0];
     }
 
+    public void AbortInteraction(IInteracter interacter)
+    {
+        
+    }
 }

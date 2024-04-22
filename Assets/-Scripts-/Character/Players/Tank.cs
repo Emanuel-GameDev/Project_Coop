@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 //Unique = tasto nord,Q = Urlo
 //BossUpgrade = tasto est,E = attacco bossFight
-public class Tank : PlayerCharacter
+public class Tank : PlayerCharacter, IPerfectTimeReceiver
 {
     [Header("Attack")]
     [SerializeField, Tooltip("Durata tempo pressione tasto attacco prima per decidere se attacco caricato o no")]
@@ -656,9 +656,6 @@ public class Tank : PlayerCharacter
     Vector3 dealerPosition;
 
 
-
-
-
     public void OnDrawGizmos()
     {
         if (dealerPosition != Vector3.zero)
@@ -750,4 +747,20 @@ public class Tank : PlayerCharacter
         return new Vector3(x, y, transform.position.z);
     }
 
+
+
+    public void SetPerfectTimingHandler(PerfectTimingHandler handler)
+    {
+       
+    }
+
+    public void PerfectTimeStarted()
+    {
+        
+    }
+
+    public void PerfectTimeEnded()
+    {
+        
+    }
 }

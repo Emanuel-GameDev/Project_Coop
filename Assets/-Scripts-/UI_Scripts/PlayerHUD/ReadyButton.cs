@@ -18,6 +18,7 @@ public class ReadyButton : MonoBehaviour
 
 
     MultiplayerConfirmationHandler multiplayerConfirmationHandler;
+    [SerializeField]
     Image buttonImage;
     LocalizeStringEvent localizeStringEvent;
     
@@ -27,7 +28,8 @@ public class ReadyButton : MonoBehaviour
 
     private void Start()
     {
-        buttonImage = GetComponent<Image>();
+        if(!buttonImage)
+            buttonImage = GetComponent<Image>();
         localizeStringEvent = GetComponentInChildren<LocalizeStringEvent>();
         ChangeToNotReady();
     }

@@ -90,6 +90,7 @@ public class BasicEnemy : EnemyCharacter
     [HideInInspector] public BasicEnemyEntryState entryState;
     [HideInInspector] public Vector2 entryDestination;
     [HideInInspector] public bool canGoIdle = true;
+    
 
     public void GoToPosition(Vector2 pos)
     {
@@ -346,34 +347,37 @@ public class BasicEnemy : EnemyCharacter
 
     public override void TakeDamage(DamageData data)
     {
-        base.TakeDamage(data);
-
-        if (currentHp <= 0)
+        if (!isDead)
         {
-            stateMachine.SetState(deathState);
-        }
-        else 
-        {
-            Character dealer = data.dealer as Character;
-
-            if(dealer != null)
+            base.TakeDamage(data);
+            if (currentHp <= 0)
             {
-                SetTarget(data.dealer.dealerTransform);
+                isDead = true;
+                stateMachine.SetState(deathState);
             }
-            
-            if(stateMachine.CurrentState.ToString() == stunState.ToString()) 
+            else
             {
-                Debug.Log("son gia stunnato");
-                return;
-            }
+                Character dealer = data.dealer as Character;
 
-            if(actionCourotine != null) 
-            {
-                StopCoroutine(actionCourotine);
-                actionCourotine=null;
-            }
+                if (dealer != null)
+                {
+                    SetTarget(data.dealer.dealerTransform);
+                }
 
-            stateMachine.SetState(stunState);
+                if (stateMachine.CurrentState.ToString() == stunState.ToString())
+                {
+                    Debug.Log("son gia stunnato");
+                    return;
+                }
+
+                if (actionCourotine != null)
+                {
+                    StopCoroutine(actionCourotine);
+                    actionCourotine = null;
+                }
+
+                stateMachine.SetState(stunState);
+            }
         }
        
     }

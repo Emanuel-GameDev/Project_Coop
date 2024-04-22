@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -25,6 +24,8 @@ public abstract class PlayerCharacter : Character
     protected float uniqueAbilityCooldown;
     [SerializeField, Tooltip("L'incremento del tempo di attesa dell'abilit� unica dopo ogni uso.")]
     protected float uniqueAbilityCooldownIncreaseAtUse;
+    [SerializeField, Tooltip("Reference per l'interactable del ress")]
+    protected GameObject ressInteracter;
 
     protected float currentHp;
     protected float uniqueAbilityUses;
@@ -59,6 +60,10 @@ public abstract class PlayerCharacter : Character
     protected bool isMoving;
     protected bool isInBossfight;
     protected bool bossfightPowerUpUnlocked;
+
+    protected bool isRightInputRecently => rightInputTimer>0;
+    [SerializeField] protected float recentlyInputTimer = 3f;
+    protected float rightInputTimer = 0;
 
 
     public bool protectedByTank; //DA RIVEDERE 
@@ -234,8 +239,31 @@ public abstract class PlayerCharacter : Character
             PubSub.Instance.Notify(EMessageType.characterDamaged, this);
         }
 
+        if (CurrentHp <= 0)
+        {
+            onDeath?.Invoke();
+            Die();
+        }
 
     }
+
+    public virtual void Die()
+    {
+        characterController.GetInputHandler().PlayerInput.actions.Disable();
+        characterController.GetInputHandler().PlayerInput.actions.FindAction("Menu").Enable();
+        characterController.GetInputHandler().PlayerInput.actions.FindAction("Option").Enable();
+        ressInteracter.gameObject.SetActive(true);
+        isDead = true;
+    }
+
+    public virtual void Ress()
+    {
+        characterController.GetInputHandler().PlayerInput.actions.Enable();
+        TakeHeal(new DamageData(MaxHp/2, this));
+        ressInteracter.gameObject.SetActive(false);
+        isDead = false;
+    }
+
 
     public virtual void TakeHeal(DamageData data)
     {
@@ -263,7 +291,11 @@ public abstract class PlayerCharacter : Character
     public void LookInput(InputAction.CallbackContext context)
     {
         if (context.performed)
+        {
             lookDir = context.ReadValue<Vector2>();
+            rightInputTimer = recentlyInputTimer;
+        }
+            
     }
 
     public void LookInputMouse(InputAction.CallbackContext context)
@@ -272,6 +304,7 @@ public abstract class PlayerCharacter : Character
         {
             Vector2 temp = context.ReadValue<Vector2>();
             lookDir = ((Camera.main.ScreenToWorldPoint(temp) - transform.position)).normalized;
+            rightInputTimer = recentlyInputTimer;
         }
 
 
@@ -461,5 +494,4 @@ public abstract class PlayerCharacter : Character
         base.EnableAllActions();
         characterController.GetInputHandler().PlayerInput.actions.Enable();
     }
-
 }

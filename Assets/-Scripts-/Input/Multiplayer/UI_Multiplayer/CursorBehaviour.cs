@@ -9,12 +9,11 @@ public class CursorBehaviour : InputReceiver
 {
     // Gli oggetti su cui il cursore potrà muoversi
     [HideInInspector] public List<RectTransform> objectsToOver = new List<RectTransform>();
-    private int currentIndex = -1;
+    private int currentIndex = 0;
 
     private ePlayerID playerID;
     internal ePlayerID PlayerID => playerID;
 
-    private Button confirmBtn;
     private bool onlyConfirmationRequired = false;
     private Vector2 movement;
     internal bool objectSelected = false;
@@ -29,8 +28,35 @@ public class CursorBehaviour : InputReceiver
         }
 
         objectsToOver = CharacterSelectionMenu.Instance.GetCharacterSelectors(playerID);
+
+        Select(0);
+
     }
 
+    internal void Select(int id)
+    {
+        int actualID;
+
+        if (id != currentIndex)
+            actualID = id;
+        else
+            actualID = currentIndex;
+
+        // Spengo il P che prima era acceso
+        CharacterSelectionMenu.Instance.PlayerOvered(false, gameObject);
+
+        // Sposto il cursore e resetto pos
+        if (currentIndex < 0) return;
+
+        GetComponent<RectTransform>().SetParent(objectsToOver[actualID]);
+        GetComponent<RectTransform>().position = GetComponent<RectTransform>().parent.position;
+
+        // Accendo il P relativo
+        CharacterSelectionMenu.Instance.PlayerOvered(true, gameObject);
+    }
+
+    #region Commands
+    
     public override void Navigate(InputAction.CallbackContext context)
     {
         movement = context.ReadValue<Vector2>();
@@ -56,28 +82,6 @@ public class CursorBehaviour : InputReceiver
         }
     }
 
-    internal void Select(int id)
-    {
-        int actualID;
-
-        if (id != currentIndex)
-            actualID = id;
-        else
-            actualID = currentIndex;
-
-        // Spengo il P che prima era acceso
-        CharacterSelectionMenu.Instance.PlayerOvered(false, gameObject);
-
-        // Sposto il cursore e resetto pos
-        if (currentIndex < 0) return;
-
-        GetComponent<RectTransform>().SetParent(objectsToOver[actualID]);
-        GetComponent<RectTransform>().position = GetComponent<RectTransform>().parent.position;
-
-        // Accendo il P relativo
-        CharacterSelectionMenu.Instance.PlayerOvered(true, gameObject);
-    }
-
     /// <summary>
     /// Filtra la validità della selezione del personaggio,
     /// poi chiede al menu di aggiornare la selezione nella lista di PlayerSelections
@@ -85,16 +89,6 @@ public class CursorBehaviour : InputReceiver
     /// <param name="context"></param>
     public override void Submit(InputAction.CallbackContext context)
     {
-        //if (context.started && confirmBtn != null)
-        //{
-        //    // Aggiungi la funzione SelectionOver come listener all'evento onClick del pulsante
-        //    confirmBtn.onClick.RemoveAllListeners();
-        //    confirmBtn.onClick.AddListener(() => CharacterSelectionMenuV2.Instance.SelectionOver(playerID));
-
-        //    // Esegui il comportamento di selezione normale del pulsante
-        //    confirmBtn.onClick.Invoke();
-        //}
-
         if (context.started && onlyConfirmationRequired)
             CharacterSelectionMenu.Instance.SelectionOver(PlayerID);
 
@@ -126,9 +120,19 @@ public class CursorBehaviour : InputReceiver
             if (response)
                 objectSelected = false;
         }
-        
+
         CheckAllReady();
     }
+    public override void RandomSelection(InputAction.CallbackContext context)
+    {
+        if (context.started && !objectSelected && GetComponent<RectTransform>().parent != null)
+        {
+            CharacterSelectionMenu.Instance.SelectRandom(this);
+        }
+    }
+
+    #endregion
+
 
     internal void CheckAllReady()
     {
@@ -141,14 +145,6 @@ public class CursorBehaviour : InputReceiver
         {
             CharacterSelectionMenu.Instance.TriggerFasciaReady(false);
             onlyConfirmationRequired = false;
-        }
-    }
-
-    public override void RandomSelection(InputAction.CallbackContext context)
-    {
-        if (context.started && !objectSelected && GetComponent<RectTransform>().parent != null)
-        {
-            CharacterSelectionMenu.Instance.SelectRandom(this);
         }
     }
 
