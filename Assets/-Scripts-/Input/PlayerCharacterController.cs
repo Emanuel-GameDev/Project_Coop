@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.InputSystem;
 
 public class PlayerCharacterController : InputReceiver
@@ -22,7 +23,7 @@ public class PlayerCharacterController : InputReceiver
         base.SetCharacter(character);
 
         // Set pos del personaggio effettivo
-        PlayerCharacter playerCharacter = PlayerCharacterPoolManager.Instance.GetCharacter(character, SpawnPosManager.Instance.GetFreePos().spawnPos);
+        PlayerCharacter playerCharacter = PlayerCharacterPoolManager.Instance.GetCharacter(character, SpawnPositionManager.Instance.GetFreePos().spawnPos);
 
         if (playerCharacter != null)
         {
@@ -33,15 +34,27 @@ public class PlayerCharacterController : InputReceiver
     public override void SetInputHandler(PlayerInputHandler inputHandler)
     {
         base.SetInputHandler(inputHandler);
-        if (inputHandler.currentCharacter != ePlayerCharacter.EmptyCharacter)
-            SetCharacter(inputHandler.currentCharacter);
-        else if (inputHandler.startingCharacter != ePlayerCharacter.EmptyCharacter)
-            SetCharacter(inputHandler.startingCharacter);
-        else
+
+        if(inputHandler.currentCharacter == ePlayerCharacter.EmptyCharacter && inputHandler.startingCharacter == ePlayerCharacter.EmptyCharacter)
         {
-            SetPlayerCharacter(PlayerCharacterPoolManager.Instance.GetFreeRandomCharacter());
+            character = PlayerCharacterPoolManager.Instance.GetFreeRandomCharacter();
             inputHandler.SetStartingCharacter(this.character);
         }
+
+
+        //if (inputHandler.currentCharacter != ePlayerCharacter.EmptyCharacter)
+        //    SetCharacter(inputHandler.currentCharacter);
+        //else if (inputHandler.startingCharacter != ePlayerCharacter.EmptyCharacter)
+        //    SetCharacter(inputHandler.startingCharacter);
+        //else
+        //{
+        //    //Da
+
+        //    //SetPlayerCharacter(PlayerCharacterPoolManager.Instance.GetFreeRandomCharacter());
+
+        //    character = PlayerCharacterPoolManager.Instance.GetFreeRandomCharacter();
+        //    inputHandler.SetStartingCharacter(this.character);
+        //}
 
     }
 
