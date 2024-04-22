@@ -117,7 +117,7 @@ public abstract class PlayerCharacter : Character
     {
         base.InitialSetup();
         Inizialize();
-
+        ressInteracter.SetActive(false);
     }
 
     public virtual void Inizialize()
@@ -253,6 +253,7 @@ public abstract class PlayerCharacter : Character
         characterController.GetInputHandler().PlayerInput.actions.FindAction("Menu").Enable();
         characterController.GetInputHandler().PlayerInput.actions.FindAction("Option").Enable();
         ressInteracter.gameObject.SetActive(true);
+        isDead = true;
     }
 
     public virtual void Ress()
@@ -260,6 +261,7 @@ public abstract class PlayerCharacter : Character
         characterController.GetInputHandler().PlayerInput.actions.Enable();
         TakeHeal(new DamageData(MaxHp/2, this));
         ressInteracter.gameObject.SetActive(false);
+        isDead = false;
     }
 
 

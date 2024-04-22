@@ -70,9 +70,11 @@ public class SaveManager : MonoBehaviour
         {
             string json = File.ReadAllText(filePath);
             saveData = JsonUtility.FromJson<SaveData>(json);
-
-            // LoadMapsData();
-            LoadPlayersData();
+            if(saveData != null)
+            {
+                // LoadMapsData();
+                LoadPlayersData();
+            }
 
             Debug.Log("Dati caricati con successo!");
         }

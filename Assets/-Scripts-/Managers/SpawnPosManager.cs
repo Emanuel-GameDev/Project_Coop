@@ -68,7 +68,14 @@ public class SpawnPosManager : MonoBehaviour
             CheckStartingPos();
 
             spawnPos = defaultSpawnPos.posData.Find(x => x.free == true);
+            
+            //Da Rivedere
+            if(spawnPos == null) 
+            {
+                spawnPos = new(Vector3.zero, false);
+            }
             spawnPos.free = false;
+
             return spawnPos;
         }
     }

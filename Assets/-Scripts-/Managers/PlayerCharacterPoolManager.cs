@@ -81,8 +81,10 @@ public class PlayerCharacterPoolManager : MonoBehaviour
             playerCharacter.characterController = null;
             ActivateCharacter(searchedCharacter, playerCharacter.transform);
             PubSub.Instance.Notify(EMessageType.characterSwitched, searchedCharacter);
-            
+
             ReturnCharacter(playerCharacter);
+
+            TargetManager.Instance.ChangeTarget(playerCharacter, searchedCharacter);
         }
     }
 

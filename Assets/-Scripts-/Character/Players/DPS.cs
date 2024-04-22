@@ -148,6 +148,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private static string ENDDASHATTACK = "EndDashAttack";
     private static string DEATH = "Death";
     private static string ISMOVING = "IsMoving";
+    private static string RESS = "Ress";
     #endregion
 
     public override float AttackSpeed => base.AttackSpeed + ExtraSpeed;
@@ -323,6 +324,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         isDodging = true;
         animator.SetTrigger(DODGESTART);
         PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
+        onDash?.Invoke();
         yield return StartCoroutine(Move(dodgeDirection, rb, dodgeDuration, dodgeDistance));
 
         isDodging = false;
@@ -523,6 +525,11 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         animator.SetTrigger(DEATH);
     }
 
+    public override void Ress()
+    {
+        base.Ress();
+        animator.SetTrigger(RESS);
+    }
 
     private void BossDamageCheck()
     {
