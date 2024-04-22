@@ -47,7 +47,6 @@ public class SouvenirShopMenu : Menu
 
             InputActionAsset actions = inputHandler.GetComponent<PlayerInput>().actions;
             actions.FindActionMap("UI").Enable();
-            actions.FindActionMap("UI").FindAction("Menu").Disable();
             actions.FindAction("Cancel").performed += Menu_performed;
 
 
