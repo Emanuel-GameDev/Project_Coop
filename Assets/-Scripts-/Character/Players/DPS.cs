@@ -323,6 +323,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         isDodging = true;
         animator.SetTrigger(DODGESTART);
         PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
+        onDash?.Invoke();
         yield return StartCoroutine(Move(dodgeDirection, rb, dodgeDuration, dodgeDistance));
 
         isDodging = false;
