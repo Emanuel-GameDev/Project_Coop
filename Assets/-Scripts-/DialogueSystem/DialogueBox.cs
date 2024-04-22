@@ -303,6 +303,7 @@ public class DialogueBox : MonoBehaviour
     {
         dialogues = new Dialogue[1];
         dialogues[0] = newDialogues;
+        dialogueIndex = 0;
     }
 
     public void RemoveAllDialogueEnd()
