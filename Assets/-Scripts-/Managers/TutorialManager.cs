@@ -584,7 +584,7 @@ public class TutorialManager : MonoBehaviour
     public void DeactivateEnemyAI()
     {
         tutorialEnemy.viewTrigger.ClearList();
-        //tutorialEnemy.closeRangeTrigger.ClearList();
+        tutorialEnemy.AttackRangeTrigger.ClearList();
 
         //tutorialEnemy.stateMachine.SetState(tutorialEnemy.idleState);
         tutorialEnemy.GetRigidBody().velocity = Vector2.zero;
