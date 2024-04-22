@@ -170,18 +170,21 @@ public class BasicEnemy : EnemyCharacter
 
         ActivateAgent();
 
-        if (target != null)
+        if (currentTarget != null)
         {
-            if (agent.CalculatePath(target.position, path))
-            {
-
+            //if (agent.CalculatePath(target.position, path))
+            //{
                 if (path.corners.Length > 1)
                     Move(path.corners[1] - path.corners[0], rb);
                 else
                     Move(target.position - transform.position, rb);
-            }
-            else
-                rb.velocity = Vector2.zero;
+                
+            //}
+            //else
+            //{
+            //    Debug.Log(path.corners.Length);
+            //    rb.velocity = Vector2.zero;
+            //}
         }
         else
         {
@@ -208,9 +211,12 @@ public class BasicEnemy : EnemyCharacter
                     Move(path.corners[1] - path.corners[0], rb);
                 else
                     Move((Vector3)pos - transform.position, rb);
+                
             }
             else
+            {
                 rb.velocity = Vector2.zero;
+            }
         }
         else
         {
@@ -361,7 +367,7 @@ public class BasicEnemy : EnemyCharacter
 
                 if (dealer != null)
                 {
-                    SetTarget(data.dealer.dealerTransform);
+                    SetTarget(dealer.dealerTransform);
                 }
 
                 if (stateMachine.CurrentState.ToString() == stunState.ToString())

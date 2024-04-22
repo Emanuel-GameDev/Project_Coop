@@ -22,10 +22,13 @@ public class Detector : MonoBehaviour
             playerInsideCount.gameObject.SetActive(false);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
         if(other.gameObject.GetComponentInParent<PlayerCharacter>())
         {
+            if (playersDetected.Contains(other.gameObject.GetComponentInParent<PlayerCharacter>()))
+                return;
+
             playersDetected.Add(other.gameObject.GetComponentInParent<PlayerCharacter>());
             playersInside++;
 
