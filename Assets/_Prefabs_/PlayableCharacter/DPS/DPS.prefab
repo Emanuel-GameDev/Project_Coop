@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 6824973493690299238}
   - component: {fileID: 6425295164101110954}
   - component: {fileID: 2201459323650387174}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: SkipButtonSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,11 +130,11 @@ RectTransform:
   m_Children:
   - {fileID: 5032782482362945645}
   - {fileID: 2072877569692921349}
-  m_Father: {fileID: 3092766138524625209}
+  m_Father: {fileID: 191665181417097072}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 1.9499998}
+  m_AnchoredPosition: {x: 0, y: 3.4999998}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6425295164101110954
@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 191665181417097072}
   - component: {fileID: 4774551600136434031}
   - component: {fileID: 336137081271127343}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: RessInteractable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,12 +237,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1610596121184808161}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.55, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 413376642743336375}
+  m_Children:
+  - {fileID: 6824973493690299238}
+  m_Father: {fileID: 3092766138524625209}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4774551600136434031
 MonoBehaviour:
@@ -290,7 +291,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 1.5}
@@ -449,7 +450,7 @@ GameObject:
   - component: {fileID: 8039950998616372452}
   - component: {fileID: 2420582025283408946}
   - component: {fileID: 356122184422970131}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -773,7 +774,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2072877569692921349}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1061,7 +1062,6 @@ Transform:
   - {fileID: 4974105039506093492}
   - {fileID: 3092766138524625209}
   - {fileID: 144035731354277357}
-  - {fileID: 191665181417097072}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7349943595437100007
@@ -1273,7 +1273,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6824973493690299238}
+  - {fileID: 191665181417097072}
   - {fileID: 5010088789243547342}
   - {fileID: 2194752481810029036}
   - {fileID: 4290996833703490751}
@@ -1302,7 +1302,7 @@ GameObject:
   - component: {fileID: 5032782482362945645}
   - component: {fileID: 7721646934348542484}
   - component: {fileID: 5747070620073987562}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
