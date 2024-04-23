@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
@@ -42,6 +43,9 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         }
 
     }
+
+    private int deadPlayers = 0;
+
 
     private void Awake()
     {
@@ -149,5 +153,28 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     }
 
     #endregion
+
+    #region PlayerDeadManager
+
+    public void PlayerIsDead()
+    {
+        deadPlayers++;
+        if(deadPlayers >= activeCharacters.Count)
+        {
+            deadPlayers = 0;
+            GameManager.Instance.LoadScene(SceneManager.GetActiveScene().name);
+        }
+            
+    }
+
+    public void PlayerIsRessed()
+    {
+        deadPlayers--;
+        if (deadPlayers <= 0)
+            deadPlayers = 0;
+    }
+
+    #endregion
+
 
 }

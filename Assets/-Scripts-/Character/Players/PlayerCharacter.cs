@@ -259,6 +259,7 @@ public abstract class PlayerCharacter : Character
         characterController.GetInputHandler().PlayerInput.actions.FindAction("Option").Enable();
         ressInteracter.gameObject.SetActive(true);
         isDead = true;
+        PlayerCharacterPoolManager.Instance.PlayerIsDead();
     }
 
     public virtual void Ress()
@@ -267,6 +268,7 @@ public abstract class PlayerCharacter : Character
         TakeHeal(new DamageData(MaxHp/2, this));
         ressInteracter.gameObject.SetActive(false);
         isDead = false;
+        PlayerCharacterPoolManager.Instance.PlayerIsRessed();   
     }
 
 
