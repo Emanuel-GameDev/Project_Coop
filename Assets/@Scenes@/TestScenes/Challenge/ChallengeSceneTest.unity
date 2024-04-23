@@ -204,7 +204,7 @@ PrefabInstance:
     - target: {fileID: 7506068142461886418, guid: c8bb8e7eacc003645b9ee626e124d497,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint (1)
+      value: SpawnPoint (1)1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -678,7 +678,7 @@ PrefabInstance:
     - target: {fileID: 7506068142461886418, guid: c8bb8e7eacc003645b9ee626e124d497,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint (1)
+      value: SpawnPoint (1)2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -976,7 +976,7 @@ PrefabInstance:
     - target: {fileID: 7506068142461886418, guid: c8bb8e7eacc003645b9ee626e124d497,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint
+      value: SpawnPoint3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1581,7 +1581,7 @@ PrefabInstance:
     - target: {fileID: 7506068142461886418, guid: c8bb8e7eacc003645b9ee626e124d497,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint
+      value: SpawnPoint2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2178,7 +2178,7 @@ MonoBehaviour:
   onChallengeStart:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1567999964}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -2196,7 +2196,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1567999964}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: 
+        m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2210,19 +2210,7 @@ MonoBehaviour:
   dialogueOnFailure: {fileID: 11400000, guid: 3f2dd2d5aa2718b46911f235e1fb7858, type: 2}
   onChallengeFailEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1716329585}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: ChangeScene
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   spawnedEnemiesList: []
   enemySpawned: 0
   onChallengeStartAction:
@@ -2877,7 +2865,7 @@ MonoBehaviour:
   onChallengeStart:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1567999964}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -2895,7 +2883,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1567999964}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: 
+        m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3046,12 +3034,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   challengesList:
   - {fileID: 1560025931}
-  - {fileID: 1560025931}
-  - {fileID: 1560025931}
+  - {fileID: 573585576}
+  - {fileID: 742193960}
   menuInfo: {fileID: 1015782527}
   panel: {fileID: 975717868}
   challengeUIPrefab: {fileID: 8814628488093020177, guid: b89dd99aca085d9469ebfc8ee6f4a4b9,
     type: 3}
+  started: 0
 --- !u!61 &778082206
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4129,7 +4118,11 @@ MonoBehaviour:
     m_LocalVariables: []
   enemySpawnPoints:
   - {fileID: 1431266245}
-  - {fileID: 0}
+  - {fileID: 283842620}
+  - {fileID: 1818375052}
+  - {fileID: 1860795256}
+  - {fileID: 745311057}
+  - {fileID: 2071691506}
   dialogueOnStart: {fileID: 11400000, guid: 5efa4c7a09dbe464c9b7ac9bdfa3bd89, type: 2}
   onChallengeStart:
     m_PersistentCalls:
@@ -4202,13 +4195,6 @@ MonoBehaviour:
   challengeCompleted: 0
   TimerText: {fileID: 1887102707}
   timerChallenge: 120
-  enemySpawnPoints:
-  - {fileID: 1431266245}
-  - {fileID: 283842620}
-  - {fileID: 1818375052}
-  - {fileID: 1860795256}
-  - {fileID: 745311057}
-  - {fileID: 2071691506}
   players: []
   references:
     version: 2
@@ -5548,31 +5534,7 @@ MonoBehaviour:
   dialogueOnFailure: {fileID: 11400000, guid: 3f2dd2d5aa2718b46911f235e1fb7858, type: 2}
   onChallengeFailEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1567999964}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1716329585}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: ChangeScene
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   spawnedEnemiesList: []
   enemySpawned: 0
   onChallengeStartAction:
@@ -7569,7 +7531,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.2602153, y: 0.73800004}
   m_AnchorMax: {x: 0.74178475, y: 0.9507659}
-  m_AnchoredPosition: {x: -0.5, y: -0.30000305}
+  m_AnchoredPosition: {x: -0.5, y: -0.2999878}
   m_SizeDelta: {x: -1, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &1888898298 stripped
@@ -8483,7 +8445,7 @@ PrefabInstance:
     - target: {fileID: 7506068142461886418, guid: c8bb8e7eacc003645b9ee626e124d497,
         type: 3}
       propertyPath: m_Name
-      value: SpawnPoint
+      value: SpawnPoint1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

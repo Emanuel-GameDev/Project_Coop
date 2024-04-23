@@ -223,33 +223,37 @@ public abstract class PlayerCharacter : Character
     #region Damage
     public override void TakeDamage(DamageData data)
     {
-        if (data.condition != null)
-            AddToConditions(data.condition);
-
-        CurrentHp -= data.damage * DamageReceivedMultiplier;
-        damager.RemoveCondition();
-        Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
-
-        //shader
-        SetHitMaterialColor(_OnHitColor);
-
-        OnHit?.Invoke();
-
-        if (protectedByTank && data.blockedByTank)
+        if (!isDead)
         {
-            Debug.Log("Protetto da tank");
-        }
-        else
-        {
-            PubSub.Instance.Notify(EMessageType.characterDamaged, this);
-        }
 
-        if (CurrentHp <= 0)
-        {
-            onDeath?.Invoke();
-            Die();
-        }
 
+            if (data.condition != null)
+                AddToConditions(data.condition);
+
+            CurrentHp -= data.damage * DamageReceivedMultiplier;
+            damager.RemoveCondition();
+            Debug.Log($"Dealer: {data.dealer}, Damage: {data.damage}, Condition: {data.condition}");
+
+            //shader
+            SetHitMaterialColor(_OnHitColor);
+
+            OnHit?.Invoke();
+
+            if (protectedByTank && data.blockedByTank)
+            {
+                Debug.Log("Protetto da tank");
+            }
+            else
+            {
+                PubSub.Instance.Notify(EMessageType.characterDamaged, this);
+            }
+
+            if (CurrentHp <= 0)
+            {
+                onDeath?.Invoke();
+                Die();
+            }
+        }
     }
 
     public virtual void Die()
