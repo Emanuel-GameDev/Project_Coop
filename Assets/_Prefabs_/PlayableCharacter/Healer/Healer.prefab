@@ -993,7 +993,7 @@ MonoBehaviour:
   maxHp: 75
   damage: 5
   attackSpeed: 30
-  moveSpeed: 15
+  moveSpeed: 13
   uniqueAbilityCooldown: 5
   uniqueAbilityCooldownIncreaseAtUse: 2
   switchCharacterCooldown: 0
@@ -1007,8 +1007,8 @@ MonoBehaviour:
   healIcon: {fileID: 1667381298283499555, guid: 81008e70013cfa54fa69a382d51da323,
     type: 3}
   smallHealTrigger: {fileID: 3239358004793338620}
-  smallHeal: 100
-  singleHealCooldown: 3
+  smallHeal: 20
+  singleHealCooldown: 1
   smallHealAreaRadius: 3
   smallHealParticlePrefab: {fileID: 3871303192067044200, guid: 4aa3fce833fcea34ea275872d59531db,
     type: 3}
@@ -1023,9 +1023,9 @@ MonoBehaviour:
   healArea: {fileID: 1224139591316512770, guid: e342c5ee29879d547bf5dc85861fff04,
     type: 3}
   areaDuration: 3
-  healAreaRadius: 5
+  healAreaRadius: 20
   tikPerSecond: 1
-  healPerTik: 5
+  healPerTik: 10
   DOTPerTik: 1
   healAreaIncrementedRadious: 5
   slowDown: {fileID: 11400000, guid: 02dd0b24375e42649a232ae5881994d6, type: 2}
