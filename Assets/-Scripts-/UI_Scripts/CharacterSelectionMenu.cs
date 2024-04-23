@@ -35,13 +35,6 @@ public class CharacterSelectionMenu : MonoBehaviour
 
     private void Start()
     {
-        // Quando un pg joina mentre la fascia ready è attiva, essa si spegne
-        CoopManager.Instance.gameObject.GetComponent<PlayerInputManager>().onPlayerJoined += WrapperFasciaReady;
-    }
-
-    private void WrapperFasciaReady(PlayerInput uselessInput)
-    {
-        TriggerFasciaReady(false);
     }
 
     internal void AddToActiveCursors(CursorBehaviour cursor)
@@ -170,7 +163,7 @@ public class CharacterSelectionMenu : MonoBehaviour
         return allReady;
     }
 
-    internal void TriggerFasciaReady(bool mode)
+    public void TriggerFasciaReady(bool mode)
     {
         if (mode)
         {
