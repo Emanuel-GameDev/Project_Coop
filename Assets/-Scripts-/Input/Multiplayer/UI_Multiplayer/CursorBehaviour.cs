@@ -15,6 +15,7 @@ public class CursorBehaviour : InputReceiver
     internal ePlayerID PlayerID => playerID;
 
     private bool onlyConfirmationRequired = false;
+
     private Vector2 movement;
     internal bool objectSelected = false;
 
@@ -152,6 +153,6 @@ public class CursorBehaviour : InputReceiver
     {
         base.SetCharacter(character);
 
-        playerInputHandler.SetStartingCharacter(character);
+        this.character = character;
     }
 }
