@@ -9,6 +9,7 @@ public class C_Survive : Challenge
     [SerializeField] private TextMeshProUGUI TimerText;
     [SerializeField] private float timerChallenge;
 
+    
     private bool startTimer;
     public List<PlayerCharacter> players;
    
