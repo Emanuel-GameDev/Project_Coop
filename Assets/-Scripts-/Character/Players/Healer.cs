@@ -312,7 +312,7 @@ public class Healer : PlayerCharacter
 
     public void PlaySmallHealParticles()
     {
-        Instantiate(smallHealParticlePrefab,transform.position, Quaternion.identity);
+        Instantiate(smallHealParticlePrefab,transform.position , Quaternion.identity);
     }
 
     //UniqueAbility: lancia area di cura
@@ -338,7 +338,6 @@ public class Healer : PlayerCharacter
         if (upgradeStatus[AbilityUpgrade.Ability2])
         {
             radius = healAreaRadius + healAreaIncrementedRadious;
-            Debug.Log("2");
         }
         else
             radius = healAreaRadius;
@@ -408,12 +407,14 @@ public class Healer : PlayerCharacter
     public override void Die()
     {
         base.Die();
+        blockInput = true;
         animator.SetBool("IsDead", true);
     }
 
     public override void Ress()
     {
         base.Ress();
+        blockInput = false;
         animator.SetBool("IsDead", false);
     }
 
