@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Video;
 
 public class RessInteractable : MonoBehaviour, IInteractable
 {
@@ -14,11 +10,11 @@ public class RessInteractable : MonoBehaviour, IInteractable
     private GameObject interacterVisualization;
     [SerializeField, Tooltip("Tempo per resuscitare il player")]
     private float ressDuration = 5f;
-    [SerializeField, Tooltip("Velocità extra di ress, per player, in percentuale"), Range(0,1)]
+    [SerializeField, Tooltip("Velocità extra di ress, per player, in percentuale"), Range(0, 1)]
     private float ressSpeedUp = 0.15f;
     [SerializeField]
     private Slider ressSlider;
-    
+
     private int triggerCount = 0;
 
     private int ressCount = 0;
@@ -69,7 +65,7 @@ public class RessInteractable : MonoBehaviour, IInteractable
                 triggerCount++;
             }
 
-            
+
         }
         Debug.Log("Entra?");
     }
@@ -94,7 +90,7 @@ public class RessInteractable : MonoBehaviour, IInteractable
 
     public void CancelInteraction(IInteracter interacter)
     {
-        
+
     }
 
     public IInteracter GetFirstInteracter()
@@ -104,7 +100,7 @@ public class RessInteractable : MonoBehaviour, IInteractable
 
     public void Interact(IInteracter interacter)
     {
-        if(ressCount == 0)
+        if (ressCount == 0)
         {
             updateSlider = true;
             startingTime = Time.time;
@@ -116,7 +112,7 @@ public class RessInteractable : MonoBehaviour, IInteractable
     public void AbortInteraction(IInteracter interacter)
     {
         ressCount--;
-        if(ressCount <= 0)
+        if (ressCount <= 0)
         {
             updateSlider = false;
         }

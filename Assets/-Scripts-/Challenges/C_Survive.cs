@@ -9,9 +9,6 @@ public class C_Survive : Challenge
     [SerializeField] private TextMeshProUGUI TimerText;
     [SerializeField] private float timerChallenge;
 
-    [Header("Enemies")]
-    [SerializeField] private List<EnemySpawner> enemySpawnPoints;
-
     private bool startTimer;
     public List<PlayerCharacter> players;
    
