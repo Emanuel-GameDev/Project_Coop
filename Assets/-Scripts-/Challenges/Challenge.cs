@@ -35,6 +35,7 @@ public class Challenge : MonoBehaviour
     [HideInInspector] public UnityEvent onChallengeStartAction;
     [HideInInspector] public UnityEvent onChallengeFailReset;
     [HideInInspector] public bool challengeCompleted;
+    [HideInInspector] private bool challengeStarted;
     private string destinationSceneName = "ChallengeSceneTest";
 
     public void ActivateGameobject()
@@ -49,6 +50,7 @@ public class Challenge : MonoBehaviour
     public virtual void StartChallenge()
     {
         Debug.Log("SFIDA INIZIATA");
+        ChallengeManager.Instance.started = challengeStarted = true;
         onChallengeStart?.Invoke();
     }
     public virtual void OnFailChallenge()
@@ -100,6 +102,7 @@ public class Challenge : MonoBehaviour
             s.gameObject.SetActive(false);
         }
         enemySpawned = false;
+        challengeStarted = false;
     }
 
 }

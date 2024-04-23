@@ -3,11 +3,33 @@ using UnityEngine;
 
 public class ChallengeManager : MonoBehaviour, IInteractable
 {
+
+    private static ChallengeManager _instance;
+    public static ChallengeManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<ChallengeManager>();
+
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new("ChallengeManager");
+                    _instance = singletonObject.AddComponent<ChallengeManager>();
+                }
+            }
+
+            return _instance;
+        }
+    }
     [SerializeField] private List<Challenge> challengesList;
     [SerializeField] private MenuInfo menuInfo;
     [SerializeField] private GameObject panel;
     [SerializeField] private GameObject challengeUIPrefab;
     private Challenge selectedChallenge;
+    public bool started;
+    
 
 
     private void Start()
@@ -38,6 +60,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     
     public void Interact(IInteracter interacter)
     {
+        if(!started)
         MenuManager.Instance.OpenMenu(menuInfo,CoopManager.Instance.GetPlayer(ePlayerID.Player1));
        
        
