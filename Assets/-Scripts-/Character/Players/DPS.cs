@@ -298,7 +298,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     public override void DefenseInput(InputAction.CallbackContext context)
     {
         //CONTROLLARE
-        base.DefenseInput(context);
         if (context.performed)
         {
             Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
