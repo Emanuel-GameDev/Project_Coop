@@ -474,6 +474,17 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     #region onHit
 
+    public override void Die()
+    {
+        base.Die();
+        animator.SetTrigger("Death");
+    }
+
+    public override void Ress()
+    {
+        base.Ress();
+        animator.SetTrigger("Ress");
+    }
     public override void TakeDamage(DamageData data)
     {
 
