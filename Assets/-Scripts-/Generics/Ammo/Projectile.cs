@@ -70,6 +70,9 @@ public class Projectile : MonoBehaviour, IDamager
         boostedProjectileDamage = damage;
         gameObject.layer = layer;
 
+        transform.right = (Vector3)travelDirection - transform.position;
+        
+
         //momentaneo
         transform.position=new Vector3(transform.position.x,transform.position.y, -1);
 
@@ -126,7 +129,9 @@ public class Projectile : MonoBehaviour, IDamager
 
     private void ProjectileFlyDirection()
     {
+        
         transform.position = Vector3.MoveTowards(transform.position, travelDirection, projectileSpeed * Time.deltaTime);
+        
     }
 
     //public float GetDamage()
