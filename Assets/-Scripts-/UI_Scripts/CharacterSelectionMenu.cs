@@ -184,6 +184,11 @@ public class CharacterSelectionMenu : MonoBehaviour
         {
             Debug.Log("Selection Over");
 
+            foreach (CursorBehaviour cursor in activeCursors)
+            {
+                cursor.GetInputHandler().SetStartingCharacter(cursor.GetCharacter());
+            }
+
             GameManager.Instance.LoadScene("TutorialScene");
         }
     }
