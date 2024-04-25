@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 [Serializable]
@@ -162,7 +163,7 @@ public class CharacterSelectionMenu : MonoBehaviour
         return allReady;
     }
 
-    internal void TriggerFasciaReady(bool mode)
+    public void TriggerFasciaReady(bool mode)
     {
         if (mode)
         {
@@ -182,6 +183,11 @@ public class CharacterSelectionMenu : MonoBehaviour
         if (ID == ePlayerID.Player1)
         {
             Debug.Log("Selection Over");
+
+            foreach (CursorBehaviour cursor in activeCursors)
+            {
+                cursor.GetInputHandler().SetStartingCharacter(cursor.GetCharacter());
+            }
 
             GameManager.Instance.LoadScene("TutorialScene");
         }

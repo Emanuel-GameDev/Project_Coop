@@ -50,13 +50,13 @@ public class InteractionNotificationHandler : MonoBehaviour
 
     public void ActivateNotification(IInteracter interacter, LocalizedString localizedString, IInteractable interactable)
     {
-        InteractionNotification interaction;
+        InteractionNotification interaction = null;
 
         if (notifications.ContainsKey(interactable))
         {
             interaction = notifications[interactable];
         }
-        else
+        else if(notificationPrefab != null && notificationParent != null)
         {
             GameObject newNotification = Instantiate(notificationPrefab, notificationParent);
             newNotification.SetActive(true);
@@ -68,7 +68,8 @@ public class InteractionNotificationHandler : MonoBehaviour
             notifications.Add(interactable, interaction);
         }
 
-        interaction.AddToCount();
+        if(interaction != null)
+            interaction.AddToCount();
 
     }
 

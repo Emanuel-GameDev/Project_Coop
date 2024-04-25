@@ -33,6 +33,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     [SerializeField, Tooltip("finestra di tempo nella quale appena viene colpito pu� parare per fare parata perfetta")]
     float perfectBlockTimeWindow = 0.4f;
 
+
     public enum blockZone
     {
         none,
@@ -75,6 +76,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private bool chargedAttack => upgradeStatus[AbilityUpgrade.Ability5];
 
 
+    private PerfectTimingHandler perfectTimingHandler;
+    private bool perfectTimingEnabled;
     private bool hyperArmorOn;
     private bool isAttacking = false;
     private bool bossfightUpgradeUnlocked;
@@ -83,6 +86,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private bool chargedAttackReady;
     private bool canMove = true;
     private bool isBlocking;
+    private bool isPerfectBlock;
     private bool canCancelAttack;
     private bool canPerfectBlock;
     private bool uniqueAbilityReady = true;
@@ -334,6 +338,12 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             if(isBlocking != true)
             {
                 isBlocking = true;
+
+                if (perfectTimingEnabled)
+                {
+                    isPerfectBlock = true;
+                }
+
                 currentBlockZone = SetBlockZone(lastNonZeroDirection.y);
                 animator.SetTrigger("StartBlock");
 
@@ -343,13 +353,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             
             //Rotate pivor Trigger per proteggere player
             pivotTriggerProtected.enabled = true;
-            pivotTriggerProtected.Rotate(lastNonZeroDirection);
-            
-
+            pivotTriggerProtected.Rotate(lastNonZeroDirection);           
             //Trigger che setta ai player protectedByTank a true;
             triggerProtectPlayer.SetPlayersProtected(true);
-
-
             //eliminare
             mostraGizmoRangeParata = true;
 
@@ -358,25 +364,20 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         else if (context.canceled && isBlocking == true)
         {
             SetCanMove(true, rb);
-            if (isBlocking != false)
-            {
-                
+            
                 isBlocking = false;
                 currentBlockZone = blockZone.none;
                 StartCoroutine(nameof(ToggleBlock));               
                 animator.SetTrigger("ToggleBlock");
-            }
-            isBlocking = false;
+            
+           
             ShowStaminaBar(false);
             
 
             //Da mettere reset in animazione alzata scudo
             ResetStamina();
-
             //Trigger che setta ai player protectedByTank a true;
             triggerProtectPlayer.SetPlayersProtected(false);
-
-
             //eliminare
             mostraGizmoRangeParata = false;
         }
@@ -474,8 +475,68 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     #region onHit
 
+    public void SetPerfectTimingHandler(PerfectTimingHandler handler) => perfectTimingHandler = handler;
+
+    public void PerfectTimeStarted()
+    {
+        if (!isBlocking)
+        {
+            perfectTimingHandler.ActivateAlert();
+            perfectTimingEnabled = true;
+        }
+
+        StartCoroutine(DisablePerfectTimeAfter(perfectBlockTimeWindow));
+    }
+
+    public void PerfectTimeEnded()
+    {
+        perfectTimingHandler.DeactivateAlert();
+        perfectTimingEnabled = false;
+        isPerfectBlock = false;
+        Utility.DebugTrace("Perfect Time Ended");
+    }
+
+    protected IEnumerator DisablePerfectTimeAfter(float time)
+    {
+        yield return new WaitForSeconds(time);
+        if (perfectTimingEnabled)
+            PerfectTimeEnded();
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        animator.SetTrigger("Death");
+    }
+
+    public override void Ress()
+    {
+        base.Ress();
+        animator.SetTrigger("Ress");
+    }
     public override void TakeDamage(DamageData data)
     {
+        if(isPerfectBlock)
+        {
+            AttackInBlockAngle(data);
+                   
+                perfectBlockCount++;
+                if (perfectBlockCount >= attacksToBlockForUpgrade)
+                {
+                    //Sblocco parry che fa danno
+                    UnlockUpgrade(AbilityUpgrade.Ability4);
+                }
+
+                Debug.Log("parata perfetta eseguita, rimanenti per potenziamento boss = " + (attacksToBlockForUpgrade - perfectBlockCount));
+                PubSub.Instance.Notify(EMessageType.perfectGuardExecuted, this);
+
+
+                data.dealer.OnParryNotify(this);
+                if (damageOnParry && data.dealer != null && data.dealer is IDamageable)
+                {
+                    ((IDamageable)data.dealer).TakeDamage(new DamageData(perfectBlockDamage, this));
+                }
+            }
 
         if (hyperArmorOn == false && !isBlocking)
         {
@@ -517,10 +578,14 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                
             }
         }
-
         else
+        {         
+            //StartCoroutine(StartPerfectBlockTimer(data));
+            base.TakeDamage(data);
+        }
+        if(perfectTimingEnabled)
         {
-            StartCoroutine(StartPerfectBlockTimer(data));
+            PerfectTimeEnded();
         }
     }
 
@@ -748,19 +813,5 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     }
 
 
-
-    public void SetPerfectTimingHandler(PerfectTimingHandler handler)
-    {
-       
-    }
-
-    public void PerfectTimeStarted()
-    {
-        
-    }
-
-    public void PerfectTimeEnded()
-    {
-        
-    }
+   
 }

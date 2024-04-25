@@ -54,6 +54,8 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     [Header("Other")]
     [SerializeField, Tooltip("I Layer da guardare quando ha sbloccato il power up per deflettere i proiettili")]
     LayerMask projectileLayer;
+    [Header("VFX")]
+    [SerializeField] TrailRenderer trailDodgeVFX;
     [SerializeField, Tooltip("Gli eventi da chiamare in caso di schivata perfetta")]
     UnityEvent onPerfectDodgeExecuted = new();
     private float ExtraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
@@ -272,13 +274,13 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     private void AdjustLastAttackTime()
     {
-        float comboCompletionValue = (float)currentComboState / (float)comboStateMax;
-        float reductionFactor = (1 - comboCompletionValue) * timeBetweenCombo;
+        //float comboCompletionValue = (float)currentComboState / (float)comboStateMax;
+        //float reductionFactor = (1 - comboCompletionValue) * timeBetweenCombo;
         lastAttackTime = Time.time; // - reductionFactor;
     }
 
     private bool CanStartCombo() => (unlimitedComboUnlocked || (canMove && Time.time > lastAttackTime + timeBetweenCombo && currentAttackComboState == AttackComboState.NotAttaking)); // && currentComboState != 1;
-    private bool CanContinueCombo() => nextComboState != 0;
+    //private bool CanContinueCombo() => nextComboState != 0;
     private void ResetAttack()
     {
         IsAttacking = false;
@@ -296,7 +298,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     public override void DefenseInput(InputAction.CallbackContext context)
     {
         //CONTROLLARE
-        base.DefenseInput(context);
         if (context.performed)
         {
             Utility.DebugTrace($"Executed: {Time.time > lastDodgeTime + dodgeCooldown} ");
@@ -311,6 +312,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
                     lastPerfectDodgeTime = Time.time;
                     PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
                     PerfectTimeEnded();
+                    onPerfectDodgeExecuted?.Invoke();
                     Utility.DebugTrace($"PerfectDodge: {true}, Count: {perfectDodgeCounter}");
                 }
 
@@ -325,10 +327,12 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         animator.SetTrigger(DODGESTART);
         PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
         onDash?.Invoke();
+        trailDodgeVFX.gameObject.SetActive(true);
         yield return StartCoroutine(Move(dodgeDirection, rb, dodgeDuration, dodgeDistance));
 
         isDodging = false;
         animator.SetTrigger(DODGEEND);
+        trailDodgeVFX.gameObject.SetActive(false);
     }
 
     private IEnumerator Move(Vector2 direction, Rigidbody2D rb, float duration, float distance)

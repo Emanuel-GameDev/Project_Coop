@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
@@ -43,6 +44,9 @@ public class PlayerCharacterPoolManager : MonoBehaviour
 
     }
 
+    private int deadPlayers = 0;
+
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -77,18 +81,14 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         PlayerCharacter searchedCharacter = freeCharacters.Find(c => c.Character == targetCharacter);
         if (searchedCharacter != null)
         {
-            
             playerCharacter.characterController.SetPlayerCharacter(searchedCharacter);
             playerCharacter.characterController = null;
             ActivateCharacter(searchedCharacter, playerCharacter.transform);
             PubSub.Instance.Notify(EMessageType.characterSwitched, searchedCharacter);
 
-            
             ReturnCharacter(playerCharacter);
+
             TargetManager.Instance.ChangeTarget(playerCharacter, searchedCharacter);
-
-
-
         }
     }
 
@@ -122,13 +122,18 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     }
 
     //DA RIVEDERE #MODIFICATO
-    public PlayerCharacter GetFreeRandomCharacter()
+    public ePlayerCharacter GetFreeRandomCharacter()
     {
-        PlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)];
-        if(searchedCharacter == null) return null;
-
-        ActivateCharacter(searchedCharacter, SpawnPosManager.Instance.GetFreePos().spawnPos);
+        ePlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)].Character;
+        
         return searchedCharacter;
+
+
+        //PlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)];
+        //if(searchedCharacter == null) return null;
+
+        //ActivateCharacter(searchedCharacter, SpawnPositionManager.Instance.GetFreePos().spawnPos); //transform.position); 
+        //return searchedCharacter;
     }
 
     public PlayerCharacter GetCharacter(ePlayerCharacter targetCharacter, Transform position)
@@ -148,5 +153,28 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     }
 
     #endregion
+
+    #region PlayerDeadManager
+
+    public void PlayerIsDead()
+    {
+        deadPlayers++;
+        if(deadPlayers >= activeCharacters.Count)
+        {
+            deadPlayers = 0;
+            GameManager.Instance.LoadScene(SceneManager.GetActiveScene().name);
+        }
+            
+    }
+
+    public void PlayerIsRessed()
+    {
+        deadPlayers--;
+        if (deadPlayers <= 0)
+            deadPlayers = 0;
+    }
+
+    #endregion
+
 
 }
