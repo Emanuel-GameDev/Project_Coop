@@ -22,6 +22,6 @@ public class EnemyTargetDetection : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position, new Vector3(transform.localScale.x, transform.localScale.y, 0));
+        Gizmos.DrawWireSphere(transform.position, transform.localScale.x);
     }
 }
