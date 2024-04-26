@@ -29,6 +29,8 @@ public class ReadyButton : MonoBehaviour
     private void Start()
     {
         Inizialize();
+        if(multiplayerConfirmationHandler != null)
+            SetReady(false);
         ChangeToNotReady();
     }
 
