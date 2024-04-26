@@ -453,7 +453,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     public override void TakeDamage(DamageData data)
     {
-        if (!isInvulnerable || !isDodging)
+        if (!isInvulnerable && !isDodging)
         {
             base.TakeDamage(data);
             //if (!isDashingAttack)
