@@ -207,7 +207,7 @@ public class Ranged : PlayerCharacter
         {
             currentHp = 0;
 
-            animator.SetBool("isDeath", true);
+            animator.SetTrigger("Death");
         }
     }
 
@@ -578,6 +578,13 @@ public class Ranged : PlayerCharacter
         ShootDirection=(rangedCrossair.transform.position- shootingPoint.transform.position).normalized;
 
 
+    }
+
+    //aggiungi death override
+
+    public override void Ress()
+    {
+        animator.SetTrigger("Ress");
     }
 
 
