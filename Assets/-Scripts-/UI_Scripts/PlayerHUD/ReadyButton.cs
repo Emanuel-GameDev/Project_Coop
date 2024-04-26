@@ -28,7 +28,7 @@ public class ReadyButton : MonoBehaviour
 
     private void Start()
     {
-        if(!buttonImage)
+        if(buttonImage == null)
             buttonImage = GetComponent<Image>();
         localizeStringEvent = GetComponentInChildren<LocalizeStringEvent>();
         ChangeToNotReady();
@@ -57,12 +57,18 @@ public class ReadyButton : MonoBehaviour
 
     private void ChangeToNotReady()
     {
+        if(buttonImage == null)
+            buttonImage = GetComponent<Image>();
+        
         buttonImage.color = NotReadyColor;
         localizeStringEvent.StringReference = pressToReadyTextAsset;
     }
 
     private void ChangeToReady()
     {
+        if (buttonImage == null)
+            buttonImage = GetComponent<Image>();
+
         buttonImage.color = ReadyColor;
         localizeStringEvent.StringReference = readyTextAsset;
     }

@@ -16,7 +16,7 @@ public class LabirintEnemy : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
-    private static int debugCountMax = 50;
+    private readonly int debugCountMax = 50;
     private int debugCount = 0;
 
     private Transform target;
