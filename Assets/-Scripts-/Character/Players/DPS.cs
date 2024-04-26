@@ -75,7 +75,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private float lastUniqueAbilityUseTime;
     private float lastPerfectDodgeTime;
     private float lastDashAttackTime;
-    private float lastHitTime;
+    private float lastLandedHitTime;
     private float perfectDodgeCounter = 0;
     private float dashAttackStartTime;
     private float dashAttackDamageMultiplier;
@@ -539,11 +539,11 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (isInBossfight && bossfightPowerUpUnlocked)
         {
-            if (Time.time > lastHitTime + bossPowerUpExtraDamageDuration)
+            if (Time.time > lastLandedHitTime + bossPowerUpExtraDamageDuration)
                 consecutiveHitsCount = 0;
 
             consecutiveHitsCount++;
-            lastHitTime = Time.time;
+            lastLandedHitTime = Time.time;
         }
     }
 
