@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &908217978448723849
 Transform:
   m_ObjectHideFlags: 0
@@ -145,9 +145,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.9853058}
+  m_Offset: {x: 0, y: 0.35557556}
   serializedVersion: 2
-  m_Radius: 37.671295
+  m_Radius: 38.301025
 --- !u!114 &101089604340345966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,7 +192,7 @@ Transform:
   m_GameObject: {fileID: 5047301388580239896}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.37, y: 0.87, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -227,7 +227,7 @@ Transform:
   m_GameObject: {fileID: 5532104535381631862}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.2, y: -0.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -284,9 +284,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.27184868, y: 0.7866273}
+  m_Offset: {x: 0.16090548, y: 0.18205082}
   serializedVersion: 2
-  m_Radius: 0.78341746
+  m_Radius: 0.86181617
 --- !u!1 &6149537241379566375
 GameObject:
   m_ObjectHideFlags: 0
@@ -506,9 +506,9 @@ MonoBehaviour:
   currentHp: 0
   groundLevel: {fileID: 5835196381590320555}
   viewRange: 28.77
-  attackRange: 2.5
+  attackRange: 1.14
   attackDelay: 2
-  despawnTime: 1
+  despawnTime: 0.5
   enemyType: 0
   escapeRange: 0
   numberOfConsecutiveShoot: 0
