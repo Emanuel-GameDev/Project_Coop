@@ -93,7 +93,7 @@ public class LabirintEnemy : MonoBehaviour
                 finalDestination = hit.position;
             }
 
-            if (Vector2.Distance(transform.position, Target.position) > MaxFollowDistance)
+            if (Vector2.Distance(transform.position, Target.position) > MaxFollowDistance  || !Target.gameObject.activeInHierarchy)
             {
                 Target = null;
                 SetRandomDestination();
