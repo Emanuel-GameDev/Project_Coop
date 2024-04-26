@@ -35,30 +35,6 @@ public class PressInteractable : MonoBehaviour, IInteractable
         InteractionNotificationHandler.Instance.ActivateNotification(interacter, localizedString, this);
     }
 
-    public void Interact(IInteracter interacter)
-    {
-        if (!interacters.Contains(interacter))
-        {
-            interacters.Add(interacter);
-
-            OnOnePlayerInteract?.Invoke(interacter);
-        }
-
-        if (interacters.Count >= CoopManager.Instance.GetActiveHandlers().Count)
-        {
-            OnAllPlayersInteract?.Invoke();
-
-            if (interacterVisualization != null)
-                interacterVisualization.SetActive(false);
-        }
-
-        if(showNotification)
-            NotifyInteraction(interacter);
-
-        if (disableInteracterActions)
-            interacter.DisableOtherActions();
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.TryGetComponent<IInteracter>(out var interacter))
@@ -87,6 +63,30 @@ public class PressInteractable : MonoBehaviour, IInteractable
             }
 
         }
+    }
+
+    public void Interact(IInteracter interacter)
+    {
+        if (!interacters.Contains(interacter))
+        {
+            interacters.Add(interacter);
+
+            OnOnePlayerInteract?.Invoke(interacter);
+        }
+
+        if (interacters.Count >= CoopManager.Instance.GetActiveHandlers().Count)
+        {
+            OnAllPlayersInteract?.Invoke();
+
+            if (interacterVisualization != null)
+                interacterVisualization.SetActive(false);
+        }
+
+        if (showNotification)
+            NotifyInteraction(interacter);
+
+        if (disableInteracterActions)
+            interacter.DisableOtherActions();
     }
 
     public void CancelInteraction(IInteracter interacter)
