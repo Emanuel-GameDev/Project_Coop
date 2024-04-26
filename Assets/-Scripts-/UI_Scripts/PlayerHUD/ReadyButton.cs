@@ -21,6 +21,8 @@ public class ReadyButton : MonoBehaviour
     [SerializeField]
     Image buttonImage;
     LocalizeStringEvent localizeStringEvent;
+
+    private bool inizialized = false;
     
     public PlayerInputHandler player { get; private set; }
 
@@ -40,6 +42,7 @@ public class ReadyButton : MonoBehaviour
             buttonImage = GetComponent<Image>();
         if (localizeStringEvent == null)
             localizeStringEvent = GetComponentInChildren<LocalizeStringEvent>();
+        inizialized = true;
     }
 
     public void SetReady()
@@ -50,6 +53,9 @@ public class ReadyButton : MonoBehaviour
 
     public void SetReady(bool ready)
     {
+        if (!inizialized)
+            return;
+        
         if (ready == this.ready)
             return;
 
@@ -65,14 +71,12 @@ public class ReadyButton : MonoBehaviour
 
     private void ChangeToNotReady()
     {
-        Inizialize();
         buttonImage.color = NotReadyColor;
         localizeStringEvent.StringReference = pressToReadyTextAsset;
     }
 
     private void ChangeToReady()
     {
-        Inizialize();
         buttonImage.color = ReadyColor;
         localizeStringEvent.StringReference = readyTextAsset;
     }
