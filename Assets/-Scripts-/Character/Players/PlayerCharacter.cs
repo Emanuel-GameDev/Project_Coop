@@ -255,6 +255,8 @@ public abstract class PlayerCharacter : Character
                 onDeath?.Invoke();
                 Die();
             }
+
+            lastHitTime = Time.time;
         }
     }
 
