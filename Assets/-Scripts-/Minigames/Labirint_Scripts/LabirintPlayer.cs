@@ -27,7 +27,6 @@ public class LabirintPlayer : InputReceiver
     void Start()
     {
         InitialSetup();
-        Debug.Log("LabirintPlayer: Start");
     }
 
     private void InitialSetup()
@@ -42,7 +41,7 @@ public class LabirintPlayer : InputReceiver
         previousPosition = grid.WorldToCell(transform.position);
     }
 
-    void FixedUpdate()
+    void Update()
     {
         Move();
         ManageAnimation();
@@ -244,6 +243,9 @@ public class LabirintPlayer : InputReceiver
     public override void MoveMinigameInput(InputAction.CallbackContext context)
     {
         moveDir = context.ReadValue<Vector2>();
+        moveDir.Normalize();
+        moveDir.x = MathF.Abs(moveDir.x) > directionTreshold ? moveDir.x : 0;
+        moveDir.y = MathF.Abs(moveDir.y) > directionTreshold ? moveDir.y : 0;
     }
 
     public override void MenuInput(InputAction.CallbackContext context)
