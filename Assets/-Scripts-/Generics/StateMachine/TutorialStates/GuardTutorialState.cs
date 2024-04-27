@@ -51,7 +51,12 @@ public class GuardTutorialState : TutorialFase
         // DA RIVEDERE #MODIFICATO
         tutorialManager.inputBindings[tutorialManager.tank].SetPlayerCharacter(tutorialManager.tank);
         tutorialManager.DeactivateAllPlayerInputs();
-        tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+        {
+            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        }
+
         tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
         tutorialManager.ActivateEnemyAI();
@@ -79,7 +84,12 @@ public class GuardTutorialState : TutorialFase
             tutorialManager.PlayDialogue(faseData.tankPerfectGuardDialogue);
 
             tutorialManager.objectiveText.text = faseData.faseObjectivePerfect.GetLocalizedString();
-            tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+
+            foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+            {
+                ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+            }
+
             tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
 
             tutorialManager.DeactivateEnemyAI();
@@ -99,7 +109,11 @@ public class GuardTutorialState : TutorialFase
         {
             tutorialManager.DeactivateAllPlayerInputs();
 
-            tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+            {
+                ih.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            }
+
             tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
             tutorialManager.DeactivateEnemyAI();
 
