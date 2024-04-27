@@ -57,7 +57,12 @@ public class HealTutorialState : TutorialFase
 
         tutorialManager.DeactivateAllPlayerInputs();
 
-        tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+        {
+            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        }
+
         tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
         dialoguePlaying = false;

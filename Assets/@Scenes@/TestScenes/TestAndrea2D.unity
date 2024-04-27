@@ -1752,8 +1752,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76dd56251dde7ea419d51e0bfb729de1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entranceReferencePoint: {fileID: 1215209162}
-  posData: []
+  defaultEntrance: {fileID: 0}
+  spawnPositions: []
 --- !u!1 &1237708759
 GameObject:
   m_ObjectHideFlags: 0
@@ -2162,7 +2162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ComponentVersion: 1
-  m_LightType: 3
+  m_LightType: 4
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3946,6 +3946,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7549865782565343502, guid: 5dc6b5cd9ad023e488d4e7d8e0b8bb99,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

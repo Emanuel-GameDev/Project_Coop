@@ -74,6 +74,10 @@ public class Healer : PlayerCharacter
     [Tooltip("Rallentamento durante l'abilità del boss")]
     [SerializeField] float bossAbilitySlowdown;
 
+    [Header("Audio")]
+    [SerializeField] AudioClip attackSound;
+    [SerializeField] AudioClip bombSound;
+
     //CapsuleCollider2D smallHealAreaCollider;
 
     List<PlayerCharacter> playerInArea;
@@ -144,6 +148,15 @@ public class Healer : PlayerCharacter
         }
 
 
+    }
+    public void PlayAttackSound()
+    {
+        AudioManager.Instance.PlayAudioClip(attackSound, transform, 0.5f);
+    }
+
+    public void PlayBombSound()
+    {
+        AudioManager.Instance.PlayAudioClip(bombSound, transform, 0.5f);
     }
 
     public void DeactivateInput()

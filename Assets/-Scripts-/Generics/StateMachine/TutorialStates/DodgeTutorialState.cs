@@ -113,7 +113,11 @@ public class DodgeTutorialState : TutorialFase
             else if(currentFaseCharacters[currentCharacterIndex] is Ranged)
                 tutorialManager.PlayDialogue(faseData.rangedPerfectDodgeDialogue);
 
-            tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+            {
+                ih.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            }
+
             tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
 
             tutorialManager.DeactivateEnemyAI();
@@ -138,7 +142,12 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetPlayerCharacter(currentFaseCharacters[currentCharacterIndex]);
 
         tutorialManager.DeactivateAllPlayerInputs();
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+        {
+            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        }
+
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
@@ -162,7 +171,12 @@ public class DodgeTutorialState : TutorialFase
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         tutorialManager.DeactivateAllPlayerInputs();
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+        {
+            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        }
+
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
 
@@ -185,7 +199,12 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded -= StartSubFase;
 
         tutorialManager.DeactivateAllPlayerInputs();
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+        {
+            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        }
+
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
         tutorialManager.ActivateEnemyAI();

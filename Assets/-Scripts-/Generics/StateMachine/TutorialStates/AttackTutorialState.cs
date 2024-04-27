@@ -83,7 +83,10 @@ public class AttackTutorialState : TutorialFase
         tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
 
         tutorialManager.DeactivateAllPlayerInputs();
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+        {
+            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        }
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
 
 
@@ -132,7 +135,11 @@ public class AttackTutorialState : TutorialFase
             hitCount = 0;
             tutorialManager.tutorialEnemy.OnHitAction -= EnemyHitted;
 
-            tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+            {
+                ih.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            }
+
             tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Attack").Disable();
 
             if (currentCharacterIndex < currentFaseCharacters.Length-1)
