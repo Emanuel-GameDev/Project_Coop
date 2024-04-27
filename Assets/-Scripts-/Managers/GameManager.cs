@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -79,12 +78,50 @@ public class GameManager : MonoBehaviour
             Debug.LogError("No player character datas found");
         }
 
-        if(loadScreen != null)
+        if (loadScreen != null)
         {
             loadScreen = Instantiate(loadScreen);
             DontDestroyOnLoad(loadScreen);
         }
-            
+
+        PlayerPrefsSettigsCheck();
+
+    }
+
+    private void PlayerPrefsSettigsCheck()
+    {
+        if (PlayerPrefs.HasKey(PlayerPrefsSettings.Languge.ToString()))
+        {
+            ChangeLanguage(PlayerPrefs.GetString(PlayerPrefsSettings.Languge.ToString()));
+        }
+        else
+        {
+            ChangeLanguage("en");
+            //StartSelectLanguageScreen();
+        }
+
+        if (PlayerPrefs.HasKey(PlayerPrefsSettings.MasterVolume.ToString()))
+        {
+            AudioManager.Instance.SetMasterVolume(PlayerPrefs.GetFloat(PlayerPrefsSettings.MasterVolume.ToString()));
+        }
+
+        if (PlayerPrefs.HasKey(PlayerPrefsSettings.MusicVolume.ToString()))
+        {
+            AudioManager.Instance.SetMusicVolume(PlayerPrefs.GetFloat(PlayerPrefsSettings.MusicVolume.ToString()));
+        }
+
+        if (PlayerPrefs.HasKey(PlayerPrefsSettings.SFXVolume.ToString()))
+        {
+            AudioManager.Instance.SetSoundFXVolume(PlayerPrefs.GetFloat(PlayerPrefsSettings.SFXVolume.ToString()));
+        }
+
+        if (!PlayerPrefs.HasKey(PlayerPrefsSettings.FirstStart.ToString()))
+        {
+            SaveManager.SavePlayerPref(PlayerPrefsSettings.FirstStart, true);
+
+            //DoSomenthigs
+        }
+
     }
 
     public void PauseGame()
@@ -135,7 +172,7 @@ public class GameManager : MonoBehaviour
 
     public bool IsSceneLoaded()
     {
-        if(sceneLoadOperation == null)
+        if (sceneLoadOperation == null)
             return false;
 
         return sceneLoadOperation.progress >= 0.9f;
@@ -168,7 +205,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => IsSceneLoaded());
         ActivateScene();
         Debug.Log($"End Load Time: {Time.time}");
-        if(Time.time - loadTime < fakeLoadSceenTime)
+        if (Time.time - loadTime < fakeLoadSceenTime)
             yield return new WaitForSeconds(fakeLoadSceenTime - (Time.time - loadTime));
         loadScreen.SetActive(false);
         CoopManager.Instance.EnableAllInput();
