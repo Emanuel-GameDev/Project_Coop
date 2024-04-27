@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class TutorialEnemy : BasicMeleeEnemy
 {
-    [HideInInspector] public event Action OnHit;
+    [HideInInspector] public event Action OnHitAction;
     [SerializeField] float invincibilitySeconds = 0.2f;
     [HideInInspector] public bool focus = false;
     bool invincible=false;
@@ -34,7 +34,7 @@ public class TutorialEnemy : BasicMeleeEnemy
         {
             base.TakeDamage(data);
             //stateMachine.SetState(stunState);
-            OnHit?.Invoke();
+            OnHitAction?.Invoke();
             StartCoroutine(Invincibility());
 
         }

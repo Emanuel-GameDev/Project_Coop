@@ -87,7 +87,7 @@ public class AttackTutorialState : TutorialFase
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
 
 
-        tutorialManager.tutorialEnemy.OnHit += EnemyHitted;
+        tutorialManager.tutorialEnemy.OnHitAction += EnemyHitted;
 
 
     }
@@ -130,7 +130,7 @@ public class AttackTutorialState : TutorialFase
         if (hitCount >= 3)
         {
             hitCount = 0;
-            tutorialManager.tutorialEnemy.OnHit -= EnemyHitted;
+            tutorialManager.tutorialEnemy.OnHitAction -= EnemyHitted;
 
             tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
             tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Attack").Disable();
