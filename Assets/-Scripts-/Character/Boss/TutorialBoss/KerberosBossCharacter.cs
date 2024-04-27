@@ -65,10 +65,7 @@ public class KerberosBossCharacter : BossCharacter
 
 
 
-    public void PALLE(Collider2D other)
-    {
-        Debug.Log(other.name);
-    }
+    
     #region Crash
     public void SetCrashDirectDamageData()
     {
@@ -191,7 +188,7 @@ public class KerberosBossCharacter : BossCharacter
     {
         previewStarted = false;
         canShowPreview = true;
-        Debug.Log("inizio preview");
+        
     }
     public void SetCanRotateInAnim(int value)
     {

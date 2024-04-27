@@ -31,7 +31,7 @@ namespace MBTExample
             tempTimer = 0;
             playerFound.Value = false;
             bossCharacter.anim.SetTrigger("Move");
-            Debug.Log("si muove");
+           
             bossCharacter.anim.ResetTrigger("Return");
         }
 
