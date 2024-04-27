@@ -73,10 +73,15 @@ public class EnemyCharacter : Character
 
     public virtual void Death()
     {
-        isDead = true;
-        OnDeath?.Invoke();
-        animator.SetTrigger("isDead");
-        TargetManager.Instance.RemoveEnemy(this);
+        if (!isDead)
+        {
+
+
+            isDead = true;
+            OnDeath?.Invoke();
+            animator.SetTrigger("isDead");
+            TargetManager.Instance.RemoveEnemy(this);
+        }
     }
 
     public virtual void TargetSelection()

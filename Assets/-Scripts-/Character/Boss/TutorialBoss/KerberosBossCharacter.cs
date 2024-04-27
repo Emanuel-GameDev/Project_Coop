@@ -44,6 +44,8 @@ public class KerberosBossCharacter : BossCharacter
     public float crashWaveDamage;
     public float crashWaveStaminaDamage;
     public float crashTimer;
+    public float crashPushForce = 2;
+    public float crashPushDuration = 1;
     public GameObject crashwaveObject;
     public Transform crashwaveTransform;
     
@@ -67,6 +69,7 @@ public class KerberosBossCharacter : BossCharacter
 
     
     #region Crash
+    public void CrashPushPlayers() { }
     public void SetCrashDirectDamageData()
     {
         staminaDamage = crashDirectStaminaDamage;
@@ -86,9 +89,10 @@ public class KerberosBossCharacter : BossCharacter
         {
             GameObject instantiatedWave = Instantiate(crashwaveObject, crashwaveTransform.position, Quaternion.identity, transform);
             instantiatedWave.GetComponentInChildren<CrashWave>().SetVariables(crashWaveDamage, crashWaveStaminaDamage, this);
-
+            //instantiatedWave.GetComponentInChildren<Damager>().AssignFunctionToOnTrigger();
         }
     }
+    
     #endregion
     #region flurryOfBlows
     public void SetFlurryOfBlowsDamageData(int attackNumber)
@@ -113,6 +117,7 @@ public class KerberosBossCharacter : BossCharacter
     }
     #endregion
 
+   
     private void Update()
     {
         
@@ -137,6 +142,7 @@ public class KerberosBossCharacter : BossCharacter
         staminaDamage = chargeStaminaDamage;
         damage = chargeDamage;
         attackCondition = null;
+        
 
     }
 
@@ -192,8 +198,6 @@ public class KerberosBossCharacter : BossCharacter
     public void SetCanRotateInAnim(int value)
     {
        
-        
-
         if (value == 0)
         {
             canRotateInAnim = false;
@@ -219,7 +223,6 @@ public class KerberosBossCharacter : BossCharacter
         gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("parried").Value = false;
         anim.SetTrigger("Return");
     }
-
     public override void Death()
     {
         base.Death();
