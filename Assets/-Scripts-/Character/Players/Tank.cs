@@ -111,6 +111,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private PerfectTimingHandler perfectBlockHandler;
     private ProtectPlayers triggerProtectPlayer;
     private PivotTriggerProtected pivotTriggerProtected;
+    private DamageData perfectBlockData;
    
 
 
@@ -340,8 +341,24 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                 isBlocking = true;
 
                 if (perfectTimingEnabled)
-                {
-                    isPerfectBlock = true;
+                {                   
+                    perfectBlockCount++;
+                    if (perfectBlockCount >= attacksToBlockForUpgrade)
+                    {
+                        //Sblocco parry che fa danno
+                        UnlockUpgrade(AbilityUpgrade.Ability4);
+                    }
+
+                    Debug.Log("parata perfetta eseguita, rimanenti per potenziamento boss = " + (attacksToBlockForUpgrade - perfectBlockCount));
+                    PubSub.Instance.Notify(EMessageType.perfectGuardExecuted, this);
+
+
+                    perfectBlockData.dealer.OnParryNotify(this);
+
+                    if (damageOnParry && perfectBlockData.dealer != null && perfectBlockData.dealer is IDamageable)
+                    {
+                        ((IDamageable)perfectBlockData.dealer).TakeDamage(new DamageData(perfectBlockDamage, this));
+                    }
                 }
 
                 currentBlockZone = SetBlockZone(lastNonZeroDirection.y);
@@ -428,48 +445,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         staminaBar.gameObject.SetActive(toShow);
     }
-    private IEnumerator StartPerfectBlockTimer(DamageData data)
-    {
-        canPerfectBlock = true;
-        perfectBlockHandler.gameObject.SetActive(true);
-        Character dealerMB = null;
-        if (data.dealer is Character)
-            dealerMB = (Character)data.dealer;
-
-
-        yield return new WaitForSeconds(perfectBlockTimeWindow);
-
-        //parata perfetta
-        if (isBlocking && AttackInBlockAngle(data))
-        {
-            perfectBlockCount++;
-            if (perfectBlockCount >= attacksToBlockForUpgrade)
-            {
-                //Sblocco parry che fa danno
-                UnlockUpgrade(AbilityUpgrade.Ability4);
-            }
-
-            Debug.Log("parata perfetta eseguita, rimanenti per potenziamento boss = " + (attacksToBlockForUpgrade - perfectBlockCount));
-            PubSub.Instance.Notify(EMessageType.perfectGuardExecuted, this);
-
-
-            data.dealer.OnParryNotify(this);           
-            if (damageOnParry && dealerMB != null)
-            {
-                dealerMB.TakeDamage(new DamageData(perfectBlockDamage, this));
-            }
-        }
-
-        else
-        {
-            base.TakeDamage(data);
-            Debug.Log($" Tank  hp : {currentHp}  stamina: {currentStamina}");
-        }
-        canPerfectBlock = false;
-        perfectBlockHandler.gameObject.SetActive(false);
-
-
-    }
+    
 
     #endregion
 
@@ -477,12 +453,14 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public void SetPerfectTimingHandler(PerfectTimingHandler handler) => perfectTimingHandler = handler;
 
-    public void PerfectTimeStarted()
+    public void PerfectTimeStarted(DamageData data)
     {
         if (!isBlocking)
         {
             perfectTimingHandler.ActivateAlert();
+            perfectBlockData = data;
             perfectTimingEnabled = true;
+            
         }
 
         StartCoroutine(DisablePerfectTimeAfter(perfectBlockTimeWindow));
@@ -493,6 +471,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         perfectTimingHandler.DeactivateAlert();
         perfectTimingEnabled = false;
         isPerfectBlock = false;
+        perfectBlockData = null;
         Utility.DebugTrace("Perfect Time Ended");
     }
 
@@ -516,28 +495,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     }
     public override void TakeDamage(DamageData data)
     {
-        if(isPerfectBlock)
-        {
-            AttackInBlockAngle(data);
-                   
-                perfectBlockCount++;
-                if (perfectBlockCount >= attacksToBlockForUpgrade)
-                {
-                    //Sblocco parry che fa danno
-                    UnlockUpgrade(AbilityUpgrade.Ability4);
-                }
-
-                Debug.Log("parata perfetta eseguita, rimanenti per potenziamento boss = " + (attacksToBlockForUpgrade - perfectBlockCount));
-                PubSub.Instance.Notify(EMessageType.perfectGuardExecuted, this);
-
-
-                data.dealer.OnParryNotify(this);
-                if (damageOnParry && data.dealer != null && data.dealer is IDamageable)
-                {
-                    ((IDamageable)data.dealer).TakeDamage(new DamageData(perfectBlockDamage, this));
-                }
-            }
-
+       
         if (hyperArmorOn == false && !isBlocking)
         {
             //Hit Reaction

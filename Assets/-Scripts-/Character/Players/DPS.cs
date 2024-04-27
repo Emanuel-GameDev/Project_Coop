@@ -557,7 +557,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     public void SetPerfectTimingHandler(PerfectTimingHandler handler) => perfectTimingHandler = handler;
 
 
-    public void PerfectTimeStarted()
+    public void PerfectTimeStarted(DamageData data)
     {
         if (!isDodging)
         {
