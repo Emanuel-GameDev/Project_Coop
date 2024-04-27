@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 //Unique = tasto nord,Q = Urlo
 //BossUpgrade = tasto est,E = attacco bossFight
+
 public class Tank : PlayerCharacter, IPerfectTimeReceiver
 {
     [Header("Attack")]
@@ -618,12 +619,11 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public override void ExtraAbilityInput(InputAction.CallbackContext context) //Tasto est
     {
         if (context.performed && !isAttacking && !isBlocking)
-        {
-            
-            SetCanMove(false, rb);
-
+        {            
+           
             if (bossfightPowerUpUnlocked && isAttacking == false)
             {
+                SetCanMove(false, rb);
                 damager.SetCondition(Utility.InstantiateCondition<StunCondition>(), true);
                 animator.SetTrigger("extraAbility");
 

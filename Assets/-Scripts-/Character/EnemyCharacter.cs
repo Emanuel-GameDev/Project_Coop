@@ -51,24 +51,32 @@ public class EnemyCharacter : Character
     }
     public override void TakeDamage(DamageData data)
     {
-        currentHp -= data.damage * damageReceivedMultiplier;
-        OnHit?.Invoke();
-        Debug.Log(currentHp);
-
-        //shader
-        SetHitMaterialColor(_OnHitColor);
-
-        if (currentHp <= 0)
+        if (!isDead)
         {
-            isDead = true;
-            OnDeath?.Invoke();
-            animator.SetTrigger("isDead");
-            TargetManager.Instance.RemoveEnemy(this);
 
+            currentHp -= data.damage * damageReceivedMultiplier;
+            OnHit?.Invoke();
+            Debug.Log(currentHp);
 
+            //shader
+            SetHitMaterialColor(_OnHitColor);
+
+            if (currentHp <= 0)
+            {
+                Death();
+
+            }
+            if (data.condition != null)
+                data.condition.AddCondition(this);
         }
-        if (data.condition != null)
-            data.condition.AddCondition(this);
+    }
+
+    public virtual void Death()
+    {
+        isDead = true;
+        OnDeath?.Invoke();
+        animator.SetTrigger("isDead");
+        TargetManager.Instance.RemoveEnemy(this);
     }
 
     public virtual void TargetSelection()
