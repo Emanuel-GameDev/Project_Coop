@@ -103,6 +103,7 @@ public class Ranged : PlayerCharacter
 
     [Header("VFX")]
     [SerializeField] TrailRenderer trailDodgeVFX;
+    [SerializeField] GameObject ChargedVFX;
 
     
 
@@ -556,6 +557,9 @@ public class Ranged : PlayerCharacter
         {
             dodgeTimer -= Time.deltaTime;
         }
+
+        
+        
 
        
     }
