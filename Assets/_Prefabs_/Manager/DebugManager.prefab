@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 5997688371505831904}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.70497066, y: 15.962105, z: -32.59336}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -45,9 +45,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugMode: 0
+  timescale: 1
   targetCharacter: 0
   powerUpToGive_7: {fileID: 0}
   powerUpToGive_8: {fileID: 0}
   powerUpToGive_9: {fileID: 0}
   guardaQuestoTooltipPerLeIstruzioni: 0
   BossGameobject: {fileID: 0}
+  istructions: "DebugMode attiva e disattiva la modalit\xE0 di Debug i comandi successivi
+    funzionano solo se \xE8 abilitata.\nTargetCharacter \xE8 il personaggio a cui
+    verrnno dati gli Ability Upgrade o PowerUp.\nPer dare un Ability Upgrade, selezionare
+    il targetCharacter a cui darlo e premere il tastierino numerico da 1 a 5.\nPer
+    dare un Power Up usare il tastierino numerico 7,8 o 9, verr\xE0 assegnato quello
+    corrispondete al numero."
