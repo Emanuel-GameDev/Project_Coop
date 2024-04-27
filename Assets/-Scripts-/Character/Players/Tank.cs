@@ -78,20 +78,20 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     private PerfectTimingHandler perfectTimingHandler;
     private bool perfectTimingEnabled;
-    private bool hyperArmorOn;
+    private bool hyperArmorOn = false;
     private bool isAttacking = false;
-    private bool bossfightUpgradeUnlocked;
+    private bool bossfightUpgradeUnlocked = false;
     private bool canPressInput;
     private bool pressed;
-    private bool chargedAttackReady;
+    private bool chargedAttackReady = false;
     private bool canMove = true;
-    private bool isBlocking;
-    private bool isPerfectBlock;
-    private bool canCancelAttack;
-    private bool canPerfectBlock;
+    private bool isBlocking = false;
+    private bool isPerfectBlock = false;
+    private bool canCancelAttack = false;
+    private bool canPerfectBlock = false;
     private bool uniqueAbilityReady = true;
-    private bool statBoosted;
-    private bool canProtectOther;
+    private bool statBoosted = false;
+    private bool canProtectOther = false;
     private bool canBlock = true;
     
 
@@ -111,7 +111,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private PerfectTimingHandler perfectBlockHandler;
     private ProtectPlayers triggerProtectPlayer;
     private PivotTriggerProtected pivotTriggerProtected;
-    private DamageData perfectBlockData;
+    private IDamager perfectBlockIDamager;
    
 
 
@@ -353,11 +353,11 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                     PubSub.Instance.Notify(EMessageType.perfectGuardExecuted, this);
 
 
-                    perfectBlockData.dealer.OnParryNotify(this);
+                    perfectBlockIDamager.OnParryNotify(this);
 
-                    if (damageOnParry && perfectBlockData.dealer != null && perfectBlockData.dealer is IDamageable)
+                    if (damageOnParry && perfectBlockIDamager != null && perfectBlockIDamager is IDamageable)
                     {
-                        ((IDamageable)perfectBlockData.dealer).TakeDamage(new DamageData(perfectBlockDamage, this));
+                        ((IDamageable)perfectBlockIDamager).TakeDamage(new DamageData(perfectBlockDamage, this));
                     }
                 }
 
@@ -373,9 +373,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             pivotTriggerProtected.Rotate(lastNonZeroDirection);           
             //Trigger che setta ai player protectedByTank a true;
             triggerProtectPlayer.SetPlayersProtected(true);
-            //eliminare
-            mostraGizmoRangeParata = true;
-
+          
         }
 
         else if (context.canceled && isBlocking == true)
@@ -395,8 +393,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             ResetStamina();
             //Trigger che setta ai player protectedByTank a true;
             triggerProtectPlayer.SetPlayersProtected(false);
-            //eliminare
-            mostraGizmoRangeParata = false;
+           
         }
 
 
@@ -453,12 +450,12 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public void SetPerfectTimingHandler(PerfectTimingHandler handler) => perfectTimingHandler = handler;
 
-    public void PerfectTimeStarted(DamageData data)
+    public void PerfectTimeStarted(IDamager damager)
     {
         if (!isBlocking)
         {
             perfectTimingHandler.ActivateAlert();
-            perfectBlockData = data;
+            perfectBlockIDamager = damager;
             perfectTimingEnabled = true;
             
         }
@@ -471,7 +468,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         perfectTimingHandler.DeactivateAlert();
         perfectTimingEnabled = false;
         isPerfectBlock = false;
-        perfectBlockData = null;
+        perfectBlockIDamager = null;
         Utility.DebugTrace("Perfect Time Ended");
     }
 
@@ -538,7 +535,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
         else
         {         
-            //StartCoroutine(StartPerfectBlockTimer(data));
+          
             base.TakeDamage(data);
         }
         if(perfectTimingEnabled)
@@ -562,10 +559,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         if (context.performed && uniqueAbilityReady)
         {
-            //Da eliminare
-            mostraGizmoAbilitaUnica = true;
-            Invoke(nameof(SetGizmoAbilitaUnica), 1.2f);
-
+           
             uniqueAbilityReady = false;
             Invoke(nameof(StartCooldownUniqueAbility), cooldownUniqueAbility);
             animator.SetTrigger("UniqueAbility");
@@ -671,105 +665,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     }
     #endregion
-
-    //Eliminare
-
-    private bool mostraGizmoAbilitaUnica;
-    private bool mostraGizmoRangeParata;
-    Vector3 dealerPosition;
-
-
-    public void OnDrawGizmos()
-    {
-        if (dealerPosition != Vector3.zero)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, dealerPosition);
-
-        }
-        if (mostraGizmoAbilitaUnica)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(transform.position, aggroRange);
-        }
-
-        if (mostraGizmoRangeParata)
-        {
-            if(currentBlockZone is blockZone.nordEst)
-            {
-                Vector2 temp = transform.position + new Vector3(1,1,0);
-
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(transform.position, temp);
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
-
-            }else if (currentBlockZone is blockZone.sudEst)
-            {
-                Vector2 temp = transform.position + new Vector3(1, -1, 0);
-
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(transform.position, temp);
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
-
-            }
-            else if (currentBlockZone is blockZone.nordOvest)
-            {
-                Vector2 temp = transform.position + new Vector3(-1, 1, 0);
-
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(transform.position, temp);
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
-
-            }
-            else if (currentBlockZone is blockZone.sudOvest)
-            {
-                Vector2 temp = transform.position + new Vector3(-1, -1, 0);
-
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(transform.position, temp);
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
-
-            }
-
-
-        }
-
-    }
-
-    private void SetGizmoAbilitaUnica()
-    {
-        mostraGizmoAbilitaUnica = false;
-    }
-
-
-    void DrawArc(Vector3 center, float radius, float angle, int segments)
-    {
-        Gizmos.color = Color.blue;
-
-    }
-
-
-    Vector3 GetPointOnCircle(float radius, float angle)
-    {
-        float radianAngle = Mathf.Deg2Rad * angle;
-        float x = transform.position.x + radius * Mathf.Cos(radianAngle);
-        float y = transform.position.y + radius * Mathf.Sin(radianAngle);
-
-        return new Vector3(x, y, transform.position.z);
-    }
-
 
    
 }
