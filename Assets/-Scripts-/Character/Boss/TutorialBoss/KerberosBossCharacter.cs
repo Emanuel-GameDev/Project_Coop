@@ -69,7 +69,7 @@ public class KerberosBossCharacter : BossCharacter
 
     
     #region Crash
-    public void CrashPushPlayers() { }
+  
     public void SetCrashDirectDamageData()
     {
         staminaDamage = crashDirectStaminaDamage;
@@ -89,7 +89,7 @@ public class KerberosBossCharacter : BossCharacter
         {
             GameObject instantiatedWave = Instantiate(crashwaveObject, crashwaveTransform.position, Quaternion.identity, transform);
             instantiatedWave.GetComponentInChildren<CrashWave>().SetVariables(crashWaveDamage, crashWaveStaminaDamage, this);
-            //instantiatedWave.GetComponentInChildren<Damager>().AssignFunctionToOnTrigger();
+           
         }
     }
     
