@@ -268,6 +268,7 @@ public abstract class PlayerCharacter : Character
         ressInteracter.gameObject.SetActive(true);
         isDead = true;
         PlayerCharacterPoolManager.Instance.PlayerIsDead();
+        TargetManager.Instance.ChangeTarget(this);
     }
 
     public virtual void Ress()

@@ -44,10 +44,22 @@ public class TargetManager : MonoBehaviour
                 if (enemy.Target.TryGetComponent<PlayerCharacter>(out PlayerCharacter player))
                 {
                     if (player == oldTarget)
-                        enemy.target = newTarget.transform;
+                        enemy.SetTarget(newTarget.transform);
                 }
         }
     }
+
+    public void ChangeTarget(PlayerCharacter diedCharacter)
+    {
+        foreach (EnemyCharacter enemy in enemyInScene)
+        {
+            if (enemy.Target != null && enemy.Target == diedCharacter.transform)
+            {
+                enemy.TargetSelection();
+            }
+        }
+    }
+
 
     private void Awake()
     {

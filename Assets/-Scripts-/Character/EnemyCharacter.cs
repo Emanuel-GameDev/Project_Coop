@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.TextCore.Text;
 
 public class EnemyCharacter : Character
 {
@@ -21,7 +19,7 @@ public class EnemyCharacter : Character
     protected NavMeshAgent agent;
     protected PowerUpData powerUpData;
     public Transform target;
-    
+
 
     public virtual float MaxHp => maxHp + powerUpData.MaxHpIncrease;
     public float MoveSpeed => moveSpeed;
@@ -32,7 +30,7 @@ public class EnemyCharacter : Character
 
     [HideInInspector]
     public float currentHp;
-    
+
     protected override void InitialSetup()
     {
         base.InitialSetup();
@@ -73,20 +71,30 @@ public class EnemyCharacter : Character
             data.condition.AddCondition(this);
     }
 
-    public virtual void TargetSelection() 
+    public virtual void TargetSelection()
     {
         List<PlayerCharacter> activePlayers = PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
 
-        Transform target = activePlayers[0].transform;
-        float distance = Vector3.Distance(transform.position, target.position);
-        
+        Transform target = null;
+        float distance = float.MaxValue;
+
         foreach (PlayerCharacter player in activePlayers)
         {
-            if (Vector3.Distance(transform.position, player.transform.position) < distance)
-                target = player.transform;
+            if (!player.isDead)
+                if (Vector3.Distance(transform.position, player.transform.position) < distance)
+                    target = player.transform;
         }
 
-        this.target = target;
+        if(target == null)
+            target = activePlayers[0].transform;
+
+       SetTarget(target);
     }
+
+    public virtual void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+    }
+
 
 }

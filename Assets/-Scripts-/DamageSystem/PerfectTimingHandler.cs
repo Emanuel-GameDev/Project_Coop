@@ -26,7 +26,7 @@ public class PerfectTimingHandler : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.GetComponent<Damager>() && Utility.IsInLayerMask(collision.gameObject, layerMask))
+        if (collision.GetComponent<PerfectTimingNotifier>() && Utility.IsInLayerMask(collision.gameObject, layerMask))
         {
             receiver.PerfectTimeStarted(collision.GetComponent<Damager>().source.GetDamageData());
             Debug.Log("Perfect time started");

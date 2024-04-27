@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,11 +16,13 @@ public class RessInteractable : MonoBehaviour, IInteractable
     [SerializeField]
     private Slider ressSlider;
 
+    private List<IInteracter> interacters = new();
+
     private int triggerCount = 0;
 
     private int ressCount = 0;
 
-    private float startingTime;
+    private float elapsedTime;
 
     private bool updateSlider = false;
 
@@ -28,14 +31,18 @@ public class RessInteractable : MonoBehaviour, IInteractable
         if (updateSlider)
         {
             float speedMultiplier = 1f + (ressSpeedUp * (ressCount - 1));
+            elapsedTime += Time.deltaTime * speedMultiplier;
 
-            float progress = (Time.time - startingTime) / (ressDuration / speedMultiplier);
+            float progress = elapsedTime / ressDuration;
             ressSlider.value = Mathf.Clamp01(progress);
 
             if (progress >= 1f)
             {
                 OnSliderComplete();
             }
+
+            Debug.Log($"ressing; M: {speedMultiplier}, P : {progress}, E: {elapsedTime}");
+        
         }
         else
         {
@@ -46,6 +53,21 @@ public class RessInteractable : MonoBehaviour, IInteractable
     private void OnSliderComplete()
     {
         character.Ress();
+        ResetRess();
+    }
+
+    private void ResetRess()
+    {
+        updateSlider = false;
+        elapsedTime = 0;
+        ressCount = 0;
+        triggerCount = 0;
+        interacterVisualization.SetActive(false);
+        foreach (IInteracter interacter in interacters)
+        {
+            interacter.DisableInteraction(this);
+        }
+        interacters.Clear();
     }
 
     private void Start()
@@ -58,16 +80,14 @@ public class RessInteractable : MonoBehaviour, IInteractable
         if (other.TryGetComponent<IInteracter>(out var interacter))
         {
             interacter.EnableInteraction(this);
+            interacters.Add(interacter);
 
             if (interacterVisualization != null)
             {
                 interacterVisualization.SetActive(true);
                 triggerCount++;
             }
-
-
         }
-        Debug.Log("Entra?");
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -75,6 +95,7 @@ public class RessInteractable : MonoBehaviour, IInteractable
         if (other.TryGetComponent<IInteracter>(out var interacter))
         {
             interacter.DisableInteraction(this);
+            interacters.Remove(interacter);
 
             if (interacterVisualization != null)
             {
@@ -82,7 +103,6 @@ public class RessInteractable : MonoBehaviour, IInteractable
                 if (triggerCount <= 0)
                     interacterVisualization.SetActive(false);
             }
-
         }
     }
 
@@ -95,7 +115,7 @@ public class RessInteractable : MonoBehaviour, IInteractable
 
     public IInteracter GetFirstInteracter()
     {
-        return null;
+        return interacters.Count > 0 ? interacters[0] : null;
     }
 
     public void Interact(IInteracter interacter)
@@ -103,7 +123,7 @@ public class RessInteractable : MonoBehaviour, IInteractable
         if (ressCount == 0)
         {
             updateSlider = true;
-            startingTime = Time.time;
+            elapsedTime = 0;
         }
 
         ressCount++;
