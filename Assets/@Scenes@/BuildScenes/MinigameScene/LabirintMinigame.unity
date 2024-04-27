@@ -22268,18 +22268,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 571408248}
   m_CullTransparentMesh: 1
---- !u!114 &575285687 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 726525942643775275, guid: 64a37e0cc339faf4b9a28466184282b9,
-    type: 3}
-  m_PrefabInstance: {fileID: 890878384}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 933432955afa09849aa58dec21533b65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &588836247
 GameObject:
   m_ObjectHideFlags: 0
@@ -57477,6 +57465,7 @@ GameObject:
   - component: {fileID: 1962843606}
   - component: {fileID: 1962843608}
   - component: {fileID: 1962843607}
+  - component: {fileID: 1962843609}
   m_Layer: 5
   m_Name: MultiplayerConfirmationBox
   m_TagString: Untagged
@@ -57572,8 +57561,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 575285687}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 1962843609}
+        m_TargetAssemblyTypeName: MenuFunctionRedirector, Assembly-CSharp
         m_MethodName: PauseGame
         m_Mode: 1
         m_Arguments:
@@ -57614,8 +57603,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 575285687}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 1962843609}
+        m_TargetAssemblyTypeName: MenuFunctionRedirector, Assembly-CSharp
         m_MethodName: ResumeGame
         m_Mode: 1
         m_Arguments:
@@ -57646,6 +57635,18 @@ MonoBehaviour:
   continuosNavigation: 1
   defaultTabIndex: 0
   tabs: []
+--- !u!114 &1962843609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962843605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 760cab0c4c518cc41b322ad0820c6ac7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1986356643
 GameObject:
   m_ObjectHideFlags: 0
@@ -62885,12 +62886,12 @@ PrefabInstance:
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: OnDialogueEnd.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: OnDialogueEnd.Array.data[0].m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
@@ -62916,12 +62917,12 @@ PrefabInstance:
         type: 3}
       propertyPath: OnDialogueEnd.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 727834046}
+      objectReference: {fileID: 1962843607}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: OnDialogueEnd.Array.data[0].m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 1962843607}
+      objectReference: {fileID: 727834046}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: OnDialogueEnd.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -62975,12 +62976,12 @@ PrefabInstance:
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: OnDialogueEnd.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OpenMenu
+      value: PlaceButtons
       objectReference: {fileID: 0}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: OnDialogueEnd.Array.data[0].m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: PlaceButtons
+      value: OpenMenu
       objectReference: {fileID: 0}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
@@ -63005,12 +63006,12 @@ PrefabInstance:
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: OnDialogueEnd.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: MenuManager, Assembly-CSharp
+      value: MultiplayerConfirmationHandler, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: OnDialogueEnd.Array.data[0].m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: MultiplayerConfirmationHandler, Assembly-CSharp
+      value: MenuManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
@@ -63036,6 +63037,11 @@ PrefabInstance:
         type: 3}
       propertyPath: OnDialogueEnd.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
+        type: 3}
+      propertyPath: OnDialogueEnd.Array.data[0].m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
+      value: 
       objectReference: {fileID: 1962843608}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
@@ -63050,12 +63056,12 @@ PrefabInstance:
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: OnDialogueEnd.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: MenuInfo, Assembly-CSharp
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: OnDialogueEnd.Array.data[0].m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
+      value: MenuInfo, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}

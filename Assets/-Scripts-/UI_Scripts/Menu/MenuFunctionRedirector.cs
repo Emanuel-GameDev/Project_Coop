@@ -34,4 +34,14 @@ public class MenuFunctionRedirector : MonoBehaviour
         GameManager.Instance.ChangeLanguage(language);
     }
 
+    public void PauseGame()
+    { 
+        GameManager.Instance.PauseGame(); 
+    }
+
+    public void ResumeGame()
+    {
+        GameManager.Instance.ResumeGame();
+    }
+
 }
