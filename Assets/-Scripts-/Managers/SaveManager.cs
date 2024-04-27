@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour
@@ -70,7 +69,7 @@ public class SaveManager : MonoBehaviour
         {
             string json = File.ReadAllText(filePath);
             saveData = JsonUtility.FromJson<SaveData>(json);
-            if(saveData != null)
+            if (saveData != null)
             {
                 // LoadMapsData();
                 LoadPlayersData();
@@ -128,9 +127,36 @@ public class SaveManager : MonoBehaviour
 
         CharacterSaveData newSaveData = new();
         newSaveData.characterName = character;
-        
+
         return newSaveData;
     }
+
+    #region PlayerPrefs
+
+    public void SavePlayerPref(PlayerPrefsSettings setting, float value)
+    {
+        PlayerPrefs.SetFloat(setting.ToString(), value);
+        PlayerPrefs.Save();
+    }
+
+    public void SavePlayerPref(PlayerPrefsSettings setting, int value)
+    {
+        PlayerPrefs.SetInt(setting.ToString(), value);
+        PlayerPrefs.Save();
+    }
+
+    public void SavePlayerPref(PlayerPrefsSettings setting, string value)
+    {
+        PlayerPrefs.SetString(setting.ToString(), value);
+        PlayerPrefs.Save();
+    }
+
+    public void SavePlayerPref(PlayerPrefsSettings setting, bool value)
+    {
+        PlayerPrefs.SetInt(setting.ToString(), value ? 1 : 0);
+        PlayerPrefs.Save();
+    }
+    #endregion
 
 
 }
@@ -148,7 +174,7 @@ public class SaveData
 }
 
 [Serializable]
-public  class MapData
+public class MapData
 {
     public eMapName mapName;
     public List<EncounterData> encounter = new();
@@ -170,4 +196,13 @@ public class CharacterSaveData
     public List<PowerUp> powerUps = new();
     public ExtraData extraData = new();
     public List<AbilityUpgrade> unlockedAbility = new();
+}
+
+public enum PlayerPrefsSettings
+{
+    FirstStart,
+    Languge,
+    MasterVolume,
+    MusicVolume,
+    SFXVolume
 }
