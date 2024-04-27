@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class PerfectTimingNotifier : MonoBehaviour
 {
-
+    public IDamager damager;
 }

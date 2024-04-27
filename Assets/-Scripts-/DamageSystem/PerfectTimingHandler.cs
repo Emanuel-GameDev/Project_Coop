@@ -28,7 +28,7 @@ public class PerfectTimingHandler : MonoBehaviour
     {
         if (collision.GetComponent<PerfectTimingNotifier>() && Utility.IsInLayerMask(collision.gameObject, layerMask))
         {
-            receiver.PerfectTimeStarted(collision.GetComponent<Damager>().source.GetDamageData());
+            receiver.PerfectTimeStarted(collision.GetComponent<PerfectTimingNotifier>().damager);
             Debug.Log("Perfect time started");
         }
     }

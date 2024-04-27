@@ -90,6 +90,28 @@ public class KerberosBossCharacter : BossCharacter
         }
     }
     #endregion
+    #region flurryOfBlows
+    public void SetFlurryOfBlowsDamageData(int attackNumber)
+    {
+
+        if (attackNumber >= punchQuantity)
+        {
+            staminaDamage = normalPunchStaminaDamage;
+            damage = normalPunchDamage;
+            attackCondition = null;
+        }
+        else
+        {
+            staminaDamage = lastPunchStaminaDamage;
+            damage = lastPunchDamage;
+            attackCondition = null;
+        }
+    }
+    public void SetCanLastAttackPunch()
+    {
+        canLastAttackPunch = true;
+    }
+    #endregion
 
     private void Update()
     {
@@ -117,29 +139,6 @@ public class KerberosBossCharacter : BossCharacter
         attackCondition = null;
 
     }
-
-    #region flurryOfBlows
-    public void SetFlurryOfBlowsDamageData(int attackNumber)
-    {
-
-        if (attackNumber >= punchQuantity)
-        {
-            staminaDamage = normalPunchStaminaDamage;
-            damage = normalPunchDamage;
-            attackCondition = null;
-        }
-        else
-        {
-            staminaDamage = lastPunchStaminaDamage;
-            damage = lastPunchDamage;
-            attackCondition = null;
-        }
-    }
-    public void SetCanLastAttackPunch()
-    {
-        canLastAttackPunch = true;
-    }
-    #endregion
 
     public override void TakeDamage(DamageData data)
     {
@@ -219,6 +218,13 @@ public class KerberosBossCharacter : BossCharacter
         yield return new WaitForSeconds(parryStunTimer);
         gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("parried").Value = false;
         anim.SetTrigger("Return");
+    }
+
+    public override void Death()
+    {
+        base.Death();
+        target = null;
+
     }
 
 }
