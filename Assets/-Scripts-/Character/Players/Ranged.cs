@@ -104,8 +104,9 @@ public class Ranged : PlayerCharacter
     [Header("VFX")]
     [SerializeField] TrailRenderer trailDodgeVFX;
     [SerializeField] GameObject ChargedVFX;
+    ParticleSystem.EmissionModule emissionModule;
 
-    
+
 
     private bool reduceEmpowerFireCoolDownUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
     private bool multiBaseAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
@@ -128,6 +129,7 @@ public class Ranged : PlayerCharacter
         landMineInInventory = maxNumberLandMine;
         perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>(true);
         perfectTimingHandler.gameObject.SetActive(false);
+        emissionModule= _walkDustParticles.emission;
     }
 
 
@@ -187,10 +189,13 @@ public class Ranged : PlayerCharacter
             if (rb.velocity.magnitude > 0.1f)
             {
                 animator.SetBool("isMoving", true);
+               
+                emissionModule.enabled = true;
             }
             else
             {
                 animator.SetBool("isMoving", false);
+                emissionModule.enabled = false;
             }
         }      
     }

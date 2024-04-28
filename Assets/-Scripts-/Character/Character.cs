@@ -13,6 +13,11 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     [SerializeField] protected Color _OnHitColor = Color.red;
     [SerializeField] protected Color _OnParryColor = Color.yellow;
 
+    [Header("General VFX")]
+    [SerializeField] protected ParticleSystem _walkDustParticles;
+    
+    
+
     private Color _materialTintColor;
     private Material spriteMaterial;
     private SpriteRenderer spriteRendererVisual;
