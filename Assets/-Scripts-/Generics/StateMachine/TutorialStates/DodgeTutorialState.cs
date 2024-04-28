@@ -138,7 +138,8 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         currentCharacterIndex++;
 
-        // DA RIVEDERE #MODIFICATO
+        tutorialManager.ResetStartingCharacterAssosiacion();
+
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetPlayerCharacter(currentFaseCharacters[currentCharacterIndex]);
 
         tutorialManager.DeactivateAllPlayerInputs();

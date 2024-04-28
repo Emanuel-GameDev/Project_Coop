@@ -48,7 +48,9 @@ public class GuardTutorialState : TutorialFase
     private void WaitAfterDialogue()
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
-        // DA RIVEDERE #MODIFICATO
+
+        tutorialManager.ResetStartingCharacterAssosiacion();
+
         tutorialManager.inputBindings[tutorialManager.tank].SetPlayerCharacter(tutorialManager.tank);
         tutorialManager.DeactivateAllPlayerInputs();
 

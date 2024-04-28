@@ -447,17 +447,21 @@ public class TutorialManager : MonoBehaviour
     {
         dialogueBox.OnDialogueEnded -= Fade;
 
+        ResetStartingCharacterAssosiacion();
+
+        dialogueBox.OnDialogueEnded += TutorialEnd;
+        PlayDialogue(endingDialogueTwo);
+    }
+
+    public void ResetStartingCharacterAssosiacion()
+    {
         foreach (PlayerInputHandler ih in inputHandlers)
         {
             // DA RIVEDERE #MODIFICATO
             PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
             receiver.SetPlayerCharacter(startingCharacters[ih]);
         }
-
-        dialogueBox.OnDialogueEnded += TutorialEnd;
-        PlayDialogue(endingDialogueTwo);
     }
-
 
 
     private void TutorialEnd()
