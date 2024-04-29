@@ -200,6 +200,28 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         }
 
+        if (pressed && !chargedAttack)
+        {
+            canCancelAttack = false;
+
+            if (comboIndex == 0 && !isAttacking)
+            {
+                isAttacking = true;
+                animator.SetTrigger("Attack1");
+                IncreaseComboIndex();
+            }
+
+            else if (doubleAttack && comboIndex == 1)
+            {
+                if (comboIndex != 2)
+                {
+                    animator.SetTrigger("Attack2");
+                    IncreaseComboIndex();
+                }
+
+            }
+        }
+
         else if (!pressed)
         {
             canCancelAttack = false;
