@@ -46,6 +46,8 @@ public class BossCharacter : EnemyCharacter
             rotation.x = 180;
 
         pivot.gameObject.transform.localRotation = rotation;
+
+       
     }
    
 }

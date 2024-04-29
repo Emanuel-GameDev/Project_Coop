@@ -148,8 +148,13 @@ public class KerberosBossCharacter : BossCharacter
 
     public override void TakeDamage(DamageData data)
     {
-        if (!isDead)      
-        base.TakeDamage(data);
+        if (!isDead)
+        {
+            base.TakeDamage(data);
+            if(currentHp <=0)
+                gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("isDead").Value = true;
+
+        }
 
         float currentPercentage = (currentHp/maxHp) * 100;
         if(currentPercentage <= lowHpPhaseTreshold)
@@ -157,13 +162,7 @@ public class KerberosBossCharacter : BossCharacter
             gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("lowHp").Value = true;
         }
 
-        if (isDead)
-        {
-            gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("isDead").Value = true;
-            OnDeath?.Invoke();
-
-        }
-
+       
     }
     protected override void SetSpriteDirection(Vector2 direction)
     {

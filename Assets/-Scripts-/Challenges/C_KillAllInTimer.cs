@@ -71,6 +71,7 @@ public class C_KillAllInTimer : Challenge
         base.AddToSpawned(enemyCharacter);
         enemyInt++;
         enemyCharacter.OnDeath.AddListener(OnEnemyDeath);
+        
     }
     private void Update()
     {     

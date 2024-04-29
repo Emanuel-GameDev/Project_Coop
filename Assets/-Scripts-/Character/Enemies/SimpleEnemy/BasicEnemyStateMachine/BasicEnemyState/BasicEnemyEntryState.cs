@@ -29,11 +29,7 @@ public class BasicEnemyEntryState : BasicEnemyState
         {
             basicEnemy.stateMachine.SetState(basicEnemy.idleState);
         }
-        //if(basicEnemy.entryDestination == new Vector2( basicEnemy.transform.position.x, basicEnemy.transform.position.y))
-        //{
-        //    basicEnemy.stateMachine.SetState(basicEnemy.moveState);
-        //}
-
+        
     }
 
     public override void Exit()
