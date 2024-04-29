@@ -7,28 +7,37 @@ using UnityEngine.UI;
 
 public class SouvenirShopTable : MonoBehaviour
 {
+    [Header("TableInfo")]
+    [SerializeField] public ePlayerCharacter character;
     [SerializeField] GameObject buyButton;
     [SerializeField] LocalizeStringEvent souvenirNameLocaleEvent;
     [SerializeField] LocalizeStringEvent souvenirDescriptionLocaleEvent;
     [SerializeField] Image souvenirImage;
     [SerializeField] Image souvenirIcon;
-
-    [SerializeField] TextMeshProUGUI coinsNumberText;
+    [SerializeField] TextMeshProUGUI coinsCostNumberText;
+    [SerializeField] TextMeshProUGUI playerCoinsNumberText;
 
     [SerializeField] GameObject soldoutSign;
     [SerializeField] Image soldoutSouvenirImage;
 
-    PlayerCharacter currentPlayerInShop;
+    [SerializeField] Image nextSouvenirImage;
+    [SerializeField] Image previousSouvenirImage;
+
+    PlayerCharacter currentPlayerOnTable;
     SouvenirEntry currentSouvenirEntry;
+
 
     //Info su cosa vendere in base al personaggio
     [SerializeField] SouvenirEntry[] entries = new SouvenirEntry[4];
+    int entryID;
+
     [Serializable]
     public class SouvenirEntry
     {
-        [SerializeField] public ePlayerCharacter character;
         [SerializeField] public PowerUp[] souvenirs = new PowerUp[2];
         [HideInInspector] public int souvenirID;
+
+
     }
 
     public void StartIdleAnimationIn(float delay)
@@ -47,7 +56,7 @@ public class SouvenirShopTable : MonoBehaviour
         souvenirNameLocaleEvent.StringReference = souvenirToSell.powerUpName;
         souvenirDescriptionLocaleEvent.StringReference = souvenirToSell.powerUpDescription;
         souvenirImage.sprite = souvenirToSell.powerUpSprite;
-        coinsNumberText.text = souvenirToSell.moneyCost.ToString();
+        coinsCostNumberText.text = souvenirToSell.moneyCost.ToString();
 
         if (souvenirToSell.powerUpExtraIcon != null)
         {
@@ -59,38 +68,70 @@ public class SouvenirShopTable : MonoBehaviour
             souvenirIcon.color = new Color(1, 1, 1, 0);
         }
 
+        //nextSouvenirImage.sprite = entries.;
+
+
+
+
         soldoutSouvenirImage.sprite = souvenirToSell.powerUpSprite;
     }
 
-    public void SetTableCurrentCharacter(PlayerCharacter currentCharacterInShop)
-    {
-        currentPlayerInShop = currentCharacterInShop;
-        soldoutSign.SetActive(false);
+   
 
-        foreach (SouvenirEntry entry in entries)
+    public void SetTableCurrentCharacter()
+    {
+        currentPlayerOnTable = PlayerCharacterPoolManager.Instance.AllPlayerCharacters.Find(c => c.Character == character);
+
+        if (currentPlayerOnTable != null)
         {
-            if(entry.character == currentCharacterInShop.Character)
-            {
-                SetCurrentEntry(entry);
-                //da cambiare quando ci saranno i salvataggi
-                //currentSouvenirEntry.souvenirID = 0;
-                break;
-            }
+            if (currentPlayerOnTable.GetInputHandler() != null)
+                currentPlayerOnTable.GetInputHandler().MultiplayerEventSystem.SetSelectedGameObject(buyButton.gameObject);
+
         }
+
+        //soldoutSign.SetActive(false);
+
+        //foreach (SouvenirEntry entry in entries)
+        //{
+        //    if(character == currentCharacterInShop.Character)
+        //    {
+        SetCurrentEntry(entries[0]);
+        //        //da cambiare quando ci saranno i salvataggi
+        //        //currentSouvenirEntry.souvenirID = 0;
+        //        break;
+        //    }
+        //}
     }
 
     private void SetCurrentEntry(SouvenirEntry entry)
     {
+        for(int i = 0; i < entries.Length; i++)
+        {
+            if (entry == entries[i])
+            {
+                if((i+1)<entries.Length)
+                    nextSouvenirImage.sprite = entries[i + 1].souvenirs[0].powerUpSprite;
+                else
+                    nextSouvenirImage.sprite = entries[0].souvenirs[0].powerUpSprite;
+
+                if((i - 1) > 0)
+                    previousSouvenirImage.sprite = entries[i - 1].souvenirs[0].powerUpSprite;
+                else
+                    previousSouvenirImage.sprite = entries[entries.Length-1].souvenirs[0].powerUpSprite;
+            }
+        }
+
+
         currentSouvenirEntry = entry;
         CheckForSouvenir();
     }
 
     public void BuySouvenir()
     {
-        if (currentPlayerInShop.ExtraData.coin < currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost) return;
-
-        currentPlayerInShop.ExtraData.coin -= currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost;
-        currentPlayerInShop.AddPowerUp(currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID]);
+        //if (currentPlayerOnTable.ExtraData.coin < currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost) return;
+        Debug.Log("Compra");
+        currentPlayerOnTable.ExtraData.coin -= currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost;
+        currentPlayerOnTable.AddPowerUp(currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID]);
         
         currentSouvenirEntry.souvenirID++;
         
@@ -100,7 +141,7 @@ public class SouvenirShopTable : MonoBehaviour
 
     public void MoneyCheck()
     {
-        if (currentPlayerInShop.ExtraData.coin < currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost)
+        if (currentPlayerOnTable.ExtraData.coin < currentSouvenirEntry.souvenirs[currentSouvenirEntry.souvenirID].moneyCost)
             buyButton.GetComponent<Image>().color = Color.gray;
         else
             buyButton.GetComponent<Image>().color = Color.white;
