@@ -79,6 +79,7 @@ public class EnemyCharacter : Character
             OnDeath?.Invoke();
             animator.SetTrigger("isDead");
             TargetManager.Instance.RemoveEnemy(this);
+            OnDeath.RemoveAllListeners();
         }
     }
 

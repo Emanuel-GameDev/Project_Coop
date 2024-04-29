@@ -6,7 +6,7 @@ using UnityEngine.Localization;
 
 public class Challenge : MonoBehaviour
 {
-    [Header("Generics")]
+    [Header("Generics")]  
     public DialogueBox dialogueBox;  
     public LocalizedString challengeName;
     public LocalizedString challengeDescription;
@@ -16,18 +16,19 @@ public class Challenge : MonoBehaviour
 
 
     [Header("OnStart")]
-    public Dialogue dialogueOnStart;
-    public UnityEvent onChallengeStart;
+    public  Dialogue dialogueOnStart;
+    [SerializeField] UnityEvent onChallengeStart;
 
 
     [Header("OnSuccess")]
     public Dialogue dialogueOnSuccess;
-    public UnityEvent onChallengeSuccessEvent;
-    public int coinsOnSuccess;
+    [SerializeField] UnityEvent onChallengeSuccessEvent;
+    [SerializeField] int coinsOnSuccess;
+    [SerializeField] int KeysOnSuccess;
 
     [Header("OnFail")]
     public Dialogue dialogueOnFailure;
-    public UnityEvent onChallengeFailEvent;
+    [SerializeField] UnityEvent onChallengeFailEvent;
 
 
     [HideInInspector] public List<EnemyCharacter> spawnedEnemiesList;
@@ -73,6 +74,18 @@ public class Challenge : MonoBehaviour
     {
         Debug.Log("HAI VINTO");
         onChallengeSuccessEvent?.Invoke();
+        foreach(Transform rewardContainer in HPHandler.Instance.rewardsContainerTransform)
+        {
+           
+            if(rewardContainer.parent.GetComponentInChildren<CharacterHUDContainer>() != null)
+            {
+                GameObject tempReward = Instantiate(ChallengeManager.Instance.rewardsUIprefeb, rewardContainer);
+                tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, KeysOnSuccess);
+                Destroy(tempReward,ChallengeManager.Instance.rewardsPopUpDuration);
+            }
+           
+        }
+        
     }
     public virtual void AddToSpawned(EnemyCharacter tempEnemy)
     {
