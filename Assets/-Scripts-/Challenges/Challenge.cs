@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
@@ -11,6 +12,8 @@ public class Challenge : MonoBehaviour
     public LocalizedString challengeName;
     public LocalizedString challengeDescription;
     
+    [SerializeField] protected TextMeshProUGUI TimerText;
+   
     [Header("Enemies")]
     [SerializeField] public List<EnemySpawner> enemySpawnPoints;
 
@@ -53,6 +56,10 @@ public class Challenge : MonoBehaviour
         Debug.Log("SFIDA INIZIATA");
         ChallengeManager.Instance.started = challengeStarted = true;
         onChallengeStart?.Invoke();
+
+        
+        TimerText.gameObject.transform.parent.gameObject.SetActive(true);
+       
     }
     public virtual void OnFailChallenge()
     {
@@ -85,7 +92,8 @@ public class Challenge : MonoBehaviour
             }
            
         }
-        
+        TimerText.gameObject.transform.parent.gameObject.SetActive(false);
+
     }
     public virtual void AddToSpawned(EnemyCharacter tempEnemy)
     {
@@ -116,6 +124,20 @@ public class Challenge : MonoBehaviour
         }
         enemySpawned = false;
         challengeStarted = false;
+    }
+
+    protected void DisplayTimer(float timeToDisplay)
+    {
+        if (timeToDisplay < 0)
+        {
+            timeToDisplay = 0;
+        }
+
+        float minutes = Mathf.FloorToInt(timeToDisplay / 60);
+        float seconds = Mathf.FloorToInt(timeToDisplay % 60);
+
+        TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
     }
 
 }
