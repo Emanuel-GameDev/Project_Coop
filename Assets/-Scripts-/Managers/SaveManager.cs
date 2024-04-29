@@ -45,6 +45,8 @@ public class SaveManager : MonoBehaviour
     #region Save
     private void SaveData()
     {
+        saveData.lastScene = SceneManager.GetActiveScene().name;
+        
         string saveFolderPath = Application.persistentDataPath + "/SaveGames";
         string filePath = saveFolderPath + "/SaveData.json";
 
@@ -239,6 +241,7 @@ public class SaveData
 {
     //Scene
     public List<SceneSaveData> sceneData = new();
+    public string lastScene;
 
     //Players
     public List<CharacterSaveData> players = new();
