@@ -7,6 +7,7 @@ public class HPHandler : MonoBehaviour
     [SerializeField] GameObject HPContainer;
 
     [SerializeField] Transform[] HpContainerTransform = new Transform[4];
+    public Transform[] rewardsContainerTransform = new Transform[4];
 
     [SerializeField] Sprite dpsContainerSprite;
     [SerializeField] Sprite healerContainerSprite;

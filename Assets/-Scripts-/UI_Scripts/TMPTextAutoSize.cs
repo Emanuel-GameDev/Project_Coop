@@ -30,8 +30,10 @@ namespace Plugins.mitaywalle.UI.Layout
 
         [SerializeField] private Vector2 _size = new Vector2(18, 72);
         [SerializeField] private bool _executeOnUpdate = true;
-        [SerializeField] private List<TMP_Text> _labels = new List<TMP_Text>();
-        [SerializeField] private List<TMP_InputField> _inputs = new List<TMP_InputField>();
+        [SerializeField, ReorderableList] 
+        private List<TMP_Text> _labels = new List<TMP_Text>();
+        [SerializeField, ReorderableList] 
+        private List<TMP_InputField> _inputs = new List<TMP_InputField>();
         private int _currentIndex;
 
         private void Update()

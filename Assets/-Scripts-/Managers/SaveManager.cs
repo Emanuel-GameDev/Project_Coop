@@ -1,11 +1,13 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SaveManager : MonoBehaviour
 {
-    SaveData saveData;
+    SaveData saveData = new();
 
     private static SaveManager _instance;
     public static SaveManager Instance
@@ -40,13 +42,11 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    public void SaveAllData()
+    #region Save
+    private void SaveData()
     {
-        saveData = new SaveData();
-
-        //UpdateMapsData();
-        UpdatePlayersData();
-
+        saveData.lastScene = SceneManager.GetActiveScene().name;
+        
         string saveFolderPath = Application.persistentDataPath + "/SaveGames";
         string filePath = saveFolderPath + "/SaveData.json";
 
@@ -61,48 +61,54 @@ public class SaveManager : MonoBehaviour
         Debug.Log("Dati salvati con successo!");
     }
 
-    public void LoadAllData()
+    public void SaveSceneData(SceneSetting setting)
     {
-        string filePath = Application.persistentDataPath + "/SaveGames/SaveData.json";
+        SaveSceneData(setting, SceneManager.GetActiveScene().name);
+    }
 
-        if (File.Exists(filePath))
+    public void SaveSceneData(SceneSetting setting, string sceneName)
+    {
+        if (setting == null)
+            return;
+
+        SceneSaveData sceneData = null;
+        foreach(SceneSaveData scene in saveData.sceneData)
         {
-            string json = File.ReadAllText(filePath);
-            saveData = JsonUtility.FromJson<SaveData>(json);
-            if (saveData != null)
+            if(scene.sceneName == sceneName)
             {
-                // LoadMapsData();
-                LoadPlayersData();
+                sceneData = scene;
+                break;
             }
-
-            Debug.Log("Dati caricati con successo!");
         }
-        else
+
+        if(sceneData == null)
         {
-            Debug.LogWarning("Il file di salvataggio non esiste.");
+            sceneData = new SceneSaveData();
+            sceneData.sceneName = sceneName;
+            saveData.sceneData.Add(sceneData);
         }
-    }
 
-    public void LoadMapsData()
-    {
-        MapsManager.Instance.LoadMapData(saveData.maps, saveData.lastMap);
-    }
-
-    public void UpdateMapsData()
-    {
-        saveData.maps = MapsManager.Instance.SaveMapData();
-        saveData.lastMap = MapsManager.Instance.currentMap;
-    }
-
-    private void LoadPlayersData()
-    {
-        foreach (PlayerCharacter player in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
+        SceneSetting sceneSetting = null;
+        foreach(SceneSetting scSetting in sceneData.sceneSettings)
         {
-            player.LoadSaveData(saveData.players.Find(c => c.characterName == player.Character));
+            if(scSetting.settingName == setting.settingName)
+            {
+                sceneSetting = scSetting;
+                break;
+            }
         }
+
+        if(sceneSetting != null)
+        {
+            sceneData.sceneSettings.Remove(sceneSetting);
+        }
+
+        sceneData.sceneSettings.Add(setting);
+
+        SaveData();
     }
 
-    private void UpdatePlayersData()
+    public void SavePlayersData()
     {
         saveData.players?.Clear();
 
@@ -110,10 +116,58 @@ public class SaveManager : MonoBehaviour
         {
             saveData.players.Add(player.GetSaveData());
         }
+
+        SaveData();
     }
+
+    #endregion
+
+    #region Load
+    public void LoadData()
+    {
+        string filePath = Application.persistentDataPath + "/SaveGames/SaveData.json";
+
+        if (File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath);
+            saveData = JsonUtility.FromJson<SaveData>(json);
+            
+            Debug.Log("Dati caricati con successo!");
+
+            if (saveData == null)
+                Debug.Log("Nessun dato nel file di salvataggio.");
+        }
+        else
+        {
+            Debug.LogWarning("Il file di salvataggio non esiste.");
+        }
+    }
+
+    public void LoadAllPlayersData()
+    {
+        if(saveData == null)
+            LoadData();
+        
+        if(saveData == null || saveData.players == null || saveData.players.Count == 0)
+        {
+            Debug.Log("Non ci sono dati da caricare.");
+            return;
+        }
+
+        foreach (PlayerCharacter player in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
+        {
+            player.LoadSaveData(saveData.players.Find(c => c.characterName == player.Character));
+        }
+    }
+    #endregion
+
+    #region GetData
 
     public CharacterSaveData GetPlayerSaveData(ePlayerCharacter character)
     {
+        if(saveData == null)
+            LoadData();
+        
         if (saveData != null)
         {
             foreach (CharacterSaveData player in saveData.players)
@@ -130,6 +184,27 @@ public class SaveManager : MonoBehaviour
 
         return newSaveData;
     }
+
+    public SceneSaveData GetSceneData()
+    {
+        return GetSceneData(SceneManager.GetActiveScene().name);
+    }
+
+    public SceneSaveData GetSceneData(string sceneName)
+    {
+        foreach (SceneSaveData sceneData in saveData.sceneData)
+        {
+            if (sceneData.sceneName == sceneName)
+            {
+               return sceneData;
+            }
+        }
+
+        return null;
+    }
+
+
+    #endregion
 
     #region PlayerPrefs
 
@@ -164,9 +239,9 @@ public class SaveManager : MonoBehaviour
 [Serializable]
 public class SaveData
 {
-    //Mappe
-    public List<MapData> maps;
-    public eMapName lastMap;
+    //Scene
+    public List<SceneSaveData> sceneData = new();
+    public string lastScene;
 
     //Players
     public List<CharacterSaveData> players = new();
@@ -174,19 +249,23 @@ public class SaveData
 }
 
 [Serializable]
-public class MapData
+public class SceneSaveData
 {
-    public eMapName mapName;
-    public List<EncounterData> encounter = new();
+    public string sceneName;
+    public List<SceneSetting> sceneSettings = new();
 }
 
 [Serializable]
-public class EncounterData
+public class SceneSetting
 {
-    public eEncounterType encounterName;
-    public int position;
-    public bool defeated;
+    public SceneSaveSettings settingName;
+    public string stringValue;
+    public int intValue;
+    public float floatValue;
+    public bool boolValue;
 }
+
+
 
 [Serializable]
 public class CharacterSaveData
@@ -198,11 +277,3 @@ public class CharacterSaveData
     public List<AbilityUpgrade> unlockedAbility = new();
 }
 
-public enum PlayerPrefsSettings
-{
-    FirstStart,
-    Languge,
-    MasterVolume,
-    MusicVolume,
-    SFXVolume
-}

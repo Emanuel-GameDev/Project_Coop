@@ -84,44 +84,6 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(loadScreen);
         }
 
-        PlayerPrefsSettigsCheck();
-
-    }
-
-    private void PlayerPrefsSettigsCheck()
-    {
-        if (PlayerPrefs.HasKey(PlayerPrefsSettings.Languge.ToString()))
-        {
-            ChangeLanguage(PlayerPrefs.GetString(PlayerPrefsSettings.Languge.ToString()));
-        }
-        else
-        {
-            ChangeLanguage("en");
-            //StartSelectLanguageScreen();
-        }
-
-        if (PlayerPrefs.HasKey(PlayerPrefsSettings.MasterVolume.ToString()))
-        {
-            AudioManager.Instance.SetMasterVolume(PlayerPrefs.GetFloat(PlayerPrefsSettings.MasterVolume.ToString()));
-        }
-
-        if (PlayerPrefs.HasKey(PlayerPrefsSettings.MusicVolume.ToString()))
-        {
-            AudioManager.Instance.SetMusicVolume(PlayerPrefs.GetFloat(PlayerPrefsSettings.MusicVolume.ToString()));
-        }
-
-        if (PlayerPrefs.HasKey(PlayerPrefsSettings.SFXVolume.ToString()))
-        {
-            AudioManager.Instance.SetSoundFXVolume(PlayerPrefs.GetFloat(PlayerPrefsSettings.SFXVolume.ToString()));
-        }
-
-        if (!PlayerPrefs.HasKey(PlayerPrefsSettings.FirstStart.ToString()))
-        {
-            SaveManager.SavePlayerPref(PlayerPrefsSettings.FirstStart, true);
-
-            //DoSomenthigs
-        }
-
     }
 
     public void PauseGame()
@@ -139,8 +101,8 @@ public class GameManager : MonoBehaviour
 
     public void ChangeScene(string sceneName)
     {
-        LoadSceneInbackground(sceneName);
         StartLoadScreen();
+        LoadSceneInbackground(sceneName);
     }
 
     public void LoadSceneInbackground(string sceneName)
@@ -154,14 +116,7 @@ public class GameManager : MonoBehaviour
 
     public void ActivateLoadedScene()
     {
-        if (IsSceneLoaded())
-        {
-            ActivateScene();
-        }
-        else
-        {
-            StartLoadScreen();
-        }
+        StartLoadScreen();
     }
 
     private void ActivateScene()
