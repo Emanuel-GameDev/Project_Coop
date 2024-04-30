@@ -657,8 +657,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1822292781
-  m_SortingLayer: 4
+  m_SortingLayerID: 218323413
+  m_SortingLayer: 7
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: b3f824b7fdd711340a55d9b565ee2d90, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -730,7 +730,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 218323413
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &4516026672969026843
@@ -855,8 +855,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.16144753, y: -0.1634202}
-  m_Size: {x: 5.2996597, y: 6.4095287}
+  m_Offset: {x: -0.15314698, y: -0.14681911}
+  m_Size: {x: 6, y: 8}
   m_Direction: 0
 --- !u!1 &4516644019998610596
 GameObject:
@@ -1112,7 +1112,7 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: -10
   m_Sprite: {fileID: 21300000, guid: 6f8ebc755ab65134aad42ed35b670368, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.52517754, g: 0.2741189, b: 0.754717, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1373,8 +1373,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1822292781
-  m_SortingLayer: 4
+  m_SortingLayerID: 218323413
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 93bdcec7d28ad0943941bddc29b93b35, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1414,7 +1414,7 @@ Transform:
   m_GameObject: {fileID: 5763330479945256150}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.20002002, y: 0.05012998, z: 0}
+  m_LocalPosition: {x: 0.40000004, y: -0.725, z: 0}
   m_LocalScale: {x: 1.5304, y: 1.5519, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1526,6 +1526,7 @@ MonoBehaviour:
   fadeSpeed: 2
   _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   _OnParryColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  _walkDustParticles: {fileID: 0}
   stunned: 0
   underAggro: 0
   inLove: 0
@@ -1571,12 +1572,13 @@ MonoBehaviour:
   soundsDatabase: {fileID: 0}
   character: 2
   maxHp: 250
-  damage: 15
+  damage: 150
   attackSpeed: 2
   moveSpeed: 9
   uniqueAbilityCooldown: 5
   uniqueAbilityCooldownIncreaseAtUse: 2
   switchCharacterCooldown: 0
+  invulnerabilityTime: 1
   ressInteracter: {fileID: 906128126998632890}
   characterController: {fileID: 0}
   recentlyInputTimer: 3
@@ -1591,7 +1593,7 @@ MonoBehaviour:
   blockTimer: 0.1
   perfectBlockDamage: 10
   blockAngle: 90
-  perfectBlockTimeWindow: 0.5
+  perfectBlockTimeWindow: 0.7
   cooldownUniqueAbility: 2
   aggroRange: 100
   aggroDuration: 10
@@ -1681,8 +1683,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.05251634, y: 1.2352356}
-  m_Size: {x: 1.6457069, y: 2.940481}
+  m_Offset: {x: -0.19055748, y: 1.2352356}
+  m_Size: {x: 1.3696246, y: 2.940481}
   m_Direction: 0
 --- !u!1 &6448158649070872344
 GameObject:

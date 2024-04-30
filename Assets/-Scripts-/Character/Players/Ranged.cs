@@ -103,8 +103,10 @@ public class Ranged : PlayerCharacter
 
     [Header("VFX")]
     [SerializeField] TrailRenderer trailDodgeVFX;
+    [SerializeField] GameObject ChargedVFX;
+    ParticleSystem.EmissionModule emissionModule;
 
-    
+
 
     private bool reduceEmpowerFireCoolDownUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
     private bool multiBaseAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
@@ -127,6 +129,7 @@ public class Ranged : PlayerCharacter
         landMineInInventory = maxNumberLandMine;
         perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>(true);
         perfectTimingHandler.gameObject.SetActive(false);
+        emissionModule= _walkDustParticles.emission;
     }
 
 
@@ -186,10 +189,13 @@ public class Ranged : PlayerCharacter
             if (rb.velocity.magnitude > 0.1f)
             {
                 animator.SetBool("isMoving", true);
+               
+                emissionModule.enabled = true;
             }
             else
             {
                 animator.SetBool("isMoving", false);
+                emissionModule.enabled = false;
             }
         }      
     }
@@ -207,7 +213,7 @@ public class Ranged : PlayerCharacter
         {
             currentHp = 0;
 
-            animator.SetBool("isDeath", true);
+            animator.SetTrigger("Death");
         }
     }
 
@@ -557,6 +563,9 @@ public class Ranged : PlayerCharacter
             dodgeTimer -= Time.deltaTime;
         }
 
+        
+        
+
        
     }
 
@@ -578,6 +587,13 @@ public class Ranged : PlayerCharacter
         ShootDirection=(rangedCrossair.transform.position- shootingPoint.transform.position).normalized;
 
 
+    }
+
+    //aggiungi death override
+
+    public override void Ress()
+    {
+        animator.SetTrigger("Ress");
     }
 
 

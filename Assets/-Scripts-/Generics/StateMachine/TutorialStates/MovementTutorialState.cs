@@ -37,6 +37,8 @@ public class MovementTutorialState : TutorialFase
         tutorialManager.DeactivateEnemyAI();
 
         tutorialManager.PlayDialogue(tutorialManager.fases[tutorialManager.faseCount].faseData.faseStartDialogue);
+
+        tutorialManager.ResetStartingCharacterAssosiacion();
     }
 
     

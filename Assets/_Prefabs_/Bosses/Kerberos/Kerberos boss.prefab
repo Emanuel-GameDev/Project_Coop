@@ -384,6 +384,16 @@ GameObject:
   - component: {fileID: 7243769657808667527}
   - component: {fileID: 475070459522448609}
   - component: {fileID: 1446723254842101227}
+  - component: {fileID: 2449852100024308353}
+  - component: {fileID: 2819364795799994445}
+  - component: {fileID: 5100135572005386095}
+  - component: {fileID: 4191416386035515608}
+  - component: {fileID: 3292208427894185623}
+  - component: {fileID: 6157935062687199734}
+  - component: {fileID: 8858098584890669825}
+  - component: {fileID: 1308300788024645101}
+  - component: {fileID: 7429416154936467744}
+  - component: {fileID: 3272895259296946878}
   m_Layer: 7
   m_Name: BehaviorTree
   m_TagString: Untagged
@@ -443,6 +453,7 @@ MonoBehaviour:
   - {fileID: 8266007243581501553}
   - {fileID: 3331555631581794550}
   - {fileID: 5303473034991474919}
+  - {fileID: 3272895259296946878}
   masterBlackboard: {fileID: 0}
 --- !u!114 &5662076403326267862
 MonoBehaviour:
@@ -640,11 +651,11 @@ MonoBehaviour:
   title: Flurry Of Blows Sequence
   rect:
     serializedVersion: 2
-    x: 365
-    y: 324
+    x: 355
+    y: 423
     width: 160
     height: 45
-  parent: {fileID: 4839482823447256924}
+  parent: {fileID: 6157935062687199734}
   children:
   - {fileID: 1326835916693297159}
   - {fileID: 7479381000988955751}
@@ -681,8 +692,8 @@ MonoBehaviour:
   title: 'Target Selection '
   rect:
     serializedVersion: 2
-    x: 3
-    y: 133
+    x: -59
+    y: 126
     width: 160
     height: 45
   parent: {fileID: 1148828877330473255}
@@ -777,8 +788,8 @@ MonoBehaviour:
   title: Crash Sequence
   rect:
     serializedVersion: 2
-    x: 101
-    y: 457
+    x: -259
+    y: 599
     width: 160
     height: 45
   parent: {fileID: 5222611407785260638}
@@ -804,7 +815,7 @@ MonoBehaviour:
   title: Random Integer
   rect:
     serializedVersion: 2
-    x: 594
+    x: 595
     y: 263
     width: 160
     height: 45
@@ -912,8 +923,8 @@ MonoBehaviour:
   title: 25% Schianto
   rect:
     serializedVersion: 2
-    x: 820
-    y: 440
+    x: 813
+    y: 439
     width: 160
     height: 45
   parent: {fileID: 6073670401585582637}
@@ -1016,8 +1027,8 @@ MonoBehaviour:
   title: Number Condition
   rect:
     serializedVersion: 2
-    x: 820
-    y: 503
+    x: 819
+    y: 494
     width: 160
     height: 45
   parent: {fileID: 1454946355117582931}
@@ -1068,8 +1079,8 @@ MonoBehaviour:
   title: 'Raffica Di Colpi '
   rect:
     serializedVersion: 2
-    x: 287
-    y: 390
+    x: 276
+    y: 477
     width: 160
     height: 45
   parent: {fileID: 8967200548375979811}
@@ -1110,8 +1121,8 @@ MonoBehaviour:
   title: Wait
   rect:
     serializedVersion: 2
-    x: 453
-    y: 385
+    x: 437
+    y: 476
     width: 160
     height: 45
   parent: {fileID: 8967200548375979811}
@@ -1120,10 +1131,10 @@ MonoBehaviour:
   runtimePriority: 0
   breakpoint: 0
   time:
-    useConstant: 1
+    useConstant: 0
     mode: 0
-    blackboard: {fileID: 0}
-    key: 
+    blackboard: {fileID: 2960433704655702723}
+    key: TimeBetweenAttacks
     constantValue: 3
   randomDeviation: 0
   continueOnRestart: 0
@@ -1142,8 +1153,8 @@ MonoBehaviour:
   title: 'Attacco Schianto '
   rect:
     serializedVersion: 2
-    x: 12
-    y: 512
+    x: -337
+    y: 662
     width: 160
     height: 45
   parent: {fileID: 1112971196430991096}
@@ -1172,8 +1183,8 @@ MonoBehaviour:
   title: Wait
   rect:
     serializedVersion: 2
-    x: 171
-    y: 512
+    x: -167
+    y: 663
     width: 160
     height: 45
   parent: {fileID: 1112971196430991096}
@@ -1182,10 +1193,10 @@ MonoBehaviour:
   runtimePriority: 0
   breakpoint: 0
   time:
-    useConstant: 1
+    useConstant: 0
     mode: 0
-    blackboard: {fileID: 0}
-    key: 
+    blackboard: {fileID: 2960433704655702723}
+    key: TimeBetweenAttacks
     constantValue: 3
   randomDeviation: 0
   continueOnRestart: 0
@@ -1204,8 +1215,8 @@ MonoBehaviour:
   title: 'Muovi '
   rect:
     serializedVersion: 2
-    x: 17
-    y: 640
+    x: 97
+    y: 767
     width: 160
     height: 45
   parent: {fileID: 7807706538974609134}
@@ -1252,8 +1263,8 @@ MonoBehaviour:
   title: Sequence
   rect:
     serializedVersion: 2
-    x: 420
-    y: 540
+    x: 547
+    y: 535
     width: 160
     height: 45
   parent: {fileID: 4505975358562675144}
@@ -1335,7 +1346,7 @@ MonoBehaviour:
   title: Sequence
   rect:
     serializedVersion: 2
-    x: 1089
+    x: 1090
     y: 392
     width: 160
     height: 45
@@ -1402,10 +1413,10 @@ MonoBehaviour:
   runtimePriority: 0
   breakpoint: 0
   time:
-    useConstant: 1
+    useConstant: 0
     mode: 0
-    blackboard: {fileID: 0}
-    key: 
+    blackboard: {fileID: 2960433704655702723}
+    key: TimeBetweenAttacks
     constantValue: 3
   randomDeviation: 0
   continueOnRestart: 0
@@ -1470,10 +1481,10 @@ MonoBehaviour:
   runtimePriority: 0
   breakpoint: 0
   time:
-    useConstant: 1
+    useConstant: 0
     mode: 0
-    blackboard: {fileID: 0}
-    key: 
+    blackboard: {fileID: 2960433704655702723}
+    key: TimeBetweenAttacks
     constantValue: 3
   randomDeviation: 0
   continueOnRestart: 0
@@ -1492,14 +1503,15 @@ MonoBehaviour:
   title: Selector
   rect:
     serializedVersion: 2
-    x: 140
-    y: 240
+    x: 100
+    y: 302
     width: 160
     height: 45
-  parent: {fileID: 1210107958510684329}
+  parent: {fileID: 2449852100024308353}
   children:
-  - {fileID: 5923884498263354617}
-  - {fileID: 8967200548375979811}
+  - {fileID: 7429416154936467744}
+  - {fileID: 8858098584890669825}
+  - {fileID: 6157935062687199734}
   behaviourTree: {fileID: 0}
   runtimePriority: 0
   breakpoint: 0
@@ -1600,8 +1612,8 @@ MonoBehaviour:
   title: no Player Found
   rect:
     serializedVersion: 2
-    x: 540
-    y: 640
+    x: 597
+    y: 714
     width: 160
     height: 45
   parent: {fileID: 7807706538974609134}
@@ -1646,8 +1658,8 @@ MonoBehaviour:
   title: Sequence
   rect:
     serializedVersion: 2
-    x: 540
-    y: 700
+    x: 605
+    y: 785
     width: 160
     height: 45
   parent: {fileID: 4080991486904476165}
@@ -1673,8 +1685,8 @@ MonoBehaviour:
   title: 'Attacco Carica '
   rect:
     serializedVersion: 2
-    x: 440
-    y: 760
+    x: 518
+    y: 855
     width: 160
     height: 45
   parent: {fileID: 6529754553574690278}
@@ -1709,8 +1721,8 @@ MonoBehaviour:
   title: Wait
   rect:
     serializedVersion: 2
-    x: 600
-    y: 760
+    x: 698
+    y: 856
     width: 160
     height: 45
   parent: {fileID: 6529754553574690278}
@@ -1719,10 +1731,10 @@ MonoBehaviour:
   runtimePriority: 0
   breakpoint: 0
   time:
-    useConstant: 1
+    useConstant: 0
     mode: 0
-    blackboard: {fileID: 0}
-    key: 
+    blackboard: {fileID: 2960433704655702723}
+    key: TimeBetweenAttacks
     constantValue: 3
   randomDeviation: 0
   continueOnRestart: 0
@@ -1761,7 +1773,7 @@ MonoBehaviour:
     height: 45
   parent: {fileID: 3430550109142413045}
   children:
-  - {fileID: 4839482823447256924}
+  - {fileID: 2449852100024308353}
   behaviourTree: {fileID: 0}
   runtimePriority: 0
   breakpoint: 0
@@ -1857,8 +1869,8 @@ MonoBehaviour:
   title: Player Found
   rect:
     serializedVersion: 2
-    x: 240
-    y: 640
+    x: 311
+    y: 760
     width: 160
     height: 45
   parent: {fileID: 7807706538974609134}
@@ -1903,8 +1915,8 @@ MonoBehaviour:
   title: Flurry Of Blows Sequence
   rect:
     serializedVersion: 2
-    x: -80
-    y: 840
+    x: 31
+    y: 921
     width: 160
     height: 45
   parent: {fileID: 8409325380360465695}
@@ -1930,8 +1942,8 @@ MonoBehaviour:
   title: 'Raffica Di Colpi '
   rect:
     serializedVersion: 2
-    x: -160
-    y: 900
+    x: -68
+    y: 993
     width: 160
     height: 45
   parent: {fileID: 2507240455215951011}
@@ -1972,8 +1984,8 @@ MonoBehaviour:
   title: Wait
   rect:
     serializedVersion: 2
-    x: -0
-    y: 900
+    x: 97
+    y: 994
     width: 160
     height: 45
   parent: {fileID: 2507240455215951011}
@@ -1982,10 +1994,10 @@ MonoBehaviour:
   runtimePriority: 0
   breakpoint: 0
   time:
-    useConstant: 1
+    useConstant: 0
     mode: 0
-    blackboard: {fileID: 0}
-    key: 
+    blackboard: {fileID: 2960433704655702723}
+    key: TimeBetweenAttacks
     constantValue: 3
   randomDeviation: 0
   continueOnRestart: 0
@@ -2004,8 +2016,8 @@ MonoBehaviour:
   title: Crash Sequence
   rect:
     serializedVersion: 2
-    x: 280
-    y: 840
+    x: 337
+    y: 922
     width: 160
     height: 45
   parent: {fileID: 8409325380360465695}
@@ -2031,8 +2043,8 @@ MonoBehaviour:
   title: Selector
   rect:
     serializedVersion: 2
-    x: 120
-    y: 760
+    x: 198
+    y: 838
     width: 160
     height: 45
   parent: {fileID: 5763513295194146872}
@@ -2058,8 +2070,8 @@ MonoBehaviour:
   title: 'Attacco Schianto '
   rect:
     serializedVersion: 2
-    x: 200
-    y: 900
+    x: 267
+    y: 994
     width: 160
     height: 45
   parent: {fileID: 6534425270521497676}
@@ -2088,8 +2100,8 @@ MonoBehaviour:
   title: Wait
   rect:
     serializedVersion: 2
-    x: 360
-    y: 900
+    x: 432
+    y: 994
     width: 160
     height: 45
   parent: {fileID: 6534425270521497676}
@@ -2098,10 +2110,10 @@ MonoBehaviour:
   runtimePriority: 0
   breakpoint: 0
   time:
-    useConstant: 1
+    useConstant: 0
     mode: 0
-    blackboard: {fileID: 0}
-    key: 
+    blackboard: {fileID: 2960433704655702723}
+    key: TimeBetweenAttacks
     constantValue: 3
   randomDeviation: 0
   continueOnRestart: 0
@@ -2675,11 +2687,11 @@ MonoBehaviour:
   title: Selector
   rect:
     serializedVersion: 2
-    x: 50
-    y: 330
+    x: -320
+    y: 440
     width: 160
     height: 45
-  parent: {fileID: 4839482823447256924}
+  parent: {fileID: 7429416154936467744}
   children:
   - {fileID: 7829165771582316572}
   - {fileID: 5222611407785260638}
@@ -2702,8 +2714,8 @@ MonoBehaviour:
   title: under 30% hp
   rect:
     serializedVersion: 2
-    x: -166
-    y: 399
+    x: -441
+    y: 521
     width: 160
     height: 45
   parent: {fileID: 5923884498263354617}
@@ -2748,8 +2760,8 @@ MonoBehaviour:
   title: over 30% hp
   rect:
     serializedVersion: 2
-    x: 99
-    y: 399
+    x: -258
+    y: 537
     width: 160
     height: 45
   parent: {fileID: 5923884498263354617}
@@ -2794,8 +2806,8 @@ MonoBehaviour:
   title: Repeater
   rect:
     serializedVersion: 2
-    x: -167
-    y: 453
+    x: -477
+    y: 586
     width: 160
     height: 45
   parent: {fileID: 7829165771582316572}
@@ -2822,8 +2834,8 @@ MonoBehaviour:
   title: 'Attacco Schianto '
   rect:
     serializedVersion: 2
-    x: -165
-    y: 517
+    x: -518
+    y: 651
     width: 160
     height: 45
   parent: {fileID: 4244495925972226282}
@@ -2903,6 +2915,392 @@ MonoBehaviour:
     blackboard: {fileID: 2960433704655702723}
     key: BossParent
     constantValue: {fileID: 0}
+--- !u!114 &2449852100024308353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413517995448248663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c78c7da6b00e1b46bad07949050f82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Sequence
+  rect:
+    serializedVersion: 2
+    x: 99
+    y: 225
+    width: 160
+    height: 45
+  parent: {fileID: 1210107958510684329}
+  children:
+  - {fileID: 2819364795799994445}
+  - {fileID: 4839482823447256924}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  random: 0
+--- !u!114 &2819364795799994445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413517995448248663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1490dbef6b51161428fcea74c8dbf399, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Random Integer
+  rect:
+    serializedVersion: 2
+    x: -97
+    y: 290
+    width: 160
+    height: 45
+  parent: {fileID: 2449852100024308353}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  min:
+    useConstant: 1
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 0
+  max:
+    useConstant: 1
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 100
+  output:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 2960433704655702723}
+    key: randomInt
+    constantValue: 0
+--- !u!114 &5100135572005386095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413517995448248663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c78c7da6b00e1b46bad07949050f82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Sequence
+  rect:
+    serializedVersion: 2
+    x: 84
+    y: 528
+    width: 160
+    height: 45
+  parent: {fileID: 1308300788024645101}
+  children:
+  - {fileID: 4191416386035515608}
+  - {fileID: 3292208427894185623}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  random: 0
+--- !u!114 &4191416386035515608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413517995448248663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad65a1b017a15e64abcbb2c4045514d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 'Attacco Carica '
+  rect:
+    serializedVersion: 2
+    x: -4
+    y: 633
+    width: 160
+    height: 45
+  parent: {fileID: 5100135572005386095}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  targetTransform:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 2960433704655702723}
+    key: targetTransform
+    constantValue: {fileID: 0}
+  parentGameObject:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 2960433704655702723}
+    key: BossParent
+    constantValue: {fileID: 0}
+--- !u!114 &3292208427894185623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413517995448248663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58fe7bc6a9b18e148b82820c7c1c0a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Wait
+  rect:
+    serializedVersion: 2
+    x: 168
+    y: 632
+    width: 160
+    height: 45
+  parent: {fileID: 5100135572005386095}
+  children: []
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  time:
+    useConstant: 0
+    mode: 0
+    blackboard: {fileID: 2960433704655702723}
+    key: TimeBetweenAttacks
+    constantValue: 3
+  randomDeviation: 0
+  continueOnRestart: 0
+--- !u!114 &6157935062687199734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413517995448248663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b95a918be8d9a4f9085201010bdec1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 50% Pugni
+  rect:
+    serializedVersion: 2
+    x: 288
+    y: 368
+    width: 160
+    height: 45
+  parent: {fileID: 4839482823447256924}
+  children:
+  - {fileID: 8967200548375979811}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  abort: 0
+  type: 1
+  floatReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 0
+  intReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 2960433704655702723}
+    key: randomInt
+    constantValue: 0
+  comparator: 1
+  floatReference2:
+    useConstant: 1
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 0
+  intReference2:
+    useConstant: 1
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 49
+--- !u!114 &8858098584890669825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413517995448248663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b95a918be8d9a4f9085201010bdec1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 15% carica
+  rect:
+    serializedVersion: 2
+    x: 84
+    y: 384
+    width: 160
+    height: 45
+  parent: {fileID: 4839482823447256924}
+  children:
+  - {fileID: 1308300788024645101}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  abort: 0
+  type: 1
+  floatReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 0
+  intReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 2960433704655702723}
+    key: randomInt
+    constantValue: 0
+  comparator: 1
+  floatReference2:
+    useConstant: 1
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 0
+  intReference2:
+    useConstant: 1
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 35
+--- !u!114 &1308300788024645101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413517995448248663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b95a918be8d9a4f9085201010bdec1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Number Condition
+  rect:
+    serializedVersion: 2
+    x: 85
+    y: 451
+    width: 160
+    height: 45
+  parent: {fileID: 8858098584890669825}
+  children:
+  - {fileID: 5100135572005386095}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  abort: 0
+  type: 1
+  floatReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 0
+  intReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 2960433704655702723}
+    key: randomInt
+    constantValue: 0
+  comparator: 2
+  floatReference2:
+    useConstant: 1
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 0
+  intReference2:
+    useConstant: 1
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 50
+--- !u!114 &7429416154936467744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413517995448248663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b95a918be8d9a4f9085201010bdec1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 35% Schianto
+  rect:
+    serializedVersion: 2
+    x: -116
+    y: 375
+    width: 160
+    height: 45
+  parent: {fileID: 4839482823447256924}
+  children:
+  - {fileID: 5923884498263354617}
+  behaviourTree: {fileID: 0}
+  runtimePriority: 0
+  breakpoint: 0
+  abort: 0
+  type: 1
+  floatReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 0
+  intReference:
+    useConstant: 0
+    mode: 1
+    blackboard: {fileID: 2960433704655702723}
+    key: randomInt
+    constantValue: 0
+  comparator: 2
+  floatReference2:
+    useConstant: 1
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 0
+  intReference2:
+    useConstant: 1
+    mode: 0
+    blackboard: {fileID: 0}
+    key: 
+    constantValue: 36
+--- !u!114 &3272895259296946878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413517995448248663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4e5f4db414f0ab4c82c187a7653e99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: TimeBetweenAttacks
+  val: 1
 --- !u!1 &6379799953282488539
 GameObject:
   m_ObjectHideFlags: 0
@@ -2931,7 +3329,7 @@ Transform:
   m_GameObject: {fileID: 6379799953282488539}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.3028425, y: 0.24301797, z: 0}
   m_LocalScale: {x: 3.5544, y: 3.5544, z: 3.5544}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2954,19 +3352,7 @@ MonoBehaviour:
     m_Bits: 64
   onTrigger:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6737167571196966536}
-        m_TargetAssemblyTypeName: KerberosBossCharacter, Assembly-CSharp
-        m_MethodName: PALLE
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!61 &5674559070049272963
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3080,7 +3466,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.16590966, y: 0.062359303, z: 0.012913287}
-  m_LocalScale: {x: 1.8, y: 1.8, z: 1.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7620931504108319402}
@@ -3097,8 +3483,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.18
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 3
+  m_Acceleration: 20
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
@@ -3189,9 +3575,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.26092744, y: 0.05518344}
+  m_Offset: {x: -0.26092744, y: 0.17}
   serializedVersion: 2
-  m_Radius: 2.1320837
+  m_Radius: 2.59
 --- !u!114 &8317270207111148981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3219,6 +3605,7 @@ MonoBehaviour:
   fadeSpeed: 2
   _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   _OnParryColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  _walkDustParticles: {fileID: 0}
   stunned: 0
   underAggro: 0
   inLove: 0
@@ -3244,7 +3631,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   soundsDatabase: {fileID: 0}
-  maxHp: 400
+  maxHp: 45
   damage: 0
   staminaDamage: 0
   attackSpeed: 50
@@ -3254,23 +3641,23 @@ MonoBehaviour:
   lowHpPhaseTreshold: 0
   minDistance: 0.4
   followDuration: 5
-  walkSpeed: 20
-  attackPreviewTimer: 0.2
+  walkSpeed: 8
+  attackPreviewTimer: 0.1
   pivotPreviewArrow: {fileID: 2109936022544078718}
   visual: {fileID: 1636597113684329488}
   _pivot: {fileID: 707992863352827762}
   flurryDistance: 2
-  flurrySpeed: 6
+  flurrySpeed: 4
   punchQuantity: 3
-  normalPunchDamage: 10
+  normalPunchDamage: 15
   normalPunchStaminaDamage: 33
-  lastPunchDamage: 15
+  lastPunchDamage: 30
   lastPunchStaminaDamage: 34
   chargeDamage: 45
   chargeStaminaDamage: 100
   chargeTimer: 0.5
-  chargeSpeed: 50
-  chargeDistance: 15
+  chargeSpeed: 150
+  chargeDistance: 20
   ChargeOnParryPushForce: 20
   ChargeOnParryDuration: 1
   crashDirectDamage: 50
@@ -3278,6 +3665,8 @@ MonoBehaviour:
   crashWaveDamage: 30
   crashWaveStaminaDamage: 100
   crashTimer: 1.5
+  crashPushForce: 2
+  crashPushDuration: 1
   crashwaveObject: {fileID: 7920591660957696306, guid: 3d2c4220d6ebc554fa41d8c66b654446,
     type: 3}
   crashwaveTransform: {fileID: 6765491392667053844}

@@ -265,7 +265,8 @@ public class DialogueBox : MonoBehaviour
         if (startImmediatly && !oneTime)
         {
             oneTime = true;
-            StartDialogue();
+            StartCoroutine(Utility.WaitForPlayers(StartDialogue));
+            //StartDialogue();
         }
 
         if (timer < 0.1)
@@ -275,7 +276,6 @@ public class DialogueBox : MonoBehaviour
         }
 
     }
-   
 
     private void NextLineInput(InputAction.CallbackContext obj)
     {

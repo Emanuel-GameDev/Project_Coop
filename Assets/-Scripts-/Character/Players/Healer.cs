@@ -74,6 +74,10 @@ public class Healer : PlayerCharacter
     [Tooltip("Rallentamento durante l'abilità del boss")]
     [SerializeField] float bossAbilitySlowdown;
 
+    [Header("Audio")]
+    [SerializeField] AudioClip attackSound;
+    [SerializeField] AudioClip bombSound;
+
     //CapsuleCollider2D smallHealAreaCollider;
 
     List<PlayerCharacter> playerInArea;
@@ -144,6 +148,15 @@ public class Healer : PlayerCharacter
         }
 
 
+    }
+    public void PlayAttackSound()
+    {
+        AudioManager.Instance.PlayAudioClip(attackSound, transform, 0.5f);
+    }
+
+    public void PlayBombSound()
+    {
+        AudioManager.Instance.PlayAudioClip(bombSound, transform, 0.5f);
     }
 
     public void DeactivateInput()
@@ -312,7 +325,7 @@ public class Healer : PlayerCharacter
 
     public void PlaySmallHealParticles()
     {
-        Instantiate(smallHealParticlePrefab,transform.position, Quaternion.identity);
+        Instantiate(smallHealParticlePrefab,transform.position , Quaternion.identity);
     }
 
     //UniqueAbility: lancia area di cura
@@ -338,7 +351,6 @@ public class Healer : PlayerCharacter
         if (upgradeStatus[AbilityUpgrade.Ability2])
         {
             radius = healAreaRadius + healAreaIncrementedRadious;
-            Debug.Log("2");
         }
         else
             radius = healAreaRadius;
@@ -408,12 +420,14 @@ public class Healer : PlayerCharacter
     public override void Die()
     {
         base.Die();
+        blockInput = true;
         animator.SetBool("IsDead", true);
     }
 
     public override void Ress()
     {
         base.Ress();
+        blockInput = false;
         animator.SetBool("IsDead", false);
     }
 

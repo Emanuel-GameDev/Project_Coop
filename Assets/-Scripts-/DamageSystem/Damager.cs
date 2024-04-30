@@ -9,7 +9,7 @@ public class Damager : MonoBehaviour
     [SerializeField] public
     LayerMask targetLayers;
 
-    IDamager source;
+    public IDamager source;
     Condition conditionToApply=null;
     bool oneTimeCondition;
 

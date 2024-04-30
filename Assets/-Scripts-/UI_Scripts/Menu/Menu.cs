@@ -32,9 +32,9 @@ public class Menu : MonoBehaviour
         foreach(PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
         {
             
-            ih.SetPlayerActiveMenu(tables.gameObject, table[i].GetComponentInChildren<Selectable>().gameObject);
+            //ih.SetPlayerActiveMenu(tables.gameObject, table[i].GetComponentInChildren<Selectable>().gameObject);
 
-            ih.MultiplayerEventSystem.SetSelectedGameObject(table[i].GetComponentInChildren<Selectable>().gameObject);
+            //ih.MultiplayerEventSystem.SetSelectedGameObject(table[i].GetComponentInChildren<Selectable>().gameObject);
             InputActionAsset actions = ih.GetComponent<PlayerInput>().actions;
 
             actions.FindActionMap("Player").Disable();

@@ -147,13 +147,13 @@ public class DebugManager : MonoBehaviour
     private void SaveGame()
     {
         Debug.Log("CallSave");
-        SaveManager.Instance.SaveAllData();
+        SaveManager.Instance.SavePlayersData();
     }
 
     private void LoadGame()
     {
         Debug.Log("CallLoad");
-        SaveManager.Instance.LoadAllData();
+        SaveManager.Instance.LoadAllPlayersData();
     }
 
 }
