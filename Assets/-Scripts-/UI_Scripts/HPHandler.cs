@@ -181,8 +181,5 @@ public class HPHandler : MonoBehaviour
         return null;
     }
 
-    private void OnDisable()
-    {
-        //containersAssociations.Clear();
-    }
+    
 }
