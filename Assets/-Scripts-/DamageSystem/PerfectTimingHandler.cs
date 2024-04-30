@@ -7,6 +7,7 @@ public class PerfectTimingHandler : MonoBehaviour
     [SerializeField] GameObject alertObject;
     [SerializeField] IPerfectTimeReceiver receiver;
     [SerializeField] LayerMask layerMask;
+   
 
     private void Awake()
     {
@@ -27,7 +28,7 @@ public class PerfectTimingHandler : MonoBehaviour
     {
         if (collision.GetComponent<PerfectTimingNotifier>() && Utility.IsInLayerMask(collision.gameObject, layerMask))
         {
-            receiver.PerfectTimeStarted();
+            receiver.PerfectTimeStarted(collision.GetComponent<PerfectTimingNotifier>().damager);
             Debug.Log("Perfect time started");
         }
     }

@@ -1,33 +1,37 @@
 using JetBrains.Annotations;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
 
 public class Challenge : MonoBehaviour
 {
-    [Header("Generics")]
+    [Header("Generics")]  
     public DialogueBox dialogueBox;  
     public LocalizedString challengeName;
     public LocalizedString challengeDescription;
     
+    [SerializeField] protected TextMeshProUGUI TimerText;
+   
     [Header("Enemies")]
     [SerializeField] public List<EnemySpawner> enemySpawnPoints;
 
 
     [Header("OnStart")]
-    public Dialogue dialogueOnStart;
-    public UnityEvent onChallengeStart;
+    public  Dialogue dialogueOnStart;
+    [SerializeField] UnityEvent onChallengeStart;
 
 
     [Header("OnSuccess")]
     public Dialogue dialogueOnSuccess;
-    public UnityEvent onChallengeSuccessEvent;
-    public int coinsOnSuccess;
+    [SerializeField] UnityEvent onChallengeSuccessEvent;
+    [SerializeField] int coinsOnSuccess;
+    [SerializeField] int KeysOnSuccess;
 
     [Header("OnFail")]
     public Dialogue dialogueOnFailure;
-    public UnityEvent onChallengeFailEvent;
+    [SerializeField] UnityEvent onChallengeFailEvent;
 
 
     [HideInInspector] public List<EnemyCharacter> spawnedEnemiesList;
@@ -52,6 +56,10 @@ public class Challenge : MonoBehaviour
         Debug.Log("SFIDA INIZIATA");
         ChallengeManager.Instance.started = challengeStarted = true;
         onChallengeStart?.Invoke();
+
+        
+        TimerText.gameObject.transform.parent.gameObject.SetActive(true);
+       
     }
     public virtual void OnFailChallenge()
     {
@@ -73,6 +81,19 @@ public class Challenge : MonoBehaviour
     {
         Debug.Log("HAI VINTO");
         onChallengeSuccessEvent?.Invoke();
+        foreach(Transform rewardContainer in HPHandler.Instance.rewardsContainerTransform)
+        {
+           
+            if(rewardContainer.parent.GetComponentInChildren<CharacterHUDContainer>() != null)
+            {
+                GameObject tempReward = Instantiate(ChallengeManager.Instance.rewardsUIprefeb, rewardContainer);
+                tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, KeysOnSuccess);
+                Destroy(tempReward,ChallengeManager.Instance.rewardsPopUpDuration);
+            }
+           
+        }
+        TimerText.gameObject.transform.parent.gameObject.SetActive(false);
+
     }
     public virtual void AddToSpawned(EnemyCharacter tempEnemy)
     {
@@ -103,6 +124,20 @@ public class Challenge : MonoBehaviour
         }
         enemySpawned = false;
         challengeStarted = false;
+    }
+
+    protected void DisplayTimer(float timeToDisplay)
+    {
+        if (timeToDisplay < 0)
+        {
+            timeToDisplay = 0;
+        }
+
+        float minutes = Mathf.FloorToInt(timeToDisplay / 60);
+        float seconds = Mathf.FloorToInt(timeToDisplay % 60);
+
+        TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
     }
 
 }

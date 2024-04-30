@@ -56,4 +56,8 @@ public class TutorialEnemy : BasicMeleeEnemy
         yield return new WaitForSeconds(invincibilitySeconds);
         invincible = false;
     }
+    public override void OnParryNotify(Character whoParried)
+    {
+        base.OnParryNotify(whoParried);
+    }
 }

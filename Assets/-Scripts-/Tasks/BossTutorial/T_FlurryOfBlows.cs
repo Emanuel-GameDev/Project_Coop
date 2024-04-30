@@ -81,7 +81,7 @@ namespace MBTExample
                             attackCount++;
                             bossCharacter.SetFlurryOfBlowsDamageData(attackCount);
 
-                            Debug.Log("inizio attacco " + attackCount);
+                           
 
                             Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
 

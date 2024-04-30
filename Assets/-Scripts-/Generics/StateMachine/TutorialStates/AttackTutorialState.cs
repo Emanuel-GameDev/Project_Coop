@@ -61,8 +61,12 @@ public class AttackTutorialState : TutorialFase
         tutorialManager.DeactivateAllPlayerInputs();
 
         currentCharacterIndex++;
-        // DA RIVEDERE #MODIFICATO
+
+        tutorialManager.ResetStartingCharacterAssosiacion();
+
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetPlayerCharacter(currentFaseCharacters[currentCharacterIndex]);
+
+        Debug.Log($"{tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().PlayerInput.currentControlScheme}");
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);
@@ -82,8 +86,14 @@ public class AttackTutorialState : TutorialFase
 
         tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
 
+
         tutorialManager.DeactivateAllPlayerInputs();
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+        {
+            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+            ih.GetComponent<PlayerInput>().actions.FindAction("Look").Enable();
+            ih.GetComponent<PlayerInput>().actions.FindAction("LookMouse").Enable();
+        }
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
 
 
@@ -132,7 +142,13 @@ public class AttackTutorialState : TutorialFase
             hitCount = 0;
             tutorialManager.tutorialEnemy.OnHitAction -= EnemyHitted;
 
-            tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+            {
+                ih.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+                ih.GetComponent<PlayerInput>().actions.FindAction("Look").Disable();
+                ih.GetComponent<PlayerInput>().actions.FindAction("LookMouse").Disable();
+            }
+
             tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Attack").Disable();
 
             if (currentCharacterIndex < currentFaseCharacters.Length-1)

@@ -20,7 +20,9 @@ public class HealArea : MonoBehaviour
     [SerializeField] public float damageIncrementPercentage = 1;
     [SerializeField] public PowerUp slowDown;
 
+    [SerializeField] AudioClip areaSound;
 
+    AudioSource areaAudioSource;
     private List<Character> characterInArea;
     
     float timer = 0;
@@ -30,6 +32,13 @@ public class HealArea : MonoBehaviour
     private bool damage = false;
     private bool slow = false;
     private bool debilitate = false;
+
+
+    private void Start()
+    {
+        if (areaSound != null)
+            areaAudioSource = AudioManager.Instance.PlayAudioClip(areaSound, transform,0.2f);
+    }
 
 
     public void Initialize(GameObject spawner, float expireTime,float tikPerSecond, float radius, bool damage, bool slow, bool debilitate)
@@ -138,6 +147,10 @@ public class HealArea : MonoBehaviour
                 c.damageReceivedMultiplier = 1f;
                 //c.RemovePowerUp(slowDown);
             }
+
+            if(areaAudioSource != null)
+                Destroy(areaAudioSource.gameObject);
+
             Destroy(gameObject);
 
             timer = 0;
