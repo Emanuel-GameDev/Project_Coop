@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace MBTExample
 {
@@ -23,15 +24,19 @@ namespace MBTExample
         public override void OnEnter()
         {
           
-                bossCharacter = parentGameObject.Value.GetComponent<KerberosBossCharacter>();
+           bossCharacter = parentGameObject.Value.GetComponent<KerberosBossCharacter>();
            
             started = false;
             mustStop = false;
             bossCharacter.parried = false;
 
+           
             Vector3 direction = (targetTransform.Value.position -bossCharacter.transform.position).normalized;
-            targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), (direction.y * bossCharacter.chargeDistance),0) + bossCharacter.transform.position; 
-
+            targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), (direction.y * bossCharacter.chargeDistance),0) + bossCharacter.transform.position;
+            if(NavMesh.SamplePosition(targetPosition, out NavMeshHit hit, bossCharacter.chargeDistance, NavMesh.AllAreas))
+                {
+                targetPosition = hit.position;
+            }
            
             //Setto il danno
             bossCharacter.SetChargeDamageData();

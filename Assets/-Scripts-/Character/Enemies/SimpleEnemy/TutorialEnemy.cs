@@ -25,7 +25,7 @@ public class TutorialEnemy : BasicMeleeEnemy
         stunState = new BasicEnemyStunState(this);
         parriedState = new BasicEnemyParriedState(this);
         deathState = new BasicEnemyDeathState(this);
-
+        entryState = new BasicEnemyEntryState(this);
     }
 
     public override void TakeDamage(DamageData data)
