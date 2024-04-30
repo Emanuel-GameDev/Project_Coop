@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
 
@@ -72,6 +74,12 @@ public static class Utility
         Vector2 first = ZtoY(v1);
         Vector2 second = ZtoY(v2);
         return Vector2.Distance(first, second);
+    }
+
+    public static IEnumerator WaitForPlayers(Action functionToCall)
+    {
+        yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
+        functionToCall();
     }
 
 }

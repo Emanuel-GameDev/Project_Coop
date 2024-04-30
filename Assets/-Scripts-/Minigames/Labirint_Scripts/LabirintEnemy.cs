@@ -16,7 +16,7 @@ public class LabirintEnemy : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
-    private static int debugCountMax = 50;
+    private readonly int debugCountMax = 50;
     private int debugCount = 0;
 
     private Transform target;
@@ -93,7 +93,7 @@ public class LabirintEnemy : MonoBehaviour
                 finalDestination = hit.position;
             }
 
-            if (Vector2.Distance(transform.position, Target.position) > MaxFollowDistance)
+            if (Vector2.Distance(transform.position, Target.position) > MaxFollowDistance  || !Target.gameObject.activeInHierarchy)
             {
                 Target = null;
                 SetRandomDestination();

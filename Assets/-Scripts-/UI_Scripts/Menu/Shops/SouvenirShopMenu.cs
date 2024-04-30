@@ -23,42 +23,48 @@ public class SouvenirShopMenu : Menu
     
 
 
-    public void OpenMenu(IInteracter interacter)
+    public override void OpenMenu()
     {
         if (shopGroup.activeSelf) return;
 
-        if (interacter.GetInteracterObject().TryGetComponent<PlayerCharacter>(out PlayerCharacter playerInShop))
+        base.OpenMenu();
+
+        //if (interacter.GetInteracterObject().TryGetComponent<PlayerCharacter>(out PlayerCharacter playerInShop))
+        //{
+        //shopGroup.SetActive(true);
+        //shopGroup.GetComponent<Animation>().Play("SouvenirEntrance");
+        //canClose = true;
+        //currentPlayerInShop = interacter.GetInteracterObject().GetComponent<PlayerCharacter>();
+
+        //PlayerInputHandler inputHandler = currentPlayerInShop.GetInputHandler();
+        //inputHandler.MultiplayerEventSystem.SetSelectedGameObject(firstSelected.GetComponentInChildren<Selectable>().gameObject);
+
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
         {
-            shopGroup.SetActive(true);
-            shopGroup.GetComponent<Animation>().Play("SouvenirEntrance");
-            canClose = true;
-            currentPlayerInShop = interacter.GetInteracterObject().GetComponent<PlayerCharacter>();
+            InputActionAsset actionAsset = ih.GetComponent<PlayerInput>().actions;
 
-            PlayerInputHandler inputHandler = currentPlayerInShop.GetInputHandler();
-            inputHandler.MultiplayerEventSystem.SetSelectedGameObject(firstSelected.GetComponentInChildren<Selectable>().gameObject);
+            actionAsset.FindActionMap("UI").FindAction("Next").performed += SouvenirTableNext;
+        }
 
-            foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
+        //InputActionAsset actions = inputHandler.GetComponent<PlayerInput>().actions;
+        //actions.FindActionMap("UI").Enable();
+        //actions.FindAction("Cancel").performed += Menu_performed;
+        shopGroup.GetComponent<Animation>().Play("SouvenirEntrance");
+
+        foreach (SouvenirShopTable table in shopTables)
             {
-                InputActionAsset actionAsset = ih.GetComponent<PlayerInput>().actions;
-                actionAsset.FindActionMap("Player").Disable();
-                actionAsset.FindActionMap("UI").Disable();
-                actionAsset.FindActionMap("UI").FindAction("Menu").Disable();
-            }
-
-            InputActionAsset actions = inputHandler.GetComponent<PlayerInput>().actions;
-            actions.FindActionMap("UI").Enable();
-            actions.FindAction("Cancel").performed += Menu_performed;
-
-
-            foreach (SouvenirShopTable table in shopTables)
-            {
-                table.SetTableCurrentCharacter(playerInShop);
+                table.SetTableCurrentCharacter();
                 table.StartIdleAnimationIn(Random.value);
             }
 
-            CheckForMoney();
+            //CheckForMoney();
             AudioManager.Instance.PlayAudioClip(openingAudioClip,transform);
-        }
+        //}
+    }
+
+    private void SouvenirTableNext(InputAction.CallbackContext obj)
+    {
+        throw new System.NotImplementedException();
     }
 
     protected override void Menu_performed(InputAction.CallbackContext obj)
@@ -79,20 +85,34 @@ public class SouvenirShopMenu : Menu
 
     public override void CloseMenu()
     {
-        InputActionAsset actions = currentPlayerInShop.GetInputHandler().GetComponent<PlayerInput>().actions;
-        actions.FindAction("Cancel").performed -= Menu_performed;
+        //InputActionAsset actions = currentPlayerInShop.GetInputHandler().GetComponent<PlayerInput>().actions;
+        //actions.FindAction("Cancel").performed -= Menu_performed;
+
+        //foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
+        //{
+        //    ih.MultiplayerEventSystem.SetSelectedGameObject(null);
+        //    InputActionAsset actionAsset = ih.GetComponent<PlayerInput>().actions;
+        //    actionAsset.FindActionMap("Player").Enable();
+        //    actionAsset.FindActionMap("UI").FindAction("Menu").Enable();
+        //    actionAsset.FindActionMap("UI").Disable();
+        //}
+        //AudioManager.Instance.PlayAudioClip(openingAudioClip, transform);
+
+        //currentPlayerInShop = null;
 
         foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
         {
-            ih.MultiplayerEventSystem.SetSelectedGameObject(null);
-            InputActionAsset actionAsset = ih.GetComponent<PlayerInput>().actions;
-            actionAsset.FindActionMap("Player").Enable();
-            actionAsset.FindActionMap("UI").FindAction("Menu").Enable();
-            actionAsset.FindActionMap("UI").Disable();
-        }
-        AudioManager.Instance.PlayAudioClip(openingAudioClip, transform);
+            InputActionAsset actions = ih.GetComponent<PlayerInput>().actions;
 
-        currentPlayerInShop = null;
+            actions.FindActionMap("Player").Enable();
+
+            actions.FindActionMap("UI").Disable();
+            actions.FindActionMap("UI").FindAction("Menu").Enable();
+
+            actions.FindAction("Cancel").performed -= Menu_performed;
+        }
+
+
         shopGroup.GetComponent<Animation>().Play("SouvenirExit");
         StartCoroutine(CloseMenuWithDelay(shopGroup.GetComponent<Animation>().clip.length));
     }

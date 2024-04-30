@@ -18,4 +18,10 @@ public class EnemyTargetDetection : MonoBehaviour
             labirintEnemy.SetTarget(other.transform);
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, transform.localScale.x);
+    }
 }

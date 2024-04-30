@@ -58,6 +58,12 @@ public class LilithShopMenu : Menu
             table.StartIdleAnimationIn(Random.value);
         }
 
+        foreach (PlayerCharacter pc in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
+        {
+
+            gameObject.GetComponentInParent<PressInteractable>().CancelInteraction(pc);
+        }
+
         shopGroup.GetComponent<Animation>().Play("LilithShopEntrance");
     }
 

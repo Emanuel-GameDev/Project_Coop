@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class C_Survive : Challenge
 {
-    [Header("Timer")]
-    [SerializeField] private TextMeshProUGUI TimerText;
+    [Header("Timer")]  
     [SerializeField] private float timerChallenge;
 
     
@@ -41,7 +40,6 @@ public class C_Survive : Challenge
             s.canSpawn = true;           
         }
 
-        TimerText.gameObject.SetActive(true);
         startTimer = true;
 
     }
@@ -93,18 +91,5 @@ public class C_Survive : Challenge
 
         }
     }
-    private void DisplayTimer(float timeToDisplay)
-    {
-        if (timeToDisplay < 0)
-        {
-            timeToDisplay = 0;
-        }
-
-        float minutes = Mathf.FloorToInt(timeToDisplay / 60);
-        float seconds = Mathf.FloorToInt(timeToDisplay % 60);
-
-        TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-    }
-   
+    
 }
