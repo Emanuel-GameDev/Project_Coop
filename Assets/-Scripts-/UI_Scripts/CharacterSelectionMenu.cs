@@ -21,6 +21,7 @@ public class CharacterSelectionMenu : MonoBehaviour
     [SerializeField]
     private GameObject fasciaReady;
 
+
     private List<CursorBehaviour> activeCursors = new List<CursorBehaviour>();
 
     public static CharacterSelectionMenu Instance;
@@ -35,11 +36,17 @@ public class CharacterSelectionMenu : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.LoadSceneInbackground("TutorialScene");
     }
 
-    internal void AddToActiveCursors(CursorBehaviour cursor)
+    internal bool AddToActiveCursors(CursorBehaviour cursor)
     {
         activeCursors.Add(cursor);
+
+        if (activeCursors.Contains(cursor))
+            return true;    
+        else
+            return false;
     }
 
     internal List<RectTransform> GetCharacterSelectors(ePlayerID ID)
@@ -189,7 +196,7 @@ public class CharacterSelectionMenu : MonoBehaviour
                 cursor.GetInputHandler().SetStartingCharacter(cursor.GetCharacter());
             }
 
-            GameManager.Instance.LoadScene("TutorialScene");
+            GameManager.Instance.ActivateLoadedScene();
         }
     }
 }
