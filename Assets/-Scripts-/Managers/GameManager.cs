@@ -101,8 +101,8 @@ public class GameManager : MonoBehaviour
 
     public void ChangeScene(string sceneName)
     {
-        LoadSceneInbackground(sceneName);
         StartLoadScreen();
+        LoadSceneInbackground(sceneName);
     }
 
     public void LoadSceneInbackground(string sceneName)
@@ -116,14 +116,7 @@ public class GameManager : MonoBehaviour
 
     public void ActivateLoadedScene()
     {
-        if (IsSceneLoaded())
-        {
-            ActivateScene();
-        }
-        else
-        {
-            StartLoadScreen();
-        }
+        StartLoadScreen();
     }
 
     private void ActivateScene()

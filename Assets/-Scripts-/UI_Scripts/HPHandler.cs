@@ -15,9 +15,9 @@ public class HPHandler : MonoBehaviour
     [SerializeField] Sprite tankContainerSprite;
 
     Dictionary<ePlayerID, CharacterHUDContainer> containersAssociations;
+    bool dictionaryCreated=false;
 
     int id = 0;
-
 
     private static HPHandler _instance;
     public static HPHandler Instance
@@ -39,19 +39,26 @@ public class HPHandler : MonoBehaviour
         }
     }
 
-
     private void OnEnable()
     {
-        containersAssociations = new Dictionary<ePlayerID, CharacterHUDContainer>();
+        if (!dictionaryCreated)
+        {
+            containersAssociations = new Dictionary<ePlayerID, CharacterHUDContainer>();
+            dictionaryCreated = true;
+            Debug.Log("Prova");
+        }
+
         PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, UpdateContainer);
         PubSub.Instance.RegisterFunction(EMessageType.characterJoined, AddContainer);
         //PubSub.Instance.RegisterFunction(EMessageType.characterSwitched, SetCharacter);
+
     }
 
-
+    
     public void SetActivePlayers()
     {
-        foreach (PlayerInputHandler inputHandler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
+        
+        foreach (PlayerInputHandler inputHandler in CoopManager.Instance.GetActiveHandlers())
         {
             if (inputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>() != null)
                 AddContainer(inputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>());
@@ -62,7 +69,7 @@ public class HPHandler : MonoBehaviour
     {
         if (obj is not PlayerCharacter)
             return;
-
+        
         PlayerCharacter player = (PlayerCharacter)obj;
 
         StartCoroutine(Wait(player));
@@ -83,7 +90,7 @@ public class HPHandler : MonoBehaviour
 
         }
         
-        if(id < HpContainerTransform.Length)
+        if (id < HpContainerTransform.Length)
         {
             GameObject hpContainerObject = Instantiate(HPContainer, HpContainerTransform[id]);
             hpContainerObject.GetComponent<RectTransform>().SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
@@ -93,7 +100,12 @@ public class HPHandler : MonoBehaviour
 
             if (player.characterController != null)
             {
+                
+
                 containersAssociations.Add(player.GetInputHandler().playerID, hpContainer);
+
+                Debug.Log(player.GetInputHandler().playerID);
+
                 hpContainer.referredPlayerID = player.GetInputHandler().playerID;
             }
             else
@@ -133,6 +145,7 @@ public class HPHandler : MonoBehaviour
         if (obj is PlayerCharacter)
         {
             PlayerCharacter playerCharacter = (PlayerCharacter)obj;
+
             if (playerCharacter.characterController != null)
                 containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
             else
@@ -147,6 +160,7 @@ public class HPHandler : MonoBehaviour
                 }
 
             }
+            
         }
     }
 
@@ -169,6 +183,6 @@ public class HPHandler : MonoBehaviour
 
     private void OnDisable()
     {
-        containersAssociations.Clear();
+        //containersAssociations.Clear();
     }
 }

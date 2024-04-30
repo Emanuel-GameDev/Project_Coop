@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.Localization.Plugins.XLIFF.V20;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -39,22 +40,31 @@ public class SouvenirShopMenu : Menu
         //PlayerInputHandler inputHandler = currentPlayerInShop.GetInputHandler();
         //inputHandler.MultiplayerEventSystem.SetSelectedGameObject(firstSelected.GetComponentInChildren<Selectable>().gameObject);
 
-        foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
-        {
-            InputActionAsset actionAsset = ih.GetComponent<PlayerInput>().actions;
-
-            actionAsset.FindActionMap("UI").FindAction("Next").performed += SouvenirTableNext;
-        }
 
         //InputActionAsset actions = inputHandler.GetComponent<PlayerInput>().actions;
         //actions.FindActionMap("UI").Enable();
         //actions.FindAction("Cancel").performed += Menu_performed;
+
+        //foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
+        //{
+        //    InputActionAsset actionAsset = ih.GetComponent<PlayerInput>().actions;
+
+        //    actionAsset.FindActionMap("UI").FindAction("Next").performed += SouvenirTableNext;
+
+        //}
+
+        foreach (PlayerCharacter pc in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
+        {
+            gameObject.GetComponentInParent<PressInteractable>().CancelInteraction(pc);
+        }
+
         shopGroup.GetComponent<Animation>().Play("SouvenirEntrance");
 
         foreach (SouvenirShopTable table in shopTables)
             {
                 table.SetTableCurrentCharacter();
                 table.StartIdleAnimationIn(Random.value);
+                table.SetUpInput();
             }
 
             //CheckForMoney();
@@ -62,10 +72,6 @@ public class SouvenirShopMenu : Menu
         //}
     }
 
-    private void SouvenirTableNext(InputAction.CallbackContext obj)
-    {
-        throw new System.NotImplementedException();
-    }
 
     protected override void Menu_performed(InputAction.CallbackContext obj)
     {
@@ -112,6 +118,10 @@ public class SouvenirShopMenu : Menu
             actions.FindAction("Cancel").performed -= Menu_performed;
         }
 
+        foreach (SouvenirShopTable table in shopTables)
+        {
+            table.DesetInput();
+        }
 
         shopGroup.GetComponent<Animation>().Play("SouvenirExit");
         StartCoroutine(CloseMenuWithDelay(shopGroup.GetComponent<Animation>().clip.length));
