@@ -118,11 +118,6 @@ namespace MBTExample
 
         }
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(targetPosition, 1);
-        }
     }
     
 }
