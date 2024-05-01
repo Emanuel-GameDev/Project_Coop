@@ -115,9 +115,10 @@ public class KerberosBossCharacter : BossCharacter
     {
         canLastAttackPunch = true;
     }
+   
     #endregion
 
-   
+
     private void Update()
     {
         

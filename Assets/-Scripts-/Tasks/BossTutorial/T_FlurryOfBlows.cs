@@ -81,8 +81,6 @@ namespace MBTExample
                             attackCount++;
                             bossCharacter.SetFlurryOfBlowsDamageData(attackCount);
 
-                           
-
                             Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
 
                             targetPosition = new Vector3((direction.x * bossCharacter.flurryDistance), (direction.y * bossCharacter.flurryDistance), 0) + bossCharacter.transform.position;

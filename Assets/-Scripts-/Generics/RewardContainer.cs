@@ -5,16 +5,20 @@ using UnityEngine;
 public class RewardContainer : MonoBehaviour
 {
     [Header("Transition")]
-    [SerializeField] float popUpDuration;    
+    
+    
     [SerializeField] public Transform targetPosition;
-    [SerializeField] float moveDuration; 
-    [SerializeField] float fadeDuration;
+    
+    [SerializeField] public bool right;
 
     [HideInInspector] public GameObject rewardPopUp;
 
   
     public IEnumerator MoveAndFadeRoutine()
     {
+        float moveDuration = RewardManager.Instance.moveDuration;
+        float popUpDuration = RewardManager.Instance.popUpDuration;
+
         Vector3 initialPosition = rewardPopUp.transform.position;       
         float elapsedTime = 0f;
 
@@ -51,4 +55,5 @@ public class RewardContainer : MonoBehaviour
         // Optionally destroy or deactivate the GameObject after fading out
         gameObject.SetActive(false);
     }
+
 }
