@@ -36,7 +36,7 @@ namespace MBTExample
             //Setto il danno
             bossCharacter.SetChargeDamageData();
 
-            Debug.Log("Start Charge Timer");
+            
             bossCharacter.anim.SetTrigger("PrepCharge");
             ShowAttackPreview(true);
             tempTimer = 0;
@@ -68,7 +68,7 @@ namespace MBTExample
                         Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
                         targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), (direction.y * bossCharacter.chargeDistance), 0) + bossCharacter.transform.position;
 
-                        Debug.Log("partito");
+                       
                         bossCharacter.Agent.isStopped = false;
                         bossCharacter.Agent.speed = bossCharacter.chargeSpeed;
                         bossCharacter.Agent.SetDestination(targetPosition);

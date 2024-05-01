@@ -26,12 +26,15 @@ public abstract class PlayerCharacter : Character
     protected float uniqueAbilityCooldownIncreaseAtUse;
     [SerializeField, Tooltip("Tempo che deve trascorrere prima di poter cambiare di nuovo personaggio")]
     protected float switchCharacterCooldown;
+    [SerializeField, Tooltip("Tempo di invulnerabilità dopo essere staty colpiti")]
+    protected float invulnerabilityTime;
     [SerializeField, Tooltip("Reference per l'interactable del ress")]
     protected GameObject ressInteracter;
 
     protected float lastestCharacterSwitch;
     protected float currentHp;
     protected float uniqueAbilityUses;
+    protected float lastHitTime;
 
     #endregion
 
@@ -107,6 +110,7 @@ public abstract class PlayerCharacter : Character
     public Vector2 LastDirection => lastNonZeroDirection;
 
     protected bool CanSwitch => !isDead && Time.time - lastestCharacterSwitch > switchCharacterCooldown;
+    protected bool IsHitInvulnerable => Time.time - lastHitTime < invulnerabilityTime;
 
     #endregion
 
@@ -223,10 +227,8 @@ public abstract class PlayerCharacter : Character
     #region Damage
     public override void TakeDamage(DamageData data)
     {
-        if (!isDead)
+        if (!isDead && !IsHitInvulnerable)
         {
-
-
             if (data.condition != null)
                 AddToConditions(data.condition);
 
@@ -253,6 +255,8 @@ public abstract class PlayerCharacter : Character
                 onDeath?.Invoke();
                 Die();
             }
+
+            lastHitTime = Time.time;
         }
     }
 
@@ -264,12 +268,13 @@ public abstract class PlayerCharacter : Character
         ressInteracter.gameObject.SetActive(true);
         isDead = true;
         PlayerCharacterPoolManager.Instance.PlayerIsDead();
+        TargetManager.Instance.ChangeTarget(this);
     }
 
     public virtual void Ress()
     {
         characterController.GetInputHandler().PlayerInput.actions.Enable();
-        TakeHeal(new DamageData(MaxHp/2, this));
+        TakeHeal(new DamageData(MathF.Floor( MaxHp/2), this));
         ressInteracter.gameObject.SetActive(false);
         isDead = false;
         PlayerCharacterPoolManager.Instance.PlayerIsRessed();   

@@ -39,7 +39,7 @@ public class MenuManager : MonoBehaviour
     private GameObject emptyRootSelected;
 
     [SerializeField]
-    private HPHandler hPHandler;
+    private HPHandler hpHandler;
 
 
     private PlayerInputHandler actualMenuOwner;
@@ -109,8 +109,8 @@ public class MenuManager : MonoBehaviour
     public void OpenPauseMenu(PlayerInputHandler player)
     {
         OpenMenu(pauseMenu, player, true);
-        if(hPHandler != null)
-            hPHandler.gameObject.SetActive(false);
+        if(hpHandler != null)
+            hpHandler.gameObject.SetActive(false);
     }
 
     public void OpenOptionMenu(PlayerInputHandler player)
@@ -118,8 +118,8 @@ public class MenuManager : MonoBehaviour
         if(optionMenu != null)
         {
             OpenMenu(optionMenu, player, true);
-            if (hPHandler != null)
-                hPHandler.gameObject.SetActive(false);
+            if (hpHandler != null)
+                hpHandler.gameObject.SetActive(false);
         }
         else
             OpenPauseMenu(player);
@@ -257,8 +257,8 @@ public class MenuManager : MonoBehaviour
         {
             ClearMenuEntries();
             GameManager.Instance.ResumeGame();
-            if (hPHandler != null)
-                hPHandler.gameObject.SetActive(true);
+            if (hpHandler != null)
+                hpHandler.gameObject.SetActive(true);
         }
 
     }
@@ -276,8 +276,8 @@ public class MenuManager : MonoBehaviour
         CloseAllMenuRecursive(actualMenu);
         ClearMenuEntries();
         GameManager.Instance.ResumeGame();
-        if (hPHandler != null)
-            hPHandler.gameObject.SetActive(true);
+        if (hpHandler != null)
+            hpHandler.gameObject.SetActive(true);
     }
 
     private void CloseAllMenuRecursive(MenuInfo menu)

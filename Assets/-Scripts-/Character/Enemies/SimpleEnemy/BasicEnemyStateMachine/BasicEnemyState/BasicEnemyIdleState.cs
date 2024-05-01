@@ -29,7 +29,9 @@ public class BasicEnemyIdleState : BasicEnemyState
         
         if (basicEnemy.viewTrigger.GetPlayersCountInTrigger() > 0 && basicEnemy.canSee)
         {
-            basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
+            if(basicEnemy.target == null)
+                basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
+
             stateMachine.SetState(basicEnemy.moveState);
         }
     }

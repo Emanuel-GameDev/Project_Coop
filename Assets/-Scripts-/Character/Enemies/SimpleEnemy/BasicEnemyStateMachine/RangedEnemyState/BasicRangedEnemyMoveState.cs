@@ -21,7 +21,9 @@ public class BasicRangedEnemyMoveState : BasicEnemyMoveState
 
         if (basicEnemy.viewTrigger.GetPlayersCountInTrigger() > 0)
         {
-            basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
+            if (basicEnemy.target == null)
+                basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
+
             stateMachine.SetState(basicEnemy.actionState);
         }
         basicEnemy.FollowPath();

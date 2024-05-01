@@ -6,7 +6,8 @@ public interface IPerfectTimeReceiver
 {
     void SetPerfectTimingHandler(PerfectTimingHandler handler);
 
-    void PerfectTimeStarted();
+     void  PerfectTimeStarted(IDamager damager);
+    
 
     void PerfectTimeEnded();
 }

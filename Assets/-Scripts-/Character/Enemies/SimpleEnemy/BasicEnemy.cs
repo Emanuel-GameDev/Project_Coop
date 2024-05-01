@@ -336,7 +336,7 @@ public class BasicEnemy : EnemyCharacter
 
     public override void TargetSelection()
     {
-        
+        base.TargetSelection();
     }
 
     //public void SetTarget(Transform newTarget)
@@ -400,12 +400,12 @@ public class BasicEnemy : EnemyCharacter
 
 
 
-    public virtual void SetTarget(Transform newTarget)
+    public override void SetTarget(Transform newTarget)
     {
         target = newTarget;
 
-        if(newTarget.GetComponent<PlayerCharacter>()!=null)
-            currentTarget = newTarget.GetComponent<PlayerCharacter>();
+        if(newTarget.TryGetComponent<PlayerCharacter>(out PlayerCharacter player))
+            currentTarget = player;
     }
 
    

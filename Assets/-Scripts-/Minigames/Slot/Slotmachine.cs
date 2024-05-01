@@ -1,13 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.U2D.Animation;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Slotmachine : MonoBehaviour
 {
     [Header("Variabili slot")]
     [SerializeField, Tooltip("Numero massimo di tentativi prima di vincere")]
     int lives = 3;
+    int remainingLives;
     [Header("Variabili colonna")]
 
     [SerializeField, Tooltip("Numero delle figure totali nella colonna")]
@@ -77,6 +81,34 @@ public class Slotmachine : MonoBehaviour
 
     [SerializeField] private SceneChanger sceneChanger;
 
+    [Header("Dialogue Settings")]
+    [SerializeField]
+    private GameObject dialogueBox;
+    [SerializeField]
+    private Dialogue winDialogue;
+    [SerializeField]
+    private Dialogue loseDialogue;
+    [SerializeField]
+    private UnityEvent onWinDialogueEnd;
+    [SerializeField]
+    private UnityEvent onLoseDialogueEnd;
+
+    private DialogueBox _dialogueBox;
+
+
+    [Header("Rewards Settings")]
+    [SerializeField]
+    private int coinForEachPlayer;
+    [SerializeField]
+    private int coinForFirstPlayer;
+    [SerializeField]
+    private int keyForEachPlayer;
+    [SerializeField]
+    private int keyForFirstPlayer;
+    [SerializeField]
+    private WinScreenHandler winScreenHandler;
+    
+
 
     //obsoleto
     //public GameObject GO;
@@ -84,6 +116,13 @@ public class Slotmachine : MonoBehaviour
     private void Awake()
     {
         playerSprites = new List<Sprite>() { dpsSprite, tankSprite, rangedSprite, healerSprite };
+
+        if (dialogueBox != null)
+        {
+            _dialogueBox = dialogueBox.GetComponent<DialogueBox>();
+        }
+        else
+            Debug.LogError("DialogueBox is null");
 
         //sceneChanger = GetComponent<SceneChanger>();
 
@@ -99,7 +138,9 @@ public class Slotmachine : MonoBehaviour
 
     public void InitializeSlotMachineMinigame()
     {
+        randomListOfPlayer.Clear();
         RandomReorder(listOfCurrentPlayer);
+        remainingLives = lives;
 
         //forse cancellare
         /*
@@ -117,25 +158,16 @@ public class Slotmachine : MonoBehaviour
             row.StartSlotMachine();
         }
 
-        lives--;
-        slotMachineUI.UpdateRemainingTryText(lives);
+        remainingLives--;
+        slotMachineUI.UpdateRemainingTryText(remainingLives);
 
 
         canInteract = true;
         inGame = true;
 
+        currentNumberOfTheSlot = 0;
+
         buttonSlots[currentNumberOfTheSlot].Arrow.SetActive(true);
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            StartCoroutine(RestartSlotMachine());
-        }
-
-
-
     }
 
     private void CheckForWin()
@@ -168,7 +200,7 @@ public class Slotmachine : MonoBehaviour
 
             
 
-            if (lives <= 0)
+            if (remainingLives <= 0)
             {
                 canInteract = false;
                 inGame = false;
@@ -176,6 +208,10 @@ public class Slotmachine : MonoBehaviour
 
                 //fai animazione/dialogo perdita
                 StartCoroutine(ShowLose());
+
+                
+
+
                 return;
             }
 
@@ -187,14 +223,24 @@ public class Slotmachine : MonoBehaviour
     {
         yield return new WaitForSeconds(screenDelay);
 
-        slotMachineUI.ShowWin();
+        _dialogueBox.SetDialogue(winDialogue);
+        _dialogueBox.AddDialogueEnd(onWinDialogueEnd);
+
+        dialogueBox.SetActive(true);
+        _dialogueBox.StartDialogue();
+
+        MakeRankList();
     }
 
     private IEnumerator ShowLose()
     {
         yield return new WaitForSeconds(screenDelay);
 
-        slotMachineUI.Showlose();
+        _dialogueBox.SetDialogue(loseDialogue);
+        _dialogueBox.AddDialogueEnd(onLoseDialogueEnd);
+
+        dialogueBox.SetActive(true);
+        _dialogueBox.StartDialogue();
     }
 
 
@@ -397,8 +443,8 @@ public class Slotmachine : MonoBehaviour
         if (canInteract && player == listOfCurrentPlayer[0]) //restarta la slot se tutta ferma
         {
             canInteract = false;
-            lives--;
-            slotMachineUI.UpdateRemainingTryText(lives);
+            remainingLives--;
+            slotMachineUI.UpdateRemainingTryText(remainingLives);
             StartCoroutine(RestartSlotMachine());
 
             //animazione manopola
@@ -422,6 +468,70 @@ public class Slotmachine : MonoBehaviour
         
     }
 
+    private void MakeRankList()
+    {
+        List<SlotPlayer> winOrder = new();
+
+        foreach (SlotPlayer player in listOfCurrentPlayer)
+        {
+            winOrder.Add(player);
+        }
+
+        
+
+        List<ePlayerCharacter> ranking = new();
+
+        foreach (SlotPlayer player in winOrder)
+        {
+            ranking.Add(player.GetCharacter());
+        }
+
+        foreach (ePlayerCharacter c in Enum.GetValues(typeof(ePlayerCharacter)))
+        {
+            if (c != ePlayerCharacter.EmptyCharacter)
+            {
+                if (!ranking.Contains(c))
+                {
+                    ranking.Add(c);
+                }
+            }
+        }
+
+        for (int i = 0; i < ranking.Count; i++)
+        {
+            int totalCoin = 0;
+            int totalKey = 0;
+            CharacterSaveData saveData = SaveManager.Instance.GetPlayerSaveData(ranking[i]);
+            if (saveData != null)
+            {
+                totalCoin = saveData.extraData.coin;
+                totalKey = saveData.extraData.key;
+            }
+
+            if (i == 0)
+            {
+                totalCoin += coinForFirstPlayer;
+                totalKey += keyForFirstPlayer;
+
+                winScreenHandler.SetCharacterValues(ranking[i], Rank.First, coinForFirstPlayer, totalCoin, keyForFirstPlayer, totalKey);
+            }
+            else if (Enum.TryParse<Rank>(i.ToString(), out Rank rank))
+            {
+                totalCoin += coinForEachPlayer;
+                totalKey += keyForEachPlayer;
+
+                winScreenHandler.SetCharacterValues(ranking[i], rank, coinForEachPlayer, totalCoin, keyForEachPlayer, totalKey);
+            }
+
+            if (saveData != null)
+            {
+                saveData.extraData.coin = totalCoin;
+                saveData.extraData.key = totalKey;
+            }
+
+        }
+    }
+
 
 
     IEnumerator WaitForPlayers()
@@ -429,6 +539,9 @@ public class Slotmachine : MonoBehaviour
         yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
         //dialogueObject.SetActive(true);
         //DA RIVEDERE #MODIFICATO
+
+        dialogueBox.SetActive(true);
+        _dialogueBox.StartDialogue();
     }
 
     public void ExitMinigame()
