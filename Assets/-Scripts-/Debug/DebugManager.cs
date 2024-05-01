@@ -105,6 +105,10 @@ public class DebugManager : MonoBehaviour
                 KillPlayer();
             }
 
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                ChallengeManager.Instance.selectedChallenge.AutoComplete();
+            }
             if (guardaQuestoTooltipPerLeIstruzioni) guardaQuestoTooltipPerLeIstruzioni = false;
             istructions = text;
         }

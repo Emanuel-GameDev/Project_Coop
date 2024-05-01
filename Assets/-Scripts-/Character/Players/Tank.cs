@@ -31,7 +31,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     float perfectBlockDamage;
     [SerializeField, Tooltip("Angolo parata frontale al tank")]
     float blockAngle = 90;
-    [SerializeField, Tooltip("finestra di tempo nella quale appena viene colpito pu� parare per fare parata perfetta")]
+    [SerializeField, Tooltip("dempo per anulare notifica parta perfetta se non colpito ma avviso inviato")]
     float perfectBlockTimeWindow = 0.4f;
 
 

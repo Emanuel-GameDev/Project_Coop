@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
@@ -41,6 +42,7 @@ public class Challenge : MonoBehaviour
     [HideInInspector] public UnityEvent onChallengeFailReset;
     [HideInInspector] public bool challengeCompleted;
     [HideInInspector] private bool challengeStarted;
+    [HideInInspector] public ChallengeUI challengeUI;
     private string destinationSceneName = "ChallengeSceneTest";
 
     public void ActivateGameobject()
@@ -56,6 +58,7 @@ public class Challenge : MonoBehaviour
     {
         Debug.Log("SFIDA INIZIATA");
         ChallengeManager.Instance.started = challengeStarted = true;
+        ChallengeManager.Instance.selectedChallenge = this;
         onChallengeStart?.Invoke();
 
         
@@ -81,6 +84,8 @@ public class Challenge : MonoBehaviour
     public virtual void OnWinChallenge()
     {
         Debug.Log("HAI VINTO");
+        challengeCompleted = true;
+        
         onChallengeSuccessEvent?.Invoke();
         foreach(Transform HPContainer in HPHandler.Instance.HpContainerTransform)
         {
@@ -88,26 +93,35 @@ public class Challenge : MonoBehaviour
             if(HPContainer.GetComponentInChildren<CharacterHUDContainer>() != null)
             {
                 RewardContainer rewardContainer = HPContainer.GetComponentInChildren<RewardContainer>();
-                GameObject tempReward = new GameObject();
+               
                 if (rewardContainer.right)
                 {
-                    tempReward = Instantiate(RewardManager.Instance.rightPrefabRewards, rewardContainer.transform);
+                    GameObject tempReward = Instantiate(RewardManager.Instance.rightPrefabRewards, rewardContainer.transform);
+                    tempReward.transform.position = rewardContainer.targetPosition.position;
+                    tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, KeysOnSuccess);
+                    rewardContainer.rewardPopUp = tempReward;
+                    StartCoroutine(rewardContainer.MoveCooroutine());
+
                 }
                 else
                 {
-                    tempReward = Instantiate(RewardManager.Instance.leftPrefabRewards, rewardContainer.transform);
+                    GameObject tempReward = Instantiate(RewardManager.Instance.leftPrefabRewards, rewardContainer.transform);
+                    tempReward.transform.position = rewardContainer.targetPosition.position;
+                    tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, KeysOnSuccess);
+                    rewardContainer.rewardPopUp = tempReward;
+                    StartCoroutine(rewardContainer.MoveCooroutine());
+
                 }
-               
-                tempReward.transform.position = rewardContainer.targetPosition.position;
-                tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, KeysOnSuccess);
-                rewardContainer.rewardPopUp = tempReward;
-                StartCoroutine(rewardContainer.MoveAndFadeRoutine());
-               
+
             }
            
         }
+
         TimerText.gameObject.transform.parent.gameObject.SetActive(false);
 
+        challengeUI.SetUpUI();
+        ResetChallenge();
+       
     }
     public virtual void AddToSpawned(EnemyCharacter tempEnemy)
     {
@@ -128,7 +142,7 @@ public class Challenge : MonoBehaviour
     {
         foreach (EnemyCharacter e in spawnedEnemiesList) 
         { 
-            e.gameObject.SetActive(false);
+           Destroy(e.gameObject);
         }
         foreach(EnemySpawner s in enemySpawnPoints)
         {
@@ -137,6 +151,7 @@ public class Challenge : MonoBehaviour
         }
         enemySpawned = false;
         challengeStarted = false;
+        ChallengeManager.Instance.started = false;
     }
 
     protected void DisplayTimer(float timeToDisplay)
@@ -153,4 +168,8 @@ public class Challenge : MonoBehaviour
 
     }
 
+    internal void AutoComplete()
+    {
+       OnWinChallenge();
+    }
 }

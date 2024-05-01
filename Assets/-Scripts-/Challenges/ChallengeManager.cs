@@ -23,14 +23,15 @@ public class ChallengeManager : MonoBehaviour, IInteractable
             return _instance;
         }
     }
-
-    
+   
     [SerializeField] private List<Challenge> challengesList;
     [SerializeField] private MenuInfo menuInfo;
     [SerializeField] private GameObject panel;
     [SerializeField] private GameObject challengeUIPrefab;
+
+    [SerializeField] private List<ChallengeUI> currentChallenges;
    
-    private Challenge selectedChallenge;
+    public Challenge selectedChallenge;
     public bool started;
     
 
@@ -41,13 +42,18 @@ public class ChallengeManager : MonoBehaviour, IInteractable
         for (int i = 0; i < 3; ++i)
         {
             GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
-            ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();
+            ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();          
             tempUI.challengeSelected = challengesList[i];
+            tempUI.challengeSelected.challengeUI = tempUI;
             tempUI.SetUpUI();
+            currentChallenges.Add(tempUI);
         }
         
 
     }
+
+    
+    
     public static void Shuffle(List<Challenge> list)
     {
         int count = list.Count;
@@ -65,8 +71,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     {
         if(!started)
         MenuManager.Instance.OpenMenu(menuInfo,CoopManager.Instance.GetPlayer(ePlayerID.Player1));
-       
-       
+             
     }
 
    
