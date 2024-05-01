@@ -15,6 +15,7 @@ public enum EMessageType
     characterDamaged,
     characterSwitched,
     characterJoined
+    
 }
 
 
