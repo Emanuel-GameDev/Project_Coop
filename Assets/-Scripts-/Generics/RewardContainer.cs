@@ -14,7 +14,7 @@ public class RewardContainer : MonoBehaviour
     [HideInInspector] public GameObject rewardPopUp;
 
   
-    public IEnumerator MoveAndFadeRoutine()
+    public IEnumerator MoveCooroutine()
     {
         float moveDuration = RewardManager.Instance.moveDuration;
         float popUpDuration = RewardManager.Instance.popUpDuration;
@@ -53,7 +53,7 @@ public class RewardContainer : MonoBehaviour
         // spriteRenderer.color = Color.clear;
 
         // Optionally destroy or deactivate the GameObject after fading out
-        gameObject.SetActive(false);
+        Destroy(rewardPopUp);
     }
 
 }
