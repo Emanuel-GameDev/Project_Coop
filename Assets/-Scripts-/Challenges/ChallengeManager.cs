@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Rendering;
 
 public class ChallengeManager : MonoBehaviour, IInteractable
 {
@@ -28,16 +31,26 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     [SerializeField] private MenuInfo menuInfo;
     [SerializeField] private GameObject panel;
     [SerializeField] private GameObject challengeUIPrefab;
-
     [SerializeField] private List<ChallengeUI> currentChallenges;
-   
-    public Challenge selectedChallenge;
-    public bool started;
-    
+
+    [Header("Dialogue")]
+    [SerializeField] Dialogue dialogueOnInteraction;
+    public DialogueBox dialogueBox;
+
+    [Header("Timer")]
+    [SerializeField] public TextMeshProUGUI timerText;
+
+
+    [HideInInspector] public Challenge selectedChallenge;
+    [HideInInspector] public bool started;
+    [HideInInspector] public UnityEvent onInteractionAction;
+
+
 
 
     private void Start()
     {
+        onInteractionAction.AddListener(OnInteraction);
         Shuffle(challengesList);
         for (int i = 0; i < 3; ++i)
         {
@@ -69,9 +82,16 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     
     public void Interact(IInteracter interacter)
     {
-        if(!started)
-        MenuManager.Instance.OpenMenu(menuInfo,CoopManager.Instance.GetPlayer(ePlayerID.Player1));
-             
+        if (!started)
+        {
+           
+           dialogueBox.SetDialogue(dialogueOnInteraction);
+           dialogueBox.RemoveAllDialogueEnd();
+           dialogueBox.AddDialogueEnd(onInteractionAction);
+           dialogueBox.StartDialogue();
+           
+        }
+        
     }
 
    
@@ -104,5 +124,10 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     public void AbortInteraction(IInteracter interacter)
     {
         
+    }
+    private void OnInteraction()
+    {
+        MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetPlayer(ePlayerID.Player1));
+        dialogueBox.RemoveAllDialogueEnd();
     }
 }
