@@ -23,11 +23,12 @@ public class C_KillAllInTimer : Challenge
 
     public override void Initiate()
     {
-        base.Initiate();     
-            dialogueBox.gameObject.SetActive(true);
-            dialogueBox.SetDialogue(dialogueOnStart);
-            dialogueBox.AddDialogueEnd(onChallengeStartAction);
-            dialogueBox.StartDialogue();
+        base.Initiate();
+
+        ChallengeManager.Instance.dialogueBox.gameObject.SetActive(true);
+        ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnStart);
+        ChallengeManager.Instance.dialogueBox.AddDialogueEnd(onChallengeStartAction);
+        ChallengeManager.Instance.dialogueBox.StartDialogue();
 
         players = PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
         foreach (PlayerCharacter p in players)
@@ -55,15 +56,23 @@ public class C_KillAllInTimer : Challenge
         startTimer = false;
         base.OnFailChallenge();
 
+        ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnFailure);
+        ChallengeManager.Instance.dialogueBox.RemoveAllDialogueEnd();
+        ChallengeManager.Instance.dialogueBox.AddDialogueEnd(onChallengeFailReset);
+        ChallengeManager.Instance.dialogueBox.StartDialogue();
+
+
+
     }
     public override void OnWinChallenge()
     {
         base.OnWinChallenge();
 
         startTimer = false;
-        dialogueBox.SetDialogue(dialogueOnSuccess);
-        dialogueBox.RemoveAllDialogueEnd();
-        dialogueBox.StartDialogue();
+
+        ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnSuccess);
+        ChallengeManager.Instance.dialogueBox.RemoveAllDialogueEnd();
+        ChallengeManager.Instance.dialogueBox.StartDialogue();
     }
     public override void AddToSpawned(EnemyCharacter enemyCharacter)
     {
