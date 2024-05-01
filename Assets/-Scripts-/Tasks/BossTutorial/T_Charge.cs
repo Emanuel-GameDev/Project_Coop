@@ -1,8 +1,6 @@
 using MBT;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace MBTExample
 {
@@ -16,35 +14,52 @@ namespace MBTExample
         private KerberosBossCharacter bossCharacter;
         private bool started = false;
         private bool mustStop = false;
-        private float tempTimer;        
+        private float tempTimer;
         private Vector3 targetPosition;
-        
+
 
         public override void OnEnter()
         {
-          
-                bossCharacter = parentGameObject.Value.GetComponent<KerberosBossCharacter>();
-           
+
+            bossCharacter = parentGameObject.Value.GetComponent<KerberosBossCharacter>();
+
             started = false;
             mustStop = false;
             bossCharacter.parried = false;
+            bool temp = false;
+            int i = 0;
 
-            Vector3 direction = (targetTransform.Value.position -bossCharacter.transform.position).normalized;
-            targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), (direction.y * bossCharacter.chargeDistance),0) + bossCharacter.transform.position; 
 
-           
+            Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
+            targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), (direction.y * bossCharacter.chargeDistance), 0) + bossCharacter.transform.position;
+
+            while (!temp)
+            {
+                i++;
+                Vector3 offset = new Vector3((i / 10f) * direction.x, (i / 10f) * direction.y, 0);
+                Vector3 newTargetPosition = targetPosition - offset;
+
+                if (NavMesh.SamplePosition(newTargetPosition, out NavMeshHit hit, bossCharacter.chargeDistance, NavMesh.AllAreas))
+                {
+                    targetPosition = hit.position;
+                    temp = true;
+                }
+                
+            }
+
+
+
+
             //Setto il danno
             bossCharacter.SetChargeDamageData();
-
-            
             bossCharacter.anim.SetTrigger("PrepCharge");
             ShowAttackPreview(true);
             tempTimer = 0;
             bossCharacter.anim.ResetTrigger("Return");
 
         }
-        
-           
+
+
 
         public override NodeResult Execute()
         {
@@ -52,7 +67,7 @@ namespace MBTExample
             {
 
                 if (bossCharacter.parried)
-                {                  
+                {
                     mustStop = true;
 
                     //funzione player spinta inetro                    
@@ -65,9 +80,6 @@ namespace MBTExample
                     if (!started)
                     {
                         ShowAttackPreview(false);
-                        Vector3 direction = (targetTransform.Value.position - bossCharacter.transform.position).normalized;
-                        targetPosition = new Vector3((direction.x * bossCharacter.chargeDistance), (direction.y * bossCharacter.chargeDistance), 0) + bossCharacter.transform.position;
-
                        
                         bossCharacter.Agent.isStopped = false;
                         bossCharacter.Agent.speed = bossCharacter.chargeSpeed;
@@ -81,7 +93,7 @@ namespace MBTExample
 
                     if (mustStop || dist <= bossCharacter.minDistance)
                     {
-                        
+
                         bossCharacter.Agent.isStopped = true;
                         bossCharacter.anim.SetTrigger("Return");
 
@@ -101,11 +113,11 @@ namespace MBTExample
 
         public void ShowAttackPreview(bool value)
         {
-            bossCharacter.canShowPreview = value;           
+            bossCharacter.canShowPreview = value;
             bossCharacter.pivotPreviewArrow.SetActive(value);
-            
+
         }
-        
-        
+
     }
+    
 }

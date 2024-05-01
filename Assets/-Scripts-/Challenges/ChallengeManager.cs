@@ -24,13 +24,12 @@ public class ChallengeManager : MonoBehaviour, IInteractable
         }
     }
 
-
+    
     [SerializeField] private List<Challenge> challengesList;
     [SerializeField] private MenuInfo menuInfo;
     [SerializeField] private GameObject panel;
     [SerializeField] private GameObject challengeUIPrefab;
-    public GameObject rewardsUIprefeb;
-    public float rewardsPopUpDuration;
+   
     private Challenge selectedChallenge;
     public bool started;
     

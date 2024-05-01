@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using System.Collections.Generic;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -81,14 +82,27 @@ public class Challenge : MonoBehaviour
     {
         Debug.Log("HAI VINTO");
         onChallengeSuccessEvent?.Invoke();
-        foreach(Transform rewardContainer in HPHandler.Instance.rewardsContainerTransform)
+        foreach(Transform HPContainer in HPHandler.Instance.HpContainerTransform)
         {
            
-            if(rewardContainer.parent.GetComponentInChildren<CharacterHUDContainer>() != null)
+            if(HPContainer.GetComponentInChildren<CharacterHUDContainer>() != null)
             {
-                GameObject tempReward = Instantiate(ChallengeManager.Instance.rewardsUIprefeb, rewardContainer);
+                RewardContainer rewardContainer = HPContainer.GetComponentInChildren<RewardContainer>();
+                GameObject tempReward = new GameObject();
+                if (rewardContainer.right)
+                {
+                    tempReward = Instantiate(RewardManager.Instance.rightPrefabRewards, rewardContainer.transform);
+                }
+                else
+                {
+                    tempReward = Instantiate(RewardManager.Instance.leftPrefabRewards, rewardContainer.transform);
+                }
+               
+                tempReward.transform.position = rewardContainer.targetPosition.position;
                 tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, KeysOnSuccess);
-                Destroy(tempReward,ChallengeManager.Instance.rewardsPopUpDuration);
+                rewardContainer.rewardPopUp = tempReward;
+                StartCoroutine(rewardContainer.MoveAndFadeRoutine());
+               
             }
            
         }
@@ -105,7 +119,6 @@ public class Challenge : MonoBehaviour
     {
        
     }
-
     public void ResetScene()
     {
             GameManager.Instance.ChangeScene(destinationSceneName);        

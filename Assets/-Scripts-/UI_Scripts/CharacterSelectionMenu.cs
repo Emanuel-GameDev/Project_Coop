@@ -21,6 +21,31 @@ public class CharacterSelectionMenu : MonoBehaviour
     [SerializeField]
     private GameObject fasciaReady;
 
+    private string nextScene;
+    public string NextScene
+    {
+        set
+        {
+            if (value != "" && value != null)
+            {
+                nextScene = value;
+            }
+        }
+        get { return nextScene; }
+    }
+
+    [Space]
+    [Title("BACK SLIDER")]
+    [Space]
+
+    [SerializeField]
+    private Slider backSlider;
+
+    [SerializeField]
+    private float backDuration;
+
+    private bool cancelPressed = false;
+    private float cancelElapsedTime = 0;    
 
     private List<CursorBehaviour> activeCursors = new List<CursorBehaviour>();
 
@@ -36,7 +61,27 @@ public class CharacterSelectionMenu : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.LoadSceneInbackground("TutorialScene");
+        if (NextScene == null)
+            NextScene = "TutorialScene";
+    }
+
+    private void Update()
+    {
+        if (cancelPressed)
+        {
+            cancelElapsedTime += Time.deltaTime;
+
+            float progress = cancelElapsedTime / backDuration;
+            backSlider.value = Mathf.Clamp01(progress);
+
+            if (progress >= 1f)
+                GoBackToMainMenu();
+        }
+    }
+
+    private void GoBackToMainMenu()
+    {
+        GameManager.Instance.ChangeScene("TitleScreenAndMainMenu");
     }
 
     internal bool AddToActiveCursors(CursorBehaviour cursor)
@@ -184,6 +229,22 @@ public class CharacterSelectionMenu : MonoBehaviour
         }
     }
 
+    internal void TriggerCancelPressed(bool mode, ePlayerID ID)
+    {
+        if (ID != ePlayerID.Player1) return;
+
+        if (mode)
+        {
+            cancelPressed = true;
+        }
+        else
+        {
+            cancelPressed = false;
+            cancelElapsedTime = 0;
+            backSlider.value = 0;
+        }
+    }
+
     public void SelectionOver(ePlayerID ID)
     {
         // Check se è il player 1 a premere
@@ -196,7 +257,7 @@ public class CharacterSelectionMenu : MonoBehaviour
                 cursor.GetInputHandler().SetStartingCharacter(cursor.GetCharacter());
             }
 
-            GameManager.Instance.ActivateLoadedScene();
+            GameManager.Instance.ChangeScene(nextScene);
         }
     }
 }

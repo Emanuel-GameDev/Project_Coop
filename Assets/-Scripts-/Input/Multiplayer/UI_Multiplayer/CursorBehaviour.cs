@@ -122,6 +122,9 @@ public class CursorBehaviour : InputReceiver
 
     public override void Cancel(InputAction.CallbackContext context)
     {
+        if (context.started) CharacterSelectionMenu.Instance.TriggerCancelPressed(true, playerID);
+        else if (context.canceled) CharacterSelectionMenu.Instance.TriggerCancelPressed(false, playerID);
+
         if (objectSelected)
         {
             bool response = CharacterSelectionMenu.Instance.TriggerPlayerSelection(false, gameObject);
