@@ -88,7 +88,16 @@ public class Challenge : MonoBehaviour
             if(HPContainer.GetComponentInChildren<CharacterHUDContainer>() != null)
             {
                 RewardContainer rewardContainer = HPContainer.GetComponentInChildren<RewardContainer>();
-                GameObject tempReward = Instantiate(ChallengeManager.Instance.rewardsUIprefeb, rewardContainer.transform);
+                GameObject tempReward = new GameObject();
+                if (rewardContainer.right)
+                {
+                    tempReward = Instantiate(RewardManager.Instance.rightPrefabRewards, rewardContainer.transform);
+                }
+                else
+                {
+                    tempReward = Instantiate(RewardManager.Instance.leftPrefabRewards, rewardContainer.transform);
+                }
+               
                 tempReward.transform.position = rewardContainer.targetPosition.position;
                 tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, KeysOnSuccess);
                 rewardContainer.rewardPopUp = tempReward;
