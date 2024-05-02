@@ -17,7 +17,7 @@ public class JudeAbilityTutorialFase : TutorialFase
     {
         base.Enter();
 
-        //PubSub.Instance.RegisterFunction(EMessageType.healAreaExpired, HealAreaExpired);
+        PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityActivated, HealAreaExpired);
 
         faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
 

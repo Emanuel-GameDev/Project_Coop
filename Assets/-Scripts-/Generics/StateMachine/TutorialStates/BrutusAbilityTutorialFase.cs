@@ -21,7 +21,7 @@ public class BrutusAbilityTutorialFase : TutorialFase
         base.Enter();
 
         PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityActivated, AllowUpdate);
-        PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, UpdateCounter);
+        PubSub.Instance.RegisterFunction(EMessageType.characterHitted, UpdateCounter);
         PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityExpired, UnallowUpdate);
 
         faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
@@ -49,7 +49,6 @@ public class BrutusAbilityTutorialFase : TutorialFase
             if (character.gameObject.GetComponent<DPS>() != null)
             {
                 canUpdateCounter = false;
-                Debug.Log("CannotUpdate");
             }
         }
     }
@@ -62,7 +61,6 @@ public class BrutusAbilityTutorialFase : TutorialFase
             if (character.gameObject.GetComponent<DPS>() != null)
             {
                 canUpdateCounter = true;
-                Debug.Log("CanUpdate");
             }
         }
     }
@@ -76,10 +74,7 @@ public class BrutusAbilityTutorialFase : TutorialFase
             PlayerCharacter character = (PlayerCharacter)obj;
             if (character.gameObject.GetComponent<DPS>() != null)
             {
-
-
                 hitCounter++;
-                Debug.Log("Update");
                 if (hitCounter >= 3)
                 {
                     stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));

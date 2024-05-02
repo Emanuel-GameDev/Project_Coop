@@ -467,6 +467,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     public override void TakeDamage(DamageData data)
     {
+        PubSub.Instance.Notify(EMessageType.characterHitted, this);
         if (!isInvulnerable && !isDodging)
         {
             base.TakeDamage(data);
