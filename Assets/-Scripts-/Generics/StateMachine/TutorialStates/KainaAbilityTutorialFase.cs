@@ -4,14 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CassiusAbilityTutorialFase : TutorialFase
+public class KainaAbilityTutorialFase : TutorialFase
 {
     TutorialManager tutorialManager;
     TutorialFaseData faseData;
 
-    int numberOfHealAreaExpired = 0;
-
-    public CassiusAbilityTutorialFase(TutorialManager tutorialManager)
+    public KainaAbilityTutorialFase(TutorialManager tutorialManager)
     {
         this.tutorialManager = tutorialManager;
     }
@@ -20,7 +18,7 @@ public class CassiusAbilityTutorialFase : TutorialFase
     {
         base.Enter();
 
-        PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityExpired, HealAreaExpired);
+        PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityActivated, StartEndFaseCountdown);
 
         faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
 
@@ -33,22 +31,26 @@ public class CassiusAbilityTutorialFase : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
-        numberOfHealAreaExpired = 0;
+        tutorialManager.tutorialEnemy.SetTarget(tutorialManager.healer.transform);
+        tutorialManager.DeactivateEnemyAI();
+
     }
 
-    private void HealAreaExpired(object obj)
+    private void StartEndFaseCountdown(object obj)
     {
-        if(obj is Healer)
+        if(obj is Tank)
         {
-            numberOfHealAreaExpired++;
-
-            if(numberOfHealAreaExpired >= 1)
-            {
-                stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
-            }
+            tutorialManager.StartCoroutine(WaitSeconds());
         }
-
     }
+
+    IEnumerator WaitSeconds()
+    {
+        yield return new WaitForSecondsRealtime(5);
+        stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+        tutorialManager.DeactivateEnemyAI();
+    }
+  
 
     private void WaitAfterDialogue()
     {
@@ -56,7 +58,7 @@ public class CassiusAbilityTutorialFase : TutorialFase
 
         tutorialManager.ResetStartingCharacterAssosiacion();
 
-        tutorialManager.inputBindings[tutorialManager.healer].SetPlayerCharacter(tutorialManager.healer);
+        tutorialManager.inputBindings[tutorialManager.tank].SetPlayerCharacter(tutorialManager.tank);
 
         tutorialManager.DeactivateAllPlayerInputs();
 
@@ -66,8 +68,8 @@ public class CassiusAbilityTutorialFase : TutorialFase
             ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         }
 
-        tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
-
+        tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
+        tutorialManager.ActivateEnemyAI();
     }
 
 

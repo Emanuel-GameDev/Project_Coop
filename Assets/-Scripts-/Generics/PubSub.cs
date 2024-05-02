@@ -15,7 +15,10 @@ public enum EMessageType
     characterDamaged,
     characterSwitched,
     characterJoined,
-    healAreaExpired
+    healAreaExpired,
+    kainaTaunt,
+    uniqueAbilityActivated,
+    uniqueAbilityExpired
     
 }
 

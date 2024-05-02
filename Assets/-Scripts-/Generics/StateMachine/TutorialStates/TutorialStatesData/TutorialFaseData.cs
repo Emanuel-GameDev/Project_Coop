@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
 
-[CreateAssetMenu(menuName = "Tutorial/TutorialFaseData")]
+[CreateAssetMenu(menuName = "Tutorial/TutorialFaseData/TutorialFaseData")]
 public class TutorialFaseData : ScriptableObject
 {
     [SerializeField] public TutorialFaseType faseType;

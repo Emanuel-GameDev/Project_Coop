@@ -620,7 +620,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         damageReceivedMultiplier = healthDamageReductionMulty;
         Invoke(nameof(SetStatToNormal), aggroDuration);
 
-
+        PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated,this);
     }
     private void StartCooldownUniqueAbility()
     {

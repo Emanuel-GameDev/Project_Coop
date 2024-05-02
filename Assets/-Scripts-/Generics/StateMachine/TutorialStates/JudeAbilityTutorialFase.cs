@@ -1,17 +1,14 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CassiusAbilityTutorialFase : TutorialFase
+public class JudeAbilityTutorialFase : TutorialFase
 {
     TutorialManager tutorialManager;
     TutorialFaseData faseData;
 
-    int numberOfHealAreaExpired = 0;
-
-    public CassiusAbilityTutorialFase(TutorialManager tutorialManager)
+    public JudeAbilityTutorialFase(TutorialManager tutorialManager)
     {
         this.tutorialManager = tutorialManager;
     }
@@ -20,7 +17,7 @@ public class CassiusAbilityTutorialFase : TutorialFase
     {
         base.Enter();
 
-        PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityExpired, HealAreaExpired);
+        //PubSub.Instance.RegisterFunction(EMessageType.healAreaExpired, HealAreaExpired);
 
         faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
 
@@ -33,22 +30,18 @@ public class CassiusAbilityTutorialFase : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
-        numberOfHealAreaExpired = 0;
+        //numberOfHealAreaExpired = 0;
     }
 
-    private void HealAreaExpired(object obj)
-    {
-        if(obj is Healer)
-        {
-            numberOfHealAreaExpired++;
+    //private void HealAreaExpired(object obj)
+    //{
+    //    numberOfHealAreaExpired++;
 
-            if(numberOfHealAreaExpired >= 1)
-            {
-                stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
-            }
-        }
-
-    }
+    //    if (numberOfHealAreaExpired >= 1)
+    //    {
+    //        stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+    //    }
+    //}
 
     private void WaitAfterDialogue()
     {
@@ -56,7 +49,7 @@ public class CassiusAbilityTutorialFase : TutorialFase
 
         tutorialManager.ResetStartingCharacterAssosiacion();
 
-        tutorialManager.inputBindings[tutorialManager.healer].SetPlayerCharacter(tutorialManager.healer);
+        tutorialManager.inputBindings[tutorialManager.dps].SetPlayerCharacter(tutorialManager.healer);
 
         tutorialManager.DeactivateAllPlayerInputs();
 
@@ -66,7 +59,7 @@ public class CassiusAbilityTutorialFase : TutorialFase
             ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         }
 
-        tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
+        tutorialManager.inputBindings[tutorialManager.dps].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
 
     }
 

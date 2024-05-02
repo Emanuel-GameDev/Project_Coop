@@ -519,11 +519,11 @@ public class TutorialManager : MonoBehaviour
                 break;
 
             case TutorialFaseType.brutusAbility:
-                stateMachine.SetState(new HealTutorialState(this));
+                stateMachine.SetState(new BrutusAbilityTutorialFase(this));
                 break;
 
             case TutorialFaseType.kainaAbility:
-                stateMachine.SetState(new HealTutorialState(this));
+                stateMachine.SetState(new KainaAbilityTutorialFase(this));
                 break;
 
             case TutorialFaseType.cassiusAbility:
@@ -531,7 +531,7 @@ public class TutorialManager : MonoBehaviour
                 break;
 
             case TutorialFaseType.judeAbility:
-                stateMachine.SetState(new HealTutorialState(this));
+                stateMachine.SetState(new JudeAbilityTutorialFase(this));
                 break;
         }
 
