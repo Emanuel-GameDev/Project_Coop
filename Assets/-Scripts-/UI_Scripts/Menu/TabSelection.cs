@@ -1,34 +1,56 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TabSelection : MonoBehaviour
 {
-    [SerializeField]
-    Image targetGraphics;
+    //[SerializeField]
+    //Animator animator;
+
+    //static string NORMAL = "Normal";
+    //static string SELECTED = "Selected";
+
+
+    //[SerializeField]
+    //Image targetGraphics;
+
+    //[SerializeField]
+    //Sprite selectedSprite;
+
+    //Sprite defaultSprite;
 
     [SerializeField]
-    Sprite selectedSprite;
-
-    Sprite defaultSprite;
+    RectTransform targetRectTransform;
+    [SerializeField]
+    Vector2 offsetPosition =new(0,-25);
 
     private void Awake()
     {
-        defaultSprite = targetGraphics.sprite;
+        //defaultSprite = targetGraphics.sprite;
+
+        //if (animator == null)
+        //    animator = GetComponent<Animator>();
+
+        //animator.SetTrigger(NORMAL);
+        if (targetRectTransform == null)
+            targetRectTransform = GetComponentInChildren<RectTransform>();
     }
 
     public void Select()
     {
-        if(defaultSprite == null)
-            defaultSprite = targetGraphics.sprite;
+        //if (defaultSprite == null)
+        //    defaultSprite = targetGraphics.sprite;
 
-        targetGraphics.sprite = selectedSprite;
+        //targetGraphics.sprite = selectedSprite;
+        //animator.SetTrigger(SELECTED);
+
+        targetRectTransform.anchoredPosition = Vector2.zero;
     }
 
     public void Deselect()
     {
-        targetGraphics.sprite = defaultSprite;
+        //targetGraphics.sprite = defaultSprite;
+        //animator.SetTrigger(NORMAL);
+        targetRectTransform.anchoredPosition = offsetPosition;
     }
-    
+
 }
