@@ -21,7 +21,7 @@ public class WinScreenCharacterReferences : MonoBehaviour
 
     public void SetValues(LocalizedString rank, ePlayerCharacter character ,int earnedCoin, int totalCoin, int earnedKey, int totalKey)
     {
-        characterRank.StringReference = rank;
+       // characterRank.StringReference = rank;
         characterIcon.sprite = GameManager.Instance.GetCharacterData(character).PixelFaceSprite;
         this.earnedCoin.text = earnedCoin.ToString();
         this.totalCoin.text = totalCoin.ToString();

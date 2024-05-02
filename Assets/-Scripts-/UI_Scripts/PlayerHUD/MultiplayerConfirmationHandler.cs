@@ -24,6 +24,9 @@ public class MultiplayerConfirmationHandler : MonoBehaviour
     private int countdownDuration = 3;
 
     [SerializeField]
+    private AudioClip countDownClip;
+
+    [SerializeField]
     private TMP_Text countdownText;
 
     [SerializeField]
@@ -92,6 +95,7 @@ public class MultiplayerConfirmationHandler : MonoBehaviour
         {
             countdownStarted = true;
             StartCoroutine(CountdownCoroutine(countdownDuration));
+            AudioManager.Instance.PlayAudioClip(countDownClip, Camera.main.transform);
         }
     }
 
