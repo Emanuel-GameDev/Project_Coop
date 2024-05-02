@@ -60,7 +60,6 @@ public class LilithShopMenu : Menu
 
         foreach (PlayerCharacter pc in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
         {
-
             gameObject.GetComponentInParent<PressInteractable>().CancelInteraction(pc);
         }
 

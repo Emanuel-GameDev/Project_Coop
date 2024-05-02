@@ -1,25 +1,22 @@
-using JetBrains.Annotations;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
 
 public class Challenge : MonoBehaviour
 {
-    [Header("Generics")]  
-    public DialogueBox dialogueBox;  
+    [Header("Generics")]
+
     public LocalizedString challengeName;
     public LocalizedString challengeDescription;
-    
-    [SerializeField] protected TextMeshProUGUI TimerText;
-   
+
+
     [Header("Enemies")]
     [SerializeField] public List<EnemySpawner> enemySpawnPoints;
 
 
     [Header("OnStart")]
-    public  Dialogue dialogueOnStart;
+    public Dialogue dialogueOnStart;
     [SerializeField] UnityEvent onChallengeStart;
 
 
@@ -40,6 +37,7 @@ public class Challenge : MonoBehaviour
     [HideInInspector] public UnityEvent onChallengeFailReset;
     [HideInInspector] public bool challengeCompleted;
     [HideInInspector] private bool challengeStarted;
+    [HideInInspector] public ChallengeUI challengeUI;
     private string destinationSceneName = "ChallengeSceneTest";
 
     public void ActivateGameobject()
@@ -50,80 +48,107 @@ public class Challenge : MonoBehaviour
     {
         onChallengeStartAction.AddListener(StartChallenge);
         onChallengeFailReset.AddListener(ResetScene);
+
+
     }
     public virtual void StartChallenge()
     {
         Debug.Log("SFIDA INIZIATA");
         ChallengeManager.Instance.started = challengeStarted = true;
+        ChallengeManager.Instance.selectedChallenge = this;
         onChallengeStart?.Invoke();
 
-        
-        TimerText.gameObject.transform.parent.gameObject.SetActive(true);
-       
+
+        ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(true);
+
     }
     public virtual void OnFailChallenge()
     {
         Debug.Log("HAI PERSO");
         onChallengeFailEvent?.Invoke();
 
-        challengeCompleted = false;   
-     
+        challengeCompleted = false;
+
         ResetChallenge();
 
-        dialogueBox.SetDialogue(dialogueOnFailure);
-        dialogueBox.RemoveAllDialogueEnd();
-        dialogueBox.AddDialogueEnd(onChallengeFailReset);
-        dialogueBox.StartDialogue();
-
-        
     }
     public virtual void OnWinChallenge()
     {
         Debug.Log("HAI VINTO");
+        challengeCompleted = true;
+
         onChallengeSuccessEvent?.Invoke();
-        foreach(Transform rewardContainer in HPHandler.Instance.rewardsContainerTransform)
+        foreach (Transform HPContainer in HPHandler.Instance.HpContainerTransform)
         {
-           
-            if(rewardContainer.parent.GetComponentInChildren<CharacterHUDContainer>() != null)
+
+            if (HPContainer.GetComponentInChildren<CharacterHUDContainer>() != null)
             {
-                GameObject tempReward = Instantiate(ChallengeManager.Instance.rewardsUIprefeb, rewardContainer);
-                tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, KeysOnSuccess);
-                Destroy(tempReward,ChallengeManager.Instance.rewardsPopUpDuration);
+                RewardContainer rewardContainer = HPContainer.GetComponentInChildren<RewardContainer>();
+
+                if (rewardContainer.right)
+                {
+                    GameObject tempReward = Instantiate(RewardManager.Instance.rightPrefabRewards, rewardContainer.transform);
+                    tempReward.transform.position = rewardContainer.targetPosition.position;
+                    tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, KeysOnSuccess);
+                    rewardContainer.rewardPopUp = tempReward;
+                    StartCoroutine(rewardContainer.MoveCooroutine());
+
+                }
+                else
+                {
+                    GameObject tempReward = Instantiate(RewardManager.Instance.leftPrefabRewards, rewardContainer.transform);
+                    tempReward.transform.position = rewardContainer.targetPosition.position;
+                    tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, KeysOnSuccess);
+                    rewardContainer.rewardPopUp = tempReward;
+                    StartCoroutine(rewardContainer.MoveCooroutine());
+
+                }
+
             }
-           
+
         }
-        TimerText.gameObject.transform.parent.gameObject.SetActive(false);
+
+        ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
+
+        challengeUI.SetUpUI();
+        ResetChallenge();
+
+
 
     }
     public virtual void AddToSpawned(EnemyCharacter tempEnemy)
     {
         TargetManager.Instance.AddEnemy(tempEnemy);
-        spawnedEnemiesList.Add(tempEnemy); 
+        spawnedEnemiesList.Add(tempEnemy);
         enemySpawned = true;
     }
     public virtual void OnEnemyDeath()
     {
-       
-    }
 
+    }
     public void ResetScene()
     {
-            GameManager.Instance.ChangeScene(destinationSceneName);        
+        GameManager.Instance.ChangeScene(destinationSceneName);
     }
 
     public void ResetChallenge()
     {
-        foreach (EnemyCharacter e in spawnedEnemiesList) 
-        { 
-            e.gameObject.SetActive(false);
-        }
-        foreach(EnemySpawner s in enemySpawnPoints)
+        if (spawnedEnemiesList.Count > 0)
+            foreach (EnemyCharacter e in spawnedEnemiesList)
+            {
+                if (e != null)
+                    Destroy(e.gameObject);
+            }
+
+        foreach (EnemySpawner s in enemySpawnPoints)
         {
             s.canSpawn = false;
             s.gameObject.SetActive(false);
         }
+
         enemySpawned = false;
         challengeStarted = false;
+        ChallengeManager.Instance.started = false;
     }
 
     protected void DisplayTimer(float timeToDisplay)
@@ -136,8 +161,12 @@ public class Challenge : MonoBehaviour
         float minutes = Mathf.FloorToInt(timeToDisplay / 60);
         float seconds = Mathf.FloorToInt(timeToDisplay % 60);
 
-        TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        ChallengeManager.Instance.timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
     }
 
+    internal void AutoComplete()
+    {
+        OnWinChallenge();
+    }
 }

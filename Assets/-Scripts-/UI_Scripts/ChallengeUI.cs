@@ -1,4 +1,5 @@
 using TMPro;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
@@ -10,14 +11,25 @@ public class ChallengeUI : MonoBehaviour
     [SerializeField] private LocalizeStringEvent challegeDescription;
     [SerializeField] private LocalizeStringEvent challengeName;
     [SerializeField] private Button selectButton;
+    [SerializeField] private Image challengeCompletedImage;
     public Challenge challengeSelected;
 
     public void SetUpUI()
     {
-        challengeName.StringReference = challengeSelected.challengeName;
-        challegeDescription.StringReference = challengeSelected.challengeDescription;
-        selectButton.onClick.AddListener(MenuManager.Instance.CloseMenu);
-        selectButton.onClick.AddListener(challengeSelected.ActivateGameobject);
-        selectButton.onClick.AddListener(challengeSelected.Initiate);
+        if (!challengeSelected.challengeCompleted)
+        {
+            challengeName.StringReference = challengeSelected.challengeName;
+            challegeDescription.StringReference = challengeSelected.challengeDescription;
+            selectButton.onClick.AddListener(MenuManager.Instance.CloseMenu);
+            selectButton.onClick.AddListener(challengeSelected.ActivateGameobject);
+            selectButton.onClick.AddListener(challengeSelected.Initiate);
+        }
+        else
+        {
+            challengeCompletedImage.gameObject.SetActive(true);
+          
+            selectButton.enabled = false;
+        }
     }
+
 }

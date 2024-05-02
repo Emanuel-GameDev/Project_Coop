@@ -20,10 +20,10 @@ public class C_Survive : Challenge
 
         base.Initiate();
 
-        dialogueBox.gameObject.SetActive(true);
-        dialogueBox.SetDialogue(dialogueOnStart);
-        dialogueBox.AddDialogueEnd(onChallengeStartAction);
-        dialogueBox.StartDialogue();     
+        ChallengeManager.Instance.dialogueBox.gameObject.SetActive(true);
+        ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnStart);
+        ChallengeManager.Instance.dialogueBox.AddDialogueEnd(onChallengeStartAction);
+        ChallengeManager.Instance.dialogueBox.StartDialogue();     
         
         players = PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
         foreach (PlayerCharacter p in players)
@@ -61,9 +61,9 @@ public class C_Survive : Challenge
             Destroy(e.gameObject);
         }
 
-        dialogueBox.SetDialogue(dialogueOnSuccess);
-        dialogueBox.RemoveAllDialogueEnd();
-        dialogueBox.StartDialogue();
+        ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnSuccess);
+        ChallengeManager.Instance.dialogueBox.RemoveAllDialogueEnd();
+        ChallengeManager.Instance.dialogueBox.StartDialogue();
     }
 
     public override void AddToSpawned(EnemyCharacter enemyCharacter)
@@ -71,6 +71,8 @@ public class C_Survive : Challenge
        base.AddToSpawned(enemyCharacter);
          enemyCharacter.OnDeath.AddListener(OnFailChallenge);
     }
+
+   
     private void Update()
     {
         if (startTimer)

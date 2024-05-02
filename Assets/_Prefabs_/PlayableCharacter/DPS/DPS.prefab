@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 28993225159450299}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.00000008940697, y: -0.2999998, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1090,13 +1090,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5763330479945256150}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0.49279723, w: 0.8701442}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3092766138524625209}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -59.049}
 --- !u!114 &1471243717186543930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1201,7 +1201,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 1.69, y: 2.94}
   m_Direction: 0
 --- !u!1 &5985021711681410352
 GameObject:
@@ -1257,6 +1257,8 @@ MonoBehaviour:
   fadeSpeed: 2
   _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   _OnParryColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  _walkDustParticles: {fileID: 7547962849168370167, guid: f956be24a411dd641afadba21f27284c,
+    type: 3}
   stunned: 0
   underAggro: 0
   inLove: 0
@@ -1435,7 +1437,7 @@ GameObject:
   - component: {fileID: 7213571875957445340}
   - component: {fileID: 2718384187832691728}
   m_Layer: 6
-  m_Name: GameObject
+  m_Name: '!'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
