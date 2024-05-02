@@ -117,7 +117,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     private bool dodgeDamageUnlocked => upgradeStatus[AbilityUpgrade.Ability4];
     private bool landMineUnlocked => upgradeStatus[AbilityUpgrade.Ability5];
 
-    private PerfectTimingHandler perfectTimingHandler;
+    //private PerfectTimingHandler perfectTimingHandler;
 
     private float empowerCoolDownDecrease => reduceEmpowerFireCoolDownUnlocked ? chargeTimeReduction : 0;
 
@@ -130,8 +130,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         base.Inizialize();
         nearbyLandmine = new List<LandMine>();
         landMineInInventory = maxNumberLandMine;
-        perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>(true);
-        perfectTimingHandler.gameObject.SetActive(false);
+        //perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>(true);
+        //perfectTimingHandler.gameObject.SetActive(false);
         emissionModule= _walkDustParticles.emission;
     }
 
@@ -376,7 +376,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     protected IEnumerator PerfectDodgeHandler(DamageData data)
     {
         Debug.Log("Check");
-        perfectTimingHandler.gameObject.SetActive(true);
+        _perfectTimingHandler.gameObject.SetActive(true);
         yield return new WaitForSeconds(perfectDodgeDuration);
         if(isDodging)
         {
@@ -394,7 +394,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             base.TakeDamage(data);
         }
 
-        perfectTimingHandler.gameObject.SetActive(false);
+        _perfectTimingHandler.gameObject.SetActive(false);
         Debug.Log($"PerfectDodge: {isDodging}");
     }
 
@@ -623,7 +623,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     {
         if (!isDodging)
         {
-            perfectTimingHandler.ActivateAlert();
+            _perfectTimingHandler.ActivateAlert();
             perfectTimingEnabled = true;
         }
 
@@ -633,7 +633,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
     public void PerfectTimeEnded()
     {
-        perfectTimingHandler.DeactivateAlert();
+        _perfectTimingHandler.DeactivateAlert();
         perfectTimingEnabled = false;
         Utility.DebugTrace("Perfect Time Ended");
     }
