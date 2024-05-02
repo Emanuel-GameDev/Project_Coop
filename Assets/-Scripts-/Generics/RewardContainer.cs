@@ -14,46 +14,51 @@ public class RewardContainer : MonoBehaviour
     [HideInInspector] public GameObject rewardPopUp;
 
   
-    public IEnumerator MoveAndFadeRoutine()
+    public IEnumerator MoveCooroutine()
     {
-        float moveDuration = RewardManager.Instance.moveDuration;
-        float popUpDuration = RewardManager.Instance.popUpDuration;
-
-        Vector3 initialPosition = rewardPopUp.transform.position;       
-        float elapsedTime = 0f;
-
-        while (elapsedTime < moveDuration)
+        if (rewardPopUp != null)
         {
-            rewardPopUp.transform.position = Vector3.Lerp(initialPosition, transform.position, elapsedTime / moveDuration);
-            
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }     
-        rewardPopUp.transform.position = transform.position;
-       
 
-        yield return new WaitForSeconds(popUpDuration);
 
-         initialPosition = transform.position;
-        //Color initialColor = spriteRenderer.color;
+            float moveDuration = RewardManager.Instance.moveDuration;
+            float popUpDuration = RewardManager.Instance.popUpDuration;
 
-         elapsedTime = 0f;
+            Vector3 initialPosition = rewardPopUp.transform.position;
+            float elapsedTime = 0f;
 
-        while (elapsedTime < moveDuration)
-        {
-            rewardPopUp.transform.position = Vector3.Lerp(initialPosition, targetPosition.position, elapsedTime / moveDuration);
-            //spriteRenderer.color = Color.Lerp(initialColor, Color.clear, elapsedTime / fadeDuration);
+            while (elapsedTime < moveDuration)
+            {
+                rewardPopUp.transform.position = Vector3.Lerp(initialPosition, transform.position, elapsedTime / moveDuration);
 
-            elapsedTime += Time.deltaTime;
-            yield return null;
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+            rewardPopUp.transform.position = transform.position;
+
+
+            yield return new WaitForSeconds(popUpDuration);
+
+            initialPosition = transform.position;
+            //Color initialColor = spriteRenderer.color;
+
+            elapsedTime = 0f;
+
+            while (elapsedTime < moveDuration)
+            {
+                rewardPopUp.transform.position = Vector3.Lerp(initialPosition, targetPosition.position, elapsedTime / moveDuration);
+                //spriteRenderer.color = Color.Lerp(initialColor, Color.clear, elapsedTime / fadeDuration);
+
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            // Ensure final position and color
+            rewardPopUp.transform.position = targetPosition.position;
+            // spriteRenderer.color = Color.clear;
+
+            // Optionally destroy or deactivate the GameObject after fading out
+            Destroy(rewardPopUp);
         }
-
-        // Ensure final position and color
-        rewardPopUp.transform.position = targetPosition.position;
-        // spriteRenderer.color = Color.clear;
-
-        // Optionally destroy or deactivate the GameObject after fading out
-        gameObject.SetActive(false);
     }
 
 }

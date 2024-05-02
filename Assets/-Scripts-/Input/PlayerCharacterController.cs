@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerCharacterController : InputReceiver
@@ -150,6 +151,7 @@ public class PlayerCharacterController : InputReceiver
     {
         if (context.performed)
         {
+            Utility.DebugTrace("Menu Input");
             MenuManager.Instance.OpenPauseMenu(playerInputHandler);
         }
     }

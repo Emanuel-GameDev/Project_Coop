@@ -218,6 +218,7 @@ public class MenuManager : MonoBehaviour
 
         actualMenu = menu;
 
+
     }
 
     private void DisableOtherPlayerInteraction(PlayerInputHandler player)
