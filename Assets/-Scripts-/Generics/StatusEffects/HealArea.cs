@@ -154,7 +154,7 @@ public class HealArea : MonoBehaviour
             Destroy(gameObject);
 
             timer = 0;
-            //PubSub.Instance.Notify()
+            PubSub.Instance.Notify(EMessageType.healAreaExpired,this);
         }
 
         timer += Time.deltaTime;
