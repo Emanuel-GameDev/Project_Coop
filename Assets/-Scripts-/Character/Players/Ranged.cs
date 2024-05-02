@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-public class Ranged : PlayerCharacter
+public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 {
     //ci deve essere il riferimento alla look qua, non al proiettile
     //aggiungere statistiche personaggio + schivata+invincibilità
@@ -90,6 +90,9 @@ public class Ranged : PlayerCharacter
     
 
     public List<LandMine> nearbyLandmine;
+
+    [SerializeField] PerfectTimingHandler _perfectTimingHandler;
+    bool perfectTimingEnabled;
 
     [Header("Potenziamneto Boss fight")]
     [SerializeField, Tooltip("distanza massima per schivata perfetta ")]
@@ -206,8 +209,15 @@ public class Ranged : PlayerCharacter
     {
         if (!isDodging)
         {
-            StartCoroutine(PerfectDodgeHandler(data));
+            base.TakeDamage(data);
+
         }
+
+        if(perfectTimingEnabled)
+        {
+            PerfectTimeEnded();
+        }
+       
 
         if (currentHp <= 0)
         {
@@ -315,9 +325,17 @@ public class Ranged : PlayerCharacter
                 return;
             }
 
+            if (perfectTimingEnabled)
+            {                             
+                PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
+                PerfectTimeEnded();
+                //infilare forse evento schivata
+                
+            }
+
             StartCoroutine(Dodge(lastNonZeroDirection, rb));
 
-            Debug.Log(lastNonZeroDirection);
+            
         }
     }
 
@@ -596,9 +614,36 @@ public class Ranged : PlayerCharacter
         animator.SetTrigger("Ress");
     }
 
+    public void SetPerfectTimingHandler(PerfectTimingHandler handler)
+    {
+        _perfectTimingHandler = handler;
+    }
 
+    public void PerfectTimeStarted(IDamager damager)
+    {
+        if (!isDodging)
+        {
+            perfectTimingHandler.ActivateAlert();
+            perfectTimingEnabled = true;
+        }
 
+        Debug.Log(!isDodging);
+        StartCoroutine(DisablePerfectTimeAfter(perfectDodgeDuration));
+    }
 
+    public void PerfectTimeEnded()
+    {
+        perfectTimingHandler.DeactivateAlert();
+        perfectTimingEnabled = false;
+        Utility.DebugTrace("Perfect Time Ended");
+    }
+
+    protected IEnumerator DisablePerfectTimeAfter(float time)
+    {
+        yield return new WaitForSeconds(time);
+        if (perfectTimingEnabled)
+            PerfectTimeEnded();
+    }
 }
 
 
