@@ -22,6 +22,10 @@ public class LabirintPlayer : InputReceiver
     private Animator animator;
     [SerializeField]
     private SpriteLibrary spriteLibrary;
+    [SerializeField]
+    private AudioClip keyCollectedSound;
+    [SerializeField]
+    private AudioClip deathSound;
 
 
     void Start()
@@ -220,11 +224,13 @@ public class LabirintPlayer : InputReceiver
     {
         pickedKeys++;
         LabirintManager.Instance.PickedKey(character, pickedKeys);
+        AudioManager.Instance.PlayAudioClip(keyCollectedSound);
     }
     internal void Killed()
     {
         gameObject.SetActive(false);
         LabirintManager.Instance.PlayerDead();
+        AudioManager.Instance.PlayAudioClip(deathSound);
     }
 
     public override void SetCharacter(ePlayerCharacter character)

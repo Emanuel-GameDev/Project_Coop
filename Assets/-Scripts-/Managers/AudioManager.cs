@@ -71,6 +71,11 @@ public class AudioManager : MonoBehaviour
         audioMixer.SetFloat(SoundFXVolume, Mathf.Log10(level) * 20);
     }
 
+    public AudioSource PlayAudioClip(AudioClip clip)
+    {
+        return PlayAudioClip(clip, Camera.main.transform, 1f);
+    }
+
     public AudioSource PlayAudioClip(AudioClip clip, Transform spawnPoint)
     {
         return PlayAudioClip(clip, spawnPoint, 1f);
@@ -99,6 +104,11 @@ public class AudioManager : MonoBehaviour
         StartCoroutine(ReturnAudioSourceToPool(audioSource, clipLength));
 
         return audioSource;
+    }
+
+    public void PlayRandomAudioClip(List<AudioClip> clips)
+    {
+        PlayRandomAudioClip(clips, Camera.main.transform, 1f);
     }
 
     public void PlayRandomAudioClip(List<AudioClip> clips, Transform spawnPoint)
