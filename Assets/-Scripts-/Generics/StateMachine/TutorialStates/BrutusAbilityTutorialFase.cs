@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,8 @@ public class BrutusAbilityTutorialFase : TutorialFase
     TutorialManager tutorialManager;
     TutorialFaseData faseData;
 
+    int hitCounter = 0;
+    bool canUpdateCounter = false;
     public BrutusAbilityTutorialFase(TutorialManager tutorialManager)
     {
         this.tutorialManager = tutorialManager;
@@ -17,7 +20,9 @@ public class BrutusAbilityTutorialFase : TutorialFase
     {
         base.Enter();
 
-        //PubSub.Instance.RegisterFunction(EMessageType.healAreaExpired, HealAreaExpired);
+        PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityActivated, AllowUpdate);
+        PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, UpdateCounter);
+        PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityExpired, UnallowUpdate);
 
         faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
 
@@ -30,26 +35,69 @@ public class BrutusAbilityTutorialFase : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
-        //numberOfHealAreaExpired = 0;
+
+        tutorialManager.tutorialEnemy.SetTarget(tutorialManager.dps.transform);
+        tutorialManager.DeactivateEnemyAI();
+        hitCounter = 0;
     }
 
-    //private void HealAreaExpired(object obj)
-    //{
-    //    numberOfHealAreaExpired++;
+    private void UnallowUpdate(object obj)
+    {
+        if (obj is PlayerCharacter)
+        {
+            PlayerCharacter character = (PlayerCharacter)obj;
+            if (character.gameObject.GetComponent<DPS>() != null)
+            {
+                canUpdateCounter = false;
+                Debug.Log("CannotUpdate");
+            }
+        }
+    }
 
-    //    if (numberOfHealAreaExpired >= 1)
-    //    {
-    //        stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
-    //    }
-    //}
+    private void AllowUpdate(object obj)
+    {
+        if (obj is DPS)
+        {
+            PlayerCharacter character = (PlayerCharacter)obj;
+            if (character.gameObject.GetComponent<DPS>() != null)
+            {
+                canUpdateCounter = true;
+                Debug.Log("CanUpdate");
+            }
+        }
+    }
 
+    private void UpdateCounter(object obj)
+    {
+        if (!canUpdateCounter) return;
+
+        if(obj is DPS)
+        {
+            PlayerCharacter character = (PlayerCharacter)obj;
+            if (character.gameObject.GetComponent<DPS>() != null)
+            {
+
+
+                hitCounter++;
+                Debug.Log("Update");
+                if (hitCounter >= 3)
+                {
+                    stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+                    tutorialManager.DeactivateEnemyAI();
+                }
+            }
+
+        }
+    }
+
+    
     private void WaitAfterDialogue()
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
 
         tutorialManager.ResetStartingCharacterAssosiacion();
 
-        tutorialManager.inputBindings[tutorialManager.dps].SetPlayerCharacter(tutorialManager.healer);
+        tutorialManager.inputBindings[tutorialManager.dps].SetPlayerCharacter(tutorialManager.dps);
 
         tutorialManager.DeactivateAllPlayerInputs();
 
@@ -60,7 +108,7 @@ public class BrutusAbilityTutorialFase : TutorialFase
         }
 
         tutorialManager.inputBindings[tutorialManager.dps].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
-
+        tutorialManager.ActivateEnemyAI();
     }
 
 
@@ -79,5 +127,6 @@ public class BrutusAbilityTutorialFase : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
         tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.PlayDialogue(faseData.faseEndDialogue);
+        tutorialManager.DeactivateEnemyAI();
     }
 }

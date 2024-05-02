@@ -376,10 +376,12 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private IEnumerator UseUniqueAbilityCoroutine()
     {
         isInvulnerable = true;
+        PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated, this);
 
         yield return new WaitForSeconds(invulnerabilityDuration);
 
         isInvulnerable = false;
+        PubSub.Instance.Notify(EMessageType.uniqueAbilityExpired, this);
     }
     #endregion
 
