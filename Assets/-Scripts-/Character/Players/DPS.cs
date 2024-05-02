@@ -137,7 +137,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     private ChargeVisualHandler chargeHandler;
     private PerfectTimingHandler perfectTimingHandler;
-
+    private ParticleSystem.EmissionModule emissionModule;
 
     #region Animation Variable
     private static string ATTACK = "Attack";
@@ -177,6 +177,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
         perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
         character = ePlayerCharacter.Brutus;
+        emissionModule = _walkDustParticles.emission;
     }
 
 
@@ -448,6 +449,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
             SetSpriteDirection(lastNonZeroDirection);
         }
         animator.SetBool(ISMOVING, isMoving);
+        emissionModule.enabled = isMoving;
     }
 
 
