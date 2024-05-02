@@ -7,27 +7,27 @@ using UnityEngine;
 public class SoundsDatabase : ScriptableObject
 {
     [ReorderableList, SerializeField]
-    List<AudioClip> hitSounds = new();
+    public List<AudioClip> hitSounds = new();
 
     [ReorderableList, SerializeField]
-    List<AudioClip> attackSounds = new();
+    public List<AudioClip> attackSounds = new();
 
     [ReorderableList, SerializeField]
-    List<AudioClip> walkSounds = new();
+    public List<AudioClip> walkSounds = new();
 
     [ReorderableList, SerializeField]
-    List<AudioClip> deathSounds = new();
+    public List<AudioClip> deathSounds = new();
 
     [ReorderableList, SerializeField]
-    List<AudioClip> dodgeSounds = new();
+    public List<AudioClip> dodgeSounds = new();
 
     [ReorderableList, SerializeField]
-    List<AudioClip> healingSounds = new();
+    public List<AudioClip> healingSounds = new();
 
     [ReorderableList, SerializeField]
-    List<AudioClip> blockSounds = new();
+    public List<AudioClip> blockSounds = new();
 
     [ReorderableList, SerializeField]
-    List<AudioClip> specialEffectsSounds = new();
+    public List<AudioClip> specialEffectsSounds = new();
 
 }

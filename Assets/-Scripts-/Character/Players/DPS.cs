@@ -9,6 +9,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     [Header("Attack")]
     [SerializeField, Tooltip("Tempo tra una combo e l'altra.")]
     float timeBetweenCombo = 1f;
+   
     [Header("Dodge")]
     [SerializeField, Tooltip("Distanza di schivata.")]
     float dodgeDistance = 10f;
@@ -22,11 +23,13 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     float perfectDodgeExtraDamage = 0.15f;
     [SerializeField, Tooltip("Durata del tempo utile per poter fare la schivata perfetta")]
     float perfectDodgeDuration = 0.5f;
+   
     [Header("Unique Ability")]
     [SerializeField, Tooltip("Durata dell'invulnerabilità.")]
     float invulnerabilityDuration = 5f;
     [SerializeField, Tooltip("Aumento di velocità in % durante l'invulnerabilità."), Range(0, 1)]
     float invulnerabilitySpeedUp = 0.25f;
+   
     [Header("Extra Ability")]
     [SerializeField, Tooltip("Distanza minima dell'attacco con il dash.")]
     float minDashAttackDistance = 5f;
@@ -42,6 +45,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     float dashAttackRushDamageMultiplier = 0.5f;
     [SerializeField, Tooltip("Moltiplicatore al danno base dell'attacco con il dash nell'attacco.")]
     float dashAttackSlashDamageMultiplier = 1.5f;
+   
     [Header("Boss Power Up")]
     [SerializeField, Tooltip("Totale dei danni da fare al boss per sbloccare il potenziamento.")]
     float bossPowerUpTotalDamageToUnlock = 1000f;
@@ -51,13 +55,16 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     float bossPowerUpExtraDamageCap = 0.16f;
     [SerializeField, Tooltip("Durata del danno extra conferito dal potenziamento del boss dopo l'ultimo colpo inferto.")]
     float bossPowerUpExtraDamageDuration = 2.5f;
+    
     [Header("Other")]
     [SerializeField, Tooltip("I Layer da guardare quando ha sbloccato il power up per deflettere i proiettili")]
     LayerMask projectileLayer;
+
     [Header("VFX")]
     [SerializeField] TrailRenderer trailDodgeVFX;
     [SerializeField, Tooltip("Gli eventi da chiamare in caso di schivata perfetta")]
     UnityEvent onPerfectDodgeExecuted = new();
+
     private float ExtraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
 
     private float ExtraDamage()
@@ -236,7 +243,10 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         IsAttacking = true;
         string triggerName = currentAttackComboState.ToString();   //ATTACK + (nextComboState).ToString();
         animator.SetTrigger(triggerName);
+
+        PlayAttackSound();
     }
+
     public void OnAttackAnimationEnd()
     {
         if (!alreadyCalled)
@@ -588,6 +598,23 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
 
     #endregion
+
+    #region Audio
+    private void PlayAttackSound()
+    {
+        if(soundsDatabase != null)
+        {
+            int value = (int)currentAttackComboState - 1;
+            if(value >= 0 && soundsDatabase.attackSounds.Count > value)
+            {
+                AudioManager.Instance.PlayAudioClip(soundsDatabase.attackSounds[value], transform);
+            }
+        }
+    }
+
+    #endregion
+
+
     //Potenziamento boss fight: gli attacchi consecutivi aumentano il danno del personaggio a ogni colpo andato a segno.
     //Dopo tot tempo (es: 1.5 secondi) senza colpire, il danno torna al valore standard.
 
