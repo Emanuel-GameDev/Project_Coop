@@ -19,7 +19,7 @@ public class CassiusAbilityTutorialFase : TutorialFase
     public override void Enter()
     {
         base.Enter();
-
+        tutorialManager.ResetStartingCharacterAssosiacion();
         PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityExpired, HealAreaExpired);
 
         faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
@@ -86,5 +86,7 @@ public class CassiusAbilityTutorialFase : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
         tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.PlayDialogue(faseData.faseEndDialogue);
+
+        PubSub.Instance.UnregisterFunction(EMessageType.uniqueAbilityExpired, HealAreaExpired);
     }
 }

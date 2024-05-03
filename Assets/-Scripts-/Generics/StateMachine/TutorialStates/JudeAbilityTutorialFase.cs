@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,8 +17,8 @@ public class JudeAbilityTutorialFase : TutorialFase
     public override void Enter()
     {
         base.Enter();
-
-        //PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityActivated, HealAreaExpired);
+        tutorialManager.ResetStartingCharacterAssosiacion();
+        PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, CheckAndCount);
 
         faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
 
@@ -30,7 +31,19 @@ public class JudeAbilityTutorialFase : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
-        //numberOfHealAreaExpired = 0;
+
+        tutorialManager.DeactivateEnemyAI();
+        
+    }
+
+    private void CheckAndCount(object obj)
+    {
+        if(obj is Projectile) 
+        {
+            Projectile projectile = (Projectile)obj;    
+            if (projectile.projectileType == EProjectileType.empoweredProjectile)
+                stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+        }
     }
 
     //private void HealAreaExpired(object obj)
@@ -49,7 +62,7 @@ public class JudeAbilityTutorialFase : TutorialFase
 
         tutorialManager.ResetStartingCharacterAssosiacion();
 
-        tutorialManager.inputBindings[tutorialManager.dps].SetPlayerCharacter(tutorialManager.healer);
+        tutorialManager.inputBindings[tutorialManager.ranged].SetPlayerCharacter(tutorialManager.ranged);
 
         tutorialManager.DeactivateAllPlayerInputs();
 
@@ -59,8 +72,9 @@ public class JudeAbilityTutorialFase : TutorialFase
             ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         }
 
-        tutorialManager.inputBindings[tutorialManager.dps].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
-
+        tutorialManager.inputBindings[tutorialManager.ranged].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
+        tutorialManager.inputBindings[tutorialManager.ranged].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Look").Enable();
+        tutorialManager.inputBindings[tutorialManager.ranged].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("LookMouse").Enable();
     }
 
 
@@ -79,5 +93,7 @@ public class JudeAbilityTutorialFase : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
         tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.PlayDialogue(faseData.faseEndDialogue);
+
+        PubSub.Instance.UnregisterFunction(EMessageType.characterDamaged, CheckAndCount);
     }
 }

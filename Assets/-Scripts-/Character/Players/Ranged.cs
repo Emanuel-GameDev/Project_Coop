@@ -549,7 +549,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
         newProjectile.transform.position =shootingPoint.transform.position;
 
-        newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier,gameObject.layer);
+        newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier,gameObject.layer,EProjectileType.empoweredProjectile);
 
         
     }

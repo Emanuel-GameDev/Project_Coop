@@ -17,7 +17,7 @@ public class KainaAbilityTutorialFase : TutorialFase
     public override void Enter()
     {
         base.Enter();
-
+        tutorialManager.ResetStartingCharacterAssosiacion();
         PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityActivated, StartEndFaseCountdown);
 
         faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
@@ -31,7 +31,9 @@ public class KainaAbilityTutorialFase : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
+        tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.healer.transform);
+
         tutorialManager.DeactivateEnemyAI();
 
     }
@@ -47,6 +49,7 @@ public class KainaAbilityTutorialFase : TutorialFase
     IEnumerator WaitSeconds()
     {
         yield return new WaitForSecondsRealtime(5);
+
         stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
         tutorialManager.DeactivateEnemyAI();
     }
@@ -55,8 +58,6 @@ public class KainaAbilityTutorialFase : TutorialFase
     private void WaitAfterDialogue()
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
-
-        tutorialManager.ResetStartingCharacterAssosiacion();
 
         tutorialManager.inputBindings[tutorialManager.tank].SetPlayerCharacter(tutorialManager.tank);
 
@@ -88,5 +89,7 @@ public class KainaAbilityTutorialFase : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
         tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.PlayDialogue(faseData.faseEndDialogue);
+
+        PubSub.Instance.UnregisterFunction(EMessageType.uniqueAbilityActivated, StartEndFaseCountdown);
     }
 }

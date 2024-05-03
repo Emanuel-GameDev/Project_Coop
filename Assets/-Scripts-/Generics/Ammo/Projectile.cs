@@ -1,7 +1,15 @@
 using UnityEngine;
 
+public enum EProjectileType
+{
+    normalProjectile,
+    empoweredProjectile
+}
+
 public class Projectile : MonoBehaviour, IDamager
 {
+    public EProjectileType projectileType = EProjectileType.normalProjectile;
+
     [Header("Proiettile statistiche base")]
     [SerializeField] private Vector2 travelDirection;
     [SerializeField] private float projectileSpeed;
@@ -56,6 +64,11 @@ public class Projectile : MonoBehaviour, IDamager
         
     }
 
+    public void Inizialize(Vector2 direction, float range, float speed, float sizeMultiplier, float damage, LayerMask layer, EProjectileType type)
+    {
+        projectileType = type;
+        Inizialize(direction, range, speed, sizeMultiplier, damage, layer);
+    }
     public void Inizialize(Vector2 direction, float range, float speed, float sizeMultiplier,float damage,LayerMask layer)
     {
         

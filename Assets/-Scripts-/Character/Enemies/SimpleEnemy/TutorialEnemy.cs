@@ -35,6 +35,13 @@ public class TutorialEnemy : BasicMeleeEnemy
             base.TakeDamage(data);
             //stateMachine.SetState(stunState);
             OnHitAction?.Invoke();
+            
+            if(data.dealer is Projectile)
+            {
+                Projectile projectile = (Projectile) data.dealer;
+                PubSub.Instance.Notify(EMessageType.characterDamaged, projectile);
+            }
+            
             StartCoroutine(Invincibility());
 
         }
