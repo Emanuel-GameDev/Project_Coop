@@ -129,6 +129,8 @@ public class MenuManager : MonoBehaviour
     {
         if (actualMenu == pauseMenu && player == actualMenuOwner)
             CloseAllMenu();
+        else
+            CloseMenu();
     }
 
     public void CloseOptionMenu(PlayerInputHandler player)

@@ -46,12 +46,6 @@ public class PlayerCharacterPoolManager : MonoBehaviour
 
     private int deadPlayers = 0;
 
-    private void OnDisable()
-    {
-        SaveManager.Instance.SavePlayersData();
-    }
-
-
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -63,6 +57,16 @@ public class PlayerCharacterPoolManager : MonoBehaviour
             _instance = this;
             InizializeList();
         }
+    }
+
+    private void OnDisable()
+    {
+        List<CharacterSaveData> saveData = new List<CharacterSaveData>();
+        foreach (PlayerCharacter player in AllPlayerCharacters)
+        {
+            saveData.Add(player.GetSaveData());
+        }
+        SaveManager.Instance.SavePlayersData(saveData);
     }
 
     #region Switching Character
