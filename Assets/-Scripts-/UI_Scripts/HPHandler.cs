@@ -126,9 +126,9 @@ public class HPHandler : MonoBehaviour
         
     }
 
-    public void NotifyUseAbility(PlayerCharacter player)
+    public void NotifyUseAbility(PlayerCharacter player,float cooldown)
     {
-        containersAssociations[player.GetInputHandler().playerID].setUseAbility(true);
+        containersAssociations[player.GetInputHandler().playerID].SetAbilityTimer(cooldown);
     }
 
     public void SetCharacter(object obj)
@@ -143,6 +143,7 @@ public class HPHandler : MonoBehaviour
                 containersAssociations[playerCharacter.GetInputHandler().playerID].SetCharacterContainer(GetSpriteContainerFromCharacter(playerCharacter));
                 containersAssociations[playerCharacter.GetInputHandler().playerID].SetUpHp();
                 containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
+                containersAssociations[playerCharacter.GetInputHandler().playerID].SetUpAbility(playerCharacter.UniqueAbilityCooldown);
             }
         }
     }

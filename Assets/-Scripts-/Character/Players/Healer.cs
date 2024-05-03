@@ -341,7 +341,8 @@ public class Healer : PlayerCharacter
 
         animator.SetTrigger("CastHealArea");
         StartCoroutine(InputReactivationDelay(animator.GetCurrentAnimatorClipInfo(0).Length));
-        
+        base.UniqueAbilityInput(context);
+
         uniqueAbilityTimer = 0;
     }
 
