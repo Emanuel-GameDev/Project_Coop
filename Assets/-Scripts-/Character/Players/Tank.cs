@@ -579,10 +579,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public override void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-
         if (context.performed && uniqueAbilityReady)
-        {
-           
+        {          
             uniqueAbilityReady = false;
             Invoke(nameof(StartCooldownUniqueAbility), cooldownUniqueAbility);
             animator.SetTrigger("UniqueAbility");

@@ -27,6 +27,10 @@ public class PlayerCharacterData : ScriptableObject
     private Sprite pixelFaceSprite;
     [SerializeField, TextArea]
     private string characterDescription;
+    [SerializeField]
+    private Sprite uniqueAbilitySprite;
+
+
 
     public ePlayerCharacter Character => character;
     public Color CharacterColor => characterColor;
@@ -37,5 +41,6 @@ public class PlayerCharacterData : ScriptableObject
     public Sprite DialogueSprite => dialogueSprite;
     public SpriteLibraryAsset PixelAnimations => pixelAnimations;
     public Sprite PixelFaceSprite => pixelFaceSprite;
+    public Sprite UniqueAbilitySprite => uniqueAbilitySprite;
 
 }
