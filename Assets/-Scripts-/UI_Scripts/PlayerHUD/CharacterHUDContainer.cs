@@ -1,8 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class CharacterHUDContainer : MonoBehaviour
@@ -22,11 +21,13 @@ public class CharacterHUDContainer : MonoBehaviour
     [Header("Ability")]
     [SerializeField] Image abilityImage;
     [SerializeField] TMP_Text abilityCooldownText;
+    [SerializeField] Image abilityCooldownBackground;
+    
     private float abilityCooldownTimer;
     private float tempTimer;
     private bool abilityUsed;
-    
- 
+
+
     [Header("EffectCooldown")]
     [SerializeField] RectTransform effectsStartingPoint;
     [SerializeField] RectTransform effectsPoolPoint;
@@ -36,12 +37,22 @@ public class CharacterHUDContainer : MonoBehaviour
     {
         if (abilityUsed)
         {
-           
+            if (tempTimer <= 0)
+            {
+                abilityCooldownText.text = tempTimer.ToString();
+                setUseAbility(false);
+                tempTimer = abilityCooldownTimer;
+            }
+
+            else
+            {
+                tempTimer -= Time.deltaTime;
+            }
         }
     }
     public void SetCharacterContainer(Sprite containerSprite)
     {
-        GetComponent<Image>().sprite = containerSprite; 
+        GetComponent<Image>().sprite = containerSprite;
     }
     public void SetUpHp()
     {
@@ -50,12 +61,24 @@ public class CharacterHUDContainer : MonoBehaviour
     }
     public void SetUpAbility(float abilityTimerValue)
     {
-        abilityImage.sprite = GameManager.Instance.GetCharacterData(referredCharacter.Character).UniqueAbilitySprite;
+        if (GameManager.Instance.GetCharacterData(referredCharacter.Character).UniqueAbilitySprite!= null)
+        {
+            abilityImage.sprite = GameManager.Instance.GetCharacterData(referredCharacter.Character).UniqueAbilitySprite;
+        }
+        
         abilityCooldownTimer = abilityTimerValue;
+        tempTimer = abilityCooldownTimer;
         abilityCooldownText.text = abilityCooldownTimer.ToString();
 
     }
-    
+    public void setUseAbility(bool value)
+    {
+        abilityUsed = value;
+        abilityCooldownBackground.gameObject.SetActive(value);
+        abilityCooldownText.gameObject.SetActive(value);
+
+    }
+
     public void UpdateHp(float newHp)
     {
         currentHP.text = newHp.ToString();

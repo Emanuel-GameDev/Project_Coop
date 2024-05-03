@@ -47,8 +47,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     [Header("Unique Ability")]
 
-    [SerializeField, Tooltip("cooldown abilit� unica")]
-    float cooldownUniqueAbility;
+  
     [SerializeField, Tooltip("Range aggro")]
     float aggroRange;
     [SerializeField, Tooltip("Durata aggro")]
@@ -133,6 +132,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         staminaDamageReductionMulty = (1 - (StaminaDamageReduction / 100));
         healthDamageReductionMulty = (1 - HealthDamageReduction / 100);
+
+        Debug.Log(powerUpData.UniqueAbilityCooldownDecrease);
 
     }
    
@@ -582,7 +583,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         if (context.performed && uniqueAbilityReady)
         {          
             uniqueAbilityReady = false;
-            Invoke(nameof(StartCooldownUniqueAbility), cooldownUniqueAbility);
+            base.UniqueAbilityInput(context);
+            Invoke(nameof(StartCooldownUniqueAbility), UniqueAbilityCooldown);
             animator.SetTrigger("UniqueAbility");
             Debug.Log("UniqueAbility Used");
         }

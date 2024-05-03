@@ -435,7 +435,7 @@ public abstract class PlayerCharacter : Character
 
     public virtual void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-
+        HPHandler.Instance.NotifyUseAbility(this);
     }
 
     public virtual void ExtraAbilityInput(InputAction.CallbackContext context)

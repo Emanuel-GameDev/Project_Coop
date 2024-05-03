@@ -118,11 +118,17 @@ public class HPHandler : MonoBehaviour
             hpContainer.UpdateHp(player.CurrentHp);
 
             //CONTROLLARE COOLDOWN ABILITA
-            
 
+            hpContainer.SetUpAbility(player.UniqueAbilityCooldown);
+            
             id++;
         }
         
+    }
+
+    public void NotifyUseAbility(PlayerCharacter player)
+    {
+        containersAssociations[player.GetInputHandler().playerID].setUseAbility(true);
     }
 
     public void SetCharacter(object obj)
