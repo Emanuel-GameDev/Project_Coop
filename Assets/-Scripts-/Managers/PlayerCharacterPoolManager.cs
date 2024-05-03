@@ -46,7 +46,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
 
     private int deadPlayers = 0;
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         SaveManager.Instance.SavePlayersData();
     }

@@ -151,7 +151,6 @@ public class PlayerCharacterController : InputReceiver
     {
         if (context.performed)
         {
-            Utility.DebugTrace("Menu Input");
             MenuManager.Instance.OpenPauseMenu(playerInputHandler);
         }
     }
