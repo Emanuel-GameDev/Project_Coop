@@ -126,9 +126,9 @@ public class HPHandler : MonoBehaviour
         
     }
 
-    public void NotifyUseAbility(PlayerCharacter player)
+    public void NotifyUseAbility(PlayerCharacter player,float cooldown)
     {
-        containersAssociations[player.GetInputHandler().playerID].setUseAbility(true);
+        containersAssociations[player.GetInputHandler().playerID].SetAbilityTimer(cooldown);
     }
 
     public void SetCharacter(object obj)

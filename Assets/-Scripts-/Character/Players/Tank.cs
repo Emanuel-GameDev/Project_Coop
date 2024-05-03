@@ -625,6 +625,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private void StartCooldownUniqueAbility()
     {
         uniqueAbilityReady = true;
+        uniqueAbilityUses++;
         Debug.Log("abilita unica pronta");
     }
     private void SetStatToNormal()

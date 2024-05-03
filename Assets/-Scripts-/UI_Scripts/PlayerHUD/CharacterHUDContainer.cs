@@ -23,8 +23,8 @@ public class CharacterHUDContainer : MonoBehaviour
     [SerializeField] TMP_Text abilityCooldownText;
     [SerializeField] Image abilityCooldownBackground;
     
-    private float abilityCooldownTimer;
-    private float tempTimer;
+    private float abilityCooldownValue;
+    private float cooldownTimer;
     private bool abilityUsed;
 
 
@@ -37,16 +37,20 @@ public class CharacterHUDContainer : MonoBehaviour
     {
         if (abilityUsed)
         {
-            if (tempTimer <= 0)
+            if (cooldownTimer <= 0)
             {
-                abilityCooldownText.text = tempTimer.ToString();
-                setUseAbility(false);
-                tempTimer = abilityCooldownTimer;
+                cooldownTimer = 0;
+                SetAbilityUsed(false);
+               
             }
 
             else
             {
-                tempTimer -= Time.deltaTime;
+                int cooldownInt = (int)cooldownTimer;
+                abilityCooldownText.text = cooldownInt.ToString();
+                cooldownTimer -= Time.deltaTime; 
+                
+
             }
         }
     }
@@ -65,14 +69,26 @@ public class CharacterHUDContainer : MonoBehaviour
         {
             abilityImage.sprite = GameManager.Instance.GetCharacterData(referredCharacter.Character).UniqueAbilitySprite;
         }
+
+        SetAbilityUsed(false);
+        abilityCooldownValue = abilityTimerValue;
+        cooldownTimer = abilityCooldownValue;
+        abilityCooldownText.text = abilityCooldownValue.ToString();
         
-        abilityCooldownTimer = abilityTimerValue;
-        tempTimer = abilityCooldownTimer;
-        abilityCooldownText.text = abilityCooldownTimer.ToString();
 
     }
-    public void setUseAbility(bool value)
+    public void SetAbilityTimer(float newCooldownValue)
     {
+        abilityCooldownValue = newCooldownValue;
+        cooldownTimer = abilityCooldownValue;
+        SetAbilityUsed(true);
+
+
+    }
+    public void SetAbilityUsed(bool value)
+    {
+       
+      
         abilityUsed = value;
         abilityCooldownBackground.gameObject.SetActive(value);
         abilityCooldownText.gameObject.SetActive(value);
