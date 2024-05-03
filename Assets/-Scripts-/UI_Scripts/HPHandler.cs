@@ -143,6 +143,7 @@ public class HPHandler : MonoBehaviour
                 containersAssociations[playerCharacter.GetInputHandler().playerID].SetCharacterContainer(GetSpriteContainerFromCharacter(playerCharacter));
                 containersAssociations[playerCharacter.GetInputHandler().playerID].SetUpHp();
                 containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
+                containersAssociations[playerCharacter.GetInputHandler().playerID].SetUpAbility(playerCharacter.UniqueAbilityCooldown);
             }
         }
     }

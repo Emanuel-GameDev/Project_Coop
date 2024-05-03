@@ -94,7 +94,6 @@ public class CharacterHUDContainer : MonoBehaviour
         abilityCooldownText.gameObject.SetActive(value);
 
     }
-
     public void UpdateHp(float newHp)
     {
         currentHP.text = newHp.ToString();
