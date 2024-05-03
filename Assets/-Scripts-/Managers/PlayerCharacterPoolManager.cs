@@ -67,6 +67,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
             saveData.Add(player.GetSaveData());
         }
         SaveManager.Instance.SavePlayersData(saveData);
+
     }
 
     #region Switching Character
