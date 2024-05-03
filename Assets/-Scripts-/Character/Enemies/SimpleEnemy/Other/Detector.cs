@@ -10,6 +10,7 @@ public class Detector : MonoBehaviour
     [SerializeField] UnityEvent OnAllPlayerInside;
     [SerializeField] TextMeshProUGUI playerInsideCount;
 
+    List<EnemyCharacter> enemiesDetected;
     List<PlayerCharacter> playersDetected;
     int playersInside;
 
@@ -48,6 +49,13 @@ public class Detector : MonoBehaviour
                     playerInsideCount.gameObject.SetActive(false);
             }
         }
+        else if (other.gameObject.GetComponentInParent<EnemyCharacter>())
+        {
+            if (enemiesDetected.Contains(other.gameObject.GetComponentInParent<EnemyCharacter>()))
+                return;
+
+            enemiesDetected.Add(other.gameObject.GetComponentInParent<EnemyCharacter>());
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -72,11 +80,23 @@ public class Detector : MonoBehaviour
 
             }
         }
+        else if (other.gameObject.GetComponentInParent<EnemyCharacter>())
+        {
+            if (enemiesDetected.Contains(other.gameObject.GetComponentInParent<EnemyCharacter>()))
+                return;
+
+            enemiesDetected.Remove(other.gameObject.GetComponentInParent<EnemyCharacter>());
+        }
     }
 
     public List<PlayerCharacter> GetPlayersDetected()
     {
         return playersDetected;
+    }
+
+    public List<EnemyCharacter> GetEnemiesDetected()
+    {
+        return enemiesDetected;
     }
 
     public int GetPlayersCountInTrigger()

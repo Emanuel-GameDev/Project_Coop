@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Localization.Plugins.XLIFF.V20;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -312,6 +313,13 @@ public class Healer : PlayerCharacter
                         PubSub.Instance.Notify(EMessageType.characterHealed, pc);
                     }
 
+                    foreach(EnemyCharacter enemyCharacter in smallHealTrigger.GetEnemiesDetected())
+                    {
+                        if(enemyCharacter.gameObject.GetComponent<TutorialEnemy>() != null)
+                        {
+                            PubSub.Instance.Notify(EMessageType.characterHealed, enemyCharacter.gameObject.GetComponent<TutorialEnemy>());
+                        }
+                    }
 
 
                     smallHealTimer = 0;

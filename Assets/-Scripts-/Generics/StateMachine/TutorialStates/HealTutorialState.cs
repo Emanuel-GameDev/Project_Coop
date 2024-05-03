@@ -110,7 +110,17 @@ public class HealTutorialState : TutorialFase
                     tutorialManager.PlayDialogue(faseData.tankDialogue);
                     dialoguePlaying = true;
                     break;
+
             }
+        }
+        else if(obj is TutorialEnemy)
+        {
+            TutorialEnemy character = (TutorialEnemy)obj;
+
+            tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
+            tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
+            tutorialManager.PlayDialogue(faseData.tankDialogue);
+            dialoguePlaying = true;
         }
     }
 
