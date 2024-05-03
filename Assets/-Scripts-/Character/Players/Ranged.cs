@@ -151,6 +151,11 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         minePickUpVisualizer.SetActive(mineNearby);
 
         UpdateCrosshair(ReadLookdirCrosshair(shootingPoint.transform.position));
+
+        if (isAttacking)
+        {
+            SetSpriteAimingDirection();
+        }
     }
 
     private void FixedUpdate()
@@ -179,7 +184,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     {
         if(!isDodging)
         {
-            if(!isAttacking && !isDodging)
+            if(!isAttacking && !isCharging)
             {
                 base.Move(direction);
             }
@@ -201,6 +206,12 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
                 emissionModule.enabled = false;
             }
         }      
+    }
+
+    private void SetSpriteAimingDirection()
+    {
+        Vector2 direction = ((Vector2)rangedCrossair.transform.position-(Vector2)shootingPoint.transform.position);
+        SetSpriteDirection(direction);      
     }
 
     
@@ -252,6 +263,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
                 SetShootDirection();
             }
 
+            
             //in futuro inserire il colpo avanzato
             if (multiBaseAttackUnlocked)
             {
@@ -259,7 +271,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             }
             else
             {
-
+                SetSpriteAimingDirection();
                 BasicFireProjectile(ShootDirection);
 
                 fireTimer = AttackSpeed;
@@ -343,15 +355,20 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     {
         if (!isDodging)
         {
+            //reset bool
             isDodging = true;
             isAttacking = false;
+            isCharging = false;
+
+            //disable/abilitate VFX
+            ChargedVFX.SetActive(false);
+            trailDodgeVFX.gameObject.SetActive(true);
 
 
             //animazione
-
             animator.SetTrigger("Dodge");
 
-            trailDodgeVFX.gameObject.SetActive(true);
+            
 
             Vector2 dodgeDirection = direction.normalized;
 
@@ -584,8 +601,12 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         {
             empowerStartTimer += Time.deltaTime;
 
-            if(empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
+            
+
+            if (empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
             {
+               
+
                 if (!ChargedVFX.activeSelf)
                 {
                     ChargedVFX.SetActive(true);
@@ -607,9 +628,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
     private void UpdateCrosshair(Vector2 position)
     {
-        rangedCrossair.transform.position=new Vector2 (position.x,position.y);
-
-       
+        rangedCrossair.transform.position=new Vector2 (position.x,position.y);    
     }
 
 
