@@ -154,6 +154,10 @@ public class HealArea : MonoBehaviour
             Destroy(gameObject);
 
             timer = 0;
+            PubSub.Instance.Notify(EMessageType.healAreaExpired,this);
+
+            if(GetComponentInParent<Healer>() != null)
+                PubSub.Instance.Notify(EMessageType.uniqueAbilityExpired, GetComponentInParent<Healer>());
         }
 
         timer += Time.deltaTime;

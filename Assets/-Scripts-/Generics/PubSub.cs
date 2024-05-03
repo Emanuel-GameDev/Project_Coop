@@ -14,7 +14,13 @@ public enum EMessageType
     slotInput,
     characterDamaged,
     characterSwitched,
-    characterJoined
+    characterJoined,
+    healAreaExpired,
+    kainaTaunt,
+    uniqueAbilityActivated,
+    uniqueAbilityExpired,
+    characterHitted
+    
 }
 
 

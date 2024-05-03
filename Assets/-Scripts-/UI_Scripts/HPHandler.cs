@@ -44,7 +44,6 @@ public class HPHandler : MonoBehaviour
         {
             containersAssociations = new Dictionary<ePlayerID, CharacterHUDContainer>();
             dictionaryCreated = true;
-            Debug.Log("Prova");
         }
 
         PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, UpdateContainer);
@@ -180,8 +179,5 @@ public class HPHandler : MonoBehaviour
         return null;
     }
 
-    private void OnDisable()
-    {
-        //containersAssociations.Clear();
-    }
+    
 }

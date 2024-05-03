@@ -122,11 +122,11 @@ public class Healer : PlayerCharacter
         extraData.coin = 2;
         //SaveManager.Instance.LoadAllData();
 
-        if (upgradeStatus[AbilityUpgrade.Ability2])
-        {
-            Debug.Log("2");
-        }
-        else Debug.Log("no");
+        //if (upgradeStatus[AbilityUpgrade.Ability2])
+        //{
+        //    Debug.Log("2");
+        //}
+        //else Debug.Log("no");
        
     }
 
@@ -337,6 +337,8 @@ public class Healer : PlayerCharacter
         if (uniqueAbilityTimer < UniqueAbilityCooldown || !context.performed)
             return;
 
+        
+
         animator.SetTrigger("CastHealArea");
         StartCoroutine(InputReactivationDelay(animator.GetCurrentAnimatorClipInfo(0).Length));
         
@@ -345,6 +347,8 @@ public class Healer : PlayerCharacter
 
     public void SpawnHealArea()
     {
+        PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated, this);
+
         float radius;
 
         //calcolo raggio area

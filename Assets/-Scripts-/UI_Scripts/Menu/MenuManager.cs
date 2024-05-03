@@ -182,7 +182,16 @@ public class MenuManager : MonoBehaviour
             return;
         }
 
-        if(pauseGame)
+
+        if (actualMenu != null)
+        {
+            if (actualMenu == menu)
+                return;
+            
+            menu.PreviousMenu = actualMenu;
+        }
+
+        if (pauseGame)
             GameManager.Instance.PauseGame();
 
         if(player != null)
@@ -205,18 +214,11 @@ public class MenuManager : MonoBehaviour
 
         if(actualMenuOwner != null)
             actualMenuOwner.SetPlayerActiveMenu(menu.MenuRoot, menu.FirstObjectSelected);
-            
-        
-            
-
+          
         menu.gameObject.SetActive(true);
 
-        if (actualMenu != null)
-        {
-            menu.PreviousMenu = actualMenu;
-        }
-
         actualMenu = menu;
+
 
     }
 
