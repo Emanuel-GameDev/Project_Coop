@@ -188,8 +188,8 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.ActivateEnemyAI();
 
         perfectDodgeCount = 0;
+        dodgeCount = 0;
 
-        
     }
 
     int dodgeCount = 0;

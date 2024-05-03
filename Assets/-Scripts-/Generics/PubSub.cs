@@ -82,9 +82,15 @@ public class PubSub : MonoBehaviour
         {
             return;
         }
-       
-            _registeredFunctions[messageType].Remove(function);
 
+        StartCoroutine(RemoveFunction(messageType, function));
+
+    }
+
+    IEnumerator RemoveFunction(EMessageType messageType, Action<object> function)
+    {
+        yield return new WaitForEndOfFrame();
+        _registeredFunctions[messageType].Remove(function);
     }
 
 }

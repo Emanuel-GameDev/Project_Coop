@@ -28,6 +28,9 @@ public class BrutusAbilityTutorialFase : TutorialFase
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
+        tutorialManager.objectiveNumbersGroup.SetActive(false);
+
+        tutorialManager.ResetStartingCharacterAssosiacion();
 
 
         tutorialManager.DeactivateAllPlayerInputs();
@@ -36,7 +39,7 @@ public class BrutusAbilityTutorialFase : TutorialFase
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
 
-        tutorialManager.tutorialEnemy.SetTarget(tutorialManager.dps.transform);
+        
         tutorialManager.DeactivateEnemyAI();
         hitCounter = 0;
     }
@@ -90,12 +93,9 @@ public class BrutusAbilityTutorialFase : TutorialFase
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
 
-        tutorialManager.ResetStartingCharacterAssosiacion();
-
         tutorialManager.inputBindings[tutorialManager.dps].SetPlayerCharacter(tutorialManager.dps);
-
         tutorialManager.DeactivateAllPlayerInputs();
-
+        tutorialManager.tutorialEnemy.SetTarget(tutorialManager.dps.transform);
 
         foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
         {
@@ -103,6 +103,11 @@ public class BrutusAbilityTutorialFase : TutorialFase
         }
 
         tutorialManager.inputBindings[tutorialManager.dps].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
+
+        tutorialManager.tutorialEnemy.focus = false;
+        tutorialManager.tutorialEnemy.SetTarget(tutorialManager.dps.transform);
+        tutorialManager.tutorialEnemy.focus = true;
+
         tutorialManager.ActivateEnemyAI();
     }
 
@@ -123,5 +128,10 @@ public class BrutusAbilityTutorialFase : TutorialFase
         tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.PlayDialogue(faseData.faseEndDialogue);
         tutorialManager.DeactivateEnemyAI();
+
+
+        PubSub.Instance.UnregisterFunction(EMessageType.uniqueAbilityActivated, AllowUpdate);
+        PubSub.Instance.UnregisterFunction(EMessageType.characterHitted, UpdateCounter);
+        PubSub.Instance.UnregisterFunction(EMessageType.uniqueAbilityExpired, UnallowUpdate);
     }
 }
