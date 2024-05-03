@@ -1,8 +1,5 @@
-using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
-using UnityEngine.Localization.Components;
 
 public class WinScreenHandler : MonoBehaviour
 {
@@ -15,59 +12,45 @@ public class WinScreenHandler : MonoBehaviour
     [SerializeField]
     private LocalizedString fourthPlaceString;
     [SerializeField]
-    private WinScreenCharacterReferences brutusReferences;
+    private WinScreenCharacterReferences firstPlaceReferences;
     [SerializeField]
-    private WinScreenCharacterReferences kainaReferences;
+    private WinScreenCharacterReferences secondPlaceReferences;
     [SerializeField]
-    private WinScreenCharacterReferences judeReferences;
+    private WinScreenCharacterReferences thirdPlaceReferences;
     [SerializeField]
-    private WinScreenCharacterReferences cassiusReferences;
+    private WinScreenCharacterReferences fourthPlaceReferences;
 
     public void SetCharacterValues(ePlayerCharacter character, Rank rank, int earnedCoin, int totalCoin, int earnedkey, int totalKey)
     {
         WinScreenCharacterReferences characterRef = null;
 
-        switch (character)
+        LocalizedString stringRef = null;
+        switch (rank)
         {
-            case ePlayerCharacter.Brutus:
-                characterRef = brutusReferences;
+            case Rank.First:
+                stringRef = firstPlaceString;
+                characterRef = firstPlaceReferences;
                 break;
-            case ePlayerCharacter.Kaina:
-                characterRef = kainaReferences;
+            case Rank.Second:
+                stringRef = secondPlaceString;
+                characterRef = secondPlaceReferences;
                 break;
-            case ePlayerCharacter.Cassius:
-                characterRef = cassiusReferences;
+            case Rank.Third:
+                stringRef = thirdPlaceString;
+                characterRef = thirdPlaceReferences;
                 break;
-            case ePlayerCharacter.Jude:
-                characterRef = judeReferences;
+            case Rank.Fourth:
+                stringRef = fourthPlaceString;
+                characterRef = fourthPlaceReferences;
                 break;
         }
 
-        if (characterRef != null)
+        if (stringRef != null)
         {
-            LocalizedString stringRef = null;
-            switch (rank)
-            {
-                case Rank.First:
-                    stringRef = firstPlaceString;
-                    break;
-                case Rank.Second:
-                    stringRef = secondPlaceString;
-                    break;
-                case Rank.Third:
-                    stringRef = thirdPlaceString;
-                    break;
-                case Rank.Fourth:
-                    stringRef = fourthPlaceString;
-                    break;
-            }
-
-            if(stringRef != null)
-            {
-                characterRef.SetValues(stringRef, earnedCoin, totalCoin, earnedkey, totalKey);
-            }
-
+            characterRef.SetValues(stringRef, character, earnedCoin, totalCoin, earnedkey, totalKey);
         }
+
+
     }
 }
 

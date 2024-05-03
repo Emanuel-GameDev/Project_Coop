@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,9 @@ public class CassiusAbilityTutorialFase : TutorialFase
 {
     TutorialManager tutorialManager;
     TutorialFaseData faseData;
+
+    int numberOfHealAreaExpired = 0;
+
     public CassiusAbilityTutorialFase(TutorialManager tutorialManager)
     {
         this.tutorialManager = tutorialManager;
@@ -15,6 +19,8 @@ public class CassiusAbilityTutorialFase : TutorialFase
     public override void Enter()
     {
         base.Enter();
+
+        PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityExpired, HealAreaExpired);
 
         faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
 
@@ -26,6 +32,22 @@ public class CassiusAbilityTutorialFase : TutorialFase
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
+
+        numberOfHealAreaExpired = 0;
+    }
+
+    private void HealAreaExpired(object obj)
+    {
+        if(obj is Healer)
+        {
+            numberOfHealAreaExpired++;
+
+            if(numberOfHealAreaExpired >= 1)
+            {
+                stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+            }
+        }
+
     }
 
     private void WaitAfterDialogue()
@@ -54,7 +76,6 @@ public class CassiusAbilityTutorialFase : TutorialFase
     {
         base.Update();
 
-
     }
 
 
@@ -62,5 +83,8 @@ public class CassiusAbilityTutorialFase : TutorialFase
     {
         base.Exit();
 
+        tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
+        tutorialManager.DeactivateAllPlayerInputs();
+        tutorialManager.PlayDialogue(faseData.faseEndDialogue);
     }
 }

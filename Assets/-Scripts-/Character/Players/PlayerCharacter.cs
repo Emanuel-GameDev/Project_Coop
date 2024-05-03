@@ -33,7 +33,7 @@ public abstract class PlayerCharacter : Character
 
     protected float lastestCharacterSwitch;
     protected float currentHp;
-    protected float uniqueAbilityUses;
+    protected float uniqueAbilityUses = 0 ;
     protected float lastHitTime;
 
     #endregion
@@ -435,7 +435,7 @@ public abstract class PlayerCharacter : Character
 
     public virtual void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-
+        HPHandler.Instance.NotifyUseAbility(this,UniqueAbilityCooldown);
     }
 
     public virtual void ExtraAbilityInput(InputAction.CallbackContext context)

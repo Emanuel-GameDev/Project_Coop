@@ -18,7 +18,11 @@ public enum TutorialFaseType
     attack,
     dodge,
     guard,
-    heal
+    heal,
+    brutusAbility,
+    kainaAbility,
+    cassiusAbility,
+    judeAbility
 }
 
 
@@ -512,6 +516,22 @@ public class TutorialManager : MonoBehaviour
 
             case TutorialFaseType.heal:
                 stateMachine.SetState(new HealTutorialState(this));
+                break;
+
+            case TutorialFaseType.brutusAbility:
+                stateMachine.SetState(new BrutusAbilityTutorialFase(this));
+                break;
+
+            case TutorialFaseType.kainaAbility:
+                stateMachine.SetState(new KainaAbilityTutorialFase(this));
+                break;
+
+            case TutorialFaseType.cassiusAbility:
+                stateMachine.SetState(new CassiusAbilityTutorialFase(this));
+                break;
+
+            case TutorialFaseType.judeAbility:
+                stateMachine.SetState(new JudeAbilityTutorialFase(this));
                 break;
         }
 

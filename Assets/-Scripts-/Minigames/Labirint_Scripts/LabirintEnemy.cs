@@ -5,6 +5,8 @@ public class LabirintEnemy : MonoBehaviour
 {
     [SerializeField]
     private float moveSpeed = 10f;
+    [SerializeField]
+    private AudioClip alertSound;
     public float maxFollowDistance = 15f;
     public Grid grid;
 
@@ -29,6 +31,7 @@ public class LabirintEnemy : MonoBehaviour
             if (target)
             {
                 alert.SetActive(true);
+                AudioManager.Instance.PlayAudioClip(alertSound);
             }
             else
             {

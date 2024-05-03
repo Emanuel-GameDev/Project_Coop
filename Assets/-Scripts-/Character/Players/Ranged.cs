@@ -520,7 +520,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
                     //in futuro inserire il colpo avanzato
                     EmpowerFireProjectile(ShootDirection);
-
+                    
+                    base.UniqueAbilityInput(context);
                     empowerCoolDownTimer = UniqueAbilityCooldown;
 
                     Debug.Log("colpo potenziato");
@@ -541,7 +542,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     private void EmpowerFireProjectile(Vector2 direction)
     {
         animator.SetTrigger("EmpowerShoot");
-        
+
+        PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated, this);
 
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 

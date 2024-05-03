@@ -54,7 +54,7 @@ public class Challenge : MonoBehaviour
     public virtual void StartChallenge()
     {
         Debug.Log("SFIDA INIZIATA");
-        ChallengeManager.Instance.started = challengeStarted = true;
+        ChallengeManager.Instance.interacted = challengeStarted = true;
         ChallengeManager.Instance.selectedChallenge = this;
         onChallengeStart?.Invoke();
 
@@ -148,7 +148,7 @@ public class Challenge : MonoBehaviour
 
         enemySpawned = false;
         challengeStarted = false;
-        ChallengeManager.Instance.started = false;
+        ChallengeManager.Instance.interacted = false;
     }
 
     protected void DisplayTimer(float timeToDisplay)

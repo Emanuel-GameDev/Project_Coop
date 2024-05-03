@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -14,6 +15,12 @@ public class InteractionNotification : MonoBehaviour
     private LocalizeStringEvent description;
     [SerializeField]
     private TextMeshProUGUI countText;
+    [SerializeField]
+    private float baseOffset;
+    [SerializeField]
+    private float activatedOffset;
+    [SerializeField]
+    private List<CharacterReference> characterReferences = new();
 
     private IInteracter firstInteracter;
 
@@ -42,13 +49,14 @@ public class InteractionNotification : MonoBehaviour
         this.countText.text = countText;
     }
 
-    public void AddToCount()
+    public bool AddToCount()
     {
         Count++;
         int maxPlayers = CoopManager.Instance.GetActiveHandlers().Count;
         if (Count > maxPlayers)
             Count = maxPlayers;
         SetCount();
+        return Count == maxPlayers;
     }
 
     public void RemoveFromCount()
