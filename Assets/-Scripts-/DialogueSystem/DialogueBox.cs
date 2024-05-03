@@ -71,7 +71,7 @@ public class DialogueBox : MonoBehaviour
 
             foreach(PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
             {
-                handler.GetComponent<PlayerInput>().actions.Enable();
+                handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Enable();
                 InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
                 //InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
                 action.Disable();
@@ -215,10 +215,10 @@ public class DialogueBox : MonoBehaviour
 
         foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
-            handler.GetComponent<PlayerInput>().actions.Disable();
-            handler.GetComponent<PlayerInput>().actions.FindAction("Menu").Enable();
-            handler.GetComponent<PlayerInput>().actions.FindAction("Option").Enable();
-            InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
+            handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Disable();
+            handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Menu").Enable();
+            handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Option").Enable();
+            InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
 
             action.Enable();
             action.performed += NextLineInput; 
