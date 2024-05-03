@@ -28,7 +28,7 @@ public class BrutusAbilityTutorialFase : TutorialFase
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
-        tutorialManager.objectiveNumbersGroup.SetActive(false);
+        tutorialManager.objectiveNumbersGroup.SetActive(true);
 
         tutorialManager.ResetStartingCharacterAssosiacion();
 
@@ -42,6 +42,8 @@ public class BrutusAbilityTutorialFase : TutorialFase
         
         tutorialManager.DeactivateEnemyAI();
         hitCounter = 0;
+        tutorialManager.objectiveNumberToReach.text = "3";
+        tutorialManager.objectiveNumberReached.text = hitCounter.ToString();
     }
 
     private void UnallowUpdate(object obj)
@@ -78,6 +80,8 @@ public class BrutusAbilityTutorialFase : TutorialFase
             if (character.gameObject.GetComponent<DPS>() != null)
             {
                 hitCounter++;
+                tutorialManager.objectiveNumberReached.text = hitCounter.ToString();
+
                 if (hitCounter >= 3)
                 {
                     stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));

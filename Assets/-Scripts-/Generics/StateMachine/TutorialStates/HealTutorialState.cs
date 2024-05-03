@@ -45,7 +45,7 @@ public class HealTutorialState : TutorialFase
         
 
         numberOfPlayerHealed = 0;
-        tutorialManager.objectiveNumberToReach.text = numberOfPlayerHealed.ToString();
+        tutorialManager.objectiveNumberReached.text = numberOfPlayerHealed.ToString();
 
     }
     bool dialoguePlaying = false;
@@ -82,7 +82,7 @@ public class HealTutorialState : TutorialFase
                     tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
 
                     numberOfPlayerHealed++;
-                    tutorialManager.objectiveNumberToReach.text = numberOfPlayerHealed.ToString();
+                    tutorialManager.objectiveNumberReached.text = numberOfPlayerHealed.ToString();
 
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.DPSDialogue);
@@ -93,7 +93,7 @@ public class HealTutorialState : TutorialFase
                     tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
 
                     numberOfPlayerHealed++;
-                    tutorialManager.objectiveNumberToReach.text = numberOfPlayerHealed.ToString();
+                    tutorialManager.objectiveNumberReached.text = numberOfPlayerHealed.ToString();
 
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.rangedDialogue);
@@ -104,7 +104,7 @@ public class HealTutorialState : TutorialFase
                     tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
 
                     numberOfPlayerHealed++;
-                    tutorialManager.objectiveNumberToReach.text = numberOfPlayerHealed.ToString();
+                    tutorialManager.objectiveNumberReached.text = numberOfPlayerHealed.ToString();
 
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.tankDialogue);

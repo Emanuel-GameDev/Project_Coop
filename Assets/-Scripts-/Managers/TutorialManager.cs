@@ -36,8 +36,8 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] public GameObject currentFaseObjective;
     [SerializeField] public TextMeshProUGUI objectiveText;
     [SerializeField] public GameObject objectiveNumbersGroup;
-    [SerializeField] public TextMeshProUGUI objectiveNumberToReach;
     [SerializeField] public TextMeshProUGUI objectiveNumberReached;
+    [SerializeField] public TextMeshProUGUI objectiveNumberToReach;
 
     [Header("Intro")]
     [SerializeField] GameObject introScreen;

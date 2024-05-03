@@ -40,7 +40,7 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
         tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
-        tutorialManager.objectiveNumberToReach.text = guardExecuted.ToString();
+        tutorialManager.objectiveNumberReached.text = guardExecuted.ToString();
 
     }
 
@@ -72,13 +72,13 @@ public class GuardTutorialState : TutorialFase
             guardExecuted++;
         if (guardExecuted < 3)
         {
-            tutorialManager.objectiveNumberToReach.text = guardExecuted.ToString();
+            tutorialManager.objectiveNumberReached.text = guardExecuted.ToString();
         }
 
         if(guardExecuted == 3)
         {
             perfectGuardExecuted = 0;
-            tutorialManager.objectiveNumberToReach.text = perfectGuardExecuted.ToString();
+            tutorialManager.objectiveNumberReached.text = perfectGuardExecuted.ToString();
 
             tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
             tutorialManager.DeactivateAllPlayerInputs();
@@ -104,7 +104,7 @@ public class GuardTutorialState : TutorialFase
     private void UpdatePerfectCounter(object obj)
     {
         perfectGuardExecuted++;
-        tutorialManager.objectiveNumberToReach.text = perfectGuardExecuted.ToString();
+        tutorialManager.objectiveNumberReached.text = perfectGuardExecuted.ToString();
 
         if ( perfectGuardExecuted >= 3)
         {

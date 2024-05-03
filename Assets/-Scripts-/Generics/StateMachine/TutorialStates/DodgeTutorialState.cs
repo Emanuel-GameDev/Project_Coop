@@ -61,7 +61,7 @@ public class DodgeTutorialState : TutorialFase
 
 
         perfectDodgeCount++;
-        tutorialManager.objectiveNumberToReach.text = perfectDodgeCount.ToString();
+        tutorialManager.objectiveNumberReached.text = perfectDodgeCount.ToString();
 
 
         if ( perfectDodgeCount == 3)
@@ -95,7 +95,7 @@ public class DodgeTutorialState : TutorialFase
 
         if (dodgeCount < 3)
         {
-            tutorialManager.objectiveNumberToReach.text = dodgeCount.ToString();
+            tutorialManager.objectiveNumberReached.text = dodgeCount.ToString();
         }
 
         if(dodgeCount == 3)
@@ -103,7 +103,7 @@ public class DodgeTutorialState : TutorialFase
             
             perfectDodgeCount = 0;
 
-            tutorialManager.objectiveNumberToReach.text = perfectDodgeCount.ToString();
+            tutorialManager.objectiveNumberReached.text = perfectDodgeCount.ToString();
 
             tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
             tutorialManager.objectiveText.text = faseData.faseObjectivePerfect.GetLocalizedString();
@@ -160,7 +160,7 @@ public class DodgeTutorialState : TutorialFase
         dodgeCount = 0;
         perfectDodgeCount = 0;
 
-        tutorialManager.objectiveNumberToReach.text = dodgeCount.ToString();
+        tutorialManager.objectiveNumberReached.text = dodgeCount.ToString();
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);

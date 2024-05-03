@@ -24,7 +24,9 @@ public class JudeAbilityTutorialFase : TutorialFase
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
-
+        tutorialManager.objectiveNumbersGroup.SetActive(true);
+        tutorialManager.objectiveNumberToReach.text = "1";
+        tutorialManager.objectiveNumberReached.text = "0";
 
         tutorialManager.DeactivateAllPlayerInputs();
 
@@ -40,21 +42,15 @@ public class JudeAbilityTutorialFase : TutorialFase
     {
         if(obj is Projectile) 
         {
-            Projectile projectile = (Projectile)obj;    
-            if (projectile.projectileType == EProjectileType.empoweredProjectile)
+            Projectile projectile = (Projectile)obj;
+            if (projectile.projectileType == EProjectileType.empoweredProjectile) 
+            {
+                tutorialManager.objectiveNumberReached.text = "1";
                 stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+            }
         }
     }
 
-    //private void HealAreaExpired(object obj)
-    //{
-    //    numberOfHealAreaExpired++;
-
-    //    if (numberOfHealAreaExpired >= 1)
-    //    {
-    //        stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
-    //    }
-    //}
 
     private void WaitAfterDialogue()
     {

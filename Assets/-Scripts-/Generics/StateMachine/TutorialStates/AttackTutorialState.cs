@@ -84,7 +84,7 @@ public class AttackTutorialState : TutorialFase
         hitCount = 0;
         comboHitCount = 0;
 
-        tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
+        tutorialManager.objectiveNumberReached.text = hitCount.ToString();
 
 
         tutorialManager.DeactivateAllPlayerInputs();
@@ -117,7 +117,7 @@ public class AttackTutorialState : TutorialFase
             {
                 comboHitCount = 0;
                 hitCount++;
-                tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
+                tutorialManager.objectiveNumberReached.text = hitCount.ToString();
             }
             else
                 hitCounterTimer = tutorialManager.StartCoroutine(ResetComboHitCounterTimer());
@@ -125,7 +125,7 @@ public class AttackTutorialState : TutorialFase
         else
         {
             hitCount++;
-            tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
+            tutorialManager.objectiveNumberReached.text = hitCount.ToString();
         }
 
         Debug.Log(hitCount);
