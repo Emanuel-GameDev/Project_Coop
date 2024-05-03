@@ -72,21 +72,23 @@ public class PressInteractable : MonoBehaviour, IInteractable
             interacters.Add(interacter);
 
             OnOnePlayerInteract?.Invoke(interacter);
+
+            if (showNotification)
+                NotifyInteraction(interacter);
+
+            if (disableInteracterActions)
+                interacter.DisableOtherActions();
+
+            if (interacters.Count >= CoopManager.Instance.GetActiveHandlers().Count)
+            {
+                OnAllPlayersInteract?.Invoke();
+
+                if (interacterVisualization != null)
+                    interacterVisualization.SetActive(false);
+            }
+
         }
 
-        if (interacters.Count >= CoopManager.Instance.GetActiveHandlers().Count)
-        {
-            OnAllPlayersInteract?.Invoke();
-
-            if (interacterVisualization != null)
-                interacterVisualization.SetActive(false);
-        }
-
-        if (showNotification)
-            NotifyInteraction(interacter);
-
-        if (disableInteracterActions)
-            interacter.DisableOtherActions();
     }
 
     public void CancelInteraction(IInteracter interacter)
@@ -95,19 +97,19 @@ public class PressInteractable : MonoBehaviour, IInteractable
         {
             interacters.Remove(interacter);
             OnOnePlayerCancelInteract?.Invoke(interacter);
-        }
 
-        if (disableInteracterActions)
-            interacter.EnableAllActions();
+            if (showNotification)
+            {
+                if (interacters.Count == 0)
+                    InteractionNotificationHandler.Instance.DeactivateNotification(this);
+                else
+                    NotifyCancelInteraction(interacter);
+            }
 
-        if (showNotification)
-        {
-            if(interacters.Count == 0)
-                InteractionNotificationHandler.Instance.DeactivateNotification(this);
-            else
-                NotifyCancelInteraction(interacter);
+
+            if (disableInteracterActions)
+                interacter.EnableAllActions();
         }
-            
 
     }
 

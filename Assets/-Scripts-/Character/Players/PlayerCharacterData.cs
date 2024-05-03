@@ -31,6 +31,8 @@ public class PlayerCharacterData : ScriptableObject
     private string characterDescription;
     [SerializeField]
     private Sprite uniqueAbilitySprite;
+    [SerializeField]
+    private Sprite notificationBackground;
 
 
 
@@ -45,5 +47,6 @@ public class PlayerCharacterData : ScriptableObject
     public Sprite PixelFaceSprite => pixelFaceSprite;
     public Sprite PixelBackgroundSprite => pixelBackgroundSprite;
     public Sprite UniqueAbilitySprite => uniqueAbilitySprite;
+    public Sprite NotificationBackground => notificationBackground;
 
 }

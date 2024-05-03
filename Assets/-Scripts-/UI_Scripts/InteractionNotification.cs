@@ -10,8 +10,6 @@ public class InteractionNotification : MonoBehaviour
     [SerializeField]
     private Image backgroundImage;
     [SerializeField]
-    private Image chracterImage;
-    [SerializeField]
     private LocalizeStringEvent description;
     [SerializeField]
     private TextMeshProUGUI countText;
@@ -30,12 +28,6 @@ public class InteractionNotification : MonoBehaviour
         backgroundImage.sprite = sprite;
     }
 
-    public void SetCharacterSprite(Sprite sprite)
-    {
-        chracterImage.sprite = sprite;
-
-    }
-
     public void SetDescription(LocalizedString descriptionString)
     {
         this.description.StringReference = descriptionString;
@@ -49,22 +41,24 @@ public class InteractionNotification : MonoBehaviour
         this.countText.text = countText;
     }
 
-    public bool AddToCount()
+    public bool AddToCount(IInteracter interacter)
     {
         Count++;
         int maxPlayers = CoopManager.Instance.GetActiveHandlers().Count;
         if (Count > maxPlayers)
             Count = maxPlayers;
         SetCount();
+        SetCharaterFlag(interacter, true);
         return Count == maxPlayers;
     }
 
-    public void RemoveFromCount()
+    public void RemoveFromCount(IInteracter interacter)
     {
         Count--;
         if (Count < 0)
             Count = 0;
         SetCount();
+        SetCharaterFlag(interacter, false);
     }
 
     public void ChangeFirstInteracter(IInteracter interacter, IInteractable interactable)
@@ -73,15 +67,29 @@ public class InteractionNotification : MonoBehaviour
             SetFirstInteracter(interacter);
         else if (firstInteracter == interacter)
             SetFirstInteracter(interactable.GetFirstInteracter());
-
-
     }
 
     private void SetFirstInteracter(IInteracter interacter)
     {
         firstInteracter = interacter;
         if (interacter is PlayerCharacter character)
-            SetCharacterSprite(GameManager.Instance.GetCharacterData(character.Character).DialogueSprite);
+            SetBackgroundSprite(GameManager.Instance.GetCharacterData(character.Character).NotificationBackground);
     }
+
+    private void SetCharaterFlag(IInteracter interacter, bool state)
+    {
+        if (interacter is PlayerCharacter character)
+        {
+            foreach (CharacterReference reference in characterReferences)
+            {
+                if(reference.Character == character.Character)
+                {
+                    reference.GetComponent<RectTransform>().anchoredPosition = new Vector2(reference.GetComponent<RectTransform>().anchoredPosition.x, state ? activatedOffset : baseOffset);
+                }
+            }
+        }
+            
+    }
+
 
 }

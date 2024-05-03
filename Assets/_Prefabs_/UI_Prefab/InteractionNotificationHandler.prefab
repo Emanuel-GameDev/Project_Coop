@@ -107,7 +107,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1158471679678135917
 RectTransform:
   m_ObjectHideFlags: 0
@@ -126,10 +126,10 @@ RectTransform:
   - {fileID: 1108951657250276910}
   m_Father: {fileID: 6091609211018916770}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 200}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 336, y: -100}
+  m_SizeDelta: {x: 672, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2060648172186849007
 CanvasRenderer:
@@ -182,11 +182,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundImage: {fileID: 5431777221244231757}
-  chracterImage: {fileID: 0}
   description: {fileID: 5266255053599201582}
   countText: {fileID: 8666620185689912780}
   baseOffset: 0
-  activatedOffset: 0
+  activatedOffset: -16
+  characterReferences:
+  - {fileID: 6835015367215893247}
+  - {fileID: 9116378524792929992}
+  - {fileID: 7331978208542375013}
+  - {fileID: 8117663207895512370}
 --- !u!1 &1415631181953221195
 GameObject:
   m_ObjectHideFlags: 0
@@ -879,7 +883,7 @@ MonoBehaviour:
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 1
+  m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 1
