@@ -1,7 +1,4 @@
-using TMPro;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
