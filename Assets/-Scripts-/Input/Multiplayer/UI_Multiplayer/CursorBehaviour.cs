@@ -125,7 +125,7 @@ public class CursorBehaviour : InputReceiver
         if (context.started) CharacterSelectionMenu.Instance.TriggerCancelPressed(true, playerID);
         else if (context.canceled) CharacterSelectionMenu.Instance.TriggerCancelPressed(false, playerID);
 
-        if (objectSelected)
+        if (objectSelected && context.started)
         {
             bool response = CharacterSelectionMenu.Instance.TriggerPlayerSelection(false, gameObject);
 

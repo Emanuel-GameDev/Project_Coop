@@ -111,12 +111,12 @@ public class CharacterSelectionMenu : MonoBehaviour
     {
         if (mode)
         {
-            cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(true);
+            cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.SetActive(true);
         }
         else
         {
             if (cursor.GetComponent<RectTransform>().parent != null)
-                cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(false);
+                cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.SetActive(false);
         }
     }
 
@@ -125,17 +125,17 @@ public class CharacterSelectionMenu : MonoBehaviour
         if (mode)
         {
             // Spengo lo sprite del P overed
-            cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(false);
+            //cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(false);
 
             // Accendo lo sprite del P ready
-            cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.SetActive(true);
+            cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(true);
 
             // Setto la classe
             ePlayerCharacter charToAssign = cursor.GetComponentInParent<CharacterIdentifier>().character;
             cursor.GetComponent<CursorBehaviour>().SetCharacter(charToAssign);
 
             // Controllo non necessario sullo sprite del ready per impostare il bool del cursore
-            if (cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.activeSelf)
+            if (cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.activeSelf)
                 return true;
             else
                 return false;
@@ -143,13 +143,13 @@ public class CharacterSelectionMenu : MonoBehaviour
         else
         {
             // Spengo lo sprite del P ready
-            cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.SetActive(false);
+            cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(false);
 
             // Accendo lo sprite del P overed
-            cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(true);
+            //cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(true);
 
             // Controllo non necessario sullo sprite del ready per impostare il bool del cursore
-            if (cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.activeSelf)
+            if (!cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.activeSelf)
                 return true;
             else
                 return false;
