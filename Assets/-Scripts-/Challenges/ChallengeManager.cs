@@ -26,12 +26,14 @@ public class ChallengeManager : MonoBehaviour, IInteractable
             return _instance;
         }
     }
-   
+
+    [Header("Generics")]
     [SerializeField] private List<Challenge> challengesList;
     [SerializeField] private MenuInfo menuInfo;
     [SerializeField] private GameObject panel;
     [SerializeField] private GameObject challengeUIPrefab;
     [SerializeField] private List<ChallengeUI> currentChallenges;
+    [SerializeField] private GameObject bottoneInutile;
 
     [Header("Dialogue")]
     [SerializeField] Dialogue dialogueOnInteraction;
@@ -42,7 +44,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
 
 
     [HideInInspector] public Challenge selectedChallenge;
-    [HideInInspector] public bool started;
+    [HideInInspector] public bool interacted;
     [HideInInspector] public UnityEvent onInteractionAction;
 
 
@@ -82,8 +84,9 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     
     public void Interact(IInteracter interacter)
     {
-        if (!started)
-        {           
+        if (!interacted)
+        {
+            bottoneInutile.SetActive(true);
            dialogueBox.SetDialogue(dialogueOnInteraction);
            dialogueBox.RemoveAllDialogueEnd();
            dialogueBox.AddDialogueEnd(onInteractionAction);
