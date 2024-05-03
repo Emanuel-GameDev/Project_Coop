@@ -42,13 +42,14 @@ public class InteractionNotification : MonoBehaviour
         this.countText.text = countText;
     }
 
-    public void AddToCount()
+    public bool AddToCount()
     {
         Count++;
         int maxPlayers = CoopManager.Instance.GetActiveHandlers().Count;
         if (Count > maxPlayers)
             Count = maxPlayers;
         SetCount();
+        return Count == maxPlayers;
     }
 
     public void RemoveFromCount()
