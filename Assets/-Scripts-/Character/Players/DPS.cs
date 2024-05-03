@@ -79,7 +79,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     private float lastAttackTime;
     private float lastDodgeTime;
-    private float lastUniqueAbilityUseTime;
     private float lastPerfectDodgeTime;
     private float lastDashAttackTime;
     private float lastLandedHitTime;
@@ -97,6 +96,8 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     private bool mustContinueCombo = false;
     private bool alreadyCalled = false;
+    private bool canUseUniqueAbility = true;
+
     private AttackComboState currentAttackComboState;
     private AttackComboState NextAttackComboState
     {
@@ -169,7 +170,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         base.Inizialize();
         lastDodgeTime = -dodgeCooldown;
         lastAttackTime = -timeBetweenCombo;
-        lastUniqueAbilityUseTime = -UniqueAbilityCooldown;
+        canUseUniqueAbility = true;
         lastDashAttackTime = -dashAttackCooldown;
         consecutiveHitsCount = 0;
         currentComboState = 0;
@@ -372,12 +373,11 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (context.performed)
         {
-
-            Utility.DebugTrace($"Executed: {!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown}");
-            if (!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown)
+            Utility.DebugTrace($"Executed: {!isInvulnerable && canUseUniqueAbility}");
+            if (!isInvulnerable && canUseUniqueAbility)
             {
-                lastUniqueAbilityUseTime = Time.time;
-                uniqueAbilityUses++;
+                canUseUniqueAbility = false;
+                base.UniqueAbilityInput(context);
                 StartCoroutine(UseUniqueAbilityCoroutine());
             }
         }
@@ -392,6 +392,10 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
         isInvulnerable = false;
         PubSub.Instance.Notify(EMessageType.uniqueAbilityExpired, this);
+
+        yield return new WaitForSeconds(UniqueAbilityCooldown - invulnerabilityDuration);
+        uniqueAbilityUses++;
+        canUseUniqueAbility = true;
     }
     #endregion
 
