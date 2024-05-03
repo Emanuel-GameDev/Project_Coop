@@ -66,16 +66,7 @@ public class DialogueBox : MonoBehaviour
         else
         {
 
-            //controllare
-            if(OnDialogueEnd.Count > 0) 
-            OnDialogueEnd[dialogueIndex]?.Invoke();
-
-            dialogueIndex++;
-
-            if (dialogueIndex == dialogues.Length)
-            {
-                dialogueIndex--;
-            }
+           
 
 
             foreach(PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
@@ -85,6 +76,17 @@ public class DialogueBox : MonoBehaviour
                 //InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
                 action.Disable();
                 action.performed -= NextLineInput;
+            }
+
+            //controllare
+            if (OnDialogueEnd.Count > 0)
+                OnDialogueEnd[dialogueIndex]?.Invoke();
+
+            dialogueIndex++;
+
+            if (dialogueIndex == dialogues.Length)
+            {
+                dialogueIndex--;
             }
 
             //if(OnDialogueEnd.Count>0)
