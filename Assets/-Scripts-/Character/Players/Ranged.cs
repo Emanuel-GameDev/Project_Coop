@@ -123,7 +123,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
     bool isAttacking=false;
     bool isDodging=false;
-    bool isInvunerable=false;
+    bool isCharging=false;
 
     public override void Inizialize()
     {
@@ -489,8 +489,9 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             }
             else
             {
-                empowerStartTimer = Time.time;
+                empowerStartTimer = 0;
                 isAttacking = true;
+                isCharging = true;
 
                 animator.SetBool("isCharging",true);
                 animator.SetTrigger("StartCharging");
@@ -506,7 +507,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             {
                 float endTimer = Time.time;
 
-                if (endTimer - empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
+                if (empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
                 {
 
                     Vector2 _look = ReadLook(context);
@@ -532,6 +533,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
             animator.SetBool("isCharging", false);
             isAttacking = false;
+            isCharging=false;
+            ChargedVFX.SetActive(false);
         }
 
         
@@ -575,6 +578,19 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         if (empowerCoolDownTimer > 0)
         {
             empowerCoolDownTimer -= Time.deltaTime;
+        }
+
+        if (isCharging)
+        {
+            empowerStartTimer += Time.deltaTime;
+
+            if(empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
+            {
+                if (!ChargedVFX.activeSelf)
+                {
+                    ChargedVFX.SetActive(true);
+                }
+            }
         }
 
         //schivata
