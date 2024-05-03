@@ -83,13 +83,12 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     public void Interact(IInteracter interacter)
     {
         if (!started)
-        {
-           
+        {           
            dialogueBox.SetDialogue(dialogueOnInteraction);
            dialogueBox.RemoveAllDialogueEnd();
            dialogueBox.AddDialogueEnd(onInteractionAction);
-           dialogueBox.StartDialogue();
-           
+           dialogueBox.StartDialogue();          
+         
         }
         
     }
