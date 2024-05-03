@@ -10,6 +10,7 @@ public class ChallengeUI : MonoBehaviour
     [SerializeField] private Button selectButton;
     [SerializeField] private Image challengeCompletedImage;
     public Challenge challengeSelected;
+    private bool selected;
 
     public void SetUpUI()
     {
