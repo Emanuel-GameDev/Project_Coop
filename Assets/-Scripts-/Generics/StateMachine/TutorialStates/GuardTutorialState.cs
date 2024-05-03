@@ -38,7 +38,7 @@ public class GuardTutorialState : TutorialFase
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
-
+        tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
         tutorialManager.objectiveNumberToReach.text = guardExecuted.ToString();
 
@@ -65,7 +65,6 @@ public class GuardTutorialState : TutorialFase
 
         tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
-        tutorialManager.tutorialEnemy.focus = true;
     }
 
     private void UpdateCounter(object obj)
