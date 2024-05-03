@@ -1,7 +1,4 @@
-using TMPro;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
@@ -13,6 +10,7 @@ public class ChallengeUI : MonoBehaviour
     [SerializeField] private Button selectButton;
     [SerializeField] private Image challengeCompletedImage;
     public Challenge challengeSelected;
+    private bool selected;
 
     public void SetUpUI()
     {

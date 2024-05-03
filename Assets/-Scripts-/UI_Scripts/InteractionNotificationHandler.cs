@@ -34,6 +34,9 @@ public class InteractionNotificationHandler : MonoBehaviour
     [SerializeField]
     private Transform notificationParent;
 
+    [SerializeField]
+    private float disapperTime = 1f;
+
     private Dictionary<IInteractable, InteractionNotification> notifications = new();
 
     private void Awake()
@@ -69,9 +72,21 @@ public class InteractionNotificationHandler : MonoBehaviour
         }
 
         if(interaction != null)
-            interaction.AddToCount();
-
+        {
+            bool full = interaction.AddToCount();
+            if (full)
+            {
+                StartCoroutine(DeavctivateNotificationAfterDelay(disapperTime, interactable));
+            }
+        }
     }
+
+    IEnumerator DeavctivateNotificationAfterDelay(float delay, IInteractable interactable)
+    {
+        yield return new WaitForSeconds(delay);
+        DeactivateNotification(interactable);
+    }
+
 
     public void CancelNotification(IInteracter interacter, IInteractable interactable)
     {
@@ -90,6 +105,4 @@ public class InteractionNotificationHandler : MonoBehaviour
             notifications.Remove(interactable);
         }
     }
-
-
 }

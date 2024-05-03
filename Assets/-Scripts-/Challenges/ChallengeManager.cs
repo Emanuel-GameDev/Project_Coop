@@ -83,13 +83,12 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     public void Interact(IInteracter interacter)
     {
         if (!started)
-        {
-           
+        {           
            dialogueBox.SetDialogue(dialogueOnInteraction);
            dialogueBox.RemoveAllDialogueEnd();
            dialogueBox.AddDialogueEnd(onInteractionAction);
-           dialogueBox.StartDialogue();
-           
+           dialogueBox.StartDialogue();          
+         
         }
         
     }
@@ -127,7 +126,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     }
     private void OnInteraction()
     {
-        MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetPlayer(ePlayerID.Player1));
+        MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetFirstPlayer());
         dialogueBox.RemoveAllDialogueEnd();
     }
 }

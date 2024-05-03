@@ -1,8 +1,6 @@
 using System.Collections;
-using UnityEditor.Localization.Plugins.XLIFF.V20;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class SouvenirShopMenu : Menu
 {
@@ -21,7 +19,7 @@ public class SouvenirShopMenu : Menu
     //}
 
 
-    
+
 
 
     public override void OpenMenu()
@@ -61,14 +59,14 @@ public class SouvenirShopMenu : Menu
         shopGroup.GetComponent<Animation>().Play("SouvenirEntrance");
 
         foreach (SouvenirShopTable table in shopTables)
-            {
-                table.SetTableCurrentCharacter();
-                table.StartIdleAnimationIn(Random.value);
-                table.SetUpInput();
-            }
+        {
+            table.SetTableCurrentCharacter();
+            table.StartIdleAnimationIn(Random.value);
+            table.SetUpInput();
+        }
 
-            //CheckForMoney();
-            AudioManager.Instance.PlayAudioClip(openingAudioClip,transform);
+        //CheckForMoney();
+        AudioManager.Instance.PlayAudioClip(openingAudioClip, transform);
         //}
     }
 
@@ -77,13 +75,13 @@ public class SouvenirShopMenu : Menu
     {
         if (canClose)
         {
-             CloseMenu();
+            CloseMenu();
         }
     }
 
     public void CheckForMoney()
     {
-        foreach(SouvenirShopTable table in shopTables)
+        foreach (SouvenirShopTable table in shopTables)
         {
             table.MoneyCheck();
         }

@@ -66,11 +66,6 @@ public abstract class InputReceiver : MonoBehaviour
 
     }
 
-    public virtual void JoinInput(InputAction.CallbackContext context)
-    {
-        
-    }
-
     public virtual void SwitchUpInput(InputAction.CallbackContext context)
     {
        

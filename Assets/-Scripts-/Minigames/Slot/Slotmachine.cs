@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.U2D.Animation;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Slotmachine : MonoBehaviour
 {
@@ -60,11 +59,11 @@ public class Slotmachine : MonoBehaviour
 
     [Header("Manopola")]
     [SerializeField] private GameObject manopola;
-    
+
 
     List<Sprite> playerSprites;
 
-    
+
 
     [Header("Colonne")]
 
@@ -107,7 +106,7 @@ public class Slotmachine : MonoBehaviour
     private int keyForFirstPlayer;
     [SerializeField]
     private WinScreenHandler winScreenHandler;
-    
+
 
 
     //obsoleto
@@ -131,7 +130,7 @@ public class Slotmachine : MonoBehaviour
 
     private void Start()
     {
-        
+
 
         StartCoroutine(WaitForPlayers());
     }
@@ -188,7 +187,7 @@ public class Slotmachine : MonoBehaviour
             Debug.Log("avete vinto");
 
             canInteract = false;
-            inGame=false;
+            inGame = false;
 
 
             //fai animazione/dialogo di vincita
@@ -198,7 +197,7 @@ public class Slotmachine : MonoBehaviour
         {
             Debug.Log("avete perso");
 
-            
+
 
             if (remainingLives <= 0)
             {
@@ -209,7 +208,7 @@ public class Slotmachine : MonoBehaviour
                 //fai animazione/dialogo perdita
                 StartCoroutine(ShowLose());
 
-                
+
 
 
                 return;
@@ -288,8 +287,8 @@ public class Slotmachine : MonoBehaviour
     private void SetRowInIndex(int index, ePlayerCharacter characterEnum)
     {
         Sprite playerSprites = null;
-        Sprite buttonSprite= null;
-        SpriteLibraryAsset libraryButton=null;
+        Sprite buttonSprite = null;
+        SpriteLibraryAsset libraryButton = null;
 
         switch (characterEnum)
         {
@@ -405,7 +404,7 @@ public class Slotmachine : MonoBehaviour
 
     private IEnumerator InputRowSlot(SlotPlayer player)
     {
-        
+
         if (player == rows[currentNumberOfTheSlot].selectedPlayer && canInteract) //ferma la riga per il giocatore giocante
         {
             canInteract = false;
@@ -425,11 +424,11 @@ public class Slotmachine : MonoBehaviour
             currentNumberOfTheSlot++;
             canInteract = true;
 
-            if(currentNumberOfTheSlot <= rows.Count - 1)
+            if (currentNumberOfTheSlot <= rows.Count - 1)
             {
                 buttonSlots[currentNumberOfTheSlot].Arrow.SetActive(true);
             }
-            
+
 
 
         }
@@ -450,14 +449,14 @@ public class Slotmachine : MonoBehaviour
             //animazione manopola
 
             manopola.GetComponent<Animator>().SetTrigger("SpinTrigger");
-            
+
 
         }
     }
 
     public void InputFromPlayer(SlotPlayer player)
     {
-        if(currentNumberOfTheSlot > rows.Count - 1)
+        if (currentNumberOfTheSlot > rows.Count - 1)
         {
             InputRestartSlot(player);
         }
@@ -465,7 +464,7 @@ public class Slotmachine : MonoBehaviour
         {
             StartCoroutine(InputRowSlot(player));
         }
-        
+
     }
 
     private void MakeRankList()
@@ -477,7 +476,7 @@ public class Slotmachine : MonoBehaviour
             winOrder.Add(player);
         }
 
-        
+
 
         List<ePlayerCharacter> ranking = new();
 
@@ -546,7 +545,7 @@ public class Slotmachine : MonoBehaviour
 
     public void ExitMinigame()
     {
-        
+
         if (sceneChanger != null)
         {
             sceneChanger.ChangeScene();

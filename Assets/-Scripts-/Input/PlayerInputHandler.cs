@@ -156,7 +156,6 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void CancelInteractInput(InputAction.CallbackContext context) => CurrentReceiver.CancelInteractInput(context);
 
-    public void JoinInput(InputAction.CallbackContext context) => CurrentReceiver.JoinInput(context);
 
     public void SwitchUpInput(InputAction.CallbackContext context) => CurrentReceiver.SwitchUpInput(context);
 
@@ -166,15 +165,15 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void SwitchLeftInput(InputAction.CallbackContext context) => CurrentReceiver.SwitchLeftInput(context);
 
-    public void MenuInput(InputAction.CallbackContext context) //=> CurrentReceiver.MenuInput(context);
-    {
-        if (context.started) Utility.DebugTrace("STARTED");
-        if (context.performed) Utility.DebugTrace("PERFORMED");
-        if (context.canceled) Utility.DebugTrace("CANCELED");
+    public void MenuInput(InputAction.CallbackContext context) => CurrentReceiver.MenuInput(context);
+    //{
+    //    if (context.started) Utility.DebugTrace("STARTED");
+    //    if (context.performed) Utility.DebugTrace("PERFORMED");
+    //    if (context.canceled) Utility.DebugTrace("CANCELED");
 
 
-        CurrentReceiver.MenuInput(context);
-    } 
+    //    CurrentReceiver.MenuInput(context);
+    //} 
 
     public void OptionInput(InputAction.CallbackContext context) => CurrentReceiver.OptionInput(context);
 

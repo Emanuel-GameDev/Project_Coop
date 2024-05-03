@@ -44,7 +44,6 @@ public class HPHandler : MonoBehaviour
         {
             containersAssociations = new Dictionary<ePlayerID, CharacterHUDContainer>();
             dictionaryCreated = true;
-            Debug.Log("Prova");
         }
 
         PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, UpdateContainer);
@@ -118,9 +117,18 @@ public class HPHandler : MonoBehaviour
             hpContainer.SetUpHp();
             hpContainer.UpdateHp(player.CurrentHp);
 
+            //CONTROLLARE COOLDOWN ABILITA
+
+            hpContainer.SetUpAbility(player.UniqueAbilityCooldown);
+            
             id++;
         }
         
+    }
+
+    public void NotifyUseAbility(PlayerCharacter player)
+    {
+        containersAssociations[player.GetInputHandler().playerID].setUseAbility(true);
     }
 
     public void SetCharacter(object obj)

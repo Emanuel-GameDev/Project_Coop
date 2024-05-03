@@ -120,6 +120,18 @@ public class SaveManager : MonoBehaviour
         SaveData();
     }
 
+    public void SavePlayersData(List<CharacterSaveData> savingData)
+    {
+        saveData.players?.Clear();
+
+        foreach (CharacterSaveData data in savingData)
+        {
+            saveData.players.Add(data);
+        }
+
+        SaveData();
+    }
+
     #endregion
 
     #region Load
@@ -232,7 +244,6 @@ public class SaveManager : MonoBehaviour
         PlayerPrefs.Save();
     }
     #endregion
-
 
 }
 
