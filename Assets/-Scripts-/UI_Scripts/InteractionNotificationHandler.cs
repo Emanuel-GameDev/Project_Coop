@@ -73,7 +73,7 @@ public class InteractionNotificationHandler : MonoBehaviour
 
         if(interaction != null)
         {
-            bool full = interaction.AddToCount();
+            bool full = interaction.AddToCount(interacter);
             if (full)
             {
                 StartCoroutine(DeavctivateNotificationAfterDelay(disapperTime, interactable));
@@ -92,7 +92,7 @@ public class InteractionNotificationHandler : MonoBehaviour
     {
         if (notifications.ContainsKey(interactable))
         {
-            notifications[interactable].RemoveFromCount();
+            notifications[interactable].RemoveFromCount(interacter);
             notifications[interactable].ChangeFirstInteracter(interacter, interactable);
         }
     }
