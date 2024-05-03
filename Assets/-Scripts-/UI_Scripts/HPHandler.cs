@@ -117,6 +117,9 @@ public class HPHandler : MonoBehaviour
             hpContainer.SetUpHp();
             hpContainer.UpdateHp(player.CurrentHp);
 
+            //CONTROLLARE COOLDOWN ABILITA
+            
+
             id++;
         }
         
