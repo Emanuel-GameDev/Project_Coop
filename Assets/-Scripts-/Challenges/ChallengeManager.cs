@@ -127,7 +127,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     }
     private void OnInteraction()
     {
-        MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetPlayer(ePlayerID.Player1));
+        MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetFirstPlayer());
         dialogueBox.RemoveAllDialogueEnd();
     }
 }
