@@ -109,6 +109,15 @@ public class DebugManager : MonoBehaviour
             {
                 ChallengeManager.Instance.selectedChallenge.AutoComplete();
             }
+
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                CharacterSaveData saveData = SaveManager.Instance.GetPlayerSaveData(targetCharacter);
+               
+
+                Debug.Log($"coin: {saveData.extraData.coin}, key: {saveData.extraData.key}");
+            }
+
             if (guardaQuestoTooltipPerLeIstruzioni) guardaQuestoTooltipPerLeIstruzioni = false;
             istructions = text;
         }
@@ -151,12 +160,13 @@ public class DebugManager : MonoBehaviour
     private void SaveGame()
     {
         Debug.Log("CallSave");
-        SaveManager.Instance.SavePlayersData();
+        SaveManager.Instance.SaveData();
     }
 
     private void LoadGame()
     {
         Debug.Log("CallLoad");
+        SaveManager.Instance.LoadData();
         SaveManager.Instance.LoadAllPlayersData();
     }
 
