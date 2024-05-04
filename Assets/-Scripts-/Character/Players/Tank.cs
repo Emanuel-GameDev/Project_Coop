@@ -112,7 +112,20 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private ProtectPlayers triggerProtectPlayer;
     private PivotTriggerProtected pivotTriggerProtected;
     private IDamager perfectBlockIDamager;
-   
+
+    [Header("VFX")]
+    [SerializeField] GameObject shieldVFX;
+    ParticleSystem.EmissionModule emissionModule;
+
+    [Header("Shield Health Color",order =1)]
+    [ColorUsage(true, true)]
+    [SerializeField] Color shieldVFXColor;
+    [ColorUsage(true, true)]
+    [SerializeField] Color shieldVFXDamagedColor;
+    [ColorUsage(true, true)]
+    [SerializeField] Color shieldVFXCriticalColor;
+
+    
 
 
     public override void Inizialize()
@@ -134,6 +147,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         healthDamageReductionMulty = (1 - HealthDamageReduction / 100);
 
         Debug.Log(powerUpData.UniqueAbilityCooldownDecrease);
+
+        emissionModule = _walkDustParticles.emission;
 
     }
    
@@ -363,6 +378,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             if(isBlocking != true)
             {
                 isBlocking = true;
+                //vfx
+                shieldVFX.gameObject.SetActive(true);
+                SetShieldColorHealth();
 
                 if (perfectTimingEnabled)
                 {                   
@@ -404,12 +422,15 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         {
             SetCanMove(true, rb);
             
-                isBlocking = false;
-                currentBlockZone = blockZone.none;
-                StartCoroutine(nameof(ToggleBlock));               
-                animator.SetTrigger("ToggleBlock");
-            
-           
+            isBlocking = false;
+            currentBlockZone = blockZone.none;
+            StartCoroutine(nameof(ToggleBlock));               
+            animator.SetTrigger("ToggleBlock");
+
+            //vfx
+            shieldVFX.gameObject.SetActive(false);
+
+
             ShowStaminaBar(false);
             
 
@@ -465,6 +486,34 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public void ShowStaminaBar(bool toShow)
     {
         staminaBar.gameObject.SetActive(toShow);
+        
+    }
+
+    private void SetShieldColorHealth()
+    {
+        Material shieldMaterial=shieldVFX.GetComponentInChildren<MeshRenderer>().material;
+
+        float healthLevel = currentStamina / maxStamina;
+
+        if (healthLevel > 0.5f)
+        {
+            //good healt
+            shieldMaterial.SetColor("_HealthColor", shieldVFXColor);
+
+        }
+        else
+        {
+            if(healthLevel > 0.25f)
+            {
+                //damaged health
+                shieldMaterial.SetColor("_HealthColor", shieldVFXDamagedColor);
+            }
+            else
+            {
+                //critical health
+                shieldMaterial.SetColor("_HealthColor", shieldVFXCriticalColor);
+            }
+        }
     }
     
 
@@ -543,6 +592,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
             PubSub.Instance.Notify(EMessageType.guardExecuted, this);
 
+            //vfx
+            SetShieldColorHealth();
 
             Debug.Log($"current stamina : {currentStamina}");
             if (currentStamina <= 0)
@@ -550,6 +601,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                 SetCanMove(true, rb);
                 isBlocking = false;
                 ShowStaminaBar(false);
+                shieldVFX.SetActive(false);
                 Debug.Log("Parata Rotta");
                 animator.SetTrigger("ShieldBroken");
                 //CONTROLLARE
@@ -671,7 +723,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             if (direction.y != 0)
                 lastDirectionYValue = direction.y;
 
-
+            emissionModule.enabled = true;
         }
         animator.SetBool("IsMoving", isMoving);
 
@@ -684,6 +736,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         if (move == false)
         {
             rigidbody.velocity = Vector3.zero;
+            emissionModule.enabled = false;
         }
 
     }
