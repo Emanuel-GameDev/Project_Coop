@@ -67,6 +67,8 @@ public class DodgeTutorialState : TutorialFase
         {
             if (currentCharacterIndex < 1)
             {
+                dodgeCount = 0;
+                tutorialManager.objectiveNumberReached.text = dodgeCount.ToString();
                 //sottofase successiva
                 characterChange = true;
                 tutorialManager.Fade();
