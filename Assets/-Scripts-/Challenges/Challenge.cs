@@ -24,7 +24,7 @@ public class Challenge : MonoBehaviour
     public Dialogue dialogueOnSuccess;
     [SerializeField] UnityEvent onChallengeSuccessEvent;
     [SerializeField] int coinsOnSuccess;
-    [SerializeField] int KeysOnSuccess;
+    [SerializeField] int keysOnSuccess;
 
     [Header("OnFail")]
     public Dialogue dialogueOnFailure;
@@ -80,7 +80,9 @@ public class Challenge : MonoBehaviour
         onChallengeSuccessEvent?.Invoke();
         foreach (Transform HPContainer in HPHandler.Instance.HpContainerTransform)
         {
-
+           
+            CharacterSaveData charSaveData = SaveManager.Instance.GetPlayerSaveData(HPContainer.GetComponentInChildren<CharacterHUDContainer>().referredCharacter.Character);
+            
             if (HPContainer.GetComponentInChildren<CharacterHUDContainer>() != null)
             {
                 RewardContainer rewardContainer = HPContainer.GetComponentInChildren<RewardContainer>();
@@ -89,7 +91,7 @@ public class Challenge : MonoBehaviour
                 {
                     GameObject tempReward = Instantiate(RewardManager.Instance.rightPrefabRewards, rewardContainer.transform);
                     tempReward.transform.position = rewardContainer.targetPosition.position;
-                    tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, KeysOnSuccess);
+                    tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, keysOnSuccess);
                     rewardContainer.rewardPopUp = tempReward;
                     StartCoroutine(rewardContainer.MoveCooroutine());
 
@@ -98,15 +100,20 @@ public class Challenge : MonoBehaviour
                 {
                     GameObject tempReward = Instantiate(RewardManager.Instance.leftPrefabRewards, rewardContainer.transform);
                     tempReward.transform.position = rewardContainer.targetPosition.position;
-                    tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, KeysOnSuccess);
+                    tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, keysOnSuccess);
                     rewardContainer.rewardPopUp = tempReward;
                     StartCoroutine(rewardContainer.MoveCooroutine());
 
                 }
 
+
+                charSaveData.extraData.coin += coinsOnSuccess;
+                charSaveData.extraData.key += keysOnSuccess;
+                
             }
 
         }
+        //SaveManager.Instance.SaveDa
 
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
 
