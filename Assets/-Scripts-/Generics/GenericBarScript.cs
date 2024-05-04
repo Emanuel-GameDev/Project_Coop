@@ -7,22 +7,27 @@ using UnityEngine.UI;
 
 public class GenericBarScript : MonoBehaviour
 {
-    [SerializeField]
-    private Slider slider;
+    [SerializeField] private Slider slider;
+    [SerializeField] private Gradient gradient;
+    [SerializeField] private Image fill;
+    
     private float maxValue;
     private void OnEnable()
     {       
         slider = GetComponent<Slider>();
+        fill = slider.fillRect.gameObject.GetComponent<Image>();
+              
     }
 
-    public void Setvalue(float value)
+    public void SetMaxValue(float maxValue)
     {                   
-        if(slider == null)
-            GetComponent<Slider>();
+        
+        slider.maxValue = maxValue;
+        this.maxValue = maxValue;
+        slider.value = maxValue;
 
-        slider.maxValue = value;
-        maxValue = value;
-        slider.value = value;
+       
+        fill.color = gradient.Evaluate(1f);
     }
     public float AddValue(float value)
     {
@@ -40,7 +45,11 @@ public class GenericBarScript : MonoBehaviour
 
         return slider.value;
     }
-
+    public void SetValue(float value) 
+    {
+        slider.value = value;
+        fill.color = gradient.Evaluate(slider.normalizedValue);
+    }
     public void ResetValue()
     {
         slider.value = maxValue; 

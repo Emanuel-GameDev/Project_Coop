@@ -17,6 +17,7 @@ public class CharacterHUDContainer : MonoBehaviour
     [SerializeField] Image playerIdImage;
     [SerializeField] TMP_Text maxHP;
     [SerializeField] TMP_Text currentHP;
+    [SerializeField] GenericBarScript hpBar;
 
     [Header("Ability")]
     [SerializeField] Image abilityImage;
@@ -58,14 +59,27 @@ public class CharacterHUDContainer : MonoBehaviour
     {
         GetComponent<Image>().sprite = containerSprite;
     }
+
+    #region Hp
     public void SetUpHp()
     {
         maxHP.text = referredCharacter.MaxHp.ToString();
         currentHP.text = maxHP.text;
+        hpBar.SetMaxValue(referredCharacter.MaxHp);
     }
+
+    public void UpdateHp(float newHp)
+    {
+        currentHP.text = newHp.ToString();
+        hpBar.SetValue(newHp);
+    }
+
+    #endregion
+    #region ability
+
     public void SetUpAbility(float abilityTimerValue)
     {
-        if (GameManager.Instance.GetCharacterData(referredCharacter.Character).UniqueAbilitySprite!= null)
+        if (GameManager.Instance.GetCharacterData(referredCharacter.Character).UniqueAbilitySprite != null)
         {
             abilityImage.sprite = GameManager.Instance.GetCharacterData(referredCharacter.Character).UniqueAbilitySprite;
         }
@@ -74,7 +88,7 @@ public class CharacterHUDContainer : MonoBehaviour
         abilityCooldownValue = abilityTimerValue;
         cooldownTimer = abilityCooldownValue;
         abilityCooldownText.text = abilityCooldownValue.ToString();
-        
+
 
     }
     public void SetAbilityTimer(float newCooldownValue)
@@ -87,17 +101,17 @@ public class CharacterHUDContainer : MonoBehaviour
     }
     public void SetAbilityUsed(bool value)
     {
-       
-      
+
+
         abilityUsed = value;
         abilityCooldownBackground.gameObject.SetActive(value);
         abilityCooldownText.gameObject.SetActive(value);
 
     }
-    public void UpdateHp(float newHp)
-    {
-        currentHP.text = newHp.ToString();
-    }
+
+    #endregion
+
+
     public void RemoveEffect()
     {
         throw new NotImplementedException();
