@@ -16,11 +16,12 @@ public enum PlayerPrefsSettings
 }
 
 /*
- * Gli SceneSaveSettings sono tutti i valori che possono essere salvati leagati al singolo salvataggio
+ * Gli SceneSaveSettings sono tutti i valori che possono essere salvati legati al singolo salvataggio
  */
 [Serializable]
 public enum SceneSaveSettings
 {
     FirstSceneDialogue,
     FirstMinigameDialogue,
+    ChallengesSaved,
 }

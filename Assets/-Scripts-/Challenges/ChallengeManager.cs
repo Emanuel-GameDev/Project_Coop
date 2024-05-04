@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering;
 
 public class ChallengeManager : MonoBehaviour, IInteractable
 {
@@ -32,7 +31,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     [SerializeField] private MenuInfo menuInfo;
     [SerializeField] private GameObject panel;
     [SerializeField] private GameObject challengeUIPrefab;
-    [SerializeField] private List<ChallengeUI> currentChallenges;
+    [SerializeField] private List<ChallengeUI> currentSaveChallenges;
     [SerializeField] private GameObject bottoneInutile;
 
     [Header("Dialogue")]
@@ -47,28 +46,46 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     [HideInInspector] public bool interacted;
     [HideInInspector] public UnityEvent onInteractionAction;
 
-
-
-
     private void Start()
     {
-        onInteractionAction.AddListener(OnInteraction);
-        Shuffle(challengesList);
-        for (int i = 0; i < 3; ++i)
-        {
-            GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
-            ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();          
-            tempUI.challengeSelected = challengesList[i];
-            tempUI.challengeSelected.challengeUI = tempUI;
-            tempUI.SetUpUI();
-            currentChallenges.Add(tempUI);
-        }
-        
+        //SaveManager.Instance.LoadData();
+        //SceneSetting saveData = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved);
 
+        //if (saveData == null)
+        //{
+
+        //    saveData = new SceneSetting(SceneSaveSettings.ChallengesSaved);           
+        //    saveData.value = false;
+
+        //    SaveManager.Instance.SaveData();
+        //}
+        //if ((bool)saveData.value == false)
+        //{
+
+            onInteractionAction.AddListener(OnInteraction);
+            Shuffle(challengesList);
+
+
+            for (int i = 0; i < 3; ++i)
+            {
+                GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
+                ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();
+                tempUI.challengeSelected = challengesList[i];
+                tempUI.challengeSelected.challengeUI = tempUI;
+                tempUI.SetUpUI();
+                currentSaveChallenges.Add(tempUI);
+
+            }
+
+         
+        //    saveData.value = true;
+
+        //    SaveManager.Instance.SaveData();
+        //}
     }
 
-    
-    
+
+
     public static void Shuffle(List<Challenge> list)
     {
         int count = list.Count;
@@ -81,22 +98,22 @@ public class ChallengeManager : MonoBehaviour, IInteractable
             list[r] = tmp;
         }
     }
-    
+
     public void Interact(IInteracter interacter)
     {
         if (!interacted)
         {
             bottoneInutile.SetActive(true);
-           dialogueBox.SetDialogue(dialogueOnInteraction);
-           dialogueBox.RemoveAllDialogueEnd();
-           dialogueBox.AddDialogueEnd(onInteractionAction);
-           dialogueBox.StartDialogue();          
-         
+            dialogueBox.SetDialogue(dialogueOnInteraction);
+            dialogueBox.RemoveAllDialogueEnd();
+            dialogueBox.AddDialogueEnd(onInteractionAction);
+            dialogueBox.StartDialogue();
+
         }
-        
+
     }
 
-   
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.TryGetComponent<IInteracter>(out var interacter))
@@ -115,7 +132,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
 
     public void CancelInteraction(IInteracter interacter)
     {
-        
+
     }
 
     public IInteracter GetFirstInteracter()
@@ -125,7 +142,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
 
     public void AbortInteraction(IInteracter interacter)
     {
-        
+
     }
     private void OnInteraction()
     {
