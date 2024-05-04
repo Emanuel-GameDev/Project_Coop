@@ -40,5 +40,10 @@ public class AbilityMenu : MonoBehaviour, IVisualizationChanger
         visualizationChangerHandler.ChangeVisualization();
     }
 
+    private void OnEnable()
+    {
+        CloseAll();
+        abilityButtons[0].Activate();
+    }
 
 }
