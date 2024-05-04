@@ -459,7 +459,7 @@ public class TutorialManager : MonoBehaviour
             if (!startingCharacters.ContainsValue(pc))
             {
                 PlayerCharacterPoolManager.Instance.ReturnCharacter(pc);
-                HPHandler.Instance.conta
+                HPHandler.Instance.RemoveLastContainer(pc);
             }
         }
 
