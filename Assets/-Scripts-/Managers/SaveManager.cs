@@ -184,12 +184,12 @@ public class SaveManager : MonoBehaviour
         return newSaveData;
     }
 
-    public SceneSaveData GetSceneData()
+    private SceneSaveData GetSceneData()
     {
         return GetSceneData(SceneManager.GetActiveScene().name);
     }
 
-    public SceneSaveData GetSceneData(string sceneName)
+    private SceneSaveData GetSceneData(string sceneName)
     {
         foreach (SceneSaveData sceneData in saveData.sceneData)
         {
@@ -202,6 +202,32 @@ public class SaveManager : MonoBehaviour
         return null;
     }
 
+    public SceneSetting GetSceneSetting(SceneSaveSettings setting)
+    {
+        SceneSetting settingData;
+
+        if (GetSceneData() == null)
+        {
+            settingData = new SceneSetting(setting);
+            SaveSceneData(settingData);
+            return settingData;
+        }
+        
+        settingData = GetSceneData().sceneSettings.Find(x => x.settingName == setting);
+
+        if (settingData == null)
+        {
+            settingData = new SceneSetting(setting);
+            SaveSceneData(settingData);
+        }
+
+        return settingData;
+    }
+
+    public SceneSetting GetSceneSetting(SceneSaveSettings setting, string sceneName)
+    {
+        return GetSceneData(sceneName).sceneSettings.Find(x => x.settingName == setting);
+    }
 
     #endregion
 
@@ -261,9 +287,16 @@ public class SceneSetting
     public int intValue;
     public float floatValue;
     public bool boolValue;
+
+    public SceneSetting(SceneSaveSettings settingName)
+    {
+        this.settingName = settingName;
+        intValue = 0;
+        floatValue = 0;
+        boolValue = false;
+        stringValue = string.Empty;
+    }
 }
-
-
 
 [Serializable]
 public class CharacterSaveData
@@ -274,4 +307,3 @@ public class CharacterSaveData
     public ExtraData extraData = new();
     public List<AbilityUpgrade> unlockedAbility = new();
 }
-
