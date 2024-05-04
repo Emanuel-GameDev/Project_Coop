@@ -62,20 +62,15 @@ public class SaveManager : MonoBehaviour
 
     public void SaveSceneData(SceneSaveSettings setting, object value)
     {
-        
+        SaveSceneData(setting, value, SceneManager.GetActiveScene().name);
     }
 
     public void SaveSceneData(SceneSaveSettings setting, object value, string sceneName)
     {
-
+        SaveSceneData(new SceneSetting(setting, value), sceneName);
     }
 
-    public void SaveSceneData(SceneSetting setting)
-    {
-        SaveSceneData(setting, SceneManager.GetActiveScene().name);
-    }
-
-    public void SaveSceneData(SceneSetting setting, string sceneName)
+    private void SaveSceneData(SceneSetting setting, string sceneName)
     {
         if (setting == null)
             return;
@@ -226,7 +221,7 @@ public class SaveManager : MonoBehaviour
         if (settingData == null)
         {
             settingData = new SceneSetting(setting);
-            SaveSceneData(settingData);
+            SaveSceneData(settingData, sceneName);
         }
 
         return settingData;
