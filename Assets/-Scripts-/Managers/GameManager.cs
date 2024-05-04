@@ -148,6 +148,7 @@ public class GameManager : MonoBehaviour
 
     public void StartLoadScreen()
     {
+        SaveManager.Instance.SaveData();
         StartCoroutine(LoadScreen());
     }
 
