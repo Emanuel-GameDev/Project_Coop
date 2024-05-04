@@ -198,6 +198,8 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         character = ePlayerCharacter.Brutus;
         emissionModule = _walkDustParticles.emission;
         invicibilityVFX.SetActive(false);
+
+        invicibilityBaloon.SetActive(false);
     }
 
 
