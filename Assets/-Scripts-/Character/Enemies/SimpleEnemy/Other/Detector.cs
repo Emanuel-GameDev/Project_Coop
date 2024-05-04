@@ -18,7 +18,7 @@ public class Detector : MonoBehaviour
     {
         GetComponent<Collider2D>().isTrigger = true;
         playersDetected = new List<PlayerCharacter>();
-
+        enemiesDetected = new List<EnemyCharacter>();
         if (playerInsideCount != null)
             playerInsideCount.gameObject.SetActive(false);
     }
@@ -49,12 +49,13 @@ public class Detector : MonoBehaviour
                     playerInsideCount.gameObject.SetActive(false);
             }
         }
-        else if (other.gameObject.GetComponentInParent<EnemyCharacter>())
+
+        if (other.gameObject.GetComponent<EnemyCharacter>())
         {
-            if (enemiesDetected.Contains(other.gameObject.GetComponentInParent<EnemyCharacter>()))
+            if (enemiesDetected.Contains(other.gameObject.GetComponent<EnemyCharacter>()))
                 return;
 
-            enemiesDetected.Add(other.gameObject.GetComponentInParent<EnemyCharacter>());
+            enemiesDetected.Add(other.gameObject.GetComponent<EnemyCharacter>());
         }
     }
 
@@ -80,12 +81,10 @@ public class Detector : MonoBehaviour
 
             }
         }
-        else if (other.gameObject.GetComponentInParent<EnemyCharacter>())
+        if (other.gameObject.GetComponent<EnemyCharacter>())
         {
-            if (enemiesDetected.Contains(other.gameObject.GetComponentInParent<EnemyCharacter>()))
-                return;
-
-            enemiesDetected.Remove(other.gameObject.GetComponentInParent<EnemyCharacter>());
+            if (enemiesDetected.Contains(other.gameObject.GetComponent<EnemyCharacter>()))
+                enemiesDetected.Remove(other.gameObject.GetComponent<EnemyCharacter>());
         }
     }
 
@@ -107,6 +106,7 @@ public class Detector : MonoBehaviour
     public void ClearList()
     {
         playersDetected.Clear();
+        enemiesDetected.Clear();
         playersInside = 0;
     }
 }

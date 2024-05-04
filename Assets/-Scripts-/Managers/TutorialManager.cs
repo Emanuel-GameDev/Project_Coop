@@ -229,7 +229,7 @@ public class TutorialManager : MonoBehaviour
         foreach (PlayerCharacter character in characters)
         {
             //DA RIVEDERE #MODIFICATO
-            character.SetCurrentHP(character.MaxHp - 5);
+            character.SetCurrentHP(character.MaxHp - (character.MaxHp/2));
             HPHandler.Instance.UpdateContainer(character);
         }
 

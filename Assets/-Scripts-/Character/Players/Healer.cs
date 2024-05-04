@@ -14,7 +14,7 @@ public class Healer : PlayerCharacter
     [Tooltip("Icona che appare sopra il personaggio da curare")]
     [SerializeField] GameObject healIcon;
     [Tooltip("")]
-    [SerializeField] Detector smallHealTrigger;
+    [SerializeField] public Detector smallHealTrigger;
     [Tooltip("Quantità di vita curata dall'abilità di cura singola")]
     [SerializeField] float smallHeal = 5f;
     [Tooltip("Tempo di ricarica dell'abilità di cura singola")]
@@ -277,8 +277,8 @@ public class Healer : PlayerCharacter
             animator.SetBool("IsMoving", false);
     }
 
-    
 
+    [HideInInspector] public bool canHealEnemies = false; 
     //Defense: cura ridotta singola
     public override void DefenseInput(InputAction.CallbackContext context)
     {
@@ -313,12 +313,16 @@ public class Healer : PlayerCharacter
                         PubSub.Instance.Notify(EMessageType.characterHealed, pc);
                     }
 
-                    foreach(EnemyCharacter enemyCharacter in smallHealTrigger.GetEnemiesDetected())
+                    if (canHealEnemies)
                     {
-                        if(enemyCharacter.gameObject.GetComponent<TutorialEnemy>() != null)
+                        foreach(EnemyCharacter enemyCharacter in smallHealTrigger.GetEnemiesDetected())
                         {
-                            PubSub.Instance.Notify(EMessageType.characterHealed, enemyCharacter.gameObject.GetComponent<TutorialEnemy>());
+                            if(enemyCharacter.gameObject.GetComponent<TutorialEnemy>() != null)
+                            {
+                                PubSub.Instance.Notify(EMessageType.characterHealed, enemyCharacter.gameObject.GetComponent<TutorialEnemy>());
+                            }
                         }
+
                     }
 
 
