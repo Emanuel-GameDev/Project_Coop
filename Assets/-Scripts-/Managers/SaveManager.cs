@@ -40,6 +40,7 @@ public class SaveManager : MonoBehaviour
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }
+
     }
 
     #region Save

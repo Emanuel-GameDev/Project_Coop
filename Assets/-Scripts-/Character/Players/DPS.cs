@@ -61,7 +61,10 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     LayerMask projectileLayer;
 
     [Header("VFX")]
-    [SerializeField] TrailRenderer trailDodgeVFX;
+    [SerializeField] 
+    TrailRenderer trailDodgeVFX;
+    [SerializeField] 
+    GameObject invicibilityVFX;
     [SerializeField, Tooltip("Gli eventi da chiamare in caso di schivata perfetta")]
     UnityEvent onPerfectDodgeExecuted = new();
 
