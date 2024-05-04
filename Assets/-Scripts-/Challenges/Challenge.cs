@@ -80,11 +80,11 @@ public class Challenge : MonoBehaviour
         onChallengeSuccessEvent?.Invoke();
         foreach (Transform HPContainer in HPHandler.Instance.HpContainerTransform)
         {
-           
-            CharacterSaveData charSaveData = SaveManager.Instance.GetPlayerSaveData(HPContainer.GetComponentInChildren<CharacterHUDContainer>().referredCharacter.Character);
-            
+                   
             if (HPContainer.GetComponentInChildren<CharacterHUDContainer>() != null)
             {
+                CharacterSaveData charSaveData = SaveManager.Instance.GetPlayerSaveData(HPContainer.GetComponentInChildren<CharacterHUDContainer>().referredCharacter.Character);
+
                 RewardContainer rewardContainer = HPContainer.GetComponentInChildren<RewardContainer>();
 
                 if (rewardContainer.right)
