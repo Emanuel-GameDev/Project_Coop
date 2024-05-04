@@ -60,6 +60,16 @@ public class SaveManager : MonoBehaviour
         Debug.Log("Dati salvati con successo!");
     }
 
+    public void SaveSceneData(SceneSaveSettings setting, object value)
+    {
+        
+    }
+
+    public void SaveSceneData(SceneSaveSettings setting, object value, string sceneName)
+    {
+
+    }
+
     public void SaveSceneData(SceneSetting setting)
     {
         SaveSceneData(setting, SceneManager.GetActiveScene().name);
