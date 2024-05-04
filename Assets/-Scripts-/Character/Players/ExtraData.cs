@@ -15,5 +15,4 @@ public class ExtraData
     public float totalDamageTaken = 0;
     public float totalHealDone = 0;
     public float totalHealReceived = 0;
-
 }
