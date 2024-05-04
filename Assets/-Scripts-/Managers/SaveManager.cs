@@ -184,12 +184,12 @@ public class SaveManager : MonoBehaviour
         return newSaveData;
     }
 
-    public SceneSaveData GetSceneData()
+    private SceneSaveData GetSceneData()
     {
         return GetSceneData(SceneManager.GetActiveScene().name);
     }
 
-    public SceneSaveData GetSceneData(string sceneName)
+    private SceneSaveData GetSceneData(string sceneName)
     {
         foreach (SceneSaveData sceneData in saveData.sceneData)
         {
@@ -204,7 +204,24 @@ public class SaveManager : MonoBehaviour
 
     public SceneSetting GetSceneSetting(SceneSaveSettings setting)
     {
-        return GetSceneData().sceneSettings.Find(x => x.settingName == setting);
+        SceneSetting settingData;
+
+        if (GetSceneData() == null)
+        {
+            settingData = new SceneSetting(setting);
+            SaveSceneData(settingData);
+            return settingData;
+        }
+        
+        settingData = GetSceneData().sceneSettings.Find(x => x.settingName == setting);
+
+        if (settingData == null)
+        {
+            settingData = new SceneSetting(setting);
+            SaveSceneData(settingData);
+        }
+
+        return settingData;
     }
 
     public SceneSetting GetSceneSetting(SceneSaveSettings setting, string sceneName)
@@ -270,6 +287,15 @@ public class SceneSetting
     public int intValue;
     public float floatValue;
     public bool boolValue;
+
+    public SceneSetting(SceneSaveSettings settingName)
+    {
+        this.settingName = settingName;
+        intValue = 0;
+        floatValue = 0;
+        boolValue = false;
+        stringValue = string.Empty;
+    }
 }
 
 [Serializable]
