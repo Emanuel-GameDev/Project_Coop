@@ -26,9 +26,8 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
         tutorialManager.objectiveNumbersGroup.SetActive(true);
+        tutorialManager.objectiveNumberToReach.text = "3";
 
-        PubSub.Instance.RegisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
-        PubSub.Instance.RegisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
 
         tutorialManager.blockFaseChange = true;
         currentCharacterIndex = -1;
@@ -82,7 +81,7 @@ public class DodgeTutorialState : TutorialFase
                 tutorialManager.DeactivateEnemyAI();
                 stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
             }
-
+            PubSub.Instance.UnregisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
             perfectDodgeCountAllowed = false;
             
 
@@ -100,7 +99,7 @@ public class DodgeTutorialState : TutorialFase
 
         if(dodgeCount == 3)
         {
-            
+            dodgeCount = 0;
             perfectDodgeCount = 0;
 
             tutorialManager.objectiveNumberReached.text = perfectDodgeCount.ToString();
@@ -123,6 +122,8 @@ public class DodgeTutorialState : TutorialFase
             tutorialManager.DeactivateEnemyAI();
 
             perfectDodgeCountAllowed = true;
+
+            PubSub.Instance.RegisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
         }
     }
 
@@ -137,6 +138,7 @@ public class DodgeTutorialState : TutorialFase
         characterChange = false;
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         currentCharacterIndex++;
+
 
         tutorialManager.ResetStartingCharacterAssosiacion();
 
@@ -165,7 +167,8 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);
 
-        //PubSub.Instance.UnregisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
+        PubSub.Instance.RegisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
+        PubSub.Instance.UnregisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
     }
 
     private void SetupPerfectDodgeTutorial()
@@ -177,6 +180,8 @@ public class DodgeTutorialState : TutorialFase
         {
             ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         }
+
+        PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
 
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
 
@@ -237,6 +242,6 @@ public class DodgeTutorialState : TutorialFase
     {
         base.Exit();
         tutorialManager.EndCurrentFase();
-        //PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdatePerfectDodgeCounter);
+        PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdatePerfectDodgeCounter);
     }
 }

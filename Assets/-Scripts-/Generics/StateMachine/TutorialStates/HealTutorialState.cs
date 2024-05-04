@@ -52,6 +52,7 @@ public class HealTutorialState : TutorialFase
 
         numberOfPlayerHealed = 0;
         tutorialManager.objectiveNumberReached.text = numberOfPlayerHealed.ToString();
+        tutorialManager.objectiveNumberToReach.text = "3";
 
     }
     bool dialoguePlaying = false;
@@ -157,8 +158,8 @@ public class HealTutorialState : TutorialFase
     public override void Update()
     {
         base.Update();
-
-        if (playerHealed.TrueForAll(p => p.CurrentHp >= p.MaxHp) && !dialoguePlaying)
+         
+        if (dpshealed && tankhealed && rangedhealed && !dialoguePlaying)
         {
             stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
         }

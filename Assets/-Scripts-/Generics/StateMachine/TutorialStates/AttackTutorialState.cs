@@ -66,8 +66,6 @@ public class AttackTutorialState : TutorialFase
 
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetPlayerCharacter(currentFaseCharacters[currentCharacterIndex]);
 
-        Debug.Log($"{tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().PlayerInput.currentControlScheme}");
-
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);
 
@@ -83,7 +81,7 @@ public class AttackTutorialState : TutorialFase
 
         hitCount = 0;
         comboHitCount = 0;
-
+        tutorialManager.objectiveNumberToReach.text = "3";
         tutorialManager.objectiveNumberReached.text = hitCount.ToString();
 
 

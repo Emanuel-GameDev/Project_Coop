@@ -41,6 +41,7 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
         tutorialManager.objectiveNumberReached.text = guardExecuted.ToString();
+        tutorialManager.objectiveNumberToReach.text = "3";
 
     }
 
