@@ -26,7 +26,7 @@ public class GuardTutorialState : TutorialFase
         guardExecuted = 0;
         perfectGuardExecuted = 0;
 
-        faseData = (GuardTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (GuardTutorialFaseData) tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
@@ -40,7 +40,8 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
         tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
-        tutorialManager.objectiveNumberToReach.text = guardExecuted.ToString();
+        tutorialManager.objectiveNumberReached.text = guardExecuted.ToString();
+        tutorialManager.objectiveNumberToReach.text = "3";
 
     }
 
@@ -72,13 +73,13 @@ public class GuardTutorialState : TutorialFase
             guardExecuted++;
         if (guardExecuted < 3)
         {
-            tutorialManager.objectiveNumberToReach.text = guardExecuted.ToString();
+            tutorialManager.objectiveNumberReached.text = guardExecuted.ToString();
         }
 
         if(guardExecuted == 3)
         {
             perfectGuardExecuted = 0;
-            tutorialManager.objectiveNumberToReach.text = perfectGuardExecuted.ToString();
+            tutorialManager.objectiveNumberReached.text = perfectGuardExecuted.ToString();
 
             tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
             tutorialManager.DeactivateAllPlayerInputs();
@@ -104,7 +105,7 @@ public class GuardTutorialState : TutorialFase
     private void UpdatePerfectCounter(object obj)
     {
         perfectGuardExecuted++;
-        tutorialManager.objectiveNumberToReach.text = perfectGuardExecuted.ToString();
+        tutorialManager.objectiveNumberReached.text = perfectGuardExecuted.ToString();
 
         if ( perfectGuardExecuted >= 3)
         {

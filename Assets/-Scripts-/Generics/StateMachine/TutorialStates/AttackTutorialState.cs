@@ -26,7 +26,7 @@ public class AttackTutorialState : TutorialFase
     {
         base.Enter();
 
-        faseData = (AttackTutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (AttackTutorialFaseData)tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData;
 
 
         tutorialManager.objectiveText.enabled = true;
@@ -66,8 +66,6 @@ public class AttackTutorialState : TutorialFase
 
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetPlayerCharacter(currentFaseCharacters[currentCharacterIndex]);
 
-        Debug.Log($"{tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().PlayerInput.currentControlScheme}");
-
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);
 
@@ -83,8 +81,8 @@ public class AttackTutorialState : TutorialFase
 
         hitCount = 0;
         comboHitCount = 0;
-
-        tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
+        tutorialManager.objectiveNumberToReach.text = "3";
+        tutorialManager.objectiveNumberReached.text = hitCount.ToString();
 
 
         tutorialManager.DeactivateAllPlayerInputs();
@@ -117,7 +115,7 @@ public class AttackTutorialState : TutorialFase
             {
                 comboHitCount = 0;
                 hitCount++;
-                tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
+                tutorialManager.objectiveNumberReached.text = hitCount.ToString();
             }
             else
                 hitCounterTimer = tutorialManager.StartCoroutine(ResetComboHitCounterTimer());
@@ -125,7 +123,7 @@ public class AttackTutorialState : TutorialFase
         else
         {
             hitCount++;
-            tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
+            tutorialManager.objectiveNumberReached.text = hitCount.ToString();
         }
 
         Debug.Log(hitCount);

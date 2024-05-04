@@ -10,6 +10,7 @@ public class Detector : MonoBehaviour
     [SerializeField] UnityEvent OnAllPlayerInside;
     [SerializeField] TextMeshProUGUI playerInsideCount;
 
+    List<EnemyCharacter> enemiesDetected;
     List<PlayerCharacter> playersDetected;
     int playersInside;
 
@@ -17,7 +18,7 @@ public class Detector : MonoBehaviour
     {
         GetComponent<Collider2D>().isTrigger = true;
         playersDetected = new List<PlayerCharacter>();
-
+        enemiesDetected = new List<EnemyCharacter>();
         if (playerInsideCount != null)
             playerInsideCount.gameObject.SetActive(false);
     }
@@ -48,6 +49,14 @@ public class Detector : MonoBehaviour
                     playerInsideCount.gameObject.SetActive(false);
             }
         }
+
+        if (other.gameObject.GetComponent<EnemyCharacter>())
+        {
+            if (enemiesDetected.Contains(other.gameObject.GetComponent<EnemyCharacter>()))
+                return;
+
+            enemiesDetected.Add(other.gameObject.GetComponent<EnemyCharacter>());
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -72,11 +81,21 @@ public class Detector : MonoBehaviour
 
             }
         }
+        if (other.gameObject.GetComponent<EnemyCharacter>())
+        {
+            if (enemiesDetected.Contains(other.gameObject.GetComponent<EnemyCharacter>()))
+                enemiesDetected.Remove(other.gameObject.GetComponent<EnemyCharacter>());
+        }
     }
 
     public List<PlayerCharacter> GetPlayersDetected()
     {
         return playersDetected;
+    }
+
+    public List<EnemyCharacter> GetEnemiesDetected()
+    {
+        return enemiesDetected;
     }
 
     public int GetPlayersCountInTrigger()
@@ -87,6 +106,7 @@ public class Detector : MonoBehaviour
     public void ClearList()
     {
         playersDetected.Clear();
+        enemiesDetected.Clear();
         playersInside = 0;
     }
 }

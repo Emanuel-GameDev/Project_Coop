@@ -20,11 +20,13 @@ public class KainaAbilityTutorialFase : TutorialFase
         tutorialManager.ResetStartingCharacterAssosiacion();
         PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityActivated, StartEndFaseCountdown);
 
-        faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (TutorialFaseData)tutorialManager.abilityFases[tutorialManager.abilityFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
-
+        tutorialManager.objectiveNumbersGroup.SetActive(true);
+        tutorialManager.objectiveNumberToReach.text = "1";
+        tutorialManager.objectiveNumberReached.text = "0";
 
         tutorialManager.DeactivateAllPlayerInputs();
 
@@ -35,13 +37,13 @@ public class KainaAbilityTutorialFase : TutorialFase
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.healer.transform);
 
         tutorialManager.DeactivateEnemyAI();
-
     }
 
     private void StartEndFaseCountdown(object obj)
     {
         if(obj is Tank)
         {
+            tutorialManager.objectiveNumberReached.text = "1";
             tutorialManager.StartCoroutine(WaitSeconds());
         }
     }
