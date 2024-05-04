@@ -202,6 +202,15 @@ public class SaveManager : MonoBehaviour
         return null;
     }
 
+    public SceneSetting GetSceneSetting(SceneSaveSettings setting)
+    {
+        return GetSceneData().sceneSettings.Find(x => x.settingName == setting);
+    }
+
+    public SceneSetting GetSceneSetting(SceneSaveSettings setting, string sceneName)
+    {
+        return GetSceneData(sceneName).sceneSettings.Find(x => x.settingName == setting);
+    }
 
     #endregion
 
@@ -263,8 +272,6 @@ public class SceneSetting
     public bool boolValue;
 }
 
-
-
 [Serializable]
 public class CharacterSaveData
 {
@@ -274,4 +281,3 @@ public class CharacterSaveData
     public ExtraData extraData = new();
     public List<AbilityUpgrade> unlockedAbility = new();
 }
-

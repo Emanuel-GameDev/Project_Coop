@@ -216,8 +216,8 @@ public class DialogueBox : MonoBehaviour
         foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Disable();
-            handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Menu").Enable();
-            handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Option").Enable();
+            // handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Menu").Enable();
+            // handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Option").Enable();
             InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
 
             action.Enable();
