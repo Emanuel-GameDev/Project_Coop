@@ -123,7 +123,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
     bool isAttacking=false;
     bool isDodging=false;
-    bool isInvunerable=false;
+    bool isCharging=false;
 
     public override void Inizialize()
     {
@@ -151,6 +151,11 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         minePickUpVisualizer.SetActive(mineNearby);
 
         UpdateCrosshair(ReadLookdirCrosshair(shootingPoint.transform.position));
+
+        if (isAttacking)
+        {
+            SetSpriteAimingDirection();
+        }
     }
 
     private void FixedUpdate()
@@ -179,7 +184,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     {
         if(!isDodging)
         {
-            if(!isAttacking && !isDodging)
+            if(!isAttacking && !isCharging)
             {
                 base.Move(direction);
             }
@@ -201,6 +206,12 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
                 emissionModule.enabled = false;
             }
         }      
+    }
+
+    private void SetSpriteAimingDirection()
+    {
+        Vector2 direction = ((Vector2)rangedCrossair.transform.position-(Vector2)shootingPoint.transform.position);
+        SetSpriteDirection(direction);      
     }
 
     
@@ -252,6 +263,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
                 SetShootDirection();
             }
 
+            
             //in futuro inserire il colpo avanzato
             if (multiBaseAttackUnlocked)
             {
@@ -259,7 +271,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             }
             else
             {
-
+                SetSpriteAimingDirection();
                 BasicFireProjectile(ShootDirection);
 
                 fireTimer = AttackSpeed;
@@ -343,15 +355,20 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     {
         if (!isDodging)
         {
+            //reset bool
             isDodging = true;
             isAttacking = false;
+            isCharging = false;
+
+            //disable/abilitate VFX
+            ChargedVFX.SetActive(false);
+            trailDodgeVFX.gameObject.SetActive(true);
 
 
             //animazione
-
             animator.SetTrigger("Dodge");
 
-            trailDodgeVFX.gameObject.SetActive(true);
+            
 
             Vector2 dodgeDirection = direction.normalized;
 
@@ -489,8 +506,9 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             }
             else
             {
-                empowerStartTimer = Time.time;
+                empowerStartTimer = 0;
                 isAttacking = true;
+                isCharging = true;
 
                 animator.SetBool("isCharging",true);
                 animator.SetTrigger("StartCharging");
@@ -506,7 +524,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             {
                 float endTimer = Time.time;
 
-                if (endTimer - empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
+                if (empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
                 {
 
                     Vector2 _look = ReadLook(context);
@@ -532,6 +550,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
             animator.SetBool("isCharging", false);
             isAttacking = false;
+            isCharging=false;
+            ChargedVFX.SetActive(false);
         }
 
         
@@ -577,6 +597,23 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             empowerCoolDownTimer -= Time.deltaTime;
         }
 
+        if (isCharging)
+        {
+            empowerStartTimer += Time.deltaTime;
+
+            
+
+            if (empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
+            {
+               
+
+                if (!ChargedVFX.activeSelf)
+                {
+                    ChargedVFX.SetActive(true);
+                }
+            }
+        }
+
         //schivata
         if(dodgeTimer > 0)
         {
@@ -591,9 +628,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
     private void UpdateCrosshair(Vector2 position)
     {
-        rangedCrossair.transform.position=new Vector2 (position.x,position.y);
-
-       
+        rangedCrossair.transform.position=new Vector2 (position.x,position.y);    
     }
 
 

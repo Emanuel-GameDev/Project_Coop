@@ -43,7 +43,7 @@ public class SaveManager : MonoBehaviour
     }
 
     #region Save
-    private void SaveData()
+    public void SaveData()
     {
         saveData.lastScene = SceneManager.GetActiveScene().name;
         
@@ -119,19 +119,6 @@ public class SaveManager : MonoBehaviour
 
         SaveData();
     }
-
-    public void SavePlayersData(List<CharacterSaveData> savingData)
-    {
-        saveData.players?.Clear();
-
-        foreach (CharacterSaveData data in savingData)
-        {
-            saveData.players.Add(data);
-        }
-
-        SaveData();
-    }
-
     #endregion
 
     #region Load

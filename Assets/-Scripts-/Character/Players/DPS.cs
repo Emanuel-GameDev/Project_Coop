@@ -61,9 +61,20 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     LayerMask projectileLayer;
 
     [Header("VFX")]
-    [SerializeField] TrailRenderer trailDodgeVFX;
+    [SerializeField] 
+    TrailRenderer trailDodgeVFX;
+    [SerializeField] 
+    GameObject invicibilityVFX;
     [SerializeField, Tooltip("Gli eventi da chiamare in caso di schivata perfetta")]
     UnityEvent onPerfectDodgeExecuted = new();
+
+    [Header("Temporany Effects")]
+    [SerializeField]
+    GameObject invicibilityBaloon;
+    [SerializeField] 
+    float balonDuration = 0.5f;
+   
+    
 
     private float ExtraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
 
@@ -186,6 +197,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
         character = ePlayerCharacter.Brutus;
         emissionModule = _walkDustParticles.emission;
+        invicibilityVFX.SetActive(false);
     }
 
 
@@ -379,19 +391,31 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
                 canUseUniqueAbility = false;
                 base.UniqueAbilityInput(context);
                 StartCoroutine(UseUniqueAbilityCoroutine());
+                StartCoroutine(BaloonDuration());
             }
         }
     }
+
+    //temp
+    private IEnumerator BaloonDuration()
+    {
+        invicibilityBaloon.SetActive(true);
+        yield return new WaitForSeconds(balonDuration);
+        invicibilityBaloon.SetActive(false);
+    }
+
 
     private IEnumerator UseUniqueAbilityCoroutine()
     {
         isInvulnerable = true;
         PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated, this);
+        invicibilityVFX.SetActive(true);
 
         yield return new WaitForSeconds(invulnerabilityDuration);
 
         isInvulnerable = false;
         PubSub.Instance.Notify(EMessageType.uniqueAbilityExpired, this);
+        invicibilityVFX.SetActive(false);
 
         yield return new WaitForSeconds(UniqueAbilityCooldown - invulnerabilityDuration);
         uniqueAbilityUses++;

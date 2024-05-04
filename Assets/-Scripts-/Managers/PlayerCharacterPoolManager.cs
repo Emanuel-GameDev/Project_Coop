@@ -59,18 +59,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         }
     }
 
-    private void OnDisable()
-    {
-        List<CharacterSaveData> saveData = new List<CharacterSaveData>();
-        foreach (PlayerCharacter player in AllPlayerCharacters)
-        {
-            saveData.Add(player.GetSaveData());
-        }
-        SaveManager.Instance.SavePlayersData(saveData);
-    }
-
     #region Switching Character
-
     private void InizializeList()
     {
         foreach(PlayerCharacterData characterData in GameManager.Instance.GetCharacterDataList())
@@ -80,6 +69,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
             //playerCharacter.Inizialize(); //DA RIVEDERE #MODIFICATO
             playerCharacter.gameObject.SetActive(false);
         }
+        SaveManager.Instance.LoadAllPlayersData();
     }
 
     public void SwitchCharacter(PlayerCharacter playerCharacter, ePlayerCharacter targetCharacter)
