@@ -113,7 +113,7 @@ public class Challenge : MonoBehaviour
             }
 
         }
-        //SaveManager.Instance.SaveDa
+        SaveManager.Instance.SaveData();
 
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
 
