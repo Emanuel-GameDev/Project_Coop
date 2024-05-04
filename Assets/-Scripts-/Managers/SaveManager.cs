@@ -201,12 +201,12 @@ public class SaveManager : MonoBehaviour
         return null;
     }
 
-    public SceneSetting GetSceneSetting(SceneSaveSettings setting)
+    public object GetSceneSetting(SceneSaveSettings setting)
     {
         return GetSceneSetting(setting, SceneManager.GetActiveScene().name);
     }
 
-    public SceneSetting GetSceneSetting(SceneSaveSettings setting, string sceneName)
+    public object GetSceneSetting(SceneSaveSettings setting, string sceneName)
     {
         SceneSaveData sceneData = GetSceneData(sceneName);
 
@@ -224,7 +224,7 @@ public class SaveManager : MonoBehaviour
             SaveSceneData(settingData, sceneName);
         }
 
-        return settingData;
+        return settingData.value;
     }
 
     #endregion
