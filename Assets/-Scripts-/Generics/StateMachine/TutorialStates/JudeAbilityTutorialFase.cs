@@ -20,7 +20,7 @@ public class JudeAbilityTutorialFase : TutorialFase
         tutorialManager.ResetStartingCharacterAssosiacion();
         PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, CheckAndCount);
 
-        faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (TutorialFaseData)tutorialManager.abilityFases[tutorialManager.abilityFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();

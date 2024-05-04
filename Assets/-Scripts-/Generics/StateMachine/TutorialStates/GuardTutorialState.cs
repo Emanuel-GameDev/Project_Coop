@@ -26,7 +26,7 @@ public class GuardTutorialState : TutorialFase
         guardExecuted = 0;
         perfectGuardExecuted = 0;
 
-        faseData = (GuardTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (GuardTutorialFaseData) tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();

@@ -20,7 +20,7 @@ public class KainaAbilityTutorialFase : TutorialFase
         tutorialManager.ResetStartingCharacterAssosiacion();
         PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityActivated, StartEndFaseCountdown);
 
-        faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (TutorialFaseData)tutorialManager.abilityFases[tutorialManager.abilityFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();

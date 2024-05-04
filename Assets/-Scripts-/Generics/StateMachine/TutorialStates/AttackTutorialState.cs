@@ -26,7 +26,7 @@ public class AttackTutorialState : TutorialFase
     {
         base.Enter();
 
-        faseData = (AttackTutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (AttackTutorialFaseData)tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData;
 
 
         tutorialManager.objectiveText.enabled = true;

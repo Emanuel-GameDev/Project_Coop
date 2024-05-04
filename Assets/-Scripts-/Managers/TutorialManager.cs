@@ -67,7 +67,7 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] GameObject lilith;
     [SerializeField] GameObject lilithBaloon;
 
-
+    [SerializeField] MenuInfo continueTutorialMenu;
     [Serializable]
     public class Fase
     {
@@ -90,10 +90,11 @@ public class TutorialManager : MonoBehaviour
 
     PlayableDirector playableDirector;
 
-    [SerializeField] public Fase[] fases = new Fase[1];
+    [SerializeField] public Fase[] standardFases = new Fase[1];
+    [HideInInspector] public int standardFaseCount = 0;
 
-
-    public int faseCount = 0;
+    [SerializeField] public Fase[] abilityFases = new Fase[1];
+    [HideInInspector] public int abilityFaseCount = 0;
 
     [HideInInspector] public List<PlayerInputHandler> inputHandlers;
     private Dictionary<PlayerInputHandler, PlayerCharacter> startingCharacters;
@@ -434,7 +435,7 @@ public class TutorialManager : MonoBehaviour
     }
 
 
-    private void PlayFinalePartOne()
+    public void PlayFinalePartOne()
     {
         blockFaseChange = true;
         finale = true;
@@ -452,6 +453,16 @@ public class TutorialManager : MonoBehaviour
         dialogueBox.OnDialogueEnded -= Fade;
 
         ResetStartingCharacterAssosiacion();
+
+        foreach (PlayerCharacter pc in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
+        {
+            if (!startingCharacters.ContainsValue(pc))
+            {
+                PlayerCharacterPoolManager.Instance.ReturnCharacter(pc);
+                HPHandler.Instance.AddContainer
+            }
+        }
+
 
         dialogueBox.OnDialogueEnded += TutorialEnd;
         PlayDialogue(endingDialogueTwo);
@@ -472,30 +483,58 @@ public class TutorialManager : MonoBehaviour
     {
         dialogueBox.OnDialogueEnded -= TutorialEnd;
 
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        exit.SetActive(true);
         foreach (PlayerCharacter character in characters)
         {
             ActivatePlayerInput(character.GetInputHandler());
         }
+
+        exit.SetActive(true);
     }
+    public bool specialFase = false;
+    public void SetSpecilaFases(bool set)
+    {
+        specialFase = set;
+    }
+
 
     public void StartNextFase()
     {
         if (blockFaseChange)
             return;
 
-        if (faseCount >= fases.Length)
+        if (!specialFase)
         {
-            //cambio scena o altro
-            Debug.Log("Tutorial finito");
+            if (standardFaseCount >= standardFases.Length)
+            {
+                MenuManager.Instance.FirstPlayerOpenMenu(continueTutorialMenu);
+                //standardFaseCount = 0;
+                return;
 
-            PlayFinalePartOne();
+            }
 
-            return;
+        }
+        else
+        {
+            if (abilityFaseCount >= abilityFases.Length)
+            {
+                PlayFinalePartOne();
+                return;
+            }
         }
 
-        switch (fases[faseCount].faseData.faseType)
+        if (!specialFase)
+        {
+            SwitchStandardFase();
+        }
+        else
+        {
+            SwitchSpecialFase();
+        }
+    }
+
+    private void SwitchStandardFase()
+    {
+        switch (standardFases[standardFaseCount].faseData.faseType)
         {
 
             case TutorialFaseType.movement:
@@ -517,7 +556,12 @@ public class TutorialManager : MonoBehaviour
             case TutorialFaseType.heal:
                 stateMachine.SetState(new HealTutorialState(this));
                 break;
-
+        }
+    }
+    private void SwitchSpecialFase()
+    {
+        switch (abilityFases[abilityFaseCount].faseData.faseType)
+        {
             case TutorialFaseType.brutusAbility:
                 stateMachine.SetState(new BrutusAbilityTutorialFase(this));
                 break;
@@ -534,8 +578,6 @@ public class TutorialManager : MonoBehaviour
                 stateMachine.SetState(new JudeAbilityTutorialFase(this));
                 break;
         }
-
-
     }
 
     public void Fade()
@@ -546,7 +588,11 @@ public class TutorialManager : MonoBehaviour
 
     public void EndCurrentFase()
     {
-        faseCount++;
+        if (!specialFase)
+            standardFaseCount++;
+        else
+            abilityFaseCount++;
+
         Fade();
 
         dialogueBox.OnDialogueEnded -= EndCurrentFase;

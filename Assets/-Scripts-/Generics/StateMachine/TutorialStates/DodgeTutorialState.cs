@@ -21,7 +21,7 @@ public class DodgeTutorialState : TutorialFase
     public override void Enter()
     {
         base.Enter();
-        faseData = (DodgeTutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (DodgeTutorialFaseData)tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();

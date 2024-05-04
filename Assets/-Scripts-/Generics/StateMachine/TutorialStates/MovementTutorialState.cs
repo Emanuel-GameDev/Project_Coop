@@ -24,7 +24,7 @@ public class MovementTutorialState : TutorialFase
     {
          base.Enter();
 
-        faseData = (MovementTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (MovementTutorialFaseData) tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.currentFaseObjective.SetActive(true);
@@ -36,7 +36,7 @@ public class MovementTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += StartFaseTimer;
         tutorialManager.DeactivateEnemyAI();
 
-        tutorialManager.PlayDialogue(tutorialManager.fases[tutorialManager.faseCount].faseData.faseStartDialogue);
+        tutorialManager.PlayDialogue(tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData.faseStartDialogue);
 
         tutorialManager.ResetStartingCharacterAssosiacion();
     }
@@ -95,7 +95,7 @@ public class MovementTutorialState : TutorialFase
         if (!moveCheck)
             tutorialManager.PlayDialogue(faseData.specialFaseEndDialogue);
         else
-            tutorialManager.PlayDialogue(tutorialManager.fases[tutorialManager.faseCount].faseData.faseEndDialogue);
+            tutorialManager.PlayDialogue(tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData.faseEndDialogue);
 
     }
 }

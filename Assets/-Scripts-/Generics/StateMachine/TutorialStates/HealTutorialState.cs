@@ -25,7 +25,7 @@ public class HealTutorialState : TutorialFase
     {
         base.Enter();
 
-        faseData = (HealTutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (HealTutorialFaseData)tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();

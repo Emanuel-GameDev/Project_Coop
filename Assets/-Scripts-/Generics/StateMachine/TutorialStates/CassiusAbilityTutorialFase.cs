@@ -23,7 +23,7 @@ public class CassiusAbilityTutorialFase : TutorialFase
         PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityActivated, HealAreaActivated);
         PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityExpired, HealAreaExpired);
 
-        faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (TutorialFaseData)tutorialManager.abilityFases[tutorialManager.abilityFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();

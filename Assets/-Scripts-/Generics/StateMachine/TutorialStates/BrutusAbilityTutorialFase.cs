@@ -24,7 +24,7 @@ public class BrutusAbilityTutorialFase : TutorialFase
         PubSub.Instance.RegisterFunction(EMessageType.characterHitted, UpdateCounter);
         PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityExpired, UnallowUpdate);
 
-        faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (TutorialFaseData)tutorialManager.abilityFases[tutorialManager.abilityFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
