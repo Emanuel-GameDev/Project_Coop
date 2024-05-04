@@ -122,8 +122,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         currentHp = MaxHp;
 
         staminaBar = GetComponentInChildren<GenericBarScript>();
+        staminaBar.SetMaxValue(maxStamina);
 
-        staminaBar.Setvalue(maxStamina);
         staminaBar.gameObject.SetActive(false);
         triggerProtectPlayer = GetComponentInChildren<ProtectPlayers>();
         pivotTriggerProtected = GetComponentInChildren<PivotTriggerProtected>();

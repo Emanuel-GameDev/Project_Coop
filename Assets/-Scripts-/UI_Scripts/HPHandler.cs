@@ -8,10 +8,7 @@ public class HPHandler : MonoBehaviour
 
     [SerializeField] public Transform[] HpContainerTransform = new Transform[4];
    
-    [SerializeField] Sprite dpsContainerSprite;
-    [SerializeField] Sprite healerContainerSprite;
-    [SerializeField] Sprite rangedContainerSprite;
-    [SerializeField] Sprite tankContainerSprite;
+    
 
     Dictionary<ePlayerID, CharacterHUDContainer> containersAssociations;
     bool dictionaryCreated=false;
@@ -174,19 +171,9 @@ public class HPHandler : MonoBehaviour
 
     private Sprite GetSpriteContainerFromCharacter(PlayerCharacter character)
     {
-        switch (character)
-        {
-            case DPS:
-                return dpsContainerSprite;
-            case Healer:
-                return healerContainerSprite;
-            case Ranged:
-                return rangedContainerSprite;
-            case Tank:
-                return tankContainerSprite;
-        }
 
-        return null;
+        return GameManager.Instance.GetCharacterData(character.Character).HpContainerLeft;
+
     }
 
     
