@@ -56,20 +56,15 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     {
 
         SaveManager.Instance.LoadData();
-        SceneSaveData sceneData = SaveManager.Instance.GetSceneData();
-        if(sceneData == null)
-        {
-
-        }
+       
 
 
-        SceneSetting saveData = SaveManager.Instance.GetSceneData().sceneSettings.Find(x => x.settingName == SceneSaveSettings.ChallengesSaved);
+        SceneSetting saveData = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved);
 
         if (saveData == null)
         {
 
-            saveData = new SceneSetting();
-            saveData.settingName = SceneSaveSettings.ChallengesSaved;
+            saveData = new SceneSetting(SceneSaveSettings.ChallengesSaved);           
             saveData.boolValue = false;
 
             SaveManager.Instance.SaveData();
