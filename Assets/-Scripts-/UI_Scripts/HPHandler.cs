@@ -64,10 +64,26 @@ public class HPHandler : MonoBehaviour
     {
         if (obj is not PlayerCharacter)
             return;
-        
+
         PlayerCharacter player = (PlayerCharacter)obj;
 
         StartCoroutine(Wait(player));
+
+    }
+
+    public void RemoveLastContainer(object obj)
+    {
+        if (obj is not PlayerCharacter)
+            return;
+
+        PlayerCharacter player = (PlayerCharacter)obj;
+
+        CharacterHUDContainer container;
+
+        containersAssociations.Remove((ePlayerID)id, out container);
+
+        Destroy(container.gameObject);
+        id--;
     }
 
     //Da rivedere

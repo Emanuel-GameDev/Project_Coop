@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -46,7 +45,7 @@ public class SaveManager : MonoBehaviour
     public void SaveData()
     {
         saveData.lastScene = SceneManager.GetActiveScene().name;
-        
+
         string saveFolderPath = Application.persistentDataPath + "/SaveGames";
         string filePath = saveFolderPath + "/SaveData.json";
 
@@ -61,27 +60,32 @@ public class SaveManager : MonoBehaviour
         Debug.Log("Dati salvati con successo!");
     }
 
-    public void SaveSceneData(SceneSetting setting)
+    public void SaveSceneData(SceneSaveSettings setting, object value)
     {
-        SaveSceneData(setting, SceneManager.GetActiveScene().name);
+        SaveSceneData(setting, value, SceneManager.GetActiveScene().name);
     }
 
-    public void SaveSceneData(SceneSetting setting, string sceneName)
+    public void SaveSceneData(SceneSaveSettings setting, object value, string sceneName)
+    {
+        SaveSceneData(new SceneSetting(setting, value), sceneName);
+    }
+
+    private void SaveSceneData(SceneSetting setting, string sceneName)
     {
         if (setting == null)
             return;
 
         SceneSaveData sceneData = null;
-        foreach(SceneSaveData scene in saveData.sceneData)
+        foreach (SceneSaveData scene in saveData.sceneData)
         {
-            if(scene.sceneName == sceneName)
+            if (scene.sceneName == sceneName)
             {
                 sceneData = scene;
                 break;
             }
         }
 
-        if(sceneData == null)
+        if (sceneData == null)
         {
             sceneData = new SceneSaveData();
             sceneData.sceneName = sceneName;
@@ -89,16 +93,16 @@ public class SaveManager : MonoBehaviour
         }
 
         SceneSetting sceneSetting = null;
-        foreach(SceneSetting scSetting in sceneData.sceneSettings)
+        foreach (SceneSetting scSetting in sceneData.sceneSettings)
         {
-            if(scSetting.settingName == setting.settingName)
+            if (scSetting.settingName == setting.settingName)
             {
                 sceneSetting = scSetting;
                 break;
             }
         }
 
-        if(sceneSetting != null)
+        if (sceneSetting != null)
         {
             sceneData.sceneSettings.Remove(sceneSetting);
         }
@@ -130,7 +134,7 @@ public class SaveManager : MonoBehaviour
         {
             string json = File.ReadAllText(filePath);
             saveData = JsonUtility.FromJson<SaveData>(json);
-            
+
             Debug.Log("Dati caricati con successo!");
 
             if (saveData == null)
@@ -144,10 +148,10 @@ public class SaveManager : MonoBehaviour
 
     public void LoadAllPlayersData()
     {
-        if(saveData == null)
+        if (saveData == null)
             LoadData();
-        
-        if(saveData == null || saveData.players == null || saveData.players.Count == 0)
+
+        if (saveData == null || saveData.players == null || saveData.players.Count == 0)
         {
             Debug.Log("Non ci sono dati da caricare.");
             return;
@@ -164,9 +168,9 @@ public class SaveManager : MonoBehaviour
 
     public CharacterSaveData GetPlayerSaveData(ePlayerCharacter character)
     {
-        if(saveData == null)
+        if (saveData == null)
             LoadData();
-        
+
         if (saveData != null)
         {
             foreach (CharacterSaveData player in saveData.players)
@@ -184,49 +188,43 @@ public class SaveManager : MonoBehaviour
         return newSaveData;
     }
 
-    private SceneSaveData GetSceneData()
-    {
-        return GetSceneData(SceneManager.GetActiveScene().name);
-    }
-
     private SceneSaveData GetSceneData(string sceneName)
     {
         foreach (SceneSaveData sceneData in saveData.sceneData)
         {
             if (sceneData.sceneName == sceneName)
             {
-               return sceneData;
+                return sceneData;
             }
         }
 
         return null;
     }
 
-    public SceneSetting GetSceneSetting(SceneSaveSettings setting)
+    public object GetSceneSetting(SceneSaveSettings setting)
     {
-        SceneSetting settingData;
+        return GetSceneSetting(setting, SceneManager.GetActiveScene().name);
+    }
 
-        if (GetSceneData() == null)
+    public object GetSceneSetting(SceneSaveSettings setting, string sceneName)
+    {
+        SceneSaveData sceneData = GetSceneData(sceneName);
+
+        if (sceneData == null)
         {
-            settingData = new SceneSetting(setting);
-            SaveSceneData(settingData);
-            return settingData;
+            sceneData = new();
+            sceneData.sceneName = sceneName;
         }
-        
-        settingData = GetSceneData().sceneSettings.Find(x => x.settingName == setting);
+
+        SceneSetting settingData = sceneData.sceneSettings.Find(x => x.settingName == setting);
 
         if (settingData == null)
         {
             settingData = new SceneSetting(setting);
-            SaveSceneData(settingData);
+            SaveSceneData(settingData, sceneName);
         }
 
-        return settingData;
-    }
-
-    public SceneSetting GetSceneSetting(SceneSaveSettings setting, string sceneName)
-    {
-        return GetSceneData(sceneName).sceneSettings.Find(x => x.settingName == setting);
+        return settingData.value;
     }
 
     #endregion
@@ -283,18 +281,18 @@ public class SceneSaveData
 public class SceneSetting
 {
     public SceneSaveSettings settingName;
-    public string stringValue;
-    public int intValue;
-    public float floatValue;
-    public bool boolValue;
+    public object value;
 
     public SceneSetting(SceneSaveSettings settingName)
     {
         this.settingName = settingName;
-        intValue = 0;
-        floatValue = 0;
-        boolValue = false;
-        stringValue = string.Empty;
+        value = null;
+    }
+
+    public SceneSetting(SceneSaveSettings settingName, object value)
+    {
+        this.settingName = settingName;
+        this.value = value;
     }
 }
 

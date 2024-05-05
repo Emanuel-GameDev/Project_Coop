@@ -20,13 +20,16 @@ public class CassiusAbilityTutorialFase : TutorialFase
     {
         base.Enter();
         tutorialManager.ResetStartingCharacterAssosiacion();
+        PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityActivated, HealAreaActivated);
         PubSub.Instance.RegisterFunction(EMessageType.uniqueAbilityExpired, HealAreaExpired);
 
-        faseData = (TutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (TutorialFaseData)tutorialManager.abilityFases[tutorialManager.abilityFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
-
+        tutorialManager.objectiveNumbersGroup.SetActive(true);
+        tutorialManager.objectiveNumberToReach.text = "1";
+        tutorialManager.objectiveNumberReached.text = "0";
 
         tutorialManager.DeactivateAllPlayerInputs();
 
@@ -34,6 +37,14 @@ public class CassiusAbilityTutorialFase : TutorialFase
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
         numberOfHealAreaExpired = 0;
+    }
+
+    private void HealAreaActivated(object obj)
+    {
+        if (obj is Healer)
+        {
+            tutorialManager.objectiveNumberReached.text = "1";
+        }
     }
 
     private void HealAreaExpired(object obj)
@@ -87,6 +98,7 @@ public class CassiusAbilityTutorialFase : TutorialFase
         tutorialManager.DeactivateAllPlayerInputs();
         tutorialManager.PlayDialogue(faseData.faseEndDialogue);
 
+        PubSub.Instance.UnregisterFunction(EMessageType.uniqueAbilityActivated, HealAreaActivated);
         PubSub.Instance.UnregisterFunction(EMessageType.uniqueAbilityExpired, HealAreaExpired);
     }
 }

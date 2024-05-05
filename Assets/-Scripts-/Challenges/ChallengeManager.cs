@@ -46,31 +46,21 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     [HideInInspector] public bool interacted;
     [HideInInspector] public UnityEvent onInteractionAction;
 
-
-
-
-
-
-
     private void Start()
     {
+        //SaveManager.Instance.LoadData();
+        //SceneSetting saveData = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved);
 
-        SaveManager.Instance.LoadData();
-       
+        //if (saveData == null)
+        //{
 
+        //    saveData = new SceneSetting(SceneSaveSettings.ChallengesSaved);           
+        //    saveData.value = false;
 
-        SceneSetting saveData = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved);
-
-        if (saveData == null)
-        {
-
-            saveData = new SceneSetting(SceneSaveSettings.ChallengesSaved);           
-            saveData.boolValue = false;
-
-            SaveManager.Instance.SaveData();
-        }
-        if (saveData.boolValue == false)
-        {
+        //    SaveManager.Instance.SaveData();
+        //}
+        //if ((bool)saveData.value == false)
+        //{
 
             onInteractionAction.AddListener(OnInteraction);
             Shuffle(challengesList);
@@ -88,10 +78,10 @@ public class ChallengeManager : MonoBehaviour, IInteractable
             }
 
          
-            saveData.boolValue = true;
+        //    saveData.value = true;
 
-            SaveManager.Instance.SaveData();
-        }
+        //    SaveManager.Instance.SaveData();
+        //}
     }
 
 
