@@ -91,6 +91,15 @@ public class PressInteractable : MonoBehaviour, IInteractable
 
     }
 
+    public void CancelAllInteraction()
+    {
+        List<IInteracter> interactersCopy = new List<IInteracter> (interacters);
+        foreach(IInteracter interacter in interactersCopy)
+        {
+            CancelInteraction(interacter);
+        }
+    }
+
     public void CancelInteraction(IInteracter interacter)
     {
         if (interacters.Contains(interacter))
