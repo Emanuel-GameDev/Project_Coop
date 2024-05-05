@@ -85,6 +85,7 @@ public class LilithShopMenu : Menu
 
         shopGroup.GetComponent<Animation>().Play("LilithShopExit");
         StartCoroutine(CloseMenuWithDelay(shopGroup.GetComponent<Animation>().clip.length));
+        SaveManager.Instance.SavePlayersData();
         
     }
 
