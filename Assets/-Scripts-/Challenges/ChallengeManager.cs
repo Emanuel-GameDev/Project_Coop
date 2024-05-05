@@ -31,7 +31,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     [SerializeField] private MenuInfo menuInfo;
     [SerializeField] private GameObject panel;
     [SerializeField] private GameObject challengeUIPrefab;
-    [SerializeField] private List<ChallengeUI> currentSaveChallenges;
+    [SerializeField] public List<Challenge> currentSaveChallenges;
     [SerializeField] private GameObject bottoneInutile;
 
     [Header("Dialogue")]
@@ -48,23 +48,20 @@ public class ChallengeManager : MonoBehaviour, IInteractable
 
     private void Start()
     {
-        //SaveManager.Instance.LoadData();
-        //SceneSetting saveData = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved);
-
-        //if (saveData == null)
-        //{
-
-        //    saveData = new SceneSetting(SceneSaveSettings.ChallengesSaved);           
-        //    saveData.value = false;
-
-        //    SaveManager.Instance.SaveData();
-        //}
-        //if ((bool)saveData.value == false)
-        //{
+        SaveManager.Instance.LoadData();
+        object challengesSelected = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSelected);
+        
+        Debug.LogWarning(challengesSelected);
+        if(challengesSelected == null)
+        {          
+            challengesSelected = false;
+        }
+        Debug.LogWarning(challengesSelected);
+        if ((bool)challengesSelected == false)
+        {
 
             onInteractionAction.AddListener(OnInteraction);
             Shuffle(challengesList);
-
 
             for (int i = 0; i < 3; ++i)
             {
@@ -73,15 +70,32 @@ public class ChallengeManager : MonoBehaviour, IInteractable
                 tempUI.challengeSelected = challengesList[i];
                 tempUI.challengeSelected.challengeUI = tempUI;
                 tempUI.SetUpUI();
-                currentSaveChallenges.Add(tempUI);
+                currentSaveChallenges.Add(tempUI.challengeSelected);
 
             }
 
-         
-        //    saveData.value = true;
+            SaveManager.Instance.SaveSceneData(SceneSaveSettings.ChallengesSaved, currentSaveChallenges);
+            challengesSelected = true;
+            SaveManager.Instance.SaveSceneData(SceneSaveSettings.ChallengesSelected, challengesSelected);
 
-        //    SaveManager.Instance.SaveData();
-        //}
+        }
+        else
+        {
+            Debug.Log("Sfide trovate");
+            onInteractionAction.AddListener(OnInteraction);
+
+            foreach (Challenge c in (List<Challenge>)SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved))
+            {
+                GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
+                ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();
+                tempUI.challengeSelected = c;
+                tempUI.challengeSelected.challengeUI = tempUI;
+                tempUI.SetUpUI();
+                currentSaveChallenges.Add(tempUI.challengeSelected);
+            }
+           
+        }
+        
     }
 
 

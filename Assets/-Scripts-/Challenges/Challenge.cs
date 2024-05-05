@@ -78,6 +78,8 @@ public class Challenge : MonoBehaviour
         challengeCompleted = true;
 
         onChallengeSuccessEvent?.Invoke();
+
+        //RewardPopUP
         foreach (Transform HPContainer in HPHandler.Instance.HpContainerTransform)
         {
                    
@@ -113,7 +115,9 @@ public class Challenge : MonoBehaviour
             }
 
         }
-        SaveManager.Instance.SaveData();
+
+        SaveManager.Instance.SaveSceneData(SceneSaveSettings.ChallengesSaved, ChallengeManager.Instance.currentSaveChallenges);
+       
 
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
 

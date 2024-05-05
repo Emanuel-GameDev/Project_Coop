@@ -24,4 +24,6 @@ public enum SceneSaveSettings
     FirstSceneDialogue,
     FirstMinigameDialogue,
     ChallengesSaved,
+    ChallengesSelected,
+    
 }
