@@ -742,26 +742,5 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     }
     #endregion
 
-    #region Audio
-
-    public void OnFirstAttackSound()
-    {
-        AudioManager.Instance.PlayAudioClip(soundsDatabase.attackSounds[0], transform);
-    }
-    public void OnSecondAttackSound()
-    {
-        AudioManager.Instance.PlayAudioClip(soundsDatabase.attackSounds[1], transform);
-    }
-    public void OnBlockSound()
-    {
-        AudioManager.Instance.PlayAudioClip(soundsDatabase.blockSounds[0], transform);
-    }
-    public void OnWalkSound()
-    {
-        AudioManager.Instance.PlayAudioClip(soundsDatabase.walkSounds[0], transform);
-    }
-
-    #endregion
-
-
+   
 }
