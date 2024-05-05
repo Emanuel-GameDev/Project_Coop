@@ -757,7 +757,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             if (direction.y != 0)
                 lastDirectionYValue = direction.y;
 
-            emissionModule.enabled = true;
+            emissionModule.enabled = isMoving;
         }
         animator.SetBool("IsMoving", isMoving);
 
