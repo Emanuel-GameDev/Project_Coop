@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,23 +59,20 @@ public class SaveManager : MonoBehaviour
         File.WriteAllText(filePath, json);
 
         Debug.Log("Dati salvati con successo!");
+        foreach (SceneSaveData scene in saveData.sceneData)
+        {
+            Debug.Log($"Lista Count: {scene.sceneSettings.Count}, 1SettingName: {scene.sceneSettings[0].ToString()} ");
+        }
+        
     }
 
-    public void SaveSceneData(SceneSaveSettings setting, object value)
+    public void SaveSceneData(SceneSetting setting)
     {
-        SaveSceneData(setting, value, SceneManager.GetActiveScene().name);
+        SaveSceneData(setting, SceneManager.GetActiveScene().name);
     }
 
-    public void SaveSceneData(SceneSaveSettings setting, object value, string sceneName)
+    public void SaveSceneData(SceneSetting settings, string sceneName)
     {
-        SaveSceneData(new SceneSetting(setting, value), sceneName);
-    }
-
-    private void SaveSceneData(SceneSetting setting, string sceneName)
-    {
-        if (setting == null)
-            return;
-
         SceneSaveData sceneData = null;
         foreach (SceneSaveData scene in saveData.sceneData)
         {
@@ -95,7 +93,7 @@ public class SaveManager : MonoBehaviour
         SceneSetting sceneSetting = null;
         foreach (SceneSetting scSetting in sceneData.sceneSettings)
         {
-            if (scSetting.settingName == setting.settingName)
+            if (scSetting.settingName == settings.settingName)
             {
                 sceneSetting = scSetting;
                 break;
@@ -107,7 +105,7 @@ public class SaveManager : MonoBehaviour
             sceneData.sceneSettings.Remove(sceneSetting);
         }
 
-        sceneData.sceneSettings.Add(setting);
+        sceneData.sceneSettings.Add(settings);
 
         SaveData();
     }
@@ -138,7 +136,10 @@ public class SaveManager : MonoBehaviour
             Debug.Log("Dati caricati con successo!");
 
             if (saveData == null)
+            {
                 Debug.Log("Nessun dato nel file di salvataggio.");
+                saveData = new();
+            }  
         }
         else
         {
@@ -201,12 +202,12 @@ public class SaveManager : MonoBehaviour
         return null;
     }
 
-    public object GetSceneSetting(SceneSaveSettings setting)
+    public SceneSetting GetSceneSetting(SceneSaveSettings setting)
     {
         return GetSceneSetting(setting, SceneManager.GetActiveScene().name);
     }
 
-    public object GetSceneSetting(SceneSaveSettings setting, string sceneName)
+    public SceneSetting GetSceneSetting(SceneSaveSettings setting, string sceneName)
     {
         SceneSaveData sceneData = GetSceneData(sceneName);
 
@@ -218,13 +219,7 @@ public class SaveManager : MonoBehaviour
 
         SceneSetting settingData = sceneData.sceneSettings.Find(x => x.settingName == setting);
 
-        if (settingData == null)
-        {
-            settingData = new SceneSetting(setting);
-            SaveSceneData(settingData, sceneName);
-        }
-
-        return settingData.value;
+        return settingData;
     }
 
     #endregion
@@ -281,20 +276,70 @@ public class SceneSaveData
 public class SceneSetting
 {
     public SceneSaveSettings settingName;
-    public object value;
+    public List<SavingBoolValue> bools = new();
+    public List<SavingIntValue> ints = new();
+    public List<SavingFloatValue> floats = new();
+    public List<SavingStringValue> strings = new();
 
     public SceneSetting(SceneSaveSettings settingName)
     {
         this.settingName = settingName;
-        value = null;
     }
 
-    public SceneSetting(SceneSaveSettings settingName, object value)
+}
+
+[Serializable]
+public class SavingBoolValue
+{
+    public string valueName;
+    public bool value;
+
+    public SavingBoolValue(string valueName, bool value)
     {
-        this.settingName = settingName;
+        this.valueName = valueName;
         this.value = value;
     }
 }
+
+[Serializable]
+public class SavingIntValue
+{
+    public string valueName;
+    public int value;
+
+    public SavingIntValue(string valueName, int value)
+    {
+        this.valueName = valueName;
+        this.value = value;
+    }
+}
+
+[Serializable]
+public class SavingFloatValue
+{
+    public string valueName;
+    public float value;
+
+    public SavingFloatValue(string valueName, float value)
+    {
+        this.valueName = valueName;
+        this.value = value;
+    }
+}
+
+[Serializable]
+public class SavingStringValue
+{
+    public string valueName;
+    public string value;
+
+    public SavingStringValue(string valueName, string value)
+    {
+        this.valueName = valueName;
+        this.value = value;
+    }
+}
+
 
 [Serializable]
 public class CharacterSaveData

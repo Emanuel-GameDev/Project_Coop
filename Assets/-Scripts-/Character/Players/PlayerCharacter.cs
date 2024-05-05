@@ -205,6 +205,12 @@ public abstract class PlayerCharacter : Character
     #endregion
 
     #region Upgrades
+
+    public virtual bool GetAbilityStatus(AbilityUpgrade abilityUpgrade)
+    {
+        return upgradeStatus[abilityUpgrade];
+    }
+
     public virtual void UnlockUpgrade(AbilityUpgrade abilityUpgrade)
     {
         if (upgradeStatus[abilityUpgrade] == false)
