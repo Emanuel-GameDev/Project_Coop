@@ -385,6 +385,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                 if (perfectTimingEnabled)
                 {                   
                     perfectBlockCount++;
+
+                    StartCoroutine(PerfectBlockVFX());
+
                     if (perfectBlockCount >= attacksToBlockForUpgrade)
                     {
                         //Sblocco parry che fa danno
@@ -405,6 +408,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
                 currentBlockZone = SetBlockZone(lastNonZeroDirection.y);
                 animator.SetTrigger("StartBlock");
+
+                
 
             }
 
@@ -514,6 +519,35 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                 shieldMaterial.SetColor("_HealthColor", shieldVFXCriticalColor);
             }
         }
+    }
+
+    private IEnumerator PerfectBlockVFX()
+    {
+        float elapsedTime = 0;
+
+        shieldVFX.transform.localScale *= 1.3f;
+
+        while (elapsedTime < 0.5f)
+        {
+            shieldVFX.transform.localScale = Vector3.Lerp(transform.localPosition, Vector3.one, (elapsedTime / 0.5f));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        shieldVFX.transform.localScale = Vector3.one;
+    }
+
+    private IEnumerator BlockVFX()
+    {
+        float elapsedTime = 0;
+
+        shieldVFX.transform.localScale *= 0.7f;
+        while (elapsedTime < 0.5f)
+        {
+            shieldVFX.transform.localScale = Vector3.Lerp(transform.localPosition, Vector3.one, (elapsedTime / 0.5f));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        shieldVFX.transform.localScale = Vector3.one;
     }
     
 
