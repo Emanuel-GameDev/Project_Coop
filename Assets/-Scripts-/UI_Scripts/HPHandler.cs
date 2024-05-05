@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class HPHandler : MonoBehaviour
 {
-    [SerializeField] GameObject HPContainer;
+    [SerializeField] GameObject HPContainerLeft;
+    [SerializeField] GameObject HPContainerRight;
 
     [SerializeField] public Transform[] HpContainerTransform = new Transform[4];
-   
-    
+
+
 
     Dictionary<ePlayerID, CharacterHUDContainer> containersAssociations;
-    bool dictionaryCreated=false;
+    bool dictionaryCreated = false;
 
     int id = 0;
 
@@ -49,10 +50,10 @@ public class HPHandler : MonoBehaviour
 
     }
 
-    
+
     public void SetActivePlayers()
     {
-        
+
         foreach (PlayerInputHandler inputHandler in CoopManager.Instance.GetActiveHandlers())
         {
             if (inputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>() != null)
@@ -90,8 +91,8 @@ public class HPHandler : MonoBehaviour
     IEnumerator Wait(PlayerCharacter player)
     {
         yield return new WaitForSeconds(0.1f);
-        
-        if(player.characterController != null)
+
+        if (player.characterController != null)
         {
             if (containersAssociations.ContainsKey(player.GetInputHandler().playerID))
             {
@@ -100,19 +101,30 @@ public class HPHandler : MonoBehaviour
             }
 
         }
-        
+
         if (id < HpContainerTransform.Length)
         {
-            GameObject hpContainerObject = Instantiate(HPContainer, HpContainerTransform[id]);
+            GameObject hpContainerObject;
+            if (HpContainerTransform[id].GetComponentInChildren<RewardContainer>().right)
+            {
+                 hpContainerObject = Instantiate(HPContainerRight, HpContainerTransform[id]);              
+            }
+            else
+            {
+                hpContainerObject = Instantiate(HPContainerLeft, HpContainerTransform[id]);         
+            }
+
+
             hpContainerObject.GetComponent<RectTransform>().SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
-           
+
             CharacterHUDContainer hpContainer = hpContainerObject.GetComponent<CharacterHUDContainer>();
             hpContainer.right = HpContainerTransform[id].gameObject.GetComponentInChildren<RewardContainer>().right;
             hpContainer.referredCharacter = player;
 
+
             if (player.characterController != null)
             {
-               
+
                 containersAssociations.Add(player.GetInputHandler().playerID, hpContainer);
 
                 Debug.Log(player.GetInputHandler().playerID);
@@ -125,21 +137,21 @@ public class HPHandler : MonoBehaviour
                 hpContainer.referredPlayerID = (ePlayerID)id + 1;
             }
 
-            hpContainer.referredCharacter = player;          
-            hpContainer.SetCharacterContainer(GetSpriteContainerFromCharacter(player,hpContainer.right));
+            hpContainer.referredCharacter = player;
+            hpContainer.SetCharacterContainer(GetSpriteContainerFromCharacter(player, hpContainer.right));
             hpContainer.SetUpHp();
             hpContainer.UpdateHp(player.CurrentHp);
 
             //CONTROLLARE COOLDOWN ABILITA
 
             hpContainer.SetUpAbility(player.UniqueAbilityCooldown);
-            
+
             id++;
         }
-        
+
     }
 
-    public void NotifyUseAbility(PlayerCharacter player,float cooldown)
+    public void NotifyUseAbility(PlayerCharacter player, float cooldown)
     {
         containersAssociations[player.GetInputHandler().playerID].SetAbilityTimer(cooldown);
     }
@@ -149,12 +161,11 @@ public class HPHandler : MonoBehaviour
         if (obj is PlayerCharacter)
         {
             PlayerCharacter playerCharacter = (PlayerCharacter)obj;
-            
+
             if (containersAssociations.ContainsKey(playerCharacter.GetInputHandler().playerID))
             {
                 containersAssociations[playerCharacter.GetInputHandler().playerID].referredCharacter = playerCharacter;
-                containersAssociations[playerCharacter.GetInputHandler().playerID].SetCharacterContainer(GetSpriteContainerFromCharacter(playerCharacter,
-                    containersAssociations[playerCharacter.GetInputHandler().playerID].right));               
+                containersAssociations[playerCharacter.GetInputHandler().playerID].SetCharacterContainer(GetSpriteContainerFromCharacter(playerCharacter, containersAssociations[playerCharacter.GetInputHandler().playerID].right));
                 containersAssociations[playerCharacter.GetInputHandler().playerID].SetUpHp();
                 containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
                 containersAssociations[playerCharacter.GetInputHandler().playerID].SetUpAbility(playerCharacter.UniqueAbilityCooldown);
@@ -172,9 +183,9 @@ public class HPHandler : MonoBehaviour
                 containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
             else
             {
-                foreach(CharacterHUDContainer cont in gameObject.GetComponentsInChildren<CharacterHUDContainer>())
+                foreach (CharacterHUDContainer cont in gameObject.GetComponentsInChildren<CharacterHUDContainer>())
                 {
-                    if(cont.referredCharacter == playerCharacter)
+                    if (cont.referredCharacter == playerCharacter)
                     {
                         containersAssociations[cont.referredPlayerID].UpdateHp(cont.referredCharacter.CurrentHp);
                         break;
@@ -182,11 +193,11 @@ public class HPHandler : MonoBehaviour
                 }
 
             }
-            
+
         }
     }
 
-    private Sprite GetSpriteContainerFromCharacter(PlayerCharacter character,bool right)
+    private Sprite GetSpriteContainerFromCharacter(PlayerCharacter character, bool right)
     {
         if (right)
         {
@@ -196,9 +207,9 @@ public class HPHandler : MonoBehaviour
         {
             return GameManager.Instance.GetCharacterData(character.Character).HpContainerLeft;
         }
-        
+
 
     }
 
-    
+
 }
