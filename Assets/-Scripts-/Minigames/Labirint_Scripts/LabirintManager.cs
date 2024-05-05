@@ -79,6 +79,8 @@ public class LabirintManager : MonoBehaviour
     private int keyForFirstPlayer;
     [SerializeField]
     private WinScreenHandler winScreenHandler;
+    [SerializeField]
+    private float victoryScreenTime = 5f;
 
     private LabirintUI labirintUI;
     private SceneChanger sceneChanger;
@@ -168,6 +170,9 @@ public class LabirintManager : MonoBehaviour
 
         MakeRankList();
     }
+
+    
+
 
     public void ExitMinigame()
     {

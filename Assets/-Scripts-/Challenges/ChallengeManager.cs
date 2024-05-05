@@ -49,17 +49,32 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     private void Start()
     {
         SaveManager.Instance.LoadData();
-        object challengesSelected = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSelected);
-        
-        Debug.LogWarning(challengesSelected);
-        if(challengesSelected == null)
-        {          
-            challengesSelected = false;
-        }
-        Debug.LogWarning(challengesSelected);
-        if ((bool)challengesSelected == false)
-        {
 
+        SceneSetting sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved);
+        bool selected = false;
+
+        Debug.Log(sceneSetting);
+
+        if(sceneSetting == null)
+        {
+            sceneSetting = new(SceneSaveSettings.ChallengesSaved);
+            sceneSetting.bools.Add(new("Selected", false));
+        }
+        else
+        {
+            SavingBoolValue selectedBool = sceneSetting.bools.Find(x => x.valueName == "Selected");
+            if(selectedBool != null)
+            {
+                selected = selectedBool.value;
+            }
+            else
+            {
+                sceneSetting.bools.Add(new("Selected", false));
+            }
+        }
+
+        if (!selected)
+        {
             onInteractionAction.AddListener(OnInteraction);
             Shuffle(challengesList);
 
@@ -71,24 +86,25 @@ public class ChallengeManager : MonoBehaviour, IInteractable
                 tempUI.challengeSelected.challengeUI = tempUI;
                 tempUI.SetUpUI();
                 currentSaveChallenges.Add(tempUI.challengeSelected);
-
             }
 
-            SaveManager.Instance.SaveSceneData(SceneSaveSettings.ChallengesSaved, currentSaveChallenges);
-            challengesSelected = true;
-            SaveManager.Instance.SaveSceneData(SceneSaveSettings.ChallengesSelected, challengesSelected);
+            SavingBoolValue selectedBool = sceneSetting.bools.Find(x => x.valueName == "Selected");
+            if (selectedBool != null)
+            {
+                selectedBool.value = true;
+            }
 
+            SaveSceneData(sceneSetting);
         }
         else
         {
-            Debug.Log("Sfide trovate");
             onInteractionAction.AddListener(OnInteraction);
 
-            foreach (Challenge c in (List<Challenge>)SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved))
+            foreach (SavingStringValue c in sceneSetting.strings.FindAll(x => x.valueName == "Challenges"))
             {
                 GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
                 ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();
-                tempUI.challengeSelected = c;
+                tempUI.challengeSelected = challengesList.Find(x => x.name == c.value);
                 tempUI.challengeSelected.challengeUI = tempUI;
                 tempUI.SetUpUI();
                 currentSaveChallenges.Add(tempUI.challengeSelected);
@@ -98,7 +114,15 @@ public class ChallengeManager : MonoBehaviour, IInteractable
         
     }
 
+    private void SaveSceneData(SceneSetting sceneSetting)
+    {
+        foreach (Challenge c in currentSaveChallenges)
+        {
+            sceneSetting.strings.Add(new("Challenges", c.name.ToString()));
+        }
 
+        SaveManager.Instance.SaveSceneData(sceneSetting);
+    }
 
     public static void Shuffle(List<Challenge> list)
     {
