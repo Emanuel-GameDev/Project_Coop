@@ -179,10 +179,10 @@ public class HPHandler : MonoBehaviour
         {
             PlayerCharacter playerCharacter = (PlayerCharacter)obj;
 
-            if (playerCharacter.characterController != null)
-                containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
-            else
-            {
+            //if (playerCharacter.characterController != null)
+            //    containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
+            //else
+            //{
                 foreach (CharacterHUDContainer cont in gameObject.GetComponentsInChildren<CharacterHUDContainer>())
                 {
                     if (cont.referredCharacter == playerCharacter)
@@ -192,7 +192,7 @@ public class HPHandler : MonoBehaviour
                     }
                 }
 
-            }
+            //}
 
         }
     }
