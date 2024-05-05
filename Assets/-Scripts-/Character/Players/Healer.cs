@@ -118,7 +118,7 @@ public class Healer : PlayerCharacter
         blockInput = false;
 
         //prova
-
+        extraData.key = 5;
     }
 
 

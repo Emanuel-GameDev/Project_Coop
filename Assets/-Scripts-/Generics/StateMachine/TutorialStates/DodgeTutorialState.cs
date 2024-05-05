@@ -204,7 +204,7 @@ public class DodgeTutorialState : TutorialFase
     private void StartSubFase()
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= StartSubFase;
-
+        dodgeCount = 0;
         tutorialManager.DeactivateAllPlayerInputs();
 
         foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
