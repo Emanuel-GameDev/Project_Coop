@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 /* 
  * I PlayerPrefsSettings sono tutti i valori che possono essere salvati nel playerPrefs.
@@ -18,12 +20,12 @@ public enum PlayerPrefsSettings
 /*
  * Gli SceneSaveSettings sono tutti i valori che possono essere salvati legati al singolo salvataggio
  */
+
 [Serializable]
 public enum SceneSaveSettings
 {
     FirstSceneDialogue,
     FirstMinigameDialogue,
-    ChallengesSaved,
-    ChallengesSelected,
-    
+    ChallengesSaved
 }
+

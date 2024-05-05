@@ -116,16 +116,10 @@ public class Challenge : MonoBehaviour
 
         }
 
-        SaveManager.Instance.SaveSceneData(SceneSaveSettings.ChallengesSaved, ChallengeManager.Instance.currentSaveChallenges);
-       
-
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
 
         challengeUI.SetUpUI();
         ResetChallenge();
-
-
-
     }
     public virtual void AddToSpawned(EnemyCharacter tempEnemy)
     {
