@@ -123,6 +123,8 @@ public class SouvenirShopMenu : Menu
 
         shopGroup.GetComponent<Animation>().Play("SouvenirExit");
         StartCoroutine(CloseMenuWithDelay(shopGroup.GetComponent<Animation>().clip.length));
+
+        SaveManager.Instance.SavePlayersData();
     }
 
     IEnumerator CloseMenuWithDelay(float delay)

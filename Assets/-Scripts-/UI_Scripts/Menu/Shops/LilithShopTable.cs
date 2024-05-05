@@ -20,7 +20,7 @@ public class LilithShopTable : MonoBehaviour
     [SerializeField] public ePlayerCharacter characterReference;
     internal PlayerCharacter playerCharacterReference;
 
-   [SerializeField] public List<AbilityShopEntry> entrys = new List<AbilityShopEntry>(5);
+    [SerializeField] public List<AbilityShopEntry> entrys = new List<AbilityShopEntry>(5);
 
     [Serializable]
     public class AbilityShopEntry
@@ -29,7 +29,8 @@ public class LilithShopTable : MonoBehaviour
         [SerializeField] public Image abilityImage;
         [SerializeField] public PlayerAbility[] abilitys = new PlayerAbility[1];
 
-        /*[HideInInspector]*/ public int id;
+        /*[HideInInspector]*/
+        public int id;
     }
 
 
@@ -41,21 +42,26 @@ public class LilithShopTable : MonoBehaviour
     {
         shopMenu = GetComponentInParent<LilithShopMenu>(true);
         playerCharacterReference = PlayerCharacterPoolManager.Instance.AllPlayerCharacters.Find(c => c.Character == characterReference);
-        
-        if(playerCharacterReference != null)
+
+        if (playerCharacterReference != null)
         {
-            if(playerCharacterReference.GetInputHandler() != null)
+            if (playerCharacterReference.GetInputHandler() != null)
                 playerCharacterReference.GetInputHandler().MultiplayerEventSystem.SetSelectedGameObject(firstSelected.gameObject);
 
         }
 
-        //da cambiare con i salvataggi
-            foreach (AbilityShopEntry entry in entrys)
+        //da cambiare 
+        foreach (AbilityShopEntry entry in entrys)
+        {
+            entry.button.buttonImage = entry.abilityImage;
+            entry.button.SetAbility(entry.abilitys[0]);
+
+            if (playerCharacterReference.GetAbilityStatus(entry.abilitys[0].abilityUpgrade))
             {
-                entry.button.buttonImage = entry.abilityImage;
-                entry.button.SetAbility(entry.abilitys[0]);
+                entry.button.DeactivateButton();
             }
-        
+        }
+
     }
 
     public void StartIdleAnimationIn(float delay)
@@ -99,7 +105,7 @@ public class LilithShopTable : MonoBehaviour
 
     public void BuyAbility()
     {
-       lastButton = lastSelected.GetComponent<LilithShopButton>();
+        lastButton = lastSelected.GetComponent<LilithShopButton>();
 
         AbilityShopEntry lastEntry = entrys.Find(b => b.button == lastButton);
         //PlayerCharacterPoolManager.Instance.AllPlayerCharacters.Find(p=>p == playerCharacterReference).UnlockUpgrade(lastEntry.abilitys[lastEntry.id].abilityUpgrade);
@@ -117,10 +123,17 @@ public class LilithShopTable : MonoBehaviour
 
         UpdateKeyCounter(--playerCharacterReference.ExtraData.key);
         KeyRequirementChecks();
+        CheckAlredyOwned();
+
         DesetOnBuyButton();
 
         //SaveManager.Instance.SaveAllData();
 
+    }
+
+    private void CheckAlredyOwned()
+    {
+        //if (lastEntry.abilitys[lastEntry.id])
     }
 
     public void DesetOnBuyButton()
@@ -133,15 +146,15 @@ public class LilithShopTable : MonoBehaviour
     {
         if (counter < 0) return;
 
-        if(counter < 10)
-            keysNumberText.text =$"0{counter}";
+        if (counter < 10)
+            keysNumberText.text = $"0{counter}";
         else
             keysNumberText.text = counter.ToString();
     }
 
     public void KeyRequirementChecks()
     {
-        foreach(AbilityShopEntry entry in entrys)
+        foreach (AbilityShopEntry entry in entrys)
         {
             entry.button.KeyRequiredCheck();
         }
