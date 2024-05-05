@@ -1,4 +1,5 @@
 using System;
+using System.IO.MemoryMappedFiles;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -18,6 +19,7 @@ public class CharacterHUDContainer : MonoBehaviour
     [SerializeField] TMP_Text maxHP;
     [SerializeField] TMP_Text currentHP;
     [SerializeField] GenericBarScript hpBar;
+    [SerializeField] public bool right;
 
     [Header("Ability")]
     [SerializeField] Image abilityImage;

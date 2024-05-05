@@ -89,14 +89,14 @@ public class HPHandler : MonoBehaviour
         {
             GameObject hpContainerObject = Instantiate(HPContainer, HpContainerTransform[id]);
             hpContainerObject.GetComponent<RectTransform>().SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.identity);
-
+           
             CharacterHUDContainer hpContainer = hpContainerObject.GetComponent<CharacterHUDContainer>();
+            hpContainer.right = HpContainerTransform[id].gameObject.GetComponentInChildren<RewardContainer>().right;
             hpContainer.referredCharacter = player;
 
             if (player.characterController != null)
             {
-                
-
+               
                 containersAssociations.Add(player.GetInputHandler().playerID, hpContainer);
 
                 Debug.Log(player.GetInputHandler().playerID);
@@ -109,8 +109,8 @@ public class HPHandler : MonoBehaviour
                 hpContainer.referredPlayerID = (ePlayerID)id + 1;
             }
 
-            hpContainer.referredCharacter = player;
-            hpContainer.SetCharacterContainer(GetSpriteContainerFromCharacter(player));
+            hpContainer.referredCharacter = player;          
+            hpContainer.SetCharacterContainer(GetSpriteContainerFromCharacter(player,hpContainer.right));
             hpContainer.SetUpHp();
             hpContainer.UpdateHp(player.CurrentHp);
 
@@ -137,7 +137,8 @@ public class HPHandler : MonoBehaviour
             if (containersAssociations.ContainsKey(playerCharacter.GetInputHandler().playerID))
             {
                 containersAssociations[playerCharacter.GetInputHandler().playerID].referredCharacter = playerCharacter;
-                containersAssociations[playerCharacter.GetInputHandler().playerID].SetCharacterContainer(GetSpriteContainerFromCharacter(playerCharacter));
+                containersAssociations[playerCharacter.GetInputHandler().playerID].SetCharacterContainer(GetSpriteContainerFromCharacter(playerCharacter,
+                    containersAssociations[playerCharacter.GetInputHandler().playerID].right));               
                 containersAssociations[playerCharacter.GetInputHandler().playerID].SetUpHp();
                 containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
                 containersAssociations[playerCharacter.GetInputHandler().playerID].SetUpAbility(playerCharacter.UniqueAbilityCooldown);
@@ -169,10 +170,17 @@ public class HPHandler : MonoBehaviour
         }
     }
 
-    private Sprite GetSpriteContainerFromCharacter(PlayerCharacter character)
+    private Sprite GetSpriteContainerFromCharacter(PlayerCharacter character,bool right)
     {
-
-        return GameManager.Instance.GetCharacterData(character.Character).HpContainerLeft;
+        if (right)
+        {
+            return GameManager.Instance.GetCharacterData(character.Character).HpContainerRight;
+        }
+        else
+        {
+            return GameManager.Instance.GetCharacterData(character.Character).HpContainerLeft;
+        }
+        
 
     }
 
