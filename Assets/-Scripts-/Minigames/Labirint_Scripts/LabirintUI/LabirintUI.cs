@@ -60,6 +60,7 @@ public class LabirintUI : MonoBehaviour
         {
             box.gameObject.SetActive(false);
         }
+        gameObject.SetActive(false);
     }
 
 }
