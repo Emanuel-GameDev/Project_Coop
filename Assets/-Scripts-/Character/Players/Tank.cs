@@ -115,17 +115,21 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     [Header("VFX")]
     [SerializeField] GameObject shieldVFX;
+    private Coroutine ShieldCoroutine;
     ParticleSystem.EmissionModule emissionModule;
 
     [Header("Shield Health Color",order =1)]
     [ColorUsage(true, true)]
-    [SerializeField] Color shieldVFXColor;
+    [SerializeField] Color shieldVFXGoodColor;
     [ColorUsage(true, true)]
     [SerializeField] Color shieldVFXDamagedColor;
     [ColorUsage(true, true)]
     [SerializeField] Color shieldVFXCriticalColor;
+    [ColorUsage(true, true)]
+    [SerializeField] Color shieldVFXParryColor;
+    private Color shieldVFXBaseColor;
 
-    
+
 
 
     public override void Inizialize()
@@ -149,6 +153,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         Debug.Log(powerUpData.UniqueAbilityCooldownDecrease);
 
         emissionModule = _walkDustParticles.emission;
+
+        shieldVFXBaseColor = shieldVFX.GetComponentInChildren<MeshRenderer>().material.GetColor("_MainColor");
 
     }
    
@@ -386,7 +392,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                 {                   
                     perfectBlockCount++;
 
-                    StartCoroutine(PerfectBlockVFX());
+                    
 
                     if (perfectBlockCount >= attacksToBlockForUpgrade)
                     {
@@ -405,6 +411,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                         ((IDamageable)perfectBlockIDamager).TakeDamage(new DamageData(perfectBlockDamage, this));
                     }
                 }
+                
 
                 currentBlockZone = SetBlockZone(lastNonZeroDirection.y);
                 animator.SetTrigger("StartBlock");
@@ -503,7 +510,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         if (healthLevel > 0.5f)
         {
             //good healt
-            shieldMaterial.SetColor("_HealthColor", shieldVFXColor);
+            shieldMaterial.SetColor("_HealthColor", shieldVFXGoodColor);
 
         }
         else
@@ -525,25 +532,33 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         float elapsedTime = 0;
 
-        shieldVFX.transform.localScale *= 1.3f;
+        Material shieldMaterial = shieldVFX.GetComponentInChildren<MeshRenderer>().material;
 
-        while (elapsedTime < 0.5f)
+        shieldVFX.transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);
+        shieldMaterial.SetColor("_MainColor", shieldVFXParryColor);
+
+        while (elapsedTime < 1)
         {
-            shieldVFX.transform.localScale = Vector3.Lerp(transform.localPosition, Vector3.one, (elapsedTime / 0.5f));
+            shieldVFX.transform.localScale = Vector3.Lerp(shieldVFX.transform.localScale, Vector3.one, (elapsedTime / 1));
             elapsedTime += Time.deltaTime;
             yield return null;
         }
         shieldVFX.transform.localScale = Vector3.one;
+        shieldMaterial.SetColor("_MainColor", shieldVFXBaseColor);
+        
     }
 
     private IEnumerator BlockVFX()
     {
         float elapsedTime = 0;
 
-        shieldVFX.transform.localScale *= 0.7f;
-        while (elapsedTime < 0.5f)
+        Material shieldMaterial = shieldVFX.GetComponentInChildren<MeshRenderer>().material;
+        shieldMaterial.SetColor("_MainColor", shieldVFXBaseColor);
+
+        shieldVFX.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+        while (elapsedTime < 1)
         {
-            shieldVFX.transform.localScale = Vector3.Lerp(transform.localPosition, Vector3.one, (elapsedTime / 0.5f));
+            shieldVFX.transform.localScale = Vector3.Lerp(shieldVFX.transform.localScale, Vector3.one, (elapsedTime / 1));
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -625,6 +640,29 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             }
 
             PubSub.Instance.Notify(EMessageType.guardExecuted, this);
+
+            if (perfectTimingEnabled)
+            {
+                if (ShieldCoroutine != null)
+                {
+                    StopCoroutine(ShieldCoroutine);
+
+                }
+
+                ShieldCoroutine = StartCoroutine(PerfectBlockVFX());
+            }
+            else 
+            {
+                if (ShieldCoroutine != null)
+                {
+                    StopCoroutine(ShieldCoroutine);
+
+                }
+
+                ShieldCoroutine = StartCoroutine(BlockVFX());
+
+            }
+
 
             //vfx
             SetShieldColorHealth();
