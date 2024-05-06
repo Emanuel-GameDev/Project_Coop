@@ -368,14 +368,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         return Mathf.Abs(angle) <= blockAngle / 2;
     }
-    Vector3 RotateVectorAroundPivot(Vector3 vector, Vector3 pivot, float angle)
-    {
-        Quaternion rotation = Quaternion.Euler(0, 0, angle);
-        vector -= pivot;
-        vector = rotation * vector;
-        vector += pivot;
-        return vector;
-    }
     public override void DefenseInput(InputAction.CallbackContext context)
     {
         if (context.performed && isAttacking == false && canCancelAttack == false && canBlock)
