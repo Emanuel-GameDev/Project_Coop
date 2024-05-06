@@ -500,7 +500,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         staminaBar.gameObject.SetActive(toShow);
         
     }
-
     private void SetShieldColorHealth()
     {
         Material shieldMaterial=shieldVFX.GetComponentInChildren<MeshRenderer>().material;
@@ -527,7 +526,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             }
         }
     }
-
     private IEnumerator PerfectBlockVFX()
     {
         float elapsedTime = 0;
@@ -547,7 +545,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         shieldMaterial.SetColor("_MainColor", shieldVFXBaseColor);
         
     }
-
     private IEnumerator BlockVFX()
     {
         float elapsedTime = 0;
