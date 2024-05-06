@@ -28,33 +28,40 @@ public class StatsMenuSetter : MonoBehaviour
             {
                 if (characterStatsReference.character == character.Character)
                 {
-                    characterStatsReference.HPText.text = $"+{character.MaxHp}%";
-                    characterStatsReference.KeyText.text = $"+{character.ExtraData.key}%";
-                    characterStatsReference.CoinText.text = $"+{character.ExtraData.coin}%";
+                    characterStatsReference.HPText.text = $"{character.MaxHp}";
+                    characterStatsReference.KeyText.text = $"{character.ExtraData.key}";
+                    characterStatsReference.CoinText.text = $"{character.ExtraData.coin}";
 
-                    characterStatsReference.PowerUp1Value.text = $"+{(character.PowerUpData.DamageIncrease * 100) - 100}%";
-                    characterStatsReference.PowerUp2Value.text = $"+{(character.PowerUpData.MaxHpIncrease * 100) - 100}%";
-                    characterStatsReference.PowerUp3Value.text = $"+{100 - (character.PowerUpData.UniqueAbilityCooldownDecrease * 100)}%";
+                    characterStatsReference.PowerUp1Value.text = GetPowerUpValue(character.PowerUpData.DamageIncrease);
+                    characterStatsReference.PowerUp2Value.text = GetPowerUpValue(character.PowerUpData.MaxHpIncrease);
+                    characterStatsReference.PowerUp3Value.text = GetPowerUpValue(character.PowerUpData.UniqueAbilityCooldownDecrease);
 
 
                     switch (character.Character)
                     {
                         case ePlayerCharacter.Brutus:
-                            characterStatsReference.UniquePowerUpValue.text = $"+{(character.PowerUpData.DodgeDistanceIncrease * 100) - 100}%";
+                            characterStatsReference.UniquePowerUpValue.text = GetPowerUpValue(character.PowerUpData.DodgeDistanceIncrease);
                             break;
                         case ePlayerCharacter.Kaina:
-                            characterStatsReference.UniquePowerUpValue.text = $"+{(character.PowerUpData.StaminaIncrease * 100) - 100}%";
+                            characterStatsReference.UniquePowerUpValue.text = GetPowerUpValue(character.PowerUpData.StaminaIncrease);
                             break;
                         case ePlayerCharacter.Cassius:
-                            characterStatsReference.UniquePowerUpValue.text = $"+{(character.PowerUpData.MoveSpeedIncrease * 100) - 100}%";
+                            characterStatsReference.UniquePowerUpValue.text = GetPowerUpValue(character.PowerUpData.MoveSpeedIncrease);
                             break;
                         case ePlayerCharacter.Jude:
-                            characterStatsReference.UniquePowerUpValue.text = $"+{(character.PowerUpData.DodgeDistanceIncrease * 100) - 100}%";
+                            characterStatsReference.UniquePowerUpValue.text = GetPowerUpValue(character.PowerUpData.DodgeDistanceIncrease);
                             break;
                     }
                 }
             }
         }
+    }
+
+    public string GetPowerUpValue(float value)
+    {
+        int valueInt = Mathf.RoundToInt((value * 100) - 100);
+
+        return $"+{valueInt}%";
     }
 
     private void OnEnable()

@@ -148,6 +148,7 @@ public class GameManager : MonoBehaviour
 
     public void StartLoadScreen()
     {
+        PubSub.Instance.Notify(EMessageType.sceneLoading, null);
         SaveManager.Instance.SaveData();
         StartCoroutine(LoadScreen());
     }
@@ -155,17 +156,17 @@ public class GameManager : MonoBehaviour
     IEnumerator LoadScreen()
     {
         float loadTime = Time.time;
-        Debug.Log($"Start Load Time: {Time.time}");
+        Utility.DebugTrace($"Start Load Time: {Time.time}");
         CoopManager.Instance.DisableAllInput();
         loadScreen.SetActive(true);
         yield return new WaitUntil(() => IsSceneLoaded());
         ActivateScene();
-        Debug.Log($"End Load Time: {Time.time}");
+        Utility.DebugTrace($"End Load Time: {Time.time}");
         if (Time.time - loadTime < fakeLoadSceenTime)
             yield return new WaitForSeconds(fakeLoadSceenTime - (Time.time - loadTime));
         loadScreen.SetActive(false);
         CoopManager.Instance.EnableAllInput();
-        Debug.Log($"Total Load Time: {Time.time - loadTime}");
+        Utility.DebugTrace($"Total Load Time: {Time.time - loadTime}");
     }
 
     #endregion
