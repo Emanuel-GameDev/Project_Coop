@@ -397,6 +397,8 @@ public class LabirintManager : MonoBehaviour
                 totalKey = saveData.extraData.key;
             }
 
+            Debug.Log(yetCompleted);
+
             if (!yetCompleted)
             {
                 if (i == 0)
