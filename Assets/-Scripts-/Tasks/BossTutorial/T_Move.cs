@@ -94,7 +94,7 @@ namespace MBTExample
             foreach (PlayerCharacter player in activePlayers)
             {
                 
-                bool isNear = Utility.DistanceV3toV2(player.transform.position, bossCharacter.transform.position) < distanceToCheckforPlayer.Value;
+                bool isNear = Vector2.Distance(player.transform.position, bossCharacter.transform.position) < distanceToCheckforPlayer.Value;
                 if (isNear)
                 {
                     bossCharacter.target = player.transform;
