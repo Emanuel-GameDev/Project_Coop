@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -291,6 +290,52 @@ public class SceneSetting
     public SceneSetting(SceneSaveSettings settingName)
     {
         this.settingName = settingName;
+    }
+
+    public bool GetBoolValue(string valueName)
+    {
+        foreach (SavingBoolValue value in bools)
+        {
+            if (value.valueName == valueName)
+                return value.value;
+        }
+
+        return false;
+    }
+
+    public int GetIntValue(string valueName)
+    {
+        foreach (SavingIntValue value in ints)
+        {
+            if (value.valueName == valueName)
+                return value.value;
+        }
+
+        return 0;
+    }
+
+    public float GetFloatValue(string valueName)
+    {
+        foreach (SavingFloatValue value in floats)
+        {
+            if (value.valueName == valueName)
+                return value.value;
+        }
+
+        return 0;
+    }
+
+    public string GetStringValue(string valueName)
+    {
+        foreach (SavingStringValue value in strings)
+        {
+            if (value.valueName == valueName)
+            {
+                return value.value;
+            }
+        }
+
+        return null;
     }
 
 }
