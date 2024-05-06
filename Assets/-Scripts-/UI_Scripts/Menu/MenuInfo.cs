@@ -66,6 +66,10 @@ public class MenuInfo : MonoBehaviour
     }
 
     [SerializeField]
+    private bool pauseButtonCanCloseMenu = true;
+    public bool PauseButtonCanCloseMenu => pauseButtonCanCloseMenu;
+
+    [SerializeField]
     private InteractableSetter interactableSetter;
     public InteractableSetter InteractableSetter => interactableSetter;
 

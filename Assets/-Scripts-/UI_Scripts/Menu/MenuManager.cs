@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -35,7 +34,7 @@ public class MenuManager : MonoBehaviour
 
     [SerializeField]
     private GameObject emptyRoot;
-    [SerializeField] 
+    [SerializeField]
     private GameObject emptyRootSelected;
 
     [SerializeField]
@@ -66,12 +65,12 @@ public class MenuManager : MonoBehaviour
 
     private void Inizialize()
     {
-        if(pauseMenu != null)
+        if (pauseMenu != null)
         {
             pauseMenu.Inizialize();
             pauseMenu.gameObject.SetActive(false);
         }
-            
+
         if (optionMenu != null)
         {
             optionMenu.Inizialize();
@@ -81,7 +80,7 @@ public class MenuManager : MonoBehaviour
 
     private void Update()
     {
-        if(EventSystem.current != null)
+        if (EventSystem.current != null)
         {
             if (EventSystem.current.currentSelectedGameObject == null)
             {
@@ -96,7 +95,7 @@ public class MenuManager : MonoBehaviour
 
     public void GoBack(PlayerInputHandler playerInputHandler)
     {
-        if(playerInputHandler != actualMenuOwner) return;
+        if (playerInputHandler != actualMenuOwner) return;
 
         if (OnGoBack != null)
             OnGoBack?.Invoke();
@@ -109,13 +108,13 @@ public class MenuManager : MonoBehaviour
     public void OpenPauseMenu(PlayerInputHandler player)
     {
         OpenMenu(pauseMenu, player, true);
-        if(hpHandler != null)
+        if (hpHandler != null)
             hpHandler.gameObject.SetActive(false);
     }
 
     public void OpenOptionMenu(PlayerInputHandler player)
     {
-        if(optionMenu != null)
+        if (optionMenu != null)
         {
             OpenMenu(optionMenu, player, true);
             if (hpHandler != null)
@@ -129,7 +128,7 @@ public class MenuManager : MonoBehaviour
     {
         if (actualMenu == pauseMenu && player == actualMenuOwner)
             CloseAllMenu();
-        else
+        else if (actualMenu.PauseButtonCanCloseMenu)
             CloseMenu();
     }
 
@@ -165,7 +164,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu(MenuInfo menu, PlayerInputHandler player)
     {
-      OpenMenu(menu, player, false);
+        OpenMenu(menu, player, false);
     }
 
     public void OpenMenu(MenuInfo menu, PlayerInputHandler player, bool pauseGame)
@@ -189,23 +188,23 @@ public class MenuManager : MonoBehaviour
         {
             if (actualMenu == menu)
                 return;
-            
+
             menu.PreviousMenu = actualMenu;
         }
 
         if (pauseGame)
             GameManager.Instance.PauseGame();
 
-        if(player != null)
+        if (player != null)
         {
             DisableOtherPlayerInteraction(player);
             actualMenuOwner = player;
         }
-            
+
 
         if (menu.HaveTabs)
         {
-            if(tabToOpen != null)
+            if (tabToOpen != null)
                 menu.GoToTab(tabToOpen);
             else
                 menu.GoDefaultTab();
@@ -214,9 +213,9 @@ public class MenuManager : MonoBehaviour
         if (menu.InteractableSetter != null)
             menu.InteractableSetter.EnableInteract();
 
-        if(actualMenuOwner != null)
+        if (actualMenuOwner != null)
             actualMenuOwner.SetPlayerActiveMenu(menu.MenuRoot, menu.FirstObjectSelected);
-          
+
         menu.gameObject.SetActive(true);
 
         actualMenu = menu;
@@ -228,12 +227,12 @@ public class MenuManager : MonoBehaviour
     {
         foreach (PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
         {
-            if(player != null && handler != player)
+            if (player != null && handler != player)
             {
                 handler.SetPlayerActiveMenu(emptyRoot, emptyRootSelected);
             }
         }
-        
+
     }
 
     public void FirstPlayerOpenMenu(MenuInfo menu)
@@ -254,7 +253,7 @@ public class MenuManager : MonoBehaviour
             actualMenu = actualMenu.PreviousMenu;
             actualMenuOwner.SetPlayerActiveMenu(actualMenu.MenuRoot, actualMenu.FirstObjectSelected);
             actualMenu.gameObject.SetActive(true);
-            if(actualMenu.InteractableSetter != null)
+            if (actualMenu.InteractableSetter != null)
                 actualMenu.InteractableSetter.EnableInteract();
         }
         else
@@ -270,7 +269,7 @@ public class MenuManager : MonoBehaviour
     private void ClearMenuEntries()
     {
         actualMenu = null;
-        if(actualMenuOwner != null)
+        if (actualMenuOwner != null)
             actualMenuOwner.SetPlayerActiveMenu(null, null);
         actualMenuOwner = null;
     }
@@ -292,7 +291,7 @@ public class MenuManager : MonoBehaviour
             menu.PreviousMenu = null;
         }
         menu.gameObject.SetActive(false);
-        if(menu.HaveTabs)
+        if (menu.HaveTabs)
             menu.CloseAllTab();
     }
 
