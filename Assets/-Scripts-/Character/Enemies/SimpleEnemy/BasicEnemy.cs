@@ -331,8 +331,6 @@ public class BasicEnemy : EnemyCharacter
         //GetComponentInChildren<SpriteRenderer>().material.color = Color.white;
     }
 
-    
-    
 
     public override void TargetSelection()
     {

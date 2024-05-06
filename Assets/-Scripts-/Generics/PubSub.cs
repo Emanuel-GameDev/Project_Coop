@@ -19,8 +19,8 @@ public enum EMessageType
     kainaTaunt,
     uniqueAbilityActivated,
     uniqueAbilityExpired,
-    characterHitted
-    
+    characterHitted,
+    sceneLoading
 }
 
 

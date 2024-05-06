@@ -186,5 +186,6 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     {
         MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetFirstPlayer());
         dialogueBox.RemoveAllDialogueEnd();
+        gameObject.GetComponent<SpriteRenderer>().enabled = false;
     }
 }
