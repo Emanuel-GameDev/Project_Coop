@@ -394,27 +394,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 955118818}
     m_Modifications:
-    - target: {fileID: 4962444163039064696, guid: 2fd7d6e04ece6c84e82b26ecf54c6b07,
-        type: 3}
-      propertyPath: HPContainerLeft
-      value: 
-      objectReference: {fileID: 8817235688118446885, guid: 9f90d3ca5770fa547bf5d440e0b4f055,
-        type: 3}
-    - target: {fileID: 4962444163039064696, guid: 2fd7d6e04ece6c84e82b26ecf54c6b07,
-        type: 3}
-      propertyPath: HPContainerRight
-      value: 
-      objectReference: {fileID: 8817235688118446885, guid: 512e5aeb34654924e83b07494f45d55a,
-        type: 3}
     - target: {fileID: 5092474310747687103, guid: 2fd7d6e04ece6c84e82b26ecf54c6b07,
         type: 3}
       propertyPath: m_Name
       value: HpHandler
-      objectReference: {fileID: 0}
-    - target: {fileID: 5092474310747687103, guid: 2fd7d6e04ece6c84e82b26ecf54c6b07,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6993901663149319593, guid: 2fd7d6e04ece6c84e82b26ecf54c6b07,
         type: 3}
@@ -2452,6 +2435,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 103600533958862017, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: m_StoppingDistance
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1050891133788748190, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: time.constantValue
@@ -2595,7 +2583,7 @@ PrefabInstance:
     - target: {fileID: 6737167571196966536, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: minDistance
-      value: 3
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 6737167571196966536, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -2610,7 +2598,7 @@ PrefabInstance:
     - target: {fileID: 6737167571196966536, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: followDuration
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6737167571196966536, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -3994,12 +3982,12 @@ PrefabInstance:
     - target: {fileID: 2105565984847598731, guid: 5706e0c49e0cf03499c487f33750d868,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 18.8
+      value: -0.2
       objectReference: {fileID: 0}
     - target: {fileID: 2105565984847598731, guid: 5706e0c49e0cf03499c487f33750d868,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 53.8
+      value: 41.7
       objectReference: {fileID: 0}
     - target: {fileID: 2105565984847598731, guid: 5706e0c49e0cf03499c487f33750d868,
         type: 3}
@@ -5090,8 +5078,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.12125015, y: 10.784999, z: 0}
-    m_Extent: {x: 22.42185, y: 30.766998, z: 0}
+    m_Center: {x: 0.122050285, y: 10.78485, z: 0}
+    m_Extent: {x: 22.421349, y: 30.766449, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
