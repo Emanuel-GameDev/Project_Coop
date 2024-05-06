@@ -2552,6 +2552,21 @@ PrefabInstance:
       propertyPath: time.constantValue
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3988804604876270016, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: m_Radius
+      value: 2.3792942
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988804604876270016, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: m_Offset.x
+      value: -0.2609275
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988804604876270016, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: m_Offset.y
+      value: 0.89083326
+      objectReference: {fileID: 0}
     - target: {fileID: 5418319695422473826, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: time.constantValue
@@ -2570,7 +2585,7 @@ PrefabInstance:
     - target: {fileID: 6737167571196966536, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: chargeSpeed
-      value: 150
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 6737167571196966536, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -2580,7 +2595,7 @@ PrefabInstance:
     - target: {fileID: 6737167571196966536, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: minDistance
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6737167571196966536, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -2601,6 +2616,11 @@ PrefabInstance:
         type: 3}
       propertyPath: attackPreviewTimer
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6737167571196966536, guid: 1a85985e5a5451e49bc1a1cba5032c19,
+        type: 3}
+      propertyPath: lowHpPhaseTreshold
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6737167571196966536, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -2842,7 +2862,7 @@ PrefabInstance:
     - target: {fileID: 7384835035709755658, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
       propertyPath: m_SortingLayer
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7384835035709755658, guid: 1a85985e5a5451e49bc1a1cba5032c19,
         type: 3}
@@ -5065,8 +5085,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.120700836, y: 10.784651, z: 0}
-    m_Extent: {x: 22.4214, y: 30.76605, z: 0}
+    m_Center: {x: 0.12125015, y: 10.7845, z: 0}
+    m_Extent: {x: 22.42215, y: 30.7658, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
