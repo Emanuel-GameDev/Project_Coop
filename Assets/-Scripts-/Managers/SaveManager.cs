@@ -292,6 +292,30 @@ public class SceneSetting
         this.settingName = settingName;
     }
 
+    #region Add
+    public void AddBoolValue(string valueName, bool value)
+    {
+        bools.Add(new SavingBoolValue(valueName, value));
+    }
+
+    public void AddIntValue(string valueName, int value)
+    {
+        ints.Add(new SavingIntValue(valueName, value));
+    }
+
+    public void AddFloatValue(string valueName, float value)
+    {
+        floats.Add(new SavingFloatValue(valueName, value));
+    }
+
+    public void AddStringValue(string valueName, string value)
+    {
+        strings.Add(new SavingStringValue(valueName, value));
+    }
+
+    #endregion
+
+    #region Get
     public bool GetBoolValue(string valueName)
     {
         foreach (SavingBoolValue value in bools)
@@ -337,7 +361,7 @@ public class SceneSetting
 
         return null;
     }
-
+    #endregion
 }
 
 [Serializable]

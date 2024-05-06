@@ -53,7 +53,6 @@ public class HPHandler : MonoBehaviour
 
     public void SetActivePlayers()
     {
-
         foreach (PlayerInputHandler inputHandler in CoopManager.Instance.GetActiveHandlers())
         {
             if (inputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacter>() != null)

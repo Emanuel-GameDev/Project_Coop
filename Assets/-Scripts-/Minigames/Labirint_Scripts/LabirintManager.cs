@@ -380,39 +380,71 @@ public class LabirintManager : MonoBehaviour
             }
         }
 
+        bool yetCompleted = CheckAndSaveYetCompleted();
+         
         for (int i = 0; i < ranking.Count; i++)
         {
             int totalCoin = 0;
             int totalKey = 0;
+            int gainedCoin = 0;
+            int gainedKey = 0;
+
             CharacterSaveData saveData = SaveManager.Instance.GetPlayerSaveData(ranking[i]);
+
             if (saveData != null)
             {
                 totalCoin = saveData.extraData.coin;
                 totalKey = saveData.extraData.key;
             }
 
-            if (i == 0)
+            if (!yetCompleted)
             {
-                totalCoin += coinForFirstPlayer;
-                totalKey += keyForFirstPlayer;
+                if (i == 0)
+                {
+                    totalCoin += coinForFirstPlayer;
+                    totalKey += keyForFirstPlayer;
 
-                winScreenHandler.SetCharacterValues(ranking[i], Rank.First, coinForFirstPlayer, totalCoin, keyForFirstPlayer, totalKey);
-            }
-            else if (Enum.TryParse<Rank>(i.ToString(), out Rank rank))
-            {
-                totalCoin += coinForEachPlayer;
-                totalKey += keyForEachPlayer;
+                    gainedCoin += coinForFirstPlayer;
+                    gainedKey += keyForFirstPlayer;
+                }
+                else
+                {
+                    totalCoin += coinForEachPlayer;
+                    totalKey += keyForEachPlayer;
 
-                winScreenHandler.SetCharacterValues(ranking[i], rank, coinForEachPlayer, totalCoin, keyForEachPlayer, totalKey);
+                    gainedCoin += coinForEachPlayer;
+                    gainedKey += keyForEachPlayer;
+
+                }
+
+                if (saveData != null)
+                {
+                    saveData.extraData.coin = totalCoin;
+                    saveData.extraData.key = totalKey;
+                }
             }
 
-            if (saveData != null)
-            {
-                saveData.extraData.coin = totalCoin;
-                saveData.extraData.key = totalKey;
-            }
+            Enum.TryParse<Rank>(i.ToString(), out Rank rank);
+            winScreenHandler.SetCharacterValues(ranking[i], rank, gainedCoin, totalCoin, gainedKey, totalKey);
 
         }
+
+        SaveManager.Instance.SaveData();
+    }
+
+    private bool CheckAndSaveYetCompleted()
+    {
+        SceneSetting sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.Passepartout);
+        if (sceneSetting == null)
+            sceneSetting = new SceneSetting(SceneSaveSettings.Passepartout);
+        if (!sceneSetting.GetBoolValue("Completed"))
+        {
+            sceneSetting.AddBoolValue("Completed", true);
+            SaveManager.Instance.SaveSceneData(sceneSetting);
+            return false;
+        }
+        else 
+            return true;  
     }
 
     #endregion
