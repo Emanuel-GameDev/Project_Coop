@@ -34,6 +34,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     [SerializeField, Tooltip("dempo per anulare notifica parta perfetta se non colpito ma avviso inviato")]
     float perfectBlockTimeWindow = 0.4f;
 
+    [SerializeField, Tooltip("velocità minima parata")]
+    float blockMoveSpeed = 0.1f;
+
 
     public enum blockZone
     {
@@ -47,7 +50,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     [Header("Unique Ability")]
 
-  
     [SerializeField, Tooltip("Range aggro")]
     float aggroRange;
     [SerializeField, Tooltip("Durata aggro")]
@@ -103,8 +105,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private float blockAngleThreshold => (blockAngle - 180) / 180;
     private float staminaDamageReductionMulty;
     private float healthDamageReductionMulty;
-    private float lastDirectionYValue;
-
+    private float moveSpeedCopy;
+    
+   
 
     private GenericBarScript staminaBar;
     private GameObject chargedAttackAreaObject = null;
@@ -135,6 +138,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public override void Inizialize()
     {
         base.Inizialize();
+
+        moveSpeedCopy = moveSpeed;
+
         currentStamina = maxStamina;
         currentHp = MaxHp;
 
@@ -446,7 +452,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
 
 
-        //se potenziamento 4 parata perfetta fa danno
     }
     public blockZone SetBlockZone(float lastYValue)
     {
@@ -777,16 +782,25 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public override void Move(Vector2 direction)
     {
-        if (canMove)
+        if (!isBlocking)
         {
-            base.Move(direction);
+            if (canMove)
+            {
+                moveSpeed = moveSpeedCopy;
+                base.Move(direction);
+              
+                emissionModule.enabled = isMoving;
+            }
 
-            if (direction.y != 0)
-                lastDirectionYValue = direction.y;
-
-            emissionModule.enabled = isMoving;
+            animator.SetBool("IsMoving", isMoving);
         }
-        animator.SetBool("IsMoving", isMoving);
+        else
+        {
+            moveSpeed = blockMoveSpeed;
+            base.Move(direction);
+            SetBlockZone(lastNonZeroDirection.y);
+
+        }
 
     }
 

@@ -59,7 +59,7 @@ namespace MBTExample
                     }
 
 
-                    float dist = Vector3.Distance(targetPosition, bossCharacter.transform.position);
+                    float dist = Vector2.Distance(targetPosition, bossCharacter.transform.position);
 
 
                     if (mustStop || dist <= bossCharacter.minDistance)
