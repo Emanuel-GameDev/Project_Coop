@@ -20,7 +20,7 @@ public class PowerUpData
     public float MoveSpeedIncrease => moveSpeedIncrease;
 
     // Cooldown
-    public float UniqueAbilityCooldownDecrease => 1 - uniqueAbilityCooldownDecrease > 0 ? 1 - uniqueAbilityCooldownDecrease : 1;
+    public float UniqueAbilityCooldownDecrease => uniqueAbilityCooldownDecrease;
     private float uniqueAbilityCooldownDecrease = 1;
 
     // AttackSpeed
