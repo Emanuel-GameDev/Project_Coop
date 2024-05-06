@@ -72,6 +72,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
             playerCharacter.gameObject.SetActive(false);
         }
         SaveManager.Instance.LoadAllPlayersData();
+
     }
 
     public void SwitchCharacter(PlayerCharacter playerCharacter, ePlayerCharacter targetCharacter)
