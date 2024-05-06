@@ -105,6 +105,7 @@ public abstract class PlayerCharacter : Character
     public float DamageReceivedMultiplier => damageReceivedMultiplier;
 
     public virtual ExtraData ExtraData => extraData;
+    public virtual PowerUpData PowerUpData => powerUpData;
 
     public Vector2 MoveDirection => moveDir;
     public Vector2 LastDirection => lastNonZeroDirection;
