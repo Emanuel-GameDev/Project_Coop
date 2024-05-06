@@ -34,6 +34,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     [SerializeField, Tooltip("dempo per anulare notifica parta perfetta se non colpito ma avviso inviato")]
     float perfectBlockTimeWindow = 0.4f;
 
+    [SerializeField, Tooltip("velocità minima parata")]
+    float blockMoveSpeed = 0.1f;
+
 
     public enum blockZone
     {
@@ -47,7 +50,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     [Header("Unique Ability")]
 
-  
     [SerializeField, Tooltip("Range aggro")]
     float aggroRange;
     [SerializeField, Tooltip("Durata aggro")]
@@ -103,8 +105,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private float blockAngleThreshold => (blockAngle - 180) / 180;
     private float staminaDamageReductionMulty;
     private float healthDamageReductionMulty;
-    private float lastDirectionYValue;
-
+    private float moveSpeedCopy;
+    
+   
 
     private GenericBarScript staminaBar;
     private GameObject chargedAttackAreaObject = null;
@@ -135,6 +138,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public override void Inizialize()
     {
         base.Inizialize();
+
+        moveSpeedCopy = moveSpeed;
+
         currentStamina = maxStamina;
         currentHp = MaxHp;
 
@@ -336,7 +342,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     #endregion
 
-    #region Block
+     #region Block
     private bool AttackInBlockAngle(DamageData data)
     {
         Character dealerMB = null;
@@ -367,14 +373,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         
 
         return Mathf.Abs(angle) <= blockAngle / 2;
-    }
-    Vector3 RotateVectorAroundPivot(Vector3 vector, Vector3 pivot, float angle)
-    {
-        Quaternion rotation = Quaternion.Euler(0, 0, angle);
-        vector -= pivot;
-        vector = rotation * vector;
-        vector += pivot;
-        return vector;
     }
     public override void DefenseInput(InputAction.CallbackContext context)
     {
@@ -454,7 +452,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
 
 
-        //se potenziamento 4 parata perfetta fa danno
     }
     public blockZone SetBlockZone(float lastYValue)
     {
@@ -500,7 +497,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         staminaBar.gameObject.SetActive(toShow);
         
     }
-
     private void SetShieldColorHealth()
     {
         Material shieldMaterial=shieldVFX.GetComponentInChildren<MeshRenderer>().material;
@@ -527,7 +523,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             }
         }
     }
-
     private IEnumerator PerfectBlockVFX()
     {
         float elapsedTime = 0;
@@ -547,7 +542,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         shieldMaterial.SetColor("_MainColor", shieldVFXBaseColor);
         
     }
-
     private IEnumerator BlockVFX()
     {
         float elapsedTime = 0;
@@ -788,16 +782,25 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public override void Move(Vector2 direction)
     {
-        if (canMove)
+        if (!isBlocking)
         {
-            base.Move(direction);
+            if (canMove)
+            {
+                moveSpeed = moveSpeedCopy;
+                base.Move(direction);
+              
+                emissionModule.enabled = isMoving;
+            }
 
-            if (direction.y != 0)
-                lastDirectionYValue = direction.y;
-
-            emissionModule.enabled = isMoving;
+            animator.SetBool("IsMoving", isMoving);
         }
-        animator.SetBool("IsMoving", isMoving);
+        else
+        {
+            moveSpeed = blockMoveSpeed;
+            base.Move(direction);
+            SetBlockZone(lastNonZeroDirection.y);
+
+        }
 
     }
 
