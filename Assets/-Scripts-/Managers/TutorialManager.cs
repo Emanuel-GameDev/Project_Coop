@@ -67,7 +67,9 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] GameObject lilith;
     [SerializeField] GameObject lilithBaloon;
 
+    [SerializeField] MenuInfo startTutorialMenu;
     [SerializeField] MenuInfo continueTutorialMenu;
+
     [Serializable]
     public class Fase
     {
@@ -494,6 +496,11 @@ public class TutorialManager : MonoBehaviour
     public void SetSpecilaFases(bool set)
     {
         specialFase = set;
+    }
+
+    public void StartTutorialMenu()
+    {
+        MenuManager.Instance.FirstPlayerOpenMenu(startTutorialMenu);
     }
 
 
