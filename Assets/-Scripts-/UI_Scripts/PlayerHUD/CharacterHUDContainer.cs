@@ -13,7 +13,7 @@ public class CharacterHUDContainer : MonoBehaviour
 
 
     [Header("HP & Background")]
-    //[SerializeField] Image characterHUDImage;
+    [SerializeField] Image characterHUDImage;
     //[SerializeField] Image HPBar;
     [SerializeField] Image playerIdImage;
     [SerializeField] TMP_Text maxHP;
@@ -59,7 +59,7 @@ public class CharacterHUDContainer : MonoBehaviour
     }
     public void SetCharacterContainer(Sprite containerSprite)
     {
-        GetComponent<Image>().sprite = containerSprite;
+        characterHUDImage.sprite = containerSprite;
     }
 
     #region Hp
