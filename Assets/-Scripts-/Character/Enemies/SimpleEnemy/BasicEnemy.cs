@@ -90,7 +90,16 @@ public class BasicEnemy : EnemyCharacter
     [HideInInspector] public BasicEnemyEntryState entryState;
     [HideInInspector] public Vector2 entryDestination;
     [HideInInspector] public bool canGoIdle = true;
-    
+
+
+    protected override void InitialSetup()
+    {
+        base.InitialSetup();
+        animator = GetComponent<Animator>();
+        agent = GetComponent<NavMeshAgent>();
+
+        currentHp = maxHp;
+    }
 
     public void GoToPosition(Vector2 pos)
     {
