@@ -27,6 +27,13 @@ public class PowerUpData
     private float attackSpeedIncrease = 1;
     public float AttackSpeedIncrease => attackSpeedIncrease;
 
+    //Stamina
+    private float staminaIncrease = 1;
+    public float StaminaIncrease => staminaIncrease;
+
+    //DodgeDistance
+    private float dodgeDistanceIncrease = 1;
+    public float DodgeDistanceIncrease => dodgeDistanceIncrease;
 
     //Aggiunge a lista powerUp e calcolo statistiche
     public void Add(PowerUp powerUp)
@@ -52,6 +59,12 @@ public class PowerUpData
 
             case StatsType.AttackSpeed:
                 attackSpeedIncrease += powerUp.value;
+                break;
+            case StatsType.Stamina:
+                staminaIncrease += powerUp.value;
+                break;
+            case StatsType.DodgeDistance:
+                dodgeDistanceIncrease += powerUp.value;
                 break;
         }
     }
@@ -83,6 +96,12 @@ public class PowerUpData
 
                 case StatsType.AttackSpeed:
                     attackSpeedIncrease -= powerUp.value;
+                    break;
+                case StatsType.Stamina:
+                    staminaIncrease -= powerUp.value;
+                    break;
+                case StatsType.DodgeDistance:
+                    dodgeDistanceIncrease -= powerUp.value;
                     break;
             }
         }

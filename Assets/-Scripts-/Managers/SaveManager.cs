@@ -63,7 +63,7 @@ public class SaveManager : MonoBehaviour
         {
             Debug.Log($"Lista Count: {scene.sceneSettings.Count}, 1SettingName: {scene.sceneSettings[0].ToString()} ");
         }
-        
+
     }
 
     public void SaveSceneData(SceneSetting setting)
@@ -139,7 +139,7 @@ public class SaveManager : MonoBehaviour
             {
                 Debug.Log("Nessun dato nel file di salvataggio.");
                 saveData = new();
-            }  
+            }
         }
         else
         {
@@ -250,6 +250,13 @@ public class SaveManager : MonoBehaviour
         PlayerPrefs.Save();
     }
     #endregion
+
+
+    public void ClearSaveData()
+    {
+        saveData = new();
+        SaveData();
+    }
 
 }
 
