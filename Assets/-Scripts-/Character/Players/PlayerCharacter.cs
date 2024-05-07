@@ -448,6 +448,7 @@ public abstract class PlayerCharacter : Character
         moveDir = context.ReadValue<Vector2>();
         if (moveDir != Vector2.zero)
             lastNonZeroDirection = moveDir;
+        
     }
 
     public void InteractInput(InputAction.CallbackContext context)

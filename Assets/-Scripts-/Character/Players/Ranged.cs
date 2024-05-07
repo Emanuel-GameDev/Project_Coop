@@ -152,7 +152,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
         UpdateCrosshair(ReadLookdirCrosshair(shootingPoint.transform.position));
 
-        if (isAttacking)
+        if (isCharging)
         {
             SetSpriteAimingDirection();
         }
@@ -210,8 +210,9 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
     private void SetSpriteAimingDirection()
     {
-        Vector2 direction = ((Vector2)rangedCrossair.transform.position-(Vector2)shootingPoint.transform.position);
-        SetSpriteDirection(direction);      
+        //Vector2 direction = ((Vector2)rangedCrossair.transform.position-(Vector2)shootingPoint.transform.position);
+        lastNonZeroDirection = new Vector2(lookDir.x, lookDir.y);
+        SetSpriteDirection(new Vector2(lookDir.x,lookDir.y));      
     }
 
     
@@ -263,7 +264,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
                 SetShootDirection();
             }
 
-            
+            SetSpriteAimingDirection();
+
             //in futuro inserire il colpo avanzato
             if (multiBaseAttackUnlocked)
             {
@@ -271,7 +273,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             }
             else
             {
-                SetSpriteAimingDirection();
+                
                 BasicFireProjectile(ShootDirection);
 
                 fireTimer = AttackSpeed;
@@ -279,6 +281,11 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
                 Debug.Log("colpo normale");
 
                 isAttacking = false;
+            }
+
+            if (moveDir != Vector2.zero)
+            {
+                lastNonZeroDirection = moveDir;
             }
 
             rightInputTimer = recentlyInputTimer;
