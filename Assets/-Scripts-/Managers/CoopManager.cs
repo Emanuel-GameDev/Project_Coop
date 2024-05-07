@@ -150,9 +150,6 @@ public class CoopManager : MonoBehaviour
             InputReceiver pReceiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(player);
             player.SetReceiver(pReceiver);
         }
-
-        CameraManager.Instance.AddAllPlayers();
-        HPHandler.Instance.SetActivePlayers();
     }
 
     public void OnDeviceLost(PlayerInput playerInput)

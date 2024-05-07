@@ -16,18 +16,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<PlayerCharacterData> playerCharacterDatas;
 
-    private PlayerInputManager playerInputManager;
     private CoopManager coopManager;
-    private CameraManager cameraManager;
-    private SaveManager saveManager;
-    private SpawnPositionManager spawnPosManager;
     private AsyncOperation sceneLoadOperation;
 
     public CoopManager CoopManager => coopManager;
-    public CameraManager CameraManager => cameraManager;
-    public PlayerInputManager PlayerInputManager => playerInputManager;
-    public SaveManager SaveManager => saveManager;
-    public SpawnPositionManager SpawnPosManager => spawnPosManager;
 
     private static GameManager _instance;
     public static GameManager Instance
@@ -64,14 +56,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        playerInputManager = PlayerInputManager.instance;
         coopManager = CoopManager.Instance;
-        cameraManager = CameraManager.Instance;
-        saveManager = SaveManager.Instance;
-        spawnPosManager = SpawnPositionManager.Instance;
-
-        if (CameraManager != null && CoopManager != null)
-            CameraManager.AddAllPlayers();
 
         if (playerCharacterDatas == null || playerCharacterDatas.Count <= 0)
         {
