@@ -18,6 +18,10 @@ public class SlotRow : MonoBehaviour
      private Sprite playerSprite;
      private List<Sprite> losingSpriteList;
 
+     public AudioSource rowAudioSource { get; private set; }
+
+    
+
 
     private List<GameObject> reorderSlots = new List<GameObject>();
 
@@ -35,11 +39,15 @@ public class SlotRow : MonoBehaviour
     [SerializeField] private Slot selectedSlotImage;
     private Slotmachine mainMachine;
 
+    [Header("Sounds")]
+    [SerializeField] AudioClip stopSlotRowAudio;
+
 
 
     private void Start()
     {
         losingSpriteList= new List<Sprite>();
+        rowAudioSource=GetComponent<AudioSource>();
     }
 
     public void Initialize()
@@ -71,6 +79,7 @@ public class SlotRow : MonoBehaviour
     public void StartSlotMachine() 
     {
         stopped = false;
+        rowAudioSource.Play();
     }
 
     public void SetRow(int slotNumber, int winNumber, float distance, Sprite playerSprite,List<Sprite>  losingSpriteList,float rotationSpeed,float stabilizationSpeed)
@@ -202,6 +211,9 @@ public class SlotRow : MonoBehaviour
         else if (isSlowDown)
         {
             isSlowDown = false;
+
+            rowAudioSource.Stop();
+            AudioManager.Instance.PlayAudioClip(stopSlotRowAudio);
             
         }
 
@@ -284,6 +296,7 @@ public class SlotRow : MonoBehaviour
         stopped = false;
         isSlowDown = false;
         selectedSlotImage = null;
+        
     }
 
     public void StartSlowDown()
