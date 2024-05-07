@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class C_KillAllInTimer : Challenge
 {
@@ -17,7 +18,7 @@ public class C_KillAllInTimer : Challenge
 
     private bool startTimer;
     private int enemyInt =0;
-    public List<PlayerCharacter> players;
+    public List<PlayerCharacter> activePlayers;
 
 
 
@@ -30,8 +31,8 @@ public class C_KillAllInTimer : Challenge
         ChallengeManager.Instance.dialogueBox.AddDialogueEnd(onChallengeStartAction);
         ChallengeManager.Instance.dialogueBox.StartDialogue();
 
-        players = PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
-        foreach (PlayerCharacter p in players)
+        activePlayers = PlayerCharacterPoolManager.Instance.AllPlayerCharacters;
+        foreach (PlayerCharacter p in activePlayers)
         {
             if(noDamage)
              p.OnHit.AddListener(OnFailChallenge);
@@ -39,6 +40,8 @@ public class C_KillAllInTimer : Challenge
             if(noDash)
              p.OnDash.AddListener(OnFailChallenge);
         }
+       
+
     }
     public override void StartChallenge()
     {
