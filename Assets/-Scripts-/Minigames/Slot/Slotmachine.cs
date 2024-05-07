@@ -220,6 +220,8 @@ public class Slotmachine : MonoBehaviour
 
     private IEnumerator ShowWin()
     {
+        _dialogueBox.RemoveAllDialogueEnd();
+
         yield return new WaitForSeconds(screenDelay);
 
         _dialogueBox.SetDialogue(winDialogue);
@@ -233,6 +235,8 @@ public class Slotmachine : MonoBehaviour
 
     private IEnumerator ShowLose()
     {
+        _dialogueBox.RemoveAllDialogueEnd();
+
         yield return new WaitForSeconds(screenDelay);
 
         _dialogueBox.SetDialogue(loseDialogue);
@@ -354,6 +358,8 @@ public class Slotmachine : MonoBehaviour
                 SetRowInIndex(indexRow, characterRemainingType);
 
                 characterEnum.Remove(characterRemainingType);
+
+                player.SetCharacter(characterRemainingType);
             }
             else
             {

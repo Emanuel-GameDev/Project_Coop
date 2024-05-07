@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: en
   m_SharedData: {fileID: 11400000, guid: d5d4b37980b359345aa1d2e0cc3417ad, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - rid: 5090016599949180994
   m_TableData:
   - m_Id: 8676888987303936
     m_Localized: <sprite index=4 tint=1> Move
@@ -231,7 +232,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 28542873894789120
-    m_Localized: Press any key
+    m_Localized: 'Press any key to break out '
     m_Metadata:
       m_Items: []
   - m_Id: 29345844312084480
@@ -258,6 +259,19 @@ MonoBehaviour:
     m_Localized: Do you want to do the tutorial?
     m_Metadata:
       m_Items: []
+  - m_Id: 31159414718644224
+    m_Localized: Passepartout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31159510470410240
+    m_Localized: Fool Slot
+    m_Metadata:
+      m_Items:
+      - rid: 5090016599949180994
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 5090016599949180994
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 00c0f6e068b36e00

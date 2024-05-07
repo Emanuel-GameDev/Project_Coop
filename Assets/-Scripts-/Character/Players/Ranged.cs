@@ -372,7 +372,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
             Vector2 dodgeDirection = direction.normalized;
 
-            rb.velocity = dodgeDirection * (dodgeDistance / dodgeDuration);
+            rb.velocity = dodgeDirection * ((dodgeDistance * powerUpData.DodgeDistanceIncrease)/ dodgeDuration);
 
             yield return new WaitForSeconds(dodgeDuration);
             PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);

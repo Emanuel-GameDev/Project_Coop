@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -63,7 +62,7 @@ public class SaveManager : MonoBehaviour
         {
             Debug.Log($"Lista Count: {scene.sceneSettings.Count}, 1SettingName: {scene.sceneSettings[0].ToString()} ");
         }
-        
+
     }
 
     public void SaveSceneData(SceneSetting setting)
@@ -139,7 +138,7 @@ public class SaveManager : MonoBehaviour
             {
                 Debug.Log("Nessun dato nel file di salvataggio.");
                 saveData = new();
-            }  
+            }
         }
         else
         {
@@ -251,6 +250,13 @@ public class SaveManager : MonoBehaviour
     }
     #endregion
 
+
+    public void ClearSaveData()
+    {
+        saveData = new();
+        SaveData();
+    }
+
 }
 
 [Serializable]
@@ -286,6 +292,92 @@ public class SceneSetting
         this.settingName = settingName;
     }
 
+    #region Add
+    public void AddBoolValue(string valueName, bool value)
+    {
+        SavingBoolValue valueData = bools.Find(x => x.valueName == valueName);
+        if (valueData != null)
+            valueData.value = value;
+        else
+            bools.Add(new SavingBoolValue(valueName, value));
+    }
+
+    public void AddIntValue(string valueName, int value)
+    {
+        SavingIntValue valueData = ints.Find(x => x.valueName == valueName);
+        if (valueData != null)
+            valueData.value = value;
+        else
+            ints.Add(new SavingIntValue(valueName, value));
+    }
+
+    public void AddFloatValue(string valueName, float value)
+    {
+        SavingFloatValue valueData = floats.Find(x => x.valueName == valueName);
+        if (valueData != null)
+            valueData.value = value;
+        else
+            floats.Add(new SavingFloatValue(valueName, value));
+    }
+
+    public void AddStringValue(string valueName, string value)
+    {
+        SavingStringValue valueData = strings.Find(x => x.valueName == valueName);
+        if (valueData != null)
+            valueData.value = value;
+        else
+            strings.Add(new SavingStringValue(valueName, value));
+    }
+
+    #endregion
+
+    #region Get
+    public bool GetBoolValue(string valueName)
+    {
+        foreach (SavingBoolValue value in bools)
+        {
+            if (value.valueName == valueName)
+                return value.value;
+        }
+
+        return false;
+    }
+
+    public int GetIntValue(string valueName)
+    {
+        foreach (SavingIntValue value in ints)
+        {
+            if (value.valueName == valueName)
+                return value.value;
+        }
+
+        return 0;
+    }
+
+    public float GetFloatValue(string valueName)
+    {
+        foreach (SavingFloatValue value in floats)
+        {
+            if (value.valueName == valueName)
+                return value.value;
+        }
+
+        return 0;
+    }
+
+    public string GetStringValue(string valueName)
+    {
+        foreach (SavingStringValue value in strings)
+        {
+            if (value.valueName == valueName)
+            {
+                return value.value;
+            }
+        }
+
+        return null;
+    }
+    #endregion
 }
 
 [Serializable]

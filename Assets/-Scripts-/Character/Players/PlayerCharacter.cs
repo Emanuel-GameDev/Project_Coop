@@ -83,10 +83,10 @@ public abstract class PlayerCharacter : Character
     #region Propriety
     public ePlayerCharacter Character => character;
 
-    public virtual float MaxHp => maxHp;
+    public virtual float MaxHp => Mathf.RoundToInt(maxHp * powerUpData.MaxHpIncrease);
     public virtual float CurrentHp 
     {
-        get {  return currentHp; }
+        get {  return Mathf.RoundToInt(currentHp); }
         set 
         { 
             currentHp = value;
@@ -101,10 +101,11 @@ public abstract class PlayerCharacter : Character
     public virtual float Damage => damage * powerUpData.DamageIncrease;
     public virtual float MoveSpeed => moveSpeed * powerUpData.MoveSpeedIncrease;
     public virtual float AttackSpeed => attackSpeed * powerUpData.AttackSpeedIncrease;
-    public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) * powerUpData.UniqueAbilityCooldownDecrease;
+    public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) / powerUpData.UniqueAbilityCooldownDecrease;
     public float DamageReceivedMultiplier => damageReceivedMultiplier;
 
     public virtual ExtraData ExtraData => extraData;
+    public virtual PowerUpData PowerUpData => powerUpData;
 
     public Vector2 MoveDirection => moveDir;
     public Vector2 LastDirection => lastNonZeroDirection;

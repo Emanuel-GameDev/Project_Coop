@@ -11,7 +11,9 @@ public enum StatsType
     Health,
     MoveSpeed,
     UniqueAbilityCooldown,
-    AttackSpeed
+    AttackSpeed,
+    Stamina,
+    DodgeDistance
 }
 
 [CreateAssetMenu(menuName = "Character/PowerUp"), Serializable]

@@ -16,7 +16,9 @@ public class DialogueBox : MonoBehaviour
     [SerializeField] bool startImmediatly = false;
 
     [Header("Set Up")]
-
+    [SerializeField] Animation characterAnimation;
+    [SerializeField] Animation boxAnimation;
+    [SerializeField] Animation boxBackAnimation;
 
     [SerializeField] private List<BoxType> boxTypes = new();
 
@@ -180,35 +182,27 @@ public class DialogueBox : MonoBehaviour
 
         nextBox.contentText.text = string.Empty;
 
-        //Animator boxAnimator = nextBox.box.GetComponent<Animator>();
-        //Animator characterImageAnimator = nextBox.characterImage.gameObject.GetComponent<Animator>();
-        //if (boxAnimator != null)
-        //{
-        //    boxAnimator.SetTrigger("NextLine");
-        //    boxAnimator.ResetTrigger("NextLine");
 
-            
-        //    if(characterImageAnimator != null)
-        //    {
-        //        if (dialogueLineIndex > 0)
-        //        {
-               
-        //            if (nextLine.Character != dialogues[dialogueIndex].GetLine(dialogueLineIndex-1).Character)
-        //            {
-        //                //characterImageAnimator.SetTrigger("CharacterChanged");
-        //                //characterImageAnimator.ResetTrigger("CharacterChanged");
-        //            }
 
-        //        }
+        Dialogue.DialogueLine previousLine = new();
 
-        //    }
-
-        //}
-
+        if (dialogueLineIndex > 0)
+            previousLine = dialogues[dialogueIndex].GetLine(dialogueLineIndex - 1);
+        
+        if (nextLine.Character != previousLine.Character)
+        {
+            characterAnimation.Play("DialogueBoxCharacterEntrance");
+            boxAnimation.Play("DialogueBoxEntrance");
+            boxBackAnimation.Play("DialogueBoxBackIdle");
+        }
+        else
+        {
+            if(!boxBackAnimation.isPlaying)
+                boxBackAnimation.Play("DialogueBoxBackIdle");
+        }
 
     }
 
-    List<InputAction> input;
 
     public void StartDialogue()
     {

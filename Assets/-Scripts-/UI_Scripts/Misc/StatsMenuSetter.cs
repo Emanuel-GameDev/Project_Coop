@@ -28,21 +28,47 @@ public class StatsMenuSetter : MonoBehaviour
             {
                 if (characterStatsReference.character == character.Character)
                 {
-                    characterStatsReference.HPText.text = character.MaxHp.ToString();
-                    characterStatsReference.KeyText.text = character.ExtraData.key.ToString();
-                    characterStatsReference.CoinText.text = character.ExtraData.coin.ToString();
+                    characterStatsReference.HPText.text = $"{character.MaxHp}";
+                    characterStatsReference.KeyText.text = $"{character.ExtraData.key}";
+                    characterStatsReference.CoinText.text = $"{character.ExtraData.coin}";
+
+                    characterStatsReference.PowerUp1Value.text = GetPowerUpValue(character.PowerUpData.DamageIncrease);
+                    characterStatsReference.PowerUp2Value.text = GetPowerUpValue(character.PowerUpData.MaxHpIncrease);
+                    characterStatsReference.PowerUp3Value.text = GetPowerUpValue(character.PowerUpData.UniqueAbilityCooldownDecrease);
+
+
+                    switch (character.Character)
+                    {
+                        case ePlayerCharacter.Brutus:
+                            characterStatsReference.UniquePowerUpValue.text = GetPowerUpValue(character.PowerUpData.DodgeDistanceIncrease);
+                            break;
+                        case ePlayerCharacter.Kaina:
+                            characterStatsReference.UniquePowerUpValue.text = GetPowerUpValue(character.PowerUpData.StaminaIncrease);
+                            break;
+                        case ePlayerCharacter.Cassius:
+                            characterStatsReference.UniquePowerUpValue.text = GetPowerUpValue(character.PowerUpData.MoveSpeedIncrease);
+                            break;
+                        case ePlayerCharacter.Jude:
+                            characterStatsReference.UniquePowerUpValue.text = GetPowerUpValue(character.PowerUpData.DodgeDistanceIncrease);
+                            break;
+                    }
                 }
             }
         }
     }
 
+    public string GetPowerUpValue(float value)
+    {
+        int valueInt = Mathf.RoundToInt((value * 100) - 100);
+
+        return $"+{valueInt}%";
+    }
 
     private void OnEnable()
     {
         ResetStatus();
         SetCharacterStats();
     }
-
 }
 
 [Serializable]
@@ -52,4 +78,21 @@ public class CharacterStatsReferences
     public TextMeshProUGUI HPText;
     public TextMeshProUGUI KeyText;
     public TextMeshProUGUI CoinText;
+
+    [Line]
+    public TextMeshProUGUI PowerUp1Value;
+    public TextMeshProUGUI PowerUp1Description;
+
+    [Line]
+    public TextMeshProUGUI PowerUp2Value;
+    public TextMeshProUGUI PowerUp2Description;
+
+    [Line]
+    public TextMeshProUGUI PowerUp3Value;
+    public TextMeshProUGUI PowerUp3Description;
+
+    [Line]
+    public TextMeshProUGUI UniquePowerUpValue;
+    public TextMeshProUGUI UniquePowerUpDescription;
+
 }

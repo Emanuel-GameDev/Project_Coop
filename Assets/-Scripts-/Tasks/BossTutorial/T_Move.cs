@@ -17,7 +17,6 @@ namespace MBTExample
         private KerberosBossCharacter bossCharacter;
         private Vector3 targetPosition;
         private float tempTimer;
-        private bool started;
         private bool mustStop;
         private List<PlayerCharacter> activePlayers;
         public override void OnEnter()
@@ -51,6 +50,7 @@ namespace MBTExample
                     //Check if a player enters in small range;
                     if (CheckForNearPlayer())
                     {
+                        
                         playerFound.Value = true;
                         bossCharacter.Agent.isStopped = true;
                         bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
@@ -94,7 +94,7 @@ namespace MBTExample
             foreach (PlayerCharacter player in activePlayers)
             {
                 
-                bool isNear = Vector2.Distance(player.transform.position, bossCharacter.transform.position) < distanceToCheckforPlayer.Value;
+                bool isNear = Vector2.Distance(player.transform.position, bossCharacter.transform.position) <= distanceToCheckforPlayer.Value;
                 if (isNear)
                 {
                     bossCharacter.target = player.transform;
