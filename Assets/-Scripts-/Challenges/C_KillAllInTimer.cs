@@ -1,23 +1,19 @@
-using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class C_KillAllInTimer : Challenge
 {
 
-    [Header("Timer")]   
+    [Header("Timer")]
     [SerializeField] private float timerChallenge;
 
-    
+
     [Header("Modifiers")]
     [SerializeField] private bool noDamage;
     [SerializeField] private bool noDash;
 
     private bool startTimer;
-    private int enemyInt =0;
+    private int enemyInt = 0;
     public List<PlayerCharacter> activePlayers;
 
 
@@ -34,13 +30,13 @@ public class C_KillAllInTimer : Challenge
         activePlayers = PlayerCharacterPoolManager.Instance.AllPlayerCharacters;
         foreach (PlayerCharacter p in activePlayers)
         {
-            if(noDamage)
-             p.OnHit.AddListener(OnFailChallenge);
+            if (noDamage)
+                p.OnHit.AddListener(OnFailChallenge);
 
-            if(noDash)
-             p.OnDash.AddListener(OnFailChallenge);
+            if (noDash)
+                p.OnDash.AddListener(OnFailChallenge);
         }
-       
+
 
     }
     public override void StartChallenge()
@@ -50,7 +46,7 @@ public class C_KillAllInTimer : Challenge
         {
             s.canSpawn = true;
         }
-        
+
         startTimer = true;
 
     }
@@ -82,17 +78,17 @@ public class C_KillAllInTimer : Challenge
         base.AddToSpawned(enemyCharacter);
         enemyInt++;
         enemyCharacter.OnDeath.AddListener(OnEnemyDeath);
-        
+
     }
     private void Update()
-    {     
+    {
         if (startTimer)
         {
             if (timerChallenge > 0)
             {
-              
-                if(enemySpawned && enemyInt ==0) 
-                { 
+
+                if (enemySpawned && enemyInt == 0)
+                {
                     OnWinChallenge();
                 }
 
@@ -108,7 +104,7 @@ public class C_KillAllInTimer : Challenge
 
         }
     }
-   
+
     public override void OnEnemyDeath()
     {
         base.OnEnemyDeath();
