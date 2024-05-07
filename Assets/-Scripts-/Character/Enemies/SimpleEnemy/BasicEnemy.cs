@@ -96,7 +96,9 @@ public class BasicEnemy : EnemyCharacter
     {
         base.InitialSetup();
         animator = GetComponent<Animator>();
-        agent = GetComponent<NavMeshAgent>();
+
+        if(GetComponent<NavMeshAgent>() != null)
+             agent = GetComponent<NavMeshAgent>();
 
         currentHp = maxHp;
     }
@@ -181,19 +183,18 @@ public class BasicEnemy : EnemyCharacter
 
         if (currentTarget != null)
         {
-            //if (agent.CalculatePath(target.position, path))
-            //{
-                if (path.corners.Length > 1)
+            if (agent.CalculatePath(target.position, path))
+            {
+            //    if (path.corners.Length > 1)
                     Move(path.corners[1] - path.corners[0], rb);
-                else
-                    Move(target.position - transform.position, rb);
-                
-            //}
-            //else
-            //{
-            //    Debug.Log(path.corners.Length);
-            //    rb.velocity = Vector2.zero;
-            //}
+                //else
+                //    Move(target.position - transform.position, rb);
+
+            }
+            else
+            {
+                rb.velocity = Vector2.zero;
+            }
         }
         else
         {
@@ -216,10 +217,10 @@ public class BasicEnemy : EnemyCharacter
             if (agent.CalculatePath(pos, path))
             {
 
-                if (path.corners.Length > 1)
+                //if (path.corners.Length > 1)
                     Move(path.corners[1] - path.corners[0], rb);
-                else
-                    Move((Vector3)pos - transform.position, rb);
+                //else
+                //    Move((Vector3)pos - transform.position, rb);
                 
             }
             else
@@ -287,7 +288,7 @@ public class BasicEnemy : EnemyCharacter
             panicAttack = false;
         }
 
-        //GetComponentInChildren<SpriteRenderer>().material.color = Color.red;
+        ActivateObstacle();
 
         switch (enemyType)
         {
@@ -337,7 +338,6 @@ public class BasicEnemy : EnemyCharacter
 
         
         
-        //GetComponentInChildren<SpriteRenderer>().material.color = Color.white;
     }
 
 
@@ -366,6 +366,7 @@ public class BasicEnemy : EnemyCharacter
             if (currentHp <= 0)
             {
                 isDead = true;
+                
                 stateMachine.SetState(deathState);
             }
             else
