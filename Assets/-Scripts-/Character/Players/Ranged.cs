@@ -611,8 +611,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             
 
             if (empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
-            {
-               
+            {  
 
                 if (!ChargedVFX.activeSelf)
                 {

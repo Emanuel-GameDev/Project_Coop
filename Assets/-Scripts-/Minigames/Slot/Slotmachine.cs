@@ -11,6 +11,11 @@ public class Slotmachine : MonoBehaviour
     [SerializeField, Tooltip("Numero massimo di tentativi prima di vincere")]
     int lives = 3;
     int remainingLives;
+    [SerializeField] AudioClip winAudio;
+    [SerializeField] AudioClip loseAudio;
+    [SerializeField] AudioClip goodAudio;
+    [SerializeField] AudioClip failAudio;
+
     [Header("Variabili colonna")]
 
     [SerializeField, Tooltip("Numero delle figure totali nella colonna")]
@@ -59,6 +64,7 @@ public class Slotmachine : MonoBehaviour
 
     [Header("Manopola")]
     [SerializeField] private GameObject manopola;
+    [SerializeField] private AudioClip giramentoManopolaAudio;
 
 
     List<Sprite> playerSprites;
@@ -186,6 +192,8 @@ public class Slotmachine : MonoBehaviour
         {
             Debug.Log("avete vinto");
 
+            AudioManager.Instance.PlayAudioClip(goodAudio);
+
             canInteract = false;
             inGame = false;
 
@@ -197,7 +205,7 @@ public class Slotmachine : MonoBehaviour
         {
             Debug.Log("avete perso");
 
-
+            AudioManager.Instance.PlayAudioClip(failAudio);
 
             if (remainingLives <= 0)
             {
@@ -224,6 +232,8 @@ public class Slotmachine : MonoBehaviour
 
         yield return new WaitForSeconds(screenDelay);
 
+        AudioManager.Instance.PlayAudioClip(winAudio);
+
         _dialogueBox.SetDialogue(winDialogue);
         _dialogueBox.AddDialogueEnd(onWinDialogueEnd);
 
@@ -238,6 +248,8 @@ public class Slotmachine : MonoBehaviour
         _dialogueBox.RemoveAllDialogueEnd();
 
         yield return new WaitForSeconds(screenDelay);
+
+        AudioManager.Instance.PlayAudioClip(loseAudio);
 
         _dialogueBox.SetDialogue(loseDialogue);
         _dialogueBox.AddDialogueEnd(onLoseDialogueEnd);
@@ -275,6 +287,13 @@ public class Slotmachine : MonoBehaviour
 
     public IEnumerator RestartSlotMachine()
     {
+        foreach (SlotRow row in rows)
+        {
+            row.rowAudioSource.Play();
+
+
+        }
+
         foreach (SlotRow row in rows)
         {
             row.ResetRow();
@@ -455,6 +474,8 @@ public class Slotmachine : MonoBehaviour
             //animazione manopola
 
             manopola.GetComponent<Animator>().SetTrigger("SpinTrigger");
+
+            AudioManager.Instance.PlayAudioClip(giramentoManopolaAudio);
 
 
         }
