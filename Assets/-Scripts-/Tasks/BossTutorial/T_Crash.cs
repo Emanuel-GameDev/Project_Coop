@@ -20,7 +20,7 @@ namespace MBTExample
             bossCharacter = parentGameObject.Value.GetComponent<KerberosBossCharacter>();
             tempTimer = 0;
             bossCharacter.parried = false;
-
+            bossCharacter.waveSpawned = false;
             bossCharacter.SetCrashDirectDamageData();
             bossCharacter.anim.SetTrigger("Crash");
             bossCharacter.anim.ResetTrigger("Return");
@@ -33,7 +33,7 @@ namespace MBTExample
             {
 
 
-                if (bossCharacter.parried)
+                if (bossCharacter.parried && !bossCharacter.waveSpawned)
                 {                    
                     bossCharacter.anim.SetTrigger("Parried");
                     parriedBool.Value = true;

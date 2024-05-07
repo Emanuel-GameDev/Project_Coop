@@ -49,6 +49,7 @@ public class KerberosBossCharacter : BossCharacter
     public GameObject crashwaveObject;
     public Transform crashwaveTransform;
     
+    
 
     [Header("IfParried")]
     public float parryStunTimer = 3;
@@ -64,12 +65,13 @@ public class KerberosBossCharacter : BossCharacter
     public bool parried = false;
     [HideInInspector] public Character whoParried;
     [HideInInspector] public Animator anim => animator;
+    [HideInInspector] public bool waveSpawned;
 
 
 
-    
+
     #region Crash
-  
+
     public void SetCrashDirectDamageData()
     {
         staminaDamage = crashDirectStaminaDamage;
@@ -89,6 +91,7 @@ public class KerberosBossCharacter : BossCharacter
         {
             GameObject instantiatedWave = Instantiate(crashwaveObject, crashwaveTransform.position, Quaternion.identity, transform);
             instantiatedWave.GetComponentInChildren<CrashWave>().SetVariables(crashWaveDamage, crashWaveStaminaDamage, this);
+            waveSpawned = true;
            
         }
     }
