@@ -113,6 +113,12 @@ public class CharacterHUDContainer : MonoBehaviour
 
     #endregion
 
+    // Durante
+
+    internal void SwitchCooldown()
+    {
+
+    }
 
     public void RemoveEffect()
     {

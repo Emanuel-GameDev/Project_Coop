@@ -82,4 +82,12 @@ public static class Utility
         functionToCall();
     }
 
+    public static Color HexToColor(string hex)
+    {
+        // Converti il valore esadecimale in un oggetto Color
+        Color color = Color.white;
+        ColorUtility.TryParseHtmlString(hex, out color);
+        return color;
+    }
+
 }

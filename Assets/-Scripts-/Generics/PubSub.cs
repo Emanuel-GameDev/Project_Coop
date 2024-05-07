@@ -20,6 +20,7 @@ public enum EMessageType
     uniqueAbilityActivated,
     uniqueAbilityExpired,
     characterHitted,
+    switchingCharacters,
     sceneLoading
 }
 
