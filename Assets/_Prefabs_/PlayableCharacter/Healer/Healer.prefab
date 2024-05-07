@@ -442,7 +442,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1822292781
-  m_SortingLayer: 4
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: ed52f613ba9ad894fa54c6c535850c29, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -660,7 +660,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1822292781
-  m_SortingLayer: 4
+  m_SortingLayer: 6
   m_SortingOrder: -10
   m_Sprite: {fileID: 21300000, guid: 6f8ebc755ab65134aad42ed35b670368, type: 3}
   m_Color: {r: 0.52512383, g: 1, b: 0, a: 1}
@@ -983,6 +983,7 @@ MonoBehaviour:
   bossAbilitySlowdown: 10
   attackSound: {fileID: 8300000, guid: 83176c5a63cb3484e8742c86b8cdb38d, type: 3}
   bombSound: {fileID: 8300000, guid: 611767c3480aad547bc0f29f0a219981, type: 3}
+  canHealEnemies: 0
 --- !u!50 &6147454556120517316
 Rigidbody2D:
   serializedVersion: 4
@@ -1232,7 +1233,7 @@ PrefabInstance:
     - target: {fileID: 1604641110270084263, guid: f956be24a411dd641afadba21f27284c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1604641110270084263, guid: f956be24a411dd641afadba21f27284c,
         type: 3}
