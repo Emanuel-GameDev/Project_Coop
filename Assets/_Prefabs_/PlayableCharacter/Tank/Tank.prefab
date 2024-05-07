@@ -242,7 +242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.37673548, g: 0.56344163, b: 0.9622642, a: 1}
+  m_Color: {r: 0.37673548, g: 0.56344163, b: 0.9622642, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -393,7 +393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 0.44705883}
+  m_Color: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -623,8 +623,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1.83}
-  m_SizeDelta: {x: 3.017, y: 0.3443}
+  m_AnchoredPosition: {x: 0, y: 2.3}
+  m_SizeDelta: {x: 3.017, y: 0.15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1575827595881566471
 Canvas:
@@ -1543,6 +1543,7 @@ MonoBehaviour:
   perfectBlockDamage: 10
   blockAngle: 90
   perfectBlockTimeWindow: 0.7
+  blockMoveSpeed: 0.1
   aggroRange: 100
   aggroDuration: 10
   HealthDamageReduction: 50
@@ -1868,8 +1869,8 @@ MonoBehaviour:
   slider: {fileID: 7504197498009630953}
   gradient:
     serializedVersion: 2
-    key0: {r: 0.37647063, g: 0.5647059, b: 0.9607844, a: 1}
-    key1: {r: 0.07539296, g: 1, b: 0, a: 1}
+    key0: {r: 0.37647063, g: 0.5647059, b: 0.9607844, a: 0}
+    key1: {r: 0.07539296, g: 1, b: 0, a: 0}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
@@ -2031,7 +2032,7 @@ PrefabInstance:
     - target: {fileID: 3473885057230883392, guid: 70a60da48383a9b40be5133af4a8c45d,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3650443528108183182, guid: 70a60da48383a9b40be5133af4a8c45d,
         type: 3}
@@ -2070,13 +2071,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4995741070570863987, guid: 70a60da48383a9b40be5133af4a8c45d,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 4995741070570863987, guid: 70a60da48383a9b40be5133af4a8c45d,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 4995741070570863987, guid: 70a60da48383a9b40be5133af4a8c45d,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 4995741070570863987, guid: 70a60da48383a9b40be5133af4a8c45d,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4995741070570863987, guid: 70a60da48383a9b40be5133af4a8c45d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 1.24
       objectReference: {fileID: 0}
     - target: {fileID: 4995741070570863987, guid: 70a60da48383a9b40be5133af4a8c45d,
         type: 3}
