@@ -28,6 +28,8 @@ public enum SceneSaveSettings
     FirstMinigameDialogue,
     ChallengesSaved,
     SviluppartyInteractions,
+    DialogueTrigger,
     Passepartout
+
 }
 
