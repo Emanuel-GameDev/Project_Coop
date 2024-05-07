@@ -50,8 +50,10 @@ namespace MBTExample
                     //Check if a player enters in small range;
                     if (CheckForNearPlayer())
                     {
+                        
                         playerFound.Value = true;
                         bossCharacter.Agent.isStopped = true;
+                        bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
                         bossCharacter.anim.SetTrigger("Return");
                         return NodeResult.success;
                     }
@@ -76,7 +78,7 @@ namespace MBTExample
                     bossCharacter.Agent.isStopped = true;
                     bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
                     bossCharacter.anim.SetTrigger("Return");
-                    return NodeResult.success;
+                    return NodeResult.failure;
 
                 }
 
@@ -92,7 +94,7 @@ namespace MBTExample
             foreach (PlayerCharacter player in activePlayers)
             {
                 
-                bool isNear = Vector2.Distance(player.transform.position, bossCharacter.transform.position) < distanceToCheckforPlayer.Value;
+                bool isNear = Vector2.Distance(player.transform.position, bossCharacter.transform.position) <= distanceToCheckforPlayer.Value;
                 if (isNear)
                 {
                     bossCharacter.target = player.transform;
