@@ -99,7 +99,7 @@ public class MenuManager : MonoBehaviour
 
         if (OnGoBack != null)
             OnGoBack?.Invoke();
-        else
+        else if(actualMenu.GoBackButtonCanCloseMenu)
             CloseMenu();
     }
 
