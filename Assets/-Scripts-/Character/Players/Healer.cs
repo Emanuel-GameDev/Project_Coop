@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Localization.Plugins.XLIFF.V20;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -99,6 +100,8 @@ public class Healer : PlayerCharacter
 
     bool mineInReach = false;
 
+    ParticleSystem.EmissionModule emissionModule;
+
 
     public override void Inizialize()
     {
@@ -117,7 +120,19 @@ public class Healer : PlayerCharacter
         blockInput = false;
 
         //prova
-        extraData.key = 5;
+
+        extraData.key = 3;
+        extraData.coin = 2;
+        //SaveManager.Instance.LoadAllData();
+
+        //if (upgradeStatus[AbilityUpgrade.Ability2])
+        //{
+        //    Debug.Log("2");
+        //}
+        //else Debug.Log("no");
+
+        emissionModule = _walkDustParticles.emission;
+
     }
 
 
@@ -261,9 +276,16 @@ public class Healer : PlayerCharacter
 
 
         if (direction != Vector2.zero)
+        {
             animator.SetBool("IsMoving", true);
+            emissionModule.enabled = true;
+        }
         else
+        {
             animator.SetBool("IsMoving", false);
+            emissionModule.enabled= false;
+        }
+            
     }
 
 
