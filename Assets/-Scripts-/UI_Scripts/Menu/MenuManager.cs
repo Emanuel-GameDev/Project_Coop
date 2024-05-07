@@ -238,13 +238,13 @@ public class MenuManager : MonoBehaviour
 
     }
 
-    private void EnableOtherPlayerInteraction(PlayerInputHandler player)
+    private void EnableOtherPlayersInteraction(PlayerInputHandler player)
     {
         foreach (PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
         {
             if (player != null && handler != player)
             {
-                handler.SetPlayerActiveMenu(emptyRoot, emptyRootSelected);
+                handler.SetPlayerActiveMenu(null, null);
             }
         }
 
@@ -286,6 +286,7 @@ public class MenuManager : MonoBehaviour
         actualMenu = null;
         if (actualMenuOwner != null)
             actualMenuOwner.SetPlayerActiveMenu(null, null);
+        EnableOtherPlayersInteraction(actualMenuOwner);
         actualMenuOwner = null;
     }
 
