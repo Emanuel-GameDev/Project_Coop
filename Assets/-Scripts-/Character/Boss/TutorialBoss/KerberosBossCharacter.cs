@@ -223,8 +223,9 @@ public class KerberosBossCharacter : BossCharacter
     public IEnumerator UnstunFromParry()
     {
         yield return new WaitForSeconds(parryStunTimer);
-        gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("parried").Value = false;
         anim.SetTrigger("Return");
+        yield return new WaitForSeconds(1f);
+        gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("parried").Value = false;
     }
     public override void Death()
     {
