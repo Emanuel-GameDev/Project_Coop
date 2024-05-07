@@ -6,7 +6,7 @@ public class DialogueTrigger : MonoBehaviour
 {
     [SerializeField] private DialogueBox dialogueBox;
     [SerializeField] private Dialogue dialogueOnTrigger;
-    private bool canTrigger = true;
+    public bool canTrigger = true;
     private string settingSaveName = "FirstTriggerChallenge";
 
     private void Start()
@@ -17,7 +17,8 @@ public class DialogueTrigger : MonoBehaviour
         if (sceneSetting == null)
         {
             sceneSetting = new(SceneSaveSettings.DialogueTrigger);
-            sceneSetting.bools.Add(new("FirstTriggerChallenge", canTrigger));
+            canTrigger = true;
+            sceneSetting.bools.Add(new(settingSaveName, canTrigger));
         }
         else
         {
@@ -29,20 +30,19 @@ public class DialogueTrigger : MonoBehaviour
             }
             else
             {
+                canTrigger = canTriggerBool.value;
                 sceneSetting.bools.Add(new(settingSaveName, canTrigger));
             }
         }
 
         if(canTrigger)
         {
-            GetComponent<BoxCollider2D>().enabled = true;
-            canTrigger = true;
+            GetComponent<BoxCollider2D>().enabled = true;         
             SaveManager.Instance.SaveSceneData(sceneSetting);
         }
         else
         {
-            GetComponent<BoxCollider2D>().enabled = false;
-            canTrigger = false;
+            GetComponent<BoxCollider2D>().enabled = false;           
             SaveManager.Instance.SaveSceneData(sceneSetting);
         }
 
@@ -51,9 +51,13 @@ public class DialogueTrigger : MonoBehaviour
     {
         if(collision.TryGetComponent<PlayerCharacter>(out PlayerCharacter player) && canTrigger)
         {
+            SceneSetting sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.DialogueTrigger);
+
             canTrigger = false;
             SetDialogue();
+            SaveManager.Instance.SaveSceneData(sceneSetting);
             
+
         }
     }
 

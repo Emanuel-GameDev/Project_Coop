@@ -17,7 +17,6 @@ namespace MBTExample
         private KerberosBossCharacter bossCharacter;
         private Vector3 targetPosition;
         private float tempTimer;
-        private bool started;
         private bool mustStop;
         private List<PlayerCharacter> activePlayers;
         public override void OnEnter()
@@ -53,7 +52,6 @@ namespace MBTExample
                     {
                         playerFound.Value = true;
                         bossCharacter.Agent.isStopped = true;
-                        bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
                         bossCharacter.anim.SetTrigger("Return");
                         return NodeResult.success;
                     }
@@ -78,7 +76,7 @@ namespace MBTExample
                     bossCharacter.Agent.isStopped = true;
                     bossCharacter.Agent.SetDestination(bossCharacter.transform.position);
                     bossCharacter.anim.SetTrigger("Return");
-                    return NodeResult.failure;
+                    return NodeResult.success;
 
                 }
 
