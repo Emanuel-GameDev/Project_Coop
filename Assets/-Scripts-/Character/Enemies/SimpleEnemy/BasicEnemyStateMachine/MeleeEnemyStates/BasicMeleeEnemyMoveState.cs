@@ -11,7 +11,6 @@ public class BasicMeleeEnemyMoveState : BasicEnemyMoveState
     public override void Enter()
     {
         base.Enter();
-
     }
 
     public override void Update()

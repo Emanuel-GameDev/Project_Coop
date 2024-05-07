@@ -18,34 +18,24 @@ public class DialogueTrigger : MonoBehaviour
         {
             sceneSetting = new(SceneSaveSettings.DialogueTrigger);
             canTrigger = true;
-            sceneSetting.bools.Add(new(settingSaveName, canTrigger));
+            sceneSetting.bools.Add(new(settingSaveName, !canTrigger));
         }
         else
         {
-            SavingBoolValue canTriggerBool = sceneSetting.bools.Find(x => x.valueName == settingSaveName);
-
-            if (canTriggerBool != null)
+            if (sceneSetting.GetBoolValue(settingSaveName))
             {
-                canTrigger = canTriggerBool.value;
+                canTrigger = false;
+                GetComponent<BoxCollider2D>().enabled = true;
             }
             else
             {
-                canTrigger = canTriggerBool.value;
-                sceneSetting.bools.Add(new(settingSaveName, canTrigger));
+                canTrigger = true;
+                GetComponent<BoxCollider2D>().enabled = false;
             }
+
         }
 
-        if(canTrigger)
-        {
-            GetComponent<BoxCollider2D>().enabled = true;         
-            SaveManager.Instance.SaveSceneData(sceneSetting);
-        }
-        else
-        {
-            GetComponent<BoxCollider2D>().enabled = false;           
-            SaveManager.Instance.SaveSceneData(sceneSetting);
-        }
-
+        SaveManager.Instance.SaveSceneData(sceneSetting);
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -55,6 +45,8 @@ public class DialogueTrigger : MonoBehaviour
 
             canTrigger = false;
             SetDialogue();
+
+            sceneSetting.AddBoolValue(settingSaveName, !canTrigger);
             SaveManager.Instance.SaveSceneData(sceneSetting);
             
 
