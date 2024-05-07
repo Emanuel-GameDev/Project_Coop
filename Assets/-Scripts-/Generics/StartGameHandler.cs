@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class StartGameHandler : MonoBehaviour
@@ -8,7 +9,8 @@ public class StartGameHandler : MonoBehaviour
     MenuInfo languageStartMenu;
     [SerializeField]
     GameObject pressAnyKeyObject;
-
+    [SerializeField]
+    Animation startAnimation;
 
     bool firstStart = true;
 
@@ -77,7 +79,15 @@ public class StartGameHandler : MonoBehaviour
 
     public void OpenMainMenu()
     {
+        StartCoroutine(StartMenuAnimation());
+    }
+
+    IEnumerator StartMenuAnimation()
+    {
+        startAnimation.Play();
+        yield return new WaitForSeconds(startAnimation.clip.length);
         MenuManager.Instance.OpenMenu(mainMenu, CoopManager.Instance.GetFirstPlayer());
     }
+
 
 }
