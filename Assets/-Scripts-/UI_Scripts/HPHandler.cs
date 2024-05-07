@@ -169,6 +169,7 @@ public class HPHandler : MonoBehaviour
                 containersAssociations[playerCharacter.GetInputHandler().playerID].SetUpHp();
                 containersAssociations[playerCharacter.GetInputHandler().playerID].UpdateHp(playerCharacter.CurrentHp);
                 containersAssociations[playerCharacter.GetInputHandler().playerID].SetUpAbility(playerCharacter.UniqueAbilityCooldown);
+                //containersAssociations[playerCharacter.GetInputHandler().playerID].startcooldownswitch(playercharacter.)
             }
         }
     }
