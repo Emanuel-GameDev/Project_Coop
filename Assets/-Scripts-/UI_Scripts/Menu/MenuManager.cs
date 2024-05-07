@@ -238,6 +238,18 @@ public class MenuManager : MonoBehaviour
 
     }
 
+    private void EnableOtherPlayerInteraction(PlayerInputHandler player)
+    {
+        foreach (PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
+        {
+            if (player != null && handler != player)
+            {
+                handler.SetPlayerActiveMenu(emptyRoot, emptyRootSelected);
+            }
+        }
+
+    }
+
     public void FirstPlayerOpenMenu(MenuInfo menu)
     {
         OpenMenu(menu, CoopManager.Instance.GetFirstPlayer());
