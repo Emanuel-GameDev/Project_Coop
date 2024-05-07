@@ -300,6 +300,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         animator.SetTrigger("SimpleShoot");
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
+        AudioManager.Instance.PlayRandomAudioClip(soundsDatabase.attackSounds);
         newProjectile.transform.position = shootingPoint.transform.position;
 
         newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer);
@@ -569,6 +570,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     private void EmpowerFireProjectile(Vector2 direction)
     {
         animator.SetTrigger("EmpowerShoot");
+
+        AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[0]);
 
         PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated, this);
 
