@@ -99,7 +99,7 @@ public class MenuManager : MonoBehaviour
 
         if (OnGoBack != null)
             OnGoBack?.Invoke();
-        else if(actualMenu.GoBackButtonCanCloseMenu)
+        else if (actualMenu.GoBackButtonCanCloseMenu)
             CloseMenu();
     }
 
@@ -126,10 +126,13 @@ public class MenuManager : MonoBehaviour
 
     public void ClosePauseMenu(PlayerInputHandler player)
     {
-        if (actualMenu == pauseMenu && player == actualMenuOwner)
+        if (player != actualMenuOwner) return;
+
+        if (actualMenu == pauseMenu)
             CloseAllMenu();
         else if (actualMenu.PauseButtonCanCloseMenu)
             CloseMenu();
+
     }
 
     public void CloseOptionMenu(PlayerInputHandler player)
