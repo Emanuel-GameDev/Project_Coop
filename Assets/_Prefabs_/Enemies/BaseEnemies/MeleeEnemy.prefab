@@ -352,11 +352,11 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 0
-  m_Extents: {x: 0.25, y: 1, z: 0.25}
+  m_Extents: {x: 0.25, y: 0.65, z: 0.25}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -0.31, z: 0}
   m_TimeToStationary: 0.5
 --- !u!70 &597402758136942406
 CapsuleCollider2D:
@@ -387,7 +387,7 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -461,7 +461,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   soundsDatabase: {fileID: 0}
-  maxHp: 300
+  maxHp: 30
   damage: 5
   staminaDamage: 5
   attackSpeed: 1
