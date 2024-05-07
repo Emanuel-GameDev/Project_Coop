@@ -19,6 +19,7 @@ public class BasicEnemyDeathState : BasicEnemyState
         basicEnemy.canMove = false;
         basicEnemy.canAction = false;
 
+        basicEnemy.GetAnimator().SetTrigger("Damaged");
         basicEnemy.GetAnimator().SetTrigger("Dead");
         
         basicEnemy.GetRigidBody().velocity = Vector3.zero;

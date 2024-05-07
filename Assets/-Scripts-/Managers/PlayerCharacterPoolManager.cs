@@ -57,6 +57,8 @@ public class PlayerCharacterPoolManager : MonoBehaviour
             _instance = this;
             InizializeList();
         }
+
+        PubSub.Instance.RegisterFunction(EMessageType.sceneLoading, SaveCharacter);
     }
 
     #region Switching Character
@@ -70,6 +72,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
             playerCharacter.gameObject.SetActive(false);
         }
         SaveManager.Instance.LoadAllPlayersData();
+
     }
 
     public void SwitchCharacter(PlayerCharacter playerCharacter, ePlayerCharacter targetCharacter)
@@ -176,5 +179,9 @@ public class PlayerCharacterPoolManager : MonoBehaviour
 
     #endregion
 
+    public void SaveCharacter(object obj)
+    {
+        SaveManager.Instance.SavePlayersData();
+    }
 
 }

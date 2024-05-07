@@ -52,18 +52,17 @@ public class ChallengeManager : MonoBehaviour, IInteractable
 
         SceneSetting sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved);
         bool selected = false;
-
-        Debug.Log(sceneSetting);
-
-        if(sceneSetting == null)
+       
+        if (sceneSetting == null)
         {
             sceneSetting = new(SceneSaveSettings.ChallengesSaved);
-            sceneSetting.bools.Add(new("Selected", false));
+            sceneSetting.bools.Add(new("Selected", selected));
         }
         else
         {
             SavingBoolValue selectedBool = sceneSetting.bools.Find(x => x.valueName == "Selected");
-            if(selectedBool != null)
+
+            if (selectedBool != null)
             {
                 selected = selectedBool.value;
             }
@@ -89,6 +88,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
             }
 
             SavingBoolValue selectedBool = sceneSetting.bools.Find(x => x.valueName == "Selected");
+
             if (selectedBool != null)
             {
                 selectedBool.value = true;
@@ -106,14 +106,19 @@ public class ChallengeManager : MonoBehaviour, IInteractable
                 ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();
                 tempUI.challengeSelected = challengesList.Find(x => x.name == c.value);
                 tempUI.challengeSelected.challengeUI = tempUI;
+                tempUI.challengeSelected.challengeCompleted = sceneSetting.GetBoolValue(tempUI.challengeSelected.name);
                 tempUI.SetUpUI();
                 currentSaveChallenges.Add(tempUI.challengeSelected);
+                
+
+
             }
            
         }
         
     }
 
+    #region saving
     private void SaveSceneData(SceneSetting sceneSetting)
     {
         foreach (Challenge c in currentSaveChallenges)
@@ -123,6 +128,14 @@ public class ChallengeManager : MonoBehaviour, IInteractable
 
         SaveManager.Instance.SaveSceneData(sceneSetting);
     }
+    public void SaveChallengeCompleted(string challengeName, bool completed)
+    {
+        SceneSetting settings = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved);
+        settings.bools.Add(new(challengeName, completed));
+        SaveManager.Instance.SaveSceneData(settings);
+
+    }
+    #endregion
 
     public static void Shuffle(List<Challenge> list)
     {
@@ -186,5 +199,6 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     {
         MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetFirstPlayer());
         dialogueBox.RemoveAllDialogueEnd();
+        gameObject.GetComponent<SpriteRenderer>().enabled = false;
     }
 }

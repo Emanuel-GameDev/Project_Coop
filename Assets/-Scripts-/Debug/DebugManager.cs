@@ -23,7 +23,8 @@ public class DebugManager : MonoBehaviour
         "TargetCharacter è il personaggio a cui verrnno dati gli Ability Upgrade o PowerUp.\n" +
         "Per dare un Ability Upgrade, selezionare il targetCharacter a cui darlo e premere il tastierino numerico da 1 a 5.\n" +
         "Per dare un Power Up usare il tastierino numerico 7,8 o 9, verrà assegnato quello corrispondete al numero.\n" + 
-        "Con il tasto M si infliggono 1000 danni al personaggio selezionato uccidendolo";
+        "Con il tasto M si infliggono 1000 danni al personaggio selezionato uccidendolo. \n " +
+        "Con N si stampa nella console il numeor di monete e chiavi \n" + " Con il tasto I si cancella i salvataggi.";
 
     [SerializeField] GameObject BossGameobject;
 
@@ -110,6 +111,11 @@ public class DebugManager : MonoBehaviour
                 ChallengeManager.Instance.selectedChallenge.AutoComplete();
             }
 
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                SaveManager.Instance.ClearSaveData();
+            }
+
             if (Input.GetKeyDown(KeyCode.N))
             {
                 CharacterSaveData saveData = SaveManager.Instance.GetPlayerSaveData(targetCharacter);
@@ -160,6 +166,7 @@ public class DebugManager : MonoBehaviour
     private void SaveGame()
     {
         Debug.Log("CallSave");
+        SaveManager.Instance.SavePlayersData();
         SaveManager.Instance.SaveData();
     }
 

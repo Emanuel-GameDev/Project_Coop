@@ -46,7 +46,7 @@ public class SlotPlayer : InputReceiver
 
     public override void ButtonSouth(InputAction.CallbackContext context)
     {
-        if(slotmachine.inGame)
+        if(slotmachine.inGame && context.performed)
         {
             slotmachine.InputFromPlayer(this);
         }

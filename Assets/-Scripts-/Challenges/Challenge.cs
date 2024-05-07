@@ -117,6 +117,10 @@ public class Challenge : MonoBehaviour
         }
 
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
+        Debug.Log(this.name);
+        Debug.Log((gameObject.name));
+        ChallengeManager.Instance.SaveChallengeCompleted(this.name, challengeCompleted);
+        
 
         challengeUI.SetUpUI();
         ResetChallenge();
@@ -154,6 +158,7 @@ public class Challenge : MonoBehaviour
         enemySpawned = false;
         challengeStarted = false;
         ChallengeManager.Instance.interacted = false;
+        ChallengeManager.Instance.gameObject.GetComponent<SpriteRenderer>().enabled = true;
     }
 
     protected void DisplayTimer(float timeToDisplay)

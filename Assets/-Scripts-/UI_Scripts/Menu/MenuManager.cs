@@ -99,7 +99,7 @@ public class MenuManager : MonoBehaviour
 
         if (OnGoBack != null)
             OnGoBack?.Invoke();
-        else
+        else if (actualMenu.GoBackButtonCanCloseMenu)
             CloseMenu();
     }
 
@@ -126,10 +126,13 @@ public class MenuManager : MonoBehaviour
 
     public void ClosePauseMenu(PlayerInputHandler player)
     {
-        if (actualMenu == pauseMenu && player == actualMenuOwner)
+        if (player != actualMenuOwner) return;
+
+        if (actualMenu == pauseMenu)
             CloseAllMenu();
         else if (actualMenu.PauseButtonCanCloseMenu)
             CloseMenu();
+
     }
 
     public void CloseOptionMenu(PlayerInputHandler player)
@@ -224,6 +227,18 @@ public class MenuManager : MonoBehaviour
     }
 
     private void DisableOtherPlayerInteraction(PlayerInputHandler player)
+    {
+        foreach (PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
+        {
+            if (player != null && handler != player)
+            {
+                handler.SetPlayerActiveMenu(emptyRoot, emptyRootSelected);
+            }
+        }
+
+    }
+
+    private void EnableOtherPlayerInteraction(PlayerInputHandler player)
     {
         foreach (PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
         {
