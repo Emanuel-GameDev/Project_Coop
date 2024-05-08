@@ -18,6 +18,11 @@ public class Slotmachine : MonoBehaviour
     [SerializeField] AudioClip stopRowAudio;
     [SerializeField] AudioSource loopSlotAudio;
 
+    [Header("Win/lose Screen")]
+    [SerializeField] GameObject winScreen;
+    [SerializeField] GameObject loseScreen;
+    [SerializeField] float screenTime=5f;
+
     [Header("Variabili colonna")]
 
     [SerializeField, Tooltip("Numero delle figure totali nella colonna")]
@@ -172,11 +177,16 @@ public class Slotmachine : MonoBehaviour
 
 
         canInteract = true;
-        inGame = true;
+        
 
         currentNumberOfTheSlot = 0;
 
         buttonSlots[currentNumberOfTheSlot].Arrow.SetActive(true);
+    }
+
+    public void SetIngameValueAfterCountDown()
+    {
+        inGame = true;
     }
 
     private void CheckForWin()
@@ -237,6 +247,10 @@ public class Slotmachine : MonoBehaviour
         yield return new WaitForSeconds(screenDelay);
 
         AudioManager.Instance.PlayAudioClip(winAudio);
+        winScreen.SetActive(true);
+        yield return new WaitForSeconds(screenTime);
+        winScreen.SetActive(false);
+
 
         _dialogueBox.SetDialogue(winDialogue);
         _dialogueBox.AddDialogueEnd(onWinDialogueEnd);
@@ -254,6 +268,10 @@ public class Slotmachine : MonoBehaviour
         yield return new WaitForSeconds(screenDelay);
 
         AudioManager.Instance.PlayAudioClip(loseAudio);
+
+        loseScreen.SetActive(true);
+        yield return new WaitForSeconds(screenTime);
+        loseScreen.SetActive(false);
 
         _dialogueBox.SetDialogue(loseDialogue);
         _dialogueBox.AddDialogueEnd(onLoseDialogueEnd);
