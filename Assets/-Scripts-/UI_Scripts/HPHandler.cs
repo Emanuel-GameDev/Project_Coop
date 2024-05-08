@@ -142,7 +142,16 @@ public class HPHandler : MonoBehaviour
 
     public void NotifyUseAbility(PlayerCharacter player, float cooldown)
     {
-        containersAssociations[player.GetInputHandler().playerID].SetAbilityTimer(cooldown);
+        //momentaneo/da rivedere
+        foreach (CharacterHUDContainer cont in gameObject.GetComponentsInChildren<CharacterHUDContainer>())
+        {
+            if (cont.referredCharacter == player)
+            {
+            //    containersAssociations[cont.referredPlayerID].UpdateHp(cont.referredCharacter.CurrentHp);
+                cont.SetAbilityTimer(cooldown);
+                break;
+            }
+        }
     }
 
     public void SetCharacter(object obj)
