@@ -76,8 +76,9 @@ public class CassiusAbilityTutorialFase : TutorialFase
         {
             ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         }
+        tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
-        tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
+        //tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
 
     }
 

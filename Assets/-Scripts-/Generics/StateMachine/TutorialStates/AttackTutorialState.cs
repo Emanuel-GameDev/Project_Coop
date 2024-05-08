@@ -92,8 +92,8 @@ public class AttackTutorialState : TutorialFase
             ih.GetComponent<PlayerInput>().actions.FindAction("Look").Enable();
             ih.GetComponent<PlayerInput>().actions.FindAction("LookMouse").Enable();
         }
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
-
+        //tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
         tutorialManager.tutorialEnemy.OnHitAction += EnemyHitted;
 
