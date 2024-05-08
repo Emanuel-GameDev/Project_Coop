@@ -58,53 +58,16 @@ public class SaveManager : MonoBehaviour
         File.WriteAllText(filePath, json);
 
         Debug.Log("Dati salvati con successo!");
-        foreach (SceneSaveData scene in saveData.sceneData)
-        {
-            Debug.Log($"Lista Count: {scene.sceneSettings.Count}, 1SettingName: {scene.sceneSettings[0].ToString()} ");
-        }
-
     }
 
     public void SaveSceneData(SceneSetting setting)
     {
-        SaveSceneData(setting, SceneManager.GetActiveScene().name);
-    }
-
-    public void SaveSceneData(SceneSetting settings, string sceneName)
-    {
-        SceneSaveData sceneData = null;
-        foreach (SceneSaveData scene in saveData.sceneData)
-        {
-            if (scene.sceneName == sceneName)
-            {
-                sceneData = scene;
-                break;
-            }
-        }
-
-        if (sceneData == null)
-        {
-            sceneData = new SceneSaveData();
-            sceneData.sceneName = sceneName;
-            saveData.sceneData.Add(sceneData);
-        }
-
-        SceneSetting sceneSetting = null;
-        foreach (SceneSetting scSetting in sceneData.sceneSettings)
-        {
-            if (scSetting.settingName == settings.settingName)
-            {
-                sceneSetting = scSetting;
-                break;
-            }
-        }
+        SceneSetting sceneSetting = saveData.sceneSettings.Find(x => x.settingName == setting.settingName);
 
         if (sceneSetting != null)
-        {
-            sceneData.sceneSettings.Remove(sceneSetting);
-        }
-
-        sceneData.sceneSettings.Add(settings);
+            saveData.sceneSettings.Remove(sceneSetting);
+        
+        saveData.sceneSettings.Add(setting);
 
         SaveData();
     }
@@ -188,37 +151,13 @@ public class SaveManager : MonoBehaviour
         return newSaveData;
     }
 
-    private SceneSaveData GetSceneData(string sceneName)
-    {
-        foreach (SceneSaveData sceneData in saveData.sceneData)
-        {
-            if (sceneData.sceneName == sceneName)
-            {
-                return sceneData;
-            }
-        }
-
-        return null;
-    }
-
     public SceneSetting GetSceneSetting(SceneSaveSettings setting)
     {
-        return GetSceneSetting(setting, SceneManager.GetActiveScene().name);
-    }
-
-    public SceneSetting GetSceneSetting(SceneSaveSettings setting, string sceneName)
-    {
-        SceneSaveData sceneData = GetSceneData(sceneName);
-
-        if (sceneData == null)
-        {
-            sceneData = new();
-            sceneData.sceneName = sceneName;
-        }
-
-        SceneSetting settingData = sceneData.sceneSettings.Find(x => x.settingName == setting);
-
-        return settingData;
+        foreach (SceneSetting sceneSetting in saveData.sceneSettings)
+            if (sceneSetting.settingName == setting)
+                return sceneSetting;
+        
+        return null;
     }
 
     #endregion
@@ -262,20 +201,13 @@ public class SaveManager : MonoBehaviour
 [Serializable]
 public class SaveData
 {
-    //Scene
-    public List<SceneSaveData> sceneData = new();
+    //SceneSettings
+    public List<SceneSetting> sceneSettings = new();
     public string lastScene;
 
     //Players
     public List<CharacterSaveData> players = new();
 
-}
-
-[Serializable]
-public class SceneSaveData
-{
-    public string sceneName;
-    public List<SceneSetting> sceneSettings = new();
 }
 
 [Serializable]
