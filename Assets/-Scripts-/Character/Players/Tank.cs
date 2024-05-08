@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -80,6 +81,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private PerfectTimingHandler perfectTimingHandler;
     private bool perfectTimingEnabled;
     private bool hyperArmorOn = false;
+
     private bool isAttacking = false;
     private bool bossfightUpgradeUnlocked = false;
     private bool canPressInput;
@@ -96,9 +98,22 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private bool isChargingAttack = false;
     private bool mustDoSecondAttack = false;
     private bool canBlock = true;
-    private bool inAnimationAttack = false;
+    private bool comboStarted = false;
 
-
+    private AttackComboState currentAttackComboState;
+    private AttackComboState NextAttackComboState
+    {
+        get
+        {
+            return currentAttackComboState switch
+            {
+                AttackComboState.NotAttaking => AttackComboState.Attack1,
+                AttackComboState.Attack1 => AttackComboState.Attack2,
+                AttackComboState.Attack2 => AttackComboState.NotAttaking,
+                _ => AttackComboState.NotAttaking,
+            };
+        }
+    }
 
 
     private int comboIndex = 0;
@@ -185,7 +200,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             ActivateHyperArmor();
             SetCanMove(false, rb);
             Invoke(nameof(ChargingAttack), timeCheckAttackType);
-
         }
 
         if (context.canceled)
@@ -197,51 +211,73 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                 animator.SetTrigger("ChargedAttackEnd");
                 Debug.Log("Charged Attack executed");
                 //effetto visivo attacco caricato a false
-                chargedAttackSprite.gameObject.SetActive(false);
-
+                chargedAttackSprite.SetActive(false);
+                currentAttackComboState = AttackComboState.Attack2;
             }
-
             else
             {
-                CheckAttackToDo();
-              
+                if (comboStarted)
+                    ContinueCombo();
+                else
+                    StartCombo();    
             }
-
             chargedAttackReady = false;
             isChargingAttack = false;
             SetCanMove(true, rb);
 
 
+            Utility.DebugTrace($"ChargeReady: {chargedAttackReady}, comboStarted: {comboStarted}");
         }
 
     }
-    
-    private void CheckAttackToDo()
+
+    private void StartCombo()
     {
-        
-        if (!inAnimationAttack)
-        {
-            inAnimationAttack = true;
-            animator.SetTrigger("Attack1");           
-        }
-
-        else
-        {           
-            if (doubleAttack)
-            {               
-                    animator.SetTrigger("Attack2");
-            }
-        }
+        currentAttackComboState = AttackComboState.Attack1;
+        DoMeleeAttack();
     }
+
+    private void ContinueCombo()
+    {
+        if(doubleAttack)
+            mustDoSecondAttack = true;
+    }
+
+    private void DoMeleeAttack()
+    {
+        comboStarted = true;
+        string triggerName = currentAttackComboState.ToString();
+        animator.SetTrigger(triggerName);
+    }
+
+
     public void OnEndAttackAnimation()
     {
-        inAnimationAttack = false;
-        //if (!attackPressed)
-        //{
-        //    CheckAttackToDo();
-        //}
-        
+        if (mustDoSecondAttack)
+        {
+            currentAttackComboState = NextAttackComboState;
+            if (currentAttackComboState == AttackComboState.NotAttaking)
+                ResetAttack();
+            else
+                DoMeleeAttack();
+        }
+        else
+        {
+            ResetAttack();
+        }
     }
+
+    public void ResetAttack()
+    {
+        currentAttackComboState = AttackComboState.NotAttaking;
+        DeactivateHyperArmor();
+        mustDoSecondAttack = false;
+        isAttacking = false;
+        Utility.DebugTrace("ResetAttack");
+        comboStarted = false;
+    }
+
+
     public void ChargingAttack()
     {
         if (chargedAttack)
@@ -280,6 +316,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
 
     }
+
     private void DeactivateHyperArmor()
     {
         hyperArmorOn = false;
