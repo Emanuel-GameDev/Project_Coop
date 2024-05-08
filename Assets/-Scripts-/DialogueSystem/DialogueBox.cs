@@ -82,6 +82,7 @@ public class DialogueBox : MonoBehaviour
             //InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
             action.Disable();
             action.performed -= NextLineInput;
+            action.canceled -= NextLineInputCancelled;
         }
 
         //controllare
@@ -109,7 +110,7 @@ public class DialogueBox : MonoBehaviour
         //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
         //}
 
-
+        skipDictionary.Clear();
         gameObject.SetActive(false);
     }
 
@@ -298,8 +299,8 @@ public class DialogueBox : MonoBehaviour
     {
         skipDictionary[context.action] = false;
         StopSkip();
-
     }
+
     bool startSkip = false;
     private void NextLineInput(InputAction.CallbackContext obj)
     {
@@ -339,8 +340,11 @@ public class DialogueBox : MonoBehaviour
     Coroutine skipCoroutine;
     private void StartSkip()
     {
-        skipCoroutine = StartCoroutine(SkipCoroutine());
-        timerActive = true;
+        if(gameObject.activeSelf)
+        {
+            skipCoroutine = StartCoroutine(SkipCoroutine());
+            timerActive = true;
+        }
     }
 
     private void StopSkip()
