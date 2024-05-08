@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,7 +10,10 @@ public class SvillupartyEndDumpy : MonoBehaviour
     UnityEvent onNormalInteract;
 
     [SerializeField]
-    UnityEvent onLastInteract;
+    UnityEvent<UnityEvent> onLastInteract;
+
+    [SerializeField]
+    UnityEvent eventToAddAtTheEndOfLastDialogue;
 
     bool interacted = false;
     bool gameComplete = false;
@@ -36,26 +37,36 @@ public class SvillupartyEndDumpy : MonoBehaviour
         SaveManager.Instance.SaveSceneData(sceneSetting);
     }
 
-    private void NormalInteract() 
-    {  
-        onNormalInteract.Invoke(); 
+    private void NormalInteract()
+    {
+        onNormalInteract.Invoke();
     }
 
-    private void LastInteract() 
-    { 
-        onLastInteract.Invoke(); 
+    private void LastInteract()
+    {
+        onLastInteract.Invoke(eventToAddAtTheEndOfLastDialogue);
     }
 
     public void Interact()
     {
-        if(gameComplete) 
+        GetSaveData();
+
+        if (gameComplete)
             LastInteract();
         else
         {
-            if (!interacted) 
+            if (!interacted)
                 FirstInteract();
-            else 
+            else
                 NormalInteract();
         }
+    }
+
+    private void GetSaveData()
+    {
+        bool passepartoutMinigameCompleted = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.Passepartout)?.GetBoolValue(SaveDataStrings.COMPLETED) ?? false;
+        bool fullSlotMachineMinigameCompleted = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.SlotMachine)?.GetBoolValue(SaveDataStrings.COMPLETED) ?? false;
+        bool allChallegesCompleted = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved)?.GetBoolValue(SaveDataStrings.COMPLETED) ?? false;
+        gameComplete = passepartoutMinigameCompleted && fullSlotMachineMinigameCompleted && allChallegesCompleted;
     }
 }
