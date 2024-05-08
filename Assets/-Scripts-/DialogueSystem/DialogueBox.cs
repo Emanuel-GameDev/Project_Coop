@@ -56,10 +56,7 @@ public class DialogueBox : MonoBehaviour
         [SerializeField] public Image dialogueChecker;
     }
 
-    private void Awake()
-    {
-        skipDictionary = new Dictionary<InputAction, bool>();
-    }
+    
 
     private void NextLine()
     {
@@ -212,6 +209,11 @@ public class DialogueBox : MonoBehaviour
 
     public void StartDialogue()
     {
+        if(skipDictionary== null)
+        {
+            skipDictionary = new Dictionary<InputAction, bool>();
+        }
+
         skipDictionary.Clear();
         skipSlider.gameObject.SetActive(false);
 
