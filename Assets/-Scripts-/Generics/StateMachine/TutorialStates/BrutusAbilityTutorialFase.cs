@@ -105,8 +105,8 @@ public class BrutusAbilityTutorialFase : TutorialFase
         {
             ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         }
-
-        tutorialManager.inputBindings[tutorialManager.dps].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
+        tutorialManager.inputBindings[tutorialManager.dps].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
+        //tutorialManager.inputBindings[tutorialManager.dps].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
 
         tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.dps.transform);

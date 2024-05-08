@@ -67,10 +67,11 @@ public class JudeAbilityTutorialFase : TutorialFase
         {
             ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         }
+        tutorialManager.inputBindings[tutorialManager.ranged].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
-        tutorialManager.inputBindings[tutorialManager.ranged].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
-        tutorialManager.inputBindings[tutorialManager.ranged].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Look").Enable();
-        tutorialManager.inputBindings[tutorialManager.ranged].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("LookMouse").Enable();
+        //tutorialManager.inputBindings[tutorialManager.ranged].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
+        //tutorialManager.inputBindings[tutorialManager.ranged].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Look").Enable();
+        //tutorialManager.inputBindings[tutorialManager.ranged].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("LookMouse").Enable();
     }
 
 

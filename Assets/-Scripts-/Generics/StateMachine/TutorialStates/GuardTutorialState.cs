@@ -60,7 +60,8 @@ public class GuardTutorialState : TutorialFase
             ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         }
 
-        tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+        //tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+        tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
         tutorialManager.ActivateEnemyAI();
 

@@ -70,8 +70,9 @@ public class KainaAbilityTutorialFase : TutorialFase
         {
             ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         }
+        tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
-        tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
+        //tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
         tutorialManager.ActivateEnemyAI();
     }
 

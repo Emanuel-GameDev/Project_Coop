@@ -40,11 +40,6 @@ public class CharacterHUDContainer : MonoBehaviour
     [Header("SwitchingCooldown")]
     [SerializeField] private Slider slider;
 
-    private void Start()
-    {
-        slider.gameObject.SetActive(false);
-    }
-
     private void Update()
     {
         if (abilityUsed)
@@ -127,8 +122,7 @@ public class CharacterHUDContainer : MonoBehaviour
     internal void StartSwitchCooldown(float cooldown)
     {
         slider.gameObject.SetActive(true);
-        slider.value = 0f;
-        Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        slider.value = 1f;
         StartCoroutine(DisplaySwitchCooldown(cooldown));
     }
 
@@ -148,6 +142,8 @@ public class CharacterHUDContainer : MonoBehaviour
         }
 
         slider.gameObject.SetActive(false);
+
+        Debug.Log("Finecooldown");
     }
 
     public void RemoveEffect()

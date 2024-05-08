@@ -81,22 +81,40 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private PerfectTimingHandler perfectTimingHandler;
     private bool perfectTimingEnabled;
     private bool hyperArmorOn = false;
+
     private bool isAttacking = false;
     private bool bossfightUpgradeUnlocked = false;
     private bool canPressInput;
-    private bool pressed;
     private bool chargedAttackReady = false;
     private bool canMove = true;
     private bool isBlocking = false;
     private bool isPerfectBlock = false;
-    private bool canCancelAttack = false;
+
     private bool canPerfectBlock = false;
     private bool uniqueAbilityReady = true;
     private bool statBoosted = false;
     private bool canProtectOther = false;
+    private bool attackPressed = false;
+    private bool isChargingAttack = false;
+    private bool mustDoSecondAttack = false;
     private bool canBlock = true;
-  
-    
+    private bool comboStarted = false;
+
+    private AttackComboState currentAttackComboState;
+    private AttackComboState NextAttackComboState
+    {
+        get
+        {
+            return currentAttackComboState switch
+            {
+                AttackComboState.NotAttaking => AttackComboState.Attack1,
+                AttackComboState.Attack1 => AttackComboState.Attack2,
+                AttackComboState.Attack2 => AttackComboState.NotAttaking,
+                _ => AttackComboState.NotAttaking,
+            };
+        }
+    }
+
 
     private int comboIndex = 0;
     private int comboMax = 2;
@@ -107,8 +125,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private float staminaDamageReductionMulty;
     private float healthDamageReductionMulty;
     private float moveSpeedCopy;
-    
-   
+
+
 
     private GenericBarScript staminaBar;
     private GameObject chargedAttackAreaObject = null;
@@ -122,7 +140,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private Coroutine ShieldCoroutine;
     ParticleSystem.EmissionModule emissionModule;
 
-    [Header("Shield Health Color",order =1)]
+    [Header("Shield Health Color", order = 1)]
     [ColorUsage(true, true)]
     [SerializeField] Color shieldVFXGoodColor;
     [ColorUsage(true, true)]
@@ -164,7 +182,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         shieldVFXBaseColor = shieldVFX.GetComponentInChildren<MeshRenderer>().material.GetColor("_MainColor");
 
     }
-   
+
     #region Attack
 
     public override void AttackInput(InputAction.CallbackContext context)
@@ -174,106 +192,102 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         if (context.performed && isBlocking == false)
         {
-            canBlock = false;
-            
+            chargedAttackReady = false;
+            isChargingAttack = false;
+            isAttacking = true;
+            attackPressed = true;
             ResetAllAnimatorTriggers();
             ActivateHyperArmor();
-            pressed = true;
-            canCancelAttack = false;
-            Invoke(nameof(CheckAttackToDo), timeCheckAttackType);
-
+            SetCanMove(false, rb);
+            Invoke(nameof(ChargingAttack), timeCheckAttackType);
         }
 
         if (context.canceled)
         {
-            pressed = false;
+            attackPressed = false;
 
-
-            if (chargedAttackReady && !canCancelAttack)
+            if (chargedAttackReady)
             {
                 animator.SetTrigger("ChargedAttackEnd");
                 Debug.Log("Charged Attack executed");
-                chargedAttackSprite.gameObject.SetActive(false);
-
+                //effetto visivo attacco caricato a false
+                chargedAttackSprite.SetActive(false);
+                currentAttackComboState = AttackComboState.Attack2;
             }
-
-            else if (!chargedAttackReady && canCancelAttack)
+            else
             {
-                animator.SetTrigger("Attack1");
-                IncreaseComboIndex();
-
+                if (comboStarted)
+                    ContinueCombo();
+                else
+                    StartCombo();    
             }
-
-
-            isAttacking = false;
             chargedAttackReady = false;
-            
+            isChargingAttack = false;
+            SetCanMove(true, rb);
+
+
+            Utility.DebugTrace($"ChargeReady: {chargedAttackReady}, comboStarted: {comboStarted}");
         }
 
     }
-    public void IncreaseComboIndex()
+
+    private void StartCombo()
     {
-        comboIndex++;
-        if (comboIndex > 2)
+        currentAttackComboState = AttackComboState.Attack1;
+        DoMeleeAttack();
+    }
+
+    private void ContinueCombo()
+    {
+        if(doubleAttack)
+            mustDoSecondAttack = true;
+    }
+
+    private void DoMeleeAttack()
+    {
+        comboStarted = true;
+        string triggerName = currentAttackComboState.ToString();
+        animator.SetTrigger(triggerName);
+    }
+
+
+    public void OnEndAttackAnimation()
+    {
+        if (mustDoSecondAttack)
         {
-            comboIndex = 0;
+            currentAttackComboState = NextAttackComboState;
+            if (currentAttackComboState == AttackComboState.NotAttaking)
+                ResetAttack();
+            else
+                DoMeleeAttack();
+        }
+        else
+        {
+            ResetAttack();
         }
     }
-    public void CheckAttackToDo()
+
+    public void ResetAttack()
     {
-        SetCanMove(false, rb);
+        currentAttackComboState = AttackComboState.NotAttaking;
+        DeactivateHyperArmor();
+        mustDoSecondAttack = false;
+        isAttacking = false;
+        Utility.DebugTrace("ResetAttack");
+        comboStarted = false;
+    }
 
-        if (pressed && chargedAttack)
+
+    public void ChargingAttack()
+    {
+        if (chargedAttack)
         {
-            isAttacking = true;
-            canCancelAttack = true;         
-            animator.SetTrigger("ChargedAttack");
-            Debug.Log($"Started Charged Attack");
-            StartCoroutine(StartChargedAttackTimer());
-
-        }
-
-        if (pressed && !chargedAttack)
-        {
-            canCancelAttack = false;
-
-            if (comboIndex == 0 && !isAttacking)
+            //tasto ancora premuto e attacco carico sbloccato
+            if (attackPressed)
             {
-                isAttacking = true;
-                animator.SetTrigger("Attack1");
-                IncreaseComboIndex();
-            }
-
-            else if (doubleAttack && comboIndex == 1)
-            {
-                if (comboIndex != 2)
-                {
-                    animator.SetTrigger("Attack2");
-                    IncreaseComboIndex();
-                }
-
-            }
-        }
-
-        else if (!pressed)
-        {
-            canCancelAttack = false;
-
-            if (comboIndex == 0 && !isAttacking)
-            {
-                isAttacking = true;
-                animator.SetTrigger("Attack1");
-                IncreaseComboIndex();
-            }
-
-            else if (doubleAttack && comboIndex == 1)
-            {
-                if (comboIndex != 2)
-                {
-                    animator.SetTrigger("Attack2");
-                    IncreaseComboIndex();
-                }
-
+                isChargingAttack = true;
+                animator.SetTrigger("ChargedAttack");
+                StartCoroutine(StartChargedAttackTimer());
             }
 
         }
@@ -281,16 +295,13 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     IEnumerator StartChargedAttackTimer()
     {
         chargedAttackReady = false;
-
         yield return new WaitForSeconds(chargedAttackTimer);
 
-        if (pressed)
+        if (attackPressed)
         {
-
             chargedAttackReady = true;
-            canCancelAttack = false;
 
-            Debug.Log("Charged Attack Ready");
+            //effetto visivo attacco pronto
             chargedAttackSprite.SetActive(true);
         }
 
@@ -305,28 +316,11 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
 
     }
+
     private void DeactivateHyperArmor()
     {
         hyperArmorOn = false;
     }
-    public void ResetAttackCombo()
-    {
-        if (comboIndex == 0 || comboIndex == 1)
-        {
-            comboIndex = 0;
-            isAttacking = false;
-            canBlock = true;
-            
-            SetCanMove(true, rb);
-
-        }
-        else if (comboIndex == 2)
-        {
-            IncreaseComboIndex();
-        }
-
-    }
-
     public void ChargedAttackAreaDamage()
     {
         RaycastHit[] hitted = Physics.SphereCastAll(transform.position, chargedAttackRadius, Vector3.up, chargedAttackRadius);
@@ -348,15 +342,15 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     #endregion
 
-     #region Block
+    #region Block
     private bool AttackInBlockAngle(DamageData data)
     {
         Character dealerMB = null;
         if (data.dealer is Character)
             dealerMB = (Character)data.dealer;
-        
+
         Vector2 dealerDirection = dealerMB.gameObject.transform.position - transform.position;
-        
+
         float angle = 0;
 
         if (currentBlockZone is blockZone.nordEst)
@@ -376,19 +370,18 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             angle = Vector2.Angle(dealerDirection, new Vector2(-1, -1));
         }
 
-        
+
 
         return Mathf.Abs(angle) <= blockAngle / 2;
     }
     public override void DefenseInput(InputAction.CallbackContext context)
     {
-        if (context.performed && isAttacking == false && canCancelAttack == false && canBlock)
+        if (context.performed && isAttacking == false && canBlock)
         {
-
             ResetAllAnimatorTriggers();
             SetCanMove(false, rb);
-            
-            if(isBlocking != true)
+
+            if (isBlocking != true)
             {
                 isBlocking = true;
                 //vfx
@@ -396,10 +389,10 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                 SetShieldColorHealth();
 
                 if (perfectTimingEnabled)
-                {                   
+                {
                     perfectBlockCount++;
 
-                    
+
 
                     if (perfectBlockCount >= attacksToBlockForUpgrade)
                     {
@@ -418,32 +411,30 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                         ((IDamageable)perfectBlockIDamager).TakeDamage(new DamageData(perfectBlockDamage, this));
                     }
                 }
-                
+
 
                 currentBlockZone = SetBlockZone(lastNonZeroDirection.y);
                 animator.SetTrigger("StartBlock");
 
-                
-
             }
 
             ShowStaminaBar(true);
-            
+
             //Rotate pivor Trigger per proteggere player
             pivotTriggerProtected.enabled = true;
-            pivotTriggerProtected.Rotate(lastNonZeroDirection);           
+            pivotTriggerProtected.Rotate(lastNonZeroDirection);
             //Trigger che setta ai player protectedByTank a true;
             triggerProtectPlayer.SetPlayersProtected(true);
-          
+
         }
 
         else if (context.canceled && isBlocking == true)
         {
             ResetAllAnimatorTriggers();
             SetCanMove(true, rb);
-            
+
             currentBlockZone = blockZone.none;
-            StartCoroutine(nameof(ToggleBlock));               
+            StartCoroutine(nameof(ToggleBlock));
             animator.SetTrigger("ToggleBlock");
 
             //vfx
@@ -451,7 +442,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
 
             ShowStaminaBar(false);
-            
+
 
             //Da mettere reset in animazione alzata scudo
             ResetStamina();
@@ -467,8 +458,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     }
     public blockZone SetBlockZone(float lastYValue)
     {
-        
-        if ((lastYValue > 0 && pivot.transform.localScale.x <0))
+
+        if ((lastYValue > 0 && pivot.transform.localScale.x < 0))
         {
             return blockZone.nordEst;
         }
@@ -495,7 +486,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private IEnumerator ToggleBlock()
     {
         canBlock = false;
-       yield return new WaitForSeconds(blockTimer);
+        yield return new WaitForSeconds(blockTimer);
         canBlock = true;
 
     }
@@ -507,11 +498,11 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public void ShowStaminaBar(bool toShow)
     {
         staminaBar.gameObject.SetActive(toShow);
-        
+
     }
     private void SetShieldColorHealth()
     {
-        Material shieldMaterial=shieldVFX.GetComponentInChildren<MeshRenderer>().material;
+        Material shieldMaterial = shieldVFX.GetComponentInChildren<MeshRenderer>().material;
 
         float healthLevel = currentStamina / maxStamina;
 
@@ -523,7 +514,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
         else
         {
-            if(healthLevel > 0.25f)
+            if (healthLevel > 0.25f)
             {
                 //damaged health
                 shieldMaterial.SetColor("_HealthColor", shieldVFXDamagedColor);
@@ -552,7 +543,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
         shieldVFX.transform.localScale = Vector3.one;
         shieldMaterial.SetColor("_MainColor", shieldVFXBaseColor);
-        
+
     }
     private IEnumerator BlockVFX()
     {
@@ -570,7 +561,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
         shieldVFX.transform.localScale = Vector3.one;
     }
-    
+
 
     #endregion
 
@@ -585,7 +576,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             perfectTimingHandler.ActivateAlert();
             perfectBlockIDamager = damager;
             perfectTimingEnabled = true;
-            
+
         }
 
         StartCoroutine(DisablePerfectTimeAfter(perfectBlockTimeWindow));
@@ -620,7 +611,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     }
     public override void TakeDamage(DamageData data)
     {
-       
+
         if (hyperArmorOn == false && !isBlocking)
         {
             //Hit Reaction
@@ -633,7 +624,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
             if (statBoosted)
             {
-               
+
                 staminaBar.DecreaseValue(data.staminaDamage * staminaDamageReductionMulty);
                 currentStamina -= (data.staminaDamage * staminaDamageReductionMulty);
 
@@ -657,7 +648,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
                 ShieldCoroutine = StartCoroutine(PerfectBlockVFX());
             }
-            else 
+            else
             {
                 if (ShieldCoroutine != null)
                 {
@@ -684,15 +675,15 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                 animator.SetTrigger("ShieldBroken");
                 //CONTROLLARE
                 stunned = true;
-               
+
             }
         }
         else
-        {         
-          
+        {
+
             base.TakeDamage(data);
         }
-        if(perfectTimingEnabled)
+        if (perfectTimingEnabled)
         {
             PerfectTimeEnded();
         }
@@ -701,7 +692,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public void Unstun()
     {
         stunned = false;
-       
+
     }
 
     #endregion
@@ -711,7 +702,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public override void UniqueAbilityInput(InputAction.CallbackContext context)
     {
         if (context.performed && uniqueAbilityReady)
-        {          
+        {
             uniqueAbilityReady = false;
             base.UniqueAbilityInput(context);
             Invoke(nameof(StartCooldownUniqueAbility), UniqueAbilityCooldown);
@@ -725,23 +716,23 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public void PerformUniqueAbility()
     {
         RaycastHit2D[] hitted = Physics2D.CircleCastAll(transform.position, aggroRange, Vector2.up, aggroRange);
-        
+
         if (hitted != null)
         {
-           
+
             foreach (RaycastHit2D r in hitted)
             {
-                
+
                 if (Utility.IsInLayerMask(r.transform.gameObject, LayerMask.GetMask("Enemy")))
                 {
                     IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
 
                     AggroCondition aggroCondition = Utility.InstantiateCondition<AggroCondition>();
                     aggroCondition.SetVariable(this, aggroDuration);
-                    
+
 
                     hittedDama.TakeDamage(new DamageData(0, this, aggroCondition));
-                   
+
                 }
             }
         }
@@ -750,7 +741,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         damageReceivedMultiplier = healthDamageReductionMulty;
         Invoke(nameof(SetStatToNormal), aggroDuration);
 
-        PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated,this);
+        PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated, this);
     }
     private void StartCooldownUniqueAbility()
     {
@@ -772,8 +763,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public override void ExtraAbilityInput(InputAction.CallbackContext context) //Tasto est
     {
         if (context.performed && !isAttacking && !isBlocking)
-        {            
-           
+        {
+
             if (bossfightPowerUpUnlocked && isAttacking == false)
             {
                 SetCanMove(false, rb);
@@ -800,7 +791,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             {
                 moveSpeed = moveSpeedCopy;
                 base.Move(direction);
-              
+
                 emissionModule.enabled = isMoving;
             }
 
@@ -829,5 +820,5 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     }
     #endregion
 
-   
+
 }
