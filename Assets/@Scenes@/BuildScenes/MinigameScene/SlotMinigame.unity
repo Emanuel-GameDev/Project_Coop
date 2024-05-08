@@ -545,6 +545,7 @@ MonoBehaviour:
   defaultFirstObjectSelected: {fileID: 0}
   defaultPreviosMenu: {fileID: 0}
   pauseButtonCanCloseMenu: 1
+  goBackButtonCanCloseMenu: 1
   interactableSetter: {fileID: 0}
   haveTabs: 0
   continuosNavigation: 1
@@ -6186,6 +6187,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 509022857915944903, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
+        type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1524393973675571985, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -11389,8 +11395,8 @@ Transform:
   m_GameObject: {fileID: 1569196626}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.375, y: -1.342, z: 0}
-  m_LocalScale: {x: 21.40976, y: 9.842739, z: 1}
+  m_LocalPosition: {x: -3.41558, y: -1.342, z: 0}
+  m_LocalScale: {x: 21.536507, y: 9.471003, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 820155894}
@@ -12115,6 +12121,7 @@ GameObject:
   - component: {fileID: 1682351670}
   - component: {fileID: 1682351671}
   - component: {fileID: 1682351672}
+  - component: {fileID: 1682351673}
   m_Layer: 0
   m_Name: '#h---SlotMachine---'
   m_TagString: Untagged
@@ -12156,6 +12163,8 @@ MonoBehaviour:
   loseAudio: {fileID: 8300000, guid: a1e221d72315a9e49afabb47f833ebae, type: 3}
   goodAudio: {fileID: 8300000, guid: b7075b409a053774787ea64cc999887b, type: 3}
   failAudio: {fileID: 8300000, guid: 1d5976c16a04a0c46bf6e428d2e7aa54, type: 3}
+  stopRowAudio: {fileID: 8300000, guid: a6292fc5e15c46f418139b6d0f6ab830, type: 3}
+  loopSlotAudio: {fileID: 1682351673}
   numberOfSlots: 10
   numberWinSlots: 1
   slotDistance: 1.25
@@ -12255,6 +12264,103 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destinationSceneName: TestZoneMap
+--- !u!82 &1682351673
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1682351669}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 8372986881690910321, guid: 41ab2704fcd02fb4cb87442f8e205cc8,
+    type: 2}
+  m_audioClip: {fileID: 8300000, guid: f48c08b6b6df33e41bdbc8ec37a69c26, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.7
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1686047715
 GameObject:
   m_ObjectHideFlags: 0
@@ -12720,6 +12826,7 @@ MonoBehaviour:
   defaultFirstObjectSelected: {fileID: 1483989495}
   defaultPreviosMenu: {fileID: 0}
   pauseButtonCanCloseMenu: 1
+  goBackButtonCanCloseMenu: 1
   interactableSetter: {fileID: 0}
   haveTabs: 0
   continuosNavigation: 0
@@ -14386,6 +14493,7 @@ MonoBehaviour:
   defaultFirstObjectSelected: {fileID: 628194053}
   defaultPreviosMenu: {fileID: 0}
   pauseButtonCanCloseMenu: 1
+  goBackButtonCanCloseMenu: 1
   interactableSetter: {fileID: 0}
   haveTabs: 0
   continuosNavigation: 0
