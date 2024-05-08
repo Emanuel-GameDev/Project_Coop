@@ -16,6 +16,7 @@ public class DialogueBox : MonoBehaviour
     [SerializeField] bool startImmediatly = false;
 
     [Header("Set Up")]
+    [SerializeField] Slider skipSlider;
     [SerializeField] Animation characterAnimation;
     [SerializeField] Animation boxAnimation;
     [SerializeField] Animation boxBackAnimation;
@@ -55,7 +56,10 @@ public class DialogueBox : MonoBehaviour
         [SerializeField] public Image dialogueChecker;
     }
 
-
+    private void Awake()
+    {
+        skipDictionary = new Dictionary<InputAction, bool>();
+    }
 
     private void NextLine()
     {
@@ -67,49 +71,51 @@ public class DialogueBox : MonoBehaviour
         }
         else
         {
-
-           
-
-
-            foreach(PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
-            {
-                handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Enable();
-                InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
-                //InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
-                action.Disable();
-                action.performed -= NextLineInput;
-            }
-
-            //controllare
-            if (OnDialogueEnd.Count > 0)
-                OnDialogueEnd[dialogueIndex]?.Invoke();
-
-            dialogueIndex++;
-
-            if (dialogueIndex == dialogues.Length)
-            {
-                dialogueIndex--;
-            }
-
-            //if(OnDialogueEnd.Count>0)
-            OnDialogueEnded?.Invoke();
-
-            //foreach (PlayerCharacter character in GameManager.Instance.coopManager.activePlayers)
-            //{
-            //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
-            //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").started -= NextLineInput;
-            //}
-
-            //foreach (PlayerCharacter character in GameManager.Instance.coopManager.ActivePlayers)
-            //{
-            //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
-            //}
-
-
-            gameObject.SetActive(false);
+            EndDialogue();
         }
 
     }
+
+    private void EndDialogue()
+    {
+        foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
+        {
+            handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Enable();
+            InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
+            //InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
+            action.Disable();
+            action.performed -= NextLineInput;
+        }
+
+        //controllare
+        if (OnDialogueEnd.Count > 0)
+            OnDialogueEnd[dialogueIndex]?.Invoke();
+
+        dialogueIndex++;
+
+        if (dialogueIndex == dialogues.Length)
+        {
+            dialogueIndex--;
+        }
+
+        //if(OnDialogueEnd.Count>0)
+        OnDialogueEnded?.Invoke();
+
+        //foreach (PlayerCharacter character in GameManager.Instance.coopManager.activePlayers)
+        //{
+        //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
+        //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").started -= NextLineInput;
+        //}
+
+        //foreach (PlayerCharacter character in GameManager.Instance.coopManager.ActivePlayers)
+        //{
+        //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
+        //}
+
+
+        gameObject.SetActive(false);
+    }
+
     BoxType nextBox;
     private void SetUpNextLine()
     {
@@ -202,10 +208,12 @@ public class DialogueBox : MonoBehaviour
         }
 
     }
-
+    Dictionary<InputAction, bool> skipDictionary;
 
     public void StartDialogue()
     {
+        skipDictionary.Clear();
+        skipSlider.gameObject.SetActive(false);
 
         foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
@@ -215,7 +223,10 @@ public class DialogueBox : MonoBehaviour
             InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
 
             action.Enable();
-            action.performed += NextLineInput; 
+            action.performed += NextLineInput;
+            action.canceled += NextLineInputCancelled;
+
+            skipDictionary.Add(action, false);
         }
 
 
@@ -271,8 +282,23 @@ public class DialogueBox : MonoBehaviour
             timer += Time.deltaTime;
         }
 
+        if (timerActive)
+        {
+            skipSlider.value +=  Time.deltaTime / timeToPressToSkip;
+
+            if (skipSlider.value > 0.1f)
+                skipSlider.gameObject.SetActive(true);
+        }
+
     }
 
+    private void NextLineInputCancelled(InputAction.CallbackContext context)
+    {
+        skipDictionary[context.action] = false;
+        StopSkip();
+
+    }
+    bool startSkip = false;
     private void NextLineInput(InputAction.CallbackContext obj)
     {
         if (timer < 0.1)
@@ -293,6 +319,46 @@ public class DialogueBox : MonoBehaviour
             }
         }
 
+
+        skipDictionary[obj.action] = true;
+        startSkip=true;
+
+        foreach (bool b in skipDictionary.Values)
+        {
+            if(!b)
+                startSkip = false;
+        }
+
+        if(startSkip)
+        {
+            StartSkip();
+        }
+    }
+    Coroutine skipCoroutine;
+    private void StartSkip()
+    {
+        skipCoroutine = StartCoroutine(SkipCoroutine());
+        timerActive = true;
+    }
+
+    private void StopSkip()
+    {
+        if(skipCoroutine != null)
+        {
+            StopCoroutine(skipCoroutine);
+            skipSlider.gameObject.SetActive(false);
+            timerActive = false;
+            skipSlider.value = 0;
+        }
+    }
+
+    public float timeToPressToSkip = 3;
+    bool timerActive=false;
+    IEnumerator SkipCoroutine()
+    {
+        yield return new WaitForSecondsRealtime(timeToPressToSkip);
+        skipSlider.gameObject.SetActive(false);
+        EndDialogue();
     }
 
     public void SetDialogue(Dialogue newDialogues)
