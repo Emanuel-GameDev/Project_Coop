@@ -17,16 +17,12 @@ public class SvillupartyEndDumpy : MonoBehaviour
     bool interacted = false;
     bool gameComplete = false;
 
-    static string InteractedKey = "SvillupartyEndDumpyInteracted";
-
     private void Awake()
     {
         SceneSetting sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.SviluppartyInteractions);
         if (sceneSetting != null)
         {
-            SavingBoolValue savingBoolValue = sceneSetting.bools.Find(x => x.valueName == InteractedKey);
-            if(savingBoolValue != null)
-                interacted = savingBoolValue.value;
+            interacted = sceneSetting.GetBoolValue(SaveDataStrings.SVILUPPARTY_END_DUMPY_INTERACTED);
         }
     }
 
@@ -36,7 +32,7 @@ public class SvillupartyEndDumpy : MonoBehaviour
         interacted = true;
 
         SceneSetting sceneSetting = new(SceneSaveSettings.SviluppartyInteractions);
-        sceneSetting.bools.Add(new(InteractedKey, interacted));
+        sceneSetting.AddBoolValue(SaveDataStrings.SVILUPPARTY_END_DUMPY_INTERACTED, interacted);
         SaveManager.Instance.SaveSceneData(sceneSetting);
     }
 

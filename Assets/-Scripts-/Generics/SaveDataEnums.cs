@@ -33,3 +33,10 @@ public enum SceneSaveSettings
 
 }
 
+public static class SaveDataStrings
+{
+    public const string COMPLETED = "Completed";
+    public const string UNLOCKED = "Unlocked";
+    public const string SVILUPPARTY_END_DUMPY_INTERACTED = "SviluppartyEndDumpyInteracted";
+}
+
