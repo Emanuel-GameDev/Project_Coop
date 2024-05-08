@@ -4,7 +4,12 @@ using UnityEngine.InputSystem;
 
 public class SouvenirShopMenu : Menu
 {
-    public PlayerCharacter currentPlayerInShop;
+    [Header("Dialogues")]
+    [SerializeField] DialogueBox dialogueBox;
+    [SerializeField] Dialogue FirstTimeDialogue;
+    [SerializeField] Dialogue beforeEnterDialogue;
+
+    [HideInInspector] public PlayerCharacter currentPlayerInShop;
 
     [SerializeField] public SouvenirShopTable[] shopTables = new SouvenirShopTable[4];
 
@@ -20,13 +25,13 @@ public class SouvenirShopMenu : Menu
 
 
 
-
+    bool firstTime = true;
 
     public override void OpenMenu()
     {
         if (shopGroup.activeSelf) return;
 
-        base.OpenMenu();
+        //base.OpenMenu();
 
         //if (interacter.GetInteracterObject().TryGetComponent<PlayerCharacter>(out PlayerCharacter playerInShop))
         //{
@@ -50,10 +55,59 @@ public class SouvenirShopMenu : Menu
         //    actionAsset.FindActionMap("UI").FindAction("Next").performed += SouvenirTableNext;
 
         //}
+        
 
-        foreach (PlayerCharacter pc in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
+
+        if (dialogueBox != null)
         {
-            gameObject.GetComponentInParent<PressInteractable>().CancelInteraction(pc);
+            if (firstTime)
+            {
+                dialogueBox.SetDialogue(FirstTimeDialogue);
+                firstTime = false;
+            }
+            else
+                dialogueBox.SetDialogue(beforeEnterDialogue);
+
+            dialogueBox.RemoveAllDialogueEnd();
+
+            dialogueBox.OnDialogueEnded += OpenAnimationEvent;
+
+            dialogueBox.StartDialogue();
+
+
+        }
+        else
+            OpenAnimation();
+    }
+
+    private void OpenAnimationEvent()
+    {
+        dialogueBox.OnDialogueEnded -= OpenAnimationEvent;
+        OpenAnimation();
+    }
+
+    private void OpenAnimation()
+    {
+        closeQueueInt = 0;
+        int i = 0;
+        canClose = true;
+
+        shopGroup.SetActive(true);
+
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+        {
+
+            //ih.SetPlayerActiveMenu(tables.gameObject, table[i].GetComponentInChildren<Selectable>().gameObject);
+
+            //ih.MultiplayerEventSystem.SetSelectedGameObject(table[i].GetComponentInChildren<Selectable>().gameObject);
+            InputActionAsset actions = ih.GetComponent<PlayerInput>().actions;
+
+            actions.FindActionMap("Player").Disable();
+            actions.FindActionMap("UI").Enable();
+            actions.FindActionMap("UI").FindAction("Menu").Disable();
+            actions.FindAction("Cancel").performed += Menu_performed;
+
+            i++;
         }
 
         shopGroup.GetComponent<Animation>().Play("SouvenirEntrance");
@@ -67,9 +121,7 @@ public class SouvenirShopMenu : Menu
 
         //CheckForMoney();
         AudioManager.Instance.PlayAudioClip(openingAudioClip, transform);
-        //}
     }
-
 
     protected override void Menu_performed(InputAction.CallbackContext obj)
     {
@@ -104,6 +156,17 @@ public class SouvenirShopMenu : Menu
 
         //currentPlayerInShop = null;
 
+        
+
+        shopGroup.GetComponent<Animation>().Play("SouvenirExit");
+        StartCoroutine(CloseMenuWithDelay(shopGroup.GetComponent<Animation>().clip.length));
+
+        SaveManager.Instance.SavePlayersData();
+    }
+
+    IEnumerator CloseMenuWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
         foreach (PlayerInputHandler ih in CoopManager.Instance.GetComponentsInChildren<PlayerInputHandler>())
         {
             InputActionAsset actions = ih.GetComponent<PlayerInput>().actions;
@@ -121,15 +184,10 @@ public class SouvenirShopMenu : Menu
             table.DesetInput();
         }
 
-        shopGroup.GetComponent<Animation>().Play("SouvenirExit");
-        StartCoroutine(CloseMenuWithDelay(shopGroup.GetComponent<Animation>().clip.length));
-
-        SaveManager.Instance.SavePlayersData();
-    }
-
-    IEnumerator CloseMenuWithDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
+        foreach (PlayerCharacter pc in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
+        {
+            gameObject.GetComponentInParent<PressInteractable>().CancelInteraction(pc);
+        }
         shopGroup.SetActive(false);
     }
 }
