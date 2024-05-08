@@ -419,13 +419,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 65304289}
-  m_LocalRotation: {x: 0.089278296, y: -0.29670408, z: 0.07141757, w: 0.9481011}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.6536095, y: 2.6536098, z: 2.6536095}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 767476308}
-  m_LocalEulerAnglesHint: {x: 12.22, y: -34.236, z: 4.839}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0.01, y: 4.95}
@@ -1757,8 +1757,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -2.78005, y: 7.9676504, z: 0}
-    m_Extent: {x: 7.19555, y: 26.042149, z: 0}
+    m_Center: {x: -2.7807, y: 7.967001, z: 0}
+    m_Extent: {x: 7.196, y: 26.0412, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -1886,7 +1886,6 @@ GameObject:
   m_Component:
   - component: {fileID: 598006834}
   - component: {fileID: 598006833}
-  - component: {fileID: 598006832}
   - component: {fileID: 598006831}
   m_Layer: 0
   m_Name: BoomFarmArena
@@ -1930,68 +1929,6 @@ CircleCollider2D:
   m_Offset: {x: 3.3280926, y: -3.640829}
   serializedVersion: 2
   m_Radius: 7.131175
---- !u!114 &598006832
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 598006830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 711c3e5ac3c1db94a97f176b35df3654, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interacterVisualization: {fileID: 742760635}
-  localizedString:
-    m_TableReference:
-      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
-    m_TableEntryReference:
-      m_KeyId: 26381004792315904
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  showNotification: 0
-  disableInteracterActions: 0
-  isOnePlayerInteractable: 0
-  OnOnePlayerInteract:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1783378296}
-        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
-        m_MethodName: SetDialogue
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 1a557210192795f458804db9c27c74eb,
-            type: 2}
-          m_ObjectArgumentAssemblyTypeName: Dialogue, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1783378296}
-        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
-        m_MethodName: StartDialogue
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnOnePlayerCancelInteract:
-    m_PersistentCalls:
-      m_Calls: []
-  OnAllPlayersInteract:
-    m_PersistentCalls:
-      m_Calls: []
-  references:
-    version: 2
-    RefIds: []
 --- !u!212 &598006833
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2070,7 +2007,6 @@ GameObject:
   m_Component:
   - component: {fileID: 619043326}
   - component: {fileID: 619043325}
-  - component: {fileID: 619043327}
   - component: {fileID: 619043328}
   - component: {fileID: 619043329}
   m_Layer: 0
@@ -2148,80 +2084,6 @@ Transform:
   - {fileID: 1742002433}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &619043327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 619043324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 711c3e5ac3c1db94a97f176b35df3654, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interacterVisualization: {fileID: 1742002430}
-  localizedString:
-    m_TableReference:
-      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
-    m_TableEntryReference:
-      m_KeyId: 26381004792315904
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  showNotification: 0
-  disableInteracterActions: 0
-  isOnePlayerInteractable: 0
-  OnOnePlayerInteract:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1783378296}
-        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
-        m_MethodName: SetDialogue
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 1a557210192795f458804db9c27c74eb,
-            type: 2}
-          m_ObjectArgumentAssemblyTypeName: Dialogue, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1783378294}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1783378296}
-        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
-        m_MethodName: StartDialogue
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnOnePlayerCancelInteract:
-    m_PersistentCalls:
-      m_Calls: []
-  OnAllPlayersInteract:
-    m_PersistentCalls:
-      m_Calls: []
-  references:
-    version: 2
-    RefIds: []
 --- !u!58 &619043328
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4302,8 +4164,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.69945, y: -0.09714997, z: 0}
-    m_Extent: {x: 3.22455, y: 2.0209498, z: 0}
+    m_Center: {x: 0.6991501, y: -0.09809995, z: 0}
+    m_Extent: {x: 3.22525, y: 2.0205, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0.96
@@ -9117,6 +8979,31 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 1.9
       objectReference: {fileID: 0}
+    - target: {fileID: 1802838751498927742, guid: 2bf206f80f481b24cac4fb8efd448636,
+        type: 3}
+      propertyPath: m_text
+      value: <sprite index=107 tint=1>
+      objectReference: {fileID: 0}
+    - target: {fileID: 2272617691615683976, guid: 2bf206f80f481b24cac4fb8efd448636,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3016269078570566672, guid: 2bf206f80f481b24cac4fb8efd448636,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3.93935
+      objectReference: {fileID: 0}
+    - target: {fileID: 3016269078570566672, guid: 2bf206f80f481b24cac4fb8efd448636,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3.93935
+      objectReference: {fileID: 0}
+    - target: {fileID: 3016269078570566672, guid: 2bf206f80f481b24cac4fb8efd448636,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 3.93935
+      objectReference: {fileID: 0}
     - target: {fileID: 3984494471739468010, guid: 2bf206f80f481b24cac4fb8efd448636,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -9425,7 +9312,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2272617691615683976, guid: 2bf206f80f481b24cac4fb8efd448636,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2bf206f80f481b24cac4fb8efd448636, type: 3}
 --- !u!1001 &1640145378
 PrefabInstance:
@@ -10902,6 +10793,11 @@ PrefabInstance:
       propertyPath: dialogueBox
       value: 
       objectReference: {fileID: 1783378296}
+    - target: {fileID: 1621496935298718381, guid: 5dc6b5cd9ad023e488d4e7d8e0b8bb99,
+        type: 3}
+      propertyPath: m_text
+      value: <sprite index=107 tint=1>
+      objectReference: {fileID: 0}
     - target: {fileID: 2196963869923359202, guid: 5dc6b5cd9ad023e488d4e7d8e0b8bb99,
         type: 3}
       propertyPath: m_Name
