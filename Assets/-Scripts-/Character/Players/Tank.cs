@@ -95,6 +95,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private bool statBoosted = false;
     private bool canProtectOther = false;
     private bool canBlock = true;
+  
     
 
     private int comboIndex = 0;
@@ -173,7 +174,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         if (context.performed && isBlocking == false)
         {
-           canBlock = false;
+            canBlock = false;
+            
             ResetAllAnimatorTriggers();
             ActivateHyperArmor();
             pressed = true;
@@ -314,6 +316,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             comboIndex = 0;
             isAttacking = false;
             canBlock = true;
+            
             SetCanMove(true, rb);
 
         }
@@ -384,6 +387,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
             ResetAllAnimatorTriggers();
             SetCanMove(false, rb);
+            
             if(isBlocking != true)
             {
                 isBlocking = true;
@@ -435,9 +439,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         else if (context.canceled && isBlocking == true)
         {
+            ResetAllAnimatorTriggers();
             SetCanMove(true, rb);
             
-            isBlocking = false;
             currentBlockZone = blockZone.none;
             StartCoroutine(nameof(ToggleBlock));               
             animator.SetTrigger("ToggleBlock");
@@ -453,9 +457,12 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             ResetStamina();
             //Trigger che setta ai player protectedByTank a true;
             triggerProtectPlayer.SetPlayersProtected(false);
-           
-        }
 
+
+            isBlocking = false;
+
+
+        }
 
     }
     public blockZone SetBlockZone(float lastYValue)
