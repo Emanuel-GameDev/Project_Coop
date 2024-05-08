@@ -44,7 +44,7 @@ public class HPHandler : MonoBehaviour
 
         PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, UpdateContainer);
         PubSub.Instance.RegisterFunction(EMessageType.characterJoined, AddContainer);
-        PubSub.Instance.RegisterFunction(EMessageType.characterSwitched, SetCharacter);
+        //PubSub.Instance.RegisterFunction(EMessageType.characterSwitched, SetCharacter);
     }
 
     public void AddContainer(object obj)
@@ -142,6 +142,7 @@ public class HPHandler : MonoBehaviour
 
             if (containersAssociations.TryGetValue(playerCharacter.GetInputHandler().playerID, out CharacterHUDContainer hpContainer))
             {
+                Debug.Log("set charcater");
                 SetHpContainerValue(hpContainer, playerCharacter);
             }
         }
