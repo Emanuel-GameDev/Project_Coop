@@ -128,7 +128,7 @@ public class CharacterHUDContainer : MonoBehaviour
     {
         slider.gameObject.SetActive(true);
         slider.value = 0f;
-
+        Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         StartCoroutine(DisplaySwitchCooldown(cooldown));
     }
 
