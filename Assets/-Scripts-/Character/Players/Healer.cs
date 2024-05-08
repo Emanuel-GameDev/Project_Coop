@@ -202,7 +202,7 @@ public class Healer : PlayerCharacter
         {
             playerInArea.Remove(other.gameObject.GetComponent<PlayerCharacter>());
 
-            Destroy(healIcons[other.gameObject.GetComponent<PlayerCharacter>()]);
+            //Destroy(healIcons[other.gameObject.GetComponent<PlayerCharacter>()]);
             healIcons.Remove(other.gameObject.GetComponent<PlayerCharacter>());
         }
 
