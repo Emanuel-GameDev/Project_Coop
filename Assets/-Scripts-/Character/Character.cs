@@ -212,8 +212,6 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 
 
     #endregion
-
-
     #region Damage
 
 
@@ -243,6 +241,8 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         AudioManager.Instance.PlayRandomAudioClip(soundsDatabase.walkSounds, transform);
     }
     #endregion
+
+   
 }
 
 

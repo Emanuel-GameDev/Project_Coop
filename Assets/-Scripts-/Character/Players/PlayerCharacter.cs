@@ -523,4 +523,15 @@ public abstract class PlayerCharacter : Character
         base.EnableAllActions();
         characterController.GetInputHandler().PlayerInput.actions.Enable();
     }
+
+    public void ResetAllAnimatorTriggers()
+    {
+        foreach (var param in animator.parameters)
+        {
+            if (param.type == AnimatorControllerParameterType.Trigger)
+            {
+                animator.ResetTrigger(param.name);
+            }
+        }
+    }
 }
