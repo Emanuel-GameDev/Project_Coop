@@ -173,6 +173,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         if (context.performed && isBlocking == false)
         {
+            isAttacking = true;
+            ResetAllAnimatorTriggers();
+
             ActivateHyperArmor();
             pressed = true;
             canCancelAttack = false;
@@ -221,7 +224,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         if (pressed && chargedAttack)
         {
             canCancelAttack = true;
-            isAttacking = true;
+           
             animator.SetTrigger("ChargedAttack");
             Debug.Log($"Started Charged Attack");
             StartCoroutine(StartChargedAttackTimer());
@@ -378,6 +381,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         if (context.performed && isAttacking == false && canCancelAttack == false && canBlock)
         {
+
+            ResetAllAnimatorTriggers();
             SetCanMove(false, rb);
             if(isBlocking != true)
             {
