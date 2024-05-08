@@ -15,6 +15,8 @@ public class Slotmachine : MonoBehaviour
     [SerializeField] AudioClip loseAudio;
     [SerializeField] AudioClip goodAudio;
     [SerializeField] AudioClip failAudio;
+    [SerializeField] AudioClip stopRowAudio;
+    [SerializeField] AudioSource loopSlotAudio;
 
     [Header("Variabili colonna")]
 
@@ -146,6 +148,8 @@ public class Slotmachine : MonoBehaviour
         randomListOfPlayer.Clear();
         RandomReorder(listOfCurrentPlayer);
         remainingLives = lives;
+
+        loopSlotAudio.Play();
 
         //forse cancellare
         /*
@@ -287,13 +291,8 @@ public class Slotmachine : MonoBehaviour
 
     public IEnumerator RestartSlotMachine()
     {
-        foreach (SlotRow row in rows)
-        {
-            row.rowAudioSource.Play();
-
-
-        }
-
+        loopSlotAudio.Play();
+        
         foreach (SlotRow row in rows)
         {
             row.ResetRow();
@@ -441,6 +440,18 @@ public class Slotmachine : MonoBehaviour
             buttonSlots[currentNumberOfTheSlot].GetComponent<Animator>().SetTrigger("Press");
 
             rows[currentNumberOfTheSlot].StartSlowDown();
+
+            //sounds
+            //play suono di stop
+            AudioManager.Instance.PlayAudioClip(stopRowAudio);
+
+
+            //se è l'ultima riga fai smettere la canzone del loop
+
+            if(currentNumberOfTheSlot >= rows.Count - 1)
+            {
+                loopSlotAudio.Stop();
+            }
 
 
 
