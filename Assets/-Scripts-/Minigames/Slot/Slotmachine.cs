@@ -476,12 +476,14 @@ public class Slotmachine : MonoBehaviour
             yield return new WaitForSeconds(stabilizationSpeed);
 
             currentNumberOfTheSlot++;
-            canInteract = true;
+            
 
             if (currentNumberOfTheSlot <= rows.Count - 1)
             {
                 buttonSlots[currentNumberOfTheSlot].Arrow.SetActive(true);
             }
+
+            canInteract = true;
 
 
 
