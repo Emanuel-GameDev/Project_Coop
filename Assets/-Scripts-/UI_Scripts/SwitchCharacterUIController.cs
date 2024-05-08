@@ -24,12 +24,26 @@ public class SwitchCharacterUIController : MonoBehaviour
     private void Start()
     {
         PubSub.Instance.RegisterFunction(EMessageType.switchingCharacters, SelectCharacter);
+        PubSub.Instance.RegisterFunction(EMessageType.characterJoined, UpdateSwitchingStatus);
 
         StartCoroutine(Utility.WaitForPlayers(InitializeSwitchingStatus));
     }
 
+    private void UpdateSwitchingStatus(object obj)
+    {
+        foreach (PlayerCharacter item in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
+        {
+            if (keyValuePairs.ContainsKey(item))
+            {
+                keyValuePairs[item].charIcon.color = colorWhenSelected;
+            }
+        }
+    }
+
     private void InitializeSwitchingStatus()
     {
+        keyValuePairs.Clear();
+
         foreach (PlayerCharacter item in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
         {
             SwitchCharData data = switchingCharacters.Find(x => x.character == item.Character);
@@ -70,31 +84,8 @@ public class SwitchCharacterUIController : MonoBehaviour
         {
             keyValuePairs[newChar].charIcon.color = colorWhenSelected;
         }
-
-        //if (selectedChar is PlayerCharacter)
-        //{
-
-        //    PlayerCharacter character = (PlayerCharacter)selectedChar;
-
-        //    foreach (SwitchCharData data in switchingCharacters)
-        //    {
-        //        if (data.character == character.Character)
-        //        {
-        //            data.charIcon.color = colorWhenSelected;
-        //        }
-        //        else
-        //        {
-        //            Color originalColor = Utility.HexToColor("FFFFFF");
-
-        //            data.charIcon.color = originalColor;
-        //        }
-        //    }
-
-        //    // ciclo sugli occupati = grigio 
-
-        //    // ciclo sui liberi = originali
-        //}
-        /*else */if (selectedChar is SwitchCharData)
+        
+        if (selectedChar is SwitchCharData)
         {
             SwitchCharData switchCharData = (SwitchCharData)selectedChar;
 
