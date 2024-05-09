@@ -53,7 +53,7 @@ public class PubSub : MonoBehaviour
     {
         if (_registeredFunctions.ContainsKey(messageType))
         {
-            //Non funzionava
+            //Non funzionava, function.ToString non ritorna il nome della funzione ma System.Action
             // Per ogni funzione dentro un messageType controllo se la vers in stringa della func è uguale a quella nuova
             //string newFuncString = function.ToString();
             
