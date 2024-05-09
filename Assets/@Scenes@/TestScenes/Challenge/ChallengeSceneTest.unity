@@ -2525,7 +2525,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: 29cd501f0b82b9e41a19c7526ab8d9ad, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -5947,6 +5947,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 179939502}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: challengeFaceWin
+          m_BoolArgument: 1
+        m_CallState: 2
   coinsOnSuccess: 1
   keysOnSuccess: 0
   dialogueOnFailure: {fileID: 11400000, guid: 3f2dd2d5aa2718b46911f235e1fb7858, type: 2}
@@ -6773,7 +6785,12 @@ PrefabInstance:
     - target: {fileID: 4316716302215535124, guid: 3852fbf91b068d04f9081786d041445a,
         type: 3}
       propertyPath: m_RenderPostProcessing
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4316716302215535124, guid: 3852fbf91b068d04f9081786d041445a,
+        type: 3}
+      propertyPath: m_VolumeLayerMask.m_Bits
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 5554256414406528514, guid: 3852fbf91b068d04f9081786d041445a,
         type: 3}
@@ -7028,7 +7045,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5480735105393077391, guid: a008ce07630c4bf4d8e9de332c2f2a16, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -7440,6 +7458,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 179939502}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: challengeFaceWin
+          m_BoolArgument: 1
+        m_CallState: 2
   coinsOnSuccess: 1
   keysOnSuccess: 1
   dialogueOnFailure: {fileID: 11400000, guid: 3f2dd2d5aa2718b46911f235e1fb7858, type: 2}
@@ -7659,6 +7689,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 179939502}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: challengeFaceWin
           m_BoolArgument: 1
         m_CallState: 2
   coinsOnSuccess: 10
