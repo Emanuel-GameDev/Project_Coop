@@ -37,6 +37,8 @@ public class C_KillAllInTimer : Challenge
                 p.OnDash.AddListener(OnFailChallenge);
         }
 
+        
+
 
     }
     public override void StartChallenge()
