@@ -879,6 +879,12 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     #endregion
 
 
+    public override void ResetAllAnimatorTriggers()
+    {
+        base.ResetAllAnimatorTriggers();
+        ResetAttack();
+    }
+
     private void PlayPerfectParrySound()
     {
         if (soundsDatabase.specialEffectsSounds.Count > 0)

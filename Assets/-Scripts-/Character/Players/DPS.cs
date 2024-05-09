@@ -529,7 +529,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         base.ResetAllAnimatorTriggers();
         ResetVariables();
-
     }
 
 
