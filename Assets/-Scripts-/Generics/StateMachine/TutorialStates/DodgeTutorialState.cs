@@ -119,7 +119,8 @@ public class DodgeTutorialState : TutorialFase
                 ih.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
             }
 
-            tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+            //tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+            tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
             tutorialManager.DeactivateEnemyAI();
 
@@ -153,8 +154,8 @@ public class DodgeTutorialState : TutorialFase
             ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
         }
 
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
-
+        //tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
         //tutorialManager.DeactivateEnemyAI();
         //tutorialManager.tutorialEnemy.focus = false;
@@ -185,7 +186,8 @@ public class DodgeTutorialState : TutorialFase
 
         PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
 
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+       // tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
 
         tutorialManager.tutorialEnemy.focus = false;

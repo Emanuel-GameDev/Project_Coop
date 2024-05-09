@@ -280,7 +280,9 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
                 Debug.Log("colpo normale");
 
-                isAttacking = false;
+                Invoke(nameof(DelayAttackAction), consecutiveFireTimer);
+
+                
             }
 
             if (moveDir != Vector2.zero)
@@ -293,6 +295,12 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         }
     }
 
+    private void DelayAttackAction()
+    {
+
+        isAttacking = false;
+    }
+
     //Sparo normale
     private void BasicFireProjectile(Vector2 direction)
     {
@@ -300,6 +308,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         animator.SetTrigger("SimpleShoot");
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
+        AudioManager.Instance.PlayRandomAudioClip(soundsDatabase.attackSounds);
         newProjectile.transform.position = shootingPoint.transform.position;
 
         newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer);
@@ -570,6 +579,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     {
         animator.SetTrigger("EmpowerShoot");
 
+        AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[0]);
+
         PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated, this);
 
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
@@ -611,8 +622,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             
 
             if (empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
-            {
-               
+            {  
 
                 if (!ChargedVFX.activeSelf)
                 {

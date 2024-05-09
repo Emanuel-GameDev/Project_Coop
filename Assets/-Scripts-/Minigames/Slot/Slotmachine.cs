@@ -11,6 +11,18 @@ public class Slotmachine : MonoBehaviour
     [SerializeField, Tooltip("Numero massimo di tentativi prima di vincere")]
     int lives = 3;
     int remainingLives;
+    [SerializeField] AudioClip winAudio;
+    [SerializeField] AudioClip loseAudio;
+    [SerializeField] AudioClip goodAudio;
+    [SerializeField] AudioClip failAudio;
+    [SerializeField] AudioClip stopRowAudio;
+    [SerializeField] AudioSource loopSlotAudio;
+
+    [Header("Win/lose Screen")]
+    [SerializeField] GameObject winScreen;
+    [SerializeField] GameObject loseScreen;
+    [SerializeField] float screenTime=5f;
+
     [Header("Variabili colonna")]
 
     [SerializeField, Tooltip("Numero delle figure totali nella colonna")]
@@ -59,6 +71,7 @@ public class Slotmachine : MonoBehaviour
 
     [Header("Manopola")]
     [SerializeField] private GameObject manopola;
+    [SerializeField] private AudioClip giramentoManopolaAudio;
 
 
     List<Sprite> playerSprites;
@@ -141,6 +154,8 @@ public class Slotmachine : MonoBehaviour
         RandomReorder(listOfCurrentPlayer);
         remainingLives = lives;
 
+        loopSlotAudio.Play();
+
         //forse cancellare
         /*
         foreach (SlotRow row in rows)
@@ -162,11 +177,16 @@ public class Slotmachine : MonoBehaviour
 
 
         canInteract = true;
-        inGame = true;
+        
 
         currentNumberOfTheSlot = 0;
 
         buttonSlots[currentNumberOfTheSlot].Arrow.SetActive(true);
+    }
+
+    public void SetIngameValueAfterCountDown()
+    {
+        inGame = true;
     }
 
     private void CheckForWin()
@@ -186,6 +206,8 @@ public class Slotmachine : MonoBehaviour
         {
             Debug.Log("avete vinto");
 
+            AudioManager.Instance.PlayAudioClip(goodAudio);
+
             canInteract = false;
             inGame = false;
 
@@ -197,7 +219,7 @@ public class Slotmachine : MonoBehaviour
         {
             Debug.Log("avete perso");
 
-
+            AudioManager.Instance.PlayAudioClip(failAudio);
 
             if (remainingLives <= 0)
             {
@@ -224,6 +246,12 @@ public class Slotmachine : MonoBehaviour
 
         yield return new WaitForSeconds(screenDelay);
 
+        AudioManager.Instance.PlayAudioClip(winAudio);
+        winScreen.SetActive(true);
+        yield return new WaitForSeconds(screenTime);
+        winScreen.SetActive(false);
+
+
         _dialogueBox.SetDialogue(winDialogue);
         _dialogueBox.AddDialogueEnd(onWinDialogueEnd);
 
@@ -238,6 +266,12 @@ public class Slotmachine : MonoBehaviour
         _dialogueBox.RemoveAllDialogueEnd();
 
         yield return new WaitForSeconds(screenDelay);
+
+        AudioManager.Instance.PlayAudioClip(loseAudio);
+
+        loseScreen.SetActive(true);
+        yield return new WaitForSeconds(screenTime);
+        loseScreen.SetActive(false);
 
         _dialogueBox.SetDialogue(loseDialogue);
         _dialogueBox.AddDialogueEnd(onLoseDialogueEnd);
@@ -275,6 +309,8 @@ public class Slotmachine : MonoBehaviour
 
     public IEnumerator RestartSlotMachine()
     {
+        loopSlotAudio.Play();
+        
         foreach (SlotRow row in rows)
         {
             row.ResetRow();
@@ -423,17 +459,31 @@ public class Slotmachine : MonoBehaviour
 
             rows[currentNumberOfTheSlot].StartSlowDown();
 
+            //sounds
+            //play suono di stop
+            AudioManager.Instance.PlayAudioClip(stopRowAudio);
+
+
+            //se è l'ultima riga fai smettere la canzone del loop
+
+            if(currentNumberOfTheSlot >= rows.Count - 1)
+            {
+                loopSlotAudio.Stop();
+            }
+
 
 
             yield return new WaitForSeconds(stabilizationSpeed);
 
             currentNumberOfTheSlot++;
-            canInteract = true;
+            
 
             if (currentNumberOfTheSlot <= rows.Count - 1)
             {
                 buttonSlots[currentNumberOfTheSlot].Arrow.SetActive(true);
             }
+
+            canInteract = true;
 
 
 
@@ -455,6 +505,8 @@ public class Slotmachine : MonoBehaviour
             //animazione manopola
 
             manopola.GetComponent<Animator>().SetTrigger("SpinTrigger");
+
+            AudioManager.Instance.PlayAudioClip(giramentoManopolaAudio);
 
 
         }

@@ -29,7 +29,18 @@ public enum SceneSaveSettings
     ChallengesSaved,
     SviluppartyInteractions,
     DialogueTrigger,
-    Passepartout
+    Passepartout,
+    SlotMachine
 
+}
+
+public static class SaveDataStrings
+{
+    public const string COMPLETED = "Completed";
+    public const string INTERACTED = "Interacted";
+    public const string UNLOCKED = "Unlocked";
+    public const string SELECTED = "Selected";
+    public const string SVILUPPARTY_END_DUMPY_INTERACTED = "SviluppartyEndDumpyInteracted";
+    public const string CHALLENGE = "Challenge";
 }
 

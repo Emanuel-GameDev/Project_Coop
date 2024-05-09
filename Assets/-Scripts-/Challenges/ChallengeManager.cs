@@ -52,24 +52,16 @@ public class ChallengeManager : MonoBehaviour, IInteractable
 
         SceneSetting sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved);
         bool selected = false;
-       
+
         if (sceneSetting == null)
         {
             sceneSetting = new(SceneSaveSettings.ChallengesSaved);
-            sceneSetting.bools.Add(new("Selected", selected));
+            sceneSetting.AddBoolValue(SaveDataStrings.SELECTED, selected);
         }
         else
         {
-            SavingBoolValue selectedBool = sceneSetting.bools.Find(x => x.valueName == "Selected");
-
-            if (selectedBool != null)
-            {
-                selected = selectedBool.value;
-            }
-            else
-            {
-                sceneSetting.bools.Add(new("Selected", false));
-            }
+            selected = sceneSetting.GetBoolValue(SaveDataStrings.SELECTED);
+            sceneSetting.AddBoolValue(SaveDataStrings.SELECTED, selected);
         }
 
         if (!selected)
@@ -87,12 +79,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
                 currentSaveChallenges.Add(tempUI.challengeSelected);
             }
 
-            SavingBoolValue selectedBool = sceneSetting.bools.Find(x => x.valueName == "Selected");
-
-            if (selectedBool != null)
-            {
-                selectedBool.value = true;
-            }
+            sceneSetting.AddBoolValue(SaveDataStrings.SELECTED, true);
 
             SaveSceneData(sceneSetting);
         }
@@ -100,7 +87,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
         {
             onInteractionAction.AddListener(OnInteraction);
 
-            foreach (SavingStringValue c in sceneSetting.strings.FindAll(x => x.valueName == "Challenges"))
+            foreach (SavingStringValue c in sceneSetting.strings.FindAll(x => x.valueName == SaveDataStrings.CHALLENGE))
             {
                 GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
                 ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();
@@ -109,13 +96,10 @@ public class ChallengeManager : MonoBehaviour, IInteractable
                 tempUI.challengeSelected.challengeCompleted = sceneSetting.GetBoolValue(tempUI.challengeSelected.name);
                 tempUI.SetUpUI();
                 currentSaveChallenges.Add(tempUI.challengeSelected);
-                
-
-
             }
-           
+
         }
-        
+
     }
 
     #region saving
@@ -123,7 +107,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     {
         foreach (Challenge c in currentSaveChallenges)
         {
-            sceneSetting.strings.Add(new("Challenges", c.name.ToString()));
+            sceneSetting.AddStringValue(SaveDataStrings.CHALLENGE, c.name.ToString());
         }
 
         SaveManager.Instance.SaveSceneData(sceneSetting);
@@ -131,9 +115,18 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     public void SaveChallengeCompleted(string challengeName, bool completed)
     {
         SceneSetting settings = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved);
-        settings.bools.Add(new(challengeName, completed));
-        SaveManager.Instance.SaveSceneData(settings);
+        settings.AddBoolValue(challengeName, completed);
 
+        bool allCompleted = true;
+        foreach (Challenge c in challengesList)
+        {
+            if(!c.challengeCompleted)
+                allCompleted = false;
+        }
+
+        settings.AddBoolValue(SaveDataStrings.COMPLETED, allCompleted);
+
+        SaveManager.Instance.SaveSceneData(settings);
     }
     #endregion
 

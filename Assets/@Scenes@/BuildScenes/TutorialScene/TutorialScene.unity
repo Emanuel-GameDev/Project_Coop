@@ -1317,6 +1317,7 @@ MonoBehaviour:
     m_LocalVariables: []
   showNotification: 1
   disableInteracterActions: 1
+  isOnePlayerInteractable: 0
   OnOnePlayerInteract:
     m_PersistentCalls:
       m_Calls: []
@@ -1874,6 +1875,7 @@ MonoBehaviour:
   defaultFirstObjectSelected: {fileID: 601290376}
   defaultPreviosMenu: {fileID: 0}
   pauseButtonCanCloseMenu: 1
+  goBackButtonCanCloseMenu: 1
   interactableSetter: {fileID: 0}
   haveTabs: 0
   continuosNavigation: 0
@@ -2194,7 +2196,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.083333336
+  m_VoxelSize: 0.14999999
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 4a1022a84e6bfe44492c0ad643515cf6, type: 2}
   m_BuildHeightMesh: 0
@@ -5406,7 +5408,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &566038580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9112,6 +9114,7 @@ MonoBehaviour:
   defaultFirstObjectSelected: {fileID: 625744904}
   defaultPreviosMenu: {fileID: 0}
   pauseButtonCanCloseMenu: 1
+  goBackButtonCanCloseMenu: 1
   interactableSetter: {fileID: 0}
   haveTabs: 0
   continuosNavigation: 0
@@ -10121,7 +10124,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1153241681}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: be4ad7f2721770242933874cf8dd1dac, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: d7c32f84963cacf4493e889566dbe72e, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -10959,6 +10962,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3527891716343161396, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3527891716343161396, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: startImmediatly
@@ -11689,8 +11702,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 2.1636505, y: -0.9861002, z: 0}
-    m_Extent: {x: 23.79405, y: 20.809101, z: 0}
+    m_Center: {x: 2.1637993, y: -0.98655033, z: 0}
+    m_Extent: {x: 23.7955, y: 20.80915, z: 0}
   m_PointLightInnerAngle: 120.90883
   m_PointLightOuterAngle: 120.90883
   m_PointLightInnerRadius: 0.78

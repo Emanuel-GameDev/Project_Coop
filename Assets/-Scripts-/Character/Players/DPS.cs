@@ -259,7 +259,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         string triggerName = currentAttackComboState.ToString();   //ATTACK + (nextComboState).ToString();
         animator.SetTrigger(triggerName);
 
-        PlayAttackSound();
+        //PlayAttackSound();
     }
 
     public void OnAttackAnimationEnd()
@@ -633,7 +633,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     #endregion
 
     #region Audio
-    private void PlayAttackSound()
+    public void PlayAttackSound()
     {
         if(soundsDatabase != null)
         {
@@ -644,7 +644,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
             }
         }
     }
-
     #endregion
 
 

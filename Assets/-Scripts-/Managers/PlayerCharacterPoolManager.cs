@@ -83,6 +83,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         PlayerCharacter searchedCharacter = freeCharacters.Find(c => c.Character == targetCharacter);
         if (searchedCharacter != null)
         {
+            PubSub.Instance.Notify(EMessageType.switchingCharacters, new PlayerCharacter[] {playerCharacter, searchedCharacter});
             playerCharacter.characterController.SetPlayerCharacter(searchedCharacter);
             playerCharacter.characterController = null;
             ActivateCharacter(searchedCharacter, playerCharacter.transform);

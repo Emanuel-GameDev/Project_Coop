@@ -103,7 +103,7 @@ public abstract class PlayerCharacter : Character
     public virtual float AttackSpeed => attackSpeed * powerUpData.AttackSpeedIncrease;
     public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) / powerUpData.UniqueAbilityCooldownDecrease;
     public float DamageReceivedMultiplier => damageReceivedMultiplier;
-
+    public float SwitchCharacterCooldown => switchCharacterCooldown;
     public virtual ExtraData ExtraData => extraData;
     public virtual PowerUpData PowerUpData => powerUpData;
 
@@ -522,5 +522,16 @@ public abstract class PlayerCharacter : Character
     {
         base.EnableAllActions();
         characterController.GetInputHandler().PlayerInput.actions.Enable();
+    }
+
+    public void ResetAllAnimatorTriggers()
+    {
+        foreach (var param in animator.parameters)
+        {
+            if (param.type == AnimatorControllerParameterType.Trigger)
+            {
+                animator.ResetTrigger(param.name);
+            }
+        }
     }
 }

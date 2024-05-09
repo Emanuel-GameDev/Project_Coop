@@ -83,6 +83,8 @@ public class AudioManager : MonoBehaviour
 
     public AudioSource PlayAudioClip(AudioClip clip, Transform spawnPoint, float volume)
     {
+        if (clip == null) return null;
+        
         AudioSource audioSource;
 
         if (audioSourcesPool.Count <= 0)

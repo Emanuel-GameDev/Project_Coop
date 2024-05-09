@@ -439,9 +439,9 @@ public class LabirintManager : MonoBehaviour
         SceneSetting sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.Passepartout);
         if (sceneSetting == null)
             sceneSetting = new SceneSetting(SceneSaveSettings.Passepartout);
-        if (!sceneSetting.GetBoolValue("Completed"))
+        if (!sceneSetting.GetBoolValue(SaveDataStrings.COMPLETED))
         {
-            sceneSetting.AddBoolValue("Completed", true);
+            sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
             SaveManager.Instance.SaveSceneData(sceneSetting);
             return false;
         }

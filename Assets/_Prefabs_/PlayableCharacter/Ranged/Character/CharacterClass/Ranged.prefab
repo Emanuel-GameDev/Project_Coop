@@ -99,15 +99,15 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  soundsDatabase: {fileID: 0}
+  soundsDatabase: {fileID: 11400000, guid: da71bb63de25b474983291d1d664c65d, type: 2}
   character: 4
   maxHp: 150
-  damage: 7
+  damage: 10
   attackSpeed: 1
   moveSpeed: 10
-  uniqueAbilityCooldown: 5
+  uniqueAbilityCooldown: 35
   uniqueAbilityCooldownIncreaseAtUse: 2
-  switchCharacterCooldown: 0
+  switchCharacterCooldown: 10
   invulnerabilityTime: 1
   ressInteracter: {fileID: 6090523008952437151}
   characterController: {fileID: 0}
@@ -1214,13 +1214,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6468027041814379304}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.46021414, y: -0, z: -0, w: 0.887808}
-  m_LocalPosition: {x: 0, y: 0, z: -0.1}
-  m_LocalScale: {x: 0.11, y: 0.11, z: 0.11}
-  m_ConstrainProportionsScale: 1
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.25754, y: 0.25754, z: 0.25754}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7626594674274175064}
-  m_LocalEulerAnglesHint: {x: 54.802, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!222 &6676142963353789124
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1270,7 +1270,7 @@ SpriteRenderer:
   m_SortingLayerID: 218323413
   m_SortingLayer: 9
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: eebdce8c47baade418c6e58af99bc899, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b4758ffb733b29445bc728d36dfaa4fb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1515,8 +1515,8 @@ SpriteRenderer:
   m_SortingLayerID: 1822292781
   m_SortingLayer: 6
   m_SortingOrder: -10
-  m_Sprite: {fileID: 21300000, guid: 6f8ebc755ab65134aad42ed35b670368, type: 3}
-  m_Color: {r: 1, g: 0.78462666, b: 0.1273585, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 84db62d55556adf4b854cfbc5cc09f70, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.49803922}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

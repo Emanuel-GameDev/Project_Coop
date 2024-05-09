@@ -24,7 +24,8 @@ public class DebugManager : MonoBehaviour
         "Per dare un Ability Upgrade, selezionare il targetCharacter a cui darlo e premere il tastierino numerico da 1 a 5.\n" +
         "Per dare un Power Up usare il tastierino numerico 7,8 o 9, verrà assegnato quello corrispondete al numero.\n" + 
         "Con il tasto M si infliggono 1000 danni al personaggio selezionato uccidendolo. \n " +
-        "Con N si stampa nella console il numeor di monete e chiavi \n" + " Con il tasto I si cancella i salvataggi.";
+        "Con N si stampa nella console il numeor di monete e chiavi \n" + " Con il tasto I si cancella i salvataggi. \n" +
+        "Con J si completa tutte le sfide per testare il dumpy di fine demo.";
 
     [SerializeField] GameObject BossGameobject;
 
@@ -109,6 +110,19 @@ public class DebugManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.G))
             {
                 ChallengeManager.Instance.selectedChallenge.AutoComplete();
+            }
+
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                SceneSetting sceneSetting = new(SceneSaveSettings.ChallengesSaved);
+                sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
+                SaveManager.Instance.SaveSceneData(sceneSetting);
+                sceneSetting = new(SceneSaveSettings.Passepartout);
+                sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
+                SaveManager.Instance.SaveSceneData(sceneSetting);
+                sceneSetting = new(SceneSaveSettings.SlotMachine);
+                sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
+                SaveManager.Instance.SaveSceneData(sceneSetting);
             }
 
             if (Input.GetKeyDown(KeyCode.I))

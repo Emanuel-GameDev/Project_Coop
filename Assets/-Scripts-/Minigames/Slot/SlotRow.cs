@@ -19,6 +19,9 @@ public class SlotRow : MonoBehaviour
      private List<Sprite> losingSpriteList;
 
 
+    
+
+
     private List<GameObject> reorderSlots = new List<GameObject>();
 
      public bool stopped { get; private set; }
@@ -34,6 +37,9 @@ public class SlotRow : MonoBehaviour
 
     [SerializeField] private Slot selectedSlotImage;
     private Slotmachine mainMachine;
+
+    [Header("Sounds")]
+    [SerializeField] AudioClip stopSlotRowAudio;
 
 
 
@@ -202,7 +208,7 @@ public class SlotRow : MonoBehaviour
         else if (isSlowDown)
         {
             isSlowDown = false;
-            
+                      
         }
 
 
@@ -284,6 +290,7 @@ public class SlotRow : MonoBehaviour
         stopped = false;
         isSlowDown = false;
         selectedSlotImage = null;
+        
     }
 
     public void StartSlowDown()

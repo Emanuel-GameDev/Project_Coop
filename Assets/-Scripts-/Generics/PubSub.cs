@@ -20,6 +20,7 @@ public enum EMessageType
     uniqueAbilityActivated,
     uniqueAbilityExpired,
     characterHitted,
+    switchingCharacters,
     sceneLoading
 }
 
@@ -52,6 +53,16 @@ public class PubSub : MonoBehaviour
     {
         if (_registeredFunctions.ContainsKey(messageType))
         {
+            // Per ogni funzione dentro un messageType controllo se la vers in stringa della func è uguale a quella nuova
+
+            string newFuncString = function.ToString();
+            
+            foreach (Action<object> item in _registeredFunctions[messageType])
+            {
+                if (item.ToString() == newFuncString)
+                    return;
+            }
+
             _registeredFunctions[messageType].Add(function);
         }
         else

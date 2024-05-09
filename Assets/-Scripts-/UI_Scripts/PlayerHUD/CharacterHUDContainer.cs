@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO.MemoryMappedFiles;
 using TMPro;
 using UnityEngine;
@@ -35,6 +36,9 @@ public class CharacterHUDContainer : MonoBehaviour
     [SerializeField] RectTransform effectsStartingPoint;
     [SerializeField] RectTransform effectsPoolPoint;
     [SerializeField] Vector2 fillDirection;
+
+    [Header("SwitchingCooldown")]
+    [SerializeField] private Slider slider;
 
     private void Update()
     {
@@ -113,6 +117,34 @@ public class CharacterHUDContainer : MonoBehaviour
 
     #endregion
 
+    // Durante
+
+    internal void StartSwitchCooldown(float cooldown)
+    {
+        slider.gameObject.SetActive(true);
+        slider.value = 1f;
+        StartCoroutine(DisplaySwitchCooldown(cooldown));
+    }
+
+    private IEnumerator DisplaySwitchCooldown(float duration)
+    {
+        float elapsedTime = duration;
+        float progress = 1f;
+
+        while (progress >= 0f)
+        {
+            elapsedTime -= Time.deltaTime;
+            progress = elapsedTime / duration;
+
+            slider.value = Mathf.Clamp01(progress);
+            
+            yield return null;
+        }
+
+        slider.gameObject.SetActive(false);
+
+        Debug.Log("Finecooldown");
+    }
 
     public void RemoveEffect()
     {
