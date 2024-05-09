@@ -1945,8 +1945,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -2.7814002, y: 7.9672003, z: 0}
-    m_Extent: {x: 7.1957, y: 26.041698, z: 0}
+    m_Center: {x: -2.78135, y: 7.9675493, z: 0}
+    m_Extent: {x: 7.1951494, y: 26.04145, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -2409,8 +2409,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.9087999, y: -5.0052, z: 0}
-    m_Extent: {x: 3.2368, y: 12.2432, z: 0}
+    m_Center: {x: -0.9075, y: -5.0046496, z: 0}
+    m_Extent: {x: 3.2368, y: 12.243349, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -2619,18 +2619,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &716495066 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 726525942643775275, guid: 64a37e0cc339faf4b9a28466184282b9,
-    type: 3}
-  m_PrefabInstance: {fileID: 909723461}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 933432955afa09849aa58dec21533b65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &718258275
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3005,6 +2993,7 @@ GameObject:
   - component: {fileID: 767476305}
   - component: {fileID: 767476304}
   - component: {fileID: 767476309}
+  - component: {fileID: 767476311}
   m_Layer: 0
   m_Name: DumpyDemo
   m_TagString: Untagged
@@ -3367,10 +3356,10 @@ MonoBehaviour:
   eventToAddAtTheEndOfLastDialogue:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 716495066}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
+      - m_Target: {fileID: 767476311}
+        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
+        m_MethodName: ChangeScene
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3379,6 +3368,19 @@ MonoBehaviour:
           m_StringArgument: EndDemo
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &767476311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767476303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa08c3febffe4b94783674d03e8cd9dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destinationSceneName: EndDemo
 --- !u!224 &880133555 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6993901663149319593, guid: 2fd7d6e04ece6c84e82b26ecf54c6b07,
@@ -4440,8 +4442,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.69920003, y: -0.09709996, z: 0}
-    m_Extent: {x: 3.2252998, y: 2.0203, z: 0}
+    m_Center: {x: 0.69935, y: -0.097550035, z: 0}
+    m_Extent: {x: 3.22535, y: 2.01995, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0.96

@@ -326,13 +326,20 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             BasicFireProjectile(direction);
 
             yield return new WaitForSeconds(consecutiveFireTimer);
+
+            if (isDodging)
+            {
+                fireTimer = AttackSpeed;
+                isAttacking = false;
+                yield break;
+            }
         }
 
         fireTimer = AttackSpeed;
 
         Debug.Log("colpo triplo");
 
-        dodgeTimer = dodgeCoolDown;
+        //dodgeTimer = dodgeCoolDown;
 
         isAttacking = false;
     }
