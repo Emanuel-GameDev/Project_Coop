@@ -280,7 +280,9 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
                 Debug.Log("colpo normale");
 
-                isAttacking = false;
+                Invoke(nameof(DelayAttackAction), consecutiveFireTimer);
+
+                
             }
 
             if (moveDir != Vector2.zero)
@@ -291,6 +293,12 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             rightInputTimer = recentlyInputTimer;
 
         }
+    }
+
+    private void DelayAttackAction()
+    {
+
+        isAttacking = false;
     }
 
     //Sparo normale

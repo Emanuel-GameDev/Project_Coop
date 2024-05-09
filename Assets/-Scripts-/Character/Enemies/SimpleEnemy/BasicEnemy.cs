@@ -17,6 +17,11 @@ public class BasicEnemy : EnemyCharacter
 
     [Tooltip("Serve per gli effetti visivi dell' editor")]
     public Transform groundLevel;
+
+    [Header("Variabili generali")]
+    [SerializeField] public float parriedTime = 1;
+
+
     [Header("Variabili di base")]
     [SerializeField] public float viewRange = 2f;
     [SerializeField] public float attackRange = 1;
@@ -338,6 +343,19 @@ public class BasicEnemy : EnemyCharacter
 
         
         
+    }
+
+    public override void OnParryNotify(Character whoParried)
+    {
+        base.OnParryNotify(whoParried);
+        SetHitMaterialColor(_OnParryColor);
+        stateMachine.SetState(parriedState);
+    }
+
+    public void Parry()
+    {
+        //SetHitMaterialColor(_OnParryColor);
+        //stateMachine.SetState(parriedState);
     }
 
 

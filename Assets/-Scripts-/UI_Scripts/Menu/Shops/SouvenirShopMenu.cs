@@ -14,6 +14,7 @@ public class SouvenirShopMenu : Menu
     [SerializeField] public SouvenirShopTable[] shopTables = new SouvenirShopTable[4];
 
     [SerializeField] AudioClip openingAudioClip;
+    [SerializeField] AudioSource shopMusicSource;
 
     //[Serializable]
     //public class SouvenirShopEntry
@@ -118,9 +119,8 @@ public class SouvenirShopMenu : Menu
             table.StartIdleAnimationIn(Random.value);
             table.SetUpInput();
         }
-
+        StartCoroutine(StartAudios());
         //CheckForMoney();
-        AudioManager.Instance.PlayAudioClip(openingAudioClip, transform);
     }
 
     protected override void Menu_performed(InputAction.CallbackContext obj)
@@ -155,13 +155,21 @@ public class SouvenirShopMenu : Menu
         //AudioManager.Instance.PlayAudioClip(openingAudioClip, transform);
 
         //currentPlayerInShop = null;
+        AudioManager.Instance.PlayAudioClip(openingAudioClip, transform);
+        shopMusicSource.Stop();
 
-        
 
         shopGroup.GetComponent<Animation>().Play("SouvenirExit");
         StartCoroutine(CloseMenuWithDelay(shopGroup.GetComponent<Animation>().clip.length));
+       
 
         SaveManager.Instance.SavePlayersData();
+    }
+    IEnumerator StartAudios()
+    {
+        AudioManager.Instance.PlayAudioClip(openingAudioClip, transform);
+        yield return new WaitForSeconds(openingAudioClip.length/5);
+        shopMusicSource.Play();
     }
 
     IEnumerator CloseMenuWithDelay(float delay)
@@ -178,7 +186,7 @@ public class SouvenirShopMenu : Menu
 
             actions.FindAction("Cancel").performed -= Menu_performed;
         }
-
+        
         foreach (SouvenirShopTable table in shopTables)
         {
             table.DesetInput();
