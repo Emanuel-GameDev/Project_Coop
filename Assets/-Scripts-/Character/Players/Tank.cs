@@ -273,27 +273,22 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             }
         }
     }
-
     private void StartCombo()
     {
         comboStarted = true;
         currentAttackComboState = AttackComboState.Attack1;
         DoMeleeAttack();
     }
-
     private void ContinueCombo()
     {
         if(doubleAttack)
             mustDoSecondAttack = true;
     }
-
     private void DoMeleeAttack()
     {
         string triggerName = currentAttackComboState.ToString();
         animator.SetTrigger(triggerName);
     }
-
-
     public void OnEndAttackAnimation()
     {
         if (!alreadyCalled)
@@ -314,12 +309,10 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             alreadyCalled = true;
         }
     }
-
     public void OnAttackAnimationStart()
     {
         alreadyCalled = false;
     }
-
     public void ResetAttack()
     {
         currentAttackComboState = AttackComboState.NotAttaking;
@@ -484,6 +477,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                     }
 
                     Debug.Log("parata perfetta eseguita, rimanenti per potenziamento boss = " + (attacksToBlockForUpgrade - perfectBlockCount));
+                    AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[0]);
                     PubSub.Instance.Notify(EMessageType.perfectGuardExecuted, this);
 
 
