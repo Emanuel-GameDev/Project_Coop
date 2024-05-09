@@ -327,26 +327,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         Utility.DebugTrace("ResetAttack");
     }
 
-    public void ResetAttackMessage()
-    {
-        currentAttackComboState = AttackComboState.NotAttaking;
-        DeactivateHyperArmor();
-        mustDoSecondAttack = false;
-        isAttacking = false;
-        chargedAttackReady = false;
-        isChargingAttack = false;
-        comboStarted = false;
-        SetCanMove(true, rb);
-
-        Utility.DebugTrace("ResetAttackDIOCAEEEEEEEEEEEEEEEEEEEEEEE");
-    }
-
-
-    public void AnimationMessage()
-    {
-        Debug.Log("DIOCANEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-    }
-
     public void ChargingAttack()
     {
         //if (chargedAttack)
@@ -840,7 +820,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         statBoosted = false;
         damageReceivedMultiplier = 1;
     }
-
 
     #endregion
 
