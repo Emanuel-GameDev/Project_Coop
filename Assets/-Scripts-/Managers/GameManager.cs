@@ -225,13 +225,7 @@ public class GameManager : MonoBehaviour
             LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[currentIndex - 1];
         }
     }
-    public void HealAllPlayerFull()
-    {
-        foreach (PlayerCharacter p in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
-        {
-            p.TakeHeal(new DamageData(99999, null));
-        }
-    }
+   
 
     #endregion
 }

@@ -187,4 +187,11 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         SaveManager.Instance.SavePlayersData();
     }
 
+    public void HealAllPlayerFull()
+    {
+        foreach (PlayerCharacter p in AllPlayerCharacters)
+        {
+            p.TakeHeal(new DamageData(99999, null));
+        }
+    }
 }

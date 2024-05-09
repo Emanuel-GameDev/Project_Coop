@@ -115,7 +115,7 @@ public class Challenge : MonoBehaviour
             }
 
         }
-        GameManager.Instance.HealAllPlayerFull();
+        PlayerCharacterPoolManager.Instance.HealAllPlayerFull();
       
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
         ChallengeManager.Instance.SaveChallengeCompleted(this.name, challengeCompleted);
