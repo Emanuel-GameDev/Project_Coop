@@ -1926,8 +1926,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -2.7803998, y: 7.966901, z: 0}
-    m_Extent: {x: 7.1956, y: 26.0414, z: 0}
+    m_Center: {x: -2.7802002, y: 7.967451, z: 0}
+    m_Extent: {x: 7.1955004, y: 26.04075, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -2357,6 +2357,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1783378294}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 1783378296}
         m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
@@ -3211,7 +3223,7 @@ Transform:
   m_GameObject: {fileID: 767476303}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.71, y: 9.95, z: 0}
+  m_LocalPosition: {x: -4.36, y: 16.82, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -4459,8 +4471,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.6998, y: -0.09794998, z: 0}
-    m_Extent: {x: 3.2247, y: 2.02125, z: 0}
+    m_Center: {x: 0.70005, y: -0.09799999, z: 0}
+    m_Extent: {x: 3.22545, y: 2.0207, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0.96
@@ -9516,6 +9528,11 @@ PrefabInstance:
       propertyPath: localizedString.m_TableReference.m_TableCollectionName
       value: GUID:d5d4b37980b359345aa1d2e0cc3417ad
       objectReference: {fileID: 0}
+    - target: {fileID: 8782673435335623699, guid: 2bf206f80f481b24cac4fb8efd448636,
+        type: 3}
+      propertyPath: dialogueBox
+      value: 
+      objectReference: {fileID: 1783378296}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11384,7 +11401,7 @@ PrefabInstance:
     - target: {fileID: 9097573086787581606, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

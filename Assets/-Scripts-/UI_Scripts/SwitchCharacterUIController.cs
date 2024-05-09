@@ -24,7 +24,6 @@ public class SwitchCharacterUIController : MonoBehaviour
     private void Start()
     {
         PubSub.Instance.RegisterFunction(EMessageType.switchingCharacters, SelectCharacter);
-        PubSub.Instance.RegisterFunction(EMessageType.characterJoined, UpdateSwitchingStatus);
 
         StartCoroutine(Utility.WaitForPlayers(InitializeSwitchingStatus));
     }
@@ -62,16 +61,20 @@ public class SwitchCharacterUIController : MonoBehaviour
                 keyValuePairs[item].charIcon.color = colorWhenSelected;
             }
         }
+
+        PubSub.Instance.RegisterFunction(EMessageType.characterJoined, UpdateSwitchingStatus);
     }
 
     private void SelectCharacter(object selectedChar)
     {
         if (selectedChar is not PlayerCharacter[]) return;
-        
+
         PlayerCharacter[] switchingArray = selectedChar as PlayerCharacter[];
 
         PlayerCharacter oldChar = switchingArray[0];
         PlayerCharacter newChar = switchingArray[1];
+
+        Debug.Log(oldChar.Character.ToString() + " into " + newChar.Character.ToString());
 
         if (keyValuePairs.ContainsKey(oldChar))
         {
@@ -83,13 +86,6 @@ public class SwitchCharacterUIController : MonoBehaviour
         if (keyValuePairs.ContainsKey(newChar))
         {
             keyValuePairs[newChar].charIcon.color = colorWhenSelected;
-        }
-        
-        if (selectedChar is SwitchCharData)
-        {
-            SwitchCharData switchCharData = (SwitchCharData)selectedChar;
-
-            switchCharData.charIcon.color = colorWhenSelected;
         }
     }
 }
