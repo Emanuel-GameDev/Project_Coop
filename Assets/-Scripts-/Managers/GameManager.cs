@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject loadScreen;
+
     [SerializeField]
     private float fakeLoadSceenTime = 3f;
 
@@ -86,8 +88,8 @@ public class GameManager : MonoBehaviour
 
     public void ChangeScene(string sceneName)
     {
-        StartLoadScreen();
         LoadSceneInbackground(sceneName);
+        StartLoadScreen();
     }
 
     public void LoadSceneInbackground(string sceneName)
@@ -178,6 +180,8 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+    #region Localization
+
     public void ChangeLanguage(string language)
     {
         Locale selectedLocale = LocalizationSettings.AvailableLocales.Locales.Find(x => x.LocaleName == language);
@@ -229,4 +233,5 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    #endregion
 }
