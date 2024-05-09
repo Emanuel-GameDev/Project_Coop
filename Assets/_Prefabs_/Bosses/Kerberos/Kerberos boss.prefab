@@ -3737,7 +3737,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7620931504108319402}
@@ -3902,14 +3902,14 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   soundsDatabase: {fileID: 0}
-  maxHp: 45
+  maxHp: 1000
   damage: 0
   staminaDamage: 0
   attackSpeed: 50
   moveSpeed: 10
   target: {fileID: 0}
   currentHp: 0
-  lowHpPhaseTreshold: 0
+  lowHpPhaseTreshold: 25
   minDistance: 0.4
   followDuration: 5
   walkSpeed: 8
@@ -3918,16 +3918,16 @@ MonoBehaviour:
   visual: {fileID: 1636597113684329488}
   _pivot: {fileID: 707992863352827762}
   flurryDistance: 2
-  flurrySpeed: 4
+  flurrySpeed: 8
   punchQuantity: 3
-  normalPunchDamage: 15
+  normalPunchDamage: 25
   normalPunchStaminaDamage: 33
-  lastPunchDamage: 30
+  lastPunchDamage: 60
   lastPunchStaminaDamage: 34
-  chargeDamage: 45
+  chargeDamage: 80
   chargeStaminaDamage: 100
   chargeTimer: 0.5
-  chargeSpeed: 150
+  chargeSpeed: 160
   chargeDistance: 20
   ChargeOnParryPushForce: 20
   ChargeOnParryDuration: 1
