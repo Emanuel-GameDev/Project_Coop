@@ -222,21 +222,22 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 
 
     #endregion
+
     #region Audio
 
-    public void OnAttackSound(int databaseClipNumber)
+    public virtual void OnAttackSound(int databaseClipNumber)
     {
         AudioManager.Instance.PlayAudioClip(soundsDatabase.attackSounds[databaseClipNumber], transform);
     }    
-    public void OnBlockSound()
+    public virtual void OnBlockSound()
     {
         AudioManager.Instance.PlayAudioClip(soundsDatabase.blockSounds[0], transform);
     }
-    public void OnDodgeSound()
+    public virtual void OnDodgeSound()
     {
         AudioManager.Instance.PlayAudioClip(soundsDatabase.dodgeSounds[0], transform);
     }
-    public void OnWalkSound()
+    public virtual void OnWalkSound()
     {
         AudioManager.Instance.PlayRandomAudioClip(soundsDatabase.walkSounds, transform);
     }
