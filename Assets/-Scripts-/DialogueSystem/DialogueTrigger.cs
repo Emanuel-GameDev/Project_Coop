@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DialogueTrigger : MonoBehaviour
 {
     [SerializeField] private DialogueBox dialogueBox;
     [SerializeField] private Dialogue dialogueOnTrigger;
-    public bool canTrigger = true;
-    private string settingSaveName = "FirstTriggerChallenge";
+    [SerializeField] UnityEvent onDialogueEndEvent;
+    private bool canTrigger = true;
+    [SerializeField] string settingSaveName = "FirstTriggerChallenge";
 
     private void Start()
     {
@@ -57,6 +59,7 @@ public class DialogueTrigger : MonoBehaviour
     {
         dialogueBox.SetDialogue(dialogueOnTrigger);
         dialogueBox.RemoveAllDialogueEnd();
+        dialogueBox.AddDialogueEnd(onDialogueEndEvent);
         dialogueBox.StartDialogue();
     }
 

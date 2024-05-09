@@ -117,8 +117,6 @@ public class Challenge : MonoBehaviour
         }
 
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
-        Debug.Log(this.name);
-        Debug.Log((gameObject.name));
         ChallengeManager.Instance.SaveChallengeCompleted(this.name, challengeCompleted);
         
 

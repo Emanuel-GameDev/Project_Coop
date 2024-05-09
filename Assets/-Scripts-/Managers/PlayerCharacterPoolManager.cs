@@ -106,6 +106,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         playerCharacter.gameObject.transform.position = spawnPosition;
         playerCharacter.gameObject.SetActive(true);
         playerCharacter.SetSwitchCooldown();
+        playerCharacter.ResetAllAnimatorTriggers();
         freeCharacters.Remove(playerCharacter);
         activeCharacters.Add(playerCharacter);
         //if (newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacterController>())
