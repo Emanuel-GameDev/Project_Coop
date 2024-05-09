@@ -93,7 +93,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private float lastPerfectDodgeTime;
     private float lastDashAttackTime;
     private float lastLandedHitTime;
-    private float perfectDodgeCounter = 0;
+    private int perfectDodgeCounter = 0;
     private float dashAttackStartTime;
     private float dashAttackDamageMultiplier;
     private float currentBossfightTotalDamageDone = 0;
@@ -312,7 +312,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
                     PerfectTimeEnded();
                     onPerfectDodgeExecuted?.Invoke();
                     Utility.DebugTrace($"PerfectDodge: {true}, Count: {perfectDodgeCounter}");
-                    AudioManager.Instance.PlayAudioClip();
+                    PlayPerfectDodgeSound();
                 }
 
                 StartCoroutine(Dodge(lastNonZeroDirection, rb));
@@ -625,6 +625,20 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
             }
         }
     }
+
+    private void PlayPerfectDodgeSound()
+    {
+        if (soundsDatabase.specialEffectsSounds[perfectDodgeCounter - 1] != null)
+        {
+            AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[perfectDodgeCounter - 1]);
+        }
+        else
+        {
+            AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[soundsDatabase.specialEffectsSounds.Count - 1]);
+        }
+    }
+
+
     #endregion
 
 
