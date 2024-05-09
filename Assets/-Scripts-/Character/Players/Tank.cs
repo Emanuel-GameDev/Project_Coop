@@ -457,7 +457,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
                     Debug.Log("parata perfetta eseguita, rimanenti per potenziamento boss = " + (attacksToBlockForUpgrade - perfectBlockCount));
 
-                    if(soundsDatabase.specialEffectsSounds[perfectBlockCount - 1] != null)
+                    if(soundsDatabase.specialEffectsSounds.Count <= perfectBlockCount && soundsDatabase.specialEffectsSounds[perfectBlockCount - 1] != null)
                     {
                         AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[perfectBlockCount - 1]);
                     }
