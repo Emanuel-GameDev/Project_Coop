@@ -164,6 +164,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
         if (other.TryGetComponent<IInteracter>(out var interacter))
         {
             interacter.EnableInteraction(this);
+            GetComponent<SpriteRenderer>().enabled = true;
         }
     }
 
@@ -172,6 +173,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
         if (other.TryGetComponent<IInteracter>(out var interacter))
         {
             interacter.DisableInteraction(this);
+            GetComponent<SpriteRenderer>().enabled = true;
         }
     }
 
