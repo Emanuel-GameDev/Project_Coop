@@ -524,7 +524,7 @@ public abstract class PlayerCharacter : Character
         characterController.GetInputHandler().PlayerInput.actions.Enable();
     }
 
-    public void ResetAllAnimatorTriggers()
+    public virtual void ResetAllAnimatorTriggers()
     {
         foreach (var param in animator.parameters)
         {

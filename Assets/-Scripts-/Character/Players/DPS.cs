@@ -99,10 +99,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private float currentBossfightTotalDamageDone = 0;
     private Vector3 startPosition;
 
-
-    private int currentComboState;
-    private int nextComboState;
-    private int comboStateMax = 3;
     private int consecutiveHitsCount;
 
     private bool mustContinueCombo = false;
@@ -145,11 +141,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         {
             _isAttacking = value;
             animator.SetBool("isAttacking", _isAttacking);
-            if (!value)
-            {
-                nextComboState = 0;
-                currentComboState = 0;
-            }
         }
     }
     private bool _isAttacking;
@@ -179,26 +170,28 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     public override void Inizialize()
     {
         base.Inizialize();
+        ResetVariables();
+        chargeHandler = GetComponentInChildren<ChargeVisualHandler>();
+        chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
+        perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
+        character = ePlayerCharacter.Brutus;
+        emissionModule = _walkDustParticles.emission;
+    }
+
+    private void ResetVariables()
+    {
         lastDodgeTime = -dodgeCooldown;
         lastAttackTime = -timeBetweenCombo;
         canUseUniqueAbility = true;
         lastDashAttackTime = -dashAttackCooldown;
         consecutiveHitsCount = 0;
-        currentComboState = 0;
-        nextComboState = 0;
         isInvulnerable = false;
         isDodging = false;
         IsAttacking = false;
         isDashingAttack = false;
         isDashingAttackStarted = false;
         perfectTimingEnabled = false;
-        chargeHandler = GetComponentInChildren<ChargeVisualHandler>();
-        chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
-        perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
-        character = ePlayerCharacter.Brutus;
-        emissionModule = _walkDustParticles.emission;
         invicibilityVFX.SetActive(false);
-
         invicibilityBaloon.SetActive(false);
     }
 
@@ -530,6 +523,14 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         damager.RemoveFunctionFromOnTrigger(DeflectProjectile);
     }
+
+    public override void ResetAllAnimatorTriggers()
+    {
+        base.ResetAllAnimatorTriggers();
+        ResetVariables();
+
+    }
+
 
     #region Damage
 

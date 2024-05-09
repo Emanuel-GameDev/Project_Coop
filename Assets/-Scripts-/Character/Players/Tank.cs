@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -100,6 +101,10 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private bool canBlock = true;
     private bool comboStarted = false;
 
+    private bool alreadyCalled = false;
+
+    private float attackStartTime = 0;
+
     private AttackComboState currentAttackComboState;
     private AttackComboState NextAttackComboState
     {
@@ -190,49 +195,88 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         //Cercar soluzione forse
         if (stunned) return;
 
-        if (context.performed && isBlocking == false)
+        //if (context.performed && isBlocking == false)
+        //{
+        //    chargedAttackReady = false;
+        //    isChargingAttack = false;
+        //    isAttacking = true;
+        //    attackPressed = true;
+        //    ResetAllAnimatorTriggers();
+        //    ActivateHyperArmor();
+        //    SetCanMove(false, rb);
+        //    Invoke(nameof(ChargingAttack), timeCheckAttackType);
+        //}
+
+        //if (context.canceled)
+        //{
+        //    attackPressed = false;
+
+        //    if (chargedAttackReady)
+        //    {
+        //        animator.SetTrigger("ChargedAttackEnd");
+        //        Debug.Log("Charged Attack executed");
+        //        //effetto visivo attacco caricato a false
+        //        chargedAttackSprite.SetActive(false);
+        //        currentAttackComboState = AttackComboState.Attack2;
+        //    }
+        //    else
+        //    {
+        //        if (comboStarted)
+        //            ContinueCombo();
+        //        else
+        //            StartCombo();    
+        //    }
+        //    chargedAttackReady = false;
+        //    isChargingAttack = false;
+        //    SetCanMove(true, rb);
+
+
+        //    Utility.DebugTrace($"ChargeReady: {chargedAttackReady}, comboStarted: {comboStarted}");
+        //}
+
+        if (context.performed && !isBlocking)
         {
-            chargedAttackReady = false;
-            isChargingAttack = false;
+            attackStartTime = Time.time;
             isAttacking = true;
-            attackPressed = true;
-            ResetAllAnimatorTriggers();
             ActivateHyperArmor();
             SetCanMove(false, rb);
-            Invoke(nameof(ChargingAttack), timeCheckAttackType);
-        }
-
-        if (context.canceled)
-        {
-            attackPressed = false;
-
-            if (chargedAttackReady)
+            ResetAllAnimatorTriggers();
+            //Animaizone Inizio Attacco
+            if(chargedAttack)
             {
-                animator.SetTrigger("ChargedAttackEnd");
-                Debug.Log("Charged Attack executed");
-                //effetto visivo attacco caricato a false
-                chargedAttackSprite.SetActive(false);
-                currentAttackComboState = AttackComboState.Attack2;
+                StartCoroutine(StartChargedAttackTimer());
             }
             else
             {
                 if (comboStarted)
                     ContinueCombo();
-                else
-                    StartCombo();    
+                else if (currentAttackComboState == AttackComboState.NotAttaking)
+                    StartCombo();
             }
-            chargedAttackReady = false;
-            isChargingAttack = false;
-            SetCanMove(true, rb);
-
-
-            Utility.DebugTrace($"ChargeReady: {chargedAttackReady}, comboStarted: {comboStarted}");
         }
 
+        if (context.canceled && isAttacking)
+        {
+            // if(chargedAttackReady) Time.time - attackStartTime < timeCheckAttackType || 
+            if (chargedAttackReady)
+            {
+                animator.SetTrigger("ChargedAttackEnd");
+                Debug.Log("Charged Attack executed");
+                chargedAttackSprite.SetActive(false);
+            }
+            else if(chargedAttack)
+            {
+                if (comboStarted)
+                    ContinueCombo();
+                else if (currentAttackComboState == AttackComboState.NotAttaking)
+                    StartCombo();
+            }
+        }
     }
 
     private void StartCombo()
     {
+        comboStarted = true;
         currentAttackComboState = AttackComboState.Attack1;
         DoMeleeAttack();
     }
@@ -245,7 +289,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     private void DoMeleeAttack()
     {
-        comboStarted = true;
         string triggerName = currentAttackComboState.ToString();
         animator.SetTrigger(triggerName);
     }
@@ -253,18 +296,28 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public void OnEndAttackAnimation()
     {
-        if (mustDoSecondAttack)
+        if (!alreadyCalled)
         {
-            currentAttackComboState = NextAttackComboState;
-            if (currentAttackComboState == AttackComboState.NotAttaking)
-                ResetAttack();
+            if (mustDoSecondAttack)
+            {
+                currentAttackComboState = NextAttackComboState;
+                if (currentAttackComboState == AttackComboState.NotAttaking)
+                    ResetAttack();
+                else
+                    DoMeleeAttack();
+            }
             else
-                DoMeleeAttack();
+            {
+                ResetAttack();
+            }
+
+            alreadyCalled = true;
         }
-        else
-        {
-            ResetAttack();
-        }
+    }
+
+    public void OnAttackAnimationStart()
+    {
+        alreadyCalled = false;
     }
 
     public void ResetAttack()
@@ -273,28 +326,57 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         DeactivateHyperArmor();
         mustDoSecondAttack = false;
         isAttacking = false;
-        Utility.DebugTrace("ResetAttack");
+        chargedAttackReady = false;
+        isChargingAttack = false;
         comboStarted = false;
+        SetCanMove(true, rb);
+
+        Utility.DebugTrace("ResetAttack");
     }
 
+    public void ResetAttackMessage()
+    {
+        currentAttackComboState = AttackComboState.NotAttaking;
+        DeactivateHyperArmor();
+        mustDoSecondAttack = false;
+        isAttacking = false;
+        chargedAttackReady = false;
+        isChargingAttack = false;
+        comboStarted = false;
+        SetCanMove(true, rb);
+
+        Utility.DebugTrace("ResetAttackDIOCAEEEEEEEEEEEEEEEEEEEEEEE");
+    }
+
+
+    public void AnimationMessage()
+    {
+        Debug.Log("DIOCANEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+    }
 
     public void ChargingAttack()
     {
-        if (chargedAttack)
-        {
+        //if (chargedAttack)
+        //{
             //tasto ancora premuto e attacco carico sbloccato
-            if (attackPressed)
-            {
+            //if (attackPressed)
+            //{
                 isChargingAttack = true;
                 animator.SetTrigger("ChargedAttack");
                 StartCoroutine(StartChargedAttackTimer());
-            }
+            //}
 
-        }
+        //}
     }
+
     IEnumerator StartChargedAttackTimer()
     {
+        isChargingAttack = true;
         chargedAttackReady = false;
+        yield return new WaitForSeconds(timeCheckAttackType);
+
+        animator.SetTrigger("ChargedAttack");
+
         yield return new WaitForSeconds(chargedAttackTimer);
 
         if (attackPressed)
@@ -306,6 +388,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
 
     }
+
     public void ActivateHyperArmor()
     {
         if (implacableAttack)
