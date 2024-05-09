@@ -209,13 +209,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (context.performed)
         {
-            //if (canMove && CanStartCombo())
-            //{
-            //    StartCombo();
-            //}
-            //else if (IsAttacking)
-            //    ContinueCombo();
-
             alreadyCalled = false;
 
             if (IsAttacking)
@@ -237,26 +230,18 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private void StartCombo()
     {
         currentAttackComboState = AttackComboState.Attack1;
-        //currentComboState = 1;
-        //nextComboState = currentComboState;
         DoMeleeAttack();
         rb.velocity = Vector3.zero;
     }
 
     private void ContinueCombo()
     {
-        //if (currentComboState == nextComboState)
-        //{
-        //    nextComboState = ++nextComboState > comboStateMax ? 0 : nextComboState;
-        //    if (CanContinueCombo())
-        //        DoMeleeAttack();
-        //}
         mustContinueCombo = true;
     }
     private void DoMeleeAttack()
     {
         IsAttacking = true;
-        string triggerName = currentAttackComboState.ToString();   //ATTACK + (nextComboState).ToString();
+        string triggerName = currentAttackComboState.ToString(); 
         animator.SetTrigger(triggerName);
 
         //PlayAttackSound();
@@ -268,9 +253,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         {
             AdjustLastAttackTime();
 
-            //if (currentComboState == nextComboState || nextComboState == 0)
-            //    IsAttacking = false;
-            //currentComboState = nextComboState;
             if (mustContinueCombo)
             {
                 mustContinueCombo = false;
@@ -300,17 +282,14 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     private void AdjustLastAttackTime()
     {
-        //float comboCompletionValue = (float)currentComboState / (float)comboStateMax;
-        //float reductionFactor = (1 - comboCompletionValue) * timeBetweenCombo;
-        lastAttackTime = Time.time; // - reductionFactor;
+        lastAttackTime = Time.time;
     }
 
     private bool CanStartCombo() => (unlimitedComboUnlocked || (canMove && Time.time > lastAttackTime + timeBetweenCombo && currentAttackComboState == AttackComboState.NotAttaking)); // && currentComboState != 1;
-    //private bool CanContinueCombo() => nextComboState != 0;
+    
     private void ResetAttack()
     {
         IsAttacking = false;
-        //currentComboState = 0;
         currentAttackComboState = AttackComboState.NotAttaking;
         mustContinueCombo = false;
         alreadyCalled = false;
