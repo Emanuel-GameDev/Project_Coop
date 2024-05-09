@@ -158,6 +158,9 @@ public class SouvenirShopMenu : Menu
         AudioManager.Instance.PlayAudioClip(openingAudioClip, transform);
         shopMusicSource.Stop();
 
+        PlayerCharacterPoolManager.Instance.HealAllPlayerFull();
+        HPHandler.Instance.UpdateAllContainers();
+
 
         shopGroup.GetComponent<Animation>().Play("SouvenirExit");
         StartCoroutine(CloseMenuWithDelay(shopGroup.GetComponent<Animation>().clip.length));
