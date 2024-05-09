@@ -312,6 +312,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
                     PerfectTimeEnded();
                     onPerfectDodgeExecuted?.Invoke();
                     Utility.DebugTrace($"PerfectDodge: {true}, Count: {perfectDodgeCounter}");
+                    AudioManager.Instance.PlayAudioClip();
                 }
 
                 StartCoroutine(Dodge(lastNonZeroDirection, rb));
