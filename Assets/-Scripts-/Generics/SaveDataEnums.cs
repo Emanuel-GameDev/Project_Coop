@@ -30,7 +30,9 @@ public enum SceneSaveSettings
     SviluppartyInteractions,
     DialogueTrigger,
     Passepartout,
-    SlotMachine
+    SlotMachine,
+    ShopLilithFirstTime,
+    ShopSouvenirFirstTime,
 
 }
 
