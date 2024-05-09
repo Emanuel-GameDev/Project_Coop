@@ -9,10 +9,10 @@ using UnityEngine.UI;
 public class DeathScreen : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private float fadeInBackgroundTime = 1f;
-    [SerializeField] private float waitTimeBeforeFadeInText = 1f;
-    [SerializeField] private float fadeInTextTime = 1f;
-    [SerializeField] private float waitTimeBeforeRetryMenu = 1f;
+    [SerializeField, Min(0f)] private float fadeInBackgroundTime = 1f;
+    [SerializeField, Min(0f)] private float waitTimeBeforeFadeInText = 1f;
+    [SerializeField, Min(0f)] private float fadeInTextTime = 1f;
+    [SerializeField, Min(0f)] private float waitTimeBeforeRetryMenu = 1f;
     [SerializeField] private string exitSceneName;
     
     [Header("References")]

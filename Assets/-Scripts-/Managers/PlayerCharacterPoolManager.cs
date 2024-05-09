@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 public class PlayerCharacterPoolManager : MonoBehaviour
@@ -66,7 +63,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     #region Switching Character
     private void InizializeList()
     {
-        foreach(PlayerCharacterData characterData in GameManager.Instance.GetCharacterDataList())
+        foreach (PlayerCharacterData characterData in GameManager.Instance.GetCharacterDataList())
         {
             PlayerCharacter playerCharacter = Instantiate(characterData.CharacterPrefab, transform).GetComponent<PlayerCharacter>();
             freeCharacters.Add(playerCharacter);
@@ -85,7 +82,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         PlayerCharacter searchedCharacter = freeCharacters.Find(c => c.Character == targetCharacter);
         if (searchedCharacter != null)
         {
-            PubSub.Instance.Notify(EMessageType.switchingCharacters, new PlayerCharacter[] {playerCharacter, searchedCharacter});
+            PubSub.Instance.Notify(EMessageType.switchingCharacters, new PlayerCharacter[] { playerCharacter, searchedCharacter });
             playerCharacter.characterController.SetPlayerCharacter(searchedCharacter);
             playerCharacter.characterController = null;
             ActivateCharacter(searchedCharacter, playerCharacter.transform);
@@ -119,7 +116,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     public void ReturnCharacter(PlayerCharacter playerCharacter)
     {
         playerCharacter.gameObject.transform.parent = transform;
-        playerCharacter.gameObject.transform.localPosition = Vector3.zero; 
+        playerCharacter.gameObject.transform.localPosition = Vector3.zero;
         playerCharacter.gameObject.SetActive(false);
         freeCharacters.Add(playerCharacter);
         activeCharacters.Remove(playerCharacter);
@@ -131,7 +128,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     public ePlayerCharacter GetFreeRandomCharacter()
     {
         ePlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)].Character;
-        
+
         return searchedCharacter;
     }
 
@@ -157,12 +154,12 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     public void PlayerIsDead()
     {
         deadPlayers++;
-        if(deadPlayers >= activeCharacters.Count)
+        if (deadPlayers >= activeCharacters.Count)
         {
             deadPlayers = 0;
             ActivateDeathScreen();
         }
-            
+
     }
 
     public void PlayerIsRessed()

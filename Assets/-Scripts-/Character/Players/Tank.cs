@@ -122,7 +122,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     private int comboIndex = 0;
     private int comboMax = 2;
-    private int perfectBlockCount;
+    private int perfectBlockCount=0;
 
     private float currentStamina;
     private float blockAngleThreshold => (blockAngle - 180) / 180;
@@ -326,26 +326,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         Utility.DebugTrace("ResetAttack");
     }
 
-    public void ResetAttackMessage()
-    {
-        currentAttackComboState = AttackComboState.NotAttaking;
-        DeactivateHyperArmor();
-        mustDoSecondAttack = false;
-        isAttacking = false;
-        chargedAttackReady = false;
-        isChargingAttack = false;
-        comboStarted = false;
-        SetCanMove(true, rb);
-
-        Utility.DebugTrace("ResetAttackDIOCAEEEEEEEEEEEEEEEEEEEEEEE");
-    }
-
-
-    public void AnimationMessage()
-    {
-        Debug.Log("DIOCANEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-    }
-
     public void ChargingAttack()
     {
         //if (chargedAttack)
@@ -476,7 +456,16 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                     }
 
                     Debug.Log("parata perfetta eseguita, rimanenti per potenziamento boss = " + (attacksToBlockForUpgrade - perfectBlockCount));
-                    AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[0]);
+
+                    if(soundsDatabase.specialEffectsSounds.Count <= perfectBlockCount && soundsDatabase.specialEffectsSounds[perfectBlockCount - 1] != null)
+                    {
+                        AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[perfectBlockCount - 1]);
+                    }
+                    else
+                    {
+                        AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[soundsDatabase.specialEffectsSounds.Count-1]);
+                    }
+
                     PubSub.Instance.Notify(EMessageType.perfectGuardExecuted, this);
 
 
@@ -830,7 +819,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         statBoosted = false;
         damageReceivedMultiplier = 1;
     }
-
 
     #endregion
 
