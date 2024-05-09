@@ -18,7 +18,7 @@ public class JudeAbilityTutorialFase : TutorialFase
     {
         base.Enter();
         tutorialManager.ResetStartingCharacterAssosiacion();
-        PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, CheckAndCount);
+       
 
         faseData = (TutorialFaseData)tutorialManager.abilityFases[tutorialManager.abilityFaseCount].faseData;
 
@@ -40,7 +40,7 @@ public class JudeAbilityTutorialFase : TutorialFase
 
     private void CheckAndCount(object obj)
     {
-        if(obj is Projectile) 
+        if (obj is Projectile) 
         {
             Projectile projectile = (Projectile)obj;
             if (projectile.projectileType == EProjectileType.empoweredProjectile) 
@@ -62,6 +62,7 @@ public class JudeAbilityTutorialFase : TutorialFase
 
         tutorialManager.DeactivateAllPlayerInputs();
 
+        PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, CheckAndCount);
 
         foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
         {

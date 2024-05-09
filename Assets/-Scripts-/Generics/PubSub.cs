@@ -53,23 +53,21 @@ public class PubSub : MonoBehaviour
     {
         if (_registeredFunctions.ContainsKey(messageType))
         {
+            //Non funzionava
             // Per ogni funzione dentro un messageType controllo se la vers in stringa della func è uguale a quella nuova
-
-            string newFuncString = function.ToString();
+            //string newFuncString = function.ToString();
             
             foreach (Action<object> item in _registeredFunctions[messageType])
             {
-                if (item.ToString() == newFuncString)
+                if (item == function)
                     return;
             }
-
             _registeredFunctions[messageType].Add(function);
         }
         else
         {
             List<Action<object>> newList = new();
             newList.Add(function);
-
             _registeredFunctions.Add(messageType, newList);
         }
     }
