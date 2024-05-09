@@ -222,6 +222,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 
 
     #endregion
+
     #region Audio
 
     public virtual void OnAttackSound(int databaseClipNumber)

@@ -225,6 +225,7 @@ public class GameManager : MonoBehaviour
             LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[currentIndex - 1];
         }
     }
+   
 
     #endregion
 }

@@ -24,6 +24,8 @@ public class ChallengeUI : MonoBehaviour
         }
         else
         {
+            challengeName.StringReference = challengeSelected.challengeName;
+            challegeDescription.StringReference = challengeSelected.challengeDescription;
             challengeCompletedImage.gameObject.SetActive(true);
           
             selectButton.enabled = false;
