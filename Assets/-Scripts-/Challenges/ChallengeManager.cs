@@ -107,7 +107,8 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     {
         foreach (Challenge c in currentSaveChallenges)
         {
-            sceneSetting.AddStringValue(SaveDataStrings.CHALLENGE, c.name.ToString());
+            
+            sceneSetting.strings.Add(new(SaveDataStrings.CHALLENGE, c.name.ToString()));
         }
 
         SaveManager.Instance.SaveSceneData(sceneSetting);
