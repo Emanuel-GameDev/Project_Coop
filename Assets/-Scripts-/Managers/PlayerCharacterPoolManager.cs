@@ -44,6 +44,8 @@ public class PlayerCharacterPoolManager : MonoBehaviour
 
     }
 
+    [SerializeField]
+    private DeathScreen deathScreen;
     private int deadPlayers = 0;
 
     private void Awake()
@@ -131,13 +133,6 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         ePlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)].Character;
         
         return searchedCharacter;
-
-
-        //PlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)];
-        //if(searchedCharacter == null) return null;
-
-        //ActivateCharacter(searchedCharacter, SpawnPositionManager.Instance.GetFreePos().spawnPos); //transform.position); 
-        //return searchedCharacter;
     }
 
     public PlayerCharacter GetCharacter(ePlayerCharacter targetCharacter, Transform position)
@@ -151,7 +146,6 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         if (searchedCharacter != null)
         {
             ActivateCharacter(searchedCharacter, position);
-            //PubSub.Instance.Notify(EMessageType.characterJoined, searchedCharacter);
         }
         return searchedCharacter;
     }
@@ -166,7 +160,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         if(deadPlayers >= activeCharacters.Count)
         {
             deadPlayers = 0;
-            GameManager.Instance.LoadScene(SceneManager.GetActiveScene().name);
+            ActivateDeathScreen();
         }
             
     }
@@ -176,6 +170,14 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         deadPlayers--;
         if (deadPlayers <= 0)
             deadPlayers = 0;
+    }
+
+    public void ActivateDeathScreen()
+    {
+        if (deathScreen != null)
+            deathScreen.ShowDeathScreen();
+        else
+            GameManager.Instance.ChangeScene(SceneManager.GetActiveScene().name);
     }
 
     #endregion
