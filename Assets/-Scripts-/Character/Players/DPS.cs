@@ -658,7 +658,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     //3: Il personaggio può respingere certi tipi di colpi(es: proiettili) con il suo attacco
     //4: quando il personaggio usa l’abilità unica(i secondi di immortalità) i suoi movimenti diventano più rapidi(attacchi, schivate e spostamenti)
     //5: Effettuare una schivata perfetta aumenta i danni per tot tempo(cumulabile con il bonus ai danni del potenziamento).
-
 }
 
 public enum AttackComboState
