@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -327,26 +326,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         Utility.DebugTrace("ResetAttack");
     }
 
-    public void ResetAttackMessage()
-    {
-        currentAttackComboState = AttackComboState.NotAttaking;
-        DeactivateHyperArmor();
-        mustDoSecondAttack = false;
-        isAttacking = false;
-        chargedAttackReady = false;
-        isChargingAttack = false;
-        comboStarted = false;
-        SetCanMove(true, rb);
-
-        Utility.DebugTrace("ResetAttackDIOCAEEEEEEEEEEEEEEEEEEEEEEE");
-    }
-
-
-    public void AnimationMessage()
-    {
-        Debug.Log("DIOCANEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-    }
-
     public void ChargingAttack()
     {
         //if (chargedAttack)
@@ -478,7 +457,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
                     Debug.Log("parata perfetta eseguita, rimanenti per potenziamento boss = " + (attacksToBlockForUpgrade - perfectBlockCount));
 
-                    if(soundsDatabase.specialEffectsSounds[perfectBlockCount - 1] != null)
+                    if(soundsDatabase.specialEffectsSounds.Count <= perfectBlockCount && soundsDatabase.specialEffectsSounds[perfectBlockCount - 1] != null)
                     {
                         AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[perfectBlockCount - 1]);
                     }
@@ -840,7 +819,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         statBoosted = false;
         damageReceivedMultiplier = 1;
     }
-
 
     #endregion
 
