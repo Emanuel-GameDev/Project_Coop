@@ -628,13 +628,16 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     private void PlayPerfectDodgeSound()
     {
-        if (soundsDatabase.specialEffectsSounds.Count <= perfectDodgeCounter && soundsDatabase.specialEffectsSounds[perfectDodgeCounter - 1] != null)
+        if(soundsDatabase.specialEffectsSounds.Count > 0)
         {
-            AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[perfectDodgeCounter - 1]);
-        }
-        else
-        {
-            AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[soundsDatabase.specialEffectsSounds.Count - 1]);
+            if (soundsDatabase.specialEffectsSounds.Count >= perfectDodgeCounter)
+            {
+                AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[perfectDodgeCounter - 1]);
+            }
+            else
+            {
+                AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[soundsDatabase.specialEffectsSounds.Count - 1]);
+            }
         }
     }
 
