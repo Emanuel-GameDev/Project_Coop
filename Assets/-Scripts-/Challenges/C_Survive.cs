@@ -47,7 +47,12 @@ public class C_Survive : Challenge
     {
         startTimer = false;
         base.OnFailChallenge();
-        
+
+        ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnFailure);
+        ChallengeManager.Instance.dialogueBox.RemoveAllDialogueEnd();
+        ChallengeManager.Instance.dialogueBox.AddDialogueEnd(onChallengeFailReset);
+        ChallengeManager.Instance.dialogueBox.StartDialogue();
+
     }
     public override void OnWinChallenge()
     {
