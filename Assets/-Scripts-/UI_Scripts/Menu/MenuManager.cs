@@ -116,9 +116,12 @@ public class MenuManager : MonoBehaviour
     {
         if (optionMenu != null)
         {
-            OpenMenu(optionMenu, player, true);
-            if (hpHandler != null)
-                hpHandler.gameObject.SetActive(false);
+            if(actualMenu == null)
+            {
+                OpenMenu(optionMenu, player, true);
+                if (hpHandler != null)
+                    hpHandler.gameObject.SetActive(false);
+            }
         }
         else
             OpenPauseMenu(player);
