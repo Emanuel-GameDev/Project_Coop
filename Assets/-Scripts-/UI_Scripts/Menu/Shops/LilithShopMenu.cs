@@ -1,12 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Localization;
-using UnityEngine.Localization.Components;
-using UnityEngine.Localization.Settings;
-using UnityEngine.UI;
 
 public class LilithShopMenu : Menu
 {
@@ -16,12 +10,33 @@ public class LilithShopMenu : Menu
     [SerializeField] Dialogue beforeEnterDialogue;
     //[HideInInspector] public Dictionary<LilithShopTable, PlayerInputHandler> tableAssosiation = new();
 
+    [SerializeField] string settingSaveName = "LilithShopFirstTimeInteraction";
+    SceneSetting sceneSetting;
+
+    
+
     public override void Start()
     {
         base.Start();
+        
+        SaveManager.Instance.LoadData();
+        sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ShopLilithFirstTime);
+
+        if (sceneSetting == null)
+        {
+            sceneSetting = new(SceneSaveSettings.ShopLilithFirstTime);
+            firstTime = true;
+
+        }
+        else
+        {
+            firstTime = sceneSetting.GetBoolValue(settingSaveName);
+        }
+
     }
 
-    bool firstTime=true;
+
+    bool firstTime = true;
 
     public override void OpenMenu()
     {
@@ -41,7 +56,7 @@ public class LilithShopMenu : Menu
         //    pc.GetInputHandler().SetPlayerActiveMenu(gameObject, table[i].GetComponentInChildren<Selectable>().gameObject);
 
         //    InputActionAsset actions = pc.GetInputHandler().PlayerInput.actions;
-            
+
 
         //    actions.FindActionMap("Player").Disable();
         //    actions.FindActionMap("UI").Enable();
@@ -55,15 +70,20 @@ public class LilithShopMenu : Menu
 
 
 
-        
-      
+
+
 
         if (dialogueBox != null)
         {
+           
             if (firstTime)
             {
                 dialogueBox.SetDialogue(FirstTimeDialogue);
-                firstTime=false;
+                firstTime = false;
+
+                sceneSetting.AddBoolValue(settingSaveName, firstTime);
+                SaveManager.Instance.SaveSceneData(sceneSetting);
+
             }
             else
                 dialogueBox.SetDialogue(beforeEnterDialogue);
@@ -74,7 +94,7 @@ public class LilithShopMenu : Menu
 
             dialogueBox.StartDialogue();
 
-            
+
         }
         else
             OpenAnimationEvent();
@@ -129,7 +149,7 @@ public class LilithShopMenu : Menu
         shopGroup.GetComponent<Animation>().Play("LilithShopExit");
         StartCoroutine(CloseMenuWithDelay(shopGroup.GetComponent<Animation>().clip.length));
         SaveManager.Instance.SavePlayersData();
-        
+
     }
 
     IEnumerator CloseMenuWithDelay(float delay)

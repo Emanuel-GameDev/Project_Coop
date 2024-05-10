@@ -94,8 +94,8 @@ public abstract class PlayerCharacter : Character
             if(currentHp<0)
                 currentHp = 0;
 
-            if(currentHp>maxHp)
-                currentHp = maxHp;
+            if (currentHp > MaxHp)
+                currentHp = MaxHp;
         }
     }
     public virtual float Damage => damage * powerUpData.DamageIncrease;

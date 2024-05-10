@@ -16,6 +16,9 @@ public class SouvenirShopMenu : Menu
     [SerializeField] AudioClip openingAudioClip;
     [SerializeField] AudioSource shopMusicSource;
 
+    [SerializeField] string settingSaveName = "SouvenirShopFirstTimeInteraction";
+    SceneSetting sceneSetting;
+
     //[Serializable]
     //public class SouvenirShopEntry
     //{
@@ -25,6 +28,25 @@ public class SouvenirShopMenu : Menu
     //}
 
 
+    public override void Start()
+    {
+        base.Start();
+
+        SaveManager.Instance.LoadData();
+        sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ShopSouvenirFirstTime);
+
+        if (sceneSetting == null)
+        {
+            sceneSetting = new(SceneSaveSettings.ShopSouvenirFirstTime);
+            firstTime = true;
+
+        }
+        else
+        {
+            firstTime = sceneSetting.GetBoolValue(settingSaveName);
+        }
+
+    }
 
     bool firstTime = true;
 
@@ -65,6 +87,9 @@ public class SouvenirShopMenu : Menu
             {
                 dialogueBox.SetDialogue(FirstTimeDialogue);
                 firstTime = false;
+
+                sceneSetting.AddBoolValue(settingSaveName, firstTime);
+                SaveManager.Instance.SaveSceneData(sceneSetting);
             }
             else
                 dialogueBox.SetDialogue(beforeEnterDialogue);
@@ -158,6 +183,9 @@ public class SouvenirShopMenu : Menu
         AudioManager.Instance.PlayAudioClip(openingAudioClip, transform);
         shopMusicSource.Stop();
 
+        PlayerCharacterPoolManager.Instance.HealAllPlayerFull();
+        HPHandler.Instance.UpdateAllContainers();
+
 
         shopGroup.GetComponent<Animation>().Play("SouvenirExit");
         StartCoroutine(CloseMenuWithDelay(shopGroup.GetComponent<Animation>().clip.length));
@@ -197,5 +225,7 @@ public class SouvenirShopMenu : Menu
             gameObject.GetComponentInParent<PressInteractable>().CancelInteraction(pc);
         }
         shopGroup.SetActive(false);
+
+        
     }
 }

@@ -93,7 +93,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private float lastPerfectDodgeTime;
     private float lastDashAttackTime;
     private float lastLandedHitTime;
-    private float perfectDodgeCounter = 0;
+    private int perfectDodgeCounter = 0;
     private float dashAttackStartTime;
     private float dashAttackDamageMultiplier;
     private float currentBossfightTotalDamageDone = 0;
@@ -312,6 +312,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
                     PerfectTimeEnded();
                     onPerfectDodgeExecuted?.Invoke();
                     Utility.DebugTrace($"PerfectDodge: {true}, Count: {perfectDodgeCounter}");
+                    PlayPerfectDodgeSound();
                 }
 
                 StartCoroutine(Dodge(lastNonZeroDirection, rb));
@@ -624,6 +625,23 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
             }
         }
     }
+
+    private void PlayPerfectDodgeSound()
+    {
+        if(soundsDatabase.specialEffectsSounds.Count > 0)
+        {
+            if (soundsDatabase.specialEffectsSounds.Count >= perfectDodgeCounter)
+            {
+                AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[perfectDodgeCounter - 1]);
+            }
+            else
+            {
+                AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[soundsDatabase.specialEffectsSounds.Count - 1]);
+            }
+        }
+    }
+
+
     #endregion
 
 
@@ -640,7 +658,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     //3: Il personaggio può respingere certi tipi di colpi(es: proiettili) con il suo attacco
     //4: quando il personaggio usa l’abilità unica(i secondi di immortalità) i suoi movimenti diventano più rapidi(attacchi, schivate e spostamenti)
     //5: Effettuare una schivata perfetta aumenta i danni per tot tempo(cumulabile con il bonus ai danni del potenziamento).
-
 }
 
 public enum AttackComboState

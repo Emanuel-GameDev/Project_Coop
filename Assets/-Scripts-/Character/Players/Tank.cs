@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -457,15 +456,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                     }
 
                     Debug.Log("parata perfetta eseguita, rimanenti per potenziamento boss = " + (attacksToBlockForUpgrade - perfectBlockCount));
-
-                    if(soundsDatabase.specialEffectsSounds[perfectBlockCount - 1] != null)
-                    {
-                        AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[perfectBlockCount - 1]);
-                    }
-                    else
-                    {
-                        AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[soundsDatabase.specialEffectsSounds.Count-1]);
-                    }
+                    PlayPerfectParrySound();
 
                     PubSub.Instance.Notify(EMessageType.perfectGuardExecuted, this);
 
@@ -522,6 +513,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
 
     }
+
+
     public blockZone SetBlockZone(float lastYValue)
     {
 
@@ -886,4 +879,19 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     #endregion
 
 
+    private void PlayPerfectParrySound()
+    {
+        if (soundsDatabase.specialEffectsSounds.Count > 0)
+        {
+
+            if (soundsDatabase.specialEffectsSounds.Count >= perfectBlockCount)
+            {
+                AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[perfectBlockCount - 1]);
+            }
+            else
+            {
+                AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[soundsDatabase.specialEffectsSounds.Count - 1]);
+            }
+        }
+    }
 }

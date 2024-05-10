@@ -197,5 +197,12 @@ public class HPHandler : MonoBehaviour
 
     }
 
+    public void UpdateAllContainers()
+    {
+        foreach (CharacterHUDContainer cont in gameObject.GetComponentsInChildren<CharacterHUDContainer>())
+        {
+            cont.SetUpHp();
+        }
+    }
 
 }
