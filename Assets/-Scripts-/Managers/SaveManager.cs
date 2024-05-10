@@ -194,6 +194,7 @@ public class SaveManager : MonoBehaviour
     {
         saveData = new();
         SaveData();
+        Utility.DebugTrace("Dati Eliminati!");
     }
 
 }

@@ -189,6 +189,7 @@ GameObject:
   - component: {fileID: 3424479737374696155}
   - component: {fileID: 6725546120686758717}
   - component: {fileID: 3063328228525057146}
+  - component: {fileID: 7130703776980853361}
   m_Layer: 5
   m_Name: ButtonYes
   m_TagString: Untagged
@@ -299,9 +300,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3186677421533828446}
-        m_TargetAssemblyTypeName: BaseMenuFunction, Assembly-CSharp
-        m_MethodName: ExitGame
+      - m_Target: {fileID: 7130703776980853361}
+        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
+        m_MethodName: ChangeScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -323,6 +324,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dd7abf0e5f16f64fad7fa03bb9bc984, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7130703776980853361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36072769535193222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa08c3febffe4b94783674d03e8cd9dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destinationSceneName: TitleScreenAndMainMenu
 --- !u!1 &49603975526595202
 GameObject:
   m_ObjectHideFlags: 0
