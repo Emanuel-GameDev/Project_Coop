@@ -85,8 +85,7 @@ public class Challenge : MonoBehaviour
                    
             if (HPContainer.GetComponentInChildren<CharacterHUDContainer>() != null)
             {
-                CharacterSaveData charSaveData = SaveManager.Instance.GetPlayerSaveData(HPContainer.GetComponentInChildren<CharacterHUDContainer>().referredCharacter.Character);
-
+                
                 RewardContainer rewardContainer = HPContainer.GetComponentInChildren<RewardContainer>();
 
                 if (rewardContainer.right)
@@ -109,12 +108,20 @@ public class Challenge : MonoBehaviour
                 }
 
 
-                charSaveData.extraData.coin += coinsOnSuccess;
-                charSaveData.extraData.key += keysOnSuccess;
+               
+                SaveManager.Instance.SavePlayersData();
                 
             }
 
+                    
         }
+        foreach (PlayerCharacter p in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
+        {
+            p.ExtraData.coin += coinsOnSuccess;
+            p.ExtraData.key += keysOnSuccess;
+        }
+        SaveManager.Instance.SavePlayersData();
+
         PlayerCharacterPoolManager.Instance.HealAllPlayerFull();
       
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
