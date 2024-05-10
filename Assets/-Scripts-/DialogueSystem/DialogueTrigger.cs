@@ -20,7 +20,7 @@ public class DialogueTrigger : MonoBehaviour
         {
             sceneSetting = new(SceneSaveSettings.DialogueTrigger);
             alreadyTriggered = false;
-            GetComponent<BoxCollider2D>().enabled = !alreadyTriggered;
+            GetComponent<Collider2D>().enabled = !alreadyTriggered;
             sceneSetting.bools.Add(new(settingSaveName, alreadyTriggered));
         }
         else
@@ -28,12 +28,12 @@ public class DialogueTrigger : MonoBehaviour
             if (sceneSetting.GetBoolValue(settingSaveName))
             {
                 alreadyTriggered = true;
-                GetComponent<BoxCollider2D>().enabled = false;
+                GetComponent<Collider2D>().enabled = false;
             }
             else
             {
                 alreadyTriggered = false;
-                GetComponent<BoxCollider2D>().enabled = true;
+                GetComponent<Collider2D>().enabled = true;
             }
 
         }
