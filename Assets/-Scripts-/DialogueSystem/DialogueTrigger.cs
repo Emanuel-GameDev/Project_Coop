@@ -8,7 +8,7 @@ public class DialogueTrigger : MonoBehaviour
     [SerializeField] private DialogueBox dialogueBox;
     [SerializeField] private Dialogue dialogueOnTrigger;
     [SerializeField] UnityEvent onDialogueEndEvent;
-    private bool canTrigger = true;
+    private bool alreadyTriggered = true;
     [SerializeField] string settingSaveName = "FirstTriggerChallenge";
 
     private void Start()
@@ -19,20 +19,21 @@ public class DialogueTrigger : MonoBehaviour
         if (sceneSetting == null)
         {
             sceneSetting = new(SceneSaveSettings.DialogueTrigger);
-            canTrigger = true;
-            sceneSetting.bools.Add(new(settingSaveName, !canTrigger));
+            alreadyTriggered = false;
+            GetComponent<BoxCollider2D>().enabled = !alreadyTriggered;
+            sceneSetting.bools.Add(new(settingSaveName, alreadyTriggered));
         }
         else
         {
             if (sceneSetting.GetBoolValue(settingSaveName))
             {
-                canTrigger = false;
-                GetComponent<BoxCollider2D>().enabled = true;
+                alreadyTriggered = true;
+                GetComponent<BoxCollider2D>().enabled = false;
             }
             else
             {
-                canTrigger = true;
-                GetComponent<BoxCollider2D>().enabled = false;
+                alreadyTriggered = false;
+                GetComponent<BoxCollider2D>().enabled = true;
             }
 
         }
@@ -41,14 +42,14 @@ public class DialogueTrigger : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.TryGetComponent<PlayerCharacter>(out PlayerCharacter player) && canTrigger)
+        if(collision.TryGetComponent<PlayerCharacter>(out PlayerCharacter player) && !alreadyTriggered)
         {
             SceneSetting sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.DialogueTrigger);
 
-            canTrigger = false;
+            alreadyTriggered = true;
             SetDialogue();
 
-            sceneSetting.AddBoolValue(settingSaveName, !canTrigger);
+            sceneSetting.AddBoolValue(settingSaveName, alreadyTriggered);
             SaveManager.Instance.SaveSceneData(sceneSetting);
             
 
