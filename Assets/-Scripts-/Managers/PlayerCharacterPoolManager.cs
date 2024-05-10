@@ -109,7 +109,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         freeCharacters.Remove(playerCharacter);
         activeCharacters.Add(playerCharacter);
         //if (newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacterController>())
-        PubSub.Instance.Notify(EMessageType.characterJoined, playerCharacter);
+        PubSub.Instance.Notify(EMessageType.characterActivated, playerCharacter);
         CameraManager.Instance.AddTarget(playerCharacter.transform);
     }
 
@@ -120,7 +120,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         playerCharacter.gameObject.SetActive(false);
         freeCharacters.Add(playerCharacter);
         activeCharacters.Remove(playerCharacter);
-
+        PubSub.Instance.Notify(EMessageType.characterDeactivated, playerCharacter);
         CameraManager.Instance.RemoveTarget(playerCharacter.transform);
     }
 
