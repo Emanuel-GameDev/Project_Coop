@@ -526,17 +526,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 357688567}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: PauseGame
-        m_Mode: 1
+      - m_Target: {fileID: 1682351671}
+        m_TargetAssemblyTypeName: Slotmachine, Assembly-CSharp
+        m_MethodName: SetPauseGame
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 535042347}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
@@ -581,10 +581,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 357688567}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: ResumeGame
-        m_Mode: 1
+      - m_Target: {fileID: 1682351671}
+        m_TargetAssemblyTypeName: Slotmachine, Assembly-CSharp
+        m_MethodName: SetPauseGame
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2876,18 +2876,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64a37e0cc339faf4b9a28466184282b9, type: 3}
---- !u!114 &357688567 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 726525942643775275, guid: 64a37e0cc339faf4b9a28466184282b9,
-    type: 3}
-  m_PrefabInstance: {fileID: 357688566}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 933432955afa09849aa58dec21533b65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &369428285
 GameObject:
   m_ObjectHideFlags: 0
