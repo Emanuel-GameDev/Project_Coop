@@ -883,6 +883,15 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         base.ResetAllAnimatorTriggers();
         ResetAttack();
+       ResetVariables();
+    }
+
+    private void ResetVariables()
+    {
+        isBlocking = false;
+        canBlock = true;
+        shieldVFX.gameObject.SetActive(false);
+
     }
 
     private void PlayPerfectParrySound()

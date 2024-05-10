@@ -161,7 +161,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.TryGetComponent<IInteracter>(out var interacter))
+        if (other.TryGetComponent<IInteracter>(out var interacter) && !interacted)
         {
             interacter.EnableInteraction(this);
             GetComponent<SpriteRenderer>().enabled = true;
