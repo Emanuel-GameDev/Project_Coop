@@ -421,7 +421,7 @@ public class Slotmachine : MonoBehaviour
         int index = 0;
 
 
-
+        if(characterEnum.Count != 0)
         do
         {
             ePlayerCharacter characterRemainingType = characterEnum[UnityEngine.Random.Range(0, characterEnum.Count)];
@@ -442,6 +442,7 @@ public class Slotmachine : MonoBehaviour
 
             index++;
             indexRow++;
+            Debug.Log(index);
         }
         while (randomListOfPlayer.Count < 4);
 
