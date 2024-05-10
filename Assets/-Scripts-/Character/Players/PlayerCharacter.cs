@@ -535,4 +535,9 @@ public abstract class PlayerCharacter : Character
             animator.Play("Entry");
         }
     }
+
+    public void Dismiss()
+    {
+        PlayerCharacterPoolManager.Instance.ReturnCharacter(this);
+    }
 }
