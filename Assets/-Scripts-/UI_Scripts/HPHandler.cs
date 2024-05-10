@@ -43,7 +43,7 @@ public class HPHandler : MonoBehaviour
         }
 
         PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, UpdateContainer);
-        PubSub.Instance.RegisterFunction(EMessageType.characterJoined, AddContainer);
+        PubSub.Instance.RegisterFunction(EMessageType.characterActivated, AddContainer);
         //PubSub.Instance.RegisterFunction(EMessageType.characterSwitched, SetCharacter);
     }
 
