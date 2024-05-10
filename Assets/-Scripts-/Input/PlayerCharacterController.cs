@@ -59,6 +59,12 @@ public class PlayerCharacterController : InputReceiver
 
     }
 
+    public override void Dismiss()
+    {
+        ActualPlayerCharacter.Dismiss();
+    }
+
+
     #region Input
     public override void MoveInput(InputAction.CallbackContext context)
     {

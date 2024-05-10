@@ -194,52 +194,12 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         //Cercar soluzione forse
         if (stunned) return;
 
-        //if (context.performed && isBlocking == false)
-        //{
-        //    chargedAttackReady = false;
-        //    isChargingAttack = false;
-        //    isAttacking = true;
-        //    attackPressed = true;
-        //    ResetAllAnimatorTriggers();
-        //    ActivateHyperArmor();
-        //    SetCanMove(false, rb);
-        //    Invoke(nameof(ChargingAttack), timeCheckAttackType);
-        //}
-
-        //if (context.canceled)
-        //{
-        //    attackPressed = false;
-
-        //    if (chargedAttackReady)
-        //    {
-        //        animator.SetTrigger("ChargedAttackEnd");
-        //        Debug.Log("Charged Attack executed");
-        //        //effetto visivo attacco caricato a false
-        //        chargedAttackSprite.SetActive(false);
-        //        currentAttackComboState = AttackComboState.Attack2;
-        //    }
-        //    else
-        //    {
-        //        if (comboStarted)
-        //            ContinueCombo();
-        //        else
-        //            StartCombo();    
-        //    }
-        //    chargedAttackReady = false;
-        //    isChargingAttack = false;
-        //    SetCanMove(true, rb);
-
-
-        //    Utility.DebugTrace($"ChargeReady: {chargedAttackReady}, comboStarted: {comboStarted}");
-        //}
-
         if (context.performed && !isBlocking)
         {
             attackStartTime = Time.time;
             isAttacking = true;
             ActivateHyperArmor();
             SetCanMove(false, rb);
-            ResetAllAnimatorTriggers();
             //Animaizone Inizio Attacco
             if(chargedAttack)
             {
@@ -762,6 +722,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         if (context.performed && uniqueAbilityReady)
         {
+            SetCanMove(false, rb);
             uniqueAbilityReady = false;
             base.UniqueAbilityInput(context);
             Invoke(nameof(StartCooldownUniqueAbility), UniqueAbilityCooldown);
@@ -774,6 +735,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public void PerformUniqueAbility()
     {
+        SetCanMove(true, rb);
+        
         RaycastHit2D[] hitted = Physics2D.CircleCastAll(transform.position, aggroRange, Vector2.up, aggroRange);
 
         if (hitted != null)
@@ -883,6 +846,15 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         base.ResetAllAnimatorTriggers();
         ResetAttack();
+        ResetVariables();
+    }
+
+    private void ResetVariables()
+    {
+        isBlocking = false;
+        canBlock = true;
+        shieldVFX.gameObject.SetActive(false);
+
     }
 
     private void PlayPerfectParrySound()

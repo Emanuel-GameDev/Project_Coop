@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +15,8 @@ public class SwitchCharacterUIController : MonoBehaviour
     [SerializeField]
     private Color colorWhenSelected;
 
+    public Color cacca = Color.green;
+
     [SerializeField]
     private List<SwitchCharData> switchingCharacters = new List<SwitchCharData>();
 
@@ -23,20 +24,22 @@ public class SwitchCharacterUIController : MonoBehaviour
 
     private void Start()
     {
-        PubSub.Instance.RegisterFunction(EMessageType.switchingCharacters, SelectCharacter);
-
         StartCoroutine(Utility.WaitForPlayers(InitializeSwitchingStatus));
     }
 
-    private void UpdateSwitchingStatus(object obj)
+    private void ActivateCharacter(object obj)
     {
-        foreach (PlayerCharacter item in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
-        {
-            if (keyValuePairs.ContainsKey(item))
-            {
-                keyValuePairs[item].charIcon.color = colorWhenSelected;
-            }
-        }
+        //foreach (PlayerCharacter item in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
+        //{
+        //    if (keyValuePairs.ContainsKey(item))
+        //    {
+        //        keyValuePairs[item].charIcon.color = colorWhenSelected;
+        //    }
+        //}
+
+        if (obj is PlayerCharacter)
+            keyValuePairs[(PlayerCharacter)obj].charIcon.color = colorWhenSelected;
+
     }
 
     private void InitializeSwitchingStatus()
@@ -49,9 +52,9 @@ public class SwitchCharacterUIController : MonoBehaviour
 
             keyValuePairs.Add(item, data);
 
-            Color originalColor = Utility.HexToColor("FFFFFF");
+            Color originalColor = Color.white;
 
-            data.charIcon.color = originalColor;    
+            data.charIcon.color = originalColor;
         }
 
         foreach (PlayerCharacter item in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
@@ -62,30 +65,36 @@ public class SwitchCharacterUIController : MonoBehaviour
             }
         }
 
-        PubSub.Instance.RegisterFunction(EMessageType.characterJoined, UpdateSwitchingStatus);
+        PubSub.Instance.RegisterFunction(EMessageType.characterActivated, ActivateCharacter);
+        PubSub.Instance.RegisterFunction(EMessageType.characterDeactivated, DeactivateCharacter);
     }
 
-    private void SelectCharacter(object selectedChar)
+    private void DeactivateCharacter(object obj)
     {
-        if (selectedChar is not PlayerCharacter[]) return;
+        //if (selectedChar is not PlayerCharacter[]) return;
 
-        PlayerCharacter[] switchingArray = selectedChar as PlayerCharacter[];
+        //PlayerCharacter[] switchingArray = selectedChar as PlayerCharacter[];
 
-        PlayerCharacter oldChar = switchingArray[0];
-        PlayerCharacter newChar = switchingArray[1];
+        //PlayerCharacter oldChar = switchingArray[0];
+        //PlayerCharacter newChar = switchingArray[1];
 
-        Debug.Log(oldChar.Character.ToString() + " into " + newChar.Character.ToString());
+        //Debug.Log(oldChar.Character.ToString() + " into " + newChar.Character.ToString());
 
-        if (keyValuePairs.ContainsKey(oldChar))
-        {
-            Color originalColor = Utility.HexToColor("FFFFFF");
+        //if (keyValuePairs.ContainsKey(oldChar))
+        //{
+        //    Color originalColor = Color.white;
 
-            keyValuePairs[oldChar].charIcon.color = originalColor;
-        }
-        
-        if (keyValuePairs.ContainsKey(newChar))
-        {
-            keyValuePairs[newChar].charIcon.color = colorWhenSelected;
-        }
+        //    keyValuePairs[oldChar].charIcon.color = originalColor;
+        //    Debug.Log("Resetting " + oldChar.Character.ToString() + "Color: " + keyValuePairs[oldChar].charIcon.color);
+        //}
+
+        //if (keyValuePairs.ContainsKey(newChar))
+        //{
+        //    keyValuePairs[newChar].charIcon.color = colorWhenSelected;
+        //    Debug.Log("Setting " + newChar.Character.ToString());
+        //}
+
+        if (obj is PlayerCharacter)
+            keyValuePairs[(PlayerCharacter)obj].charIcon.color = Color.white;
     }
 }

@@ -177,7 +177,7 @@ public class CoopManager : MonoBehaviour
     {
         foreach(PlayerInputHandler player in playerInputHandlers)
         {
-            player.PlayerInput.actions.Disable();
+            player.SetActionMap(InputMap.EmptyMap);
         }
     }
 
@@ -185,7 +185,7 @@ public class CoopManager : MonoBehaviour
     {
         foreach (PlayerInputHandler player in playerInputHandlers) 
         { 
-            player.PlayerInput.actions.Enable();
+            player.SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
         }
     }
 }
