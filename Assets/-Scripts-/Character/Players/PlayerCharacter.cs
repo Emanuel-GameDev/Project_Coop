@@ -532,6 +532,7 @@ public abstract class PlayerCharacter : Character
             {
                 animator.ResetTrigger(param.name);
             }
+            animator.Play("Entry");
         }
     }
 }

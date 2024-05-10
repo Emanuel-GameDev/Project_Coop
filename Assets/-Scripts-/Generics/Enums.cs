@@ -14,7 +14,8 @@ public enum InputMap
 {
     Player,
     UI,
-    Minigame
+    Minigame,
+    EmptyMap
 }
 
 [Serializable]
