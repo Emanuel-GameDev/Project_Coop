@@ -141,6 +141,13 @@ public class Slotmachine : MonoBehaviour
         // GameManager.Instance.coopManager.playerInputPrefab = GO;
     }
 
+    public void SetPauseGame(bool value)
+    {
+        if (value)
+            GameManager.Instance.PauseGame();
+        else
+            GameManager.Instance.ResumeGame();
+    }
     private void Start()
     {
 
