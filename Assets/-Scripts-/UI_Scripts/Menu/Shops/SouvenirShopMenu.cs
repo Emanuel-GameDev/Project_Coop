@@ -8,6 +8,7 @@ public class SouvenirShopMenu : Menu
     [SerializeField] DialogueBox dialogueBox;
     [SerializeField] Dialogue FirstTimeDialogue;
     [SerializeField] Dialogue beforeEnterDialogue;
+    [SerializeField] AudioSource musicaWorldMap;
 
     [HideInInspector] public PlayerCharacter currentPlayerInShop;
 
@@ -120,6 +121,8 @@ public class SouvenirShopMenu : Menu
 
         shopGroup.SetActive(true);
 
+        musicaWorldMap.Pause();
+
         foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
         {
 
@@ -214,7 +217,7 @@ public class SouvenirShopMenu : Menu
 
             actions.FindAction("Cancel").performed -= Menu_performed;
         }
-        
+
         foreach (SouvenirShopTable table in shopTables)
         {
             table.DesetInput();
@@ -226,6 +229,7 @@ public class SouvenirShopMenu : Menu
         }
         shopGroup.SetActive(false);
 
-        
+        musicaWorldMap.Play();
+
     }
 }
