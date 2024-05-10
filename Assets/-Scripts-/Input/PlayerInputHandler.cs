@@ -19,7 +19,8 @@ public class PlayerInputHandler : MonoBehaviour
     public ePlayerCharacter startingCharacter { private set; get; } = ePlayerCharacter.EmptyCharacter;
     public ePlayerCharacter currentCharacter { private set; get; }
 
-    private InputMap previousInputMap = InputMap.UI;
+    private InputMap previousInputMap = InputMap.EmptyMap;
+    private InputMap currentInputMap = InputMap.EmptyMap;
 
     public InputReceiver _currentReceiver;
     public InputReceiver CurrentReceiver
@@ -45,7 +46,8 @@ public class PlayerInputHandler : MonoBehaviour
     public void SetReceiver(InputReceiver newReceiver)
     {
         CurrentReceiver = newReceiver;
-        SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
+        if(!GameManager.Instance.IsLoading)
+            SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
         CurrentReceiver.SetInputHandler(this);
         if (currentCharacter != ePlayerCharacter.EmptyCharacter)
             CurrentReceiver.SetCharacter(currentCharacter);
@@ -122,6 +124,7 @@ public class PlayerInputHandler : MonoBehaviour
     public void SetActionMap(InputMap map)
     {
         playerInput.SwitchCurrentActionMap(map.ToString());
+        currentInputMap = map;
     }
 
     public void OnDeviceLost(PlayerInput playerInput)

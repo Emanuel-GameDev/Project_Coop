@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     private AsyncOperation sceneLoadOperation;
 
     public CoopManager CoopManager => coopManager;
+    public bool IsLoading => loadScreen.activeInHierarchy;
 
     private static GameManager _instance;
     public static GameManager Instance
