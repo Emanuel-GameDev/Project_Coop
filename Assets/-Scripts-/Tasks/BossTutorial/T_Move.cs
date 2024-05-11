@@ -91,17 +91,29 @@ namespace MBTExample
 
         private bool CheckForNearPlayer()
         {
+            List<PlayerCharacter> alivePlayers = new List<PlayerCharacter>();
             foreach (PlayerCharacter player in activePlayers)
             {
-                
-                bool isNear = Vector2.Distance(player.transform.position, bossCharacter.transform.position) <= distanceToCheckforPlayer.Value;
+                if (!player.isDead)
+                {
+                    alivePlayers.Add(player);
+                }
+
+
+               
+            }
+
+            foreach (PlayerCharacter p in alivePlayers)
+            {
+                bool isNear = Vector2.Distance(p.transform.position, bossCharacter.transform.position) <= distanceToCheckforPlayer.Value;
                 if (isNear)
                 {
-                    bossCharacter.target = player.transform;
-                    targetTransform.Value = player.transform;
+                    bossCharacter.target = p.transform;
+                    targetTransform.Value = p.transform;
                     return true;
-                    
+
                 }
+
             }
             return false;
         }

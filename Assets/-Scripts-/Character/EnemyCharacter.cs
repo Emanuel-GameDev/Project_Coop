@@ -88,33 +88,42 @@ public class EnemyCharacter : Character
         List<PlayerCharacter> activePlayers = PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
 
         List<PlayerCharacter> alivePlayers = new();
-        foreach(PlayerCharacter p in activePlayers)
+        foreach (PlayerCharacter p in activePlayers)
         {
             if (!p.isDead)
                 alivePlayers.Add(p);
 
-            
+            if ((p.isDead || p.CurrentHp <= 0) && alivePlayers.Contains(p))
+            {
+                alivePlayers.Remove(p);
+            }
+
+
         }
-      
+
 
         Transform target = null;
         float distance = float.MaxValue;
 
         foreach (PlayerCharacter player in alivePlayers)
         {
-            
-                if (Vector3.Distance(transform.position, player.transform.position) < distance && !player.isDead)
-                    target = player.transform;
+            if (Vector3.Distance(transform.position, player.transform.position) < distance && !player.isDead)
+            {
+                target = player.transform;
+                distance = Vector3.Distance(transform.position, player.transform.position);
+            }
+
+
         }
 
-        if(target == null)
+
+        if (target == null)
         {
             target = alivePlayers[0].transform;
-            
+
         }
-        
 
-
+        Debug.Log(target.gameObject.name);
 
         SetTarget(target);
     }
