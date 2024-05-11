@@ -4770,6 +4770,7 @@ MonoBehaviour:
     type: 2}
   dialogueBox: {fileID: 1440181397}
   timerText: {fileID: 809128541}
+  challengeText: {fileID: 2133291289}
   selectedChallenge: {fileID: 0}
   interacted: 0
   onInteractionAction:
@@ -7941,7 +7942,7 @@ MonoBehaviour:
   - {fileID: 885873802}
   - {fileID: 1391974277}
   - {fileID: 1882722253}
-  dialogueOnStart: {fileID: 11400000, guid: e6d3dffb78856f64dbba0ae176f9c2e6, type: 2}
+  dialogueOnStart: {fileID: 11400000, guid: 45000f3307eebfb4d86d2f50b2106759, type: 2}
   onChallengeStart:
     m_PersistentCalls:
       m_Calls:
@@ -7957,7 +7958,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  dialogueOnSuccess: {fileID: 11400000, guid: 30d7b7a79cefed942a78eabfb6acff5c, type: 2}
+  dialogueOnSuccess: {fileID: 11400000, guid: 6471bbf6aa7fe5443b34ceaa26cbdb6c, type: 2}
   onChallengeSuccessEvent:
     m_PersistentCalls:
       m_Calls:
@@ -10691,6 +10692,18 @@ Transform:
   - {fileID: 1882722254}
   m_Father: {fileID: 1453646569}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2133291289 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2031663836131074697, guid: e9f7df8390fa52f4d8a245db0fe6f7fe,
+    type: 3}
+  m_PrefabInstance: {fileID: 1115626016}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2147405503
 GameObject:
   m_ObjectHideFlags: 0
