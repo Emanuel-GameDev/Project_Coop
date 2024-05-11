@@ -96,7 +96,7 @@ public class RessInteractable : MonoBehaviour, IInteractable
         {
             interacter.DisableInteraction(this);
             interacters.Remove(interacter);
-
+            AbortInteraction(interacter);
             if (interacterVisualization != null)
             {
                 triggerCount--;
