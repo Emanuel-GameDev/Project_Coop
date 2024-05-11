@@ -281,23 +281,28 @@ public abstract class PlayerCharacter : Character
     public virtual void Ress()
     {
         characterController.GetInputHandler().PlayerInput.actions.Enable();
+        isDead = false;
         TakeHeal(new DamageData(MathF.Floor( MaxHp/2), this));
         ressInteracter.gameObject.SetActive(false);
-        isDead = false;
         PlayerCharacterPoolManager.Instance.PlayerIsRessed();   
     }
 
 
     public virtual void TakeHeal(DamageData data)
     {
-        if (data.condition != null)
-            RemoveFromConditions(data.condition);
+        if (!isDead)
+        {
+            if (data.condition != null)
+                RemoveFromConditions(data.condition);
 
-        CurrentHp += data.damage;
-        PubSub.Instance.Notify(EMessageType.characterDamaged, this);
+            CurrentHp += data.damage;
+            PubSub.Instance.Notify(EMessageType.characterDamaged, this);
 
-        damager.RemoveCondition();
-        Debug.Log($"Healer: {data.dealer}, Heal: {data.damage}, Condition Removed: {data.condition}");
+            damager.RemoveCondition();
+            Debug.Log($"Healer: {data.dealer}, Heal: {data.damage}, Condition Removed: {data.condition}");
+
+        }
+
     }
 
     public override DamageData GetDamageData()
