@@ -180,7 +180,6 @@ public class ChallengeManager : MonoBehaviour
         
     }
 
-
     public void DeactivateInteractable()
     {
         if (pressInteractable == null)
@@ -188,8 +187,7 @@ public class ChallengeManager : MonoBehaviour
 
         pressInteractable.gameObject.SetActive(false);
     }
-
-    internal void EnableInteractable()
+    internal void ActivateInteractable()
     {
         if (pressInteractable == null)
             pressInteractable = GetComponentInChildren<PressInteractable>(true);

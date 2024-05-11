@@ -61,6 +61,7 @@ public class Challenge : MonoBehaviour
 
 
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(true);
+        ChallengeManager.Instance.DeactivateInteractable();
         DisplayChallengeDescription();
 
     }
@@ -132,7 +133,7 @@ public class Challenge : MonoBehaviour
 
         challengeUI.SetUpUI();
         ResetChallenge();
-        ChallengeManager.Instance.EnableInteractable();
+        ChallengeManager.Instance.ActivateInteractable();
     }
     public virtual void AddToSpawned(EnemyCharacter tempEnemy)
     {

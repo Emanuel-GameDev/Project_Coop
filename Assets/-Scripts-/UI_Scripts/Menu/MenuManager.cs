@@ -107,9 +107,12 @@ public class MenuManager : MonoBehaviour
     #region Pause/Option Menu
     public void OpenPauseMenu(PlayerInputHandler player)
     {
-        OpenMenu(pauseMenu, player, true);
-        if (hpHandler != null)
-            hpHandler.gameObject.SetActive(false);
+        if (actualMenu == null)
+        {
+            OpenMenu(pauseMenu, player, true);
+            if (hpHandler != null)
+                hpHandler.gameObject.SetActive(false);
+        }
     }
 
     public void OpenOptionMenu(PlayerInputHandler player)
