@@ -532,7 +532,12 @@ public abstract class PlayerCharacter : Character
             {
                 animator.ResetTrigger(param.name);
             }
-            animator.Play("Entry");
+            animator.Play("Idle");
         }
+    }
+
+    public void Dismiss()
+    {
+        PlayerCharacterPoolManager.Instance.ReturnCharacter(this);
     }
 }
