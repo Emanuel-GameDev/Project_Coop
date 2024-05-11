@@ -1950,8 +1950,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -2.7805, y: 7.9669, z: 0}
-    m_Extent: {x: 7.1955, y: 26.0411, z: 0}
+    m_Center: {x: -2.7811, y: 7.967, z: 0}
+    m_Extent: {x: 7.1958, y: 26.041, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -2550,8 +2550,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.90845, y: -5.0057, z: 0}
-    m_Extent: {x: 3.2375498, y: 12.2427, z: 0}
+    m_Center: {x: -0.9086, y: -5.00575, z: 0}
+    m_Extent: {x: 3.237, y: 12.24305, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -3548,12 +3548,13 @@ AudioSource:
   m_GameObject: {fileID: 771492989}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 6382695351832364015, guid: 41ab2704fcd02fb4cb87442f8e205cc8,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 517a01676191ab44c9b4cb3e7be6111f, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.8
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -4306,6 +4307,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1497565537}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1039079726 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2541922807563626448, guid: 5dc6b5cd9ad023e488d4e7d8e0b8bb99,
+    type: 3}
+  m_PrefabInstance: {fileID: 1902530699}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1047039648
 GameObject:
   m_ObjectHideFlags: 0
@@ -4711,8 +4718,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.69935, y: -0.09799999, z: 0}
-    m_Extent: {x: 3.2256498, y: 2.021, z: 0}
+    m_Center: {x: 0.69965005, y: -0.09740007, z: 0}
+    m_Extent: {x: 3.22475, y: 2.0203, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0.96
@@ -9919,6 +9926,12 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 3.93935
       objectReference: {fileID: 0}
+    - target: {fileID: 3325812604327058283, guid: 2bf206f80f481b24cac4fb8efd448636,
+        type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000,
+        type: 0}
     - target: {fileID: 3984494471739468010, guid: 2bf206f80f481b24cac4fb8efd448636,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -11709,11 +11722,27 @@ PrefabInstance:
       propertyPath: dialogueBox
       value: 
       objectReference: {fileID: 1783378296}
+    - target: {fileID: 445372715243247896, guid: 5dc6b5cd9ad023e488d4e7d8e0b8bb99,
+        type: 3}
+      propertyPath: musicaWorldMap
+      value: 
+      objectReference: {fileID: 771492990}
+    - target: {fileID: 445372715243247896, guid: 5dc6b5cd9ad023e488d4e7d8e0b8bb99,
+        type: 3}
+      propertyPath: shopMusicSource
+      value: 
+      objectReference: {fileID: 1039079726}
     - target: {fileID: 1621496935298718381, guid: 5dc6b5cd9ad023e488d4e7d8e0b8bb99,
         type: 3}
       propertyPath: m_text
       value: <sprite index=107 tint=1>
       objectReference: {fileID: 0}
+    - target: {fileID: 2196963869923359202, guid: 5dc6b5cd9ad023e488d4e7d8e0b8bb99,
+        type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000,
+        type: 0}
     - target: {fileID: 2196963869923359202, guid: 5dc6b5cd9ad023e488d4e7d8e0b8bb99,
         type: 3}
       propertyPath: m_Name

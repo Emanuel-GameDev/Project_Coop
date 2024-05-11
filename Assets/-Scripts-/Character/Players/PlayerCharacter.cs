@@ -257,7 +257,7 @@ public abstract class PlayerCharacter : Character
                 PubSub.Instance.Notify(EMessageType.characterDamaged, this);
             }
 
-            if (CurrentHp <= 0)
+            if (CurrentHp <= 0 )
             {
                 onDeath?.Invoke();
                 Die();
