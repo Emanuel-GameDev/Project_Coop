@@ -672,6 +672,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
     public override void Ress()
     {
+        base.Ress();
         animator.SetTrigger("Ress");
     }
 

@@ -110,7 +110,7 @@ public class DialogueBox : MonoBehaviour
         //    character.GetComponent<PlayerInput>().actions.FindAction("Dialogue").Disable();
         //}
 
-        skipDictionary.Clear();
+        //skipDictionary.Clear();
         gameObject.SetActive(false);
     }
 
@@ -206,16 +206,16 @@ public class DialogueBox : MonoBehaviour
         }
 
     }
-    Dictionary<InputAction, bool> skipDictionary;
+    //Dictionary<InputAction, bool> skipDictionary;
 
     public void StartDialogue()
     {
-        if(skipDictionary== null)
-        {
-            skipDictionary = new Dictionary<InputAction, bool>();
-        }
+        //if(skipDictionary== null)
+        //{
+        //    skipDictionary = new Dictionary<InputAction, bool>();
+        ////}
 
-        skipDictionary.Clear();
+        //skipDictionary.Clear();
         skipSlider.gameObject.SetActive(false);
 
         foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
@@ -229,7 +229,7 @@ public class DialogueBox : MonoBehaviour
             action.performed += NextLineInput;
             action.canceled += NextLineInputCancelled;
 
-            skipDictionary.Add(action, false);
+            //skipDictionary.Add(action, false);
         }
 
 
@@ -297,7 +297,7 @@ public class DialogueBox : MonoBehaviour
 
     private void NextLineInputCancelled(InputAction.CallbackContext context)
     {
-        skipDictionary[context.action] = false;
+        //skipDictionary[context.action] = false;
         StopSkip();
     }
 
@@ -323,19 +323,19 @@ public class DialogueBox : MonoBehaviour
         }
 
 
-        skipDictionary[obj.action] = true;
-        startSkip=true;
+        //skipDictionary[obj.action] = true;
+        //startSkip=true;
 
-        foreach (bool b in skipDictionary.Values)
-        {
-            if(!b)
-                startSkip = false;
-        }
+        //foreach (bool b in skipDictionary.Values)
+        //{
+        //    if (!b)
+                //startSkip = false;
+        //}
 
-        if(startSkip)
-        {
-            StartSkip();
-        }
+        //if(startSkip)
+        //{
+           StartSkip();
+        //}
     }
     Coroutine skipCoroutine;
     private void StartSkip()
