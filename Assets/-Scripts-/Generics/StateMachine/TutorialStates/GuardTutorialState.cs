@@ -33,7 +33,7 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.objectiveNumbersGroup.SetActive(true);
         tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.tank);
         PubSub.Instance.RegisterFunction(EMessageType.guardExecuted, UpdateCounter);
-
+        PubSub.Instance.RegisterFunction(EMessageType.perfectGuardExecuted, UpdateCounter);
         tutorialManager.DeactivateAllPlayerInputs();
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
@@ -79,12 +79,12 @@ public class GuardTutorialState : TutorialFase
 
         if(guardExecuted == 3)
         {
-            perfectGuardExecuted = 0;
-            tutorialManager.objectiveNumberReached.text = perfectGuardExecuted.ToString();
+            //perfectGuardExecuted = 0;
+            //tutorialManager.objectiveNumberReached.text = perfectGuardExecuted.ToString();
 
-            tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
+           // tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
             tutorialManager.DeactivateAllPlayerInputs();
-            tutorialManager.PlayDialogue(faseData.tankPerfectGuardDialogue);
+            //tutorialManager.PlayDialogue(faseData.tankPerfectGuardDialogue);
 
             tutorialManager.objectiveText.text = faseData.faseObjectivePerfect.GetLocalizedString();
 
@@ -97,32 +97,34 @@ public class GuardTutorialState : TutorialFase
 
             tutorialManager.DeactivateEnemyAI();
 
-            PubSub.Instance.RegisterFunction(EMessageType.perfectGuardExecuted, UpdatePerfectCounter);
-
-
-        }
-    }
-
-    private void UpdatePerfectCounter(object obj)
-    {
-        perfectGuardExecuted++;
-        tutorialManager.objectiveNumberReached.text = perfectGuardExecuted.ToString();
-
-        if ( perfectGuardExecuted >= 3)
-        {
-            tutorialManager.DeactivateAllPlayerInputs();
-
-            foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
-            {
-                ih.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
-            }
-
-            tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
-            tutorialManager.DeactivateEnemyAI();
-
             stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+
+            //PubSub.Instance.RegisterFunction(EMessageType.perfectGuardExecuted, UpdatePerfectCounter);
+
+
         }
     }
+
+    //private void UpdatePerfectCounter(object obj)
+    //{
+    //    perfectGuardExecuted++;
+    //    tutorialManager.objectiveNumberReached.text = perfectGuardExecuted.ToString();
+
+    //    if ( perfectGuardExecuted >= 3)
+    //    {
+    //        tutorialManager.DeactivateAllPlayerInputs();
+
+    //        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+    //        {
+    //            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+    //        }
+
+    //        tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+    //        tutorialManager.DeactivateEnemyAI();
+
+    //        stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+    //    }
+    //}
 
     public override void Update()
     {
@@ -134,7 +136,8 @@ public class GuardTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
-        //PubSub.Instance.UnregisterFunction(EMessageType.perfectGuardExecuted, UpdateCounter);
+        PubSub.Instance.UnregisterFunction(EMessageType.perfectGuardExecuted, UpdateCounter);
+        PubSub.Instance.UnregisterFunction(EMessageType.guardExecuted, UpdateCounter);
         tutorialManager.EndCurrentFase();
     }
 }
