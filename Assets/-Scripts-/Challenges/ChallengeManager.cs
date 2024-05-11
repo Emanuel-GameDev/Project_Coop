@@ -48,7 +48,18 @@ public class ChallengeManager : MonoBehaviour
     [HideInInspector] public bool interacted;
     [HideInInspector] public UnityEvent onInteractionAction;
     [SerializeField] private PressInteractable pressInteractable;
-
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+           
+        }
+    }
     private void Start()
     {
         SaveManager.Instance.LoadData();
@@ -162,58 +173,24 @@ public class ChallengeManager : MonoBehaviour
     }
 
 
-    //private void OnTriggerEnter2D(Collider2D other)
-    //{
-    //    if (other.TryGetComponent<IInteracter>(out var interacter) && !interacted)
-    //    {
-    //        interacter.EnableInteraction(this);
-    //        GetComponent<SpriteRenderer>().enabled = true;
-    //    }
-    //}
-
-    //private void OnTriggerExit2D(Collider2D other)
-    //{
-    //    if (other.TryGetComponent<IInteracter>(out var interacter))
-    //    {
-    //        interacter.DisableInteraction(this);
-    //        GetComponent<SpriteRenderer>().enabled = false;
-    //    }
-    //}
-
-    //public void CancelInteraction(IInteracter interacter)
-    //{
-
-    //}
-
-    //public IInteracter GetFirstInteracter()
-    //{
-    //    return null;
-    //}
-
-    //public void AbortInteraction(IInteracter interacter)
-    //{
-
-    //}
     private void OnInteraction()
     {
         MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetFirstPlayer());
         dialogueBox.RemoveAllDialogueEnd();
-        //gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        
     }
-
 
     public void DeactivateInteractable()
     {
         if (pressInteractable == null)
-            pressInteractable = GetComponent<PressInteractable>();
+            pressInteractable = GetComponentInChildren<PressInteractable>();
 
         pressInteractable.gameObject.SetActive(false);
     }
-
-    internal void EnableInteractable()
+    internal void ActivateInteractable()
     {
         if (pressInteractable == null)
-            pressInteractable = GetComponent<PressInteractable>();
+            pressInteractable = GetComponentInChildren<PressInteractable>(true);
 
         pressInteractable.gameObject.SetActive(true);
     }

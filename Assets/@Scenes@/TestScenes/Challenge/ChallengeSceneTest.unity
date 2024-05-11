@@ -2878,71 +2878,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1602279603}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &227564184
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 227564185}
-  - component: {fileID: 227564186}
-  m_Layer: 0
-  m_Name: Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &227564185
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 227564184}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 778082204}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &227564186
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 227564184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0fc929b3ed0a08438ca22eea0deb579, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  challengesList:
-  - {fileID: 1560025931}
-  - {fileID: 1453646568}
-  - {fileID: 1196853732}
-  menuInfo: {fileID: 1015782527}
-  panel: {fileID: 975717868}
-  challengeUIPrefab: {fileID: 8814628488093020177, guid: b89dd99aca085d9469ebfc8ee6f4a4b9,
-    type: 3}
-  currentSaveChallenges: []
-  bottoneInutile: {fileID: 1640480881}
-  dialogueOnInteraction: {fileID: 11400000, guid: 9919fc4cd3290aa4bb4642f46f8ac057,
-    type: 2}
-  dialogueBox: {fileID: 1440181397}
-  timerText: {fileID: 809128541}
-  challengeText: {fileID: 2133291289}
-  selectedChallenge: {fileID: 0}
-  interacted: 0
-  onInteractionAction:
-    m_PersistentCalls:
-      m_Calls: []
-  pressInteractable: {fileID: 0}
 --- !u!1 &231402039
 GameObject:
   m_ObjectHideFlags: 0
@@ -4752,7 +4687,6 @@ Transform:
   m_Children:
   - {fileID: 1241250576}
   - {fileID: 1163562570}
-  - {fileID: 227564185}
   - {fileID: 998444256}
   m_Father: {fileID: 1832766001}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5220,6 +5154,135 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a5258a28faf3444cb1ee0b829e6be58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &910463913
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 910463915}
+  - component: {fileID: 910463914}
+  m_Layer: 0
+  m_Name: Musica
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &910463914
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910463913}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 6382695351832364015, guid: 41ab2704fcd02fb4cb87442f8e205cc8,
+    type: 2}
+  m_audioClip: {fileID: 8300000, guid: 517a01676191ab44c9b4cb3e7be6111f, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.8
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &910463915
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910463913}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 6.53, y: 4.25, z: 0}
+  m_LocalScale: {x: 0.78787, y: 0.78787, z: 0.78787}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &911063156
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5388,8 +5451,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 998444256}
-  - component: {fileID: 998444258}
   - component: {fileID: 998444257}
+  - component: {fileID: 998444258}
   m_Layer: 0
   m_Name: Interactable
   m_TagString: Untagged
@@ -5405,8 +5468,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 998444255}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.000061035156, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5446,30 +5509,6 @@ MonoBehaviour:
   OnAllPlayersInteract:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 998444257}
-        m_TargetAssemblyTypeName: PressInteractable, Assembly-CSharp
-        m_MethodName: CancelAllInteraction
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 778082205}
-        m_TargetAssemblyTypeName: ChallengeManager, Assembly-CSharp
-        m_MethodName: DeactivateInteractable
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 778082205}
         m_TargetAssemblyTypeName: ChallengeManager, Assembly-CSharp
         m_MethodName: Interact
@@ -5485,8 +5524,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
---- !u!61 &998444258
-BoxCollider2D:
+--- !u!70 &998444258
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5517,19 +5556,9 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.13425422, y: -2.36}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.28, y: 1.28}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 4.251951, y: 3.267415}
-  m_EdgeRadius: 0
+  m_Offset: {x: 0, y: -3.8}
+  m_Size: {x: 8.79, y: 5.85}
+  m_Direction: 1
 --- !u!1 &1015782525
 GameObject:
   m_ObjectHideFlags: 0
@@ -6445,18 +6474,6 @@ MonoBehaviour:
   onChallengeFailEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6007461284949289636}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 179939502}
         m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
         m_MethodName: Play
@@ -6467,18 +6484,6 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: challengeFaceDefeat
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1716329585}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: ChangeScene
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
   spawnedEnemiesList: []
@@ -7711,12 +7716,17 @@ PrefabInstance:
     - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
         type: 3}
       propertyPath: debugMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
         type: 3}
       propertyPath: BossGameobject
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
+        type: 3}
+      propertyPath: targetCharacter
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
         type: 3}
@@ -11460,3 +11470,4 @@ SceneRoots:
   - {fileID: 1778277944}
   - {fileID: 1357754214}
   - {fileID: 654745692}
+  - {fileID: 910463915}
