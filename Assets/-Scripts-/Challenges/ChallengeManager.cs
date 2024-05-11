@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ChallengeManager : MonoBehaviour, IInteractable
+public class ChallengeManager : MonoBehaviour
 {
 
     private static ChallengeManager _instance;
@@ -144,7 +144,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
         }
     }
 
-    public void Interact(IInteracter interacter)
+    public void Interact()
     {
         if (!interacted)
         {
@@ -159,38 +159,38 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     }
 
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.TryGetComponent<IInteracter>(out var interacter) && !interacted)
-        {
-            interacter.EnableInteraction(this);
-            GetComponent<SpriteRenderer>().enabled = true;
-        }
-    }
+    //private void OnTriggerEnter2D(Collider2D other)
+    //{
+    //    if (other.TryGetComponent<IInteracter>(out var interacter) && !interacted)
+    //    {
+    //        interacter.EnableInteraction(this);
+    //        GetComponent<SpriteRenderer>().enabled = true;
+    //    }
+    //}
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.TryGetComponent<IInteracter>(out var interacter))
-        {
-            interacter.DisableInteraction(this);
-            GetComponent<SpriteRenderer>().enabled = false;
-        }
-    }
+    //private void OnTriggerExit2D(Collider2D other)
+    //{
+    //    if (other.TryGetComponent<IInteracter>(out var interacter))
+    //    {
+    //        interacter.DisableInteraction(this);
+    //        GetComponent<SpriteRenderer>().enabled = false;
+    //    }
+    //}
 
-    public void CancelInteraction(IInteracter interacter)
-    {
+    //public void CancelInteraction(IInteracter interacter)
+    //{
 
-    }
+    //}
 
-    public IInteracter GetFirstInteracter()
-    {
-        return null;
-    }
+    //public IInteracter GetFirstInteracter()
+    //{
+    //    return null;
+    //}
 
-    public void AbortInteraction(IInteracter interacter)
-    {
+    //public void AbortInteraction(IInteracter interacter)
+    //{
 
-    }
+    //}
     private void OnInteraction()
     {
         MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetFirstPlayer());
