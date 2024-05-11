@@ -32,7 +32,7 @@ public class JudeAbilityTutorialFase : TutorialFase
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
-
+        tutorialManager.ranged.AddPowerUp(tutorialManager.powerUpDebug);
 
         tutorialManager.DeactivateEnemyAI();
         
@@ -87,6 +87,7 @@ public class JudeAbilityTutorialFase : TutorialFase
     public override void Exit()
     {
         base.Exit();
+        tutorialManager.ranged.RemovePowerUp(tutorialManager.powerUpDebug);
 
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
         tutorialManager.DeactivateAllPlayerInputs();

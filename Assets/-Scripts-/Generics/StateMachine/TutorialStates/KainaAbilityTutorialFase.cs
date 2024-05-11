@@ -37,6 +37,8 @@ public class KainaAbilityTutorialFase : TutorialFase
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.healer.transform);
 
         tutorialManager.DeactivateEnemyAI();
+
+        tutorialManager.tank.AddPowerUp(tutorialManager.powerUpDebug);
     }
 
     private void StartEndFaseCountdown(object obj)
@@ -88,6 +90,8 @@ public class KainaAbilityTutorialFase : TutorialFase
     public override void Exit()
     {
         base.Exit();
+
+        tutorialManager.tank.RemovePowerUp(tutorialManager.powerUpDebug);
 
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
         tutorialManager.DeactivateAllPlayerInputs();

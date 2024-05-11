@@ -262,6 +262,12 @@ public class TutorialManager : MonoBehaviour
         
         lilithBaloon.SetActive(false);
         playableDirector.Play();
+
+        //dps.AddPowerUp(powerUpDebug);
+        //healer.AddPowerUp(powerUpDebug);
+        //ranged.AddPowerUp(powerUpDebug);
+        //tank.AddPowerUp(powerUpDebug);
+
     }
 
     private void SetUpCharacters()
@@ -481,11 +487,18 @@ public class TutorialManager : MonoBehaviour
             receiver.SetPlayerCharacter(startingCharacters[ih]);
         }
     }
-
+    [SerializeField] public PowerUp powerUpDebug;
 
     private void TutorialEnd()
     {
         dialogueBox.OnDialogueEnded -= TutorialEnd;
+
+        //dps.RemovePowerUp(powerUpDebug);
+        //healer.RemovePowerUp(powerUpDebug);
+        //ranged.RemovePowerUp(powerUpDebug);
+        //tank.RemovePowerUp(powerUpDebug);
+
+
 
         foreach (PlayerCharacter character in characters)
         {
@@ -632,6 +645,8 @@ public class TutorialManager : MonoBehaviour
         healer.GetRigidBody().velocity = Vector2.zero;
         ranged.GetRigidBody().velocity = Vector2.zero;
         tank.GetRigidBody().velocity = Vector2.zero;
+
+        
 
        
     }
