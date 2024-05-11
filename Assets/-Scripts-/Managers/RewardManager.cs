@@ -23,6 +23,19 @@ public class RewardManager : MonoBehaviour
             return _instance;
         }
     }
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+           
+        }
+    }
     [SerializeField] public GameObject rightPrefabRewards;
     [SerializeField] public GameObject leftPrefabRewards;
     [SerializeField] public float popUpDuration;
