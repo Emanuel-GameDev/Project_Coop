@@ -31,7 +31,7 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
         tutorialManager.objectiveNumbersGroup.SetActive(true);
-
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.tank);
         PubSub.Instance.RegisterFunction(EMessageType.guardExecuted, UpdateCounter);
 
         tutorialManager.DeactivateAllPlayerInputs();

@@ -146,7 +146,7 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.ResetStartingCharacterAssosiacion();
 
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetPlayerCharacter(currentFaseCharacters[currentCharacterIndex]);
-
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(currentFaseCharacters[currentCharacterIndex]);
         tutorialManager.DeactivateAllPlayerInputs();
 
         foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())

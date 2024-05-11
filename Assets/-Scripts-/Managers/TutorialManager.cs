@@ -70,6 +70,8 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] MenuInfo startTutorialMenu;
     [SerializeField] MenuInfo continueTutorialMenu;
 
+    public Image currentTutorialFaseImage;
+
     [Serializable]
     public class Fase
     {
@@ -160,6 +162,12 @@ public class TutorialManager : MonoBehaviour
         }
 
 
+    }
+
+    public void ChangeAndActivateCurrentCharacterImage(PlayerCharacter character)
+    {
+        currentTutorialFaseImage.sprite = GameManager.Instance.GetCharacterData(character.Character).DialogueSprite;
+        currentTutorialFaseImage.gameObject.SetActive(true);
     }
 
     private void DisableSkipSlider(InputAction.CallbackContext context)
@@ -263,10 +271,6 @@ public class TutorialManager : MonoBehaviour
         lilithBaloon.SetActive(false);
         playableDirector.Play();
 
-        //dps.AddPowerUp(powerUpDebug);
-        //healer.AddPowerUp(powerUpDebug);
-        //ranged.AddPowerUp(powerUpDebug);
-        //tank.AddPowerUp(powerUpDebug);
 
     }
 
