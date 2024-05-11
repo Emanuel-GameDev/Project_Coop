@@ -72,6 +72,7 @@ public class Slotmachine : MonoBehaviour
     [Header("Manopola")]
     [SerializeField] private GameObject manopola;
     [SerializeField] private AudioClip giramentoManopolaAudio;
+    [SerializeField] private GameObject ActionButton;
 
 
     List<Sprite> playerSprites;
@@ -241,6 +242,10 @@ public class Slotmachine : MonoBehaviour
 
 
                 return;
+            }
+            else
+            {
+                ActionButton.SetActive(true);
             }
 
 
@@ -505,6 +510,7 @@ public class Slotmachine : MonoBehaviour
 
         if (canInteract && player == listOfCurrentPlayer[0]) //restarta la slot se tutta ferma
         {
+            ActionButton.gameObject.SetActive(false);
             canInteract = false;
             remainingLives--;
             slotMachineUI.UpdateRemainingTryText(remainingLives);
