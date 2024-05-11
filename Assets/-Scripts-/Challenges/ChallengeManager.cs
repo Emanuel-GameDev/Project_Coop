@@ -198,7 +198,7 @@ public class ChallengeManager : MonoBehaviour
     {
         MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetFirstPlayer());
         dialogueBox.RemoveAllDialogueEnd();
-        gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        //gameObject.GetComponent<SpriteRenderer>().enabled = false;
     }
 
 
@@ -207,7 +207,7 @@ public class ChallengeManager : MonoBehaviour
         if (pressInteractable == null)
             pressInteractable = GetComponent<PressInteractable>();
 
-        pressInteractable.enabled = false;
+        pressInteractable.gameObject.SetActive(false);
     }
 
     internal void EnableInteractable()
@@ -215,6 +215,6 @@ public class ChallengeManager : MonoBehaviour
         if (pressInteractable == null)
             pressInteractable = GetComponent<PressInteractable>();
 
-        pressInteractable.enabled = true;
+        pressInteractable.gameObject.SetActive(true);
     }
 }
