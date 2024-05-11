@@ -5380,18 +5380,6 @@ MonoBehaviour:
   OnAllPlayersInteract:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 998444257}
-        m_TargetAssemblyTypeName: PressInteractable, Assembly-CSharp
-        m_MethodName: CancelAllInteraction
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 778082205}
         m_TargetAssemblyTypeName: ChallengeManager, Assembly-CSharp
         m_MethodName: Interact
@@ -6357,18 +6345,6 @@ MonoBehaviour:
   onChallengeFailEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6007461284949289636}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 179939502}
         m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
         m_MethodName: Play
@@ -6379,18 +6355,6 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: challengeFaceDefeat
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1716329585}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: ChangeScene
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
   spawnedEnemiesList: []
@@ -7623,12 +7587,17 @@ PrefabInstance:
     - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
         type: 3}
       propertyPath: debugMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
         type: 3}
       propertyPath: BossGameobject
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
+        type: 3}
+      propertyPath: targetCharacter
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
         type: 3}

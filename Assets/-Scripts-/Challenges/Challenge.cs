@@ -80,8 +80,7 @@ public class Challenge : MonoBehaviour
         Debug.Log("HAI VINTO");
         challengeCompleted = true;
 
-        onChallengeSuccessEvent?.Invoke();
-
+       
         //RewardPopUP
         foreach (Transform HPContainer in HPHandler.Instance.HpContainerTransform)
         {
@@ -122,14 +121,21 @@ public class Challenge : MonoBehaviour
         {
             p.ExtraData.coin += coinsOnSuccess;
             p.ExtraData.key += keysOnSuccess;
+            if(p.isDead)
+            {
+                p.Ress();
+            }
+           
         }
+        PlayerCharacterPoolManager.Instance.HealAllPlayerFull();
         SaveManager.Instance.SavePlayersData();
 
         PlayerCharacterPoolManager.Instance.HealAllPlayerFull();
       
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
         ChallengeManager.Instance.SaveChallengeCompleted(this.name, challengeCompleted);
-        
+
+        onChallengeSuccessEvent?.Invoke();
 
         challengeUI.SetUpUI();
         ResetChallenge();

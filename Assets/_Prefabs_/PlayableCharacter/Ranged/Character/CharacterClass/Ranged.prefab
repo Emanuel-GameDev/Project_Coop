@@ -62,6 +62,9 @@ MonoBehaviour:
   inLove: 0
   bleeding: 0
   isDead: 0
+  colliders:
+  - {fileID: 3889445347155130365}
+  - {fileID: 7076929445431620904}
   damageReceivedMultiplier: 1
   onHit:
     m_PersistentCalls:
@@ -120,7 +123,7 @@ MonoBehaviour:
   projectileRange: 10
   consecutiveFireTimer: 0.3
   numberProjectile: 3
-  empowerFireChargeTime: 1.5
+  empowerFireChargeTime: 0.5
   chargeTimeReduction: 0.5
   empowerAdditionalRange: 15
   empowerDamageMultiplier: 3

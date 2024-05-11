@@ -348,7 +348,7 @@ public class BasicEnemy : EnemyCharacter
     public override void OnParryNotify(Character whoParried)
     {
         base.OnParryNotify(whoParried);
-        SetHitMaterialColor(_OnParryColor);
+        
         stateMachine.SetState(parriedState);
     }
 
