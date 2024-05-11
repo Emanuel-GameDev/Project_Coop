@@ -167,7 +167,7 @@ public class Challenge : MonoBehaviour
         enemySpawned = false;
         challengeStarted = false;
         ChallengeManager.Instance.interacted = false;
-        ChallengeManager.Instance.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        //ChallengeManager.Instance.gameObject.GetComponent<SpriteRenderer>().enabled = true;
     }
 
     protected void DisplayTimer(float timeToDisplay)

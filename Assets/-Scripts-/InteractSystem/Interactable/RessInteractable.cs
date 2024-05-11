@@ -136,11 +136,14 @@ public class RessInteractable : MonoBehaviour, IInteractable
 
     public void AbortInteraction(IInteracter interacter)
     {
-        ressCount--;
-        if (ressCount <= 0)
+        if (doInteraction.Contains(interacter))
         {
-            updateSlider = false;
+            ressCount--;
+            if (ressCount <= 0)
+            {
+                updateSlider = false;
+            }
+            doInteraction.Remove(interacter);
         }
-        doInteraction.Remove(interacter);
     }
 }
