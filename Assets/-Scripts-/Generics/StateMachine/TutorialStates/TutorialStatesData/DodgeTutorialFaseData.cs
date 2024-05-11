@@ -12,7 +12,7 @@ public class DodgeTutorialFaseData : TutorialFaseData
     [SerializeField] public Dialogue dpsDodgeDialogue;
     [SerializeField] public Dialogue rangedDodgeDialogue;
 
-    [Header("Dialoghi pre-tutorial schivata perfetta dei personaggi")]
-    [SerializeField] public Dialogue dpsPerfectDodgeDialogue;
-    [SerializeField] public Dialogue rangedPerfectDodgeDialogue;
+    //[Header("Dialoghi pre-tutorial schivata perfetta dei personaggi")]
+    //[SerializeField] public Dialogue dpsPerfectDodgeDialogue;
+    //[SerializeField] public Dialogue rangedPerfectDodgeDialogue;
 }

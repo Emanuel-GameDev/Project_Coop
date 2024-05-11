@@ -30,6 +30,8 @@ public class BrutusAbilityTutorialFase : TutorialFase
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
         tutorialManager.objectiveNumbersGroup.SetActive(true);
 
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.dps);
+
         tutorialManager.ResetStartingCharacterAssosiacion();
 
 

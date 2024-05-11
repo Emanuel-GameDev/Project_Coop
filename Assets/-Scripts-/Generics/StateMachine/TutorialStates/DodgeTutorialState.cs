@@ -34,7 +34,7 @@ public class DodgeTutorialState : TutorialFase
 
         currentFaseCharacters = new PlayerCharacter[2] { tutorialManager.dps, tutorialManager.ranged };
         charactersPreTutorialDialogue = new Dialogue[2] { faseData.dpsDodgeDialogue, faseData.rangedDodgeDialogue };
-        charactersPerfectTutorialDialogue = new Dialogue[2] { faseData.dpsPerfectDodgeDialogue, faseData.rangedPerfectDodgeDialogue };
+        //charactersPerfectTutorialDialogue = new Dialogue[2] { faseData.dpsPerfectDodgeDialogue, faseData.rangedPerfectDodgeDialogue };
 
 
         tutorialManager.DeactivateAllPlayerInputs();
@@ -48,47 +48,48 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
         perfectDodgeCountAllowed = false;
+        PubSub.Instance.RegisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
     }
 
     bool characterChange = true;
     bool perfectDodgeCountAllowed = false;
 
-    private void UpdatePerfectDodgeCounter(object obj)
-    {
-        if (!perfectDodgeCountAllowed)
-            return;
+    //private void UpdatePerfectDodgeCounter(object obj)
+    //{
+    //    if (!perfectDodgeCountAllowed)
+    //        return;
 
 
-        perfectDodgeCount++;
-        tutorialManager.objectiveNumberReached.text = perfectDodgeCount.ToString();
+    //    perfectDodgeCount++;
+    //    tutorialManager.objectiveNumberReached.text = perfectDodgeCount.ToString();
 
 
-        if ( perfectDodgeCount == 3)
-        {
-            if (currentCharacterIndex < 1)
-            {
-                dodgeCount = 0;
-                tutorialManager.objectiveNumberReached.text = dodgeCount.ToString();
-                //sottofase successiva
-                characterChange = true;
-                tutorialManager.Fade();
-                //currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
-                //currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
-                SetupNextCharacter();
-            }
-            else
-            {
-                //fase successiva
-                tutorialManager.blockFaseChange = false;
-                tutorialManager.DeactivateEnemyAI();
-                stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
-            }
-            PubSub.Instance.UnregisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
-            perfectDodgeCountAllowed = false;
+    //    if ( perfectDodgeCount == 3)
+    //    {
+    //        if (currentCharacterIndex < 1)
+    //        {
+    //            dodgeCount = 0;
+    //            tutorialManager.objectiveNumberReached.text = dodgeCount.ToString();
+    //            //sottofase successiva
+    //            characterChange = true;
+    //            tutorialManager.Fade();
+    //            //currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+    //            //currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+    //            SetupNextCharacter();
+    //        }
+    //        else
+    //        {
+    //            //fase successiva
+    //            tutorialManager.blockFaseChange = false;
+    //            tutorialManager.DeactivateEnemyAI();
+    //            stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+    //        }
+    //        PubSub.Instance.UnregisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
+    //        perfectDodgeCountAllowed = false;
             
 
-        }
-    }
+    //    }
+    //}
 
     private void UpdateDodgeCounter(object obj)
     {
@@ -106,27 +107,47 @@ public class DodgeTutorialState : TutorialFase
 
             tutorialManager.objectiveNumberReached.text = perfectDodgeCount.ToString();
 
-            tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
-            tutorialManager.objectiveText.text = faseData.faseObjectivePerfect.GetLocalizedString();
+            //tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
+            //tutorialManager.objectiveText.text = faseData.faseObjectivePerfect.GetLocalizedString();
 
-            if (currentFaseCharacters[currentCharacterIndex] is DPS)
-                tutorialManager.PlayDialogue(faseData.dpsPerfectDodgeDialogue);
-            else if(currentFaseCharacters[currentCharacterIndex] is Ranged)
-                tutorialManager.PlayDialogue(faseData.rangedPerfectDodgeDialogue);
+            //if (currentFaseCharacters[currentCharacterIndex] is DPS)
+            //    tutorialManager.PlayDialogue(faseData.dpsPerfectDodgeDialogue);
+            //else if(currentFaseCharacters[currentCharacterIndex] is Ranged)
+            //    tutorialManager.PlayDialogue(faseData.rangedPerfectDodgeDialogue);
 
             foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
             {
                 ih.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
             }
 
-            //tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
-            tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
+            tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+            //tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
             tutorialManager.DeactivateEnemyAI();
 
             perfectDodgeCountAllowed = true;
 
-            PubSub.Instance.RegisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
+
+            if (currentCharacterIndex < currentFaseCharacters.Length - 1)
+            {
+                dodgeCount = 0;
+                tutorialManager.objectiveNumberReached.text = dodgeCount.ToString();
+                //sottofase successiva
+                characterChange = true;
+                tutorialManager.Fade();
+                //currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+                //currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+                SetupNextCharacter();
+            }
+            else
+            {
+                //fase successiva
+                tutorialManager.blockFaseChange = false;
+                tutorialManager.DeactivateEnemyAI();
+                stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+            }
+
+            //PubSub.Instance.RegisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
         }
     }
 
@@ -146,7 +167,7 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.ResetStartingCharacterAssosiacion();
 
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetPlayerCharacter(currentFaseCharacters[currentCharacterIndex]);
-
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(currentFaseCharacters[currentCharacterIndex]);
         tutorialManager.DeactivateAllPlayerInputs();
 
         foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
@@ -170,35 +191,35 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);
 
-        PubSub.Instance.RegisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
-        PubSub.Instance.UnregisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
+       
+        //PubSub.Instance.UnregisterFunction(EMessageType.perfectDodgeExecuted, UpdatePerfectDodgeCounter);
     }
 
-    private void SetupPerfectDodgeTutorial()
-    {
-        tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
-        tutorialManager.DeactivateAllPlayerInputs();
+    //private void SetupPerfectDodgeTutorial()
+    //{
+    //    tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
+    //    tutorialManager.DeactivateAllPlayerInputs();
 
-        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
-        {
-            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        }
+    //    foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+    //    {
+    //        ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+    //    }
 
-        PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
+    //    PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
 
-       // tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
+    //   // tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+    //    tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
 
-        tutorialManager.tutorialEnemy.focus = false;
-        tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
-        tutorialManager.tutorialEnemy.focus = true;
+    //    tutorialManager.tutorialEnemy.focus = false;
+    //    tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
+    //    tutorialManager.tutorialEnemy.focus = true;
 
-        tutorialManager.ActivateEnemyAI();
+    //    tutorialManager.ActivateEnemyAI();
 
-        perfectDodgeCount = 0;
+    //    perfectDodgeCount = 0;
 
-    }
+    //}
 
     int dodgeCount = 0;
     int perfectDodgeCount = 0;
@@ -230,10 +251,10 @@ public class DodgeTutorialState : TutorialFase
     {
         yield return new WaitForSeconds(time);
 
-        if (characterChange)
+        //if (characterChange)
             SetupNextCharacter();
-        else
-            SetupPerfectDodgeTutorial();
+        //else
+        //    SetupPerfectDodgeTutorial();
 
     }
 
@@ -247,6 +268,6 @@ public class DodgeTutorialState : TutorialFase
     {
         base.Exit();
         tutorialManager.EndCurrentFase();
-        PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdatePerfectDodgeCounter);
+        PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
     }
 }

@@ -28,6 +28,8 @@ public class JudeAbilityTutorialFase : TutorialFase
         tutorialManager.objectiveNumberToReach.text = "1";
         tutorialManager.objectiveNumberReached.text = "0";
 
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.ranged);
+
         tutorialManager.DeactivateAllPlayerInputs();
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;

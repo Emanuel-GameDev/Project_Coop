@@ -35,10 +35,8 @@ public class HealTutorialState : TutorialFase
 
         DamageData damageData = new DamageData(1, null);
 
-        //tutorialManager.dps.CharacterClass.TakeDamage(damageData);
-        //tutorialManager.ranged.CharacterClass.TakeDamage(damageData);
-        //tutorialManager.tank.CharacterClass.TakeDamage(damageData);
-        //tutorialManager.tutorialEnemy.TakeDamage(damageData);
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.healer);
+
 
         PubSub.Instance.RegisterFunction(EMessageType.characterHealed, CharacterHealed);
 
