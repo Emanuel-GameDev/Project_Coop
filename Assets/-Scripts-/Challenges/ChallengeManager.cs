@@ -40,6 +40,7 @@ public class ChallengeManager : MonoBehaviour
 
     [Header("Timer")]
     [SerializeField] public TextMeshProUGUI timerText;
+    [SerializeField] public TextMeshProUGUI challengeText;
 
 
     [HideInInspector] public Challenge selectedChallenge;

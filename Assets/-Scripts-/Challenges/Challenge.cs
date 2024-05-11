@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 
 public class Challenge : MonoBehaviour
 {
@@ -60,6 +61,7 @@ public class Challenge : MonoBehaviour
 
 
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(true);
+        DisplayChallengeDescription();
 
     }
     public virtual void OnFailChallenge()
@@ -179,6 +181,12 @@ public class Challenge : MonoBehaviour
 
         ChallengeManager.Instance.timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
+    }
+
+    protected void DisplayChallengeDescription()
+    {
+        ChallengeManager.Instance.challengeText.GetComponent<LocalizeStringEvent>().StringReference = challengeDescription;
+        //ChallengeManager.Instance.challengeText.text = ChallengeManager.Instance.challengeText.GetComponent<LocalizeStringEvent>().StringReference.ToString();
     }
 
     internal void AutoComplete()
