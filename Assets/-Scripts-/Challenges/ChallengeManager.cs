@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -46,6 +47,7 @@ public class ChallengeManager : MonoBehaviour
     [HideInInspector] public Challenge selectedChallenge;
     [HideInInspector] public bool interacted;
     [HideInInspector] public UnityEvent onInteractionAction;
+    [SerializeField] private PressInteractable pressInteractable;
 
     private void Start()
     {
@@ -197,5 +199,22 @@ public class ChallengeManager : MonoBehaviour
         MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetFirstPlayer());
         dialogueBox.RemoveAllDialogueEnd();
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
+    }
+
+
+    public void DeactivateInteractable()
+    {
+        if (pressInteractable == null)
+            pressInteractable = GetComponent<PressInteractable>();
+
+        pressInteractable.enabled = false;
+    }
+
+    internal void EnableInteractable()
+    {
+        if (pressInteractable == null)
+            pressInteractable = GetComponent<PressInteractable>();
+
+        pressInteractable.enabled = true;
     }
 }

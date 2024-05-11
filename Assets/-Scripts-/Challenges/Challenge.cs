@@ -132,6 +132,7 @@ public class Challenge : MonoBehaviour
 
         challengeUI.SetUpUI();
         ResetChallenge();
+        ChallengeManager.Instance.EnableInteractable();
     }
     public virtual void AddToSpawned(EnemyCharacter tempEnemy)
     {
