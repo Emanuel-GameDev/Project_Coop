@@ -212,7 +212,7 @@ public class TutorialManager : MonoBehaviour
 
     }
 
-
+    [SerializeField] AudioSource musicaTutorial;
     private void PostIntro()
     {
         foreach (PlayerInputHandler inputHandler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
@@ -222,6 +222,8 @@ public class TutorialManager : MonoBehaviour
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").started -= EnableSkipSlider;
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").canceled -= DisableSkipSlider;
         }
+
+        musicaTutorial.Play();
 
         SetUpCharacters();
         //DeactivateAllPlayerInputs();
