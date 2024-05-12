@@ -18,6 +18,8 @@ public class DebugManager : MonoBehaviour
 
     [SerializeField, Tooltip(text)]
     private bool guardaQuestoTooltipPerLeIstruzioni = false;
+    [SerializeField]
+    string loadSceneName;
 
     const string text = "DebugMode attiva e disattiva la modalità di Debug i comandi successivi funzionano solo se è abilitata.\n" +
         "TargetCharacter è il personaggio a cui verrnno dati gli Ability Upgrade o PowerUp.\n" +
@@ -138,6 +140,12 @@ public class DebugManager : MonoBehaviour
 
             if (guardaQuestoTooltipPerLeIstruzioni) guardaQuestoTooltipPerLeIstruzioni = false;
             istructions = text;
+
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                if(!string.IsNullOrEmpty(loadSceneName))
+                    GameManager.Instance.LoadScene(loadSceneName);
+            }
         }
     }
 
