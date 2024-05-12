@@ -45,7 +45,7 @@ public class ChallengeManager : MonoBehaviour
 
 
     [HideInInspector] public Challenge selectedChallenge;
-    [HideInInspector] public bool interacted;
+     public bool interacted;
     [HideInInspector] public UnityEvent onInteractionAction;
     [SerializeField] private PressInteractable pressInteractable;
     private void Awake()
