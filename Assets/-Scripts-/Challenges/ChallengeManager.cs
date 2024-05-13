@@ -186,6 +186,7 @@ public class ChallengeManager : MonoBehaviour
             pressInteractable = GetComponentInChildren<PressInteractable>();
 
         pressInteractable.gameObject.SetActive(false);
+        pressInteractable.CancelAllInteraction();
     }
     internal void ActivateInteractable()
     {
