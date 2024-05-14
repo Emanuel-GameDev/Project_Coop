@@ -7,11 +7,21 @@ using UnityEngine.Timeline;
 [CreateAssetMenu(menuName = "Tutorial/TutorialFaseData/AttackTutorialFaseData")]
 public class AttackTutorialFaseData : TutorialFaseData
 {
-    [SerializeField] public LocalizedString faseObjectiveBrutus;
+    [Header("Special objective")]
+    [Tooltip("Localized string for dps objective")]
+    [SerializeField] internal LocalizedString faseObjectiveBrutus;
 
-    [Header("Dialoghi pre-tutorial dei personaggi")]
-    [SerializeField] public Dialogue dpsDialogue;
-    [SerializeField] public Dialogue healerDialogue;
-    [SerializeField] public Dialogue rangedDialogue;
-    [SerializeField] public Dialogue tankDialogue;
+    [Header("Pre-tutorial dialogues")]
+    [Tooltip("Pre-tutorial dialogues for dps")]
+    [SerializeField] internal Dialogue dpsDialogue;
+    [Tooltip("Pre-tutorial dialogues for healer")]
+    [SerializeField] internal Dialogue healerDialogue;
+    [Tooltip("Pre-tutorial dialogues for ranged")]
+    [SerializeField] internal Dialogue rangedDialogue;
+    [Tooltip("Pre-tutorial dialogues for tank")]
+    [SerializeField] internal Dialogue tankDialogue;
+
+    [Header("Fase info")]
+    [Tooltip("Number of times to hit the enemy to pass the fase")]
+    [SerializeField] internal int timesToHit = 3;
 }

@@ -51,7 +51,6 @@ public class MovementTutorialState : TutorialFase
 
         foreach(PlayerInputHandler ih in tutorialManager.inputHandlers)
         {
-            //ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
             ih.GetComponent<PlayerInput>().actions.Enable();
         }
 
@@ -67,21 +66,13 @@ public class MovementTutorialState : TutorialFase
         if (!moveCheck)
         {
             foreach (PlayerCharacter p in tutorialManager.characters)
-            {
                 if(p.MoveDirection != Vector2.zero)
-                {
                     moveCheck=true;
-                    Debug.Log(moveCheck);
-                }
-            }
-
         }
 
         if (tutorialManager.timerEnded)
         {
             tutorialManager.timerEnded = false;
-
-            //tutorialManager.DeactivateAllPlayerInputs();
             stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
         }
     }

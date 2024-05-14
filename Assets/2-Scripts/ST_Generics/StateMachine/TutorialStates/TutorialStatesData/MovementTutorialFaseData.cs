@@ -6,9 +6,12 @@ using UnityEngine.Localization;
 [CreateAssetMenu(menuName = "Tutorial/TutorialFaseData/MovementTutorialFaseData")]
 public class MovementTutorialFaseData : TutorialFaseData
 {
-    [SerializeField] public float faseLenght = 10;
-    [SerializeField] public Dialogue specialFaseEndDialogue;
+    [Header("Special dialogues")]
+    [Tooltip("Dialoue to play if no one moves")]
+    [SerializeField] internal Dialogue specialFaseEndDialogue;
 
-    
+    [Header("Fase info")]
+    [Tooltip("Lenght of the fase in seconds")]
+    [SerializeField] internal float faseLenght = 10;
 }
 

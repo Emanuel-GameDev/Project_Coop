@@ -6,10 +6,15 @@ using UnityEngine.Localization;
 [CreateAssetMenu(menuName = "Tutorial/TutorialFaseData/GuardTutorialFaseData")]
 public class GuardTutorialFaseData : TutorialFaseData
 {
-    [SerializeField] public LocalizedString faseObjectivePerfect;
-    [SerializeField] public int numberOfBlockToPass = 3;
+    [Header("Pre-tutorial dialogue")]
+    [Tooltip("Pre-tutorial dialogue for tank")]
+    [SerializeField] internal Dialogue tankPreGuardDialogue;
 
-    [Header("Dialoghi tutorial")]
-    [SerializeField] public Dialogue tankPreGuardDialogue;
-    [SerializeField] public Dialogue tankPerfectGuardDialogue;
+    [Header("Fase info")]
+    [SerializeField] internal int timesToBlock = 3;
+
+    //potrebbero essere rimossi
+    //[Tooltip("Localized string for dps objective")]
+    //[SerializeField] internal LocalizedString faseObjectivePerfect;
+    //[SerializeField] internal Dialogue tankPerfectGuardDialogue;
 }

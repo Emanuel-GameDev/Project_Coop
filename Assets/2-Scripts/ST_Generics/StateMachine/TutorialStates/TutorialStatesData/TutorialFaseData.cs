@@ -7,11 +7,16 @@ using UnityEngine.Localization;
 [CreateAssetMenu(menuName = "Tutorial/TutorialFaseData/TutorialFaseData")]
 public class TutorialFaseData : ScriptableObject
 {
-    [SerializeField] public TutorialFaseType faseType;
+    [SerializeField] internal TutorialFaseType faseType;
 
-    [SerializeField] public LocalizedString faseObjective;
+    [Header("Objective")]
+    [Tooltip("LocalizedString of the fase objective")]
+    [SerializeField] internal LocalizedString faseObjective;
 
-    [SerializeField] public Dialogue faseStartDialogue;
-    [SerializeField] public Dialogue faseEndDialogue;
+    [Header("Dialogues")]
+    [Tooltip("Dialogue at the start of the fase")]
+    [SerializeField] internal Dialogue faseStartDialogue;
+    [Tooltip("Dialogue at the end of the fase")]
+    [SerializeField] internal Dialogue faseEndDialogue;
 
 }

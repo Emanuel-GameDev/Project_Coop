@@ -11,6 +11,7 @@ public class BrutusAbilityTutorialFase : TutorialFase
 
     int hitCounter = 0;
     bool canUpdateCounter = false;
+
     public BrutusAbilityTutorialFase(TutorialManager tutorialManager)
     {
         this.tutorialManager = tutorialManager;

@@ -6,12 +6,18 @@ using UnityEngine.Localization;
 [CreateAssetMenu(menuName = "Tutorial/TutorialFaseData/DodgeTutorialFaseData")]
 public class DodgeTutorialFaseData : TutorialFaseData
 {
-    [SerializeField] public LocalizedString faseObjectivePerfect;
+    [Header("Fase dialogues")]
+    [Tooltip("Pre-Tutorial dps dialogue")]
+    [SerializeField] internal Dialogue dpsDodgeDialogue;
+    [Tooltip("Pre-Tutorial ranged dialogue")]
+    [SerializeField] internal Dialogue rangedDodgeDialogue;
 
-    [Header("Dialoghi pre-tutorial schivata dei personaggi")]
-    [SerializeField] public Dialogue dpsDodgeDialogue;
-    [SerializeField] public Dialogue rangedDodgeDialogue;
+    [Header("Fase info")]
+    [Tooltip("Times to dodge to complete the fase")]
+    [SerializeField] internal int timesToDodge = 3;
 
+    //forse da rimuovere
+    //[SerializeField] public LocalizedString faseObjectivePerfect;
     //[Header("Dialoghi pre-tutorial schivata perfetta dei personaggi")]
     //[SerializeField] public Dialogue dpsPerfectDodgeDialogue;
     //[SerializeField] public Dialogue rangedPerfectDodgeDialogue;

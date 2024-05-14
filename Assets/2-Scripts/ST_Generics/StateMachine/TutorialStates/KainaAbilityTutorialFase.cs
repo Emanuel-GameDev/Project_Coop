@@ -43,23 +43,6 @@ public class KainaAbilityTutorialFase : TutorialFase
         tutorialManager.tank.AddPowerUp(tutorialManager.powerUpDebug);
     }
 
-    private void StartEndFaseCountdown(object obj)
-    {
-        if(obj is Tank)
-        {
-            tutorialManager.objectiveNumberReached.text = "1";
-            tutorialManager.StartCoroutine(WaitSeconds());
-        }
-    }
-
-    IEnumerator WaitSeconds()
-    {
-        yield return new WaitForSecondsRealtime(5);
-
-        stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
-        tutorialManager.DeactivateEnemyAI();
-    }
-  
 
     private void WaitAfterDialogue()
     {
@@ -80,6 +63,14 @@ public class KainaAbilityTutorialFase : TutorialFase
         tutorialManager.ActivateEnemyAI();
     }
 
+    private void StartEndFaseCountdown(object obj)
+    {
+        if(obj is Tank)
+        {
+            tutorialManager.objectiveNumberReached.text = "1";
+            tutorialManager.StartCoroutine(WaitSeconds());
+        }
+    }
 
 
     public override void Update()
@@ -101,4 +92,13 @@ public class KainaAbilityTutorialFase : TutorialFase
 
         PubSub.Instance.UnregisterFunction(EMessageType.uniqueAbilityActivated, StartEndFaseCountdown);
     }
+    IEnumerator WaitSeconds()
+    {
+        yield return new WaitForSecondsRealtime(5);
+
+        stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+        tutorialManager.DeactivateEnemyAI();
+    }
+  
+
 }

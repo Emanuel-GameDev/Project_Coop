@@ -5,12 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Tutorial/TutorialFaseData/HealTutorialFaseData")]
 public class HealTutorialFaseData : TutorialFaseData
 {
-    [Header("Dialoghi personaggi")]
-    [SerializeField] public Dialogue DPSDialogue;
-    [SerializeField] public Dialogue rangedDialogue;
-    [SerializeField] public Dialogue tankDialogue;
-    [SerializeField] public Dialogue dumpyDialogue;
-
-    [Header("Dialogo speciale")]
-    [SerializeField] public Dialogue specialDialogue;
+    [Header("Healed dialogues")]
+    [Tooltip("Dialogue to play when dps is healed")]
+    [SerializeField] internal Dialogue DPSDialogue;
+    [Tooltip("Dialogue to play when ranged is healed")]
+    [SerializeField] internal Dialogue rangedDialogue;
+    [Tooltip("Dialogue to play when tank is healed")]
+    [SerializeField] internal Dialogue tankDialogue;
+    [Tooltip("Dialogue to play when Dumpy is healed")]
+    [SerializeField] internal Dialogue dumpyDialogue;
 }

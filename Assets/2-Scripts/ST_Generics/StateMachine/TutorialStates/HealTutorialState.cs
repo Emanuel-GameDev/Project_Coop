@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class HealTutorialState : TutorialFase
 {
     TutorialManager tutorialManager;
-    List<PlayerCharacter> playerHealed;
+    //List<PlayerCharacter> playerHealed;
     int numberOfPlayerHealed = 0;
     HealTutorialFaseData faseData;
 
@@ -31,7 +31,7 @@ public class HealTutorialState : TutorialFase
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
         tutorialManager.objectiveNumbersGroup.SetActive(true);
 
-        playerHealed = new List<PlayerCharacter> { tutorialManager.dps, tutorialManager.ranged, tutorialManager.tank };
+        //playerHealed = new List<PlayerCharacter> { tutorialManager.dps, tutorialManager.ranged, tutorialManager.tank };
 
         DamageData damageData = new DamageData(1, null);
 

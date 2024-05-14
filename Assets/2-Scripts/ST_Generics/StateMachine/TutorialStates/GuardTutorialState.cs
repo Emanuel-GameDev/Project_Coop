@@ -12,7 +12,7 @@ public class GuardTutorialState : TutorialFase
     GuardTutorialFaseData faseData;
 
     int guardExecuted = 0;
-    int perfectGuardExecuted = 0;
+    //int perfectGuardExecuted = 0;
 
     public GuardTutorialState(TutorialManager tutorialManager)
     {
@@ -24,24 +24,28 @@ public class GuardTutorialState : TutorialFase
         base.Enter();
 
         guardExecuted = 0;
-        perfectGuardExecuted = 0;
+        //perfectGuardExecuted = 0;
 
         faseData = (GuardTutorialFaseData) tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
         tutorialManager.objectiveNumbersGroup.SetActive(true);
+        tutorialManager.objectiveNumberReached.text = guardExecuted.ToString();
+        tutorialManager.objectiveNumberToReach.text = faseData.timesToBlock.ToString();
         tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.tank);
+
         PubSub.Instance.RegisterFunction(EMessageType.guardExecuted, UpdateCounter);
         PubSub.Instance.RegisterFunction(EMessageType.perfectGuardExecuted, UpdateCounter);
+
         tutorialManager.DeactivateAllPlayerInputs();
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
+
         tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
-        tutorialManager.objectiveNumberReached.text = guardExecuted.ToString();
-        tutorialManager.objectiveNumberToReach.text = "3";
+
 
     }
 
@@ -86,7 +90,7 @@ public class GuardTutorialState : TutorialFase
             tutorialManager.DeactivateAllPlayerInputs();
             //tutorialManager.PlayDialogue(faseData.tankPerfectGuardDialogue);
 
-            tutorialManager.objectiveText.text = faseData.faseObjectivePerfect.GetLocalizedString();
+            //tutorialManager.objectiveText.text = faseData.faseObjectivePerfect.GetLocalizedString();
 
             foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
             {

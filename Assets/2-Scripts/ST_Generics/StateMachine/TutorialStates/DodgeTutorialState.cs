@@ -5,13 +5,18 @@ using UnityEngine.InputSystem;
 
 public class DodgeTutorialState : TutorialFase
 {
+    //le parti commentate potrebbero essere rimosse 
+
     TutorialManager tutorialManager;
     DodgeTutorialFaseData faseData;
 
     PlayerCharacter[] currentFaseCharacters;
+
     Dialogue[] charactersPreTutorialDialogue;
-    Dialogue[] charactersPerfectTutorialDialogue;
+    //Dialogue[] charactersPerfectTutorialDialogue;
+
     int currentCharacterIndex;
+    int dodgeCount = 0;
 
     public DodgeTutorialState(TutorialManager tutorialManager)
     {
@@ -26,7 +31,7 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
         tutorialManager.objectiveNumbersGroup.SetActive(true);
-        tutorialManager.objectiveNumberToReach.text = "3";
+        tutorialManager.objectiveNumberToReach.text = faseData.timesToDodge.ToString();
 
 
         tutorialManager.blockFaseChange = true;
@@ -40,19 +45,19 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.DeactivateAllPlayerInputs();
 
 
-        characterChange = true;
+        //characterChange = true;
 
         tutorialManager.DeactivateEnemyAI();
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
-        perfectDodgeCountAllowed = false;
+        //perfectDodgeCountAllowed = false;
         PubSub.Instance.RegisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
     }
 
-    bool characterChange = true;
-    bool perfectDodgeCountAllowed = false;
+    //bool characterChange = true;
+    //bool perfectDodgeCountAllowed = false;
 
     //private void UpdatePerfectDodgeCounter(object obj)
     //{
@@ -95,17 +100,17 @@ public class DodgeTutorialState : TutorialFase
     {
         dodgeCount++;
 
-        if (dodgeCount < 3)
+        if (dodgeCount < faseData.timesToDodge)
         {
             tutorialManager.objectiveNumberReached.text = dodgeCount.ToString();
         }
 
-        if(dodgeCount == 3)
+        if(dodgeCount == faseData.timesToDodge)
         {
             dodgeCount = 0;
-            perfectDodgeCount = 0;
+            //perfectDodgeCount = 0;
 
-            tutorialManager.objectiveNumberReached.text = perfectDodgeCount.ToString();
+            //tutorialManager.objectiveNumberReached.text = perfectDodgeCount.ToString();
 
             //tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
             //tutorialManager.objectiveText.text = faseData.faseObjectivePerfect.GetLocalizedString();
@@ -125,7 +130,7 @@ public class DodgeTutorialState : TutorialFase
 
             tutorialManager.DeactivateEnemyAI();
 
-            perfectDodgeCountAllowed = true;
+            //perfectDodgeCountAllowed = true;
 
 
             if (currentCharacterIndex < currentFaseCharacters.Length - 1)
@@ -133,7 +138,7 @@ public class DodgeTutorialState : TutorialFase
                 dodgeCount = 0;
                 tutorialManager.objectiveNumberReached.text = dodgeCount.ToString();
                 //sottofase successiva
-                characterChange = true;
+                //characterChange = true;
                 tutorialManager.Fade();
                 //currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
                 //currentFaseCharacters[currentCharacterIndex].GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
@@ -159,7 +164,7 @@ public class DodgeTutorialState : TutorialFase
 
     private void SetupNextCharacter()
     {
-        characterChange = false;
+        //characterChange = false;
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         currentCharacterIndex++;
 
@@ -184,7 +189,7 @@ public class DodgeTutorialState : TutorialFase
         //tutorialManager.tutorialEnemy.focus = true;
         
         dodgeCount = 0;
-        perfectDodgeCount = 0;
+        //perfectDodgeCount = 0;
 
         tutorialManager.objectiveNumberReached.text = dodgeCount.ToString();
 
@@ -221,8 +226,7 @@ public class DodgeTutorialState : TutorialFase
 
     //}
 
-    int dodgeCount = 0;
-    int perfectDodgeCount = 0;
+    //int perfectDodgeCount = 0;
 
     private void StartSubFase()
     {
@@ -247,17 +251,6 @@ public class DodgeTutorialState : TutorialFase
 
    
 
-    public IEnumerator Wait(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-        //if (characterChange)
-            SetupNextCharacter();
-        //else
-        //    SetupPerfectDodgeTutorial();
-
-    }
-
     public override void Update()
     {
         base.Update();
@@ -269,5 +262,17 @@ public class DodgeTutorialState : TutorialFase
         base.Exit();
         tutorialManager.EndCurrentFase();
         PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
+    }
+
+
+    public IEnumerator Wait(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        //if (characterChange)
+            SetupNextCharacter();
+        //else
+        //    SetupPerfectDodgeTutorial();
+
     }
 }
