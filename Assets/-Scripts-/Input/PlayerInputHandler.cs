@@ -19,7 +19,8 @@ public class PlayerInputHandler : MonoBehaviour
     public ePlayerCharacter startingCharacter { private set; get; } = ePlayerCharacter.EmptyCharacter;
     public ePlayerCharacter currentCharacter { private set; get; }
 
-    private InputMap previousInputMap = InputMap.UI;
+    private InputMap previousInputMap = InputMap.EmptyMap;
+    private InputMap currentInputMap = InputMap.EmptyMap;
 
     public InputReceiver _currentReceiver;
     public InputReceiver CurrentReceiver
@@ -45,7 +46,8 @@ public class PlayerInputHandler : MonoBehaviour
     public void SetReceiver(InputReceiver newReceiver)
     {
         CurrentReceiver = newReceiver;
-        SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
+        if(!GameManager.Instance.IsLoading)
+            SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
         CurrentReceiver.SetInputHandler(this);
         if (currentCharacter != ePlayerCharacter.EmptyCharacter)
             CurrentReceiver.SetCharacter(currentCharacter);
@@ -101,7 +103,7 @@ public class PlayerInputHandler : MonoBehaviour
         MultiplayerEventSystem.firstSelectedGameObject = firstSelection;
         MultiplayerEventSystem.playerRoot = menuRoot;
 
-        if(firstSelection != null)
+        if (firstSelection != null)
             multiplayerEventSystem.SetSelectedGameObject(firstSelection);
 
         if (menuRoot != null)
@@ -112,7 +114,7 @@ public class PlayerInputHandler : MonoBehaviour
         {
             SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
         }
-            
+
 
         Debug.Log(playerInput.currentActionMap);
     }
@@ -122,6 +124,7 @@ public class PlayerInputHandler : MonoBehaviour
     public void SetActionMap(InputMap map)
     {
         playerInput.SwitchCurrentActionMap(map.ToString());
+        currentInputMap = map;
     }
 
     public void OnDeviceLost(PlayerInput playerInput)
@@ -156,7 +159,6 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void CancelInteractInput(InputAction.CallbackContext context) => CurrentReceiver.CancelInteractInput(context);
 
-    public void JoinInput(InputAction.CallbackContext context) => CurrentReceiver.JoinInput(context);
 
     public void SwitchUpInput(InputAction.CallbackContext context) => CurrentReceiver.SwitchUpInput(context);
 
@@ -167,6 +169,14 @@ public class PlayerInputHandler : MonoBehaviour
     public void SwitchLeftInput(InputAction.CallbackContext context) => CurrentReceiver.SwitchLeftInput(context);
 
     public void MenuInput(InputAction.CallbackContext context) => CurrentReceiver.MenuInput(context);
+    //{
+    //    if (context.started) Utility.DebugTrace("STARTED");
+    //    if (context.performed) Utility.DebugTrace("PERFORMED");
+    //    if (context.canceled) Utility.DebugTrace("CANCELED");
+
+
+    //    CurrentReceiver.MenuInput(context);
+    //} 
 
     public void OptionInput(InputAction.CallbackContext context) => CurrentReceiver.OptionInput(context);
 

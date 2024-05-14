@@ -11,6 +11,11 @@ public class HealTutorialState : TutorialFase
     int numberOfPlayerHealed = 0;
     HealTutorialFaseData faseData;
 
+    bool tankhealed = false;
+    bool dpshealed = false;
+    bool rangedhealed = false;
+    bool enemyhealed = false;
+
     public HealTutorialState(TutorialManager tutorialManager)
     {
         this.tutorialManager = tutorialManager;
@@ -20,7 +25,7 @@ public class HealTutorialState : TutorialFase
     {
         base.Enter();
 
-        faseData = (HealTutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (HealTutorialFaseData)tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
@@ -30,10 +35,8 @@ public class HealTutorialState : TutorialFase
 
         DamageData damageData = new DamageData(1, null);
 
-        //tutorialManager.dps.CharacterClass.TakeDamage(damageData);
-        //tutorialManager.ranged.CharacterClass.TakeDamage(damageData);
-        //tutorialManager.tank.CharacterClass.TakeDamage(damageData);
-        //tutorialManager.tutorialEnemy.TakeDamage(damageData);
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.healer);
+
 
         PubSub.Instance.RegisterFunction(EMessageType.characterHealed, CharacterHealed);
 
@@ -42,23 +45,33 @@ public class HealTutorialState : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
-        
+        tutorialManager.healer.GetComponent<Healer>().canHealEnemies = true;
+        tutorialManager.healer.GetComponent<Healer>().smallHealTrigger.ClearList();
 
         numberOfPlayerHealed = 0;
-        tutorialManager.objectiveNumberToReach.text = numberOfPlayerHealed.ToString();
+        tutorialManager.objectiveNumberReached.text = numberOfPlayerHealed.ToString();
+        tutorialManager.objectiveNumberToReach.text = "3";
 
     }
     bool dialoguePlaying = false;
     private void WaitAfterDialogue()
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
-        // DA RIVEDERE #MODIFICATO
+
+        tutorialManager.ResetStartingCharacterAssosiacion();
+
         tutorialManager.inputBindings[tutorialManager.healer].SetPlayerCharacter(tutorialManager.healer);
 
         tutorialManager.DeactivateAllPlayerInputs();
 
-        tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+        {
+            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        }
+
+        //tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+        tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
         dialoguePlaying = false;
     }
@@ -72,38 +85,71 @@ public class HealTutorialState : TutorialFase
             switch (character)
             {
                 case DPS:
+
+                    if (dpshealed || dialoguePlaying)
+                        break;
+
                     tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
 
                     numberOfPlayerHealed++;
-                    tutorialManager.objectiveNumberToReach.text = numberOfPlayerHealed.ToString();
+                    tutorialManager.objectiveNumberReached.text = numberOfPlayerHealed.ToString();
 
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.DPSDialogue);
                     dialoguePlaying = true;
+                    dpshealed = true;
                     break;
 
                 case Ranged:
+
+                    if (rangedhealed || dialoguePlaying)
+                        break;
+
+
                     tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
 
                     numberOfPlayerHealed++;
-                    tutorialManager.objectiveNumberToReach.text = numberOfPlayerHealed.ToString();
+                    tutorialManager.objectiveNumberReached.text = numberOfPlayerHealed.ToString();
 
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.rangedDialogue);
                     dialoguePlaying = true;
+
+                    rangedhealed = true;
                     break;
 
                 case Tank:
+
+                    if (tankhealed || dialoguePlaying)
+                        break;
+
                     tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
 
                     numberOfPlayerHealed++;
-                    tutorialManager.objectiveNumberToReach.text = numberOfPlayerHealed.ToString();
+                    tutorialManager.objectiveNumberReached.text = numberOfPlayerHealed.ToString();
 
                     tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
                     tutorialManager.PlayDialogue(faseData.tankDialogue);
                     dialoguePlaying = true;
+
+                    tankhealed = true;
                     break;
+
             }
+        }
+        else if(obj is TutorialEnemy)
+        {
+            if (enemyhealed || dialoguePlaying)
+                return;
+
+            TutorialEnemy character = (TutorialEnemy)obj;
+
+            tutorialManager.DeactivatePlayerInput(tutorialManager.healer.GetInputHandler());
+            tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
+            tutorialManager.PlayDialogue(faseData.dumpyDialogue);
+            dialoguePlaying = true;
+
+            enemyhealed = true;
         }
     }
 
@@ -111,8 +157,8 @@ public class HealTutorialState : TutorialFase
     public override void Update()
     {
         base.Update();
-
-        if (playerHealed.TrueForAll(p => p.CurrentHp >= p.MaxHp) && !dialoguePlaying)
+         
+        if (dpshealed && tankhealed && rangedhealed && !dialoguePlaying)
         {
             stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
         }
@@ -127,6 +173,7 @@ public class HealTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
+        tutorialManager.healer.GetComponent<Healer>().canHealEnemies = false;
 
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
         tutorialManager.DeactivateAllPlayerInputs();

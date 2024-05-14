@@ -1,25 +1,25 @@
-using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
 
 public class PressInteractable : MonoBehaviour, IInteractable
 {
-    [SerializeField, Tooltip("Oggetto per mostrare il comando di interazione")] 
+    [SerializeField, Tooltip("Oggetto per mostrare il comando di interazione")]
     private GameObject interacterVisualization;
-    [SerializeField,Tooltip("Stringa da visualizzare nella notifica di interazione")] 
+    [SerializeField, Tooltip("Stringa da visualizzare nella notifica di interazione")]
     private LocalizedString localizedString;
     [SerializeField]
     private bool showNotification = true;
     [SerializeField]
     private bool disableInteracterActions = true;
+    [SerializeField]
+    private bool isOnePlayerInteractable = false;
 
     [SerializeField] UnityEvent<IInteracter> OnOnePlayerInteract;
     [SerializeField] UnityEvent<IInteracter> OnOnePlayerCancelInteract;
     [SerializeField] UnityEvent OnAllPlayersInteract;
-    
+
     List<IInteracter> interacters = new List<IInteracter>();
 
     private int triggerCount;
@@ -55,10 +55,13 @@ public class PressInteractable : MonoBehaviour, IInteractable
         {
             interacter.DisableInteraction(this);
 
+            if (interacters.Contains(interacter))
+                interacters.Remove(interacter);
+            
             if (interacterVisualization != null)
             {
                 triggerCount--;
-                if(triggerCount <= 0)
+                if (triggerCount <= 0)
                     interacterVisualization.SetActive(false);
             }
 
@@ -67,26 +70,45 @@ public class PressInteractable : MonoBehaviour, IInteractable
 
     public void Interact(IInteracter interacter)
     {
-        if (!interacters.Contains(interacter))
+        if (isOnePlayerInteractable)
+        {
+            OnOnePlayerInteract?.Invoke(interacter);
+
+            if (disableInteracterActions)
+                interacter.DisableOtherActions();
+
+            if (showNotification)
+                NotifyInteraction(interacter);
+
+        }
+        else if (!interacters.Contains(interacter))
         {
             interacters.Add(interacter);
 
-            OnOnePlayerInteract?.Invoke(interacter);
+            if (showNotification)
+                NotifyInteraction(interacter);
+
+            if (disableInteracterActions)
+                interacter.DisableOtherActions();
+
+            if (interacters.Count >= CoopManager.Instance.GetActiveHandlers().Count)
+            {
+                OnAllPlayersInteract?.Invoke();
+
+                if (interacterVisualization != null)
+                    interacterVisualization.SetActive(false);
+            }
         }
 
-        if (interacters.Count >= CoopManager.Instance.GetActiveHandlers().Count)
+    }
+
+    public void CancelAllInteraction()
+    {
+        List<IInteracter> interactersCopy = new List<IInteracter>(interacters);
+        foreach (IInteracter interacter in interactersCopy)
         {
-            OnAllPlayersInteract?.Invoke();
-
-            if (interacterVisualization != null)
-                interacterVisualization.SetActive(false);
+            CancelInteraction(interacter);
         }
-
-        if (showNotification)
-            NotifyInteraction(interacter);
-
-        if (disableInteracterActions)
-            interacter.DisableOtherActions();
     }
 
     public void CancelInteraction(IInteracter interacter)
@@ -95,31 +117,31 @@ public class PressInteractable : MonoBehaviour, IInteractable
         {
             interacters.Remove(interacter);
             OnOnePlayerCancelInteract?.Invoke(interacter);
-        }
 
-        if (disableInteracterActions)
-            interacter.EnableAllActions();
+            if (showNotification)
+            {
+                if (interacters.Count == 0)
+                    InteractionNotificationHandler.Instance.DeactivateNotification(this);
+                else
+                    NotifyCancelInteraction(interacter);
+            }
 
-        if (showNotification)
-        {
-            if(interacters.Count == 0)
-                InteractionNotificationHandler.Instance.DeactivateNotification(this);
-            else
-                NotifyCancelInteraction(interacter);
+
+            if (disableInteracterActions)
+                interacter.EnableAllActions();
         }
-            
 
     }
 
     private void NotifyCancelInteraction(IInteracter interacter)
     {
-        InteractionNotificationHandler.Instance.CancelNotification(interacter,this);
+        InteractionNotificationHandler.Instance.CancelNotification(interacter, this);
     }
 
 
     public IInteracter GetFirstInteracter()
     {
-        if(interacters.Count == 0)
+        if (interacters.Count == 0)
             return null;
 
         return interacters[0];
@@ -127,6 +149,6 @@ public class PressInteractable : MonoBehaviour, IInteractable
 
     public void AbortInteraction(IInteracter interacter)
     {
-        
+
     }
 }

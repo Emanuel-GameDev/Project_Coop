@@ -24,19 +24,21 @@ public class MovementTutorialState : TutorialFase
     {
          base.Enter();
 
-        faseData = (MovementTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (MovementTutorialFaseData) tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.currentFaseObjective.SetActive(true);
         tutorialManager.objectiveNumbersGroup.SetActive(false);
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
-
+        tutorialManager.currentTutorialFaseImage.gameObject.SetActive(false);
         tutorialManager.DeactivateAllPlayerInputs();
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartFaseTimer;
         tutorialManager.DeactivateEnemyAI();
 
-        tutorialManager.PlayDialogue(tutorialManager.fases[tutorialManager.faseCount].faseData.faseStartDialogue);
+        tutorialManager.PlayDialogue(tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData.faseStartDialogue);
+
+        tutorialManager.ResetStartingCharacterAssosiacion();
     }
 
     
@@ -49,7 +51,8 @@ public class MovementTutorialState : TutorialFase
 
         foreach(PlayerInputHandler ih in tutorialManager.inputHandlers)
         {
-            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+            //ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+            ih.GetComponent<PlayerInput>().actions.Enable();
         }
 
         tutorialManager.dialogueBox.OnDialogueEnded -= StartFaseTimer;
@@ -93,7 +96,7 @@ public class MovementTutorialState : TutorialFase
         if (!moveCheck)
             tutorialManager.PlayDialogue(faseData.specialFaseEndDialogue);
         else
-            tutorialManager.PlayDialogue(tutorialManager.fases[tutorialManager.faseCount].faseData.faseEndDialogue);
+            tutorialManager.PlayDialogue(tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData.faseEndDialogue);
 
     }
 }

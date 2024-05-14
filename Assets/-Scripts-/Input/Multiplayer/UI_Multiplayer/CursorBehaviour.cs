@@ -17,11 +17,13 @@ public class CursorBehaviour : InputReceiver
     private bool onlyConfirmationRequired = false;
 
     private Vector2 movement;
+    private bool initialized = false;
+
     internal bool objectSelected = false;
 
     private void Start()
     {
-        CharacterSelectionMenu.Instance.AddToActiveCursors(this);
+        initialized = CharacterSelectionMenu.Instance.AddToActiveCursors(this);
 
         if (playerInputHandler != null)
         {
@@ -31,7 +33,6 @@ public class CursorBehaviour : InputReceiver
         objectsToOver = CharacterSelectionMenu.Instance.GetCharacterSelectors(playerID);
 
         Select(0);
-
     }
 
     internal void Select(int id)
@@ -60,6 +61,9 @@ public class CursorBehaviour : InputReceiver
     
     public override void Navigate(InputAction.CallbackContext context)
     {
+        if (!initialized)
+            return;
+
         movement = context.ReadValue<Vector2>();
 
         if (context.started && !objectSelected)
@@ -90,6 +94,9 @@ public class CursorBehaviour : InputReceiver
     /// <param name="context"></param>
     public override void Submit(InputAction.CallbackContext context)
     {
+        if (!initialized)
+            return;
+
         if (context.started && onlyConfirmationRequired)
             CharacterSelectionMenu.Instance.SelectionOver(PlayerID);
 
@@ -106,6 +113,7 @@ public class CursorBehaviour : InputReceiver
 
                 if (response)
                     objectSelected = true;
+
             }
         }
 
@@ -114,7 +122,10 @@ public class CursorBehaviour : InputReceiver
 
     public override void Cancel(InputAction.CallbackContext context)
     {
-        if (objectSelected)
+        if (context.started) CharacterSelectionMenu.Instance.TriggerCancelPressed(true, playerID);
+        else if (context.canceled) CharacterSelectionMenu.Instance.TriggerCancelPressed(false, playerID);
+
+        if (objectSelected && context.started)
         {
             bool response = CharacterSelectionMenu.Instance.TriggerPlayerSelection(false, gameObject);
 

@@ -14,6 +14,7 @@ public class BasicMeleeEnemyAttackState : BasicEnemyActionState
         base.Enter();
 
         basicEnemy.StartCoroutine(basicEnemy.Attack());
+        basicEnemy.ActivateObstacle();
 
     }
 

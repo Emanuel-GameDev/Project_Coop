@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-public class Ranged : PlayerCharacter
+public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 {
     //ci deve essere il riferimento alla look qua, non al proiettile
     //aggiungere statistiche personaggio + schivata+invincibilità
@@ -91,6 +91,9 @@ public class Ranged : PlayerCharacter
 
     public List<LandMine> nearbyLandmine;
 
+    [SerializeField] PerfectTimingHandler _perfectTimingHandler;
+    bool perfectTimingEnabled;
+
     [Header("Potenziamneto Boss fight")]
     [SerializeField, Tooltip("distanza massima per schivata perfetta ")]
     float perfectDodgeBossDistance = 30f;
@@ -104,8 +107,9 @@ public class Ranged : PlayerCharacter
     [Header("VFX")]
     [SerializeField] TrailRenderer trailDodgeVFX;
     [SerializeField] GameObject ChargedVFX;
+    ParticleSystem.EmissionModule emissionModule;
 
-    
+
 
     private bool reduceEmpowerFireCoolDownUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
     private bool multiBaseAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
@@ -113,21 +117,22 @@ public class Ranged : PlayerCharacter
     private bool dodgeDamageUnlocked => upgradeStatus[AbilityUpgrade.Ability4];
     private bool landMineUnlocked => upgradeStatus[AbilityUpgrade.Ability5];
 
-    private PerfectTimingHandler perfectTimingHandler;
+    //private PerfectTimingHandler perfectTimingHandler;
 
     private float empowerCoolDownDecrease => reduceEmpowerFireCoolDownUnlocked ? chargeTimeReduction : 0;
 
     bool isAttacking=false;
     bool isDodging=false;
-    bool isInvunerable=false;
+    bool isCharging=false;
 
     public override void Inizialize()
     {
         base.Inizialize();
         nearbyLandmine = new List<LandMine>();
         landMineInInventory = maxNumberLandMine;
-        perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>(true);
-        perfectTimingHandler.gameObject.SetActive(false);
+        //perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>(true);
+        //perfectTimingHandler.gameObject.SetActive(false);
+        emissionModule= _walkDustParticles.emission;
     }
 
 
@@ -146,6 +151,11 @@ public class Ranged : PlayerCharacter
         minePickUpVisualizer.SetActive(mineNearby);
 
         UpdateCrosshair(ReadLookdirCrosshair(shootingPoint.transform.position));
+
+        if (isCharging)
+        {
+            SetSpriteAimingDirection();
+        }
     }
 
     private void FixedUpdate()
@@ -174,7 +184,7 @@ public class Ranged : PlayerCharacter
     {
         if(!isDodging)
         {
-            if(!isAttacking && !isDodging)
+            if(!isAttacking && !isCharging)
             {
                 base.Move(direction);
             }
@@ -187,12 +197,22 @@ public class Ranged : PlayerCharacter
             if (rb.velocity.magnitude > 0.1f)
             {
                 animator.SetBool("isMoving", true);
+               
+                emissionModule.enabled = true;
             }
             else
             {
                 animator.SetBool("isMoving", false);
+                emissionModule.enabled = false;
             }
         }      
+    }
+
+    private void SetSpriteAimingDirection()
+    {
+        //Vector2 direction = ((Vector2)rangedCrossair.transform.position-(Vector2)shootingPoint.transform.position);
+        lastNonZeroDirection = new Vector2(lookDir.x, lookDir.y);
+        SetSpriteDirection(new Vector2(lookDir.x,lookDir.y));      
     }
 
     
@@ -201,8 +221,15 @@ public class Ranged : PlayerCharacter
     {
         if (!isDodging)
         {
-            StartCoroutine(PerfectDodgeHandler(data));
+            base.TakeDamage(data);
+
         }
+
+        if(perfectTimingEnabled)
+        {
+            PerfectTimeEnded();
+        }
+       
 
         if (currentHp <= 0)
         {
@@ -237,6 +264,8 @@ public class Ranged : PlayerCharacter
                 SetShootDirection();
             }
 
+            SetSpriteAimingDirection();
+
             //in futuro inserire il colpo avanzato
             if (multiBaseAttackUnlocked)
             {
@@ -244,19 +273,32 @@ public class Ranged : PlayerCharacter
             }
             else
             {
-
+                
                 BasicFireProjectile(ShootDirection);
 
                 fireTimer = AttackSpeed;
 
                 Debug.Log("colpo normale");
 
-                isAttacking = false;
+                Invoke(nameof(DelayAttackAction), consecutiveFireTimer);
+
+                
+            }
+
+            if (moveDir != Vector2.zero)
+            {
+                lastNonZeroDirection = moveDir;
             }
 
             rightInputTimer = recentlyInputTimer;
 
         }
+    }
+
+    private void DelayAttackAction()
+    {
+
+        isAttacking = false;
     }
 
     //Sparo normale
@@ -266,6 +308,7 @@ public class Ranged : PlayerCharacter
         animator.SetTrigger("SimpleShoot");
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
+        AudioManager.Instance.PlayRandomAudioClip(soundsDatabase.attackSounds);
         newProjectile.transform.position = shootingPoint.transform.position;
 
         newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer);
@@ -283,13 +326,20 @@ public class Ranged : PlayerCharacter
             BasicFireProjectile(direction);
 
             yield return new WaitForSeconds(consecutiveFireTimer);
+
+            if (isDodging)
+            {
+                fireTimer = AttackSpeed;
+                isAttacking = false;
+                yield break;
+            }
         }
 
         fireTimer = AttackSpeed;
 
         Debug.Log("colpo triplo");
 
-        dodgeTimer = dodgeCoolDown;
+        //dodgeTimer = dodgeCoolDown;
 
         isAttacking = false;
     }
@@ -310,9 +360,17 @@ public class Ranged : PlayerCharacter
                 return;
             }
 
+            if (perfectTimingEnabled)
+            {                             
+                PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
+                PerfectTimeEnded();
+                //infilare forse evento schivata
+                
+            }
+
             StartCoroutine(Dodge(lastNonZeroDirection, rb));
 
-            Debug.Log(lastNonZeroDirection);
+            
         }
     }
 
@@ -320,19 +378,24 @@ public class Ranged : PlayerCharacter
     {
         if (!isDodging)
         {
+            //reset bool
             isDodging = true;
             isAttacking = false;
+            isCharging = false;
+
+            //disable/abilitate VFX
+            ChargedVFX.SetActive(false);
+            trailDodgeVFX.gameObject.SetActive(true);
 
 
             //animazione
-
             animator.SetTrigger("Dodge");
 
-            trailDodgeVFX.gameObject.SetActive(true);
+            
 
             Vector2 dodgeDirection = direction.normalized;
 
-            rb.velocity = dodgeDirection * (dodgeDistance / dodgeDuration);
+            rb.velocity = dodgeDirection * ((dodgeDistance * powerUpData.DodgeDistanceIncrease)/ dodgeDuration);
 
             yield return new WaitForSeconds(dodgeDuration);
             PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
@@ -353,7 +416,7 @@ public class Ranged : PlayerCharacter
     protected IEnumerator PerfectDodgeHandler(DamageData data)
     {
         Debug.Log("Check");
-        perfectTimingHandler.gameObject.SetActive(true);
+        _perfectTimingHandler.gameObject.SetActive(true);
         yield return new WaitForSeconds(perfectDodgeDuration);
         if(isDodging)
         {
@@ -371,7 +434,7 @@ public class Ranged : PlayerCharacter
             base.TakeDamage(data);
         }
 
-        perfectTimingHandler.gameObject.SetActive(false);
+        _perfectTimingHandler.gameObject.SetActive(false);
         Debug.Log($"PerfectDodge: {isDodging}");
     }
 
@@ -466,8 +529,9 @@ public class Ranged : PlayerCharacter
             }
             else
             {
-                empowerStartTimer = Time.time;
+                empowerStartTimer = 0;
                 isAttacking = true;
+                isCharging = true;
 
                 animator.SetBool("isCharging",true);
                 animator.SetTrigger("StartCharging");
@@ -483,7 +547,7 @@ public class Ranged : PlayerCharacter
             {
                 float endTimer = Time.time;
 
-                if (endTimer - empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
+                if (empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
                 {
 
                     Vector2 _look = ReadLook(context);
@@ -497,7 +561,8 @@ public class Ranged : PlayerCharacter
 
                     //in futuro inserire il colpo avanzato
                     EmpowerFireProjectile(ShootDirection);
-
+                    
+                    base.UniqueAbilityInput(context);
                     empowerCoolDownTimer = UniqueAbilityCooldown;
 
                     Debug.Log("colpo potenziato");
@@ -508,6 +573,8 @@ public class Ranged : PlayerCharacter
 
             animator.SetBool("isCharging", false);
             isAttacking = false;
+            isCharging=false;
+            ChargedVFX.SetActive(false);
         }
 
         
@@ -518,13 +585,16 @@ public class Ranged : PlayerCharacter
     private void EmpowerFireProjectile(Vector2 direction)
     {
         animator.SetTrigger("EmpowerShoot");
-        
+
+        AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[0]);
+
+        PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated, this);
 
         Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
 
         newProjectile.transform.position =shootingPoint.transform.position;
 
-        newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier,gameObject.layer);
+        newProjectile.Inizialize(direction, projectileRange + empowerAdditionalRange, projectileSpeed, empowerSizeMultiplier,Damage*empowerDamageMultiplier,gameObject.layer,EProjectileType.empoweredProjectile);
 
         
     }
@@ -552,6 +622,22 @@ public class Ranged : PlayerCharacter
             empowerCoolDownTimer -= Time.deltaTime;
         }
 
+        if (isCharging)
+        {
+            empowerStartTimer += Time.deltaTime;
+
+            
+
+            if (empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
+            {  
+
+                if (!ChargedVFX.activeSelf)
+                {
+                    ChargedVFX.SetActive(true);
+                }
+            }
+        }
+
         //schivata
         if(dodgeTimer > 0)
         {
@@ -566,9 +652,7 @@ public class Ranged : PlayerCharacter
 
     private void UpdateCrosshair(Vector2 position)
     {
-        rangedCrossair.transform.position=new Vector2 (position.x,position.y);
-
-       
+        rangedCrossair.transform.position=new Vector2 (position.x,position.y);    
     }
 
 
@@ -588,12 +672,40 @@ public class Ranged : PlayerCharacter
 
     public override void Ress()
     {
+        base.Ress();
         animator.SetTrigger("Ress");
     }
 
+    public void SetPerfectTimingHandler(PerfectTimingHandler handler)
+    {
+        _perfectTimingHandler = handler;
+    }
 
+    public void PerfectTimeStarted(IDamager damager)
+    {
+        if (!isDodging)
+        {
+            _perfectTimingHandler.ActivateAlert();
+            perfectTimingEnabled = true;
+        }
 
+        Debug.Log(!isDodging);
+        StartCoroutine(DisablePerfectTimeAfter(perfectDodgeDuration));
+    }
 
+    public void PerfectTimeEnded()
+    {
+        _perfectTimingHandler.DeactivateAlert();
+        perfectTimingEnabled = false;
+        Utility.DebugTrace("Perfect Time Ended");
+    }
+
+    protected IEnumerator DisablePerfectTimeAfter(float time)
+    {
+        yield return new WaitForSeconds(time);
+        if (perfectTimingEnabled)
+            PerfectTimeEnded();
+    }
 }
 
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,24 +11,18 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject loadScreen;
+
     [SerializeField]
     private float fakeLoadSceenTime = 3f;
 
     [SerializeField]
     private List<PlayerCharacterData> playerCharacterDatas;
 
-    private PlayerInputManager playerInputManager;
     private CoopManager coopManager;
-    private CameraManager cameraManager;
-    private SaveManager saveManager;
-    private SpawnPositionManager spawnPosManager;
     private AsyncOperation sceneLoadOperation;
 
     public CoopManager CoopManager => coopManager;
-    public CameraManager CameraManager => cameraManager;
-    public PlayerInputManager PlayerInputManager => playerInputManager;
-    public SaveManager SaveManager => saveManager;
-    public SpawnPositionManager SpawnPosManager => spawnPosManager;
+    public bool IsLoading => loadScreen.activeInHierarchy;
 
     private static GameManager _instance;
     public static GameManager Instance
@@ -64,14 +59,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        playerInputManager = PlayerInputManager.instance;
         coopManager = CoopManager.Instance;
-        cameraManager = CameraManager.Instance;
-        saveManager = SaveManager.Instance;
-        spawnPosManager = SpawnPositionManager.Instance;
-
-        if (CameraManager != null && CoopManager != null)
-            CameraManager.AddAllPlayers();
 
         if (playerCharacterDatas == null || playerCharacterDatas.Count <= 0)
         {
@@ -82,44 +70,6 @@ public class GameManager : MonoBehaviour
         {
             loadScreen = Instantiate(loadScreen);
             DontDestroyOnLoad(loadScreen);
-        }
-
-        PlayerPrefsSettigsCheck();
-
-    }
-
-    private void PlayerPrefsSettigsCheck()
-    {
-        if (PlayerPrefs.HasKey(PlayerPrefsSettings.Languge.ToString()))
-        {
-            ChangeLanguage(PlayerPrefs.GetString(PlayerPrefsSettings.Languge.ToString()));
-        }
-        else
-        {
-            ChangeLanguage("en");
-            //StartSelectLanguageScreen();
-        }
-
-        if (PlayerPrefs.HasKey(PlayerPrefsSettings.MasterVolume.ToString()))
-        {
-            AudioManager.Instance.SetMasterVolume(PlayerPrefs.GetFloat(PlayerPrefsSettings.MasterVolume.ToString()));
-        }
-
-        if (PlayerPrefs.HasKey(PlayerPrefsSettings.MusicVolume.ToString()))
-        {
-            AudioManager.Instance.SetMusicVolume(PlayerPrefs.GetFloat(PlayerPrefsSettings.MusicVolume.ToString()));
-        }
-
-        if (PlayerPrefs.HasKey(PlayerPrefsSettings.SFXVolume.ToString()))
-        {
-            AudioManager.Instance.SetSoundFXVolume(PlayerPrefs.GetFloat(PlayerPrefsSettings.SFXVolume.ToString()));
-        }
-
-        if (!PlayerPrefs.HasKey(PlayerPrefsSettings.FirstStart.ToString()))
-        {
-            SaveManager.SavePlayerPref(PlayerPrefsSettings.FirstStart, true);
-
-            //DoSomenthigs
         }
 
     }
@@ -154,14 +104,7 @@ public class GameManager : MonoBehaviour
 
     public void ActivateLoadedScene()
     {
-        if (IsSceneLoaded())
-        {
-            ActivateScene();
-        }
-        else
-        {
-            StartLoadScreen();
-        }
+        StartLoadScreen();
     }
 
     private void ActivateScene()
@@ -193,23 +136,25 @@ public class GameManager : MonoBehaviour
 
     public void StartLoadScreen()
     {
+        PubSub.Instance.Notify(EMessageType.sceneLoading, null);
+        SaveManager.Instance.SaveData();
         StartCoroutine(LoadScreen());
     }
 
     IEnumerator LoadScreen()
     {
         float loadTime = Time.time;
-        Debug.Log($"Start Load Time: {Time.time}");
+        Utility.DebugTrace($"Start Load Time: {Time.time}");
         CoopManager.Instance.DisableAllInput();
         loadScreen.SetActive(true);
         yield return new WaitUntil(() => IsSceneLoaded());
         ActivateScene();
-        Debug.Log($"End Load Time: {Time.time}");
+        Utility.DebugTrace($"End Load Time: {Time.time}");
         if (Time.time - loadTime < fakeLoadSceenTime)
             yield return new WaitForSeconds(fakeLoadSceenTime - (Time.time - loadTime));
         loadScreen.SetActive(false);
         CoopManager.Instance.EnableAllInput();
-        Debug.Log($"Total Load Time: {Time.time - loadTime}");
+        Utility.DebugTrace($"Total Load Time: {Time.time - loadTime}");
     }
 
     #endregion
@@ -235,6 +180,8 @@ public class GameManager : MonoBehaviour
         Debug.LogError($"Character {character} not found");
         return null;
     }
+
+    #region Localization
 
     public void ChangeLanguage(string language)
     {
@@ -279,5 +226,7 @@ public class GameManager : MonoBehaviour
             LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[currentIndex - 1];
         }
     }
+   
 
+    #endregion
 }

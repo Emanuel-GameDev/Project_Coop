@@ -76,7 +76,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 516462079
-  m_SortingLayer: 6
+  m_SortingLayer: 8
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &1673966222615046603
@@ -184,6 +184,7 @@ GameObject:
   - component: {fileID: 3598046385495299685}
   - component: {fileID: 5141181050687344315}
   - component: {fileID: 7762280575634188898}
+  - component: {fileID: 3363485037816864036}
   m_Layer: 0
   m_Name: PressInteractablePrefab
   m_TagString: Untagged
@@ -248,8 +249,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7,
-    type: 3}
+  m_Sprite: {fileID: 21300000, guid: 73b2ffbad595f2241a81ae0baea64ee7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -284,6 +284,7 @@ MonoBehaviour:
     m_LocalVariables: []
   showNotification: 1
   disableInteracterActions: 1
+  isOnePlayerInteractable: 0
   OnOnePlayerInteract:
     m_PersistentCalls:
       m_Calls: []
@@ -356,3 +357,24 @@ CircleCollider2D:
   m_Offset: {x: -0.7610276, y: -2.5874963}
   serializedVersion: 2
   m_Radius: 2.7785308
+--- !u!95 &3363485037816864036
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6007461284173961356}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5e98a55c7c2b2b044be4062c0ee06c71, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

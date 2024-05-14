@@ -14,7 +14,15 @@ public enum EMessageType
     slotInput,
     characterDamaged,
     characterSwitched,
-    characterJoined
+    characterActivated,
+    characterDeactivated,
+    healAreaExpired,
+    kainaTaunt,
+    uniqueAbilityActivated,
+    uniqueAbilityExpired,
+    characterHitted,
+    switchingCharacters,
+    sceneLoading
 }
 
 
@@ -46,13 +54,21 @@ public class PubSub : MonoBehaviour
     {
         if (_registeredFunctions.ContainsKey(messageType))
         {
+            //Non funzionava, function.ToString non ritorna il nome della funzione ma System.Action
+            // Per ogni funzione dentro un messageType controllo se la vers in stringa della func è uguale a quella nuova
+            //string newFuncString = function.ToString();
+            
+            foreach (Action<object> item in _registeredFunctions[messageType])
+            {
+                if (item == function)
+                    return;
+            }
             _registeredFunctions[messageType].Add(function);
         }
         else
         {
             List<Action<object>> newList = new();
             newList.Add(function);
-
             _registeredFunctions.Add(messageType, newList);
         }
     }
@@ -76,9 +92,15 @@ public class PubSub : MonoBehaviour
         {
             return;
         }
-       
-            _registeredFunctions[messageType].Remove(function);
 
+        StartCoroutine(RemoveFunction(messageType, function));
+
+    }
+
+    IEnumerator RemoveFunction(EMessageType messageType, Action<object> function)
+    {
+        yield return new WaitForEndOfFrame();
+        _registeredFunctions[messageType].Remove(function);
     }
 
 }

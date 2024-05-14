@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BasicEnemyDeathState : BasicEnemyState
 {
@@ -19,9 +20,17 @@ public class BasicEnemyDeathState : BasicEnemyState
         basicEnemy.canMove = false;
         basicEnemy.canAction = false;
 
+        //basicEnemy.GetAnimator().SetTrigger("Damaged");
         basicEnemy.GetAnimator().SetTrigger("Dead");
-        
         basicEnemy.GetRigidBody().velocity = Vector3.zero;
+        
+        foreach(Collider2D collider in basicEnemy.GetComponentsInChildren<Collider2D>())
+        {
+            collider.enabled = false;
+        }
+
+        basicEnemy.GetComponentInChildren<SpriteRenderer>().sortingOrder = -10;
+        basicEnemy.GetComponent<NavMeshObstacle>().enabled = false;
     }
 
     public override void Update()

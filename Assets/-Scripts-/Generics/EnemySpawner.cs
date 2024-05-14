@@ -58,6 +58,13 @@ public class EnemySpawner : MonoBehaviour
 
             }
 
+            tempObject.TryGetComponent<BossCharacter>(out BossCharacter tempBossCharacter);
+            if(tempBossCharacter != null)
+            {
+                challengeParent.AddToSpawned(tempBossCharacter);
+                
+            }
+
         }
     }
 

@@ -26,13 +26,12 @@ public class AttackTutorialState : TutorialFase
     {
         base.Enter();
 
-        faseData = (AttackTutorialFaseData)tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (AttackTutorialFaseData)tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData;
 
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjectiveBrutus.GetLocalizedString();
         tutorialManager.objectiveNumbersGroup.SetActive(true);
-
 
         tutorialManager.blockFaseChange = true;
 
@@ -61,9 +60,11 @@ public class AttackTutorialState : TutorialFase
         tutorialManager.DeactivateAllPlayerInputs();
 
         currentCharacterIndex++;
-        // DA RIVEDERE #MODIFICATO
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetPlayerCharacter(currentFaseCharacters[currentCharacterIndex]);
 
+        tutorialManager.ResetStartingCharacterAssosiacion();
+
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetPlayerCharacter(currentFaseCharacters[currentCharacterIndex]);
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(currentFaseCharacters[currentCharacterIndex]);
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);
 
@@ -79,13 +80,19 @@ public class AttackTutorialState : TutorialFase
 
         hitCount = 0;
         comboHitCount = 0;
+        tutorialManager.objectiveNumberToReach.text = "3";
+        tutorialManager.objectiveNumberReached.text = hitCount.ToString();
 
-        tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
 
         tutorialManager.DeactivateAllPlayerInputs();
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
-
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+        {
+            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+            ih.GetComponent<PlayerInput>().actions.FindAction("Look").Enable();
+            ih.GetComponent<PlayerInput>().actions.FindAction("LookMouse").Enable();
+        }
+        //tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Attack").Enable();
+        tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
         tutorialManager.tutorialEnemy.OnHitAction += EnemyHitted;
 
@@ -107,7 +114,7 @@ public class AttackTutorialState : TutorialFase
             {
                 comboHitCount = 0;
                 hitCount++;
-                tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
+                tutorialManager.objectiveNumberReached.text = hitCount.ToString();
             }
             else
                 hitCounterTimer = tutorialManager.StartCoroutine(ResetComboHitCounterTimer());
@@ -115,7 +122,7 @@ public class AttackTutorialState : TutorialFase
         else
         {
             hitCount++;
-            tutorialManager.objectiveNumberToReach.text = hitCount.ToString();
+            tutorialManager.objectiveNumberReached.text = hitCount.ToString();
         }
 
         Debug.Log(hitCount);
@@ -132,7 +139,13 @@ public class AttackTutorialState : TutorialFase
             hitCount = 0;
             tutorialManager.tutorialEnemy.OnHitAction -= EnemyHitted;
 
-            tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+            foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+            {
+                ih.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+                ih.GetComponent<PlayerInput>().actions.FindAction("Look").Disable();
+                ih.GetComponent<PlayerInput>().actions.FindAction("LookMouse").Disable();
+            }
+
             tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Attack").Disable();
 
             if (currentCharacterIndex < currentFaseCharacters.Length-1)

@@ -51,44 +51,81 @@ public class EnemyCharacter : Character
     }
     public override void TakeDamage(DamageData data)
     {
-        currentHp -= data.damage * damageReceivedMultiplier;
-        OnHit?.Invoke();
-        Debug.Log(currentHp);
+        if (!isDead)
+        {
 
-        //shader
-        SetHitMaterialColor(_OnHitColor);
+            currentHp -= data.damage * damageReceivedMultiplier;
+            OnHit?.Invoke();
+            Debug.Log(currentHp);
 
-        if (currentHp <= 0)
+            //shader
+            SetHitMaterialColor(_OnHitColor);
+
+            if (currentHp <= 0)
+            {
+                Death();
+
+            }
+            if (data.condition != null)
+                data.condition.AddCondition(this);
+        }
+    }
+
+    public virtual void Death()
+    {
+        if (isDead == false)
         {
             isDead = true;
             OnDeath?.Invoke();
             animator.SetTrigger("isDead");
             TargetManager.Instance.RemoveEnemy(this);
-
-
+            OnDeath.RemoveAllListeners();
         }
-        if (data.condition != null)
-            data.condition.AddCondition(this);
     }
 
     public virtual void TargetSelection()
     {
         List<PlayerCharacter> activePlayers = PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
 
+        List<PlayerCharacter> alivePlayers = new();
+        foreach (PlayerCharacter p in activePlayers)
+        {
+            if (!p.isDead)
+                alivePlayers.Add(p);
+
+            if ((p.isDead || p.CurrentHp <= 0) && alivePlayers.Contains(p))
+            {
+                alivePlayers.Remove(p);
+            }
+
+
+        }
+
+
         Transform target = null;
         float distance = float.MaxValue;
 
-        foreach (PlayerCharacter player in activePlayers)
+        foreach (PlayerCharacter player in alivePlayers)
         {
-            if (!player.isDead)
-                if (Vector3.Distance(transform.position, player.transform.position) < distance)
-                    target = player.transform;
+            if (Vector3.Distance(transform.position, player.transform.position) < distance && !player.isDead)
+            {
+                target = player.transform;
+                distance = Vector3.Distance(transform.position, player.transform.position);
+            }
+
+
         }
 
-        if(target == null)
-            target = activePlayers[0].transform;
 
-       SetTarget(target);
+        if (target == null)
+        {
+            target = alivePlayers[0].transform;
+
+        }
+
+        Debug.Log(target.gameObject.name);
+
+        SetTarget(target);
     }
 
     public virtual void SetTarget(Transform newTarget)

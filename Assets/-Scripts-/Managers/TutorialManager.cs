@@ -18,7 +18,11 @@ public enum TutorialFaseType
     attack,
     dodge,
     guard,
-    heal
+    heal,
+    brutusAbility,
+    kainaAbility,
+    cassiusAbility,
+    judeAbility
 }
 
 
@@ -32,8 +36,8 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] public GameObject currentFaseObjective;
     [SerializeField] public TextMeshProUGUI objectiveText;
     [SerializeField] public GameObject objectiveNumbersGroup;
-    [SerializeField] public TextMeshProUGUI objectiveNumberToReach;
     [SerializeField] public TextMeshProUGUI objectiveNumberReached;
+    [SerializeField] public TextMeshProUGUI objectiveNumberToReach;
 
     [Header("Intro")]
     [SerializeField] GameObject introScreen;
@@ -63,6 +67,10 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] GameObject lilith;
     [SerializeField] GameObject lilithBaloon;
 
+    [SerializeField] MenuInfo startTutorialMenu;
+    [SerializeField] MenuInfo continueTutorialMenu;
+
+    public Image currentTutorialFaseImage;
 
     [Serializable]
     public class Fase
@@ -86,10 +94,11 @@ public class TutorialManager : MonoBehaviour
 
     PlayableDirector playableDirector;
 
-    [SerializeField] public Fase[] fases = new Fase[1];
+    [SerializeField] public Fase[] standardFases = new Fase[1];
+    [HideInInspector] public int standardFaseCount = 0;
 
-
-    public int faseCount = 0;
+    [SerializeField] public Fase[] abilityFases = new Fase[1];
+    [HideInInspector] public int abilityFaseCount = 0;
 
     [HideInInspector] public List<PlayerInputHandler> inputHandlers;
     private Dictionary<PlayerInputHandler, PlayerCharacter> startingCharacters;
@@ -155,6 +164,12 @@ public class TutorialManager : MonoBehaviour
 
     }
 
+    public void ChangeAndActivateCurrentCharacterImage(PlayerCharacter character)
+    {
+        currentTutorialFaseImage.sprite = GameManager.Instance.GetCharacterData(character.Character).DialogueSprite;
+        currentTutorialFaseImage.gameObject.SetActive(true);
+    }
+
     private void DisableSkipSlider(InputAction.CallbackContext context)
     {
         skipSlider.gameObject.SetActive(false);
@@ -205,7 +220,7 @@ public class TutorialManager : MonoBehaviour
 
     }
 
-
+    [SerializeField] AudioSource musicaTutorial;
     private void PostIntro()
     {
         foreach (PlayerInputHandler inputHandler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
@@ -216,6 +231,8 @@ public class TutorialManager : MonoBehaviour
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").canceled -= DisableSkipSlider;
         }
 
+        musicaTutorial.Play();
+
         SetUpCharacters();
         //DeactivateAllPlayerInputs();
 
@@ -225,7 +242,7 @@ public class TutorialManager : MonoBehaviour
         foreach (PlayerCharacter character in characters)
         {
             //DA RIVEDERE #MODIFICATO
-            character.SetCurrentHP(character.MaxHp - 5);
+            character.SetCurrentHP(character.MaxHp - (character.MaxHp/2));
             HPHandler.Instance.UpdateContainer(character);
         }
 
@@ -253,6 +270,8 @@ public class TutorialManager : MonoBehaviour
         
         lilithBaloon.SetActive(false);
         playableDirector.Play();
+
+
     }
 
     private void SetUpCharacters()
@@ -430,7 +449,7 @@ public class TutorialManager : MonoBehaviour
     }
 
 
-    private void PlayFinalePartOne()
+    public void PlayFinalePartOne()
     {
         blockFaseChange = true;
         finale = true;
@@ -447,47 +466,101 @@ public class TutorialManager : MonoBehaviour
     {
         dialogueBox.OnDialogueEnded -= Fade;
 
+        ResetStartingCharacterAssosiacion();
+
+        foreach (PlayerCharacter pc in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
+        {
+            if (!startingCharacters.ContainsValue(pc))
+            {
+                PlayerCharacterPoolManager.Instance.ReturnCharacter(pc);
+                HPHandler.Instance.RemoveLastContainer(pc);
+            }
+        }
+
+
+        dialogueBox.OnDialogueEnded += TutorialEnd;
+        PlayDialogue(endingDialogueTwo);
+    }
+
+    public void ResetStartingCharacterAssosiacion()
+    {
         foreach (PlayerInputHandler ih in inputHandlers)
         {
             // DA RIVEDERE #MODIFICATO
             PlayerCharacterController receiver = (PlayerCharacterController)ih.CurrentReceiver;
             receiver.SetPlayerCharacter(startingCharacters[ih]);
         }
-
-        dialogueBox.OnDialogueEnded += TutorialEnd;
-        PlayDialogue(endingDialogueTwo);
     }
-
-
+    [SerializeField] public PowerUp powerUpDebug;
 
     private void TutorialEnd()
     {
         dialogueBox.OnDialogueEnded -= TutorialEnd;
 
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        exit.SetActive(true);
+        //dps.RemovePowerUp(powerUpDebug);
+        //healer.RemovePowerUp(powerUpDebug);
+        //ranged.RemovePowerUp(powerUpDebug);
+        //tank.RemovePowerUp(powerUpDebug);
+
+
+
         foreach (PlayerCharacter character in characters)
         {
             ActivatePlayerInput(character.GetInputHandler());
         }
+
+        exit.SetActive(true);
     }
+    public bool specialFase = false;
+    public void SetSpecilaFases(bool set)
+    {
+        specialFase = set;
+    }
+
+    public void StartTutorialMenu()
+    {
+        MenuManager.Instance.FirstPlayerOpenMenu(startTutorialMenu);
+    }
+
 
     public void StartNextFase()
     {
         if (blockFaseChange)
             return;
 
-        if (faseCount >= fases.Length)
+        if (!specialFase)
         {
-            //cambio scena o altro
-            Debug.Log("Tutorial finito");
+            if (standardFaseCount >= standardFases.Length)
+            {
+                MenuManager.Instance.FirstPlayerOpenMenu(continueTutorialMenu);
+                //standardFaseCount = 0;
+                return;
 
-            PlayFinalePartOne();
+            }
 
-            return;
+        }
+        else
+        {
+            if (abilityFaseCount >= abilityFases.Length)
+            {
+                PlayFinalePartOne();
+                return;
+            }
         }
 
-        switch (fases[faseCount].faseData.faseType)
+        if (!specialFase)
+        {
+            SwitchStandardFase();
+        }
+        else
+        {
+            SwitchSpecialFase();
+        }
+    }
+
+    private void SwitchStandardFase()
+    {
+        switch (standardFases[standardFaseCount].faseData.faseType)
         {
 
             case TutorialFaseType.movement:
@@ -510,8 +583,27 @@ public class TutorialManager : MonoBehaviour
                 stateMachine.SetState(new HealTutorialState(this));
                 break;
         }
+    }
+    private void SwitchSpecialFase()
+    {
+        switch (abilityFases[abilityFaseCount].faseData.faseType)
+        {
+            case TutorialFaseType.brutusAbility:
+                stateMachine.SetState(new BrutusAbilityTutorialFase(this));
+                break;
 
+            case TutorialFaseType.kainaAbility:
+                stateMachine.SetState(new KainaAbilityTutorialFase(this));
+                break;
 
+            case TutorialFaseType.cassiusAbility:
+                stateMachine.SetState(new CassiusAbilityTutorialFase(this));
+                break;
+
+            case TutorialFaseType.judeAbility:
+                stateMachine.SetState(new JudeAbilityTutorialFase(this));
+                break;
+        }
     }
 
     public void Fade()
@@ -522,7 +614,11 @@ public class TutorialManager : MonoBehaviour
 
     public void EndCurrentFase()
     {
-        faseCount++;
+        if (!specialFase)
+            standardFaseCount++;
+        else
+            abilityFaseCount++;
+
         Fade();
 
         dialogueBox.OnDialogueEnded -= EndCurrentFase;
@@ -553,6 +649,8 @@ public class TutorialManager : MonoBehaviour
         healer.GetRigidBody().velocity = Vector2.zero;
         ranged.GetRigidBody().velocity = Vector2.zero;
         tank.GetRigidBody().velocity = Vector2.zero;
+
+        
 
        
     }

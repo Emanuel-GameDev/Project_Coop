@@ -11,7 +11,9 @@ public enum StatsType
     Health,
     MoveSpeed,
     UniqueAbilityCooldown,
-    AttackSpeed
+    AttackSpeed,
+    Stamina,
+    DodgeDistance
 }
 
 [CreateAssetMenu(menuName = "Character/PowerUp"), Serializable]
@@ -24,7 +26,7 @@ public class PowerUp : ScriptableObject
     public LocalizedString powerUpName;
     public LocalizedString powerUpDescription;
 
-    [Range(0, 1), Tooltip("Incremento della statistica in percentuale dove 1 = 100%.")]
+    [/*Range(0, 1),*/ Tooltip("Incremento della statistica in percentuale dove 1 = 100%.")]
     public float value;
 
     public int moneyCost;

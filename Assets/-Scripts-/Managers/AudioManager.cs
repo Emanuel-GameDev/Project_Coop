@@ -71,13 +71,20 @@ public class AudioManager : MonoBehaviour
         audioMixer.SetFloat(SoundFXVolume, Mathf.Log10(level) * 20);
     }
 
-    public void PlayAudioClip(AudioClip clip, Transform spawnPoint)
+    public AudioSource PlayAudioClip(AudioClip clip)
     {
-        PlayAudioClip(clip, spawnPoint, 1f);
+        return PlayAudioClip(clip, Camera.main.transform, 1f);
     }
 
-    public void PlayAudioClip(AudioClip clip, Transform spawnPoint, float volume)
+    public AudioSource PlayAudioClip(AudioClip clip, Transform spawnPoint)
     {
+        return PlayAudioClip(clip, spawnPoint, 1f);
+    }
+
+    public AudioSource PlayAudioClip(AudioClip clip, Transform spawnPoint, float volume)
+    {
+        if (clip == null) return null;
+        
         AudioSource audioSource;
 
         if (audioSourcesPool.Count <= 0)
@@ -97,6 +104,13 @@ public class AudioManager : MonoBehaviour
         audioSource.Play();
         float clipLength = audioSource.clip.length;
         StartCoroutine(ReturnAudioSourceToPool(audioSource, clipLength));
+
+        return audioSource;
+    }
+
+    public void PlayRandomAudioClip(List<AudioClip> clips)
+    {
+        PlayRandomAudioClip(clips, Camera.main.transform, 1f);
     }
 
     public void PlayRandomAudioClip(List<AudioClip> clips, Transform spawnPoint)
@@ -113,6 +127,9 @@ public class AudioManager : MonoBehaviour
     private IEnumerator ReturnAudioSourceToPool(AudioSource audioSource, float clipLenght)
     {
         yield return new WaitForSeconds(clipLenght);
+
+        if (audioSource == null) yield break;
+
         audioSource.Stop();
         audioSource.clip = null;
         audioSource.volume = 1f;

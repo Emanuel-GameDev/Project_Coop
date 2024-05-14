@@ -1,44 +1,45 @@
-using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class C_KillAllInTimer : Challenge
 {
-    
+
     [Header("Timer")]
-    [SerializeField] private TextMeshProUGUI TimerText;
     [SerializeField] private float timerChallenge;
 
-    
+
     [Header("Modifiers")]
     [SerializeField] private bool noDamage;
     [SerializeField] private bool noDash;
 
     private bool startTimer;
-    private int enemyInt =0;
-    public List<PlayerCharacter> players;
+    private int enemyInt = 0;
+    public List<PlayerCharacter> activePlayers;
 
 
 
     public override void Initiate()
     {
-        base.Initiate();     
-            dialogueBox.gameObject.SetActive(true);
-            dialogueBox.SetDialogue(dialogueOnStart);
-            dialogueBox.AddDialogueEnd(onChallengeStartAction);
-            dialogueBox.StartDialogue();
+        base.Initiate();
 
-        players = PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
-        foreach (PlayerCharacter p in players)
+        ChallengeManager.Instance.dialogueBox.gameObject.SetActive(true);
+        ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnStart);
+        ChallengeManager.Instance.dialogueBox.AddDialogueEnd(onChallengeStartAction);
+        ChallengeManager.Instance.dialogueBox.StartDialogue();
+
+        activePlayers = PlayerCharacterPoolManager.Instance.AllPlayerCharacters;
+        foreach (PlayerCharacter p in activePlayers)
         {
-            if(noDamage)
-             p.OnHit.AddListener(OnFailChallenge);
+            if (noDamage)
+                p.OnHit.AddListener(OnFailChallenge);
 
-            if(noDash)
-             p.OnDash.AddListener(OnFailChallenge);
+            if (noDash)
+                p.OnDash.AddListener(OnFailChallenge);
         }
+
+        
+
+
     }
     public override void StartChallenge()
     {
@@ -47,7 +48,7 @@ public class C_KillAllInTimer : Challenge
         {
             s.canSpawn = true;
         }
-        TimerText.gameObject.SetActive(true);
+
         startTimer = true;
 
     }
@@ -56,31 +57,40 @@ public class C_KillAllInTimer : Challenge
         startTimer = false;
         base.OnFailChallenge();
 
+        ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnFailure);
+        ChallengeManager.Instance.dialogueBox.RemoveAllDialogueEnd();
+        ChallengeManager.Instance.dialogueBox.AddDialogueEnd(onChallengeFailReset);
+        ChallengeManager.Instance.dialogueBox.StartDialogue();
+
+
+
     }
     public override void OnWinChallenge()
     {
         base.OnWinChallenge();
 
         startTimer = false;
-        dialogueBox.SetDialogue(dialogueOnSuccess);
-        dialogueBox.RemoveAllDialogueEnd();
-        dialogueBox.StartDialogue();
+
+        ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnSuccess);
+        ChallengeManager.Instance.dialogueBox.RemoveAllDialogueEnd();
+        ChallengeManager.Instance.dialogueBox.StartDialogue();
     }
     public override void AddToSpawned(EnemyCharacter enemyCharacter)
     {
         base.AddToSpawned(enemyCharacter);
         enemyInt++;
         enemyCharacter.OnDeath.AddListener(OnEnemyDeath);
+
     }
     private void Update()
-    {     
+    {
         if (startTimer)
         {
             if (timerChallenge > 0)
             {
-              
-                if(enemySpawned && enemyInt ==0) 
-                { 
+
+                if (enemySpawned && enemyInt == 0)
+                {
                     OnWinChallenge();
                 }
 
@@ -96,19 +106,7 @@ public class C_KillAllInTimer : Challenge
 
         }
     }
-    private void DisplayTimer(float timeToDisplay)
-    {
-        if (timeToDisplay < 0)
-        {
-            timeToDisplay = 0;
-        }
 
-        float minutes = Mathf.FloorToInt(timeToDisplay / 60);
-        float seconds = Mathf.FloorToInt(timeToDisplay % 60);
-
-        TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-    }
     public override void OnEnemyDeath()
     {
         base.OnEnemyDeath();

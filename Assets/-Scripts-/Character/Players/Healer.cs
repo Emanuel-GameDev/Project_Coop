@@ -13,7 +13,7 @@ public class Healer : PlayerCharacter
     [Tooltip("Icona che appare sopra il personaggio da curare")]
     [SerializeField] GameObject healIcon;
     [Tooltip("")]
-    [SerializeField] Detector smallHealTrigger;
+    [SerializeField] public Detector smallHealTrigger;
     [Tooltip("Quantità di vita curata dall'abilità di cura singola")]
     [SerializeField] float smallHeal = 5f;
     [Tooltip("Tempo di ricarica dell'abilità di cura singola")]
@@ -74,6 +74,10 @@ public class Healer : PlayerCharacter
     [Tooltip("Rallentamento durante l'abilità del boss")]
     [SerializeField] float bossAbilitySlowdown;
 
+    [Header("Audio")]
+    [SerializeField] AudioClip attackSound;
+    [SerializeField] AudioClip bombSound;
+
     //CapsuleCollider2D smallHealAreaCollider;
 
     List<PlayerCharacter> playerInArea;
@@ -95,6 +99,8 @@ public class Healer : PlayerCharacter
 
     bool mineInReach = false;
 
+    ParticleSystem.EmissionModule emissionModule;
+
 
     public override void Inizialize()
     {
@@ -114,16 +120,16 @@ public class Healer : PlayerCharacter
 
         //prova
 
-        extraData.key = 3;
-        extraData.coin = 2;
         //SaveManager.Instance.LoadAllData();
 
-        if (upgradeStatus[AbilityUpgrade.Ability2])
-        {
-            Debug.Log("2");
-        }
-        else Debug.Log("no");
-       
+        //if (upgradeStatus[AbilityUpgrade.Ability2])
+        //{
+        //    Debug.Log("2");
+        //}
+        //else Debug.Log("no");
+
+        emissionModule = _walkDustParticles.emission;
+
     }
 
 
@@ -144,6 +150,15 @@ public class Healer : PlayerCharacter
         }
 
 
+    }
+    public void PlayAttackSound()
+    {
+        AudioManager.Instance.PlayAudioClip(attackSound, transform, 0.5f);
+    }
+
+    public void PlayBombSound()
+    {
+        AudioManager.Instance.PlayAudioClip(bombSound, transform, 0.5f);
     }
 
     public void DeactivateInput()
@@ -184,7 +199,7 @@ public class Healer : PlayerCharacter
         {
             playerInArea.Remove(other.gameObject.GetComponent<PlayerCharacter>());
 
-            Destroy(healIcons[other.gameObject.GetComponent<PlayerCharacter>()]);
+            //Destroy(healIcons[other.gameObject.GetComponent<PlayerCharacter>()]);
             healIcons.Remove(other.gameObject.GetComponent<PlayerCharacter>());
         }
 
@@ -258,13 +273,20 @@ public class Healer : PlayerCharacter
 
 
         if (direction != Vector2.zero)
+        {
             animator.SetBool("IsMoving", true);
+            emissionModule.enabled = true;
+        }
         else
+        {
             animator.SetBool("IsMoving", false);
+            emissionModule.enabled= false;
+        }
+            
     }
 
-    
 
+    [HideInInspector] public bool canHealEnemies = false; 
     //Defense: cura ridotta singola
     public override void DefenseInput(InputAction.CallbackContext context)
     {
@@ -299,6 +321,17 @@ public class Healer : PlayerCharacter
                         PubSub.Instance.Notify(EMessageType.characterHealed, pc);
                     }
 
+                    if (canHealEnemies)
+                    {
+                        foreach(EnemyCharacter enemyCharacter in smallHealTrigger.GetEnemiesDetected())
+                        {
+                            if(enemyCharacter.gameObject.GetComponent<TutorialEnemy>() != null)
+                            {
+                                PubSub.Instance.Notify(EMessageType.characterHealed, enemyCharacter.gameObject.GetComponent<TutorialEnemy>());
+                            }
+                        }
+
+                    }
 
 
                     smallHealTimer = 0;
@@ -324,14 +357,19 @@ public class Healer : PlayerCharacter
         if (uniqueAbilityTimer < UniqueAbilityCooldown || !context.performed)
             return;
 
+        
+
         animator.SetTrigger("CastHealArea");
         StartCoroutine(InputReactivationDelay(animator.GetCurrentAnimatorClipInfo(0).Length));
-        
+        base.UniqueAbilityInput(context);
+
         uniqueAbilityTimer = 0;
     }
 
     public void SpawnHealArea()
     {
+        PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated, this);
+
         float radius;
 
         //calcolo raggio area

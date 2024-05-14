@@ -18,12 +18,16 @@ public class DebugManager : MonoBehaviour
 
     [SerializeField, Tooltip(text)]
     private bool guardaQuestoTooltipPerLeIstruzioni = false;
+    [SerializeField]
+    string loadSceneName;
 
     const string text = "DebugMode attiva e disattiva la modalità di Debug i comandi successivi funzionano solo se è abilitata.\n" +
         "TargetCharacter è il personaggio a cui verrnno dati gli Ability Upgrade o PowerUp.\n" +
         "Per dare un Ability Upgrade, selezionare il targetCharacter a cui darlo e premere il tastierino numerico da 1 a 5.\n" +
         "Per dare un Power Up usare il tastierino numerico 7,8 o 9, verrà assegnato quello corrispondete al numero.\n" + 
-        "Con il tasto M si infliggono 1000 danni al personaggio selezionato uccidendolo";
+        "Con il tasto M si infliggono 1000 danni al personaggio selezionato uccidendolo. \n " +
+        "Con N si stampa nella console il numeor di monete e chiavi \n" + " Con il tasto I si cancella i salvataggi. \n" +
+        "Con J si completa tutte le sfide per testare il dumpy di fine demo.";
 
     [SerializeField] GameObject BossGameobject;
 
@@ -99,14 +103,49 @@ public class DebugManager : MonoBehaviour
             {
                 SaveGame();
             }
-
             if (Input.GetKeyDown(KeyCode.M))
             {
                 KillPlayer();
             }
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                ChallengeManager.Instance.selectedChallenge.AutoComplete();
+            }
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                SceneSetting sceneSetting = new(SceneSaveSettings.ChallengesSaved);
+                sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
+                SaveManager.Instance.SaveSceneData(sceneSetting);
+                sceneSetting = new(SceneSaveSettings.Passepartout);
+                sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
+                SaveManager.Instance.SaveSceneData(sceneSetting);
+                sceneSetting = new(SceneSaveSettings.SlotMachine);
+                sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
+                SaveManager.Instance.SaveSceneData(sceneSetting);
+            }
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                SaveManager.Instance.ClearSaveData();
+            }
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                CharacterSaveData saveData = SaveManager.Instance.GetPlayerSaveData(targetCharacter);
+                foreach (PlayerCharacter p in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
+                {
+                    p.ExtraData.coin += 9999;
+                    p.ExtraData.key += 9999;
+                }
+                    Debug.Log($"coin: {saveData.extraData.coin}, key: {saveData.extraData.key}");
+            }
 
             if (guardaQuestoTooltipPerLeIstruzioni) guardaQuestoTooltipPerLeIstruzioni = false;
             istructions = text;
+
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                if(!string.IsNullOrEmpty(loadSceneName))
+                    GameManager.Instance.LoadScene(loadSceneName);
+            }
         }
     }
 
@@ -147,13 +186,15 @@ public class DebugManager : MonoBehaviour
     private void SaveGame()
     {
         Debug.Log("CallSave");
-        SaveManager.Instance.SaveAllData();
+        SaveManager.Instance.SavePlayersData();
+        SaveManager.Instance.SaveData();
     }
 
     private void LoadGame()
     {
         Debug.Log("CallLoad");
-        SaveManager.Instance.LoadAllData();
+        SaveManager.Instance.LoadData();
+        SaveManager.Instance.LoadAllPlayersData();
     }
 
 }

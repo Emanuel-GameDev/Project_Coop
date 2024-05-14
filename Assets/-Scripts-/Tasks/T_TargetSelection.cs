@@ -18,7 +18,9 @@ namespace MBTExample
         {          
             bossCharacter =  parentGameObject.Value.GetComponent<BossCharacter>();
             bossCharacter.TargetSelection();
+            
             blackboardVariable.Value = bossCharacter.Target;
+            Debug.LogWarning(bossCharacter.target.name + "palle" + blackboardVariable.Value.name);
         }
 
         public override NodeResult Execute()
@@ -29,6 +31,7 @@ namespace MBTExample
             }
             else
             {
+               
                 return NodeResult.failure;
             }
             

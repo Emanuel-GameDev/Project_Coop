@@ -21,6 +21,32 @@ public class CharacterSelectionMenu : MonoBehaviour
     [SerializeField]
     private GameObject fasciaReady;
 
+    private string nextScene;
+    public string NextScene
+    {
+        set
+        {
+            if (value != "" && value != null)
+            {
+                nextScene = value;
+            }
+        }
+        get { return nextScene; }
+    }
+
+    [Space]
+    [Title("BACK SLIDER")]
+    [Space]
+
+    [SerializeField]
+    private Slider backSlider;
+
+    [SerializeField]
+    private float backDuration;
+
+    private bool cancelPressed = false;
+    private float cancelElapsedTime = 0;    
+
     private List<CursorBehaviour> activeCursors = new List<CursorBehaviour>();
 
     public static CharacterSelectionMenu Instance;
@@ -35,11 +61,37 @@ public class CharacterSelectionMenu : MonoBehaviour
 
     private void Start()
     {
+        if (NextScene == null)
+            NextScene = "TutorialScene";
     }
 
-    internal void AddToActiveCursors(CursorBehaviour cursor)
+    private void Update()
+    {
+        if (cancelPressed)
+        {
+            cancelElapsedTime += Time.deltaTime;
+
+            float progress = cancelElapsedTime / backDuration;
+            backSlider.value = Mathf.Clamp01(progress);
+
+            if (progress >= 1f)
+                GoBackToMainMenu();
+        }
+    }
+
+    private void GoBackToMainMenu()
+    {
+        GameManager.Instance.ChangeScene("TitleScreenAndMainMenu");
+    }
+
+    internal bool AddToActiveCursors(CursorBehaviour cursor)
     {
         activeCursors.Add(cursor);
+
+        if (activeCursors.Contains(cursor))
+            return true;    
+        else
+            return false;
     }
 
     internal List<RectTransform> GetCharacterSelectors(ePlayerID ID)
@@ -59,12 +111,12 @@ public class CharacterSelectionMenu : MonoBehaviour
     {
         if (mode)
         {
-            cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(true);
+            cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.SetActive(true);
         }
         else
         {
             if (cursor.GetComponent<RectTransform>().parent != null)
-                cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(false);
+                cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.SetActive(false);
         }
     }
 
@@ -73,17 +125,17 @@ public class CharacterSelectionMenu : MonoBehaviour
         if (mode)
         {
             // Spengo lo sprite del P overed
-            cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(false);
+            //cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(false);
 
             // Accendo lo sprite del P ready
-            cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.SetActive(true);
+            cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(true);
 
             // Setto la classe
             ePlayerCharacter charToAssign = cursor.GetComponentInParent<CharacterIdentifier>().character;
             cursor.GetComponent<CursorBehaviour>().SetCharacter(charToAssign);
 
             // Controllo non necessario sullo sprite del ready per impostare il bool del cursore
-            if (cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.activeSelf)
+            if (cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.activeSelf)
                 return true;
             else
                 return false;
@@ -91,13 +143,13 @@ public class CharacterSelectionMenu : MonoBehaviour
         else
         {
             // Spengo lo sprite del P ready
-            cursor.GetComponent<RectTransform>().parent.GetChild(1).gameObject.SetActive(false);
+            cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(false);
 
             // Accendo lo sprite del P overed
-            cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(true);
+            //cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.SetActive(true);
 
             // Controllo non necessario sullo sprite del ready per impostare il bool del cursore
-            if (cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.activeSelf)
+            if (!cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.activeSelf)
                 return true;
             else
                 return false;
@@ -177,6 +229,22 @@ public class CharacterSelectionMenu : MonoBehaviour
         }
     }
 
+    internal void TriggerCancelPressed(bool mode, ePlayerID ID)
+    {
+        if (ID != ePlayerID.Player1) return;
+
+        if (mode)
+        {
+            cancelPressed = true;
+        }
+        else
+        {
+            cancelPressed = false;
+            cancelElapsedTime = 0;
+            backSlider.value = 0;
+        }
+    }
+
     public void SelectionOver(ePlayerID ID)
     {
         // Check se è il player 1 a premere
@@ -189,7 +257,7 @@ public class CharacterSelectionMenu : MonoBehaviour
                 cursor.GetInputHandler().SetStartingCharacter(cursor.GetCharacter());
             }
 
-            GameManager.Instance.LoadScene("TutorialScene");
+            GameManager.Instance.ChangeScene(nextScene);
         }
     }
 }

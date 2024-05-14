@@ -66,7 +66,7 @@ public class LabirintManager : MonoBehaviour
     private UnityEvent onLoseDialogueEnd;
 
     private DialogueBox _dialogueBox;
-    
+
 
     [Header("Rewards Settings")]
     [SerializeField]
@@ -79,6 +79,32 @@ public class LabirintManager : MonoBehaviour
     private int keyForFirstPlayer;
     [SerializeField]
     private WinScreenHandler winScreenHandler;
+
+    [Header("End Screen Settings")]
+    [SerializeField]
+    private GameObject victoryScreen;
+    [SerializeField]
+    private GameObject loseScreen;
+    [SerializeField]
+    private float victoryLoseScreenTime = 5f;
+
+    [Header("Audio Settings")]
+    [SerializeField]
+    AudioSource mainThemeSource;
+    [SerializeField]
+    private float attenuationVolume = 0.5f;
+    [SerializeField]
+    private AudioClip victoryClip;
+    [SerializeField]
+    private AudioClip loseClip;
+
+
+    [Header("VFX Settings")]
+    [SerializeField]
+    private GameObject gameVolume;
+
+    [SerializeField]
+    private GameObject endVolume;
 
     private LabirintUI labirintUI;
     private SceneChanger sceneChanger;
@@ -94,12 +120,14 @@ public class LabirintManager : MonoBehaviour
             _instance = this;
         }
 
-        if(dialogueBox != null)
+        if (dialogueBox != null)
         {
             _dialogueBox = dialogueBox.GetComponent<DialogueBox>();
         }
         else
             Debug.LogError("DialogueBox is null");
+
+        ChangeGameVolume(true);
 
     }
 
@@ -134,6 +162,7 @@ public class LabirintManager : MonoBehaviour
 
     public void StartGame()
     {
+        labirintUI.gameObject.SetActive(true);
         labirintUI.UpdateRemainingKeyCount(keyCount);
         labirintUI.SetAllPlayer(CoopManager.Instance.GetActiveHandlers());
 
@@ -145,21 +174,19 @@ public class LabirintManager : MonoBehaviour
 
     private void EndGame(bool playerWin)
     {
-        _dialogueBox.RemoveAllDialogueEnd();
+        labirintUI.gameObject.SetActive(false);
+        StartCoroutine(EndgameTimer(playerWin));
 
         if (playerWin)
         {
-            _dialogueBox.SetDialogue(winDialogue);
-            _dialogueBox.AddDialogueEnd(onWinDialogueEnd);
+            AudioManager.Instance.PlayAudioClip(victoryClip);
+            StartCoroutine(AttenuateManinTheme(victoryClip.length));
         }
         else
         {
-            _dialogueBox.SetDialogue(loseDialogue);
-            _dialogueBox.AddDialogueEnd(onLoseDialogueEnd);
+            AudioManager.Instance.PlayAudioClip(loseClip);
+            StartCoroutine(AttenuateManinTheme(loseClip.length));
         }
-
-        dialogueBox.SetActive(true);
-        _dialogueBox.StartDialogue();
 
         foreach (GameObject obj in objectsForTheGame)
         {
@@ -169,9 +196,50 @@ public class LabirintManager : MonoBehaviour
         MakeRankList();
     }
 
+    IEnumerator EndgameTimer(bool playerWin)
+    {
+        _dialogueBox.RemoveAllDialogueEnd();
+
+        if (playerWin)
+        {
+            victoryScreen.SetActive(true);
+            yield return new WaitForSeconds(victoryLoseScreenTime);
+            victoryScreen.SetActive(false);
+
+            _dialogueBox.SetDialogue(winDialogue);
+            _dialogueBox.AddDialogueEnd(onWinDialogueEnd);
+        }
+        else
+        {
+            loseScreen.SetActive(true);
+            yield return new WaitForSeconds(victoryLoseScreenTime);
+            loseScreen.SetActive(false);
+
+            _dialogueBox.SetDialogue(loseDialogue);
+            _dialogueBox.AddDialogueEnd(onLoseDialogueEnd);
+        }
+
+        dialogueBox.SetActive(true);
+        _dialogueBox.StartDialogue();
+    }
+
+    public void ChangeGameVolume(bool game)
+    {
+        if (game)
+        {
+            gameVolume.SetActive(true);
+            endVolume.SetActive(false);
+        }
+        else
+        {
+            gameVolume.SetActive(false);
+            endVolume.SetActive(true);
+        }
+    }
+
     public void ExitMinigame()
     {
-        if(sceneChanger != null)
+        if (sceneChanger != null)
             sceneChanger.ChangeScene();
     }
 
@@ -180,6 +248,13 @@ public class LabirintManager : MonoBehaviour
         yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
         dialogueBox.SetActive(true);
         _dialogueBox.StartDialogue();
+    }
+
+    IEnumerator AttenuateManinTheme(float duration)
+    {
+        mainThemeSource.volume = attenuationVolume;
+        yield return new WaitForSeconds(duration);
+        mainThemeSource.volume = 1f;
     }
 
     #endregion
@@ -211,7 +286,7 @@ public class LabirintManager : MonoBehaviour
             currentLabirint = null;
         }
 
-        if(objectsForTheGame != null)
+        if (objectsForTheGame != null)
         {
             foreach (GameObject obj in objectsForTheGame)
             {
@@ -294,9 +369,9 @@ public class LabirintManager : MonoBehaviour
             ranking.Add(player.GetCharacter());
         }
 
-        foreach(ePlayerCharacter c in Enum.GetValues(typeof(ePlayerCharacter)))
+        foreach (ePlayerCharacter c in Enum.GetValues(typeof(ePlayerCharacter)))
         {
-            if(c != ePlayerCharacter.EmptyCharacter)
+            if (c != ePlayerCharacter.EmptyCharacter)
             {
                 if (!ranking.Contains(c))
                 {
@@ -305,39 +380,73 @@ public class LabirintManager : MonoBehaviour
             }
         }
 
+        bool yetCompleted = CheckAndSaveYetCompleted();
+         
         for (int i = 0; i < ranking.Count; i++)
         {
             int totalCoin = 0;
             int totalKey = 0;
+            int gainedCoin = 0;
+            int gainedKey = 0;
+
             CharacterSaveData saveData = SaveManager.Instance.GetPlayerSaveData(ranking[i]);
+
             if (saveData != null)
             {
                 totalCoin = saveData.extraData.coin;
                 totalKey = saveData.extraData.key;
             }
 
-            if (i == 0)
-            {
-                totalCoin += coinForFirstPlayer;
-                totalKey += keyForFirstPlayer;
-                
-                winScreenHandler.SetCharacterValues(ranking[i], Rank.First, coinForFirstPlayer, totalCoin, keyForFirstPlayer, totalKey);
-            }
-            else if(Enum.TryParse<Rank>(i.ToString(), out Rank rank))
-            {
-                totalCoin += coinForEachPlayer;
-                totalKey += keyForEachPlayer;
+            Debug.Log(yetCompleted);
 
-                winScreenHandler.SetCharacterValues(ranking[i], rank, coinForEachPlayer, totalCoin, keyForEachPlayer, totalKey);
+            if (!yetCompleted)
+            {
+                if (i == 0)
+                {
+                    totalCoin += coinForFirstPlayer;
+                    totalKey += keyForFirstPlayer;
+
+                    gainedCoin += coinForFirstPlayer;
+                    gainedKey += keyForFirstPlayer;
+                }
+                else
+                {
+                    totalCoin += coinForEachPlayer;
+                    totalKey += keyForEachPlayer;
+
+                    gainedCoin += coinForEachPlayer;
+                    gainedKey += keyForEachPlayer;
+
+                }
+
+                if (saveData != null)
+                {
+                    saveData.extraData.coin = totalCoin;
+                    saveData.extraData.key = totalKey;
+                }
             }
 
-            if (saveData != null)
-            {
-                saveData.extraData.coin = totalCoin;
-                saveData.extraData.key = totalKey;
-            }
+            Enum.TryParse<Rank>(i.ToString(), out Rank rank);
+            winScreenHandler.SetCharacterValues(ranking[i], rank, gainedCoin, totalCoin, gainedKey, totalKey);
 
         }
+
+        SaveManager.Instance.SaveData();
+    }
+
+    private bool CheckAndSaveYetCompleted()
+    {
+        SceneSetting sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.Passepartout);
+        if (sceneSetting == null)
+            sceneSetting = new SceneSetting(SceneSaveSettings.Passepartout);
+        if (!sceneSetting.GetBoolValue(SaveDataStrings.COMPLETED))
+        {
+            sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
+            SaveManager.Instance.SaveSceneData(sceneSetting);
+            return false;
+        }
+        else 
+            return true;  
     }
 
     #endregion

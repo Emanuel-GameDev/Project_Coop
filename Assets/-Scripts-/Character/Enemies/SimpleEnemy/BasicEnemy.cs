@@ -17,6 +17,11 @@ public class BasicEnemy : EnemyCharacter
 
     [Tooltip("Serve per gli effetti visivi dell' editor")]
     public Transform groundLevel;
+
+    [Header("Variabili generali")]
+    [SerializeField] public float parriedTime = 1;
+
+
     [Header("Variabili di base")]
     [SerializeField] public float viewRange = 2f;
     [SerializeField] public float attackRange = 1;
@@ -90,7 +95,18 @@ public class BasicEnemy : EnemyCharacter
     [HideInInspector] public BasicEnemyEntryState entryState;
     [HideInInspector] public Vector2 entryDestination;
     [HideInInspector] public bool canGoIdle = true;
-    
+
+
+    protected override void InitialSetup()
+    {
+        base.InitialSetup();
+        animator = GetComponent<Animator>();
+
+        if(GetComponent<NavMeshAgent>() != null)
+             agent = GetComponent<NavMeshAgent>();
+
+        currentHp = maxHp;
+    }
 
     public void GoToPosition(Vector2 pos)
     {
@@ -172,19 +188,18 @@ public class BasicEnemy : EnemyCharacter
 
         if (currentTarget != null)
         {
-            //if (agent.CalculatePath(target.position, path))
-            //{
-                if (path.corners.Length > 1)
+            if (agent.CalculatePath(target.position, path))
+            {
+            //    if (path.corners.Length > 1)
                     Move(path.corners[1] - path.corners[0], rb);
-                else
-                    Move(target.position - transform.position, rb);
-                
-            //}
-            //else
-            //{
-            //    Debug.Log(path.corners.Length);
-            //    rb.velocity = Vector2.zero;
-            //}
+                //else
+                //    Move(target.position - transform.position, rb);
+
+            }
+            else
+            {
+                rb.velocity = Vector2.zero;
+            }
         }
         else
         {
@@ -207,10 +222,10 @@ public class BasicEnemy : EnemyCharacter
             if (agent.CalculatePath(pos, path))
             {
 
-                if (path.corners.Length > 1)
+                //if (path.corners.Length > 1)
                     Move(path.corners[1] - path.corners[0], rb);
-                else
-                    Move((Vector3)pos - transform.position, rb);
+                //else
+                //    Move((Vector3)pos - transform.position, rb);
                 
             }
             else
@@ -278,7 +293,7 @@ public class BasicEnemy : EnemyCharacter
             panicAttack = false;
         }
 
-        //GetComponentInChildren<SpriteRenderer>().material.color = Color.red;
+        ActivateObstacle();
 
         switch (enemyType)
         {
@@ -328,11 +343,21 @@ public class BasicEnemy : EnemyCharacter
 
         
         
-        //GetComponentInChildren<SpriteRenderer>().material.color = Color.white;
     }
 
-    
-    
+    public override void OnParryNotify(Character whoParried)
+    {
+        base.OnParryNotify(whoParried);
+        
+        stateMachine.SetState(parriedState);
+    }
+
+    public void Parry()
+    {
+        //SetHitMaterialColor(_OnParryColor);
+        //stateMachine.SetState(parriedState);
+    }
+
 
     public override void TargetSelection()
     {
@@ -359,6 +384,7 @@ public class BasicEnemy : EnemyCharacter
             if (currentHp <= 0)
             {
                 isDead = true;
+                
                 stateMachine.SetState(deathState);
             }
             else

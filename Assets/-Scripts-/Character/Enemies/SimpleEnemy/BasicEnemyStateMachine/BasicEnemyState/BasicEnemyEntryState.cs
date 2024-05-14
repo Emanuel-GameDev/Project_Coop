@@ -27,13 +27,10 @@ public class BasicEnemyEntryState : BasicEnemyState
         basicEnemy.GoToPosition(basicEnemy.entryDestination);
         if(Vector2.Distance(basicEnemy.transform.position,basicEnemy.entryDestination) <= 0.2)
         {
+            basicEnemy.GetRigidBody().velocity = Vector2.zero;
             basicEnemy.stateMachine.SetState(basicEnemy.idleState);
         }
-        //if(basicEnemy.entryDestination == new Vector2( basicEnemy.transform.position.x, basicEnemy.transform.position.y))
-        //{
-        //    basicEnemy.stateMachine.SetState(basicEnemy.moveState);
-        //}
-
+        
     }
 
     public override void Exit()

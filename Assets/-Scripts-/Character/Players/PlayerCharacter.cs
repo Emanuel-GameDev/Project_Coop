@@ -30,10 +30,15 @@ public abstract class PlayerCharacter : Character
     protected float invulnerabilityTime;
     [SerializeField, Tooltip("Reference per l'interactable del ress")]
     protected GameObject ressInteracter;
+    [SerializeField]
+    protected float onHitPushTimer = 0.2f;
+    [SerializeField]
+    protected float onHitPushForce = 1;
+
 
     protected float lastestCharacterSwitch;
     protected float currentHp;
-    protected float uniqueAbilityUses;
+    protected float uniqueAbilityUses = 0 ;
     protected float lastHitTime;
 
     #endregion
@@ -83,10 +88,10 @@ public abstract class PlayerCharacter : Character
     #region Propriety
     public ePlayerCharacter Character => character;
 
-    public virtual float MaxHp => maxHp;
+    public virtual float MaxHp => Mathf.RoundToInt(maxHp * powerUpData.MaxHpIncrease);
     public virtual float CurrentHp 
     {
-        get {  return currentHp; }
+        get {  return Mathf.RoundToInt(currentHp); }
         set 
         { 
             currentHp = value;
@@ -94,17 +99,18 @@ public abstract class PlayerCharacter : Character
             if(currentHp<0)
                 currentHp = 0;
 
-            if(currentHp>maxHp)
-                currentHp = maxHp;
+            if (currentHp > MaxHp)
+                currentHp = MaxHp;
         }
     }
     public virtual float Damage => damage * powerUpData.DamageIncrease;
     public virtual float MoveSpeed => moveSpeed * powerUpData.MoveSpeedIncrease;
     public virtual float AttackSpeed => attackSpeed * powerUpData.AttackSpeedIncrease;
-    public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) * powerUpData.UniqueAbilityCooldownDecrease;
+    public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) / powerUpData.UniqueAbilityCooldownDecrease;
     public float DamageReceivedMultiplier => damageReceivedMultiplier;
-
+    public float SwitchCharacterCooldown => switchCharacterCooldown;
     public virtual ExtraData ExtraData => extraData;
+    public virtual PowerUpData PowerUpData => powerUpData;
 
     public Vector2 MoveDirection => moveDir;
     public Vector2 LastDirection => lastNonZeroDirection;
@@ -205,6 +211,12 @@ public abstract class PlayerCharacter : Character
     #endregion
 
     #region Upgrades
+
+    public virtual bool GetAbilityStatus(AbilityUpgrade abilityUpgrade)
+    {
+        return upgradeStatus[abilityUpgrade];
+    }
+
     public virtual void UnlockUpgrade(AbilityUpgrade abilityUpgrade)
     {
         if (upgradeStatus[abilityUpgrade] == false)
@@ -240,6 +252,7 @@ public abstract class PlayerCharacter : Character
             SetHitMaterialColor(_OnHitColor);
 
             OnHit?.Invoke();
+            StartCoroutine(PushCharacter(data.dealer.dealerTransform.transform.position, onHitPushForce, onHitPushTimer));
 
             if (protectedByTank && data.blockedByTank)
             {
@@ -250,7 +263,7 @@ public abstract class PlayerCharacter : Character
                 PubSub.Instance.Notify(EMessageType.characterDamaged, this);
             }
 
-            if (CurrentHp <= 0)
+            if (CurrentHp <= 0 )
             {
                 onDeath?.Invoke();
                 Die();
@@ -267,6 +280,12 @@ public abstract class PlayerCharacter : Character
         characterController.GetInputHandler().PlayerInput.actions.FindAction("Option").Enable();
         ressInteracter.gameObject.SetActive(true);
         isDead = true;
+        
+        foreach(Collider2D coll in colliders)
+        {
+            coll.enabled = false;
+        }
+
         PlayerCharacterPoolManager.Instance.PlayerIsDead();
         TargetManager.Instance.ChangeTarget(this);
     }
@@ -274,23 +293,33 @@ public abstract class PlayerCharacter : Character
     public virtual void Ress()
     {
         characterController.GetInputHandler().PlayerInput.actions.Enable();
+        isDead = false;
+
+        foreach (Collider2D coll in colliders)
+        {
+            coll.enabled = true;
+        }
         TakeHeal(new DamageData(MathF.Floor( MaxHp/2), this));
         ressInteracter.gameObject.SetActive(false);
-        isDead = false;
         PlayerCharacterPoolManager.Instance.PlayerIsRessed();   
     }
 
 
     public virtual void TakeHeal(DamageData data)
     {
-        if (data.condition != null)
-            RemoveFromConditions(data.condition);
+        if (!isDead)
+        {
+            if (data.condition != null)
+                RemoveFromConditions(data.condition);
 
-        CurrentHp += data.damage;
-        PubSub.Instance.Notify(EMessageType.characterDamaged, this);
+            CurrentHp += data.damage;
+            PubSub.Instance.Notify(EMessageType.characterDamaged, this);
 
-        damager.RemoveCondition();
-        Debug.Log($"Healer: {data.dealer}, Heal: {data.damage}, Condition Removed: {data.condition}");
+            damager.RemoveCondition();
+            Debug.Log($"Healer: {data.dealer}, Heal: {data.damage}, Condition Removed: {data.condition}");
+
+        }
+
     }
 
     public override DamageData GetDamageData()
@@ -435,7 +464,7 @@ public abstract class PlayerCharacter : Character
 
     public virtual void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-
+        HPHandler.Instance.NotifyUseAbility(this,UniqueAbilityCooldown);
     }
 
     public virtual void ExtraAbilityInput(InputAction.CallbackContext context)
@@ -448,6 +477,7 @@ public abstract class PlayerCharacter : Character
         moveDir = context.ReadValue<Vector2>();
         if (moveDir != Vector2.zero)
             lastNonZeroDirection = moveDir;
+        
     }
 
     public void InteractInput(InputAction.CallbackContext context)
@@ -514,5 +544,22 @@ public abstract class PlayerCharacter : Character
     {
         base.EnableAllActions();
         characterController.GetInputHandler().PlayerInput.actions.Enable();
+    }
+
+    public virtual void ResetAllAnimatorTriggers()
+    {
+        foreach (var param in animator.parameters)
+        {
+            if (param.type == AnimatorControllerParameterType.Trigger)
+            {
+                animator.ResetTrigger(param.name);
+            }
+            animator.Play("Idle");
+        }
+    }
+
+    public void Dismiss()
+    {
+        PlayerCharacterPoolManager.Instance.ReturnCharacter(this);
     }
 }

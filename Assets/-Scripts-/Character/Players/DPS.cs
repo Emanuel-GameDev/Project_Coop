@@ -9,6 +9,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     [Header("Attack")]
     [SerializeField, Tooltip("Tempo tra una combo e l'altra.")]
     float timeBetweenCombo = 1f;
+   
     [Header("Dodge")]
     [SerializeField, Tooltip("Distanza di schivata.")]
     float dodgeDistance = 10f;
@@ -22,11 +23,13 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     float perfectDodgeExtraDamage = 0.15f;
     [SerializeField, Tooltip("Durata del tempo utile per poter fare la schivata perfetta")]
     float perfectDodgeDuration = 0.5f;
+   
     [Header("Unique Ability")]
     [SerializeField, Tooltip("Durata dell'invulnerabilità.")]
     float invulnerabilityDuration = 5f;
     [SerializeField, Tooltip("Aumento di velocità in % durante l'invulnerabilità."), Range(0, 1)]
     float invulnerabilitySpeedUp = 0.25f;
+   
     [Header("Extra Ability")]
     [SerializeField, Tooltip("Distanza minima dell'attacco con il dash.")]
     float minDashAttackDistance = 5f;
@@ -42,6 +45,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     float dashAttackRushDamageMultiplier = 0.5f;
     [SerializeField, Tooltip("Moltiplicatore al danno base dell'attacco con il dash nell'attacco.")]
     float dashAttackSlashDamageMultiplier = 1.5f;
+   
     [Header("Boss Power Up")]
     [SerializeField, Tooltip("Totale dei danni da fare al boss per sbloccare il potenziamento.")]
     float bossPowerUpTotalDamageToUnlock = 1000f;
@@ -51,13 +55,27 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     float bossPowerUpExtraDamageCap = 0.16f;
     [SerializeField, Tooltip("Durata del danno extra conferito dal potenziamento del boss dopo l'ultimo colpo inferto.")]
     float bossPowerUpExtraDamageDuration = 2.5f;
+    
     [Header("Other")]
     [SerializeField, Tooltip("I Layer da guardare quando ha sbloccato il power up per deflettere i proiettili")]
     LayerMask projectileLayer;
+
     [Header("VFX")]
-    [SerializeField] TrailRenderer trailDodgeVFX;
+    [SerializeField] 
+    TrailRenderer trailDodgeVFX;
+    [SerializeField] 
+    GameObject invicibilityVFX;
     [SerializeField, Tooltip("Gli eventi da chiamare in caso di schivata perfetta")]
     UnityEvent onPerfectDodgeExecuted = new();
+
+    [Header("Temporany Effects")]
+    [SerializeField]
+    GameObject invicibilityBaloon;
+    [SerializeField] 
+    float balonDuration = 0.5f;
+   
+    
+
     private float ExtraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
 
     private float ExtraDamage()
@@ -72,24 +90,21 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     private float lastAttackTime;
     private float lastDodgeTime;
-    private float lastUniqueAbilityUseTime;
     private float lastPerfectDodgeTime;
     private float lastDashAttackTime;
     private float lastLandedHitTime;
-    private float perfectDodgeCounter = 0;
+    private int perfectDodgeCounter = 0;
     private float dashAttackStartTime;
     private float dashAttackDamageMultiplier;
     private float currentBossfightTotalDamageDone = 0;
     private Vector3 startPosition;
 
-
-    private int currentComboState;
-    private int nextComboState;
-    private int comboStateMax = 3;
     private int consecutiveHitsCount;
 
     private bool mustContinueCombo = false;
     private bool alreadyCalled = false;
+    private bool canUseUniqueAbility = true;
+
     private AttackComboState currentAttackComboState;
     private AttackComboState NextAttackComboState
     {
@@ -126,18 +141,13 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         {
             _isAttacking = value;
             animator.SetBool("isAttacking", _isAttacking);
-            if (!value)
-            {
-                nextComboState = 0;
-                currentComboState = 0;
-            }
         }
     }
     private bool _isAttacking;
 
     private ChargeVisualHandler chargeHandler;
     private PerfectTimingHandler perfectTimingHandler;
-
+    private ParticleSystem.EmissionModule emissionModule;
 
     #region Animation Variable
     private static string ATTACK = "Attack";
@@ -160,23 +170,29 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     public override void Inizialize()
     {
         base.Inizialize();
+        ResetVariables();
+        chargeHandler = GetComponentInChildren<ChargeVisualHandler>();
+        chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
+        perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
+        character = ePlayerCharacter.Brutus;
+        emissionModule = _walkDustParticles.emission;
+    }
+
+    private void ResetVariables()
+    {
         lastDodgeTime = -dodgeCooldown;
         lastAttackTime = -timeBetweenCombo;
-        lastUniqueAbilityUseTime = -UniqueAbilityCooldown;
+        canUseUniqueAbility = true;
         lastDashAttackTime = -dashAttackCooldown;
         consecutiveHitsCount = 0;
-        currentComboState = 0;
-        nextComboState = 0;
         isInvulnerable = false;
         isDodging = false;
         IsAttacking = false;
         isDashingAttack = false;
         isDashingAttackStarted = false;
         perfectTimingEnabled = false;
-        chargeHandler = GetComponentInChildren<ChargeVisualHandler>();
-        chargeHandler.Inizialize(minDashAttackDistance, maxDashAttackDistance, dashAttackMaxLoadUpTime, this);
-        perfectTimingHandler = GetComponentInChildren<PerfectTimingHandler>();
-        character = ePlayerCharacter.Brutus;
+        invicibilityVFX.SetActive(false);
+        invicibilityBaloon.SetActive(false);
     }
 
 
@@ -186,13 +202,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (context.performed)
         {
-            //if (canMove && CanStartCombo())
-            //{
-            //    StartCombo();
-            //}
-            //else if (IsAttacking)
-            //    ContinueCombo();
-
             alreadyCalled = false;
 
             if (IsAttacking)
@@ -214,37 +223,29 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private void StartCombo()
     {
         currentAttackComboState = AttackComboState.Attack1;
-        //currentComboState = 1;
-        //nextComboState = currentComboState;
         DoMeleeAttack();
         rb.velocity = Vector3.zero;
     }
 
     private void ContinueCombo()
     {
-        //if (currentComboState == nextComboState)
-        //{
-        //    nextComboState = ++nextComboState > comboStateMax ? 0 : nextComboState;
-        //    if (CanContinueCombo())
-        //        DoMeleeAttack();
-        //}
         mustContinueCombo = true;
     }
     private void DoMeleeAttack()
     {
         IsAttacking = true;
-        string triggerName = currentAttackComboState.ToString();   //ATTACK + (nextComboState).ToString();
+        string triggerName = currentAttackComboState.ToString(); 
         animator.SetTrigger(triggerName);
+
+        //PlayAttackSound();
     }
+
     public void OnAttackAnimationEnd()
     {
         if (!alreadyCalled)
         {
             AdjustLastAttackTime();
 
-            //if (currentComboState == nextComboState || nextComboState == 0)
-            //    IsAttacking = false;
-            //currentComboState = nextComboState;
             if (mustContinueCombo)
             {
                 mustContinueCombo = false;
@@ -274,17 +275,14 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     private void AdjustLastAttackTime()
     {
-        //float comboCompletionValue = (float)currentComboState / (float)comboStateMax;
-        //float reductionFactor = (1 - comboCompletionValue) * timeBetweenCombo;
-        lastAttackTime = Time.time; // - reductionFactor;
+        lastAttackTime = Time.time;
     }
 
     private bool CanStartCombo() => (unlimitedComboUnlocked || (canMove && Time.time > lastAttackTime + timeBetweenCombo && currentAttackComboState == AttackComboState.NotAttaking)); // && currentComboState != 1;
-    //private bool CanContinueCombo() => nextComboState != 0;
+    
     private void ResetAttack()
     {
         IsAttacking = false;
-        //currentComboState = 0;
         currentAttackComboState = AttackComboState.NotAttaking;
         mustContinueCombo = false;
         alreadyCalled = false;
@@ -314,6 +312,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
                     PerfectTimeEnded();
                     onPerfectDodgeExecuted?.Invoke();
                     Utility.DebugTrace($"PerfectDodge: {true}, Count: {perfectDodgeCounter}");
+                    PlayPerfectDodgeSound();
                 }
 
                 StartCoroutine(Dodge(lastNonZeroDirection, rb));
@@ -328,7 +327,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
         onDash?.Invoke();
         trailDodgeVFX.gameObject.SetActive(true);
-        yield return StartCoroutine(Move(dodgeDirection, rb, dodgeDuration, dodgeDistance));
+        yield return StartCoroutine(Move(dodgeDirection, rb, dodgeDuration, dodgeDistance * powerUpData.DodgeDistanceIncrease));
 
         isDodging = false;
         animator.SetTrigger(DODGEEND);
@@ -361,24 +360,41 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (context.performed)
         {
-
-            Utility.DebugTrace($"Executed: {!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown}");
-            if (!isInvulnerable && Time.time > lastUniqueAbilityUseTime + UniqueAbilityCooldown)
+            Utility.DebugTrace($"Executed: {!isInvulnerable && canUseUniqueAbility}");
+            if (!isInvulnerable && canUseUniqueAbility)
             {
-                lastUniqueAbilityUseTime = Time.time;
-                uniqueAbilityUses++;
+                canUseUniqueAbility = false;
+                base.UniqueAbilityInput(context);
                 StartCoroutine(UseUniqueAbilityCoroutine());
+                StartCoroutine(BaloonDuration());
             }
         }
     }
 
+    //temp
+    private IEnumerator BaloonDuration()
+    {
+        invicibilityBaloon.SetActive(true);
+        yield return new WaitForSeconds(balonDuration);
+        invicibilityBaloon.SetActive(false);
+    }
+
+
     private IEnumerator UseUniqueAbilityCoroutine()
     {
         isInvulnerable = true;
+        PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated, this);
+        invicibilityVFX.SetActive(true);
 
         yield return new WaitForSeconds(invulnerabilityDuration);
 
         isInvulnerable = false;
+        PubSub.Instance.Notify(EMessageType.uniqueAbilityExpired, this);
+        invicibilityVFX.SetActive(false);
+
+        yield return new WaitForSeconds(UniqueAbilityCooldown - invulnerabilityDuration);
+        uniqueAbilityUses++;
+        canUseUniqueAbility = true;
     }
     #endregion
 
@@ -448,11 +464,13 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
             SetSpriteDirection(lastNonZeroDirection);
         }
         animator.SetBool(ISMOVING, isMoving);
+        emissionModule.enabled = isMoving;
     }
 
 
     public override void TakeDamage(DamageData data)
     {
+        PubSub.Instance.Notify(EMessageType.characterHitted, this);
         if (!isInvulnerable && !isDodging)
         {
             base.TakeDamage(data);
@@ -507,6 +525,13 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         damager.RemoveFunctionFromOnTrigger(DeflectProjectile);
     }
 
+    public override void ResetAllAnimatorTriggers()
+    {
+        base.ResetAllAnimatorTriggers();
+        ResetVariables();
+    }
+
+
     #region Damage
 
     public override DamageData GetDamageData()
@@ -557,7 +582,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     public void SetPerfectTimingHandler(PerfectTimingHandler handler) => perfectTimingHandler = handler;
 
 
-    public void PerfectTimeStarted(DamageData data)
+    public void PerfectTimeStarted(IDamager damager)
     {
         if (!isDodging)
         {
@@ -586,6 +611,39 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
 
     #endregion
+
+    #region Audio
+    public void PlayAttackSound()
+    {
+        if(soundsDatabase != null)
+        {
+            int value = (int)currentAttackComboState - 1;
+            if(value >= 0 && soundsDatabase.attackSounds.Count > value)
+            {
+                AudioManager.Instance.PlayAudioClip(soundsDatabase.attackSounds[value], transform);
+            }
+        }
+    }
+
+    private void PlayPerfectDodgeSound()
+    {
+        if(soundsDatabase.specialEffectsSounds.Count > 0)
+        {
+            if (soundsDatabase.specialEffectsSounds.Count >= perfectDodgeCounter)
+            {
+                AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[perfectDodgeCounter - 1]);
+            }
+            else
+            {
+                AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[soundsDatabase.specialEffectsSounds.Count - 1]);
+            }
+        }
+    }
+
+
+    #endregion
+
+
     //Potenziamento boss fight: gli attacchi consecutivi aumentano il danno del personaggio a ogni colpo andato a segno.
     //Dopo tot tempo (es: 1.5 secondi) senza colpire, il danno torna al valore standard.
 
@@ -599,7 +657,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     //3: Il personaggio può respingere certi tipi di colpi(es: proiettili) con il suo attacco
     //4: quando il personaggio usa l’abilità unica(i secondi di immortalità) i suoi movimenti diventano più rapidi(attacchi, schivate e spostamenti)
     //5: Effettuare una schivata perfetta aumenta i danni per tot tempo(cumulabile con il bonus ai danni del potenziamento).
-
 }
 
 public enum AttackComboState

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
 //using UnityEditor.Search;
 using UnityEngine;
  using UnityEngine.Rendering;
@@ -17,7 +19,10 @@ public class SlotRow : MonoBehaviour
      private List<Sprite> losingSpriteList;
 
 
-    private List<GameObject> reorderSlots;
+    
+
+
+    private List<GameObject> reorderSlots = new List<GameObject>();
 
      public bool stopped { get; private set; }
      bool isSlowDown;
@@ -33,6 +38,9 @@ public class SlotRow : MonoBehaviour
     [SerializeField] private Slot selectedSlotImage;
     private Slotmachine mainMachine;
 
+    [Header("Sounds")]
+    [SerializeField] AudioClip stopSlotRowAudio;
+
 
 
     private void Start()
@@ -45,7 +53,18 @@ public class SlotRow : MonoBehaviour
         mainMachine = GetComponentInParent<Slotmachine>();
         stopped = true;
         selectedSlotImage = null; //reset della slot presa
-        reorderSlots = new List<GameObject>();
+        
+        if(reorderSlots.Count > 0 )
+        {
+            for( int i = transform.childCount-1; i >= 0; i-- )
+            {
+               Destroy(transform.GetChild(i).gameObject);
+            }
+
+            reorderSlots.Clear();
+            
+        }
+
         InitializeRow();
         
     }
@@ -155,6 +174,8 @@ public class SlotRow : MonoBehaviour
             GameObject slot = Instantiate(reorderSlots[reorderSlots.Count-1-i]);
             slot.transform.SetParent(gameObject.transform, true);
             slot.transform.localPosition = new Vector3(0, + ((slotDistance*i)+slotDistance), 0);
+
+           
         }
 
         //add after
@@ -164,6 +185,7 @@ public class SlotRow : MonoBehaviour
             GameObject slot = Instantiate(reorderSlots[0+i]);
             slot.transform.SetParent(gameObject.transform, true);
             slot.transform.localPosition = new Vector3(0, reorderSlots[reorderSlots.Count-1].transform.localPosition.y -((slotDistance * i) + slotDistance), 0);
+            
         }
 
 
@@ -186,7 +208,7 @@ public class SlotRow : MonoBehaviour
         else if (isSlowDown)
         {
             isSlowDown = false;
-            
+                      
         }
 
 
@@ -268,6 +290,7 @@ public class SlotRow : MonoBehaviour
         stopped = false;
         isSlowDown = false;
         selectedSlotImage = null;
+        
     }
 
     public void StartSlowDown()

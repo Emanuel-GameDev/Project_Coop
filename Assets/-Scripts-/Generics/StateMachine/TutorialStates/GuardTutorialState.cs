@@ -26,21 +26,22 @@ public class GuardTutorialState : TutorialFase
         guardExecuted = 0;
         perfectGuardExecuted = 0;
 
-        faseData = (GuardTutorialFaseData) tutorialManager.fases[tutorialManager.faseCount].faseData;
+        faseData = (GuardTutorialFaseData) tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData;
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
         tutorialManager.objectiveNumbersGroup.SetActive(true);
-
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.tank);
         PubSub.Instance.RegisterFunction(EMessageType.guardExecuted, UpdateCounter);
-
+        PubSub.Instance.RegisterFunction(EMessageType.perfectGuardExecuted, UpdateCounter);
         tutorialManager.DeactivateAllPlayerInputs();
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
-
+        tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
-        tutorialManager.objectiveNumberToReach.text = guardExecuted.ToString();
+        tutorialManager.objectiveNumberReached.text = guardExecuted.ToString();
+        tutorialManager.objectiveNumberToReach.text = "3";
 
     }
 
@@ -48,17 +49,24 @@ public class GuardTutorialState : TutorialFase
     private void WaitAfterDialogue()
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
-        // DA RIVEDERE #MODIFICATO
+
+        tutorialManager.ResetStartingCharacterAssosiacion();
+
         tutorialManager.inputBindings[tutorialManager.tank].SetPlayerCharacter(tutorialManager.tank);
         tutorialManager.DeactivateAllPlayerInputs();
-        tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
-        tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+
+        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+        {
+            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+        }
+
+        //tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Enable();
+        tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
         tutorialManager.ActivateEnemyAI();
 
         tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
-        tutorialManager.tutorialEnemy.focus = true;
     }
 
     private void UpdateCounter(object obj)
@@ -66,46 +74,57 @@ public class GuardTutorialState : TutorialFase
             guardExecuted++;
         if (guardExecuted < 3)
         {
-            tutorialManager.objectiveNumberToReach.text = guardExecuted.ToString();
+            tutorialManager.objectiveNumberReached.text = guardExecuted.ToString();
         }
 
         if(guardExecuted == 3)
         {
-            perfectGuardExecuted = 0;
-            tutorialManager.objectiveNumberToReach.text = perfectGuardExecuted.ToString();
+            //perfectGuardExecuted = 0;
+            //tutorialManager.objectiveNumberReached.text = perfectGuardExecuted.ToString();
 
-            tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
+           // tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
             tutorialManager.DeactivateAllPlayerInputs();
-            tutorialManager.PlayDialogue(faseData.tankPerfectGuardDialogue);
+            //tutorialManager.PlayDialogue(faseData.tankPerfectGuardDialogue);
 
             tutorialManager.objectiveText.text = faseData.faseObjectivePerfect.GetLocalizedString();
-            tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+
+            foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+            {
+                ih.GetComponent<PlayerInput>().actions.FindAction("Move").Enable();
+            }
+
             tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
 
-            tutorialManager.DeactivateEnemyAI();
-
-            PubSub.Instance.RegisterFunction(EMessageType.perfectGuardExecuted, UpdatePerfectCounter);
-
-
-        }
-    }
-
-    private void UpdatePerfectCounter(object obj)
-    {
-        perfectGuardExecuted++;
-        tutorialManager.objectiveNumberToReach.text = perfectGuardExecuted.ToString();
-
-        if ( perfectGuardExecuted >= 3)
-        {
-            tutorialManager.DeactivateAllPlayerInputs();
-
-            tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
-            tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
             tutorialManager.DeactivateEnemyAI();
 
             stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+
+            //PubSub.Instance.RegisterFunction(EMessageType.perfectGuardExecuted, UpdatePerfectCounter);
+
+
         }
     }
+
+    //private void UpdatePerfectCounter(object obj)
+    //{
+    //    perfectGuardExecuted++;
+    //    tutorialManager.objectiveNumberReached.text = perfectGuardExecuted.ToString();
+
+    //    if ( perfectGuardExecuted >= 3)
+    //    {
+    //        tutorialManager.DeactivateAllPlayerInputs();
+
+    //        foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())
+    //        {
+    //            ih.GetComponent<PlayerInput>().actions.FindAction("Move").Disable();
+    //        }
+
+    //        tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Defense").Disable();
+    //        tutorialManager.DeactivateEnemyAI();
+
+    //        stateMachine.SetState(new IntermediateTutorialFase(tutorialManager));
+    //    }
+    //}
 
     public override void Update()
     {
@@ -117,7 +136,8 @@ public class GuardTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
-        //PubSub.Instance.UnregisterFunction(EMessageType.perfectGuardExecuted, UpdateCounter);
+        PubSub.Instance.UnregisterFunction(EMessageType.perfectGuardExecuted, UpdateCounter);
+        PubSub.Instance.UnregisterFunction(EMessageType.guardExecuted, UpdateCounter);
         tutorialManager.EndCurrentFase();
     }
 }

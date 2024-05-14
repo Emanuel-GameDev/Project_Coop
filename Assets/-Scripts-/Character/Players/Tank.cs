@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 //Unique = tasto nord,Q = Urlo
 //BossUpgrade = tasto est,E = attacco bossFight
+
 public class Tank : PlayerCharacter, IPerfectTimeReceiver
 {
     [Header("Attack")]
@@ -30,8 +31,11 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     float perfectBlockDamage;
     [SerializeField, Tooltip("Angolo parata frontale al tank")]
     float blockAngle = 90;
-    [SerializeField, Tooltip("finestra di tempo nella quale appena viene colpito pu� parare per fare parata perfetta")]
+    [SerializeField, Tooltip("dempo per anulare notifica parta perfetta se non colpito ma avviso inviato")]
     float perfectBlockTimeWindow = 0.4f;
+
+    [SerializeField, Tooltip("velocità minima parata")]
+    float blockMoveSpeed = 0.1f;
 
 
     public enum blockZone
@@ -46,8 +50,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     [Header("Unique Ability")]
 
-    [SerializeField, Tooltip("cooldown abilit� unica")]
-    float cooldownUniqueAbility;
     [SerializeField, Tooltip("Range aggro")]
     float aggroRange;
     [SerializeField, Tooltip("Durata aggro")]
@@ -78,32 +80,56 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     private PerfectTimingHandler perfectTimingHandler;
     private bool perfectTimingEnabled;
-    private bool hyperArmorOn;
+    private bool hyperArmorOn = false;
+
     private bool isAttacking = false;
-    private bool bossfightUpgradeUnlocked;
+    private bool bossfightUpgradeUnlocked = false;
     private bool canPressInput;
-    private bool pressed;
-    private bool chargedAttackReady;
+    private bool chargedAttackReady = false;
     private bool canMove = true;
-    private bool isBlocking;
-    private bool isPerfectBlock;
-    private bool canCancelAttack;
-    private bool canPerfectBlock;
+    private bool isBlocking = false;
+    private bool isPerfectBlock = false;
+
+    private bool canPerfectBlock = false;
     private bool uniqueAbilityReady = true;
-    private bool statBoosted;
-    private bool canProtectOther;
+    private bool statBoosted = false;
+    private bool canProtectOther = false;
+    private bool attackPressed = false;
+    private bool isChargingAttack = false;
+    private bool mustDoSecondAttack = false;
     private bool canBlock = true;
-    
+    private bool comboStarted = false;
+
+    private bool alreadyCalled = false;
+
+    private float attackStartTime = 0;
+
+    private AttackComboState currentAttackComboState;
+    private AttackComboState NextAttackComboState
+    {
+        get
+        {
+            return currentAttackComboState switch
+            {
+                AttackComboState.NotAttaking => AttackComboState.Attack1,
+                AttackComboState.Attack1 => AttackComboState.Attack2,
+                AttackComboState.Attack2 => AttackComboState.NotAttaking,
+                _ => AttackComboState.NotAttaking,
+            };
+        }
+    }
+
 
     private int comboIndex = 0;
     private int comboMax = 2;
-    private int perfectBlockCount;
+    private int perfectBlockCount=0;
 
     private float currentStamina;
     private float blockAngleThreshold => (blockAngle - 180) / 180;
     private float staminaDamageReductionMulty;
     private float healthDamageReductionMulty;
-    private float lastDirectionYValue;
+    private float moveSpeedCopy;
+
 
 
     private GenericBarScript staminaBar;
@@ -111,19 +137,39 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private PerfectTimingHandler perfectBlockHandler;
     private ProtectPlayers triggerProtectPlayer;
     private PivotTriggerProtected pivotTriggerProtected;
-    private DamageData perfectBlockData;
-   
+    private IDamager perfectBlockIDamager;
+
+    [Header("VFX")]
+    [SerializeField] GameObject shieldVFX;
+    private Coroutine ShieldCoroutine;
+    ParticleSystem.EmissionModule emissionModule;
+
+    [Header("Shield Health Color", order = 1)]
+    [ColorUsage(true, true)]
+    [SerializeField] Color shieldVFXGoodColor;
+    [ColorUsage(true, true)]
+    [SerializeField] Color shieldVFXDamagedColor;
+    [ColorUsage(true, true)]
+    [SerializeField] Color shieldVFXCriticalColor;
+    [ColorUsage(true, true)]
+    [SerializeField] Color shieldVFXParryColor;
+    private Color shieldVFXBaseColor;
+
+
 
 
     public override void Inizialize()
     {
         base.Inizialize();
+
+        moveSpeedCopy = moveSpeed;
+
         currentStamina = maxStamina;
         currentHp = MaxHp;
 
         staminaBar = GetComponentInChildren<GenericBarScript>();
+        staminaBar.SetMaxValue(maxStamina);
 
-        staminaBar.Setvalue(maxStamina);
         staminaBar.gameObject.SetActive(false);
         triggerProtectPlayer = GetComponentInChildren<ProtectPlayers>();
         pivotTriggerProtected = GetComponentInChildren<PivotTriggerProtected>();
@@ -133,8 +179,14 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         staminaDamageReductionMulty = (1 - (StaminaDamageReduction / 100));
         healthDamageReductionMulty = (1 - HealthDamageReduction / 100);
 
+        Debug.Log(powerUpData.UniqueAbilityCooldownDecrease);
+
+        emissionModule = _walkDustParticles.emission;
+
+        shieldVFXBaseColor = shieldVFX.GetComponentInChildren<MeshRenderer>().material.GetColor("_MainColor");
+
     }
-   
+
     #region Attack
 
     public override void AttackInput(InputAction.CallbackContext context)
@@ -142,103 +194,133 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         //Cercar soluzione forse
         if (stunned) return;
 
-        if (context.performed && isBlocking == false)
+        if (context.performed && !isBlocking)
         {
+            attackStartTime = Time.time;
+            isAttacking = true;
             ActivateHyperArmor();
-            pressed = true;
-            canCancelAttack = false;
-            Invoke(nameof(CheckAttackToDo), timeCheckAttackType);
-
+            SetCanMove(false, rb);
+            //Animaizone Inizio Attacco
+            if(chargedAttack)
+            {
+                StartCoroutine(StartChargedAttackTimer());
+            }
+            else
+            {
+                if (comboStarted)
+                    ContinueCombo();
+                else if (currentAttackComboState == AttackComboState.NotAttaking)
+                    StartCombo();
+            }
         }
 
-        if (context.canceled)
+        if (context.canceled && isAttacking)
         {
-            pressed = false;
-
-
-            if (chargedAttackReady && !canCancelAttack)
+            // if(chargedAttackReady) Time.time - attackStartTime < timeCheckAttackType || 
+            if (chargedAttackReady)
             {
                 animator.SetTrigger("ChargedAttackEnd");
                 Debug.Log("Charged Attack executed");
-                chargedAttackSprite.gameObject.SetActive(false);
-
+                chargedAttackSprite.SetActive(false);
             }
-
-            else if (!chargedAttackReady && canCancelAttack)
+            else if(chargedAttack)
             {
-                animator.SetTrigger("Attack1");
-                IncreaseComboIndex();
-
+                if (comboStarted)
+                    ContinueCombo();
+                else if (currentAttackComboState == AttackComboState.NotAttaking)
+                    StartCombo();
             }
-
-
-            isAttacking = false;
-            chargedAttackReady = false;
         }
-
     }
-    public void IncreaseComboIndex()
+    private void StartCombo()
     {
-        comboIndex++;
-        if (comboIndex > 2)
-        {
-            comboIndex = 0;
-        }
+        comboStarted = true;
+        currentAttackComboState = AttackComboState.Attack1;
+        DoMeleeAttack();
     }
-    public void CheckAttackToDo()
+    private void ContinueCombo()
     {
-        SetCanMove(false, rb);
-
-        if (pressed && chargedAttack)
+        if(doubleAttack)
+            mustDoSecondAttack = true;
+    }
+    private void DoMeleeAttack()
+    {
+        string triggerName = currentAttackComboState.ToString();
+        animator.SetTrigger(triggerName);
+    }
+    public void OnEndAttackAnimation()
+    {
+        if (!alreadyCalled)
         {
-            canCancelAttack = true;
-            isAttacking = true;
-            animator.SetTrigger("ChargedAttack");
-            Debug.Log($"Started Charged Attack");
-            StartCoroutine(StartChargedAttackTimer());
-
-        }
-
-        else if (!pressed)
-        {
-            canCancelAttack = false;
-
-            if (comboIndex == 0 && !isAttacking)
+            if (mustDoSecondAttack)
             {
-                isAttacking = true;
-                animator.SetTrigger("Attack1");
-                IncreaseComboIndex();
+                currentAttackComboState = NextAttackComboState;
+                if (currentAttackComboState == AttackComboState.NotAttaking)
+                    ResetAttack();
+                else
+                    DoMeleeAttack();
+            }
+            else
+            {
+                ResetAttack();
             }
 
-            else if (doubleAttack && comboIndex == 1)
-            {
-                if (comboIndex != 2)
-                {
-                    animator.SetTrigger("Attack2");
-                    IncreaseComboIndex();
-                }
-
-            }
-
+            alreadyCalled = true;
         }
     }
+    public void OnAttackAnimationStart()
+    {
+        alreadyCalled = false;
+    }
+    public void ResetAttack()
+    {
+        currentAttackComboState = AttackComboState.NotAttaking;
+        DeactivateHyperArmor();
+        mustDoSecondAttack = false;
+        isAttacking = false;
+        chargedAttackReady = false;
+        isChargingAttack = false;
+        comboStarted = false;
+        SetCanMove(true, rb);
+
+        Utility.DebugTrace("ResetAttack");
+    }
+
+    public void ChargingAttack()
+    {
+        //if (chargedAttack)
+        //{
+            //tasto ancora premuto e attacco carico sbloccato
+            //if (attackPressed)
+            //{
+                isChargingAttack = true;
+                animator.SetTrigger("ChargedAttack");
+                StartCoroutine(StartChargedAttackTimer());
+            //}
+
+        //}
+    }
+
     IEnumerator StartChargedAttackTimer()
     {
+        isChargingAttack = true;
         chargedAttackReady = false;
+        yield return new WaitForSeconds(timeCheckAttackType);
+
+        animator.SetTrigger("ChargedAttack");
 
         yield return new WaitForSeconds(chargedAttackTimer);
 
-        if (pressed)
+        if (attackPressed)
         {
-
             chargedAttackReady = true;
-            canCancelAttack = false;
 
-            Debug.Log("Charged Attack Ready");
+            //effetto visivo attacco pronto
             chargedAttackSprite.SetActive(true);
         }
 
     }
+
     public void ActivateHyperArmor()
     {
         if (implacableAttack)
@@ -249,27 +331,11 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
 
     }
+
     private void DeactivateHyperArmor()
     {
         hyperArmorOn = false;
     }
-    public void ResetAttackCombo()
-    {
-        if (comboIndex == 0 || comboIndex == 1)
-        {
-            comboIndex = 0;
-            isAttacking = false;
-            Debug.Log("Reset Variables");
-            SetCanMove(true, rb);
-
-        }
-        else if (comboIndex == 2)
-        {
-            IncreaseComboIndex();
-        }
-
-    }
-
     public void ChargedAttackAreaDamage()
     {
         RaycastHit[] hitted = Physics.SphereCastAll(transform.position, chargedAttackRadius, Vector3.up, chargedAttackRadius);
@@ -297,9 +363,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         Character dealerMB = null;
         if (data.dealer is Character)
             dealerMB = (Character)data.dealer;
-        
+
         Vector2 dealerDirection = dealerMB.gameObject.transform.position - transform.position;
-        
+
         float angle = 0;
 
         if (currentBlockZone is blockZone.nordEst)
@@ -319,30 +385,30 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             angle = Vector2.Angle(dealerDirection, new Vector2(-1, -1));
         }
 
-        
+
 
         return Mathf.Abs(angle) <= blockAngle / 2;
     }
-    Vector3 RotateVectorAroundPivot(Vector3 vector, Vector3 pivot, float angle)
-    {
-        Quaternion rotation = Quaternion.Euler(0, 0, angle);
-        vector -= pivot;
-        vector = rotation * vector;
-        vector += pivot;
-        return vector;
-    }
     public override void DefenseInput(InputAction.CallbackContext context)
     {
-        if (context.performed && isAttacking == false && canCancelAttack == false && canBlock)
+        if (context.performed && isAttacking == false && canBlock)
         {
+            ResetAllAnimatorTriggers();
             SetCanMove(false, rb);
-            if(isBlocking != true)
+
+            if (isBlocking != true)
             {
                 isBlocking = true;
+                //vfx
+                shieldVFX.gameObject.SetActive(true);
+                SetShieldColorHealth();
 
                 if (perfectTimingEnabled)
-                {                   
+                {
                     perfectBlockCount++;
+
+
+
                     if (perfectBlockCount >= attacksToBlockForUpgrade)
                     {
                         //Sblocco parry che fa danno
@@ -350,16 +416,19 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                     }
 
                     Debug.Log("parata perfetta eseguita, rimanenti per potenziamento boss = " + (attacksToBlockForUpgrade - perfectBlockCount));
+                    PlayPerfectParrySound();
+
                     PubSub.Instance.Notify(EMessageType.perfectGuardExecuted, this);
 
 
-                    perfectBlockData.dealer.OnParryNotify(this);
+                    perfectBlockIDamager.OnParryNotify(this);
 
-                    if (damageOnParry && perfectBlockData.dealer != null && perfectBlockData.dealer is IDamageable)
+                    if (damageOnParry && perfectBlockIDamager != null && perfectBlockIDamager is IDamageable)
                     {
-                        ((IDamageable)perfectBlockData.dealer).TakeDamage(new DamageData(perfectBlockDamage, this));
+                        ((IDamageable)perfectBlockIDamager).TakeDamage(new DamageData(perfectBlockDamage, this));
                     }
                 }
+
 
                 currentBlockZone = SetBlockZone(lastNonZeroDirection.y);
                 animator.SetTrigger("StartBlock");
@@ -367,45 +436,49 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             }
 
             ShowStaminaBar(true);
-            
+
             //Rotate pivor Trigger per proteggere player
             pivotTriggerProtected.enabled = true;
-            pivotTriggerProtected.Rotate(lastNonZeroDirection);           
+            pivotTriggerProtected.Rotate(lastNonZeroDirection);
             //Trigger che setta ai player protectedByTank a true;
             triggerProtectPlayer.SetPlayersProtected(true);
-            //eliminare
-            mostraGizmoRangeParata = true;
 
         }
 
         else if (context.canceled && isBlocking == true)
         {
+            ResetAllAnimatorTriggers();
             SetCanMove(true, rb);
-            
-                isBlocking = false;
-                currentBlockZone = blockZone.none;
-                StartCoroutine(nameof(ToggleBlock));               
-                animator.SetTrigger("ToggleBlock");
-            
-           
+
+            currentBlockZone = blockZone.none;
+            StartCoroutine(nameof(ToggleBlock));
+            animator.SetTrigger("ToggleBlock");
+
+            //vfx
+            shieldVFX.gameObject.SetActive(false);
+
+
             ShowStaminaBar(false);
-            
+
 
             //Da mettere reset in animazione alzata scudo
             ResetStamina();
             //Trigger che setta ai player protectedByTank a true;
             triggerProtectPlayer.SetPlayersProtected(false);
-            //eliminare
-            mostraGizmoRangeParata = false;
+
+
+            isBlocking = false;
+
+
         }
 
-
-        //se potenziamento 4 parata perfetta fa danno
     }
+
+
     public blockZone SetBlockZone(float lastYValue)
     {
-        
-        if ((lastYValue > 0 && pivot.transform.localScale.x <0))
+
+        if ((lastYValue > 0 && pivot.transform.localScale.x < 0))
         {
             return blockZone.nordEst;
         }
@@ -432,7 +505,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private IEnumerator ToggleBlock()
     {
         canBlock = false;
-       yield return new WaitForSeconds(blockTimer);
+        yield return new WaitForSeconds(blockTimer);
         canBlock = true;
 
     }
@@ -444,8 +517,70 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public void ShowStaminaBar(bool toShow)
     {
         staminaBar.gameObject.SetActive(toShow);
+
     }
-    
+    private void SetShieldColorHealth()
+    {
+        Material shieldMaterial = shieldVFX.GetComponentInChildren<MeshRenderer>().material;
+
+        float healthLevel = currentStamina / maxStamina;
+
+        if (healthLevel > 0.5f)
+        {
+            //good healt
+            shieldMaterial.SetColor("_HealthColor", shieldVFXGoodColor);
+
+        }
+        else
+        {
+            if (healthLevel > 0.25f)
+            {
+                //damaged health
+                shieldMaterial.SetColor("_HealthColor", shieldVFXDamagedColor);
+            }
+            else
+            {
+                //critical health
+                shieldMaterial.SetColor("_HealthColor", shieldVFXCriticalColor);
+            }
+        }
+    }
+    private IEnumerator PerfectBlockVFX()
+    {
+        float elapsedTime = 0;
+
+        Material shieldMaterial = shieldVFX.GetComponentInChildren<MeshRenderer>().material;
+
+        shieldVFX.transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);
+        shieldMaterial.SetColor("_MainColor", shieldVFXParryColor);
+
+        while (elapsedTime < 1)
+        {
+            shieldVFX.transform.localScale = Vector3.Lerp(shieldVFX.transform.localScale, Vector3.one, (elapsedTime / 1));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        shieldVFX.transform.localScale = Vector3.one;
+        shieldMaterial.SetColor("_MainColor", shieldVFXBaseColor);
+
+    }
+    private IEnumerator BlockVFX()
+    {
+        float elapsedTime = 0;
+
+        Material shieldMaterial = shieldVFX.GetComponentInChildren<MeshRenderer>().material;
+        shieldMaterial.SetColor("_MainColor", shieldVFXBaseColor);
+
+        shieldVFX.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+        while (elapsedTime < 1)
+        {
+            shieldVFX.transform.localScale = Vector3.Lerp(shieldVFX.transform.localScale, Vector3.one, (elapsedTime / 1));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        shieldVFX.transform.localScale = Vector3.one;
+    }
+
 
     #endregion
 
@@ -453,14 +588,14 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public void SetPerfectTimingHandler(PerfectTimingHandler handler) => perfectTimingHandler = handler;
 
-    public void PerfectTimeStarted(DamageData data)
+    public void PerfectTimeStarted(IDamager damager)
     {
         if (!isBlocking)
         {
             perfectTimingHandler.ActivateAlert();
-            perfectBlockData = data;
+            perfectBlockIDamager = damager;
             perfectTimingEnabled = true;
-            
+
         }
 
         StartCoroutine(DisablePerfectTimeAfter(perfectBlockTimeWindow));
@@ -471,7 +606,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         perfectTimingHandler.DeactivateAlert();
         perfectTimingEnabled = false;
         isPerfectBlock = false;
-        perfectBlockData = null;
+        perfectBlockIDamager = null;
         Utility.DebugTrace("Perfect Time Ended");
     }
 
@@ -495,7 +630,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     }
     public override void TakeDamage(DamageData data)
     {
-       
+
         if (hyperArmorOn == false && !isBlocking)
         {
             //Hit Reaction
@@ -508,7 +643,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
             if (statBoosted)
             {
-               
+
                 staminaBar.DecreaseValue(data.staminaDamage * staminaDamageReductionMulty);
                 currentStamina -= (data.staminaDamage * staminaDamageReductionMulty);
 
@@ -522,6 +657,31 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
             PubSub.Instance.Notify(EMessageType.guardExecuted, this);
 
+            if (perfectTimingEnabled)
+            {
+                if (ShieldCoroutine != null)
+                {
+                    StopCoroutine(ShieldCoroutine);
+
+                }
+
+                ShieldCoroutine = StartCoroutine(PerfectBlockVFX());
+            }
+            else
+            {
+                if (ShieldCoroutine != null)
+                {
+                    StopCoroutine(ShieldCoroutine);
+
+                }
+
+                ShieldCoroutine = StartCoroutine(BlockVFX());
+
+            }
+
+
+            //vfx
+            SetShieldColorHealth();
 
             Debug.Log($"current stamina : {currentStamina}");
             if (currentStamina <= 0)
@@ -529,19 +689,20 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                 SetCanMove(true, rb);
                 isBlocking = false;
                 ShowStaminaBar(false);
+                shieldVFX.SetActive(false);
                 Debug.Log("Parata Rotta");
                 animator.SetTrigger("ShieldBroken");
                 //CONTROLLARE
                 stunned = true;
-               
+
             }
         }
         else
-        {         
-            //StartCoroutine(StartPerfectBlockTimer(data));
+        {
+
             base.TakeDamage(data);
         }
-        if(perfectTimingEnabled)
+        if (perfectTimingEnabled)
         {
             PerfectTimeEnded();
         }
@@ -550,7 +711,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public void Unstun()
     {
         stunned = false;
-       
+
     }
 
     #endregion
@@ -559,15 +720,12 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public override void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-
         if (context.performed && uniqueAbilityReady)
         {
-            //Da eliminare
-            mostraGizmoAbilitaUnica = true;
-            Invoke(nameof(SetGizmoAbilitaUnica), 1.2f);
-
+            SetCanMove(false, rb);
             uniqueAbilityReady = false;
-            Invoke(nameof(StartCooldownUniqueAbility), cooldownUniqueAbility);
+            base.UniqueAbilityInput(context);
+            Invoke(nameof(StartCooldownUniqueAbility), UniqueAbilityCooldown);
             animator.SetTrigger("UniqueAbility");
             Debug.Log("UniqueAbility Used");
         }
@@ -577,24 +735,26 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public void PerformUniqueAbility()
     {
-        RaycastHit2D[] hitted = Physics2D.CircleCastAll(transform.position, aggroRange, Vector2.up, aggroRange);
+        SetCanMove(true, rb);
         
+        RaycastHit2D[] hitted = Physics2D.CircleCastAll(transform.position, aggroRange, Vector2.up, aggroRange);
+
         if (hitted != null)
         {
-           
+
             foreach (RaycastHit2D r in hitted)
             {
-                
+
                 if (Utility.IsInLayerMask(r.transform.gameObject, LayerMask.GetMask("Enemy")))
                 {
                     IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
 
                     AggroCondition aggroCondition = Utility.InstantiateCondition<AggroCondition>();
                     aggroCondition.SetVariable(this, aggroDuration);
-                    
+
 
                     hittedDama.TakeDamage(new DamageData(0, this, aggroCondition));
-                   
+
                 }
             }
         }
@@ -603,11 +763,12 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         damageReceivedMultiplier = healthDamageReductionMulty;
         Invoke(nameof(SetStatToNormal), aggroDuration);
 
-
+        PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated, this);
     }
     private void StartCooldownUniqueAbility()
     {
         uniqueAbilityReady = true;
+        uniqueAbilityUses++;
         Debug.Log("abilita unica pronta");
     }
     private void SetStatToNormal()
@@ -615,7 +776,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         statBoosted = false;
         damageReceivedMultiplier = 1;
     }
-
 
     #endregion
 
@@ -625,11 +785,10 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         if (context.performed && !isAttacking && !isBlocking)
         {
-            
-            SetCanMove(false, rb);
 
             if (bossfightPowerUpUnlocked && isAttacking == false)
             {
+                SetCanMove(false, rb);
                 damager.SetCondition(Utility.InstantiateCondition<StunCondition>(), true);
                 animator.SetTrigger("extraAbility");
 
@@ -647,16 +806,25 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public override void Move(Vector2 direction)
     {
-        if (canMove)
+        if (!isBlocking)
         {
+            if (canMove)
+            {
+                moveSpeed = moveSpeedCopy;
+                base.Move(direction);
+
+                emissionModule.enabled = isMoving;
+            }
+
+            animator.SetBool("IsMoving", isMoving);
+        }
+        else
+        {
+            moveSpeed = blockMoveSpeed;
             base.Move(direction);
-
-            if (direction.y != 0)
-                lastDirectionYValue = direction.y;
-
+            SetBlockZone(lastNonZeroDirection.y);
 
         }
-        animator.SetBool("IsMoving", isMoving);
 
     }
 
@@ -667,109 +835,41 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         if (move == false)
         {
             rigidbody.velocity = Vector3.zero;
+            emissionModule.enabled = false;
         }
 
     }
     #endregion
 
-    //Eliminare
 
-    private bool mostraGizmoAbilitaUnica;
-    private bool mostraGizmoRangeParata;
-    Vector3 dealerPosition;
-
-
-    public void OnDrawGizmos()
+    public override void ResetAllAnimatorTriggers()
     {
-        if (dealerPosition != Vector3.zero)
+        base.ResetAllAnimatorTriggers();
+        ResetAttack();
+        ResetVariables();
+    }
+
+    private void ResetVariables()
+    {
+        isBlocking = false;
+        canBlock = true;
+        shieldVFX.gameObject.SetActive(false);
+
+    }
+
+    private void PlayPerfectParrySound()
+    {
+        if (soundsDatabase.specialEffectsSounds.Count > 0)
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, dealerPosition);
 
-        }
-        if (mostraGizmoAbilitaUnica)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(transform.position, aggroRange);
-        }
-
-        if (mostraGizmoRangeParata)
-        {
-            if(currentBlockZone is blockZone.nordEst)
+            if (soundsDatabase.specialEffectsSounds.Count >= perfectBlockCount)
             {
-                Vector2 temp = transform.position + new Vector3(1,1,0);
-
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(transform.position, temp);
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
-
-            }else if (currentBlockZone is blockZone.sudEst)
-            {
-                Vector2 temp = transform.position + new Vector3(1, -1, 0);
-
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(transform.position, temp);
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
-
+                AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[perfectBlockCount - 1]);
             }
-            else if (currentBlockZone is blockZone.nordOvest)
+            else
             {
-                Vector2 temp = transform.position + new Vector3(-1, 1, 0);
-
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(transform.position, temp);
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
-
+                AudioManager.Instance.PlayAudioClip(soundsDatabase.specialEffectsSounds[soundsDatabase.specialEffectsSounds.Count - 1]);
             }
-            else if (currentBlockZone is blockZone.sudOvest)
-            {
-                Vector2 temp = transform.position + new Vector3(-1, -1, 0);
-
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(transform.position, temp);
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (-1 * (blockAngle / 2))));
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(transform.position, RotateVectorAroundPivot(temp, transform.position, (1 * (blockAngle / 2))));
-
-            }
-
-
         }
-
     }
-
-    private void SetGizmoAbilitaUnica()
-    {
-        mostraGizmoAbilitaUnica = false;
-    }
-
-
-    void DrawArc(Vector3 center, float radius, float angle, int segments)
-    {
-        Gizmos.color = Color.blue;
-
-    }
-
-
-    Vector3 GetPointOnCircle(float radius, float angle)
-    {
-        float radianAngle = Mathf.Deg2Rad * angle;
-        float x = transform.position.x + radius * Mathf.Cos(radianAngle);
-        float y = transform.position.y + radius * Mathf.Sin(radianAngle);
-
-        return new Vector3(x, y, transform.position.z);
-    }
-
-
-   
 }

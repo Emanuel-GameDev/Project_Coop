@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 public class PlayerCharacterPoolManager : MonoBehaviour
@@ -44,8 +41,9 @@ public class PlayerCharacterPoolManager : MonoBehaviour
 
     }
 
+    [SerializeField]
+    private DeathScreen deathScreen;
     private int deadPlayers = 0;
-
 
     private void Awake()
     {
@@ -58,19 +56,22 @@ public class PlayerCharacterPoolManager : MonoBehaviour
             _instance = this;
             InizializeList();
         }
+
+        PubSub.Instance.RegisterFunction(EMessageType.sceneLoading, SaveCharacter);
     }
 
     #region Switching Character
-
     private void InizializeList()
     {
-        foreach(PlayerCharacterData characterData in GameManager.Instance.GetCharacterDataList())
+        foreach (PlayerCharacterData characterData in GameManager.Instance.GetCharacterDataList())
         {
             PlayerCharacter playerCharacter = Instantiate(characterData.CharacterPrefab, transform).GetComponent<PlayerCharacter>();
             freeCharacters.Add(playerCharacter);
             //playerCharacter.Inizialize(); //DA RIVEDERE #MODIFICATO
             playerCharacter.gameObject.SetActive(false);
         }
+        SaveManager.Instance.LoadAllPlayersData();
+
     }
 
     public void SwitchCharacter(PlayerCharacter playerCharacter, ePlayerCharacter targetCharacter)
@@ -81,6 +82,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         PlayerCharacter searchedCharacter = freeCharacters.Find(c => c.Character == targetCharacter);
         if (searchedCharacter != null)
         {
+            PubSub.Instance.Notify(EMessageType.switchingCharacters, new PlayerCharacter[] { playerCharacter, searchedCharacter });
             playerCharacter.characterController.SetPlayerCharacter(searchedCharacter);
             playerCharacter.characterController = null;
             ActivateCharacter(searchedCharacter, playerCharacter.transform);
@@ -103,21 +105,22 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         playerCharacter.gameObject.transform.position = spawnPosition;
         playerCharacter.gameObject.SetActive(true);
         playerCharacter.SetSwitchCooldown();
+        playerCharacter.ResetAllAnimatorTriggers();
         freeCharacters.Remove(playerCharacter);
         activeCharacters.Add(playerCharacter);
         //if (newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacterController>())
-        PubSub.Instance.Notify(EMessageType.characterJoined, playerCharacter);
+        PubSub.Instance.Notify(EMessageType.characterActivated, playerCharacter);
         CameraManager.Instance.AddTarget(playerCharacter.transform);
     }
 
     public void ReturnCharacter(PlayerCharacter playerCharacter)
     {
         playerCharacter.gameObject.transform.parent = transform;
-        playerCharacter.gameObject.transform.localPosition = Vector3.zero; 
+        playerCharacter.gameObject.transform.localPosition = Vector3.zero;
         playerCharacter.gameObject.SetActive(false);
         freeCharacters.Add(playerCharacter);
         activeCharacters.Remove(playerCharacter);
-
+        PubSub.Instance.Notify(EMessageType.characterDeactivated, playerCharacter);
         CameraManager.Instance.RemoveTarget(playerCharacter.transform);
     }
 
@@ -125,15 +128,8 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     public ePlayerCharacter GetFreeRandomCharacter()
     {
         ePlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)].Character;
-        
+
         return searchedCharacter;
-
-
-        //PlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)];
-        //if(searchedCharacter == null) return null;
-
-        //ActivateCharacter(searchedCharacter, SpawnPositionManager.Instance.GetFreePos().spawnPos); //transform.position); 
-        //return searchedCharacter;
     }
 
     public PlayerCharacter GetCharacter(ePlayerCharacter targetCharacter, Transform position)
@@ -147,7 +143,6 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         if (searchedCharacter != null)
         {
             ActivateCharacter(searchedCharacter, position);
-            //PubSub.Instance.Notify(EMessageType.characterJoined, searchedCharacter);
         }
         return searchedCharacter;
     }
@@ -159,12 +154,12 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     public void PlayerIsDead()
     {
         deadPlayers++;
-        if(deadPlayers >= activeCharacters.Count)
+        if (deadPlayers >= activeCharacters.Count)
         {
             deadPlayers = 0;
-            GameManager.Instance.LoadScene(SceneManager.GetActiveScene().name);
+            ActivateDeathScreen();
         }
-            
+
     }
 
     public void PlayerIsRessed()
@@ -174,7 +169,26 @@ public class PlayerCharacterPoolManager : MonoBehaviour
             deadPlayers = 0;
     }
 
+    public void ActivateDeathScreen()
+    {
+        if (deathScreen != null)
+            deathScreen.ShowDeathScreen();
+        else
+            GameManager.Instance.ChangeScene(SceneManager.GetActiveScene().name);
+    }
+
     #endregion
 
+    public void SaveCharacter(object obj)
+    {
+        SaveManager.Instance.SavePlayersData();
+    }
 
+    public void HealAllPlayerFull()
+    {
+        foreach (PlayerCharacter p in AllPlayerCharacters)
+        {
+            p.TakeHeal(new DamageData(99999, null));
+        }
+    }
 }

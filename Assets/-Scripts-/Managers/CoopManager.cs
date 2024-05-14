@@ -150,9 +150,6 @@ public class CoopManager : MonoBehaviour
             InputReceiver pReceiver = SceneInputReceiverManager.Instance.GetSceneInputReceiver(player);
             player.SetReceiver(pReceiver);
         }
-
-        CameraManager.Instance.AddAllPlayers();
-        HPHandler.Instance.SetActivePlayers();
     }
 
     public void OnDeviceLost(PlayerInput playerInput)
@@ -180,7 +177,7 @@ public class CoopManager : MonoBehaviour
     {
         foreach(PlayerInputHandler player in playerInputHandlers)
         {
-            player.PlayerInput.actions.Disable();
+            player.SetActionMap(InputMap.EmptyMap);
         }
     }
 
@@ -188,7 +185,7 @@ public class CoopManager : MonoBehaviour
     {
         foreach (PlayerInputHandler player in playerInputHandlers) 
         { 
-            player.PlayerInput.actions.Enable();
+            player.SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
         }
     }
 }

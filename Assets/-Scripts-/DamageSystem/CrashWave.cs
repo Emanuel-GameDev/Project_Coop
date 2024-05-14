@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CrashWave : MonoBehaviour, IDamager
 {
@@ -11,10 +12,12 @@ public class CrashWave : MonoBehaviour, IDamager
     float damage;
     float staminaDamage;
     Character dealer;
+    Damager damager;
 
-  
+   
     ParticleSystem.ShapeModule sh1;
     ParticleSystem.ShapeModule sh2;
+
 
 
 
@@ -23,8 +26,8 @@ public class CrashWave : MonoBehaviour, IDamager
     private void OnEnable()
     {
         sh1 = particle1.shape;
-        sh2 = particle2.shape;
-      
+        sh2 = particle2.shape;      
+       
     }
     private void Update()
     {
@@ -53,6 +56,8 @@ public class CrashWave : MonoBehaviour, IDamager
 
     public void OnParryNotify(Character whoParried)
     {
-        Debug.Log("AAAAAAAAAAAAAAAA");
+       
     }
+
+   
 }

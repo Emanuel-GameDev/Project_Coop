@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -11,12 +8,10 @@ public class PlayerCharacterData : ScriptableObject
     private ePlayerCharacter character;
     [SerializeField]
     private Color characterColor;
-    [SerializeField] 
+    [SerializeField]
     private GameObject characterPrefab;
     [SerializeField]
     private Sprite fullBodyArt;
-    [SerializeField]
-    private Sprite hudHealthSprite;
     [SerializeField]
     private Sprite hudSprite;
     [SerializeField]
@@ -25,17 +20,35 @@ public class PlayerCharacterData : ScriptableObject
     private SpriteLibraryAsset pixelAnimations;
     [SerializeField]
     private Sprite pixelFaceSprite;
+    [SerializeField]
+    private Sprite pixelBackgroundSprite;
     [SerializeField, TextArea]
     private string characterDescription;
+    [SerializeField]
+    private Sprite uniqueAbilitySprite;
+    [SerializeField]
+    private Sprite notificationBackground;
+    [SerializeField] 
+    private Sprite hpContainerSpriteLeft;
+    [SerializeField]
+    private Sprite hpContainerSpriteRight;
+
+
+
 
     public ePlayerCharacter Character => character;
     public Color CharacterColor => characterColor;
     public GameObject CharacterPrefab => characterPrefab;
-    public Sprite FullBodyArt => fullBodyArt;
-    public Sprite HudHealthSprite => hudHealthSprite;
+    public Sprite FullBodyArt => fullBodyArt;  
     public Sprite HudSprite => hudSprite;
     public Sprite DialogueSprite => dialogueSprite;
     public SpriteLibraryAsset PixelAnimations => pixelAnimations;
     public Sprite PixelFaceSprite => pixelFaceSprite;
+    public Sprite PixelBackgroundSprite => pixelBackgroundSprite;
+    public Sprite UniqueAbilitySprite => uniqueAbilitySprite;
+    public Sprite NotificationBackground => notificationBackground;
+
+    public Sprite HpContainerLeft => hpContainerSpriteLeft;
+    public Sprite HpContainerRight => hpContainerSpriteRight;
 
 }

@@ -9,6 +9,7 @@ public class HealTutorialFaseData : TutorialFaseData
     [SerializeField] public Dialogue DPSDialogue;
     [SerializeField] public Dialogue rangedDialogue;
     [SerializeField] public Dialogue tankDialogue;
+    [SerializeField] public Dialogue dumpyDialogue;
 
     [Header("Dialogo speciale")]
     [SerializeField] public Dialogue specialDialogue;

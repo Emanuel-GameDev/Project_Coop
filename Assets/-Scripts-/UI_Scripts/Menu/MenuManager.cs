@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -35,11 +34,11 @@ public class MenuManager : MonoBehaviour
 
     [SerializeField]
     private GameObject emptyRoot;
-    [SerializeField] 
+    [SerializeField]
     private GameObject emptyRootSelected;
 
     [SerializeField]
-    private HPHandler hPHandler;
+    private HPHandler hpHandler;
 
 
     private PlayerInputHandler actualMenuOwner;
@@ -66,12 +65,12 @@ public class MenuManager : MonoBehaviour
 
     private void Inizialize()
     {
-        if(pauseMenu != null)
+        if (pauseMenu != null)
         {
             pauseMenu.Inizialize();
             pauseMenu.gameObject.SetActive(false);
         }
-            
+
         if (optionMenu != null)
         {
             optionMenu.Inizialize();
@@ -81,7 +80,7 @@ public class MenuManager : MonoBehaviour
 
     private void Update()
     {
-        if(EventSystem.current != null)
+        if (EventSystem.current != null)
         {
             if (EventSystem.current.currentSelectedGameObject == null)
             {
@@ -96,11 +95,11 @@ public class MenuManager : MonoBehaviour
 
     public void GoBack(PlayerInputHandler playerInputHandler)
     {
-        if(playerInputHandler != actualMenuOwner) return;
+        if (playerInputHandler != actualMenuOwner) return;
 
         if (OnGoBack != null)
             OnGoBack?.Invoke();
-        else
+        else if (actualMenu.GoBackButtonCanCloseMenu)
             CloseMenu();
     }
 
@@ -108,18 +107,24 @@ public class MenuManager : MonoBehaviour
     #region Pause/Option Menu
     public void OpenPauseMenu(PlayerInputHandler player)
     {
-        OpenMenu(pauseMenu, player, true);
-        if(hPHandler != null)
-            hPHandler.gameObject.SetActive(false);
+        if (actualMenu == null)
+        {
+            OpenMenu(pauseMenu, player, true);
+            if (hpHandler != null)
+                hpHandler.gameObject.SetActive(false);
+        }
     }
 
     public void OpenOptionMenu(PlayerInputHandler player)
     {
-        if(optionMenu != null)
+        if (optionMenu != null)
         {
-            OpenMenu(optionMenu, player, true);
-            if (hPHandler != null)
-                hPHandler.gameObject.SetActive(false);
+            if(actualMenu == null)
+            {
+                OpenMenu(optionMenu, player, true);
+                if (hpHandler != null)
+                    hpHandler.gameObject.SetActive(false);
+            }
         }
         else
             OpenPauseMenu(player);
@@ -127,8 +132,13 @@ public class MenuManager : MonoBehaviour
 
     public void ClosePauseMenu(PlayerInputHandler player)
     {
-        if (actualMenu == pauseMenu && player == actualMenuOwner)
+        if (player != actualMenuOwner) return;
+
+        if (actualMenu == pauseMenu)
             CloseAllMenu();
+        else if (actualMenu.PauseButtonCanCloseMenu)
+            CloseMenu();
+
     }
 
     public void CloseOptionMenu(PlayerInputHandler player)
@@ -163,7 +173,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu(MenuInfo menu, PlayerInputHandler player)
     {
-      OpenMenu(menu, player, false);
+        OpenMenu(menu, player, false);
     }
 
     public void OpenMenu(MenuInfo menu, PlayerInputHandler player, bool pauseGame)
@@ -182,19 +192,28 @@ public class MenuManager : MonoBehaviour
             return;
         }
 
-        if(pauseGame)
+
+        if (actualMenu != null)
+        {
+            if (actualMenu == menu)
+                return;
+
+            menu.PreviousMenu = actualMenu;
+        }
+
+        if (pauseGame)
             GameManager.Instance.PauseGame();
 
-        if(player != null)
+        if (player != null)
         {
             DisableOtherPlayerInteraction(player);
             actualMenuOwner = player;
         }
-            
+
 
         if (menu.HaveTabs)
         {
-            if(tabToOpen != null)
+            if (tabToOpen != null)
                 menu.GoToTab(tabToOpen);
             else
                 menu.GoDefaultTab();
@@ -203,20 +222,13 @@ public class MenuManager : MonoBehaviour
         if (menu.InteractableSetter != null)
             menu.InteractableSetter.EnableInteract();
 
-        if(actualMenuOwner != null)
+        if (actualMenuOwner != null)
             actualMenuOwner.SetPlayerActiveMenu(menu.MenuRoot, menu.FirstObjectSelected);
-            
-        
-            
 
         menu.gameObject.SetActive(true);
 
-        if (actualMenu != null)
-        {
-            menu.PreviousMenu = actualMenu;
-        }
-
         actualMenu = menu;
+
 
     }
 
@@ -224,12 +236,24 @@ public class MenuManager : MonoBehaviour
     {
         foreach (PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
         {
-            if(player != null && handler != player)
+            if (player != null && handler != player)
             {
                 handler.SetPlayerActiveMenu(emptyRoot, emptyRootSelected);
             }
         }
-        
+
+    }
+
+    private void EnableOtherPlayersInteraction(PlayerInputHandler player)
+    {
+        foreach (PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
+        {
+            if (player != null && handler != player)
+            {
+                handler.SetPlayerActiveMenu(null, null);
+            }
+        }
+
     }
 
     public void FirstPlayerOpenMenu(MenuInfo menu)
@@ -250,15 +274,15 @@ public class MenuManager : MonoBehaviour
             actualMenu = actualMenu.PreviousMenu;
             actualMenuOwner.SetPlayerActiveMenu(actualMenu.MenuRoot, actualMenu.FirstObjectSelected);
             actualMenu.gameObject.SetActive(true);
-            if(actualMenu.InteractableSetter != null)
+            if (actualMenu.InteractableSetter != null)
                 actualMenu.InteractableSetter.EnableInteract();
         }
         else
         {
             ClearMenuEntries();
             GameManager.Instance.ResumeGame();
-            if (hPHandler != null)
-                hPHandler.gameObject.SetActive(true);
+            if (hpHandler != null)
+                hpHandler.gameObject.SetActive(true);
         }
 
     }
@@ -266,8 +290,9 @@ public class MenuManager : MonoBehaviour
     private void ClearMenuEntries()
     {
         actualMenu = null;
-        if(actualMenuOwner != null)
+        if (actualMenuOwner != null)
             actualMenuOwner.SetPlayerActiveMenu(null, null);
+        EnableOtherPlayersInteraction(actualMenuOwner);
         actualMenuOwner = null;
     }
 
@@ -276,8 +301,8 @@ public class MenuManager : MonoBehaviour
         CloseAllMenuRecursive(actualMenu);
         ClearMenuEntries();
         GameManager.Instance.ResumeGame();
-        if (hPHandler != null)
-            hPHandler.gameObject.SetActive(true);
+        if (hpHandler != null)
+            hpHandler.gameObject.SetActive(true);
     }
 
     private void CloseAllMenuRecursive(MenuInfo menu)
@@ -288,7 +313,7 @@ public class MenuManager : MonoBehaviour
             menu.PreviousMenu = null;
         }
         menu.gameObject.SetActive(false);
-        if(menu.HaveTabs)
+        if (menu.HaveTabs)
             menu.CloseAllTab();
     }
 

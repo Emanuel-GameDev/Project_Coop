@@ -25,7 +25,7 @@ public class TutorialEnemy : BasicMeleeEnemy
         stunState = new BasicEnemyStunState(this);
         parriedState = new BasicEnemyParriedState(this);
         deathState = new BasicEnemyDeathState(this);
-
+        entryState = new BasicEnemyEntryState(this);
     }
 
     public override void TakeDamage(DamageData data)
@@ -35,6 +35,12 @@ public class TutorialEnemy : BasicMeleeEnemy
             base.TakeDamage(data);
             //stateMachine.SetState(stunState);
             OnHitAction?.Invoke();
+            if(data.dealer is Projectile)
+            {
+                Projectile projectile = (Projectile) data.dealer;
+                PubSub.Instance.Notify(EMessageType.characterDamaged, projectile);
+            }
+            
             StartCoroutine(Invincibility());
 
         }
@@ -55,5 +61,9 @@ public class TutorialEnemy : BasicMeleeEnemy
         invincible = true;
         yield return new WaitForSeconds(invincibilitySeconds);
         invincible = false;
+    }
+    public override void OnParryNotify(Character whoParried)
+    {
+        base.OnParryNotify(whoParried);
     }
 }

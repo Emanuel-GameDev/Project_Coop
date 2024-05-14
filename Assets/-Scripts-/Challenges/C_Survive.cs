@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class C_Survive : Challenge
 {
-    [Header("Timer")]
-    [SerializeField] private TextMeshProUGUI TimerText;
+    [Header("Timer")]  
     [SerializeField] private float timerChallenge;
 
     
@@ -21,10 +20,10 @@ public class C_Survive : Challenge
 
         base.Initiate();
 
-        dialogueBox.gameObject.SetActive(true);
-        dialogueBox.SetDialogue(dialogueOnStart);
-        dialogueBox.AddDialogueEnd(onChallengeStartAction);
-        dialogueBox.StartDialogue();     
+        ChallengeManager.Instance.dialogueBox.gameObject.SetActive(true);
+        ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnStart);
+        ChallengeManager.Instance.dialogueBox.AddDialogueEnd(onChallengeStartAction);
+        ChallengeManager.Instance.dialogueBox.StartDialogue();     
         
         players = PlayerCharacterPoolManager.Instance.ActivePlayerCharacters;
         foreach (PlayerCharacter p in players)
@@ -41,7 +40,6 @@ public class C_Survive : Challenge
             s.canSpawn = true;           
         }
 
-        TimerText.gameObject.SetActive(true);
         startTimer = true;
 
     }
@@ -49,7 +47,12 @@ public class C_Survive : Challenge
     {
         startTimer = false;
         base.OnFailChallenge();
-        
+
+        ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnFailure);
+        ChallengeManager.Instance.dialogueBox.RemoveAllDialogueEnd();
+        ChallengeManager.Instance.dialogueBox.AddDialogueEnd(onChallengeFailReset);
+        ChallengeManager.Instance.dialogueBox.StartDialogue();
+
     }
     public override void OnWinChallenge()
     {
@@ -63,9 +66,9 @@ public class C_Survive : Challenge
             Destroy(e.gameObject);
         }
 
-        dialogueBox.SetDialogue(dialogueOnSuccess);
-        dialogueBox.RemoveAllDialogueEnd();
-        dialogueBox.StartDialogue();
+        ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnSuccess);
+        ChallengeManager.Instance.dialogueBox.RemoveAllDialogueEnd();
+        ChallengeManager.Instance.dialogueBox.StartDialogue();
     }
 
     public override void AddToSpawned(EnemyCharacter enemyCharacter)
@@ -73,6 +76,8 @@ public class C_Survive : Challenge
        base.AddToSpawned(enemyCharacter);
          enemyCharacter.OnDeath.AddListener(OnFailChallenge);
     }
+
+   
     private void Update()
     {
         if (startTimer)
@@ -93,18 +98,5 @@ public class C_Survive : Challenge
 
         }
     }
-    private void DisplayTimer(float timeToDisplay)
-    {
-        if (timeToDisplay < 0)
-        {
-            timeToDisplay = 0;
-        }
-
-        float minutes = Mathf.FloorToInt(timeToDisplay / 60);
-        float seconds = Mathf.FloorToInt(timeToDisplay % 60);
-
-        TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-    }
-   
+    
 }

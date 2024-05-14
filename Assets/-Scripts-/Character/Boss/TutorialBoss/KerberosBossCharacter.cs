@@ -44,8 +44,11 @@ public class KerberosBossCharacter : BossCharacter
     public float crashWaveDamage;
     public float crashWaveStaminaDamage;
     public float crashTimer;
+    public float crashPushForce = 2;
+    public float crashPushDuration = 1;
     public GameObject crashwaveObject;
     public Transform crashwaveTransform;
+    
     
 
     [Header("IfParried")]
@@ -62,11 +65,13 @@ public class KerberosBossCharacter : BossCharacter
     public bool parried = false;
     [HideInInspector] public Character whoParried;
     [HideInInspector] public Animator anim => animator;
+    [HideInInspector] public bool waveSpawned;
 
 
 
-    
+
     #region Crash
+
     public void SetCrashDirectDamageData()
     {
         staminaDamage = crashDirectStaminaDamage;
@@ -86,10 +91,36 @@ public class KerberosBossCharacter : BossCharacter
         {
             GameObject instantiatedWave = Instantiate(crashwaveObject, crashwaveTransform.position, Quaternion.identity, transform);
             instantiatedWave.GetComponentInChildren<CrashWave>().SetVariables(crashWaveDamage, crashWaveStaminaDamage, this);
-
+            waveSpawned = true;
+           
         }
     }
+    
     #endregion
+    #region flurryOfBlows
+    public void SetFlurryOfBlowsDamageData(int attackNumber)
+    {
+
+        if (attackNumber >= punchQuantity)
+        {
+            staminaDamage = normalPunchStaminaDamage;
+            damage = normalPunchDamage;
+            attackCondition = null;
+        }
+        else
+        {
+            staminaDamage = lastPunchStaminaDamage;
+            damage = lastPunchDamage;
+            attackCondition = null;
+        }
+    }
+    public void SetCanLastAttackPunch()
+    {
+        canLastAttackPunch = true;
+    }
+   
+    #endregion
+
 
     private void Update()
     {
@@ -115,36 +146,19 @@ public class KerberosBossCharacter : BossCharacter
         staminaDamage = chargeStaminaDamage;
         damage = chargeDamage;
         attackCondition = null;
+        
 
     }
-
-    #region flurryOfBlows
-    public void SetFlurryOfBlowsDamageData(int attackNumber)
-    {
-
-        if (attackNumber >= punchQuantity)
-        {
-            staminaDamage = normalPunchStaminaDamage;
-            damage = normalPunchDamage;
-            attackCondition = null;
-        }
-        else
-        {
-            staminaDamage = lastPunchStaminaDamage;
-            damage = lastPunchDamage;
-            attackCondition = null;
-        }
-    }
-    public void SetCanLastAttackPunch()
-    {
-        canLastAttackPunch = true;
-    }
-    #endregion
 
     public override void TakeDamage(DamageData data)
     {
-        if (!isDead)      
-        base.TakeDamage(data);
+        if (!isDead)
+        {
+            base.TakeDamage(data);
+            if(currentHp <=0)
+                gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("isDead").Value = true;
+
+        }
 
         float currentPercentage = (currentHp/maxHp) * 100;
         if(currentPercentage <= lowHpPhaseTreshold)
@@ -152,13 +166,7 @@ public class KerberosBossCharacter : BossCharacter
             gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("lowHp").Value = true;
         }
 
-        if (isDead)
-        {
-            gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("isDead").Value = true;
-            OnDeath?.Invoke();
-
-        }
-
+       
     }
     protected override void SetSpriteDirection(Vector2 direction)
     {
@@ -193,8 +201,6 @@ public class KerberosBossCharacter : BossCharacter
     public void SetCanRotateInAnim(int value)
     {
        
-        
-
         if (value == 0)
         {
             canRotateInAnim = false;
@@ -217,8 +223,15 @@ public class KerberosBossCharacter : BossCharacter
     public IEnumerator UnstunFromParry()
     {
         yield return new WaitForSeconds(parryStunTimer);
-        gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("parried").Value = false;
         anim.SetTrigger("Return");
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(0).Length);
+        gameObject.GetComponentInChildren<Blackboard>().GetVariable<BoolVariable>("parried").Value = false;
+    }
+    public override void Death()
+    {
+        base.Death();
+        target = null;
+
     }
 
 }

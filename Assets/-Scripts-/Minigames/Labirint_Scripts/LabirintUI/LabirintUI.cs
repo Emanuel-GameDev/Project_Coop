@@ -22,7 +22,8 @@ public class LabirintUI : MonoBehaviour
                     {
                         playersBox[i].gameObject.SetActive(true);
                         playerBox.Add(players[i].currentCharacter, playersBox[i]);
-                        playersBox[i].SetIcon(GameManager.Instance.GetCharacterData(players[i].currentCharacter).PixelFaceSprite);
+                        playersBox[i].SetIconAndBackground(GameManager.Instance.GetCharacterData(players[i].currentCharacter).PixelFaceSprite, 
+                            GameManager.Instance.GetCharacterData(players[i].currentCharacter).PixelBackgroundSprite);
                         
                     }
 
@@ -59,6 +60,7 @@ public class LabirintUI : MonoBehaviour
         {
             box.gameObject.SetActive(false);
         }
+        gameObject.SetActive(false);
     }
 
 }

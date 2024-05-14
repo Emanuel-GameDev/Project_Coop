@@ -8,11 +8,13 @@ using UnityEngine.UI;
 public class PlayerBoxUI : MonoBehaviour
 {
     [SerializeField] Image icon;
+    [SerializeField] Image background;
     [SerializeField] TMP_Text keyCount;
 
-    public void SetIcon(Sprite newIcon)
+    public void SetIconAndBackground(Sprite newIcon, Sprite newBackground)
     {
         icon.sprite = newIcon;
+        background.sprite = newBackground;
     }
 
     public void SetKeyCount(int count)
