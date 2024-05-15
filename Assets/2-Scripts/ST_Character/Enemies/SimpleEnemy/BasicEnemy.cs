@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,18 +44,18 @@ public class BasicEnemy : EnemyCharacter
     List<PlayerCharacter> playerInRange;
     PlayerCharacter selectedPlayerInRange;
 
-
-    //di prova
-    //[SerializeField] Transform tryTarget;
-
-    //[SerializeField] public float closeRange = 1;
-   
     NavMeshPath path;
 
     [Header("Pivot")]
     [SerializeField] Transform pivot;
 
     public StateMachine<BasicEnemyState> stateMachine { get; } = new();
+
+    //di prova
+    //[SerializeField] Transform tryTarget;
+
+    //[SerializeField] public float closeRange = 1;
+   
     
 
     Vector2 lastNonZeroDirection;
@@ -96,6 +97,44 @@ public class BasicEnemy : EnemyCharacter
     [HideInInspector] public Vector2 entryDestination;
     [HideInInspector] public bool canGoIdle = true;
 
+    public bool showDirections = false;
+    public int contextSteeringDirectionCount = 8;
+    internal ContextSteeringDirection[] chaseBehaviour;
+    internal ContextSteeringDirection[] avoidBehaviour;
+
+    internal struct ContextSteeringDirection
+    {
+        public Vector2 direction;
+        public Vector2 relativeDirection;
+        public Vector2 relativePos;
+        public float directionStrenght;
+
+        public void Initialize()
+        {
+            this.direction = new Vector2();
+            directionStrenght = 0;
+        }
+
+        public void SetDirection(Vector2 direction)
+        {
+            this.direction = direction;
+        }
+
+        public void SetRelativePos(Vector2 pos)
+        {
+            relativePos = pos;
+        }
+
+        public void SetDirectionStrenght(float strenght)
+        {
+            directionStrenght = strenght;
+        }
+
+        public Vector2 GetRelativeDirection(Transform relativeTransform)
+        {
+            return relativeTransform.InverseTransformVector(direction);
+        }
+    }
 
     protected override void InitialSetup()
     {
@@ -106,6 +145,29 @@ public class BasicEnemy : EnemyCharacter
              agent = GetComponent<NavMeshAgent>();
 
         currentHp = maxHp;
+
+        chaseBehaviour = new ContextSteeringDirection[contextSteeringDirectionCount];
+        avoidBehaviour = new ContextSteeringDirection[contextSteeringDirectionCount];
+
+      
+
+
+        for (int i = 0; i < contextSteeringDirectionCount; i++)
+        {
+            chaseBehaviour[i].Initialize();
+            avoidBehaviour[i].Initialize();
+
+            double radians = 2 * Math.PI / contextSteeringDirectionCount * i;
+
+            float vertical = MathF.Sin((float)radians);
+            float horizontal = MathF.Cos((float)radians);
+            
+
+            Vector2 dir = new Vector2(horizontal, vertical);
+            
+            Vector2 localDir = groundLevel.InverseTransformDirection(dir);
+            chaseBehaviour[i].SetDirection(localDir);
+        }
     }
 
     public void GoToPosition(Vector2 pos)
@@ -120,7 +182,7 @@ public class BasicEnemy : EnemyCharacter
 
         if (pos != null)
         {         
-            Move((Vector3)pos -transform.position,rb);          
+            //Move((Vector3)pos -transform.position,rb);          
         }
         else
         {
@@ -172,34 +234,40 @@ public class BasicEnemy : EnemyCharacter
 
     protected virtual void Update()
     {
-        if(AIActive)
+        if (AIActive)
             stateMachine.StateUpdate();
+
+        CalculateContextSteering();
     }
+
+
+
 
     public void FollowPath()
     {
-        if (!canMove)
-        {
-            rb.velocity = Vector2.zero;
-            return;
-        }
+        //if (!canMove)
+        //{
+        //    rb.velocity = Vector2.zero;
+        //    return;
+        //}
 
-        ActivateAgent();
+        //ActivateAgent();
 
         if (currentTarget != null)
         {
-            if (agent.CalculatePath(target.position, path))
-            {
-            //    if (path.corners.Length > 1)
-                    Move(path.corners[1] - path.corners[0], rb);
-                //else
-                //    Move(target.position - transform.position, rb);
+            CalculateContextSteering();
+            //if (agent.CalculatePath(target.position, path))
+            //{
+            //    //    if (path.corners.Length > 1)
+            //    //Move(path.corners[1] - path.corners[0], rb);
+            //    //else
+            //    //    Move(target.position - transform.position, rb);
 
-            }
-            else
-            {
-                rb.velocity = Vector2.zero;
-            }
+            //}
+            //else
+            //{
+            //    rb.velocity = Vector2.zero;
+            //}
         }
         else
         {
@@ -209,35 +277,80 @@ public class BasicEnemy : EnemyCharacter
 
     public void FollowPosition(Vector2 pos)
     {
-        if (!canMove)
+        //if (!canMove)
+        //{
+        //    rb.velocity = Vector2.zero;
+        //    return;
+        //}
+
+        //ActivateAgent();
+
+        //if (pos != null)
+        //{
+        //    if (agent.CalculatePath(pos, path))
+        //    {
+
+        //        //if (path.corners.Length > 1)
+        //           // Move(path.corners[1] - path.corners[0], rb);
+        //        //else
+        //        //    Move((Vector3)pos - transform.position, rb);
+                
+        //    }
+        //    else
+        //    {
+        //        rb.velocity = Vector2.zero;
+        //    }
+        //}
+        //else
+        //{
+        //    rb.velocity = Vector2.zero;
+        //}
+    }
+
+    public float csChaseDistance = 3;
+    public LayerMask csChaseLayerMask;
+
+    public void CalculateContextSteering()
+    {
+        if (target == null)
         {
-            rb.velocity = Vector2.zero;
             return;
         }
 
-        ActivateAgent();
+        int indexToSubstitute = -1;
+        float bestDot = 0;
 
-        if (pos != null)
+        for (int i = 0; i < contextSteeringDirectionCount; i++)
         {
-            if (agent.CalculatePath(pos, path))
-            {
+            chaseBehaviour[i].SetRelativePos(new Vector2(groundLevel.position.x + chaseBehaviour[i].direction.x, groundLevel.position.y + chaseBehaviour[i].direction.y));
 
-                //if (path.corners.Length > 1)
-                    Move(path.corners[1] - path.corners[0], rb);
-                //else
-                //    Move((Vector3)pos - transform.position, rb);
-                
+            float currentDot = Vector2.Dot(new Vector2(target.position.x-groundLevel.position.x, target.position.y - groundLevel.position.y).normalized, chaseBehaviour[i].GetRelativeDirection(groundLevel).normalized);
+            
+            if(indexToSubstitute < 0)
+            {
+                indexToSubstitute = i;
+                bestDot = currentDot;
             }
             else
             {
-                rb.velocity = Vector2.zero;
+                if (bestDot < currentDot)
+                {
+                    indexToSubstitute = i;
+                    bestDot = currentDot;
+                }
             }
         }
-        else
-        {
-            rb.velocity = Vector2.zero;
-        }
+
+        chaseBehaviour[indexToSubstitute].SetDirectionStrenght(1);
+        Move(chaseBehaviour[indexToSubstitute].GetRelativeDirection(groundLevel), rb);
+        //RaycastHit2D raycast = Physics2D.Raycast(groundLevel.position, chaseBehaviour[i].GetRelativeDirection(groundLevel), csChaseDistance, csChaseLayerMask);
+        Debug.Log(chaseBehaviour[indexToSubstitute].GetRelativeDirection(groundLevel));
+
+        //if (raycast.collider != null)
+        //    Debug.Log(raycast.distance);
+
     }
+
     
     public virtual void Move(Vector2 direction, Rigidbody2D rb)
     {
@@ -249,7 +362,7 @@ public class BasicEnemy : EnemyCharacter
 
         rb.velocity = direction * MoveSpeed;
 
-        isMoving = rb.velocity.magnitude > 0.2f;
+        isMoving = true;
 
         if (direction != Vector2.zero)
             lastNonZeroDirection = direction;
@@ -316,7 +429,7 @@ public class BasicEnemy : EnemyCharacter
 
                     newProjectile.transform.position = transform.position;
 
-                    selectedPlayerInRange = playerInRange[Random.Range(0, playerInRange.Count)];
+                    selectedPlayerInRange = playerInRange[UnityEngine.Random.Range(0, playerInRange.Count)];
 
 
 
@@ -438,13 +551,13 @@ public class BasicEnemy : EnemyCharacter
     public void ActivateAgent()
     {
         obstacle.enabled = false;
-        Agent.enabled = true;
+        Agent.enabled = false;
     }
 
     public void ActivateObstacle()
     {
         Agent.enabled = false;
-        obstacle.enabled = true;
+        obstacle.enabled = false;
     }
 
     public void Despawn()
@@ -457,6 +570,24 @@ public class BasicEnemy : EnemyCharacter
         actionCourotine=coroutine;
     }
 
-   
+    private void OnDrawGizmos()
+    {
+        Vector2 vec = transform.position;
+
+        Gizmos.DrawWireSphere(groundLevel.position, csChaseDistance);
+
+        if (showDirections)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(groundLevel.position, target.position);
+            Gizmos.color = Color.white;
+
+            for (int i = 0; i < contextSteeringDirectionCount; i++)
+            {
+                Gizmos.DrawLine(groundLevel.position, new Vector2(groundLevel.position.x + chaseBehaviour[i].direction.x, groundLevel.position.y + chaseBehaviour[i].direction.y));
+            }
+        }
+
+    }
 
 }
