@@ -97,12 +97,8 @@ public class BasicEnemy : EnemyCharacter
     [HideInInspector] public Vector2 entryDestination;
     [HideInInspector] public bool canGoIdle = true;
 
-    public bool showDirections = false;
-    public int contextSteeringDirectionCount = 8;
-    internal ContextSteeringDirection[] chaseBehaviour;
-    internal ContextSteeringDirection[] avoidBehaviour;
-
-    internal struct ContextSteeringDirection
+   
+    public struct ContextSteeringDirection
     {
         public Vector2 direction;
         public Vector2 relativeDirection;
@@ -148,8 +144,10 @@ public class BasicEnemy : EnemyCharacter
 
         chaseBehaviour = new ContextSteeringDirection[contextSteeringDirectionCount];
         avoidBehaviour = new ContextSteeringDirection[contextSteeringDirectionCount];
+        finalBehaviour = new ContextSteeringDirection[contextSteeringDirectionCount];
 
-      
+        //finalDirection = new ContextSteeringDirection();
+
 
 
         for (int i = 0; i < contextSteeringDirectionCount; i++)
@@ -167,6 +165,11 @@ public class BasicEnemy : EnemyCharacter
             
             Vector2 localDir = groundLevel.InverseTransformDirection(dir);
             chaseBehaviour[i].SetDirection(localDir);
+            avoidBehaviour[i].SetDirection(localDir);
+            finalBehaviour[i].SetDirection(localDir);
+
+
+            
         }
     }
 
@@ -237,44 +240,66 @@ public class BasicEnemy : EnemyCharacter
         if (AIActive)
             stateMachine.StateUpdate();
 
-        CalculateContextSteering();
+        
     }
 
 
 
-
+    Vector2 move;
     public void FollowPath()
     {
-        //if (!canMove)
-        //{
-        //    rb.velocity = Vector2.zero;
-        //    return;
-        //}
+        if (!canMove)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
 
         //ActivateAgent();
 
-        if (currentTarget != null)
-        {
-            CalculateContextSteering();
-            //if (agent.CalculatePath(target.position, path))
-            //{
-            //    //    if (path.corners.Length > 1)
-            //    //Move(path.corners[1] - path.corners[0], rb);
-            //    //else
-            //    //    Move(target.position - transform.position, rb);
+        //if (currentTarget != null)
+        //{
+        //    CalculateContextSteering();
+        //    //if (agent.CalculatePath(target.position, path))
+        //    //{
+        //    //    //    if (path.corners.Length > 1)
+        //    //    //Move(path.corners[1] - path.corners[0], rb);
+        //    //    //else
+        //    //    //    Move(target.position - transform.position, rb);
 
-            //}
-            //else
-            //{
-            //    rb.velocity = Vector2.zero;
-            //}
-        }
-        else
-        {
-            rb.velocity = Vector2.zero;
-        }
+        //    //}
+        //    //else
+        //    //{
+        //    //    rb.velocity = Vector2.zero;
+        //    //}
+        //}
+        //else
+        //{
+        //    rb.velocity = Vector2.zero;
+        //}
+
+        if(!isRunning )
+        StartCoroutine(CalculatePathAndSteering());
+
+         move = Vector2.zero;
+         move = (finalDirection*(finalStrenght*inc))/* + targetDirection*/;
+        Move(move, rb);
+    }
+    bool isRunning = false;
+    public float delay = 1;
+    IEnumerator CalculatePathAndSteering()
+    {
+        isRunning = true;
+        CalculateTargetDirection();
+        CalculateContextSteeringDirectionStrenght(chaseBehaviour);
+        CalculateContextSteeringAvoidDirectionStrenght(avoidBehaviour, csAvoidDistance, csAvoidLayerMask);
+        CalculateContextSteeringSummary();
+        CalculateFinalDirection();
+        yield return new WaitForSeconds(delay);
+        StartCoroutine(CalculatePathAndSteering());
     }
 
+
+    public float inc = 1;
     public void FollowPosition(Vector2 pos)
     {
         //if (!canMove)
@@ -294,7 +319,7 @@ public class BasicEnemy : EnemyCharacter
         //           // Move(path.corners[1] - path.corners[0], rb);
         //        //else
         //        //    Move((Vector3)pos - transform.position, rb);
-                
+
         //    }
         //    else
         //    {
@@ -305,12 +330,51 @@ public class BasicEnemy : EnemyCharacter
         //{
         //    rb.velocity = Vector2.zero;
         //}
+
     }
 
-    public float csChaseDistance = 3;
+    #region cs
+
+    public bool showDirections = false;
+    public int contextSteeringDirectionCount = 8;
+
+    internal ContextSteeringDirection[] chaseBehaviour;
+    internal ContextSteeringDirection[] avoidBehaviour;
+    internal ContextSteeringDirection[] finalBehaviour;
+
+    internal Vector2 targetDirection;
+    internal Vector2 finalDirection;
+    internal float finalStrenght;
+
+    public float csChaseDistance = 5;
     public LayerMask csChaseLayerMask;
 
-    public void CalculateContextSteering()
+    public float obstacleAvoidancePriority = 1;
+    public float csAvoidDistance = 5;
+    public LayerMask csAvoidLayerMask;
+
+
+    public void CalculateTargetDirection()
+    {
+        Vector2 agentDir = Vector2.zero;
+
+        if (currentTarget != null)
+        {
+            if (agent.CalculatePath(target.position, path))
+            {
+                //    if (path.corners.Length > 1)
+                agentDir = path.corners[1] - path.corners[0];
+                //else
+                //    Move(target.position - transform.position, rb);
+
+            }
+
+        }
+
+        targetDirection = agentDir;
+    }
+
+    public void CalculateContextSteeringDirectionStrenght(ContextSteeringDirection[] likedDirections)
     {
         if (target == null)
         {
@@ -319,14 +383,19 @@ public class BasicEnemy : EnemyCharacter
 
         int indexToSubstitute = -1;
         float bestDot = 0;
+        
 
         for (int i = 0; i < contextSteeringDirectionCount; i++)
         {
-            chaseBehaviour[i].SetRelativePos(new Vector2(groundLevel.position.x + chaseBehaviour[i].direction.x, groundLevel.position.y + chaseBehaviour[i].direction.y));
+            likedDirections[i].SetRelativePos(new Vector2(groundLevel.position.x + likedDirections[i].direction.x, groundLevel.position.y + likedDirections[i].direction.y));
 
-            float currentDot = Vector2.Dot(new Vector2(target.position.x-groundLevel.position.x, target.position.y - groundLevel.position.y).normalized, chaseBehaviour[i].GetRelativeDirection(groundLevel).normalized);
-            
-            if(indexToSubstitute < 0)
+            Vector2 localDir = new Vector2(groundLevel.position.x + targetDirection.x, groundLevel.position.y + targetDirection.y); 
+
+            float currentDot = Vector2.Dot(new Vector2(localDir.x-groundLevel.position.x, localDir.y - groundLevel.position.y).normalized, likedDirections[i].GetRelativeDirection(groundLevel).normalized);
+
+
+            //forse non serve
+            if (indexToSubstitute < 0)
             {
                 indexToSubstitute = i;
                 bestDot = currentDot;
@@ -339,25 +408,193 @@ public class BasicEnemy : EnemyCharacter
                     bestDot = currentDot;
                 }
             }
+
+            if (currentDot >= 0)
+            {
+                float powerDirection = MathF.Sin(currentDot);
+                likedDirections[i].SetDirectionStrenght(powerDirection);
+            }
+            else
+                likedDirections[i].SetDirectionStrenght(0);
         }
-
-        chaseBehaviour[indexToSubstitute].SetDirectionStrenght(1);
-        Move(chaseBehaviour[indexToSubstitute].GetRelativeDirection(groundLevel), rb);
+        favorite = new ContextSteeringDirection();
+        favorite = likedDirections[indexToSubstitute];
+        //Move(chaseBehaviour[indexToSubstitute].GetRelativeDirection(groundLevel), rb);
         //RaycastHit2D raycast = Physics2D.Raycast(groundLevel.position, chaseBehaviour[i].GetRelativeDirection(groundLevel), csChaseDistance, csChaseLayerMask);
-        Debug.Log(chaseBehaviour[indexToSubstitute].GetRelativeDirection(groundLevel));
-
+        //Debug.Log(chaseBehaviour[indexToSubstitute].GetRelativeDirection(groundLevel));
+        //Debug.Log(bestDot);
         //if (raycast.collider != null)
         //    Debug.Log(raycast.distance);
 
     }
+    ContextSteeringDirection favorite;
+    public void CalculateContextSteeringAvoidDirectionStrenght(ContextSteeringDirection[] directionsToAvoid,float distanceToConsider,LayerMask layerToAvoid)
+    {
+        for (int i = 0; i < contextSteeringDirectionCount; i++)
+        {
+            directionsToAvoid[i].SetRelativePos(new Vector2(groundLevel.position.x + directionsToAvoid[i].direction.x, groundLevel.position.y + directionsToAvoid[i].direction.y));
+            
+            RaycastHit2D[] raycast=new RaycastHit2D[2];
+            Physics2D.RaycastNonAlloc(groundLevel.position, directionsToAvoid[i].GetRelativeDirection(groundLevel), raycast, distanceToConsider, layerToAvoid);
 
+            //foreach(RaycastHit2D ray in raycast)
+            //{
+            //    if (ray.collider.gameObject.GetComponentInParent<EnemyCharacter>())
+            //    {
+            //        if((ray.collider.gameObject.GetComponentInParent<EnemyCharacter>() == )
+
+            //    }
+            //}
+
+
+            if (raycast[1].collider != null)
+            {
+                float dis = distanceToConsider - raycast[1].distance;
+                float per = dis / distanceToConsider;
+
+                if (per >= 0)
+                {
+                    directionsToAvoid[i].SetDirectionStrenght(per* obstacleAvoidancePriority);
+                }
+                else
+                    directionsToAvoid[i].SetDirectionStrenght(-per* obstacleAvoidancePriority);
+                
+            }
+            else
+                directionsToAvoid[i].SetDirectionStrenght(0);
+        }
+    }
     
+    public void CalculateContextSteeringSummary()
+    {
+
+        for (int i = 0; i < contextSteeringDirectionCount; i++)
+        {
+            finalBehaviour[i].SetRelativePos(new Vector2(groundLevel.position.x + finalBehaviour[i].direction.x, groundLevel.position.y + finalBehaviour[i].direction.y));
+
+            float strenght = chaseBehaviour[i].directionStrenght - avoidBehaviour[i].directionStrenght;
+
+            //if (strenght < 0)
+            //    strenght = 0;
+
+
+            finalBehaviour[i].SetDirectionStrenght(strenght);
+        }
+
+        //check inverse
+        //ContextSteeringDirection[] finalCopy = (ContextSteeringDirection[]) finalBehaviour.Clone();
+
+        ContextSteeringDirection[] currentCopy = new ContextSteeringDirection[contextSteeringDirectionCount];
+        currentCopy = (ContextSteeringDirection[])finalBehaviour.Clone();
+
+
+        int half = contextSteeringDirectionCount / 2;
+        for (int i = 0; i < contextSteeringDirectionCount; i++)
+        {
+            float strenght = 0;
+            if (currentCopy[i].directionStrenght < 0)
+            {
+
+                if (i < half)
+                {
+                    strenght = (MathF.Abs(currentCopy[i].directionStrenght) + currentCopy[i + half].directionStrenght) * strenghtMultiplier;
+                    finalBehaviour[i + half].SetDirectionStrenght(strenght);
+                }
+                else
+                {
+                    strenght = (MathF.Abs(currentCopy[i].directionStrenght) + currentCopy[i - half].directionStrenght) * strenghtMultiplier;
+                    finalBehaviour[i - half].SetDirectionStrenght(strenght);
+                }
+
+
+            }
+        }
+
+    }
+    public float strenghtMultiplier = 1;
+    public void CalculateFinalDirection()
+    {
+        Vector2 avarenge = Vector2.zero;
+        float avarangeStrenght = 0;
+        int div = 0;
+
+
+        Vector2 vec = Vector2.zero;
+        int bestId = 0;
+        float currentBest=0;
+
+        //best
+        //for (int i = 0; i < contextSteeringDirectionCount; i++)
+        //{
+        //    if (finalBehaviour[i].directionStrenght > currentBest)
+        //    {
+        //        bestId = i;
+        //        currentBest = finalBehaviour[i].directionStrenght;
+        //    }
+
+        //}
+
+        ////finalDirection = finalBehaviour[bestId].GetRelativeDirection(groundLevel);
+        ////finalStrenght = finalBehaviour[bestId].directionStrenght;
+        //vec = finalBehaviour[bestId].GetRelativeDirection(groundLevel);
+
+
+        //Avarange
+        for (int i = 0; i < contextSteeringDirectionCount; i++)
+        {
+            if (finalBehaviour[i].directionStrenght > 0)
+            {
+                avarenge += finalBehaviour[i].GetRelativeDirection(groundLevel);
+                div++;
+
+            avarangeStrenght += finalBehaviour[i].directionStrenght;
+            }
+        }
+        finalDirection = avarenge / div;
+        finalStrenght = avarangeStrenght / div;
+
+        bool allow = false;
+
+        Vector2 localDir = new Vector2(groundLevel.position.x + finalDirection.x, groundLevel.position.y + finalDirection.y);
+        float currentDot = Vector2.Dot(new Vector2(localDir.x - groundLevel.position.x, localDir.y - groundLevel.position.y).normalized, favorite.GetRelativeDirection(groundLevel).normalized);
+
+
+        if (currentDot > 0.5f)
+            allow = true;
+        else
+        {
+            finalDirection = finalDirection + favorite.GetRelativeDirection(groundLevel);
+        }
+
+        //float bestDot = 0;
+        //int bestDotId = -1;
+
+        //check if good or stop
+        //for (int i = 0; i < contextSteeringDirectionCount; i++)
+        //{
+        //    if (chaseBehaviour[i].relativeDirection == vec)
+        //    {
+        //        if (finalBehaviour[i].directionStrenght > 0)
+        //            allow = true;
+        //    }
+        //}
+
+        //if (!allow)
+        //{
+        //    finalDirection = Vector2.zero;
+        //    finalStrenght *= 0.2f;
+        //}
+    }
+
+    #endregion
+
     public virtual void Move(Vector2 direction, Rigidbody2D rb)
     {
         if (obstacle.enabled)
             return;
+       
 
-        if (!direction.normalized.Equals(direction))
+        //if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
 
         rb.velocity = direction * MoveSpeed;
@@ -398,8 +635,10 @@ public class BasicEnemy : EnemyCharacter
     //forse nei figli
     public IEnumerator Attack()
     {
+        StopCoroutine(CalculatePathAndSteering());
+        isRunning = false;
 
-        isActioning= true;
+        isActioning = true;
 
         if (panicAttack)
         {
@@ -551,12 +790,12 @@ public class BasicEnemy : EnemyCharacter
     public void ActivateAgent()
     {
         obstacle.enabled = false;
-        Agent.enabled = false;
+        Agent.enabled = true;
     }
 
     public void ActivateObstacle()
     {
-        Agent.enabled = false;
+        Agent.enabled = true;
         obstacle.enabled = false;
     }
 
@@ -569,23 +808,90 @@ public class BasicEnemy : EnemyCharacter
     {
         actionCourotine=coroutine;
     }
+    public bool showLikedDirections = false;
+    public bool showUnlikedDirections = false;
+    public bool showCounterAvoid = false;
+    public bool showFinalDirections = false;
 
+    public bool showBestDirections = false;
+    public bool showMoveDirections = false;
     private void OnDrawGizmos()
     {
         Vector2 vec = transform.position;
 
-        Gizmos.DrawWireSphere(groundLevel.position, csChaseDistance);
+        Gizmos.DrawWireSphere(groundLevel.position, csAvoidDistance);
 
         if (showDirections)
         {
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(groundLevel.position, target.position);
+            Gizmos.color = Color.yellow;
+
+            //if(target!=null)
+            //    Gizmos.DrawLine(groundLevel.position, target.position);
+
             Gizmos.color = Color.white;
 
             for (int i = 0; i < contextSteeringDirectionCount; i++)
             {
-                Gizmos.DrawLine(groundLevel.position, new Vector2(groundLevel.position.x + chaseBehaviour[i].direction.x, groundLevel.position.y + chaseBehaviour[i].direction.y));
+                if(showLikedDirections)
+                {
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawLine(groundLevel.position, new Vector2(
+                        groundLevel.position.x + (chaseBehaviour[i].direction.x * chaseBehaviour[i].directionStrenght), 
+                        groundLevel.position.y + (chaseBehaviour[i].direction.y * chaseBehaviour[i].directionStrenght)));
+
+
+                }
+
+                if (showUnlikedDirections)
+                {
+                    Gizmos.color = Color.red; ;
+                    Gizmos.DrawLine(groundLevel.position, new Vector2(
+                        groundLevel.position.x + (avoidBehaviour[i].direction.x * avoidBehaviour[i].directionStrenght),
+                        groundLevel.position.y + (avoidBehaviour[i].direction.y * avoidBehaviour[i].directionStrenght)));
+
+                }
+
+                //if (showCounterAvoid)
+                //{
+                //    Gizmos.color = Color.yellow; ;
+                //    Gizmos.DrawLine(groundLevel.position, new Vector2(
+                //        groundLevel.position.x + (avoidBehaviour[i].direction.x * finalCopy[i].directionStrenght),
+                //        groundLevel.position.y + (avoidBehaviour[i].direction.y * finalCopy[i].directionStrenght)));
+
+                //}
+
+                if (showFinalDirections)
+                {
+                    Gizmos.color = Color.white; ;
+                    Gizmos.DrawLine(groundLevel.position, new Vector2(
+                        groundLevel.position.x + (finalBehaviour[i].direction.x * finalBehaviour[i].directionStrenght),
+                        groundLevel.position.y + (finalBehaviour[i].direction.y * finalBehaviour[i].directionStrenght)));
+
+                }
+
+
             }
+            if (showBestDirections)
+            {
+                    Gizmos.color = Color.cyan;
+                Gizmos.DrawLine(groundLevel.position, new Vector2(
+                            groundLevel.position.x + (move.x * (finalStrenght*inc)),
+                            groundLevel.position.y + (move.y * (finalStrenght*inc))));
+
+            }
+            if (showMoveDirections)
+            {
+                Gizmos.color = Color.blue;
+            Gizmos.DrawLine(groundLevel.position, new Vector2(
+                        groundLevel.position.x + (finalDirection.x*finalStrenght),
+                        groundLevel.position.y + (finalDirection.y*finalStrenght)));
+
+            }
+
+
+
+            Gizmos.color = Color.white;
+
         }
 
     }

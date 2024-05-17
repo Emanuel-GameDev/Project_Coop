@@ -432,15 +432,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b41f803478156e045bd4d13ca95728db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 2
-  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
-  _OnParryColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   _walkDustParticles: {fileID: 0}
+  fadeSpeedOnHit: 2
+  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   stunned: 0
   underAggro: 0
   inLove: 0
   bleeding: 0
   isDead: 0
+  colliders: []
   damageReceivedMultiplier: 1
   onHit:
     m_PersistentCalls:
@@ -497,6 +497,26 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   entryDestination: {x: 0, y: 0}
   canGoIdle: 1
+  delay: 0.2
+  inc: 20
+  showDirections: 0
+  contextSteeringDirectionCount: 8
+  csChaseDistance: 0.1
+  csChaseLayerMask:
+    serializedVersion: 2
+    m_Bits: 1088
+  obstacleAvoidancePriority: 50
+  csAvoidDistance: 3
+  csAvoidLayerMask:
+    serializedVersion: 2
+    m_Bits: 1536
+  strenghtMultiplier: 1
+  showLikedDirections: 0
+  showUnlikedDirections: 0
+  showCounterAvoid: 0
+  showFinalDirections: 0
+  showBestDirections: 0
+  showMoveDirections: 0
 --- !u!195 &725418225090187483
 NavMeshAgent:
   m_ObjectHideFlags: 0
