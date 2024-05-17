@@ -10,7 +10,7 @@ public class LabirintPlayer : InputReceiver
     private float moveSpeed = 10f;
     [SerializeField, Range(0, 1f)]
     private float directionTreshold = 0.2f;
-    [SceneDetails]
+    [SerializeField]
     private float reachCenterDistance = 0.05f;
     private Grid grid;
     private Tilemap wallTilemap;
