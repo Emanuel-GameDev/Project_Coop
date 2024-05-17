@@ -890,10 +890,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6da214327990b4b4395e8dfcd89dc313, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 2
-  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
-  _OnParryColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   _walkDustParticles: {fileID: 3611517289115023779}
+  fadeSpeedOnHit: 2
+  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   stunned: 0
   underAggro: 0
   inLove: 0
@@ -950,6 +949,8 @@ MonoBehaviour:
   switchCharacterCooldown: 10
   invulnerabilityTime: 1
   ressInteracter: {fileID: 6463082202739045687}
+  onHitPushTimer: 0.2
+  onHitPushForce: 1
   characterController: {fileID: 0}
   recentlyInputTimer: 3
   protectedByTank: 0
@@ -1046,8 +1047,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0026045442, y: 0.5800959}
-  m_Size: {x: 1.4056271, y: 1.7693558}
+  m_Offset: {x: 0, y: 0.5800959}
+  m_Size: {x: 1.5167751, y: 1.7693558}
   m_Direction: 0
 --- !u!1 &7519209064113368251
 GameObject:
