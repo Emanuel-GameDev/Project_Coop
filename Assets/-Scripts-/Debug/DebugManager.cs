@@ -18,6 +18,8 @@ public class DebugManager : MonoBehaviour
 
     [SerializeField, Tooltip(text)]
     private bool guardaQuestoTooltipPerLeIstruzioni = false;
+    [SerializeField]
+    string loadSceneName;
 
     const string text = "DebugMode attiva e disattiva la modalità di Debug i comandi successivi funzionano solo se è abilitata.\n" +
         "TargetCharacter è il personaggio a cui verrnno dati gli Ability Upgrade o PowerUp.\n" +
@@ -101,17 +103,14 @@ public class DebugManager : MonoBehaviour
             {
                 SaveGame();
             }
-
             if (Input.GetKeyDown(KeyCode.M))
             {
                 KillPlayer();
             }
-
             if (Input.GetKeyDown(KeyCode.G))
             {
                 ChallengeManager.Instance.selectedChallenge.AutoComplete();
             }
-
             if (Input.GetKeyDown(KeyCode.J))
             {
                 SceneSetting sceneSetting = new(SceneSaveSettings.ChallengesSaved);
@@ -124,22 +123,29 @@ public class DebugManager : MonoBehaviour
                 sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
                 SaveManager.Instance.SaveSceneData(sceneSetting);
             }
-
             if (Input.GetKeyDown(KeyCode.I))
             {
                 SaveManager.Instance.ClearSaveData();
             }
-
             if (Input.GetKeyDown(KeyCode.N))
             {
                 CharacterSaveData saveData = SaveManager.Instance.GetPlayerSaveData(targetCharacter);
-               
-
-                Debug.Log($"coin: {saveData.extraData.coin}, key: {saveData.extraData.key}");
+                foreach (PlayerCharacter p in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
+                {
+                    p.ExtraData.coin += 9999;
+                    p.ExtraData.key += 9999;
+                }
+                    Debug.Log($"coin: {saveData.extraData.coin}, key: {saveData.extraData.key}");
             }
 
             if (guardaQuestoTooltipPerLeIstruzioni) guardaQuestoTooltipPerLeIstruzioni = false;
             istructions = text;
+
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                if(!string.IsNullOrEmpty(loadSceneName))
+                    GameManager.Instance.LoadScene(loadSceneName);
+            }
         }
     }
 

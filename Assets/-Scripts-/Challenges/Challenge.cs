@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 
 public class Challenge : MonoBehaviour
 {
@@ -60,6 +61,8 @@ public class Challenge : MonoBehaviour
 
 
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(true);
+        ChallengeManager.Instance.DeactivateInteractable();
+        DisplayChallengeDescription();
 
     }
     public virtual void OnFailChallenge()
@@ -77,8 +80,7 @@ public class Challenge : MonoBehaviour
         Debug.Log("HAI VINTO");
         challengeCompleted = true;
 
-        onChallengeSuccessEvent?.Invoke();
-
+       
         //RewardPopUP
         foreach (Transform HPContainer in HPHandler.Instance.HpContainerTransform)
         {
@@ -119,17 +121,25 @@ public class Challenge : MonoBehaviour
         {
             p.ExtraData.coin += coinsOnSuccess;
             p.ExtraData.key += keysOnSuccess;
+            if(p.isDead)
+            {
+                p.Ress();
+            }
+           
         }
-        SaveManager.Instance.SavePlayersData();
 
         PlayerCharacterPoolManager.Instance.HealAllPlayerFull();
-      
+        SaveManager.Instance.SavePlayersData();
+
+       
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
         ChallengeManager.Instance.SaveChallengeCompleted(this.name, challengeCompleted);
-        
+
+        onChallengeSuccessEvent?.Invoke();
 
         challengeUI.SetUpUI();
         ResetChallenge();
+        ChallengeManager.Instance.ActivateInteractable();
     }
     public virtual void AddToSpawned(EnemyCharacter tempEnemy)
     {
@@ -164,7 +174,7 @@ public class Challenge : MonoBehaviour
         enemySpawned = false;
         challengeStarted = false;
         ChallengeManager.Instance.interacted = false;
-        ChallengeManager.Instance.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        //ChallengeManager.Instance.gameObject.GetComponent<SpriteRenderer>().enabled = true;
     }
 
     protected void DisplayTimer(float timeToDisplay)
@@ -179,6 +189,12 @@ public class Challenge : MonoBehaviour
 
         ChallengeManager.Instance.timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
+    }
+
+    protected void DisplayChallengeDescription()
+    {
+        ChallengeManager.Instance.challengeText.GetComponent<LocalizeStringEvent>().StringReference = challengeDescription;
+        //ChallengeManager.Instance.challengeText.text = ChallengeManager.Instance.challengeText.GetComponent<LocalizeStringEvent>().StringReference.ToString();
     }
 
     internal void AutoComplete()

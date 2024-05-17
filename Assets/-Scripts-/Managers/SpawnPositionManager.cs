@@ -48,7 +48,13 @@ public class SpawnPositionManager : MonoBehaviour
         SpawnPositionEntrance entrance = null;
 
         if (scenesEntrances.ContainsKey(sceneName))
+        {
             entrance = scenesEntrances[sceneName];
+            foreach (SpawnPositionData pos in entrance.posData)
+            {
+                pos.free = true;
+            }
+        }
         else
             entrance = SceneSpawnPositionHandler.Instance.GetSpawnPosition();
 

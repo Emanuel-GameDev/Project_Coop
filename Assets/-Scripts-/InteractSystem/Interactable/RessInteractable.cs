@@ -17,6 +17,7 @@ public class RessInteractable : MonoBehaviour, IInteractable
     private Slider ressSlider;
 
     private List<IInteracter> interacters = new();
+    private List<IInteracter> doInteraction = new();
 
     private int triggerCount = 0;
 
@@ -95,6 +96,8 @@ public class RessInteractable : MonoBehaviour, IInteractable
         if (other.TryGetComponent<IInteracter>(out var interacter))
         {
             interacter.DisableInteraction(this);
+            if(doInteraction.Contains(interacter))
+                AbortInteraction(interacter);
             interacters.Remove(interacter);
 
             if (interacterVisualization != null)
@@ -126,15 +129,21 @@ public class RessInteractable : MonoBehaviour, IInteractable
             elapsedTime = 0;
         }
 
+        doInteraction.Add(interacter);
+
         ressCount++;
     }
 
     public void AbortInteraction(IInteracter interacter)
     {
-        ressCount--;
-        if (ressCount <= 0)
+        if (doInteraction.Contains(interacter))
         {
-            updateSlider = false;
+            ressCount--;
+            if (ressCount <= 0)
+            {
+                updateSlider = false;
+            }
+            doInteraction.Remove(interacter);
         }
     }
 }

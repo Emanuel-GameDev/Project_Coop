@@ -28,11 +28,13 @@ public class JudeAbilityTutorialFase : TutorialFase
         tutorialManager.objectiveNumberToReach.text = "1";
         tutorialManager.objectiveNumberReached.text = "0";
 
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.ranged);
+
         tutorialManager.DeactivateAllPlayerInputs();
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
-
+        tutorialManager.ranged.AddPowerUp(tutorialManager.powerUpDebug);
 
         tutorialManager.DeactivateEnemyAI();
         
@@ -87,6 +89,7 @@ public class JudeAbilityTutorialFase : TutorialFase
     public override void Exit()
     {
         base.Exit();
+        tutorialManager.ranged.RemovePowerUp(tutorialManager.powerUpDebug);
 
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
         tutorialManager.DeactivateAllPlayerInputs();

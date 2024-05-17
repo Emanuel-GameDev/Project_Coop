@@ -6,17 +6,11 @@ using UnityEngine.InputSystem;
 
 public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInteracter
 {
-
-    //shader
-    [Header("ProvaShaderGraph Hit e Parry")]
-    [SerializeField] private float fadeSpeed = 2f;
-    [SerializeField] protected Color _OnHitColor = Color.red;
-    [SerializeField] protected Color _OnParryColor = Color.yellow;
-
+  
     [Header("General VFX")]
     [SerializeField] protected ParticleSystem _walkDustParticles;
-    
-    
+    [SerializeField] private float fadeSpeedOnHit = 2f;
+    [SerializeField] protected Color _OnHitColor = Color.red;
 
     private Color _materialTintColor;
     private Material spriteMaterial;
@@ -30,6 +24,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 
     public bool isDead = false;
     protected Rigidbody2D rb;
+    [SerializeField] protected List<Collider2D> colliders ;
     protected List<Condition> conditions;
 
     private bool canInteract;
@@ -202,7 +197,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     {
         while (_materialTintColor.a > 0)
         {
-            _materialTintColor.a = Mathf.Clamp01(_materialTintColor.a - fadeSpeed * Time.deltaTime);
+            _materialTintColor.a = Mathf.Clamp01(_materialTintColor.a - fadeSpeedOnHit * Time.deltaTime);
             spriteMaterial.SetColor("_Tint", _materialTintColor);
 
             yield return new WaitForEndOfFrame();

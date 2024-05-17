@@ -13,7 +13,8 @@ public class LilithShopMenu : Menu
     [SerializeField] string settingSaveName = "LilithShopFirstTimeInteraction";
     SceneSetting sceneSetting;
 
-    
+    [SerializeField] AudioSource musicaWorldMap;
+    [SerializeField] AudioSource shopMusicSource;
 
     public override void Start()
     {
@@ -98,6 +99,8 @@ public class LilithShopMenu : Menu
         }
         else
             OpenAnimationEvent();
+
+        musicaWorldMap.Play();
     }
 
 
@@ -142,6 +145,8 @@ public class LilithShopMenu : Menu
 
 
         shopGroup.GetComponent<Animation>().Play("LilithShopEntrance");
+
+        StartCoroutine(StartAudios());
     }
 
     public override void CloseMenu()
@@ -173,5 +178,15 @@ public class LilithShopMenu : Menu
             gameObject.GetComponentInParent<PressInteractable>().CancelInteraction(pc);
         }
         shopGroup.SetActive(false);
+        shopMusicSource.Stop();
+        musicaWorldMap.Play();
+    }
+
+    IEnumerator StartAudios()
+    {
+        //AudioManager.Instance.PlayAudioClip(openingAudioClip, transform);
+        yield return new WaitForSeconds(0.5f);
+        shopMusicSource.Play();
+        musicaWorldMap.Pause();
     }
 }

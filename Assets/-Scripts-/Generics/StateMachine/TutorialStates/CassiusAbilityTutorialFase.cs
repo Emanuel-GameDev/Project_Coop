@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -30,6 +31,7 @@ public class CassiusAbilityTutorialFase : TutorialFase
         tutorialManager.objectiveNumbersGroup.SetActive(true);
         tutorialManager.objectiveNumberToReach.text = "1";
         tutorialManager.objectiveNumberReached.text = "0";
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.healer);
 
         tutorialManager.DeactivateAllPlayerInputs();
 
@@ -37,6 +39,8 @@ public class CassiusAbilityTutorialFase : TutorialFase
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
         numberOfHealAreaExpired = 0;
+
+        tutorialManager.healer.AddPowerUp(tutorialManager.powerUpDebug);
     }
 
     private void HealAreaActivated(object obj)
@@ -94,6 +98,8 @@ public class CassiusAbilityTutorialFase : TutorialFase
     public override void Exit()
     {
         base.Exit();
+
+        tutorialManager.healer.RemovePowerUp(tutorialManager.powerUpDebug);
 
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
         tutorialManager.DeactivateAllPlayerInputs();

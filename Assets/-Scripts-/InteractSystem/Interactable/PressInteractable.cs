@@ -55,6 +55,9 @@ public class PressInteractable : MonoBehaviour, IInteractable
         {
             interacter.DisableInteraction(this);
 
+            if (interacters.Contains(interacter))
+                interacters.Remove(interacter);
+            
             if (interacterVisualization != null)
             {
                 triggerCount--;

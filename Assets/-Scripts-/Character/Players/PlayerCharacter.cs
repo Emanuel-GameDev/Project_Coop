@@ -30,6 +30,11 @@ public abstract class PlayerCharacter : Character
     protected float invulnerabilityTime;
     [SerializeField, Tooltip("Reference per l'interactable del ress")]
     protected GameObject ressInteracter;
+    [SerializeField]
+    protected float onHitPushTimer = 0.2f;
+    [SerializeField]
+    protected float onHitPushForce = 1;
+
 
     protected float lastestCharacterSwitch;
     protected float currentHp;
@@ -247,6 +252,7 @@ public abstract class PlayerCharacter : Character
             SetHitMaterialColor(_OnHitColor);
 
             OnHit?.Invoke();
+            StartCoroutine(PushCharacter(data.dealer.dealerTransform.transform.position, onHitPushForce, onHitPushTimer));
 
             if (protectedByTank && data.blockedByTank)
             {
@@ -257,7 +263,7 @@ public abstract class PlayerCharacter : Character
                 PubSub.Instance.Notify(EMessageType.characterDamaged, this);
             }
 
-            if (CurrentHp <= 0)
+            if (CurrentHp <= 0 )
             {
                 onDeath?.Invoke();
                 Die();
@@ -274,6 +280,12 @@ public abstract class PlayerCharacter : Character
         characterController.GetInputHandler().PlayerInput.actions.FindAction("Option").Enable();
         ressInteracter.gameObject.SetActive(true);
         isDead = true;
+        
+        foreach(Collider2D coll in colliders)
+        {
+            coll.enabled = false;
+        }
+
         PlayerCharacterPoolManager.Instance.PlayerIsDead();
         TargetManager.Instance.ChangeTarget(this);
     }
@@ -281,23 +293,33 @@ public abstract class PlayerCharacter : Character
     public virtual void Ress()
     {
         characterController.GetInputHandler().PlayerInput.actions.Enable();
+        isDead = false;
+
+        foreach (Collider2D coll in colliders)
+        {
+            coll.enabled = true;
+        }
         TakeHeal(new DamageData(MathF.Floor( MaxHp/2), this));
         ressInteracter.gameObject.SetActive(false);
-        isDead = false;
         PlayerCharacterPoolManager.Instance.PlayerIsRessed();   
     }
 
 
     public virtual void TakeHeal(DamageData data)
     {
-        if (data.condition != null)
-            RemoveFromConditions(data.condition);
+        if (!isDead)
+        {
+            if (data.condition != null)
+                RemoveFromConditions(data.condition);
 
-        CurrentHp += data.damage;
-        PubSub.Instance.Notify(EMessageType.characterDamaged, this);
+            CurrentHp += data.damage;
+            PubSub.Instance.Notify(EMessageType.characterDamaged, this);
 
-        damager.RemoveCondition();
-        Debug.Log($"Healer: {data.dealer}, Heal: {data.damage}, Condition Removed: {data.condition}");
+            damager.RemoveCondition();
+            Debug.Log($"Healer: {data.dealer}, Heal: {data.damage}, Condition Removed: {data.condition}");
+
+        }
+
     }
 
     public override DamageData GetDamageData()

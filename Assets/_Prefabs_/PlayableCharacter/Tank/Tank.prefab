@@ -1652,6 +1652,9 @@ MonoBehaviour:
   inLove: 0
   bleeding: 0
   isDead: 0
+  colliders:
+  - {fileID: 1945173145726264731}
+  - {fileID: 4253467473740823511}
   damageReceivedMultiplier: 1
   onHit:
     m_PersistentCalls:
@@ -1712,7 +1715,7 @@ MonoBehaviour:
   maxStamina: 100
   blockTimer: 0.2
   perfectBlockDamage: 10
-  blockAngle: 90
+  blockAngle: 360
   perfectBlockTimeWindow: 0.7
   blockMoveSpeed: 0.001
   aggroRange: 100

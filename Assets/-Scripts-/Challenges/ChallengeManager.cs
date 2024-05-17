@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ChallengeManager : MonoBehaviour, IInteractable
+public class ChallengeManager : MonoBehaviour
 {
 
     private static ChallengeManager _instance;
@@ -40,12 +41,25 @@ public class ChallengeManager : MonoBehaviour, IInteractable
 
     [Header("Timer")]
     [SerializeField] public TextMeshProUGUI timerText;
+    [SerializeField] public TextMeshProUGUI challengeText;
 
 
     [HideInInspector] public Challenge selectedChallenge;
-    [HideInInspector] public bool interacted;
+     public bool interacted;
     [HideInInspector] public UnityEvent onInteractionAction;
-
+    [SerializeField] private PressInteractable pressInteractable;
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+           
+        }
+    }
     private void Start()
     {
         SaveManager.Instance.LoadData();
@@ -144,7 +158,7 @@ public class ChallengeManager : MonoBehaviour, IInteractable
         }
     }
 
-    public void Interact(IInteracter interacter)
+    public void Interact()
     {
         if (!interacted)
         {
@@ -159,42 +173,26 @@ public class ChallengeManager : MonoBehaviour, IInteractable
     }
 
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.TryGetComponent<IInteracter>(out var interacter) && !interacted)
-        {
-            interacter.EnableInteraction(this);
-            GetComponent<SpriteRenderer>().enabled = true;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.TryGetComponent<IInteracter>(out var interacter))
-        {
-            interacter.DisableInteraction(this);
-            GetComponent<SpriteRenderer>().enabled = false;
-        }
-    }
-
-    public void CancelInteraction(IInteracter interacter)
-    {
-
-    }
-
-    public IInteracter GetFirstInteracter()
-    {
-        return null;
-    }
-
-    public void AbortInteraction(IInteracter interacter)
-    {
-
-    }
     private void OnInteraction()
     {
         MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetFirstPlayer());
         dialogueBox.RemoveAllDialogueEnd();
-        gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        
+    }
+
+    public void DeactivateInteractable()
+    {
+        if (pressInteractable == null)
+            pressInteractable = GetComponentInChildren<PressInteractable>();
+
+        pressInteractable.gameObject.SetActive(false);
+        pressInteractable.CancelAllInteraction();
+    }
+    internal void ActivateInteractable()
+    {
+        if (pressInteractable == null)
+            pressInteractable = GetComponentInChildren<PressInteractable>(true);
+
+        pressInteractable.gameObject.SetActive(true);
     }
 }

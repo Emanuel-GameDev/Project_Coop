@@ -30,6 +30,8 @@ public class BrutusAbilityTutorialFase : TutorialFase
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
         tutorialManager.objectiveNumbersGroup.SetActive(true);
 
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.dps);
+
         tutorialManager.ResetStartingCharacterAssosiacion();
 
 
@@ -38,8 +40,8 @@ public class BrutusAbilityTutorialFase : TutorialFase
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
+        tutorialManager.dps.AddPowerUp(tutorialManager.powerUpDebug);
 
-        
         tutorialManager.DeactivateEnemyAI();
         hitCounter = 0;
         tutorialManager.objectiveNumberToReach.text = "3";
@@ -133,6 +135,7 @@ public class BrutusAbilityTutorialFase : TutorialFase
         tutorialManager.PlayDialogue(faseData.faseEndDialogue);
         tutorialManager.DeactivateEnemyAI();
 
+        tutorialManager.dps.RemovePowerUp(tutorialManager.powerUpDebug);
 
         PubSub.Instance.UnregisterFunction(EMessageType.uniqueAbilityActivated, AllowUpdate);
         PubSub.Instance.UnregisterFunction(EMessageType.characterHitted, UpdateCounter);

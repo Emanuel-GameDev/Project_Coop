@@ -70,6 +70,8 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] MenuInfo startTutorialMenu;
     [SerializeField] MenuInfo continueTutorialMenu;
 
+    public Image currentTutorialFaseImage;
+
     [Serializable]
     public class Fase
     {
@@ -160,6 +162,12 @@ public class TutorialManager : MonoBehaviour
         }
 
 
+    }
+
+    public void ChangeAndActivateCurrentCharacterImage(PlayerCharacter character)
+    {
+        currentTutorialFaseImage.sprite = GameManager.Instance.GetCharacterData(character.Character).DialogueSprite;
+        currentTutorialFaseImage.gameObject.SetActive(true);
     }
 
     private void DisableSkipSlider(InputAction.CallbackContext context)
@@ -262,6 +270,8 @@ public class TutorialManager : MonoBehaviour
         
         lilithBaloon.SetActive(false);
         playableDirector.Play();
+
+
     }
 
     private void SetUpCharacters()
@@ -481,11 +491,18 @@ public class TutorialManager : MonoBehaviour
             receiver.SetPlayerCharacter(startingCharacters[ih]);
         }
     }
-
+    [SerializeField] public PowerUp powerUpDebug;
 
     private void TutorialEnd()
     {
         dialogueBox.OnDialogueEnded -= TutorialEnd;
+
+        //dps.RemovePowerUp(powerUpDebug);
+        //healer.RemovePowerUp(powerUpDebug);
+        //ranged.RemovePowerUp(powerUpDebug);
+        //tank.RemovePowerUp(powerUpDebug);
+
+
 
         foreach (PlayerCharacter character in characters)
         {
@@ -632,6 +649,8 @@ public class TutorialManager : MonoBehaviour
         healer.GetRigidBody().velocity = Vector2.zero;
         ranged.GetRigidBody().velocity = Vector2.zero;
         tank.GetRigidBody().velocity = Vector2.zero;
+
+        
 
        
     }
