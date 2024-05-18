@@ -106,6 +106,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private bool mustDoSecondAttack = false;
     private bool canBlock = true;
     private bool comboStarted = false;
+    private bool inAttackAnimation = false;
 
    
     private int perfectBlockCount = 0;
@@ -186,6 +187,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         else if (context.performed && !isBlocking)
         {         
             isAttacking = true;
+           
             ActivateHyperArmor();
             SetCanMove(false, rb);
             //Animaizone Inizio Attacco
@@ -196,7 +198,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
            
         }
 
-        if (context.canceled && isAttacking)
+        if (context.canceled && isAttacking && !inAttackAnimation)
         {
             
             if (chargedAttackReady)
@@ -207,6 +209,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             }
             else 
             {
+                inAttackAnimation = true;
                 animator.SetTrigger("Attack");
             }
         }
@@ -225,11 +228,11 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         chargedAttackReady = false;
         isChargingAttack = false;
         comboStarted = false;
+        inAttackAnimation = false;
         SetCanMove(true, rb);
 
         Utility.DebugTrace("ResetAttack");
     }
-
     public void ChargingAttack()
     {
         isChargingAttack = true;
