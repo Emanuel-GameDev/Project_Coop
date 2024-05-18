@@ -78,7 +78,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
 
     //private bool doubleAttack => upgradeStatus[AbilityUpgrade.Ability1];
-    private bool chargeattack => upgradeStatus[AbilityUpgrade.Ability1];
+    private bool chargeAttack => upgradeStatus[AbilityUpgrade.Ability1];
     private bool maximizedStun => upgradeStatus[AbilityUpgrade.Ability2];
     private bool implacableAttack => upgradeStatus[AbilityUpgrade.Ability3];
     private bool damageOnParry => upgradeStatus[AbilityUpgrade.Ability4];
@@ -179,9 +179,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         //Cercar soluzione forse
         if (stunned) return;
-        if (context.performed && isBlocking)
+        if (context.performed && isBlocking && chargeAttack)
         {
-
+            Debug.Log("inizioCarica");
         }
         else if (context.performed && !isBlocking)
         {         
