@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -21,8 +20,15 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     [SerializeField, Tooltip("Sprite del segnale visivo se attacco caricato pronto")]
     GameObject chargedAttackSprite;
 
-    [Header("Block")]
+    [Header("ChargeAttack")]
+    [SerializeField, Tooltip("Velocità movimento in carica")]
+    float chargeSpeed = 5f;
+    [SerializeField, Tooltip("durata carica se non interrotta")]
+    float chargeDuration = 5f;
+    [SerializeField, Tooltip("danno carica")]
+    float chargeDamage;
 
+    [Header("Block")]
     [SerializeField, Tooltip("Quantit� di danno parabile prima di rottura parata")]
     float maxStamina;
     [SerializeField, Tooltip("timer tra una parata in altra")]
@@ -71,7 +77,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     float additionalStunDuration = 5;
 
 
-    private bool doubleAttack => upgradeStatus[AbilityUpgrade.Ability1];
+    //private bool doubleAttack => upgradeStatus[AbilityUpgrade.Ability1];
+    private bool chargeattack => upgradeStatus[AbilityUpgrade.Ability1];
     private bool maximizedStun => upgradeStatus[AbilityUpgrade.Ability2];
     private bool implacableAttack => upgradeStatus[AbilityUpgrade.Ability3];
     private bool damageOnParry => upgradeStatus[AbilityUpgrade.Ability4];
@@ -100,29 +107,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private bool canBlock = true;
     private bool comboStarted = false;
 
-    private bool alreadyCalled = false;
-
-    private float attackStartTime = 0;
-
-    private AttackComboState currentAttackComboState;
-    private AttackComboState NextAttackComboState
-    {
-        get
-        {
-            return currentAttackComboState switch
-            {
-                AttackComboState.NotAttaking => AttackComboState.Attack1,
-                AttackComboState.Attack1 => AttackComboState.Attack2,
-                AttackComboState.Attack2 => AttackComboState.NotAttaking,
-                _ => AttackComboState.NotAttaking,
-            };
-        }
-    }
-
-
-    private int comboIndex = 0;
-    private int comboMax = 2;
-    private int perfectBlockCount=0;
+   
+    private int perfectBlockCount = 0;
 
     private float currentStamina;
     private float blockAngleThreshold => (blockAngle - 180) / 180;
@@ -193,88 +179,46 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         //Cercar soluzione forse
         if (stunned) return;
-
-        if (context.performed && !isBlocking)
+        if (context.performed && isBlocking)
         {
-            attackStartTime = Time.time;
+
+        }
+        else if (context.performed && !isBlocking)
+        {         
             isAttacking = true;
             ActivateHyperArmor();
             SetCanMove(false, rb);
             //Animaizone Inizio Attacco
-            if(chargedAttack)
+            if (chargedAttack)
             {
                 StartCoroutine(StartChargedAttackTimer());
             }
-            else
-            {
-                if (comboStarted)
-                    ContinueCombo();
-                else if (currentAttackComboState == AttackComboState.NotAttaking)
-                    StartCombo();
-            }
+           
         }
 
         if (context.canceled && isAttacking)
         {
-            // if(chargedAttackReady) Time.time - attackStartTime < timeCheckAttackType || 
+            
             if (chargedAttackReady)
             {
                 animator.SetTrigger("ChargedAttackEnd");
                 Debug.Log("Charged Attack executed");
                 chargedAttackSprite.SetActive(false);
             }
-            else if(chargedAttack)
+            else 
             {
-                if (comboStarted)
-                    ContinueCombo();
-                else if (currentAttackComboState == AttackComboState.NotAttaking)
-                    StartCombo();
+                animator.SetTrigger("Attack");
             }
         }
     }
-    private void StartCombo()
-    {
-        comboStarted = true;
-        currentAttackComboState = AttackComboState.Attack1;
-        DoMeleeAttack();
-    }
-    private void ContinueCombo()
-    {
-        if(doubleAttack)
-            mustDoSecondAttack = true;
-    }
-    private void DoMeleeAttack()
-    {
-        string triggerName = currentAttackComboState.ToString();
-        animator.SetTrigger(triggerName);
-    }
-    public void OnEndAttackAnimation()
-    {
-        if (!alreadyCalled)
-        {
-            if (mustDoSecondAttack)
-            {
-                currentAttackComboState = NextAttackComboState;
-                if (currentAttackComboState == AttackComboState.NotAttaking)
-                    ResetAttack();
-                else
-                    DoMeleeAttack();
-            }
-            else
-            {
-                ResetAttack();
-            }
 
-            alreadyCalled = true;
-        }
-    }
-    public void OnAttackAnimationStart()
-    {
-        alreadyCalled = false;
-    }
+
+  
+
+   
     public void ResetAttack()
     {
-        currentAttackComboState = AttackComboState.NotAttaking;
+
         DeactivateHyperArmor();
         mustDoSecondAttack = false;
         isAttacking = false;
@@ -288,17 +232,10 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public void ChargingAttack()
     {
-        //if (chargedAttack)
-        //{
-            //tasto ancora premuto e attacco carico sbloccato
-            //if (attackPressed)
-            //{
-                isChargingAttack = true;
-                animator.SetTrigger("ChargedAttack");
-                StartCoroutine(StartChargedAttackTimer());
-            //}
+        isChargingAttack = true;
+        animator.SetTrigger("ChargedAttack");
+        StartCoroutine(StartChargedAttackTimer());
 
-        //}
     }
 
     IEnumerator StartChargedAttackTimer()
@@ -736,7 +673,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public void PerformUniqueAbility()
     {
         SetCanMove(true, rb);
-        
+
         RaycastHit2D[] hitted = Physics2D.CircleCastAll(transform.position, aggroRange, Vector2.up, aggroRange);
 
         if (hitted != null)
