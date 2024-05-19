@@ -107,6 +107,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private bool canBlock = true;
     private bool comboStarted = false;
     private bool inAttackAnimation = false;
+    private bool inCharge = false;
 
    
     private int perfectBlockCount = 0;
@@ -180,9 +181,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         //Cercar soluzione forse
         if (stunned) return;
-        if (context.performed && isBlocking && chargeAttack)
+        if (context.performed && isBlocking && chargeAttack && !inCharge)
         {
-            Debug.Log("inizioCarica");
+            StartCoroutine(ChargeCoroutine());
         }
         else if (context.performed && !isBlocking)
         {         
@@ -259,6 +260,21 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             chargedAttackSprite.SetActive(true);
         }
 
+    }
+    IEnumerator ChargeCoroutine()
+    {
+        Debug.Log("inizioCarica");
+        animator.SetTrigger("ToggleBlock");
+        inCharge = true;   
+        animator.SetBool("IsMoving", inCharge);
+        moveSpeed = chargeSpeed;
+         base.Move(lastNonZeroDirection);
+
+        yield return new WaitForSeconds(chargeDuration);
+        inCharge = false;
+        animator.SetBool("IsMoving", inCharge);
+        moveSpeed = moveSpeedCopy;
+        Debug.Log("Fine Carica");
     }
 
     public void ActivateHyperArmor()
@@ -746,24 +762,33 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public override void Move(Vector2 direction)
     {
-        if (!isBlocking)
+        if (inCharge)
         {
-            if (canMove)
-            {
-                moveSpeed = moveSpeedCopy;
-                base.Move(direction);
+            base.Move(lastNonZeroDirection);
 
-                emissionModule.enabled = isMoving;
-            }
-
-            animator.SetBool("IsMoving", isMoving);
         }
         else
         {
-            moveSpeed = blockMoveSpeed;
-            base.Move(direction);
-            SetBlockZone(lastNonZeroDirection.y);
 
+            if (!isBlocking)
+            {
+                if (canMove)
+                {
+                    moveSpeed = moveSpeedCopy;
+                    base.Move(direction);
+
+                    emissionModule.enabled = isMoving;
+                }
+
+                animator.SetBool("IsMoving", isMoving);
+            }
+            else
+            {
+                moveSpeed = blockMoveSpeed;
+                base.Move(direction);
+                SetBlockZone(lastNonZeroDirection.y);
+
+            }
         }
 
     }
