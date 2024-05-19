@@ -278,7 +278,7 @@ public class BasicEnemy : EnemyCharacter
         //}
 
         if(!isRunning )
-        StartCoroutine(CalculatePathAndSteering());
+        StartCoroutine(CalculateChasePathAndSteering());
 
          move = Vector2.zero;
          move = (finalDirection*(finalStrenght*inc))/* + targetDirection*/;
@@ -286,16 +286,45 @@ public class BasicEnemy : EnemyCharacter
     }
     bool isRunning = false;
     public float delay = 1;
-    IEnumerator CalculatePathAndSteering()
+    IEnumerator CalculateChasePathAndSteering()
     {
         isRunning = true;
         CalculateTargetDirection();
-        CalculateContextSteeringDirectionStrenght(chaseBehaviour);
-        CalculateContextSteeringAvoidDirectionStrenght(avoidBehaviour, csAvoidDistance, csAvoidLayerMask);
-        CalculateContextSteeringSummary();
+
+        CalculateContextSteeringInterestMap(chaseBehaviour);
+
+        CalculateContextSteeringAvoidMap(avoidBehaviour, csAvoidDistance, csAvoidLayerMask);
+
+        CalculateContextSteeringMapSummary();
+
+        InvertNegativeStrenghtContextSteeringMap(finalBehaviour);
+
         CalculateFinalDirection();
+
         yield return new WaitForSeconds(delay);
-        StartCoroutine(CalculatePathAndSteering());
+        StartCoroutine(CalculateChasePathAndSteering());
+    }
+
+    IEnumerator CalculateRunAwayPathAndSteering()
+    {
+        isRunning = true;
+
+        CalculateTargetDirection();
+
+        CalculateContextSteeringInterestMap(chaseBehaviour);
+        InvertDirectionsContextSteeringMap(chaseBehaviour);
+
+        CalculateContextSteeringAvoidMap(avoidBehaviour, csAvoidDistance, csAvoidLayerMask);
+
+        CalculateContextSteeringMapSummary();
+
+        InvertNegativeStrenghtContextSteeringMap(finalBehaviour);
+
+        CalculateFinalDirection();
+
+
+        yield return new WaitForSeconds(delay);
+        StartCoroutine(CalculateRunAwayPathAndSteering());
     }
 
 
@@ -374,7 +403,7 @@ public class BasicEnemy : EnemyCharacter
         targetDirection = agentDir;
     }
 
-    public void CalculateContextSteeringDirectionStrenght(ContextSteeringDirection[] likedDirections)
+    public void CalculateContextSteeringInterestMap(ContextSteeringDirection[] likedDirections)
     {
         if (target == null)
         {
@@ -428,23 +457,14 @@ public class BasicEnemy : EnemyCharacter
 
     }
     ContextSteeringDirection favorite;
-    public void CalculateContextSteeringAvoidDirectionStrenght(ContextSteeringDirection[] directionsToAvoid,float distanceToConsider,LayerMask layerToAvoid)
+    public void CalculateContextSteeringAvoidMap(ContextSteeringDirection[] directionsToAvoid,float distanceToConsider,LayerMask layerToAvoid)
     {
         for (int i = 0; i < contextSteeringDirectionCount; i++)
         {
             directionsToAvoid[i].SetRelativePos(new Vector2(groundLevel.position.x + directionsToAvoid[i].direction.x, groundLevel.position.y + directionsToAvoid[i].direction.y));
             
-            RaycastHit2D[] raycast=new RaycastHit2D[2];
+            RaycastHit2D[] raycast = new RaycastHit2D[2];
             Physics2D.RaycastNonAlloc(groundLevel.position, directionsToAvoid[i].GetRelativeDirection(groundLevel), raycast, distanceToConsider, layerToAvoid);
-
-            //foreach(RaycastHit2D ray in raycast)
-            //{
-            //    if (ray.collider.gameObject.GetComponentInParent<EnemyCharacter>())
-            //    {
-            //        if((ray.collider.gameObject.GetComponentInParent<EnemyCharacter>() == )
-
-            //    }
-            //}
 
 
             if (raycast[1].collider != null)
@@ -454,10 +474,10 @@ public class BasicEnemy : EnemyCharacter
 
                 if (per >= 0)
                 {
-                    directionsToAvoid[i].SetDirectionStrenght(per* obstacleAvoidancePriority);
+                    directionsToAvoid[i].SetDirectionStrenght(per * obstacleAvoidancePriority);
                 }
                 else
-                    directionsToAvoid[i].SetDirectionStrenght(-per* obstacleAvoidancePriority);
+                    directionsToAvoid[i].SetDirectionStrenght(-per * obstacleAvoidancePriority);
                 
             }
             else
@@ -465,55 +485,76 @@ public class BasicEnemy : EnemyCharacter
         }
     }
     
-    public void CalculateContextSteeringSummary()
+    public void CalculateContextSteeringMapSummary()
     {
-
         for (int i = 0; i < contextSteeringDirectionCount; i++)
         {
             finalBehaviour[i].SetRelativePos(new Vector2(groundLevel.position.x + finalBehaviour[i].direction.x, groundLevel.position.y + finalBehaviour[i].direction.y));
 
             float strenght = chaseBehaviour[i].directionStrenght - avoidBehaviour[i].directionStrenght;
 
-            //if (strenght < 0)
-            //    strenght = 0;
-
-
             finalBehaviour[i].SetDirectionStrenght(strenght);
         }
+    }
 
-        //check inverse
-        //ContextSteeringDirection[] finalCopy = (ContextSteeringDirection[]) finalBehaviour.Clone();
-
-        ContextSteeringDirection[] currentCopy = new ContextSteeringDirection[contextSteeringDirectionCount];
-        currentCopy = (ContextSteeringDirection[])finalBehaviour.Clone();
+    public float strenghtMultiplier = 1;
+    private void InvertNegativeStrenghtContextSteeringMap(ContextSteeringDirection[] mapToInvert)
+    {
+        ContextSteeringDirection[] mapCopy = new ContextSteeringDirection[contextSteeringDirectionCount];
+        mapCopy = (ContextSteeringDirection[])mapToInvert.Clone();
 
 
         int half = contextSteeringDirectionCount / 2;
         for (int i = 0; i < contextSteeringDirectionCount; i++)
         {
             float strenght = 0;
-            if (currentCopy[i].directionStrenght < 0)
+            if (mapCopy[i].directionStrenght < 0)
             {
 
                 if (i < half)
                 {
-                    strenght = (MathF.Abs(currentCopy[i].directionStrenght) + currentCopy[i + half].directionStrenght) * strenghtMultiplier;
-                    finalBehaviour[i + half].SetDirectionStrenght(strenght);
+                    strenght = (MathF.Abs(mapCopy[i].directionStrenght) + mapCopy[i + half].directionStrenght) * strenghtMultiplier;
+                    mapToInvert[i + half].SetDirectionStrenght(strenght);
                 }
                 else
                 {
-                    strenght = (MathF.Abs(currentCopy[i].directionStrenght) + currentCopy[i - half].directionStrenght) * strenghtMultiplier;
-                    finalBehaviour[i - half].SetDirectionStrenght(strenght);
+                    strenght = (MathF.Abs(mapCopy[i].directionStrenght) + mapCopy[i - half].directionStrenght) * strenghtMultiplier;
+                    mapToInvert[i - half].SetDirectionStrenght(strenght);
                 }
-
-
             }
         }
-
     }
-    public float strenghtMultiplier = 1;
+
+    private void InvertDirectionsContextSteeringMap(ContextSteeringDirection[] mapToInvert)
+    {
+        ContextSteeringDirection[] mapCopy = new ContextSteeringDirection[contextSteeringDirectionCount];
+        mapCopy = (ContextSteeringDirection[])mapToInvert.Clone();
+
+
+        int half = contextSteeringDirectionCount / 2;
+        for (int i = 0; i < contextSteeringDirectionCount; i++)
+        {
+            float strenght = 0;
+            //if (mapCopy[i].directionStrenght < 0)
+            //{
+
+                if (i < half)
+                {
+                    strenght = mapCopy[i].directionStrenght;
+                    mapToInvert[i + half].SetDirectionStrenght(strenght);
+                }
+                else
+                {
+                    strenght = mapCopy[i].directionStrenght;
+                    mapToInvert[i - half].SetDirectionStrenght(strenght);
+                }
+            //}
+        }
+    }
+    
     public void CalculateFinalDirection()
     {
+
         Vector2 avarenge = Vector2.zero;
         float avarangeStrenght = 0;
         int div = 0;
@@ -523,16 +564,16 @@ public class BasicEnemy : EnemyCharacter
         int bestId = 0;
         float currentBest=0;
 
-        //best
-        //for (int i = 0; i < contextSteeringDirectionCount; i++)
-        //{
-        //    if (finalBehaviour[i].directionStrenght > currentBest)
-        //    {
-        //        bestId = i;
-        //        currentBest = finalBehaviour[i].directionStrenght;
-        //    }
+        // best
+        for (int i = 0; i < contextSteeringDirectionCount; i++)
+        {
+            if (finalBehaviour[i].directionStrenght > currentBest)
+            {
+                bestId = i;
+                currentBest = finalBehaviour[i].directionStrenght;
+            }
 
-        //}
+        }
 
         ////finalDirection = finalBehaviour[bestId].GetRelativeDirection(groundLevel);
         ////finalStrenght = finalBehaviour[bestId].directionStrenght;
@@ -542,12 +583,12 @@ public class BasicEnemy : EnemyCharacter
         //Avarange
         for (int i = 0; i < contextSteeringDirectionCount; i++)
         {
-            if (finalBehaviour[i].directionStrenght > 0)
+            if (finalBehaviour[i].directionStrenght > 0.1f)
             {
                 avarenge += finalBehaviour[i].GetRelativeDirection(groundLevel);
                 div++;
 
-            avarangeStrenght += finalBehaviour[i].directionStrenght;
+                avarangeStrenght += finalBehaviour[i].directionStrenght;
             }
         }
         finalDirection = avarenge / div;
@@ -556,16 +597,16 @@ public class BasicEnemy : EnemyCharacter
         bool allow = false;
 
         Vector2 localDir = new Vector2(groundLevel.position.x + finalDirection.x, groundLevel.position.y + finalDirection.y);
-        float currentDot = Vector2.Dot(new Vector2(localDir.x - groundLevel.position.x, localDir.y - groundLevel.position.y).normalized, favorite.GetRelativeDirection(groundLevel).normalized);
+        float currentDot = Vector2.Dot(new Vector2(localDir.x - groundLevel.position.x, localDir.y - groundLevel.position.y).normalized, finalBehaviour[bestId].GetRelativeDirection(groundLevel).normalized);
 
 
-        if (currentDot > 0.5f)
-            allow = true;
-        else
-        {
-            finalDirection = finalDirection + favorite.GetRelativeDirection(groundLevel);
-        }
-
+        //if (currentDot > 0.5f)
+        //    allow = true;
+        //else
+        //{
+            //finalDirection = finalDirection + finalBehaviour[bestId].GetRelativeDirection(groundLevel);
+      
+        //}
         //float bestDot = 0;
         //int bestDotId = -1;
 
@@ -635,7 +676,7 @@ public class BasicEnemy : EnemyCharacter
     //forse nei figli
     public IEnumerator Attack()
     {
-        StopCoroutine(CalculatePathAndSteering());
+        StopCoroutine(CalculateChasePathAndSteering());
         isRunning = false;
 
         isActioning = true;
