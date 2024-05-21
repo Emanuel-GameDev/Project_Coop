@@ -113,15 +113,7 @@ public class DebugManager : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.J))
             {
-                Settings sceneSetting = new(SceneSaveSettings.ChallengesSaved);
-                sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
-                SaveManager.Instance.SaveSceneData(sceneSetting);
-                sceneSetting = new(SceneSaveSettings.Passepartout);
-                sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
-                SaveManager.Instance.SaveSceneData(sceneSetting);
-                sceneSetting = new(SceneSaveSettings.SlotMachine);
-                sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
-                SaveManager.Instance.SaveSceneData(sceneSetting);
+                //ToRedo
             }
             if (Input.GetKeyDown(KeyCode.I))
             {

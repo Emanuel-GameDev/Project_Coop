@@ -245,6 +245,28 @@ public class SaveManager : MonoBehaviour
         return null;
     }
 
+    public CharacterSaveData GetPlayerSaveData(ePlayerCharacter character)
+    {
+        if (saveData == null)
+            LoadData();
+
+        if (saveData != null)
+        {
+            foreach (CharacterSaveData player in saveData.players)
+            {
+                if (player.characterName == character)
+                {
+                    return player;
+                }
+            }
+        }
+
+        CharacterSaveData newSaveData = new();
+        newSaveData.characterName = character;
+
+        return newSaveData;
+    }
+
     #endregion
 
     #region PlayerPrefs

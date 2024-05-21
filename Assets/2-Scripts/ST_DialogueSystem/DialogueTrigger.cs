@@ -7,12 +7,12 @@ public class DialogueTrigger : MonoBehaviour
     [SerializeField] private Dialogue dialogueOnTrigger;
     [SerializeField] UnityEvent onDialogueEndEvent;
     private bool alreadyTriggered = true;
-    [SerializeField] static string DIALOGUE_TRIGGER_SAVE_NAME = "TriggerDialogue";
+    [SerializeField] string dialogueTriggerSaveName = "TriggerDialogue";
 
     private void Start()
     {
         SaveManager.Instance.LoadData();
-        bool alreadyTriggeredSave = SaveManager.Instance.LoadSetting<bool>(DIALOGUE_TRIGGER_SAVE_NAME);
+        bool alreadyTriggeredSave = SaveManager.Instance.LoadSetting<bool>(dialogueTriggerSaveName);
 
         if (alreadyTriggeredSave)
         {
@@ -32,7 +32,7 @@ public class DialogueTrigger : MonoBehaviour
         {
             alreadyTriggered = true;
             SetDialogue();
-            SaveManager.Instance.SaveSetting(DIALOGUE_TRIGGER_SAVE_NAME, alreadyTriggered);
+            SaveManager.Instance.SaveSetting(dialogueTriggerSaveName, alreadyTriggered);
         }
     }
 

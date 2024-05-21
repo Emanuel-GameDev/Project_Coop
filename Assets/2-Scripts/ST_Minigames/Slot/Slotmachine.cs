@@ -626,17 +626,15 @@ public class Slotmachine : MonoBehaviour
 
     private bool CheckAndSaveYetCompleted()
     {
-        Settings sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.SlotMachine);
-        if (sceneSetting == null)
-            sceneSetting = new Settings(SceneSaveSettings.SlotMachine);
-        if (!sceneSetting.GetBoolValue(SaveDataStrings.COMPLETED))
+        if (SaveManager.Instance.TryLoadSetting<bool>(SaveDataStrings.FOOLSLOT_MINIGAME_COMPLETED, out bool value))
         {
-            sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
-            SaveManager.Instance.SaveSceneData(sceneSetting);
-            return false;
+            return value;
         }
         else
-            return true;
+        {
+            SaveManager.Instance.SaveSetting(SaveDataStrings.FOOLSLOT_MINIGAME_COMPLETED, true);
+            return false;
+        }
     }
 
 

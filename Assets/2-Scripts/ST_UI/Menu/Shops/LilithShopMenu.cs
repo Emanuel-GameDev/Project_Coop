@@ -11,34 +11,27 @@ public class LilithShopMenu : Menu
     //[HideInInspector] public Dictionary<LilithShopTable, PlayerInputHandler> tableAssosiation = new();
 
     [SerializeField] string settingSaveName = "LilithShopFirstTimeInteraction";
-    Settings sceneSetting;
 
     [SerializeField] AudioSource musicaWorldMap;
     [SerializeField] AudioSource shopMusicSource;
+
+    bool firstTime = true;
+
 
     public override void Start()
     {
         base.Start();
         
         SaveManager.Instance.LoadData();
-        sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ShopLilithFirstTime);
-
-        if (sceneSetting == null)
+        if(SaveManager.Instance.TryLoadSetting<bool>(settingSaveName, out bool value))
         {
-            sceneSetting = new(SceneSaveSettings.ShopLilithFirstTime);
-            firstTime = true;
-
+            firstTime = value;
         }
         else
         {
-            firstTime = sceneSetting.GetBoolValue(settingSaveName);
+            firstTime = true;
         }
-
     }
-
-
-    bool firstTime = true;
-
     public override void OpenMenu()
     {
         if (shopGroup.activeSelf) return;
@@ -82,8 +75,7 @@ public class LilithShopMenu : Menu
                 dialogueBox.SetDialogue(FirstTimeDialogue);
                 firstTime = false;
 
-                sceneSetting.AddBoolValue(settingSaveName, firstTime);
-                SaveManager.Instance.SaveSceneData(sceneSetting);
+                SaveManager.Instance.SaveSetting(settingSaveName, firstTime);
 
             }
             else

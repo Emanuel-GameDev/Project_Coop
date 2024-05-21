@@ -18,7 +18,6 @@ public class SouvenirShopMenu : Menu
     [SerializeField] AudioSource shopMusicSource;
 
     [SerializeField] string settingSaveName = "SouvenirShopFirstTimeInteraction";
-    Settings sceneSetting;
 
     //[Serializable]
     //public class SouvenirShopEntry
@@ -28,29 +27,24 @@ public class SouvenirShopMenu : Menu
     //    [HideInInspector] public int souvenirID;
     //}
 
+    bool firstTime = true;
 
     public override void Start()
     {
         base.Start();
 
         SaveManager.Instance.LoadData();
-        sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ShopSouvenirFirstTime);
-
-        if (sceneSetting == null)
+        if (SaveManager.Instance.TryLoadSetting<bool>(settingSaveName, out bool value))
         {
-            sceneSetting = new(SceneSaveSettings.ShopSouvenirFirstTime);
-            firstTime = true;
+            firstTime = value;
 
         }
         else
         {
-            firstTime = sceneSetting.GetBoolValue(settingSaveName);
+            firstTime = true;
         }
 
     }
-
-    bool firstTime = true;
-
     public override void OpenMenu()
     {
         if (shopGroup.activeSelf) return;
@@ -89,8 +83,7 @@ public class SouvenirShopMenu : Menu
                 dialogueBox.SetDialogue(FirstTimeDialogue);
                 firstTime = false;
 
-                sceneSetting.AddBoolValue(settingSaveName, firstTime);
-                SaveManager.Instance.SaveSceneData(sceneSetting);
+                SaveManager.Instance.SaveSetting(settingSaveName, firstTime);
             }
             else
                 dialogueBox.SetDialogue(beforeEnterDialogue);

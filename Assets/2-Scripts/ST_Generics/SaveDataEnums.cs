@@ -50,5 +50,7 @@ public static class SaveDataStrings
     public const string SELECTED = "Selected";
     public const string SVILUPPARTY_END_DUMPY_INTERACTED = "SviluppartyEndDumpyInteracted";
     public const string CHALLENGE = "Challenge";
+    public const string PASSEPARTOUT_MINIGAME_COMPLETED = "PassepartoutMinigameCompleted";
+    public const string FOOLSLOT_MINIGAME_COMPLETED = "FoolSlotMinigameCompleted";
 }
 

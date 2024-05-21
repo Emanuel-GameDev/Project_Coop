@@ -436,17 +436,15 @@ public class LabirintManager : MonoBehaviour
 
     private bool CheckAndSaveYetCompleted()
     {
-        Settings sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.Passepartout);
-        if (sceneSetting == null)
-            sceneSetting = new Settings(SceneSaveSettings.Passepartout);
-        if (!sceneSetting.GetBoolValue(SaveDataStrings.COMPLETED))
+        if(SaveManager.Instance.TryLoadSetting<bool>(SaveDataStrings.PASSEPARTOUT_MINIGAME_COMPLETED, out bool value))
         {
-            sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
-            SaveManager.Instance.SaveSceneData(sceneSetting);
+            return value;
+        }
+        else
+        {
+            SaveManager.Instance.SaveSetting(SaveDataStrings.PASSEPARTOUT_MINIGAME_COMPLETED, true);
             return false;
         }
-        else 
-            return true;  
     }
 
     #endregion

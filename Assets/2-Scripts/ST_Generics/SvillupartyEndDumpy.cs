@@ -20,11 +20,11 @@ public class SvillupartyEndDumpy : MonoBehaviour
 
     private void Awake()
     {
-        Settings sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.SviluppartyInteractions);
-        if (sceneSetting != null)
-        {
-            interacted = sceneSetting.GetBoolValue(SaveDataStrings.SVILUPPARTY_END_DUMPY_INTERACTED);
-        }
+        //Settings sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.SviluppartyInteractions);
+        //if (sceneSetting != null)
+        //{
+        //    interacted = sceneSetting.GetBoolValue(SaveDataStrings.SVILUPPARTY_END_DUMPY_INTERACTED);
+        //}
     }
 
     private void FirstInteract()
@@ -32,9 +32,9 @@ public class SvillupartyEndDumpy : MonoBehaviour
         onFirstInteract.Invoke();
         interacted = true;
 
-        Settings sceneSetting = new(SceneSaveSettings.SviluppartyInteractions);
-        sceneSetting.AddBoolValue(SaveDataStrings.SVILUPPARTY_END_DUMPY_INTERACTED, interacted);
-        SaveManager.Instance.SaveSceneData(sceneSetting);
+        //Settings sceneSetting = new(SceneSaveSettings.SviluppartyInteractions);
+        //sceneSetting.AddBoolValue(SaveDataStrings.SVILUPPARTY_END_DUMPY_INTERACTED, interacted);
+        //SaveManager.Instance.SaveSceneData(sceneSetting);
     }
 
     private void NormalInteract()
@@ -64,9 +64,9 @@ public class SvillupartyEndDumpy : MonoBehaviour
 
     private void GetSaveData()
     {
-        bool passepartoutMinigameCompleted = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.Passepartout)?.GetBoolValue(SaveDataStrings.COMPLETED) ?? false;
-        bool fullSlotMachineMinigameCompleted = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.SlotMachine)?.GetBoolValue(SaveDataStrings.COMPLETED) ?? false;
-        bool allChallegesCompleted = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved)?.GetBoolValue(SaveDataStrings.COMPLETED) ?? false;
-        gameComplete = passepartoutMinigameCompleted && fullSlotMachineMinigameCompleted && allChallegesCompleted;
+        //bool passepartoutMinigameCompleted = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.Passepartout)?.GetBoolValue(SaveDataStrings.COMPLETED) ?? false;
+        //bool fullSlotMachineMinigameCompleted = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.SlotMachine)?.GetBoolValue(SaveDataStrings.COMPLETED) ?? false;
+        //bool allChallegesCompleted = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved)?.GetBoolValue(SaveDataStrings.COMPLETED) ?? false;
+        //gameComplete = passepartoutMinigameCompleted && fullSlotMachineMinigameCompleted && allChallegesCompleted;
     }
 }
