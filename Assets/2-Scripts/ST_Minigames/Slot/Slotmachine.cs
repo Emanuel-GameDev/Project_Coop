@@ -626,9 +626,9 @@ public class Slotmachine : MonoBehaviour
 
     private bool CheckAndSaveYetCompleted()
     {
-        SceneSetting sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.SlotMachine);
+        Settings sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.SlotMachine);
         if (sceneSetting == null)
-            sceneSetting = new SceneSetting(SceneSaveSettings.SlotMachine);
+            sceneSetting = new Settings(SceneSaveSettings.SlotMachine);
         if (!sceneSetting.GetBoolValue(SaveDataStrings.COMPLETED))
         {
             sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);

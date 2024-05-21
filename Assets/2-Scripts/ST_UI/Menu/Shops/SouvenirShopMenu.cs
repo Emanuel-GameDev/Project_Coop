@@ -18,7 +18,7 @@ public class SouvenirShopMenu : Menu
     [SerializeField] AudioSource shopMusicSource;
 
     [SerializeField] string settingSaveName = "SouvenirShopFirstTimeInteraction";
-    SceneSetting sceneSetting;
+    Settings sceneSetting;
 
     //[Serializable]
     //public class SouvenirShopEntry

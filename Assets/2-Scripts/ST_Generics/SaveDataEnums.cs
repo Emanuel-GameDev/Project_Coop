@@ -24,16 +24,22 @@ public enum PlayerPrefsSettings
 [Serializable]
 public enum SceneSaveSettings
 {
+    //Dialogues
     FirstSceneDialogue,
     FirstMinigameDialogue,
-    ChallengesSaved,
-    SviluppartyInteractions,
-    DialogueTrigger,
+    FirstTimeChallegeDialogueTriggered,
+    //Minigames
     Passepartout,
     SlotMachine,
+    //Shops
     ShopLilithFirstTime,
     ShopSouvenirFirstTime,
-
+    //Challeges
+    ChallengesSaved,
+    AllFirstZoneChallengesCompleted,
+    AllChallengesCompleted,
+    //Others
+    SviluppartyInteractions
 }
 
 public static class SaveDataStrings

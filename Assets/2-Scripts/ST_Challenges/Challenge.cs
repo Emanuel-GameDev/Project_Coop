@@ -10,6 +10,7 @@ public class Challenge : MonoBehaviour
 
     public LocalizedString challengeName;
     public LocalizedString challengeDescription;
+    public ChallengeName challengeNameEnum;
 
 
     [Header("Enemies")]
@@ -133,7 +134,7 @@ public class Challenge : MonoBehaviour
 
        
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
-        ChallengeManager.Instance.SaveChallengeCompleted(this.name, challengeCompleted);
+        ChallengeManager.Instance.SaveChallengeCompleted(this.challengeNameEnum, challengeCompleted);
 
         onChallengeSuccessEvent?.Invoke();
 
@@ -201,4 +202,12 @@ public class Challenge : MonoBehaviour
     {
         OnWinChallenge();
     }
+}
+
+public enum ChallengeName
+{
+    Survive,
+    KillThemAll,
+    KillAllInTimer,
+    KerberosAgain
 }

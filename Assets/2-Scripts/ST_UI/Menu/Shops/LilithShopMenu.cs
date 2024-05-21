@@ -11,7 +11,7 @@ public class LilithShopMenu : Menu
     //[HideInInspector] public Dictionary<LilithShopTable, PlayerInputHandler> tableAssosiation = new();
 
     [SerializeField] string settingSaveName = "LilithShopFirstTimeInteraction";
-    SceneSetting sceneSetting;
+    Settings sceneSetting;
 
     [SerializeField] AudioSource musicaWorldMap;
     [SerializeField] AudioSource shopMusicSource;
