@@ -50,9 +50,8 @@ public class Challenge : MonoBehaviour
     {
         onChallengeStartAction.AddListener(StartChallenge);
         onChallengeFailReset.AddListener(ResetScene);
-
-
     }
+
     public virtual void StartChallenge()
     {
         Debug.Log("SFIDA INIZIATA");

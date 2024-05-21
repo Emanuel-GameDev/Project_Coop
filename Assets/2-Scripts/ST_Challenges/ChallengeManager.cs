@@ -34,7 +34,7 @@ public class ChallengeManager : MonoBehaviour
     [SerializeField] private GameObject challengeUIPrefab;
     [SerializeField] public List<Challenge> currentSaveChallenges;
     [SerializeField] private GameObject bottoneInutile;
-    [SerializeField] private static string ZONE_SETTING_NAME = "AllFirstZoneChallengesCompleted";
+    [SerializeField] private string zoneSettingSaveName = "AllFirstZoneChallengesCompleted";
 
     [Header("Dialogue")]
     [SerializeField] Dialogue dialogueOnInteraction;
@@ -131,8 +131,7 @@ public class ChallengeManager : MonoBehaviour
             }
         }
 
-        //Da aggiungere codice per controllare la zona
-        SaveManager.Instance.SaveSetting(ZONE_SETTING_NAME, allChallegesCompleted);
+        SaveManager.Instance.SaveSetting(zoneSettingSaveName, allChallegesCompleted);
     }
     #endregion
 
