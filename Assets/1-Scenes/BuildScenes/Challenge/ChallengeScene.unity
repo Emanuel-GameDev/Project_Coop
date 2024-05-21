@@ -3894,6 +3894,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  challengeNameEnum: 3
   enemySpawnPoints:
   - {fileID: 553666770}
   - {fileID: 1262515097}
@@ -4591,6 +4592,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  challengeNameEnum: 4
   enemySpawnPoints:
   - {fileID: 2000432604}
   - {fileID: 805978970}
@@ -4712,6 +4714,7 @@ MonoBehaviour:
     type: 3}
   currentSaveChallenges: []
   bottoneInutile: {fileID: 1640480881}
+  zoneSettingSaveName: AllFirstZoneChallengesCompleted
   dialogueOnInteraction: {fileID: 11400000, guid: 9919fc4cd3290aa4bb4642f46f8ac057,
     type: 2}
   dialogueBox: {fileID: 1440181397}
@@ -5302,6 +5305,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: e3ea9f04824e32049922a185c99d4e7b,
         type: 2}
+    - target: {fileID: 1457129021371019520, guid: 451b3e449a119024fbfd36fec14a194f,
+        type: 3}
+      propertyPath: dialogueTriggerSaveName
+      value: ChallegesFirstDialogue
+      objectReference: {fileID: 0}
     - target: {fileID: 2693127927199351003, guid: 451b3e449a119024fbfd36fec14a194f,
         type: 3}
       propertyPath: m_Size.x
@@ -6422,6 +6430,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  challengeNameEnum: 0
   enemySpawnPoints:
   - {fileID: 1431266245}
   dialogueOnStart: {fileID: 11400000, guid: 5efa4c7a09dbe464c9b7ac9bdfa3bd89, type: 2}
@@ -7981,6 +7990,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  challengeNameEnum: 2
   enemySpawnPoints:
   - {fileID: 1736028558}
   - {fileID: 885873802}
@@ -8188,6 +8198,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  challengeNameEnum: 1
   enemySpawnPoints:
   - {fileID: 1426356637}
   - {fileID: 1720580342}

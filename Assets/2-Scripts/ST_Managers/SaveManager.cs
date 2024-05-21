@@ -58,7 +58,10 @@ public class SaveManager : MonoBehaviour
             Directory.CreateDirectory(saveFolderPath);
         }
 
+
         string json = JsonUtility.ToJson(saveData);
+        //string encryptSave = EncryptionUtility.Encrypt(json);
+        //File.WriteAllText(filePath, encryptSave);
         File.WriteAllText(filePath, json);
 
         Debug.Log("Dati salvati con successo!");
@@ -143,6 +146,8 @@ public class SaveManager : MonoBehaviour
         if (File.Exists(filePath))
         {
             string json = File.ReadAllText(filePath);
+            //string decryptedJson = EncryptionUtility.Decrypt(json);
+            //saveData = JsonUtility.FromJson<SaveData>(decryptedJson);
             saveData = JsonUtility.FromJson<SaveData>(json);
 
             Debug.Log("Dati caricati con successo!");
