@@ -15,7 +15,9 @@ public enum InputMap
     Player,
     UI,
     Minigame,
-    EmptyMap
+    EmptyMap,
+    Dialogue,
+    Cutscene
 }
 
 [Serializable]
