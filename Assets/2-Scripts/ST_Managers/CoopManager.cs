@@ -36,6 +36,9 @@ public class CoopManager : MonoBehaviour
     private PlayerInputManager inputManager;
     private List<PlayerInputHandler> playerInputHandlers;
 
+    private InputMap actualInputMap;
+    public InputMap ActualInputMap => actualInputMap;
+
     public List<ePlayerCharacter> ActiveEPlayerCharacters
     {
         get
@@ -188,4 +191,10 @@ public class CoopManager : MonoBehaviour
             player.SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
         }
     }
+
+    public void SetActualActionMap(InputMap map)
+    {
+        actualInputMap = map;
+    }
+
 }
