@@ -21,13 +21,13 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     GameObject chargedAttackSprite;
 
     [Header("ChargeAttack")]
+    [SerializeField, Tooltip("timer tra una carica e un altra per non spammare")]
+    float chargeCooldownTimer = 5f;
     [SerializeField, Tooltip("Velocità movimento in carica")]
     float chargeSpeed = 5f;
     [SerializeField, Tooltip("durata carica se non interrotta")]
     float chargeDuration = 5f;
-    [SerializeField, Tooltip("danno carica")]
-    float chargeDamage;
-
+    
     [Header("Block")]
     [SerializeField, Tooltip("Quantit� di danno parabile prima di rottura parata")]
     float maxStamina;
@@ -105,11 +105,12 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private bool isChargingAttack = false;
     private bool mustDoSecondAttack = false;
     private bool canBlock = true;
+    private bool canCharge = true;
     private bool comboStarted = false;
     private bool inAttackAnimation = false;
     private bool inCharge = false;
 
-   
+
     private int perfectBlockCount = 0;
 
     private float currentStamina;
@@ -181,27 +182,28 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         attackPressed = true;
 
-        
+
         if (stunned) return;
-        if (context.performed && isBlocking && chargeAttack && !inCharge)
+        if (context.performed && isBlocking && chargeAttack && !inCharge && canCharge)
         {
             StartCoroutine(ChargeCoroutine());
+            
         }
-        else if (context.performed && !isBlocking)
-        {         
+        else if (context.performed && !isBlocking && !inCharge)
+        {
             isAttacking = true;
-           
+
             ActivateHyperArmor();
             SetCanMove(false, rb);
-            
+
             if (chargedAttack)
             {
                 StartCoroutine(StartChargedAttackTimer());
             }
-           
+
         }
 
-        if (context.canceled && isAttacking && !inAttackAnimation)
+        if (context.canceled && isAttacking && !inAttackAnimation && !inCharge)
         {
             attackPressed = false;
             StopCoroutine(StartChargedAttackTimer());
@@ -211,18 +213,29 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                 Debug.Log("Charged Attack executed");
                 chargedAttackSprite.SetActive(false);
             }
-            else 
+            else
             {
                 inAttackAnimation = true;
                 animator.SetTrigger("Attack");
             }
         }
+        else if (context.canceled && !isAttacking && inCharge)
+        {
+            StopCharge();
+
+        }
     }
 
+    private void StopCharge()
+    {
+        StopCoroutine(ChargeCoroutine());
+        inCharge = false;
+        animator.SetBool("InCharge", inCharge);
+        moveSpeed = moveSpeedCopy;
+        Debug.Log("Fine Carica");
+        StartCoroutine(StartChargeCooldown());
+    }
 
-  
-
-   
     public void ResetAttack()
     {
 
@@ -270,19 +283,27 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     }
     IEnumerator ChargeCoroutine()
     {
+        canCharge = false;
+        
         Debug.Log("inizioCarica");
         animator.SetTrigger("ToggleBlock");
-        inCharge = true;   
-        animator.SetBool("IsMoving", inCharge);
+        inCharge = true;
+        animator.SetBool("InCharge", inCharge);
         moveSpeed = chargeSpeed;
-         base.Move(lastNonZeroDirection);
+        base.Move(lastNonZeroDirection);
 
         yield return new WaitForSeconds(chargeDuration);
 
-        inCharge = false;
-        animator.SetBool("IsMoving", inCharge);
-        moveSpeed = moveSpeedCopy;
-        Debug.Log("Fine Carica");
+        StopCharge();
+
+
+
+
+    }
+    IEnumerator StartChargeCooldown()
+    {
+        yield return new WaitForSeconds(chargeCooldownTimer);
+        canCharge = true;
     }
 
     public void ActivateHyperArmor()
@@ -663,8 +684,11 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
         else
         {
-
             base.TakeDamage(data);
+            if (inCharge)
+            {
+                StopCharge();
+            }
         }
         if (perfectTimingEnabled)
         {
