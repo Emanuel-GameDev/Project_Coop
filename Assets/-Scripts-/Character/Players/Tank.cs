@@ -179,7 +179,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public override void AttackInput(InputAction.CallbackContext context)
     {
-        //Cercar soluzione forse
+        attackPressed = true;
+
+        
         if (stunned) return;
         if (context.performed && isBlocking && chargeAttack && !inCharge)
         {
@@ -191,7 +193,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
            
             ActivateHyperArmor();
             SetCanMove(false, rb);
-            //Animaizone Inizio Attacco
+            
             if (chargedAttack)
             {
                 StartCoroutine(StartChargedAttackTimer());
@@ -201,7 +203,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         if (context.canceled && isAttacking && !inAttackAnimation)
         {
-            
+            attackPressed = false;
+            StopCoroutine(StartChargedAttackTimer());
             if (chargedAttackReady)
             {
                 animator.SetTrigger("ChargedAttackEnd");
@@ -226,6 +229,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         DeactivateHyperArmor();
         mustDoSecondAttack = false;
         isAttacking = false;
+        attackPressed = false;
         chargedAttackReady = false;
         isChargingAttack = false;
         comboStarted = false;
@@ -248,7 +252,10 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         chargedAttackReady = false;
         yield return new WaitForSeconds(timeCheckAttackType);
 
-        animator.SetTrigger("ChargedAttack");
+        if (attackPressed)
+        {
+            animator.SetTrigger("ChargedAttack");
+        }
 
         yield return new WaitForSeconds(chargedAttackTimer);
 
@@ -271,6 +278,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
          base.Move(lastNonZeroDirection);
 
         yield return new WaitForSeconds(chargeDuration);
+
         inCharge = false;
         animator.SetBool("IsMoving", inCharge);
         moveSpeed = moveSpeedCopy;
