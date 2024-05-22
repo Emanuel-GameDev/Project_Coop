@@ -4,14 +4,22 @@ using UnityEngine;
 
 public enum slotType
 {
-    Player,
-    OtherCharacter       //con gli altri si perde
+    Brutus,
+    Kaina,
+    Jude,
+    Cassius,
+    Dumpy,
+    Lilith,
+    Seven
 }
 
 public class Slot : MonoBehaviour
 {
     [SerializeField] private Sprite sprite;
     [SerializeField] private slotType slotType;
+
+    //Sprite List basato sul type
+    [SerializeField] private List<Sprite> spriteDatabase;
 
    
 
@@ -25,7 +33,9 @@ public class Slot : MonoBehaviour
     public slotType Type
     {
         get => slotType;
-        set => slotType = value;
+        set { slotType = value;
+            sprite = spriteDatabase[(int)value];
+        }
     }
 
 

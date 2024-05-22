@@ -11,6 +11,7 @@ public class SlotRow : MonoBehaviour
      int numberOfSlots;
      int numberWinSlots;
      float slotDistance = 0.25f;
+     [SerializeField] GameObject slotPrefab;
 
     //inserire giocatore scelto
      public SlotPlayer selectedPlayer;
@@ -98,15 +99,16 @@ public class SlotRow : MonoBehaviour
 
         for (int i = 0; i < numberOfSlots; i++)
         {
-            GameObject slot = new GameObject($"slot #{i}");
+            GameObject slot = Instantiate(slotPrefab);
+            slot.name=$"slot #{i}";
             slot.transform.SetParent(gameObject.transform, true);
 
-            slot.AddComponent<Slot>();
+           
 
             if (winGenerate < numberWinSlots)
             {
                 slot.GetComponent<Slot>().Sprite = playerSprite;
-                slot.GetComponent<Slot>().Type = slotType.Player;
+                slot.GetComponent<Slot>().Type = slotType.Brutus;
 
                 winGenerate++;
             }
@@ -120,7 +122,7 @@ public class SlotRow : MonoBehaviour
                 }
 
                 slot.GetComponent<Slot>().Sprite = losingSpriteList[index];
-                slot.GetComponent<Slot>().Type = slotType.OtherCharacter;
+                slot.GetComponent<Slot>().Type = slotType.Dumpy;
             }
 
 

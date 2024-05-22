@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.U2D.Animation;
@@ -17,6 +18,10 @@ public class Slotmachine : MonoBehaviour
     [SerializeField] AudioClip failAudio;
     [SerializeField] AudioClip stopRowAudio;
     [SerializeField] AudioSource loopSlotAudio;
+
+    [SerializeField] slotType[] WinCombination;
+    [SerializeField] List<slotType> allSlotType;
+    private List<Sprite> WinCombinationSprite;
 
     [Header("Win/lose Screen")]
     [SerializeField] GameObject winScreen;
@@ -136,6 +141,9 @@ public class Slotmachine : MonoBehaviour
         else
             Debug.LogError("DialogueBox is null");
 
+        WinCombination = new slotType[rows.Count];
+        allSlotType = Enum.GetValues(typeof(slotType)).Cast<slotType>().ToList();
+
         //sceneChanger = GetComponent<SceneChanger>();
 
         // GameManager.Instance.coopManager.playerInputPrefab = GO;
@@ -166,6 +174,11 @@ public class Slotmachine : MonoBehaviour
 
         //da aggiungere dopo una possibile animazione/tutorial
 
+        for (int i = 0;i<rows.Count-1;i++)
+        {
+            WinCombination[i] = allSlotType[UnityEngine.Random.Range(0, allSlotType.Count)];
+        }
+
         foreach (SlotRow row in rows)
         {
             row.Initialize();
@@ -195,7 +208,7 @@ public class Slotmachine : MonoBehaviour
 
         foreach (SlotRow row in rows)
         {
-            if (row.GetSelectedSlot().Type != slotType.Player)
+            if (row.GetSelectedSlot().Type != slotType.Brutus)
             {
                 win = false;
                 break;
