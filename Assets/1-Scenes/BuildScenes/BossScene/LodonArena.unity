@@ -123,6 +123,115 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &332376879
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 332376881}
+  - component: {fileID: 332376880}
+  m_Layer: 0
+  m_Name: LodonBoss
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &332376880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332376879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a9b633a764f5f64b8be8b5bc72a3216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _walkDustParticles: {fileID: 0}
+  fadeSpeedOnHit: 2
+  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
+  stunned: 0
+  underAggro: 0
+  inLove: 0
+  bleeding: 0
+  isDead: 0
+  colliders: []
+  damageReceivedMultiplier: 1
+  onHit:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  onDash:
+    m_PersistentCalls:
+      m_Calls: []
+  onParried:
+    m_PersistentCalls:
+      m_Calls: []
+  pushAnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  soundsDatabase: {fileID: 0}
+  maxHp: 0
+  damage: 0
+  staminaDamage: 0
+  attackSpeed: 0
+  moveSpeed: 0
+  target: {fileID: 0}
+  currentHp: 0
+  shortLongDistanceMoveSelectionPercetage: 0.35
+  shortFuryCharge: 0.23397616
+  shortRocketHead: 0.08456437
+  shortTridentThrowing: 0.11786438
+  shortLowerAnchor: 0.21813221
+  shortOpenPlatforms: 0.34546283
+  longFuryCharge: 0.10145196
+  longRocketHead: 0.3194254
+  longTridentThrowing: 0.24047752
+  longLowerAnchor: 0.19784276
+  longOpenPlatforms: 0.14080232
+--- !u!4 &332376881
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332376879}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.8922186, y: 0.9954177, z: 0.8341113}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &366855774
 GameObject:
   m_ObjectHideFlags: 0
@@ -5601,3 +5710,4 @@ SceneRoots:
   - {fileID: 687231875}
   - {fileID: 1728079779}
   - {fileID: 1467160913}
+  - {fileID: 332376881}
