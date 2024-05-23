@@ -19,7 +19,7 @@ public class TutorialEnemy : BasicMeleeEnemy
         obstacle.carving = true;
 
 
-        idleState = new BasicEnemyIdleState(this);
+        //idleState = new BasicEnemyIdleState(this);
         moveState = new TutorialEnemyMovementState(this);
         actionState = new TutorialEnemyAttackState(this);
         stunState = new BasicEnemyStunState(this);

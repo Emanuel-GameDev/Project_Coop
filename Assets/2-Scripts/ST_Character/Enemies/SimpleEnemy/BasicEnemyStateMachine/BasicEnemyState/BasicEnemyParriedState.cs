@@ -38,8 +38,7 @@ public class BasicEnemyParriedState : BasicEnemyState
 
         if (stunTime <= 0f)
         {
-
-            stateMachine.SetState(basicEnemy.idleState);
+            basicEnemy.SetIdleState();
         }
 
     }

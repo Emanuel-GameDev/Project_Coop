@@ -22,8 +22,8 @@ public class BasicEnemyEditor : Editor
             Handles.color = new Color(0, 1, 0, 0.2f);
             Handles.DrawSolidDisc(enemy.groundLevel.position, Vector3.forward, enemy.attackRange);
 
-            Handles.color = new Color(0, 0, 1, 0.2f);
-            Handles.DrawSolidDisc(enemy.groundLevel.position, Vector3.forward, enemy.escapeRange);
+            //Handles.color = new Color(0, 0, 1, 0.2f);
+            //Handles.DrawSolidDisc(enemy.groundLevel.position, Vector3.forward, enemy.escapeRange);
         }
 
         Handles.zTest = oldZtest;

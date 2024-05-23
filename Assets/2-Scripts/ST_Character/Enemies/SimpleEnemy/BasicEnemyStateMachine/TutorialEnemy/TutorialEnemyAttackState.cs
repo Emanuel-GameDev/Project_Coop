@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TutorialEnemyAttackState : BasicMeleeEnemyAttackState
 {
-    public TutorialEnemyAttackState(BasicEnemy basicEnemy) : base(basicEnemy)
+    public TutorialEnemyAttackState(TutorialEnemy basicEnemy) : base(basicEnemy)
     {
     }
 
@@ -28,7 +28,7 @@ public class TutorialEnemyAttackState : BasicMeleeEnemyAttackState
                 }
             }
 
-            stateMachine.SetState(basicEnemy.moveState);
+            //stateMachine.SetState(basicEnemy.moveState);
 
         }
     }

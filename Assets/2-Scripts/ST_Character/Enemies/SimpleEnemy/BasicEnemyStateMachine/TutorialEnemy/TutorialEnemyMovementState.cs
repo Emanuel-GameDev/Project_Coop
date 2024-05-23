@@ -5,7 +5,7 @@ using UnityEngine;
 public class TutorialEnemyMovementState : BasicMeleeEnemyMoveState
 {
 
-    public TutorialEnemyMovementState(BasicEnemy basicEnemy) : base(basicEnemy)
+    public TutorialEnemyMovementState(TutorialEnemy basicEnemy) : base(basicEnemy)
     {
     }
 
@@ -16,8 +16,8 @@ public class TutorialEnemyMovementState : BasicMeleeEnemyMoveState
         {
             foreach (PlayerCharacter player in basicEnemy.AttackRangeTrigger.GetPlayersDetected())
             {
-                if(player == basicEnemy.currentTarget)
-                    stateMachine.SetState(basicEnemy.actionState);
+                //if(player == basicEnemy.currentTarget)
+                   // stateMachine.SetState(basicEnemy.actionState);
             }
 
         }

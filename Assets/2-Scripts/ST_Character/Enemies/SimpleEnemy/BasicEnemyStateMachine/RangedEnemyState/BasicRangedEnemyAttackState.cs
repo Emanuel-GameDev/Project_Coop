@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicRangedEnemyAttackState : BasicEnemyActionState
+public class BasicRangedEnemyAttackState : BasicRangedEnemyState
 {
 
-    public BasicRangedEnemyAttackState(BasicEnemy basicEnemy) : base(basicEnemy)
+    public BasicRangedEnemyAttackState(RangedEnemy basicEnemy) : base(basicEnemy)
     {
     }
 
@@ -14,6 +14,12 @@ public class BasicRangedEnemyAttackState : BasicEnemyActionState
         base.Enter();
 
         //basicEnemy.StartCoroutine(basicEnemy.Attack());
+
+        basicEnemy.canMove = false;
+        basicEnemy.canAction = true;
+
+
+        basicEnemy.ActivateObstacle();
 
     }
 
@@ -24,20 +30,17 @@ public class BasicRangedEnemyAttackState : BasicEnemyActionState
 
         if (!basicEnemy.isActioning)
         {
-            if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() == 0)
+            if (rangedEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() == 0)
             {
-
-                stateMachine.SetState(basicEnemy.moveState);
-
+                stateMachine.SetState(rangedEnemy.moveState);
             }
-            else if(basicEnemy.EscapeTrigger.GetPlayersCountInTrigger()==0 || basicEnemy.panicAttack)
+            else if(rangedEnemy.EscapeTrigger.GetPlayersCountInTrigger()==0 || rangedEnemy.panicAttack)
             {
-                basicEnemy.SetActionCoroutine(basicEnemy.StartCoroutine(basicEnemy.Attack()));
-                
+                rangedEnemy.SetActionCoroutine(basicEnemy.StartCoroutine(rangedEnemy.Attack()));
             }
             else 
             {
-                stateMachine.SetState(basicEnemy.escapeState);
+                stateMachine.SetState(rangedEnemy.escapeState);
             }
                 
 

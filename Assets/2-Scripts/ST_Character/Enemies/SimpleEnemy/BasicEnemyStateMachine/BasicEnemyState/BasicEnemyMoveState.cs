@@ -11,11 +11,10 @@ public class BasicEnemyMoveState : BasicEnemyState
 
     public override void Enter()
     {
-        base.Enter();
         basicEnemy.canMove = true;
         basicEnemy.canAction = false;
 
-
+        Debug.Log("Bo");
         basicEnemy.GetAnimator().SetBool("isMoving", true);
 
     }

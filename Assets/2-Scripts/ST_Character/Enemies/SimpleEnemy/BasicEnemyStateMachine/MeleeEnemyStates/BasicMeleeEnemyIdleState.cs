@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
-public class BasicEnemyIdleState : BasicEnemyState
+public class BasicMeleeEnemyIdleState : BasicMeleeEnemyState
 {
-    
-    public BasicEnemyIdleState(BasicEnemy basicEnemy)
+    public BasicMeleeEnemyIdleState(BasicMeleeEnemy basicEnemy) : base(basicEnemy)
     {
-        this.basicEnemy = basicEnemy;
     }
+
 
     public override void Enter()
     {
-        base.Enter();
 
         basicEnemy.canSee = true;
         basicEnemy.canMove = false;
@@ -20,24 +19,22 @@ public class BasicEnemyIdleState : BasicEnemyState
 
         basicEnemy.ActivateObstacle();
 
-
     }
 
     public override void Update()
     {
-        base.Update();
-
         if (basicEnemy.viewTrigger.GetPlayersCountInTrigger() > 0 && basicEnemy.canSee)
         {
             if (basicEnemy.target == null)
                 basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
 
-            //stateMachine.SetState(basicEnemy.moveState);
+            stateMachine.SetState(meleeEnemy.moveState);
         }
     }
 
     public override void Exit()
     {
         base.Exit();
+        
     }
 }

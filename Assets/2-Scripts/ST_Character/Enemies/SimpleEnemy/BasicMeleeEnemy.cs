@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class BasicMeleeEnemy : BasicEnemy
 {
-   
+    [HideInInspector] public BasicMeleeEnemyIdleState idleState;
+    [HideInInspector] public BasicMeleeEnemyMoveState moveState;
+    [HideInInspector] public BasicMeleeEnemyAttackState actionState;
     protected override void Awake()
     {
         base.Awake();
@@ -14,23 +16,54 @@ public class BasicMeleeEnemy : BasicEnemy
         obstacle.carving = true;
 
         
-        idleState = new BasicEnemyIdleState(this);
+        idleState = new BasicMeleeEnemyIdleState(this);
         moveState = new BasicMeleeEnemyMoveState(this);
         actionState = new BasicMeleeEnemyAttackState(this);
-        stunState = new BasicEnemyStunState(this);
-        parriedState = new BasicEnemyParriedState(this);
-        deathState = new BasicEnemyDeathState(this);
+        //stunState = new BasicEnemyStunState(this);
+        //parriedState = new BasicEnemyParriedState(this);
+        //deathState = new BasicEnemyDeathState(this);
 
     }
 
     protected override void Start()
     {
         base.Start();
-
+        if (canGoIdle)
+            stateMachine.SetState(idleState);
         //CONTROLLARE
         //stateMachine.SetState(idleState);
     }
 
+    public override void FollowPath()
+    {
+        base.FollowPath();
+    }
 
+    public override IEnumerator Attack()
+    {
+        StopCoroutine(CalculateChasePathAndSteering());
+        isRunning = false;
 
+        isActioning = true;
+
+        //if (panicAttack)
+        //{
+        //    panicAttack = false;
+        //}
+
+        ActivateObstacle();
+        readyToAttack = false;
+
+        animator.SetTrigger("Attack");
+        yield return new WaitForSeconds(attackDelay);
+        isActioning = false;
+        readyToAttack = true;
+
+    }
+
+    public override void SetIdleState()
+    {
+        base.SetIdleState();
+        stateMachine.SetState(idleState);
+    }
 }
