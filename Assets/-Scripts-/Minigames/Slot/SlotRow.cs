@@ -11,16 +11,11 @@ public class SlotRow : MonoBehaviour
      int numberOfSlots;
      int numberWinSlots;
      float slotDistance = 0.25f;
-     [SerializeField] GameObject slotPrefab;
+     slotType winType;
 
     //inserire giocatore scelto
      public SlotPlayer selectedPlayer;
-
-     private Sprite playerSprite;
-     private List<Sprite> losingSpriteList;
-
-
-    
+   
 
 
     private List<GameObject> reorderSlots = new List<GameObject>();
@@ -42,12 +37,6 @@ public class SlotRow : MonoBehaviour
     [Header("Sounds")]
     [SerializeField] AudioClip stopSlotRowAudio;
 
-
-
-    private void Start()
-    {
-        losingSpriteList= new List<Sprite>();
-    }
 
     public void Initialize()
     {
@@ -80,13 +69,13 @@ public class SlotRow : MonoBehaviour
         stopped = false;
     }
 
-    public void SetRow(int slotNumber, int winNumber, float distance, Sprite playerSprite,List<Sprite>  losingSpriteList,float rotationSpeed,float stabilizationSpeed)
+    public void SetRow(int slotNumber, int winNumber, float distance, slotType winType,float rotationSpeed,float stabilizationSpeed)
     {
         numberOfSlots = slotNumber;
         numberWinSlots = winNumber;
         slotDistance = distance;
-        this.playerSprite = playerSprite;
-        this.losingSpriteList = losingSpriteList;
+
+        this.winType = winType;
         this.rotationSpeed = rotationSpeed;
         stabilitationTime = stabilizationSpeed;
         
@@ -95,42 +84,48 @@ public class SlotRow : MonoBehaviour
     private void InitializeRow()
     {
         List<GameObject> generatedSlots = new List<GameObject>();
+        List<slotType> remainingSlotType = new List<slotType>(mainMachine.allSlotType);
+
+        remainingSlotType.Remove(winType);
+
+
         int winGenerate = 0;
+        int typeindex = 0; //index per far generare almeno ogni tipo di immagine
+
 
         for (int i = 0; i < numberOfSlots; i++)
         {
-            GameObject slot = Instantiate(slotPrefab);
-            slot.name=$"slot #{i}";
+            GameObject slot = new GameObject($"slot #{i}");
+            slot.AddComponent<Slot>();
             slot.transform.SetParent(gameObject.transform, true);
 
            
 
             if (winGenerate < numberWinSlots)
             {
-                slot.GetComponent<Slot>().Sprite = playerSprite;
-                slot.GetComponent<Slot>().Type = slotType.Brutus;
+                slot.GetComponent<Slot>().Type = winType;
+                slot.GetComponent<Slot>().Sprite = mainMachine.ChoseSpriteBySlotType(winType);
+                
 
                 winGenerate++;
             }
+            else if(typeindex<remainingSlotType.Count-1)
+            {
+                slot.GetComponent<Slot>().Type = remainingSlotType[typeindex];
+                slot.GetComponent<Slot>().Sprite = mainMachine.ChoseSpriteBySlotType(remainingSlotType[typeindex]);
+
+                typeindex++;
+                          
+            }
             else
             {
-                int index=Random.Range(0,losingSpriteList.Count);
+                slotType randomType = remainingSlotType[Random.Range(0,remainingSlotType.Count)];
 
-                if (losingSpriteList[index] == null)
-                {
-                    Debug.LogError("Inserisci almeno uno sprite dentro la lista delle immagini perdenti");
-                }
+                slot.GetComponent<Slot>().Type = randomType;
+                slot.GetComponent<Slot>().Sprite = mainMachine.ChoseSpriteBySlotType(randomType);
 
-                slot.GetComponent<Slot>().Sprite = losingSpriteList[index];
-                slot.GetComponent<Slot>().Type = slotType.Dumpy;
             }
-
-
-
             generatedSlots.Add(slot);
-
-            
-
             
         }
 

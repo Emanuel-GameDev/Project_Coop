@@ -6,12 +6,32 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.U2D.Animation;
 
+public enum slotType
+{
+    Brutus,
+    Kaina,
+    Jude,
+    Cassius,
+    Dumpy,
+    Lilith,
+    Seven
+}
+
+
 public class Slotmachine : MonoBehaviour
 {
     [Header("Variabili slot")]
     [SerializeField, Tooltip("Numero massimo di tentativi prima di vincere")]
     int lives = 3;
     int remainingLives;
+
+    //Sprite List basato sul type
+    [SerializeField] private List<Sprite> spriteDatabase;
+    public List<slotType> allSlotType { get; private set; }
+    [SerializeField] slotType[] WinCombination;
+    private List<Sprite> WinCombinationSprite;
+
+    [Header("Audio base")]
     [SerializeField] AudioClip winAudio;
     [SerializeField] AudioClip loseAudio;
     [SerializeField] AudioClip goodAudio;
@@ -19,9 +39,9 @@ public class Slotmachine : MonoBehaviour
     [SerializeField] AudioClip stopRowAudio;
     [SerializeField] AudioSource loopSlotAudio;
 
-    [SerializeField] slotType[] WinCombination;
-    [SerializeField] List<slotType> allSlotType;
-    private List<Sprite> WinCombinationSprite;
+    
+    
+    
 
     [Header("Win/lose Screen")]
     [SerializeField] GameObject winScreen;
@@ -339,29 +359,27 @@ public class Slotmachine : MonoBehaviour
 
     private void SetRowInIndex(int index, ePlayerCharacter characterEnum)
     {
-        Sprite playerSprites = null;
         Sprite buttonSprite = null;
         SpriteLibraryAsset libraryButton = null;
 
         switch (characterEnum)
         {
             case ePlayerCharacter.Brutus:
-                playerSprites = dpsSprite;
                 buttonSprite = dpsButtonSprite;
                 libraryButton = dpsSpriteLibrary;
                 break;
             case ePlayerCharacter.Kaina:
-                playerSprites = tankSprite;
+
                 buttonSprite = tankButtonSprite;
                 libraryButton = tankSpriteLibrary;
                 break;
             case ePlayerCharacter.Cassius:
-                playerSprites = healerSprite;
+
                 buttonSprite = healerButtonSprite;
                 libraryButton = healerSpriteLibrary;
                 break;
             case ePlayerCharacter.Jude:
-                playerSprites = rangedSprite;
+
                 buttonSprite = rangedButtonSprite;
                 libraryButton = rangedSpriteLibrary;
                 break;
@@ -370,8 +388,25 @@ public class Slotmachine : MonoBehaviour
                 break;
         }
 
-        rows[index].SetRow(numberOfSlots, numberWinSlots, slotDistance, playerSprites, losingSpriteList, rotationSpeed, stabilizationSpeed);
+        rows[index].SetRow(numberOfSlots, numberWinSlots, slotDistance, WinCombination[index], rotationSpeed, stabilizationSpeed);
         buttonSlots[index].InitializeButton(buttonSprite, libraryButton);
+    }
+
+    public Sprite ChoseSpriteBySlotType(slotType slotType)
+    {
+        slotType currentType;
+
+        for (int i = 0;i< allSlotType.Count;i++)
+        {
+            currentType = allSlotType[i];
+
+            if(currentType == slotType)
+            {
+                return spriteDatabase[i];
+            }
+        }
+
+        return null;
     }
 
     private void RandomReorder(List<SlotPlayer> currentPlayersList)
