@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class LodonBoss : BossCharacter
@@ -12,69 +13,12 @@ public class LodonBoss : BossCharacter
     private float shortLongDistanceMoveSelectionPercetage = 0.35f;
     public float LongDistancePercentage => shortLongDistanceMoveSelectionPercetage;
 
-    //[Header("Short Distance Bheaviour")]
-    //[SerializeField, Range(0f, 1f)]
-    //private float shortFuryCharge;
-    //[SerializeField, Range(0f, 1f)]
-    //private float shortRocketHead;
-    //[SerializeField, Range(0f, 1f)]
-    //private float shortTridentThrowing;
-    //[SerializeField, Range(0f, 1f)]
-    //private float shortLowerAnchor;
-    //[SerializeField, Range(0f, 1f)]
-    //private float shortOpenPlatforms;
-
-    //[Header("Long Distance Bheaviour")]
-    //[SerializeField, Range(0f, 1f)]
-    //private float longFuryCharge;
-    //[SerializeField, Range(0f, 1f)]
-    //private float longRocketHead;
-    //[SerializeField, Range(0f, 1f)]
-    //private float longTridentThrowing;
-    //[SerializeField, Range(0f, 1f)]
-    //private float longLowerAnchor;
-    //[SerializeField, Range(0f, 1f)]
-    //private float longOpenPlatforms;
-
-    //private void OnValidate()
-    //{
-    //    ShortNormalize();
-    //    LongNormalize();
-    //}
-
-    //private void ShortNormalize()
-    //{
-    //    float total = shortFuryCharge + shortRocketHead + shortTridentThrowing + shortOpenPlatforms + shortLowerAnchor; 
-    //    if (total == 0f) return;
-
-    //    float scaleFactor = Mathf.Min(1 / total, 1f);
-    //    shortFuryCharge *= scaleFactor;
-    //    shortRocketHead *= scaleFactor;
-    //    shortTridentThrowing *= scaleFactor;
-    //    shortOpenPlatforms *= scaleFactor;
-    //    shortLowerAnchor *= scaleFactor;
-
-    //    // For real-time update in the editor
-    //    UnityEditor.EditorApplication.QueuePlayerLoopUpdate();
-    //}
-
-
-    //private void LongNormalize()
-    //{
-    //    float total = longFuryCharge + longRocketHead + longTridentThrowing + longLowerAnchor + longOpenPlatforms;
-    //    if (total == 0f) return;
-    //    float scaleFactor = Mathf.Min(1 / total, 1f);
-
-    //    longFuryCharge *= scaleFactor;
-    //    longRocketHead *= scaleFactor;
-    //    longTridentThrowing *= scaleFactor;
-    //    longOpenPlatforms *= scaleFactor;
-    //    longLowerAnchor *= scaleFactor;
-
-    //    // For real-time update in the editor
-    //    UnityEditor.EditorApplication.QueuePlayerLoopUpdate();
-    //}
-
+    [Header("References")]
+    [SerializeField]
+    List<Transform> platformsCenterPositions = new List<Transform>();
+    [SerializeField]
+    List<Transform> waterCenterPositions = new List<Transform>();
+    List<Transform> AllCenterPositions => platformsCenterPositions.Concat(waterCenterPositions).ToList();
 
     private void Start()
     {
@@ -103,10 +47,79 @@ public class LodonBoss : BossCharacter
 public enum LodonState
 {
     Move,
+    Wait,
     TargetMoveSelection,
+    //Attacks
     TridentThrowing,
     FuryCharge,
     OpenPlatforms,
     RocketHead,
     LowerAnchor
 }
+
+
+
+
+//[Header("Short Distance Bheaviour")]
+//[SerializeField, Range(0f, 1f)]
+//private float shortFuryCharge;
+//[SerializeField, Range(0f, 1f)]
+//private float shortRocketHead;
+//[SerializeField, Range(0f, 1f)]
+//private float shortTridentThrowing;
+//[SerializeField, Range(0f, 1f)]
+//private float shortLowerAnchor;
+//[SerializeField, Range(0f, 1f)]
+//private float shortOpenPlatforms;
+
+//[Header("Long Distance Bheaviour")]
+//[SerializeField, Range(0f, 1f)]
+//private float longFuryCharge;
+//[SerializeField, Range(0f, 1f)]
+//private float longRocketHead;
+//[SerializeField, Range(0f, 1f)]
+//private float longTridentThrowing;
+//[SerializeField, Range(0f, 1f)]
+//private float longLowerAnchor;
+//[SerializeField, Range(0f, 1f)]
+//private float longOpenPlatforms;
+
+//private void OnValidate()
+//{
+//    ShortNormalize();
+//    LongNormalize();
+//}
+
+//private void ShortNormalize()
+//{
+//    float total = shortFuryCharge + shortRocketHead + shortTridentThrowing + shortOpenPlatforms + shortLowerAnchor; 
+//    if (total == 0f) return;
+
+//    float scaleFactor = Mathf.Min(1 / total, 1f);
+//    shortFuryCharge *= scaleFactor;
+//    shortRocketHead *= scaleFactor;
+//    shortTridentThrowing *= scaleFactor;
+//    shortOpenPlatforms *= scaleFactor;
+//    shortLowerAnchor *= scaleFactor;
+
+//    // For real-time update in the editor
+//    UnityEditor.EditorApplication.QueuePlayerLoopUpdate();
+//}
+
+
+//private void LongNormalize()
+//{
+//    float total = longFuryCharge + longRocketHead + longTridentThrowing + longLowerAnchor + longOpenPlatforms;
+//    if (total == 0f) return;
+//    float scaleFactor = Mathf.Min(1 / total, 1f);
+
+//    longFuryCharge *= scaleFactor;
+//    longRocketHead *= scaleFactor;
+//    longTridentThrowing *= scaleFactor;
+//    longOpenPlatforms *= scaleFactor;
+//    longLowerAnchor *= scaleFactor;
+
+//    // For real-time update in the editor
+//    UnityEditor.EditorApplication.QueuePlayerLoopUpdate();
+//}
+
