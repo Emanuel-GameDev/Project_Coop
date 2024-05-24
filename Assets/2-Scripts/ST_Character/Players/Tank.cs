@@ -96,7 +96,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
 
     //private bool doubleAttack => upgradeStatus[AbilityUpgrade.Ability1];
-    private bool chargeAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
+    private bool chargeUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
     private bool maximizedStunUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
     private bool implacableAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability3];
     private bool damageOnParryUnlocked => upgradeStatus[AbilityUpgrade.Ability4];
@@ -188,7 +188,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         if (context.performed)
         {
             //Carica
-            if(chargeAttackUnlocked && canCharge && isBlocking)
+            if(chargeUnlocked && canCharge && isBlocking)
             {
                 StartCoroutine(ChargeCoroutine());
             }
@@ -282,8 +282,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         if (attackPressed)
         {
-            chargedAttackReady = true;
-            chargedAttackVFX.gameObject.SetActive(true);
+            chargedAttackReady = true;           
+            chargedAttackVFX.SetActive(true);
+            
            
         }
 
@@ -292,7 +293,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         animator.SetTrigger("ChargedAttackEnd");
         chargedAttackReady = false;
-        chargedAttackVFX.gameObject.SetActive(false);
+        chargedAttackVFX.SetActive(false);
     }
     public void ChargedAttackAreaDamage()
     {
@@ -740,6 +741,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         if (context.performed && uniqueAbilityReady)
         {
+            chargedAttackVFX.gameObject.SetActive(true);
             SetCanMove(false, rb);
             uniqueAbilityReady = false;
             base.UniqueAbilityInput(context);
@@ -753,6 +755,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public void PerformUniqueAbility()
     {
+        chargedAttackVFX.gameObject.SetActive(false);
         SetCanMove(true, rb);
 
         RaycastHit2D[] hitted = Physics2D.CircleCastAll(transform.position, aggroRange, Vector2.up, aggroRange);
@@ -797,7 +800,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     #endregion
 
-    #region ExtraAbility(BossAttack)
+    #region ExtraAbility(BossAttack) /Mettere qua attacco caricato
 
     public override void ExtraAbilityInput(InputAction.CallbackContext context) //Tasto est
     {
