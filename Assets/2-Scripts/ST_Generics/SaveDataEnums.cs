@@ -18,31 +18,41 @@ public enum PlayerPrefsSettings
 }
 
 /*
- * Gli SceneSaveSettings sono tutti i valori che possono essere salvati legati al singolo salvataggio
+ * Gli SceneSaveSettings sono da eliminare li lascio temporaneamente come Reference.
  */
 
 [Serializable]
 public enum SceneSaveSettings
 {
+    //Dialogues
     FirstSceneDialogue,
     FirstMinigameDialogue,
-    ChallengesSaved,
-    SviluppartyInteractions,
-    DialogueTrigger,
+    FirstTimeChallegeDialogueTriggered,
+    //Minigames
     Passepartout,
     SlotMachine,
+    //Shops
     ShopLilithFirstTime,
     ShopSouvenirFirstTime,
-
+    //Challeges
+    ChallengesSaved,
+    AllFirstZoneChallengesCompleted,
+    AllChallengesCompleted,
+    //Others
+    SviluppartyInteractions
 }
+
+/*
+ * Le SaveData Strings possono essere utilizzate in caso di salvataggi che devono essere verificati da script diversi
+ * così da avere un riferimento sicuro alla Key giusta
+ */
+
 
 public static class SaveDataStrings
 {
-    public const string COMPLETED = "Completed";
-    public const string INTERACTED = "Interacted";
-    public const string UNLOCKED = "Unlocked";
-    public const string SELECTED = "Selected";
-    public const string SVILUPPARTY_END_DUMPY_INTERACTED = "SviluppartyEndDumpyInteracted";
-    public const string CHALLENGE = "Challenge";
+    //Minigames
+    public const string PASSEPARTOUT_MINIGAME_COMPLETED = "PassepartoutMinigameCompleted";
+    public const string FOOLSLOT_MINIGAME_COMPLETED = "FoolSlotMinigameCompleted";
+
 }
 

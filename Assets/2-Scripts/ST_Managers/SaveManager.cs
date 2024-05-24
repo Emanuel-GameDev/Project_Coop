@@ -8,6 +8,10 @@ public class SaveManager : MonoBehaviour
 {
     SaveData saveData = new();
 
+    int saveSlotIndex = 0;
+
+    public string SaveSlot => "SaveData" + saveSlotIndex;
+
     private static SaveManager _instance;
     public static SaveManager Instance
     {
@@ -44,32 +48,23 @@ public class SaveManager : MonoBehaviour
     #region Save
     public void SaveData()
     {
-        saveData.lastScene = SceneManager.GetActiveScene().name;
+        saveData.lastSceneName = SceneManager.GetActiveScene().name;
 
         string saveFolderPath = Application.persistentDataPath + "/SaveGames";
-        string filePath = saveFolderPath + "/SaveData.json";
+        string filePath = saveFolderPath + $"/{SaveSlot}.json";
 
         if (!Directory.Exists(saveFolderPath))
         {
             Directory.CreateDirectory(saveFolderPath);
         }
 
+
         string json = JsonUtility.ToJson(saveData);
+        //string encryptSave = EncryptionUtility.Encrypt(json);
+        //File.WriteAllText(filePath, encryptSave);
         File.WriteAllText(filePath, json);
 
         Debug.Log("Dati salvati con successo!");
-    }
-
-    public void SaveSceneData(SceneSetting setting)
-    {
-        SceneSetting sceneSetting = saveData.sceneSettings.Find(x => x.settingName == setting.settingName);
-
-        if (sceneSetting != null)
-            saveData.sceneSettings.Remove(sceneSetting);
-        
-        saveData.sceneSettings.Add(setting);
-
-        SaveData();
     }
 
     public void SavePlayersData()
@@ -83,16 +78,76 @@ public class SaveManager : MonoBehaviour
 
         SaveData();
     }
+
+    public void SaveSetting(string setting, int value)
+    {
+        saveData.settings.AddIntValue(setting, value);
+        SaveData();
+    }
+
+    public void SaveSetting(string setting, bool value)
+    {
+        saveData.settings.AddBoolValue(setting, value);
+        SaveData();
+    }
+
+    public void SaveSetting(string setting, string value)
+    {
+        saveData.settings.AddStringValue(setting, value);
+        SaveData();
+    }
+
+    public void SaveSetting(string setting, float value)
+    {
+        saveData.settings.AddFloatValue(setting, value);
+        SaveData();
+    }
+
+    public void SaveChallenges(List<ChallengeData> data)
+    {
+        ChallengesSaveData chSaveData = saveData.challenges.Find(x => x.sceneName == SceneManager.GetActiveScene().name);
+        if (chSaveData == null)
+        {
+            chSaveData = new ChallengesSaveData(SceneManager.GetActiveScene().name);
+            saveData.challenges.Add(chSaveData);
+        }
+
+        foreach (ChallengeData d in data)
+        {
+            chSaveData.AddChalleges(d);
+        }
+
+        SaveData();
+    }
+
+    public void SaveChallenge(ChallengeData data)
+    {
+        ChallengesSaveData chSaveData = saveData.challenges.Find(x => x.sceneName == SceneManager.GetActiveScene().name);
+        if (chSaveData != null)
+        {
+            chSaveData.AddChalleges(data);
+        }
+        else
+        {
+            chSaveData = new ChallengesSaveData(SceneManager.GetActiveScene().name);
+            chSaveData.AddChalleges(data);
+            saveData.challenges.Add(chSaveData);
+        }
+
+        SaveData();
+    }
     #endregion
 
     #region Load
     public void LoadData()
     {
-        string filePath = Application.persistentDataPath + "/SaveGames/SaveData.json";
+        string filePath = Application.persistentDataPath + $"/SaveGames/{SaveSlot}.json";
 
         if (File.Exists(filePath))
         {
             string json = File.ReadAllText(filePath);
+            //string decryptedJson = EncryptionUtility.Decrypt(json);
+            //saveData = JsonUtility.FromJson<SaveData>(decryptedJson);
             saveData = JsonUtility.FromJson<SaveData>(json);
 
             Debug.Log("Dati caricati con successo!");
@@ -125,9 +180,75 @@ public class SaveManager : MonoBehaviour
             player.LoadSaveData(saveData.players.Find(c => c.characterName == player.Character));
         }
     }
-    #endregion
 
-    #region GetData
+    public bool TryLoadSetting<T>(string setting, out T value)
+    {
+        Type typeOfT = typeof(T);
+
+        if (typeOfT == typeof(int))
+        {
+            foreach (IntSetting v in saveData.settings.ints)
+            {
+                if (v.settingName == setting)
+                {
+                    value = (T)(object)v.value;
+                    return true;
+                }
+            }
+        }
+        else if (typeOfT == typeof(bool))
+        {
+            foreach (BoolSetting v in saveData.settings.bools)
+            {
+                if (v.settingName == setting)
+                {
+                    value = (T)(object)v.value;
+                    return true;
+                }
+            }
+        }
+        else if (typeOfT == typeof(string))
+        {
+            foreach (StringSetting v in saveData.settings.strings)
+            {
+                if (v.settingName == setting)
+                {
+                    value = (T)(object)v.value;
+                    return true;
+                }
+            }
+        }
+        else if (typeOfT == typeof(float))
+        {
+            foreach (FloatSetting v in saveData.settings.floats)
+            {
+                if (v.settingName == setting)
+                {
+                    value = (T)(object)v.value;
+                    return true;
+                }
+            }
+        }
+
+        value = default(T);
+        return false;
+    }
+
+    public T LoadSetting<T>(string setting)
+    {
+        return TryLoadSetting<T>(setting, out T value) ? value : default(T);
+    }
+
+    public List<ChallengeData> LoadChallenges()
+    {
+        foreach (ChallengesSaveData data in saveData.challenges)
+        {
+            if (data.sceneName == SceneManager.GetActiveScene().name)
+                return data.savedChalleges;
+        }
+
+        return null;
+    }
 
     public CharacterSaveData GetPlayerSaveData(ePlayerCharacter character)
     {
@@ -149,15 +270,6 @@ public class SaveManager : MonoBehaviour
         newSaveData.characterName = character;
 
         return newSaveData;
-    }
-
-    public SceneSetting GetSceneSetting(SceneSaveSettings setting)
-    {
-        foreach (SceneSetting sceneSetting in saveData.sceneSettings)
-            if (sceneSetting.settingName == setting)
-                return sceneSetting;
-        
-        return null;
     }
 
     #endregion
@@ -189,7 +301,6 @@ public class SaveManager : MonoBehaviour
     }
     #endregion
 
-
     public void ClearSaveData()
     {
         saveData = new();
@@ -197,14 +308,27 @@ public class SaveManager : MonoBehaviour
         Utility.DebugTrace("Dati Eliminati!");
     }
 
+    public void SetSaveSlot(int slot)
+    {
+        saveSlotIndex = slot;
+    }
+
+    public int GetSaveSlot()
+    {
+        return saveSlotIndex;
+    }
 }
 
 [Serializable]
 public class SaveData
 {
-    //SceneSettings
-    public List<SceneSetting> sceneSettings = new();
-    public string lastScene;
+    public string lastSceneName;
+    public string lastMapZoneSceneName;
+    //Settings
+    public Settings settings = new();
+
+    //Challenges
+    public List<ChallengesSaveData> challenges = new();
 
     //Players
     public List<CharacterSaveData> players = new();
@@ -212,155 +336,101 @@ public class SaveData
 }
 
 [Serializable]
-public class SceneSetting
+public class Settings
 {
-    public SceneSaveSettings settingName;
-    public List<SavingBoolValue> bools = new();
-    public List<SavingIntValue> ints = new();
-    public List<SavingFloatValue> floats = new();
-    public List<SavingStringValue> strings = new();
-
-    public SceneSetting(SceneSaveSettings settingName)
-    {
-        this.settingName = settingName;
-    }
+    public List<BoolSetting> bools = new();
+    public List<IntSetting> ints = new();
+    public List<FloatSetting> floats = new();
+    public List<StringSetting> strings = new();
 
     #region Add
-    public void AddBoolValue(string valueName, bool value)
+    public void AddBoolValue(string settingName, bool value)
     {
-        SavingBoolValue valueData = bools.Find(x => x.valueName == valueName);
+        BoolSetting valueData = bools.Find(x => x.settingName == settingName);
         if (valueData != null)
             valueData.value = value;
         else
-            bools.Add(new SavingBoolValue(valueName, value));
+            bools.Add(new BoolSetting(settingName, value));
     }
 
-    public void AddIntValue(string valueName, int value)
+    public void AddIntValue(string settingName, int value)
     {
-        SavingIntValue valueData = ints.Find(x => x.valueName == valueName);
+        IntSetting valueData = ints.Find(x => x.settingName == settingName);
         if (valueData != null)
             valueData.value = value;
         else
-            ints.Add(new SavingIntValue(valueName, value));
+            ints.Add(new IntSetting(settingName, value));
     }
 
-    public void AddFloatValue(string valueName, float value)
+    public void AddFloatValue(string settingName, float value)
     {
-        SavingFloatValue valueData = floats.Find(x => x.valueName == valueName);
+        FloatSetting valueData = floats.Find(x => x.settingName == settingName);
         if (valueData != null)
             valueData.value = value;
         else
-            floats.Add(new SavingFloatValue(valueName, value));
+            floats.Add(new FloatSetting(settingName, value));
     }
 
-    public void AddStringValue(string valueName, string value)
+    public void AddStringValue(string settingName, string value)
     {
-        SavingStringValue valueData = strings.Find(x => x.valueName == valueName);
+        StringSetting valueData = strings.Find(x => x.settingName == settingName);
         if (valueData != null)
             valueData.value = value;
         else
-            strings.Add(new SavingStringValue(valueName, value));
+            strings.Add(new StringSetting(settingName, value));
     }
 
-    #endregion
-
-    #region Get
-    public bool GetBoolValue(string valueName)
-    {
-        foreach (SavingBoolValue value in bools)
-        {
-            if (value.valueName == valueName)
-                return value.value;
-        }
-
-        return false;
-    }
-
-    public int GetIntValue(string valueName)
-    {
-        foreach (SavingIntValue value in ints)
-        {
-            if (value.valueName == valueName)
-                return value.value;
-        }
-
-        return 0;
-    }
-
-    public float GetFloatValue(string valueName)
-    {
-        foreach (SavingFloatValue value in floats)
-        {
-            if (value.valueName == valueName)
-                return value.value;
-        }
-
-        return 0;
-    }
-
-    public string GetStringValue(string valueName)
-    {
-        foreach (SavingStringValue value in strings)
-        {
-            if (value.valueName == valueName)
-            {
-                return value.value;
-            }
-        }
-
-        return null;
-    }
     #endregion
 }
 
 [Serializable]
-public class SavingBoolValue
+public class BoolSetting
 {
-    public string valueName;
+    public string settingName;
     public bool value;
 
-    public SavingBoolValue(string valueName, bool value)
+    public BoolSetting(string settingName, bool value)
     {
-        this.valueName = valueName;
+        this.settingName = settingName;
         this.value = value;
     }
 }
 
 [Serializable]
-public class SavingIntValue
+public class IntSetting
 {
-    public string valueName;
+    public string settingName;
     public int value;
 
-    public SavingIntValue(string valueName, int value)
+    public IntSetting(string settingName, int value)
     {
-        this.valueName = valueName;
+        this.settingName = settingName;
         this.value = value;
     }
 }
 
 [Serializable]
-public class SavingFloatValue
+public class FloatSetting
 {
-    public string valueName;
+    public string settingName;
     public float value;
 
-    public SavingFloatValue(string valueName, float value)
+    public FloatSetting(string settingName, float value)
     {
-        this.valueName = valueName;
+        this.settingName = settingName;
         this.value = value;
     }
 }
 
 [Serializable]
-public class SavingStringValue
+public class StringSetting
 {
-    public string valueName;
+    public string settingName;
     public string value;
 
-    public SavingStringValue(string valueName, string value)
+    public StringSetting(string settingName, string value)
     {
-        this.valueName = valueName;
+        this.settingName = settingName;
         this.value = value;
     }
 }
@@ -374,4 +444,51 @@ public class CharacterSaveData
     public List<PowerUp> powerUps = new();
     public ExtraData extraData = new();
     public List<AbilityUpgrade> unlockedAbility = new();
+}
+
+[Serializable]
+public class ChallengesSaveData
+{
+    public string sceneName;
+    public List<ChallengeData> savedChalleges = new();
+
+    public ChallengesSaveData(string sceneName)
+    {
+        this.sceneName = sceneName;
+    }
+
+    public ChallengesSaveData(string sceneName, List<ChallengeData> savedChalleges) : this(sceneName)
+    {
+        this.savedChalleges = savedChalleges;
+    }
+
+    internal void AddChalleges(ChallengeData data)
+    {
+        ChallengeData chData = savedChalleges.Find(x => x.challengeName == data.challengeName);
+        if (chData != null)
+        {
+            chData.completed = data.completed;
+            chData.rank = data.rank;
+        }
+        else
+        {
+            savedChalleges.Add(data);
+        }
+    }
+}
+
+
+[Serializable]
+public class ChallengeData
+{
+    public ChallengeName challengeName;
+    public bool completed;
+    public int rank;
+
+    public ChallengeData(ChallengeName challengeName, bool completed, int rank)
+    {
+        this.challengeName = challengeName;
+        this.completed = completed;
+        this.rank = rank;
+    }
 }

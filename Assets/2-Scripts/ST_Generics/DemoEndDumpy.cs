@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class SvillupartyEndDumpy : MonoBehaviour
+public class DemoEndDumpy : MonoBehaviour
 {
     [SerializeField]
     UnityEvent onFirstInteract;
@@ -17,13 +17,13 @@ public class SvillupartyEndDumpy : MonoBehaviour
 
     bool interacted = false;
     bool gameComplete = false;
+    private static string DEMO_END_DUMPY_INTERACTED = "DemoEndDumpyInteracted";
 
     private void Awake()
     {
-        SceneSetting sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.SviluppartyInteractions);
-        if (sceneSetting != null)
+        if(SaveManager.Instance.TryLoadSetting<bool>(DEMO_END_DUMPY_INTERACTED, out bool value))
         {
-            interacted = sceneSetting.GetBoolValue(SaveDataStrings.SVILUPPARTY_END_DUMPY_INTERACTED);
+            interacted = value;
         }
     }
 
@@ -31,10 +31,7 @@ public class SvillupartyEndDumpy : MonoBehaviour
     {
         onFirstInteract.Invoke();
         interacted = true;
-
-        SceneSetting sceneSetting = new(SceneSaveSettings.SviluppartyInteractions);
-        sceneSetting.AddBoolValue(SaveDataStrings.SVILUPPARTY_END_DUMPY_INTERACTED, interacted);
-        SaveManager.Instance.SaveSceneData(sceneSetting);
+        SaveManager.Instance.SaveSetting(DEMO_END_DUMPY_INTERACTED, interacted);
     }
 
     private void NormalInteract()
@@ -64,9 +61,9 @@ public class SvillupartyEndDumpy : MonoBehaviour
 
     private void GetSaveData()
     {
-        bool passepartoutMinigameCompleted = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.Passepartout)?.GetBoolValue(SaveDataStrings.COMPLETED) ?? false;
-        bool fullSlotMachineMinigameCompleted = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.SlotMachine)?.GetBoolValue(SaveDataStrings.COMPLETED) ?? false;
-        bool allChallegesCompleted = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved)?.GetBoolValue(SaveDataStrings.COMPLETED) ?? false;
+        bool passepartoutMinigameCompleted = SaveManager.Instance.TryLoadSetting<bool>(SaveDataStrings.PASSEPARTOUT_MINIGAME_COMPLETED, out bool value) && value;
+        bool fullSlotMachineMinigameCompleted = SaveManager.Instance.TryLoadSetting<bool>(SaveDataStrings.FOOLSLOT_MINIGAME_COMPLETED, out bool value2) && value2;
+        bool allChallegesCompleted = SaveManager.Instance.TryLoadSetting<bool>("AllFirstZoneChallengesCompleted", out bool value3) && value3;
         gameComplete = passepartoutMinigameCompleted && fullSlotMachineMinigameCompleted && allChallegesCompleted;
     }
 }

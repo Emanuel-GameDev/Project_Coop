@@ -18,22 +18,10 @@ public class BossCharacter : EnemyCharacter
         pivot = GetComponent<Pivot>(); 
     }
 
-
-    public override void TargetSelection()
-    {
-        base.TargetSelection();
-    }
-
-    
-
     public override DamageData GetDamageData()
     {
         return new DamageData(damage, staminaDamage, this, attackCondition, true);
     }
-
-    
-
-
 
     protected virtual void SetSpriteDirection(Vector2 direction)
     {
@@ -47,7 +35,6 @@ public class BossCharacter : EnemyCharacter
 
         pivot.gameObject.transform.localRotation = rotation;
 
-       
     }
    
 }
