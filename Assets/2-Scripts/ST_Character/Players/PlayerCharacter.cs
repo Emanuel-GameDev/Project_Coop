@@ -25,7 +25,8 @@ public abstract class PlayerCharacter : Character
     [SerializeField, Tooltip("L'incremento del tempo di attesa dell'abilit� unica dopo ogni uso.")]
     protected float uniqueAbilityCooldownIncreaseAtUse;
     [SerializeField, Tooltip("Tempo che deve trascorrere prima di poter cambiare di nuovo personaggio")]
-    protected float switchCharacterCooldown;
+     //Controllare/Debug(levaree public)
+     public float switchCharacterCooldown;
     [SerializeField, Tooltip("Tempo di invulnerabilità dopo essere staty colpiti")]
     protected float invulnerabilityTime;
     [SerializeField, Tooltip("Reference per l'interactable del ress")]

@@ -1643,10 +1643,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b18d651622bf64438b65fd1593eb40c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 2
-  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
-  _OnParryColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   _walkDustParticles: {fileID: 6131186109790520247}
+  fadeSpeedOnHit: 2
+  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   stunned: 0
   underAggro: 0
   inLove: 0
@@ -1703,6 +1702,8 @@ MonoBehaviour:
   switchCharacterCooldown: 10
   invulnerabilityTime: 1
   ressInteracter: {fileID: 906128126998632890}
+  onHitPushTimer: 0.2
+  onHitPushForce: 1
   characterController: {fileID: 0}
   recentlyInputTimer: 3
   protectedByTank: 0
@@ -1712,6 +1713,9 @@ MonoBehaviour:
   chargedAttackDamage: 50
   chargedAttackRadius: 5
   chargedAttackSprite: {fileID: 6584751586460598899}
+  chargeCooldownTimer: 5
+  chargeSpeed: 20
+  chargeDuration: 3
   maxStamina: 100
   blockTimer: 0.2
   perfectBlockDamage: 10
@@ -1727,6 +1731,7 @@ MonoBehaviour:
   chargedAttackStunDuration: 5
   additionalStunDuration: 5
   shieldVFX: {fileID: 2378909330986876465}
+  chargedAttackVFX: {fileID: 3853030557984777652}
   shieldVFXGoodColor: {r: 4, g: 0, b: 2.3378906, a: 0}
   shieldVFXDamagedColor: {r: 3.7785237, g: 3.185038, b: 0, a: 0}
   shieldVFXCriticalColor: {r: 4, g: 0.37696332, b: 0, a: 0}
@@ -2600,6 +2605,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd425138b6e0b9942bd1cfed8eef9be9, type: 3}
+--- !u!1 &3853030557984777652 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7293090427560167442, guid: dd425138b6e0b9942bd1cfed8eef9be9,
+    type: 3}
+  m_PrefabInstance: {fileID: 5786833028209634726}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6281454516557800185 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 532199226694537055, guid: dd425138b6e0b9942bd1cfed8eef9be9,

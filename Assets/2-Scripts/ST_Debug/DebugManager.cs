@@ -9,7 +9,7 @@ public class DebugManager : MonoBehaviour
 {
     [SerializeField] bool debugMode = false;
 
-    [SerializeField, Range(0, 10), Tooltip("Se la debug mode è attiva premi T per attivare e disattivare il cambio di timescale")]
+    [SerializeField, Range(0, 10), Tooltip("Se la debug mode ï¿½ attiva premi T per attivare e disattivare il cambio di timescale")]
     float timescale = 1f;
     private bool timeescaleChanged = false;
 
@@ -24,9 +24,9 @@ public class DebugManager : MonoBehaviour
     [SerializeField]
     string loadSceneName;
 
-    const string text = "DebugMode attiva e disattiva la modalità di Debug i comandi successivi funzionano solo se è abilitata.\n" +
+    const string text = "DebugMode attiva e disattiva la modalitï¿½ di Debug i comandi successivi funzionano solo se ï¿½ abilitata.\n" +
         "[Tastierino Numerico 1-5] Assegna Ability Upgrade al Target Character.\n" +
-        "[Tastierino Numerico 7,8 o 9] Verrà assegnato il PowerUp corrispondete al numero al Target Character.\n" +
+        "[Tastierino Numerico 7,8 o 9] Verrï¿½ assegnato il PowerUp corrispondete al numero al Target Character.\n" +
         "[M] Infligge 1000 danni al Target Character. \n" +
         "[N] Assegna 9999 monete e chiavi al Target Character. \n" +
         "[I] Cancella i salvataggi. \n" +
@@ -49,37 +49,30 @@ public class DebugManager : MonoBehaviour
             {
                 UnlockUpgrade(AbilityUpgrade.Ability1);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad2))
             {
                 UnlockUpgrade(AbilityUpgrade.Ability2);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad3))
             {
                 UnlockUpgrade(AbilityUpgrade.Ability3);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad4))
             {
                 UnlockUpgrade(AbilityUpgrade.Ability4);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad5))
             {
                 UnlockUpgrade(AbilityUpgrade.Ability5);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad7))
             {
                 GivePowerUP(powerUpToGive_7);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad8))
             {
                 GivePowerUP(powerUpToGive_8);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad9))
             {
                 GivePowerUP(powerUpToGive_9);
@@ -163,6 +156,13 @@ public class DebugManager : MonoBehaviour
                 }
             }
 
+            if(Input.GetKeyDown(KeyCode.C))
+            {
+                foreach (PlayerCharacter character in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
+                {
+                    character.switchCharacterCooldown = 1f;
+                }
+            }
         }
     }
 
