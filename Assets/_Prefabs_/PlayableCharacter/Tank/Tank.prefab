@@ -1708,7 +1708,7 @@ MonoBehaviour:
   recentlyInputTimer: 3
   protectedByTank: 0
   crosshairDistance: 6
-  timeCheckAttackType: 0.4
+  timeCheckAttackType: 0.2
   chargedAttackTimer: 2.5
   chargedAttackDamage: 50
   chargedAttackRadius: 5
@@ -1716,7 +1716,6 @@ MonoBehaviour:
   chargeCooldownTimer: 5
   chargeSpeed: 20
   chargeDuration: 3
-  chargeDamage: 0
   maxStamina: 100
   blockTimer: 0.2
   perfectBlockDamage: 10
@@ -1732,6 +1731,7 @@ MonoBehaviour:
   chargedAttackStunDuration: 5
   additionalStunDuration: 5
   shieldVFX: {fileID: 2378909330986876465}
+  chargedAttackVFX: {fileID: 3853030557984777652}
   shieldVFXGoodColor: {r: 4, g: 0, b: 2.3378906, a: 0}
   shieldVFXDamagedColor: {r: 3.7785237, g: 3.185038, b: 0, a: 0}
   shieldVFXCriticalColor: {r: 4, g: 0.37696332, b: 0, a: 0}
@@ -2605,6 +2605,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd425138b6e0b9942bd1cfed8eef9be9, type: 3}
+--- !u!1 &3853030557984777652 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7293090427560167442, guid: dd425138b6e0b9942bd1cfed8eef9be9,
+    type: 3}
+  m_PrefabInstance: {fileID: 5786833028209634726}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6281454516557800185 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 532199226694537055, guid: dd425138b6e0b9942bd1cfed8eef9be9,
