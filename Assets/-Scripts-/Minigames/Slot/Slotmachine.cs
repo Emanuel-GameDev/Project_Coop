@@ -227,11 +227,11 @@ public class Slotmachine : MonoBehaviour
 
     private void CheckForWin()
     {
-        bool win = true;
+        bool win = true;       
 
-        foreach (SlotRow row in rows)
+        for (int i = 0; i < rows.Count; i++)
         {
-            if (row.GetSelectedSlot().Type != slotType.Brutus)
+            if (rows[i].GetSelectedSlot().Type != WinCombination[i])
             {
                 win = false;
                 break;
