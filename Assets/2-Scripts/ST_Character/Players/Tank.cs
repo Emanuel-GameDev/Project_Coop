@@ -202,35 +202,14 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
                 SetHyperArmor(true);
                 SetCanMove(false, rb);
-
-                StopCoroutineNoCooldowns(); 
-                StartCoroutine(CheckAttackToDo());
+                
+                Attack();
 
             }
 
 
         }
-        if(context.canceled)
-        {
-            attackPressed = false;
-            if (inCharge)
-            {
-                StopCharge();
-            }
-            else if (isChargingAttack)
-            {
-                if(chargedAttackReady)
-                {
-                    EndChargedAttack();
-                }
-
-                else //Risolvere sennò spam
-                {
-                 
-                    Attack();
-                }
-            }
-        }
+       
          
     }
 
@@ -267,53 +246,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     }
     #endregion
 
-    #region chargedAttack
-    public void ChargingAttack()
-    {
-        isChargingAttack = true;      
-        StartCoroutine(StartChargedAttackTimer());
-
-    }
-    IEnumerator StartChargedAttackTimer()
-    {
-        animator.SetTrigger("ChargedAttack");
-
-        yield return new WaitForSeconds(chargedAttackTimer);
-
-        if (attackPressed)
-        {
-            chargedAttackReady = true;           
-            chargedAttackVFX.SetActive(true);
-            
-           
-        }
-
-    }
-    public void EndChargedAttack()
-    {
-        animator.SetTrigger("ChargedAttackEnd");
-        chargedAttackReady = false;
-        chargedAttackVFX.SetActive(false);
-    }
-    public void ChargedAttackAreaDamage()
-    {
-        RaycastHit[] hitted = Physics.SphereCastAll(transform.position, chargedAttackRadius, Vector3.up, chargedAttackRadius);
-        if (hitted != null)
-        {
-            foreach (RaycastHit r in hitted)
-            {
-                if (Utility.IsInLayerMask(r.transform.gameObject, LayerMask.GetMask("Enemy")))
-                {
-                    IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
-                    hittedDama.TakeDamage(new DamageData(chargedAttackDamage, this, null));
-                    Debug.Log(r.transform.gameObject.name + " colpito con " + chargedAttackDamage + " damage di attacco ad area");
-
-                }
-            }
-        }
-    }
-
-    #endregion
+   
 
     IEnumerator CheckAttackToDo()
     {
@@ -800,12 +733,69 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     #endregion
 
-    #region ExtraAbility(BossAttack) /Mettere qua attacco caricato
+    #region ExtraAbility(BossAttack)
 
+    #region chargedAttack
+    public void ChargingAttack()
+    {
+        isChargingAttack = true;
+        StartCoroutine(StartChargedAttackTimer());
+
+    }
+    IEnumerator StartChargedAttackTimer()
+    {
+        animator.SetTrigger("ChargedAttack");
+
+        yield return new WaitForSeconds(chargedAttackTimer);
+
+        if (attackPressed)
+        {
+            chargedAttackReady = true;
+            chargedAttackVFX.SetActive(true);
+        }
+
+    }
+    public void EndChargedAttack()
+    {
+        animator.SetTrigger("ChargedAttackEnd");
+        chargedAttackReady = false;
+        chargedAttackVFX.SetActive(false);
+    }
+    public void ChargedAttackAreaDamage()
+    {
+        RaycastHit[] hitted = Physics.SphereCastAll(transform.position, chargedAttackRadius, Vector3.up, chargedAttackRadius);
+        if (hitted != null)
+        {
+            foreach (RaycastHit r in hitted)
+            {
+                if (Utility.IsInLayerMask(r.transform.gameObject, LayerMask.GetMask("Enemy")))
+                {
+                    IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
+                    hittedDama.TakeDamage(new DamageData(chargedAttackDamage, this, null));
+                    Debug.Log(r.transform.gameObject.name + " colpito con " + chargedAttackDamage + " damage di attacco ad area");
+
+                }
+            }
+        }
+    }
+
+    #endregion
     public override void ExtraAbilityInput(InputAction.CallbackContext context) //Tasto est
     {
+
+        if(context.started && !inAttackAnimation && !inCharge)
+        {
+            
+        }
+        if(context.performed)
+        {
+            //finito caricamento
+        }
         if (context.performed && !isAttacking && !isBlocking)
         {
+            //se finito attacco caricato 
+
+
 
             if (bossfightPowerUpUnlocked && isAttacking == false)
             {
