@@ -179,6 +179,12 @@ public class Slotmachine : MonoBehaviour
     public void InitializeSlotMachineMinigame()
     {
         randomListOfPlayer.Clear();
+
+        for (int i = 0; i < rows.Count; i++)
+        {
+            WinCombination[i] = allSlotType[UnityEngine.Random.Range(0, allSlotType.Count)];
+        }
+
         RandomReorder(listOfCurrentPlayer);
         remainingLives = lives;
 
@@ -194,10 +200,7 @@ public class Slotmachine : MonoBehaviour
 
         //da aggiungere dopo una possibile animazione/tutorial
 
-        for (int i = 0;i<rows.Count-1;i++)
-        {
-            WinCombination[i] = allSlotType[UnityEngine.Random.Range(0, allSlotType.Count)];
-        }
+        
 
         foreach (SlotRow row in rows)
         {

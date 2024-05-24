@@ -125,6 +125,7 @@ public class SlotRow : MonoBehaviour
                 slot.GetComponent<Slot>().Sprite = mainMachine.ChoseSpriteBySlotType(randomType);
 
             }
+
             generatedSlots.Add(slot);
             
         }
