@@ -134,6 +134,15 @@ public class CharacterSelectionMenu : MonoBehaviour
             ePlayerCharacter charToAssign = cursor.GetComponentInParent<CharacterIdentifier>().character;
             cursor.GetComponent<CursorBehaviour>().SetCharacter(charToAssign);
 
+            // Vibrazione Pad
+            ePlayerID currentPlayerID = cursor.GetComponent<CursorBehaviour>().PlayerID;
+            PlayerInputHandler currentInput = CoopManager.Instance.GetPlayer(currentPlayerID);
+
+            RumbleController RC = GetComponent<RumbleController>();
+
+            if (currentInput.PlayerInput.currentControlScheme != "Keyboard")
+                RumbleManager.Instance.RumblePulse(RC.lowFreqency, RC.highFreqency, (Gamepad)currentInput.PlayerInput.devices[0], RC.duration);
+
             // Controllo non necessario sullo sprite del ready per impostare il bool del cursore
             if (cursor.GetComponent<RectTransform>().parent.GetChild(0).gameObject.activeSelf)
                 return true;
