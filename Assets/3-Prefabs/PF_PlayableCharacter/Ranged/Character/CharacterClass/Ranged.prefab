@@ -53,10 +53,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1879169578ec4de4caea6927587d0805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 2
-  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
-  _OnParryColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   _walkDustParticles: {fileID: 3267068977706261624}
+  fadeSpeedOnHit: 2
+  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   stunned: 0
   underAggro: 0
   inLove: 0
@@ -113,6 +112,8 @@ MonoBehaviour:
   switchCharacterCooldown: 10
   invulnerabilityTime: 1
   ressInteracter: {fileID: 6090523008952437151}
+  onHitPushTimer: 0.2
+  onHitPushForce: 1
   characterController: {fileID: 0}
   recentlyInputTimer: 1
   protectedByTank: 0

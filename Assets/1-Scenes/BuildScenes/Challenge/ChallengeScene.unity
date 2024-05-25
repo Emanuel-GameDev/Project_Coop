@@ -3894,7 +3894,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  challengeNameEnum: 3
+  challengeNameEnum: 0
   enemySpawnPoints:
   - {fileID: 553666770}
   - {fileID: 1262515097}
@@ -4592,7 +4592,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  challengeNameEnum: 4
+  challengeNameEnum: 0
   enemySpawnPoints:
   - {fileID: 2000432604}
   - {fileID: 805978970}
@@ -5305,11 +5305,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: e3ea9f04824e32049922a185c99d4e7b,
         type: 2}
-    - target: {fileID: 1457129021371019520, guid: 451b3e449a119024fbfd36fec14a194f,
-        type: 3}
-      propertyPath: dialogueTriggerSaveName
-      value: ChallegesFirstDialogue
-      objectReference: {fileID: 0}
     - target: {fileID: 2693127927199351003, guid: 451b3e449a119024fbfd36fec14a194f,
         type: 3}
       propertyPath: m_Size.x
@@ -7701,23 +7696,7 @@ PrefabInstance:
     - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
         type: 3}
       propertyPath: debugMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
-        type: 3}
-      propertyPath: istructions
-      value: "DebugMode attiva e disattiva la modalit\xE0 di Debug i comandi successivi
-        funzionano solo se \xE8 abilitata.\n- TargetCharacter \xE8 il personaggio
-        a cui verrnno dati gli Ability Upgrade o PowerUp.\n- Per dare un Ability
-        Upgrade, selezionare il targetCharacter a cui darlo e premere il tastierino
-        numerico da 1 a 5.\n- Per dare un Power Up usare il tastierino numerico 7,8
-        o 9, verr\xE0 assegnato quello corrispondete al numero.\n- Con il tasto M
-        si infliggono 1000 danni al targetCharacter uccidendolo. \n- Con N si danno
-        9999 monete e chiavi al targetCharacter. \n- Con il tasto I si cancella i
-        salvataggi. \n- Con J si completa tutte le sfide per testare il dumpy di
-        fine demo. \n- Con O si apre la cartella dei salvataggi. \n- Con L e K rispettivamente
-        si salva e carica il gioco. \n- Con V si carica la scena scritta in loasdSceneName.
-        \n- Con G si completa una Challenge. \n"
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
         type: 3}
@@ -7727,7 +7706,7 @@ PrefabInstance:
     - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
         type: 3}
       propertyPath: targetCharacter
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3126158976181875733, guid: 80dff735d4a582b479c9efeacf5c9213,
         type: 3}
@@ -8006,7 +7985,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  challengeNameEnum: 2
+  challengeNameEnum: 0
   enemySpawnPoints:
   - {fileID: 1736028558}
   - {fileID: 885873802}
@@ -8214,7 +8193,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  challengeNameEnum: 1
+  challengeNameEnum: 0
   enemySpawnPoints:
   - {fileID: 1426356637}
   - {fileID: 1720580342}
@@ -9236,7 +9215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa08c3febffe4b94783674d03e8cd9dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destinationSceneName: ChallengeScene
+  destinationSceneName: ChallengeSceneTest
 --- !u!4 &1716329586
 Transform:
   m_ObjectHideFlags: 0
@@ -11131,7 +11110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa08c3febffe4b94783674d03e8cd9dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destinationSceneName: FirstZoneMap
+  destinationSceneName: TestZoneMap
 --- !u!1 &6007461284949289636
 GameObject:
   m_ObjectHideFlags: 0
