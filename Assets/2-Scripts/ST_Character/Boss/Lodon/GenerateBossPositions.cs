@@ -43,11 +43,11 @@ public class GenerateBossPositions : MonoBehaviour
         float spriteHeightHalf = spriteHeight / 2;
 
         // Calcolo della posizione iniziale per centrare la griglia isometrica
-        float maxVerticalDifference = (((columns + rows) / 2) - 1) * (spriteHeightHalf + spacing);
+        float maxVerticalDifference = (((float)(columns + rows - 2)) / 2) * (spriteHeightHalf + spacing);
 
         // Calcola la massima differenza di larghezza tra i due quadrati più alle estremità
-        float maxHorizontalDifference = ((columns - rows) / 2) * (spriteWidthHalf + spacing);
-
+        float maxHorizontalDifference = (((float)(columns - rows)) / 2) * (spriteWidthHalf + spacing);
+        Debug.Log($"Vertical offset : {maxVerticalDifference} | Horizontal offset: {maxHorizontalDifference}");
         // Calcola la posizione iniziale
         Vector3 startPosition = new Vector3(-maxHorizontalDifference, -maxVerticalDifference, 0);
 
@@ -86,7 +86,7 @@ public class GenerateBossPositions : MonoBehaviour
     //DEBUG
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             DestroyAllPlatforms();
             GeneratePlatforms();
