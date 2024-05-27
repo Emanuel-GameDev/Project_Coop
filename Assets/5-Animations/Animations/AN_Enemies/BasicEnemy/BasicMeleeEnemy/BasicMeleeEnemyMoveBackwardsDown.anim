@@ -26,17 +26,17 @@ AnimationClip:
       value: {fileID: 21300000, guid: 11bc290472623b1438c2cf987f04f9bb, type: 3}
     - time: 0.16666667
       value: {fileID: 21300000, guid: 7a1853802b2f5934aae0643e76bf4707, type: 3}
-    - time: 0.26666668
+    - time: 0.25
       value: {fileID: 21300000, guid: 033c6760638563349a2741a26bd52dee, type: 3}
-    - time: 0.36666667
+    - time: 0.33333334
       value: {fileID: 21300000, guid: 1e88fd6d2c1df0342ac33fd7acc04155, type: 3}
-    - time: 0.46666667
+    - time: 0.41666666
       value: {fileID: 21300000, guid: b089b2b574c784b4495a0f8821362749, type: 3}
-    - time: 0.55
+    - time: 0.5
       value: {fileID: 21300000, guid: 85f25f2129b3ed04293f8a3dbfb82d89, type: 3}
-    - time: 0.65
+    - time: 0.5833333
       value: {fileID: 21300000, guid: de07144018927c4458d40e102215a67d, type: 3}
-    - time: 0.73333335
+    - time: 0.6666667
       value: {fileID: 21300000, guid: de07144018927c4458d40e102215a67d, type: 3}
     attribute: m_Sprite
     path: Pivot/Visual
@@ -74,7 +74,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.75
+    m_StopTime: 0.68333334
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -93,4 +93,32 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.083333336
+    functionName: AccellerateMovement
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.16666667
+    functionName: DecellerateMovement
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.33333334
+    functionName: AccellerateMovement
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.5
+    functionName: DecellerateMovement
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

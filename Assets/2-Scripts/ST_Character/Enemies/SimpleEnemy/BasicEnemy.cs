@@ -758,8 +758,11 @@ public class BasicEnemy : EnemyCharacter
             direction = Quaternion.Euler(0, 0, 1) * direction;
 
 
+        float speed = normalMovement ? MoveSpeed : MoveSpeed-4;
+
+
         
-        rb.velocity = direction * MoveSpeed;
+        rb.velocity = direction * speed;
         
         isMoving = true;
 
@@ -769,6 +772,16 @@ public class BasicEnemy : EnemyCharacter
         SetSpriteDirection(lastNonZeroDirection);
 
         animator.SetBool("isMoving", isMoving);
+    }
+    bool normalMovement = true;
+    public void AccellerateMovement()
+    {
+        normalMovement = true;
+    }
+
+    public void DecellerateMovement()
+    {
+        normalMovement = false;
     }
 
     public void SetSpriteDirection(Vector2 direction)
