@@ -1,12 +1,15 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using UnityEngine;
-using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 
 public class DebugManager : MonoBehaviour
 {
     [SerializeField] bool debugMode = false;
 
-    [SerializeField, Range(0, 10), Tooltip("Se la debug mode è attiva premi T per attivare e disattivare il cambio di timescale")]
+    [SerializeField, Range(0, 10), Tooltip("Se la debug mode ï¿½ attiva premi T per attivare e disattivare il cambio di timescale")]
     float timescale = 1f;
     private bool timeescaleChanged = false;
 
@@ -21,17 +24,21 @@ public class DebugManager : MonoBehaviour
     [SerializeField]
     string loadSceneName;
 
-    const string text = "DebugMode attiva e disattiva la modalità di Debug i comandi successivi funzionano solo se è abilitata.\n" +
-        "TargetCharacter è il personaggio a cui verrnno dati gli Ability Upgrade o PowerUp.\n" +
-        "Per dare un Ability Upgrade, selezionare il targetCharacter a cui darlo e premere il tastierino numerico da 1 a 5.\n" +
-        "Per dare un Power Up usare il tastierino numerico 7,8 o 9, verrà assegnato quello corrispondete al numero.\n" + 
-        "Con il tasto M si infliggono 1000 danni al personaggio selezionato uccidendolo. \n " +
-        "Con N si stampa nella console il numeor di monete e chiavi \n" + " Con il tasto I si cancella i salvataggi. \n" +
-        "Con J si completa tutte le sfide per testare il dumpy di fine demo.";
+    const string text = "DebugMode attiva e disattiva la modalitï¿½ di Debug i comandi successivi funzionano solo se ï¿½ abilitata.\n" +
+        "[Tastierino Numerico 1-5] Assegna Ability Upgrade al Target Character.\n" +
+        "[Tastierino Numerico 7,8 o 9] Verrï¿½ assegnato il PowerUp corrispondete al numero al Target Character.\n" +
+        "[M] Infligge 1000 danni al Target Character. \n" +
+        "[N] Assegna 9999 monete e chiavi al Target Character. \n" +
+        "[I] Cancella i salvataggi. \n" +
+        "[J] Completa tutte le sfide per testare il dumpy di fine demo. \n" +
+        "[O] Apre la cartella dei salvataggi. \n" +
+        "[L e K] Rispettivamente Salva e Carica il gioco. \n" +
+        "[V] Carica la scena scritta in Loasd Scene Name. \n" +
+        "[G] Completa la Challenge attuale (solo in ChallengeScene). \n";
 
     [SerializeField] GameObject BossGameobject;
 
-    [SerializeField, TextArea(5, 20)]
+    [SerializeField, TextArea(5, 100)]
     private string istructions = text;
 
     private void Update()
@@ -42,37 +49,30 @@ public class DebugManager : MonoBehaviour
             {
                 UnlockUpgrade(AbilityUpgrade.Ability1);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad2))
             {
                 UnlockUpgrade(AbilityUpgrade.Ability2);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad3))
             {
                 UnlockUpgrade(AbilityUpgrade.Ability3);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad4))
             {
                 UnlockUpgrade(AbilityUpgrade.Ability4);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad5))
             {
                 UnlockUpgrade(AbilityUpgrade.Ability5);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad7))
             {
                 GivePowerUP(powerUpToGive_7);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad8))
             {
                 GivePowerUP(powerUpToGive_8);
             }
-
             if (Input.GetKeyDown(KeyCode.Keypad9))
             {
                 GivePowerUP(powerUpToGive_9);
@@ -109,19 +109,14 @@ public class DebugManager : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.G))
             {
-                ChallengeManager.Instance.selectedChallenge.AutoComplete();
+                if (SceneManager.GetActiveScene().name == "ChallengeScene")
+                    ChallengeManager.Instance.selectedChallenge.AutoComplete();
             }
             if (Input.GetKeyDown(KeyCode.J))
             {
-                SceneSetting sceneSetting = new(SceneSaveSettings.ChallengesSaved);
-                sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
-                SaveManager.Instance.SaveSceneData(sceneSetting);
-                sceneSetting = new(SceneSaveSettings.Passepartout);
-                sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
-                SaveManager.Instance.SaveSceneData(sceneSetting);
-                sceneSetting = new(SceneSaveSettings.SlotMachine);
-                sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
-                SaveManager.Instance.SaveSceneData(sceneSetting);
+                SaveManager.Instance.SaveSetting(SaveDataStrings.PASSEPARTOUT_MINIGAME_COMPLETED, true);
+                SaveManager.Instance.SaveSetting(SaveDataStrings.FOOLSLOT_MINIGAME_COMPLETED, true);
+                SaveManager.Instance.SaveSetting("AllFirstZoneChallengesCompleted", true);
             }
             if (Input.GetKeyDown(KeyCode.I))
             {
@@ -135,7 +130,7 @@ public class DebugManager : MonoBehaviour
                     p.ExtraData.coin += 9999;
                     p.ExtraData.key += 9999;
                 }
-                    Debug.Log($"coin: {saveData.extraData.coin}, key: {saveData.extraData.key}");
+                Debug.Log($"coin: {saveData.extraData.coin}, key: {saveData.extraData.key}");
             }
 
             if (guardaQuestoTooltipPerLeIstruzioni) guardaQuestoTooltipPerLeIstruzioni = false;
@@ -143,8 +138,30 @@ public class DebugManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.V))
             {
-                if(!string.IsNullOrEmpty(loadSceneName))
+                if (!string.IsNullOrEmpty(loadSceneName))
                     GameManager.Instance.LoadScene(loadSceneName);
+            }
+
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                string saveFolderPath = Application.persistentDataPath + "/SaveGames";
+                if (Directory.Exists(saveFolderPath))
+                {
+                    Process.Start(new ProcessStartInfo()
+                    {
+                        FileName = saveFolderPath,
+                        UseShellExecute = true,
+                        Verb = "open"
+                    });
+                }
+            }
+
+            if(Input.GetKeyDown(KeyCode.C))
+            {
+                foreach (PlayerCharacter character in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
+                {
+                    character.CancelSwitchCooldown();
+                }
             }
         }
     }

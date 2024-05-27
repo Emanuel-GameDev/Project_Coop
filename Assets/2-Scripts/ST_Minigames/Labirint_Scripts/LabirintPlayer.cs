@@ -10,6 +10,8 @@ public class LabirintPlayer : InputReceiver
     private float moveSpeed = 10f;
     [SerializeField, Range(0, 1f)]
     private float directionTreshold = 0.2f;
+    [SerializeField]
+    private float reachCenterDistance = 0.05f;
     private Grid grid;
     private Tilemap wallTilemap;
 
@@ -207,7 +209,7 @@ public class LabirintPlayer : InputReceiver
 
     private bool HasReachCenter()
     {
-        return Vector2.Distance(transform.position, destination) < 0.01f;
+        return Vector2.Distance(transform.position, destination) < reachCenterDistance;
     }
 
     public void Inizialize()

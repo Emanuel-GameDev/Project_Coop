@@ -34,6 +34,7 @@ public class ChallengeManager : MonoBehaviour
     [SerializeField] private GameObject challengeUIPrefab;
     [SerializeField] public List<Challenge> currentSaveChallenges;
     [SerializeField] private GameObject bottoneInutile;
+    [SerializeField] private string zoneSettingSaveName = "AllFirstZoneChallengesCompleted";
 
     [Header("Dialogue")]
     [SerializeField] Dialogue dialogueOnInteraction;
@@ -64,25 +65,13 @@ public class ChallengeManager : MonoBehaviour
     {
         SaveManager.Instance.LoadData();
 
-        SceneSetting sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved);
-        bool selected = false;
+        List<ChallengeData> savedChallenges = SaveManager.Instance.LoadChallenges();
 
-        if (sceneSetting == null)
-        {
-            sceneSetting = new(SceneSaveSettings.ChallengesSaved);
-            sceneSetting.AddBoolValue(SaveDataStrings.SELECTED, selected);
-        }
-        else
-        {
-            selected = sceneSetting.GetBoolValue(SaveDataStrings.SELECTED);
-            sceneSetting.AddBoolValue(SaveDataStrings.SELECTED, selected);
-        }
-
-        if (!selected)
+        if (savedChallenges == null)
         {
             onInteractionAction.AddListener(OnInteraction);
             Shuffle(challengesList);
-
+            savedChallenges = new();
             for (int i = 0; i < 3; ++i)
             {
                 GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
@@ -91,23 +80,22 @@ public class ChallengeManager : MonoBehaviour
                 tempUI.challengeSelected.challengeUI = tempUI;
                 tempUI.SetUpUI();
                 currentSaveChallenges.Add(tempUI.challengeSelected);
+                savedChallenges.Add(new(tempUI.challengeSelected.challengeNameEnum, false,0));
             }
 
-            sceneSetting.AddBoolValue(SaveDataStrings.SELECTED, true);
-
-            SaveSceneData(sceneSetting);
+            SaveManager.Instance.SaveChallenges(savedChallenges);
         }
         else
         {
             onInteractionAction.AddListener(OnInteraction);
 
-            foreach (SavingStringValue c in sceneSetting.strings.FindAll(x => x.valueName == SaveDataStrings.CHALLENGE))
+            foreach (ChallengeData c in savedChallenges)
             {
                 GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
                 ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();
-                tempUI.challengeSelected = challengesList.Find(x => x.name == c.value);
+                tempUI.challengeSelected = challengesList.Find(x => x.challengeNameEnum == c.challengeName);
                 tempUI.challengeSelected.challengeUI = tempUI;
-                tempUI.challengeSelected.challengeCompleted = sceneSetting.GetBoolValue(tempUI.challengeSelected.name);
+                tempUI.challengeSelected.challengeCompleted = c.completed;
                 tempUI.SetUpUI();
                 currentSaveChallenges.Add(tempUI.challengeSelected);
             }
@@ -117,31 +105,33 @@ public class ChallengeManager : MonoBehaviour
     }
 
     #region saving
-    private void SaveSceneData(SceneSetting sceneSetting)
+    public void SaveChallengeCompleted(ChallengeName challenge, bool completed)
     {
-        foreach (Challenge c in currentSaveChallenges)
+        List<ChallengeData> savedChallenges = SaveManager.Instance.LoadChallenges();
+
+        if (savedChallenges == null)
         {
-            
-            sceneSetting.strings.Add(new(SaveDataStrings.CHALLENGE, c.name.ToString()));
+            SaveManager.Instance.SaveChallenge(new(challenge, completed,0));
+        }
+        else
+        {
+            ChallengeData challengeData = savedChallenges.Find(x => x.challengeName == challenge);
+            challengeData.completed = completed;
+            SaveManager.Instance.SaveChallenge(challengeData);
         }
 
-        SaveManager.Instance.SaveSceneData(sceneSetting);
-    }
-    public void SaveChallengeCompleted(string challengeName, bool completed)
-    {
-        SceneSetting settings = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.ChallengesSaved);
-        settings.AddBoolValue(challengeName, completed);
+        bool allChallegesCompleted = true;
 
-        bool allCompleted = true;
-        foreach (Challenge c in challengesList)
+        foreach (ChallengeData c in savedChallenges)
         {
-            if(!c.challengeCompleted)
-                allCompleted = false;
+            if (!c.completed)
+            {
+                allChallegesCompleted = false;
+                break;
+            }
         }
 
-        settings.AddBoolValue(SaveDataStrings.COMPLETED, allCompleted);
-
-        SaveManager.Instance.SaveSceneData(settings);
+        SaveManager.Instance.SaveSetting(zoneSettingSaveName, allChallegesCompleted);
     }
     #endregion
 

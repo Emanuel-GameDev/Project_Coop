@@ -26,6 +26,8 @@ public class StateMachine<T> where T : State<T>
     private T currentState;
     public T CurrentState => currentState;
 
+    private Dictionary<Enum, T> states = new();
+
     public void StateUpdate()
     {
         currentState?.Update();
@@ -46,5 +48,32 @@ public class StateMachine<T> where T : State<T>
         yield return new WaitForSeconds(waitTime);
 
         SetState(state);
+    }
+
+    public void RegisterState(Enum key, T state)
+    {
+        if (states.ContainsKey(key))
+        {
+            Debug.LogWarning($"State with key {key} is already registered.");
+            return;
+        }
+
+        states.Add(key, state);
+    }
+
+    public void UnregisterState(Enum key)
+    {
+        if (states.ContainsKey(key))
+        {
+            states.Remove(key);
+        }
+    }
+
+    public void SetState(Enum key)
+    {
+        if (states.ContainsKey(key))
+        {
+            SetState(states[key]);
+        }
     }
 }
