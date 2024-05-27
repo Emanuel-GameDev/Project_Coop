@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -718,7 +719,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     #endregion
 
-    #region ExtraAbility(BossAttack)
+    #region ExtraAbility(ChargedAttack)
 
     #region chargedAttack
    
@@ -726,7 +727,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
        animator.SetTrigger("ChargedAttackEnd");
         chargedAttackReady = false;
-        chargedAttackVFX.SetActive(false);
+        chargedAttackVFX.gameObject.SetActive(false);
 
         
     }
@@ -757,12 +758,17 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         }
     }
+    public void InstantiateCrashWave()
+    {        
+            //GameObject instantiatedWave = Instantiate(crashwaveObject, crashwaveTransform.position, Quaternion.identity, transform);
+            //instantiatedWave.GetComponentInChildren<CrashWave>().SetVariables(crashWaveDamage, crashWaveStaminaDamage, this);
+              
+    }
 
     #endregion
     public override void ExtraAbilityInput(InputAction.CallbackContext context) //Tasto est
     {
-
-       
+     
         if (context.started && !inAttackAnimation && !inCharge)
         {                     
             chargedAttackReady = false;
@@ -770,9 +776,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
         if (context.performed)
         {      
-                chargedAttackReady = true;
-            Debug.Log("PROOONTI");
-                chargedAttackVFX.SetActive(true);
+                chargedAttackReady = true;          
+                chargedAttackVFX.gameObject.SetActive(true);
             
         }
         
@@ -788,7 +793,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
             else
             {
                 chargedAttackReady = false;
-                chargedAttackVFX.SetActive(false);
+                chargedAttackVFX.gameObject.SetActive(false);
                 Attack();
             }
         }
