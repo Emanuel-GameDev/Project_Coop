@@ -1,7 +1,7 @@
 using System.Collections;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
 
 //Unique = tasto nord,Q = Urlo
@@ -28,7 +28,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     float chargeSpeed = 5f;
     [SerializeField, Tooltip("durata carica se non interrotta")]
     float chargeDuration = 5f;
-    
+
     [Header("Block")]
     [SerializeField, Tooltip("Quantit� di danno parabile prima di rottura parata")]
     float maxStamina;
@@ -119,10 +119,10 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private bool uniqueAbilityReady = true;
     private bool statBoosted = false;
     private bool canProtectOther = false;
-    private bool attackPressed = false;
+   
     private bool isChargingAttack = false;
     private bool canBlock = true;
-    private bool canCharge = true;   
+    private bool canCharge = true;
     private bool inAttackAnimation = false;
     private bool inCharge = false;
 
@@ -144,7 +144,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private PivotTriggerProtected pivotTriggerProtected;
     private IDamager perfectBlockIDamager;
 
-    
+
 
 
 
@@ -176,41 +176,39 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         shieldVFXBaseColor = shieldVFX.GetComponentInChildren<MeshRenderer>().material.GetColor("_MainColor");
 
+       
     }
 
     #region Attack
 
     public override void AttackInput(InputAction.CallbackContext context)
     {
-        attackPressed = true;
+       
         if (stunned) return;
 
         if (context.performed)
         {
             //Carica
-            if(chargeUnlocked && canCharge && isBlocking)
+            if (chargeUnlocked && canCharge && isBlocking)
             {
                 StartCoroutine(ChargeCoroutine());
             }
 
             //Attacco
-            else if( !isBlocking && !inCharge && !inAttackAnimation)
+            else if (!isBlocking && !inCharge && !inAttackAnimation)
             {
-                isAttacking = true;
-                attackPressed = true;
-                inAttackAnimation = true;
-
-                SetHyperArmor(true);
-                SetCanMove(false, rb);
-                
+             
                 Attack();
 
             }
 
 
         }
-       
-         
+
+        if (context.canceled && inCharge)
+        {
+            StopCharge();
+        }
     }
 
     #region charge
@@ -218,13 +216,17 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         StopCoroutine(ChargeCoroutine());
         inCharge = false;
+        canBlock = true;
         animator.SetBool("InCharge", inCharge);
-        moveSpeed = moveSpeedCopy;     
+        moveSpeed = moveSpeedCopy;
         StartCoroutine(StartChargeCooldown());
     }
     IEnumerator ChargeCoroutine()
     {
-        canCharge = false;      
+        isBlocking = false;      
+        shieldVFX.gameObject.SetActive(false);
+        canBlock = false;
+        canCharge = false;
         animator.SetTrigger("ToggleBlock");
         inCharge = true;
         animator.SetBool("InCharge", inCharge);
@@ -246,24 +248,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     }
     #endregion
 
+
+
    
-
-    IEnumerator CheckAttackToDo()
-    {
-        yield return new WaitForSeconds(timeCheckAttackType);
-        if(attackPressed && chargedAttackUnlocked)
-        {
-            //Inizio attacco caricato
-            ChargingAttack();
-        }
-        else
-        {
-            //attacco base
-            Attack();
-        }
-        
-
-    }
     public void ResetVariables()
     {
 
@@ -273,7 +260,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         shieldVFX.gameObject.SetActive(false);
         chargedAttackVFX.gameObject.SetActive(false);
         isAttacking = false;
-        attackPressed = false;
+        
         chargedAttackReady = false;
         isChargingAttack = false;
         inAttackAnimation = false;
@@ -283,8 +270,15 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     }
     public void Attack()
     {
+        isAttacking = true;
+
+        inAttackAnimation = true;
+
+        SetHyperArmor(true);
+        SetCanMove(false, rb);
+
         animator.SetTrigger("Attack");
-    } 
+    }
     public void SetHyperArmor(bool value)
     {
         if (implacableAttackUnlocked)
@@ -293,16 +287,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
 
     }
-    public void StopCoroutineNoCooldowns()
-    {
-        StopCoroutine(CheckAttackToDo());
-        StopCoroutine(ChargeCoroutine());
-        StopCoroutine(StartChargedAttackTimer());
-        
-    }
-   
     
-
 
     #endregion
 
@@ -672,7 +657,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public override void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-        if (context.performed && uniqueAbilityReady)
+        if (context.performed && uniqueAbilityReady && !inAttackAnimation && !inCharge)
         {
             chargedAttackVFX.gameObject.SetActive(true);
             SetCanMove(false, rb);
@@ -736,33 +721,24 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     #region ExtraAbility(BossAttack)
 
     #region chargedAttack
-    public void ChargingAttack()
-    {
-        isChargingAttack = true;
-        StartCoroutine(StartChargedAttackTimer());
-
-    }
-    IEnumerator StartChargedAttackTimer()
-    {
-        animator.SetTrigger("ChargedAttack");
-
-        yield return new WaitForSeconds(chargedAttackTimer);
-
-        if (attackPressed)
-        {
-            chargedAttackReady = true;
-            chargedAttackVFX.SetActive(true);
-        }
-
-    }
+   
     public void EndChargedAttack()
     {
-        animator.SetTrigger("ChargedAttackEnd");
+       animator.SetTrigger("ChargedAttackEnd");
         chargedAttackReady = false;
         chargedAttackVFX.SetActive(false);
+
+        
     }
+    //Rivedere e mettere onda urto
     public void ChargedAttackAreaDamage()
     {
+        if (bossfightPowerUpUnlocked)
+        {
+            damager.SetCondition(Utility.InstantiateCondition<StunCondition>(), true);
+            float stunDamageDuration = maximizedStunUnlocked ? (chargedAttackStunDuration + additionalStunDuration) : chargedAttackStunDuration;
+          
+        }
         RaycastHit[] hitted = Physics.SphereCastAll(transform.position, chargedAttackRadius, Vector3.up, chargedAttackRadius);
         if (hitted != null)
         {
@@ -776,6 +752,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
                 }
             }
+
+           
+
         }
     }
 
@@ -783,30 +762,37 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public override void ExtraAbilityInput(InputAction.CallbackContext context) //Tasto est
     {
 
-        if(context.started && !inAttackAnimation && !inCharge)
-        {
+       
+        if (context.started && !inAttackAnimation && !inCharge)
+        {                     
+            chargedAttackReady = false;
+            animator.SetTrigger("ChargedAttack");
+        }
+        if (context.performed)
+        {      
+                chargedAttackReady = true;
+            Debug.Log("PROOONTI");
+                chargedAttackVFX.SetActive(true);
             
         }
-        if(context.performed)
+        
+            
+        if (context.canceled && !inAttackAnimation)
         {
-            //finito caricamento
-        }
-        if (context.performed && !isAttacking && !isBlocking)
-        {
-            //se finito attacco caricato 
-
-
-
-            if (bossfightPowerUpUnlocked && isAttacking == false)
+            
+            if (chargedAttackReady)
             {
                 SetCanMove(false, rb);
-                damager.SetCondition(Utility.InstantiateCondition<StunCondition>(), true);
-                animator.SetTrigger("extraAbility");
-
-                float stunDamageDuration = maximizedStunUnlocked ? (chargedAttackStunDuration + additionalStunDuration) : chargedAttackStunDuration;
-                Debug.Log($"BossFight Upgrade Attack Executed, stun duration:[{stunDamageDuration}]");
+                EndChargedAttack();
+            }
+            else
+            {
+                chargedAttackReady = false;
+                chargedAttackVFX.SetActive(false);
+                Attack();
             }
         }
+        
 
     }
 
@@ -867,7 +853,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         base.ResetAllAnimatorTriggers();
         ResetVariables();
         ResetVariables();
-    }  
+    }
     private void PlayPerfectParrySound()
     {
         if (soundsDatabase.specialEffectsSounds.Count > 0)
