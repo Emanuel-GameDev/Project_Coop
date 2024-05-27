@@ -5,4 +5,6 @@ using UnityEngine;
 public class LodonMove : LodonBaseState
 {
     public LodonMove(LodonBoss lodonBossCharacter) : base(lodonBossCharacter) { }
+
+
 }

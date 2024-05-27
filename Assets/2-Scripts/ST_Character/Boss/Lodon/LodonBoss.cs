@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using UnityEngine;
 
 public class LodonBoss : BossCharacter
@@ -15,6 +16,9 @@ public class LodonBoss : BossCharacter
     [SerializeField] PlatformsGenerator generator;
     public PlatformsGenerator Generator => generator;
 
+    [HideInInspector]
+    public LodonState selectedAttack;
+
     private void Start()
     {
         if(generator == null)
@@ -28,7 +32,7 @@ public class LodonBoss : BossCharacter
     private void RegisterStates()
     {
         stateMachine.RegisterState(LodonState.Move, new LodonMove(this));
-        stateMachine.RegisterState(LodonState.TargetMoveSelection, new LodonTargetMoveSelection(this));
+        stateMachine.RegisterState(LodonState.TargetAttackSelection, new LodonTargetAttackSelection(this));
         stateMachine.RegisterState(LodonState.TridentThrowing, new LodonTridentThrowing(this));
         stateMachine.RegisterState(LodonState.FuryCharge, new LodonFuryCharge(this));
         stateMachine.RegisterState(LodonState.OpenPlatforms, new LodonOpenPlatforms(this));
@@ -40,6 +44,12 @@ public class LodonBoss : BossCharacter
     {
         stateMachine.StateUpdate();
     }
+
+    public void OnExitAnimation()
+    {
+        stateMachine.CurrentState.EndAnimation();
+    }
+
 }
 
 
@@ -47,7 +57,7 @@ public enum LodonState
 {
     Move,
     Wait,
-    TargetMoveSelection,
+    TargetAttackSelection,
     //Attacks
     TridentThrowing,
     FuryCharge,
