@@ -9,6 +9,11 @@ public class TutorialEnemy : BasicMeleeEnemy
     [HideInInspector] public event Action OnHitAction;
     [SerializeField] float invincibilitySeconds = 0.2f;
     [HideInInspector] public bool focus = false;
+
+
+    [HideInInspector] public TutorialEnemyMovementState moveState;
+    [HideInInspector] public TutorialEnemyAttackState actionState;
+
     bool invincible=false;
     protected override void Awake()
     {
@@ -19,13 +24,10 @@ public class TutorialEnemy : BasicMeleeEnemy
         obstacle.carving = true;
 
 
-        //idleState = new BasicEnemyIdleState(this);
+        idleState = new BasicMeleeEnemyIdleState(this);
         moveState = new TutorialEnemyMovementState(this);
         actionState = new TutorialEnemyAttackState(this);
-        stunState = new BasicEnemyStunState(this);
-        parriedState = new BasicEnemyParriedState(this);
-        deathState = new BasicEnemyDeathState(this);
-        entryState = new BasicEnemyEntryState(this);
+       // entryState = new BasicEnemyEntryState(this);
     }
 
     public override void TakeDamage(DamageData data)
@@ -33,7 +35,7 @@ public class TutorialEnemy : BasicMeleeEnemy
         if (!invincible)
         {
             base.TakeDamage(data);
-            //stateMachine.SetState(stunState);
+            stateMachine.SetState(stunState);
             OnHitAction?.Invoke();
             if(data.dealer is Projectile)
             {

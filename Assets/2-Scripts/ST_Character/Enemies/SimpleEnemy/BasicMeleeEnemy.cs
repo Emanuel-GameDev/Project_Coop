@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BasicMeleeEnemy : BasicEnemy
 {
@@ -14,6 +15,8 @@ public class BasicMeleeEnemy : BasicEnemy
         obstacle.enabled = false;
         obstacle.carveOnlyStationary = false;
         obstacle.carving = true;
+
+        //agent = GetComponentInChildren<NavMeshAgent>(true);
 
         
         idleState = new BasicMeleeEnemyIdleState(this);

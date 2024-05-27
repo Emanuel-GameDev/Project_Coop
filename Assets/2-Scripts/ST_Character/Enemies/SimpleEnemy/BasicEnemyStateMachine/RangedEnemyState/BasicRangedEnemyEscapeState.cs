@@ -122,6 +122,7 @@ public class BasicRangedEnemyEscapeState : BasicRangedEnemyState
     public override void Exit()
     {
         base.Exit();
+        
         basicEnemy.Agent.isStopped=true;
         basicEnemy.GetAnimator().SetBool("isMoving", false);
     }

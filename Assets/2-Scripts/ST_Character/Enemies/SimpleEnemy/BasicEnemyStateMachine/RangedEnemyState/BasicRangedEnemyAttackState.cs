@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class BasicRangedEnemyAttackState : BasicRangedEnemyState
 {
 
@@ -30,19 +26,19 @@ public class BasicRangedEnemyAttackState : BasicRangedEnemyState
 
         if (!basicEnemy.isActioning)
         {
-            if (rangedEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() == 0)
-            {
-                stateMachine.SetState(rangedEnemy.moveState);
-            }
-            else if(rangedEnemy.EscapeTrigger.GetPlayersCountInTrigger()==0 || rangedEnemy.panicAttack)
+            if (rangedEnemy.EscapeTrigger.GetPlayersCountInTrigger() == 0 || rangedEnemy.panicAttack)
             {
                 rangedEnemy.SetActionCoroutine(basicEnemy.StartCoroutine(rangedEnemy.Attack()));
             }
-            else 
+            else if (rangedEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() == 0)
+            {
+                stateMachine.SetState(rangedEnemy.moveState);
+            }
+            else
             {
                 stateMachine.SetState(rangedEnemy.escapeState);
             }
-                
+
 
         }
 

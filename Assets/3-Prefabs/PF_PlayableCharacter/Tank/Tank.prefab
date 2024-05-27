@@ -905,7 +905,7 @@ GameObject:
   - component: {fileID: 9068013905245930763}
   - component: {fileID: 4253467473740823511}
   - component: {fileID: 1616401854955390967}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: PlayerBlocker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1643,10 +1643,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b18d651622bf64438b65fd1593eb40c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 2
-  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
-  _OnParryColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   _walkDustParticles: {fileID: 6131186109790520247}
+  fadeSpeedOnHit: 2
+  _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   stunned: 0
   underAggro: 0
   inLove: 0
@@ -1703,6 +1702,8 @@ MonoBehaviour:
   switchCharacterCooldown: 10
   invulnerabilityTime: 1
   ressInteracter: {fileID: 906128126998632890}
+  onHitPushTimer: 0.2
+  onHitPushForce: 1
   characterController: {fileID: 0}
   recentlyInputTimer: 3
   protectedByTank: 0
