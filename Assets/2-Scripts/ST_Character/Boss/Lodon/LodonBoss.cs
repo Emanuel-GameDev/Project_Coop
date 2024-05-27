@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class LodonBoss : BossCharacter
@@ -14,14 +12,15 @@ public class LodonBoss : BossCharacter
     public float LongDistancePercentage => shortLongDistanceMoveSelectionPercetage;
 
     [Header("References")]
-    [SerializeField]
-    List<Transform> platformsCenterPositions = new List<Transform>();
-    [SerializeField]
-    List<Transform> waterCenterPositions = new List<Transform>();
-    List<Transform> AllCenterPositions => platformsCenterPositions.Concat(waterCenterPositions).ToList();
+    [SerializeField] PlatformsGenerator generator;
+    public PlatformsGenerator Generator => generator;
 
     private void Start()
     {
+        if(generator == null)
+        {
+            generator = (PlatformsGenerator)new GameObject("Platform Generator").AddComponent(typeof(PlatformsGenerator));    
+        }
         RegisterStates();
         stateMachine.SetState(LodonState.Move);
     }

@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class PlatformsGenerator : MonoBehaviour
 {
@@ -30,6 +33,8 @@ public class PlatformsGenerator : MonoBehaviour
     public List<Transform> OuterCenterPositions { get; private set; } = new List<Transform>();
     public List<Transform> AllCenterPositions => PlatformsCenterPositions.Concat(OuterCenterPositions).ToList();
 
+    private readonly string addressableKey = "PlatformPrefab";
+
     private void Awake()
     {
         DestroyAllPlatforms();
@@ -40,8 +45,22 @@ public class PlatformsGenerator : MonoBehaviour
     {
         if (platformPrefab == null)
         {
-            Debug.LogError("PlatformPrefab is null");
-            return;
+            // Carica il prefab della piattaforma dagli Addressable
+            Addressables.LoadAssetAsync<GameObject>(addressableKey).Completed += handle =>
+            {
+                if (handle.Status == AsyncOperationStatus.Succeeded)
+                {
+                    // Assegna il prefab caricato alla variabile platformPrefab
+                    platformPrefab = handle.Result;
+                    // Genera le piattaforme dopo aver caricato il prefab
+                    GeneratePlatforms();
+                }
+                else
+                {
+                    Debug.LogError("Failed to load platform prefab from Addressables");
+                }
+            };
+            return; // Ritorna per non continuare con la generazione delle piattaforme finché il caricamento degli Addressable non è completato
         }
 
         SpriteRenderer spriteRenderer = platformPrefab.GetComponent<SpriteRenderer>();
