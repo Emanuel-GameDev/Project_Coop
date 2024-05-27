@@ -464,9 +464,14 @@ public class BasicEnemy : EnemyCharacter
     {
         if (ChangeTargetTrigger.GetPlayersCountInTrigger() > 0)
         {
-            PlayerCharacter[] listCopy = ChangeTargetTrigger.GetPlayersDetected().OrderBy(p=>p.transform.position-groundLevel.transform.position).ToArray();
-            SetTarget(listCopy[0].transform);
-            
+            if (ChangeTargetTrigger.GetPlayersCountInTrigger() > 1)
+            {
+                PlayerCharacter[] listCopy = ChangeTargetTrigger.GetPlayersDetected().OrderBy(p=>p.transform.position-groundLevel.transform.position).ToArray();
+                SetTarget(listCopy[0].transform);
+
+            }
+            else
+                SetTarget(ChangeTargetTrigger.GetPlayersDetected()[0].transform);
         }
 
         Vector2 agentDir = Vector2.zero;
@@ -758,7 +763,7 @@ public class BasicEnemy : EnemyCharacter
             direction = Quaternion.Euler(0, 0, 1) * direction;
 
 
-        float speed = normalMovement ? MoveSpeed : MoveSpeed-4;
+        float speed = normalMovement ? MoveSpeed : MoveSpeed;
 
 
         
