@@ -119,8 +119,6 @@ public class PlatformsGenerator : MonoBehaviour
         }
     }
 
-    //platform.GetComponent<SpriteRenderer>().color = Color.white;
-
     public void DestroyAllPlatforms()
     {
         foreach (Transform platform in AllCenterPositions)
