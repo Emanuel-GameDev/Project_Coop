@@ -8,6 +8,7 @@ public class LodonTargetAttackSelection : LodonBaseState
 
     override public void Enter()
     {
+        base.Enter();
         SelectTarget();
         SelectAttack();
         stateMachine.SetState(LodonState.Move);
@@ -15,11 +16,15 @@ public class LodonTargetAttackSelection : LodonBaseState
 
     public void SelectTarget()
     {
+        //TODO: Implement target selection
+        
         lodonBossCharacter.TargetSelection();
     }
 
     public void SelectAttack()
     {
+        //TODO: Implement attack selection
+        
         lodonBossCharacter.selectedAttack = LodonState.FuryCharge;
     }
 

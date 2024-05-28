@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using UnityEngine;
 
 public class LodonBoss : BossCharacter
@@ -14,10 +13,29 @@ public class LodonBoss : BossCharacter
 
     [Header("References")]
     [SerializeField] PlatformsGenerator generator;
-    public PlatformsGenerator Generator => generator;
+
+    [Header("Fury Charge Settings")]
+    public float FCtargetReachDistance = 5f;
+    public float searchRadius = 10f;
 
     [HideInInspector]
     public LodonState selectedAttack;
+    [HideInInspector]
+    public bool animationMustFollowTarget = false;
+
+    #region Proprieties
+    public Animator Animator => animator;
+    public PlatformsGenerator Generator => generator;
+    #endregion
+
+    public string lastAnimationEnd = string.Empty;
+
+    #region AnimationVariable
+    public readonly string EMERGE = "Emerge";
+    public readonly string FURY_CHARGE = "FuryCharge";
+    public readonly string MOVING = "Moving";
+    #endregion
+
 
     private void Start()
     {
@@ -26,7 +44,7 @@ public class LodonBoss : BossCharacter
             generator = (PlatformsGenerator)new GameObject("Platform Generator").AddComponent(typeof(PlatformsGenerator));    
         }
         RegisterStates();
-        stateMachine.SetState(LodonState.Move);
+        stateMachine.SetState(LodonState.TargetAttackSelection);
     }
 
     private void RegisterStates()
@@ -43,10 +61,31 @@ public class LodonBoss : BossCharacter
     private void Update()
     {
         stateMachine.StateUpdate();
+        SetAnimationDirection();
     }
 
-    public void OnExitAnimation()
+    private void SetAnimationDirection()
     {
+        Vector2 animationDirection;
+        if (animationMustFollowTarget)
+        {
+            animationDirection = (target.position - transform.position).normalized; 
+        }
+        else
+        {
+            animationDirection = (agent.destination - transform.position).normalized;
+        }
+
+        SetSpriteDirection(animationDirection);
+    }
+
+    public void OnExitAnimation(string animationName)
+    {
+        Debug.Log("End Animation: " + animationName);
+        if (lastAnimationEnd == animationName)
+            return;
+
+        lastAnimationEnd = animationName;
         stateMachine.CurrentState.EndAnimation();
     }
 
