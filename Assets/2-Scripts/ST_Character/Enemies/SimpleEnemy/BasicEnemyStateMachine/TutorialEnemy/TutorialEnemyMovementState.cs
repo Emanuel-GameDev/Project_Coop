@@ -12,16 +12,16 @@ public class TutorialEnemyMovementState : BasicMeleeEnemyMoveState
     public override void Update()
     {
 
-        if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() > 0 )
+        if (meleeEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() > 0 )
         {
-            foreach (PlayerCharacter player in basicEnemy.AttackRangeTrigger.GetPlayersDetected())
+            foreach (PlayerCharacter player in meleeEnemy.AttackRangeTrigger.GetPlayersDetected())
             {
-                //if(player == basicEnemy.currentTarget)
-                   // stateMachine.SetState(basicEnemy.actionState);
+                if (player == meleeEnemy.currentTarget)
+                    stateMachine.SetState(meleeEnemy.actionState);
             }
 
         }
-        basicEnemy.FollowPath();
+        meleeEnemy.FollowPath();
     }
 
 

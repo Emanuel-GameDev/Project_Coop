@@ -48,7 +48,7 @@ CircleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -565,12 +565,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2926466183222958110}
-  - component: {fileID: 2218432200098444318}
   - component: {fileID: 4818657858611305959}
   - component: {fileID: 1231016496115807171}
-  - component: {fileID: 1997708594994739991}
   - component: {fileID: 4278370625917358377}
   - component: {fileID: 5685418474842049650}
+  - component: {fileID: 2218432200098444318}
+  - component: {fileID: 1997708594994739991}
   - component: {fileID: 3883815466981758555}
   m_Layer: 7
   m_Name: TutorialEnemy
@@ -597,28 +597,6 @@ Transform:
   - {fileID: 5835196381590320555}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!195 &2218432200098444318
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6177594625496059516}
-  m_Enabled: 0
-  m_AgentTypeID: 0
-  m_Radius: 0.46
-  m_Speed: 0
-  m_Acceleration: 0
-  avoidancePriority: 50
-  m_AngularSpeed: 0
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 0.03
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!95 &4818657858611305959
 Animator:
   serializedVersion: 5
@@ -702,6 +680,7 @@ MonoBehaviour:
   currentHp: 0
   groundLevel: {fileID: 5835196381590320555}
   parriedTime: 1
+  stunTime: 1
   viewRange: 28.77
   attackRange: 2
   changeTargetRange: 6
@@ -727,8 +706,8 @@ MonoBehaviour:
   canGoIdle: 1
   strafe: 0
   delay: 0.1
-  minStrafe: 0
-  maxStrafe: 1
+  minStrafe: 0.4
+  maxStrafe: 0.7
   inc: 1
   showDirections: 0
   contextSteeringDirectionCount: 8
@@ -736,12 +715,12 @@ MonoBehaviour:
   csChaseLayerMask:
     serializedVersion: 2
     m_Bits: 576
-  csAvoidDistance: 5
+  csAvoidDistance: 8
   csAvoidLayerMask:
     serializedVersion: 2
     m_Bits: 3072
-  obstacleAvoidanceCloseRange: 3
-  obstacleAvoidanceFarRange: 1
+  obstacleAvoidanceCloseRange: 5
+  obstacleAvoidanceFarRange: 1.1
   strenghtMultiplier: 1
   showLikedDirections: 0
   showUnlikedDirections: 0
@@ -751,22 +730,6 @@ MonoBehaviour:
   showMoveDirections: 0
   invincibilitySeconds: 0.1
   focus: 0
---- !u!208 &1997708594994739991
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6177594625496059516}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 0.42, y: 0.17, z: 0.42}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!70 &4278370625917358377
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -829,6 +792,44 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!195 &2218432200098444318
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6177594625496059516}
+  m_Enabled: 0
+  m_AgentTypeID: 0
+  m_Radius: 0.46
+  m_Speed: 0
+  m_Acceleration: 0
+  avoidancePriority: 50
+  m_AngularSpeed: 0
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 0.03
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!208 &1997708594994739991
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6177594625496059516}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.42, y: 0.17, z: 0.42}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!114 &3883815466981758555
 MonoBehaviour:
   m_ObjectHideFlags: 0

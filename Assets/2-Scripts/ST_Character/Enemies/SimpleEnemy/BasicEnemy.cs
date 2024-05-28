@@ -23,6 +23,7 @@ public class BasicEnemy : EnemyCharacter
 
     [Header("Variabili generali")]
     [SerializeField] public float parriedTime = 1;
+    [SerializeField] public float stunTime = 1;
 
 
     [Header("Variabili di base")]
@@ -141,7 +142,7 @@ public class BasicEnemy : EnemyCharacter
 
         //finalDirection = new ContextSteeringDirection();
 
-
+        lastFinalDirection = Vector2.zero;
 
         for (int i = 0; i < contextSteeringDirectionCount; i++)
         {
@@ -224,6 +225,10 @@ public class BasicEnemy : EnemyCharacter
         AttackRangeTrigger.GetComponent<CircleCollider2D>().radius = attackRange;
         ChangeTargetTrigger.GetComponent<CircleCollider2D>().radius = changeTargetRange;
 
+
+        StartCoroutine(MovementCountdown(
+            UnityEngine.Random.Range(minStrafeInterval,maxStrafeInterval),
+            UnityEngine.Random.Range(minStrafeTime, maxStrafeTime)));
         //if(canGoIdle)
         //stateMachine.SetState(idleState);       
     }
@@ -299,7 +304,9 @@ public class BasicEnemy : EnemyCharacter
             if(!strafe)
                 StartCoroutine(CalculateChasePathAndSteering());
             else
+            {
                 StartCoroutine(CalculateStrafePathAndSteering());
+            }
 
 
         }
@@ -307,14 +314,39 @@ public class BasicEnemy : EnemyCharacter
          move = Vector2.zero;
          move = (finalDirection/**(finalStrenght*inc)*/)/* + targetDirection*/;
 
+        if(strafe && !strafeAllowed)
+        {
+            move = Vector2.zero;
+        }
+
         Move(move, rb);
         //rb.velocity = Vector2.up * moveSpeed;
     }
     public bool strafe = false;
     internal bool isRunning = false;
     public float delay = 1;
+
     public float minStrafe = 0;
     public float maxStrafe = 1;
+    
+    public float minStrafeInterval = 2;
+    public float maxStrafeInterval = 2;
+
+    public float minStrafeTime = 4;
+    public float maxStrafeTime = 4;
+
+    bool strafeAllowed = true;
+    internal IEnumerator MovementCountdown(float blockInterval,float moveAllowedTime)
+    {
+        while(true)
+        {
+            strafeAllowed = false;
+            yield return new WaitForSeconds(blockInterval);
+            strafeAllowed = true;
+            yield return new WaitForSeconds(moveAllowedTime);
+        }
+    }
+
     internal IEnumerator CalculateStrafePathAndSteering()
     {
         isRunning = true;
@@ -333,8 +365,9 @@ public class BasicEnemy : EnemyCharacter
 
         CalculateFinalDirection();
 
+        
 
-        yield return new WaitForSeconds(delay*2);
+        yield return new WaitForSeconds(delay);
 
         if (!strafe)
             StartCoroutine(CalculateChasePathAndSteering());
@@ -449,6 +482,7 @@ public class BasicEnemy : EnemyCharacter
 
     internal Vector2 targetDirection;
     internal Vector2 finalDirection;
+    internal Vector2 lastFinalDirection;
     internal float finalStrenght;
 
     public float csChaseDistance = 5;
@@ -724,37 +758,20 @@ public class BasicEnemy : EnemyCharacter
 
         if (currentDot < 0f)
             finalDirection = finalDirection + finalBehaviour[bestId].GetRelativeDirection(groundLevel);
-        //    allow = true;
-        //else
-        //{
         
-      
-        //}
-        //float bestDot = 0;
-        //int bestDotId = -1;
+        if( lastFinalDirection != Vector2.zero)
+        {
+            finalDirection += (lastFinalDirection/(steeringSpeed/10));
+        }
 
-        //check if good or stop
-        //for (int i = 0; i < contextSteeringDirectionCount; i++)
-        //{
-        //    if (chaseBehaviour[i].relativeDirection == vec)
-        //    {
-        //        if (finalBehaviour[i].directionStrenght > 0)
-        //            allow = true;
-        //    }
-        //}
-
-        //if (!allow)
-        //{
-        //    finalDirection = Vector2.zero;
-        //    finalStrenght *= 0.2f;
-        //}
+        lastFinalDirection = finalDirection;
     }
-
+    public float steeringSpeed = 1;
     #endregion
 
     public virtual void Move(Vector2 direction, Rigidbody2D rb)
     {
-
+        
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
 
@@ -763,10 +780,23 @@ public class BasicEnemy : EnemyCharacter
             direction = Quaternion.Euler(0, 0, 1) * direction;
 
 
+        if (direction == Vector2.zero)
+        {
+            GetAnimator().SetBool("isMoving", false);
+        }
+        else
+        {
+            animator.SetBool("isMoving", isMoving);
+
+            if (!GetAnimator().GetBool("isMoving"))
+                GetAnimator().SetBool("isMoving", true);
+        }
+
+
+
+
         float speed = normalMovement ? MoveSpeed : MoveSpeed;
 
-
-        
         rb.velocity = direction * speed;
         
         isMoving = true;
@@ -776,7 +806,7 @@ public class BasicEnemy : EnemyCharacter
 
         SetSpriteDirection(lastNonZeroDirection);
 
-        animator.SetBool("isMoving", isMoving);
+        //animator.SetBool("isMoving", isMoving);
     }
     bool normalMovement = true;
     public void AccellerateMovement()
@@ -852,14 +882,14 @@ public class BasicEnemy : EnemyCharacter
     {
         base.OnParryNotify(whoParried);
         
-        //stateMachine.SetState(parriedState);
-    }
-
-    public void Parry()
-    {
-        //SetHitMaterialColor(_OnParryColor);
         stateMachine.SetState(parriedState);
     }
+
+    //public void Parry()
+    //{
+    //    //SetHitMaterialColor(_OnParryColor);
+    //    stateMachine.SetState(parriedState);
+    //}
 
 
     public override void TargetSelection()
@@ -924,13 +954,13 @@ public class BasicEnemy : EnemyCharacter
 
 
 
-    public void DamagedAnimationEndedEvent()
-    {
-        animator.SetTrigger("DamageEnded");
+    //public void DamagedAnimationEndedEvent()
+    //{
+    //    animator.SetTrigger("DamageEnded");
 
-        //per ora da problemi
-        //stateMachine.SetState(moveState);
-    }
+    //    //per ora da problemi
+    //    //stateMachine.SetState(moveState);
+    //}
 
 
 

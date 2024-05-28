@@ -13,7 +13,6 @@ public class BasicMeleeEnemyMoveState : BasicMeleeEnemyState
 
         meleeEnemy.canMove = true;
         meleeEnemy.canAction = false;
-        Debug.Log("Via");
 
         meleeEnemy.GetAnimator().SetBool("isMoving", true);
 

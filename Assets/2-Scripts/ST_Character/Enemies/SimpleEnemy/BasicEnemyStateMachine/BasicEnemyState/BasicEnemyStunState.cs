@@ -15,9 +15,8 @@ public class BasicEnemyStunState : BasicEnemyState
     {
         base.Enter();
 
-        stunTime = 1f;
+        stunTime = basicEnemy.stunTime;
 
-        Debug.Log(stunTime);
 
         basicEnemy.canSee = false;
         basicEnemy.canAction = false;
@@ -46,6 +45,7 @@ public class BasicEnemyStunState : BasicEnemyState
 
     public override void Exit()
     {
+        basicEnemy.GetAnimator().SetTrigger("DamageEnded");
         base.Exit();
     }
 }

@@ -49,6 +49,34 @@ public class TutorialEnemy : BasicMeleeEnemy
 
     }
 
+    public override IEnumerator Attack()
+    {
+        StopCoroutine(CalculateChasePathAndSteering());
+        isRunning = false;
+
+        isActioning = true;
+
+        //if (panicAttack)
+        //{
+        //    panicAttack = false;
+        //}
+
+        ActivateObstacle();
+        readyToAttack = false;
+
+        animator.SetTrigger("Attack");
+        yield return new WaitForSeconds(attackDelay);
+        isActioning = false;
+        readyToAttack = true;
+
+    }
+
+    public override void SetIdleState()
+    {
+        base.SetIdleState();
+        stateMachine.SetState(idleState);
+    }
+
     public override void SetTarget(Transform newTarget)
     {
         if (!focus)
