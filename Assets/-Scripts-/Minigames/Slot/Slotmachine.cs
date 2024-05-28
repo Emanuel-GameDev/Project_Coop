@@ -24,6 +24,8 @@ public class Slotmachine : MonoBehaviour
     [SerializeField, Tooltip("Numero massimo di tentativi prima di vincere")]
     int lives = 3;
     int remainingLives;
+    int numberOfJackpots = 0;
+    
 
     //Sprite List basato sul type
     [SerializeField] private List<Sprite> spriteDatabase;
@@ -44,7 +46,7 @@ public class Slotmachine : MonoBehaviour
     
 
     [Header("Win/lose Screen")]
-    [SerializeField] GameObject winScreen;
+    [SerializeField] GameObject jackpotScreen;
     [SerializeField] GameObject loseScreen;
     [SerializeField] float screenTime=5f;
 
@@ -59,6 +61,8 @@ public class Slotmachine : MonoBehaviour
     float slotDistance = 0.25f;
     [SerializeField, Tooltip("Velocità di rotazione della colonna")]
     float rotationSpeed = 0;
+    [SerializeField, Tooltip("valore aggiunto alla velocità di rotazione per ogni fase successiva alla prima")]
+    float incrementalVelocity = 1.5f;
     [SerializeField, Tooltip("Velocità/tempo impiegato alla colonna per fermarsi")]
     float stabilizationSpeed = 0;
     [SerializeField, Tooltip("Delay restart della colonna")]
@@ -70,14 +74,7 @@ public class Slotmachine : MonoBehaviour
 
     [SerializeField] public ePlayerCharacter currentPlayer;
     [SerializeField] public List<SlotPlayer> listOfCurrentPlayer;
-    [SerializeField] public List<SlotPlayer> randomListOfPlayer;
-
-    [Header("Sprite figure")]
-    [SerializeField] private Sprite dpsSprite;
-    [SerializeField] private Sprite tankSprite;
-    [SerializeField] private Sprite rangedSprite;
-    [SerializeField] private Sprite healerSprite;
-    [SerializeField] private List<Sprite> losingSpriteList = new List<Sprite>();
+    [SerializeField] public List<SlotPlayer> randomListOfPlayer;   
 
     [Header("Sprite Button")]
     [SerializeField] private Sprite dpsButtonSprite;
@@ -99,7 +96,7 @@ public class Slotmachine : MonoBehaviour
     [SerializeField] private AudioClip giramentoManopolaAudio;
 
 
-    List<Sprite> playerSprites;
+    //List<Sprite> playerSprites;
 
 
 
@@ -122,26 +119,32 @@ public class Slotmachine : MonoBehaviour
     [SerializeField]
     private GameObject dialogueBox;
     [SerializeField]
-    private Dialogue winDialogue;
+    private Dialogue allJackpotDialogue;
+    [SerializeField]
+    private Dialogue slightyWinDialogue;
     [SerializeField]
     private Dialogue loseDialogue;
     [SerializeField]
-    private UnityEvent onWinDialogueEnd;
-    [SerializeField]
-    private UnityEvent onLoseDialogueEnd;
+    private UnityEvent onResultDialogueEnd;
 
     private DialogueBox _dialogueBox;
 
 
     [Header("Rewards Settings")]
     [SerializeField]
-    private int coinForEachPlayer;
+    private int coinForRightRow;
     [SerializeField]
-    private int coinForFirstPlayer;
+    private int coinForJackpot;
     [SerializeField]
     private int keyForEachPlayer;
-    [SerializeField]
-    private int keyForFirstPlayer;
+
+
+
+    private int totalCoinsBrutus;
+    private int totalCoinsKaina;
+    private int totalCoinsJude;
+    private int totalCoinsCassius;
+    private int totalJackpotCoins;
     [SerializeField]
     private WinScreenHandler winScreenHandler;
 
@@ -152,7 +155,7 @@ public class Slotmachine : MonoBehaviour
 
     private void Awake()
     {
-        playerSprites = new List<Sprite>() { dpsSprite, tankSprite, rangedSprite, healerSprite };
+        //playerSprites = new List<Sprite>() { dpsSprite, tankSprite, rangedSprite, healerSprite };
 
         if (dialogueBox != null)
         {
@@ -174,11 +177,13 @@ public class Slotmachine : MonoBehaviour
 
 
         StartCoroutine(WaitForPlayers());
+        remainingLives = lives;
     }
 
-    public void InitializeSlotMachineMinigame()
+    public void InitializeNewTrySlotMachineMinigame()
     {
         randomListOfPlayer.Clear();
+        
 
         for (int i = 0; i < rows.Count; i++)
         {
@@ -186,38 +191,28 @@ public class Slotmachine : MonoBehaviour
         }
 
         RandomReorder(listOfCurrentPlayer);
-        remainingLives = lives;
 
-        loopSlotAudio.Play();
-
-        //forse cancellare
-        /*
-        foreach (SlotRow row in rows)
+        if(remainingLives!=lives)
         {
-            row.SetRow(numberOfSlots, numberWinSlots, slotDistance, playerSprites, enemySprite, rotationSpeed, stabilizationSpeed);
+            rotationSpeed += incrementalVelocity;
         }
-        */
-
-        //da aggiungere dopo una possibile animazione/tutorial
-
-        
+                     
 
         foreach (SlotRow row in rows)
         {
             row.Initialize();
-            row.StartSlotMachine();
+           
         }
 
-        remainingLives--;
+        
         slotMachineUI.UpdateRemainingTryText(remainingLives);
+                
+        //fail safe momentaneo
+        currentNumberOfTheSlot = -1;
 
+       
 
         canInteract = true;
-        
-
-        currentNumberOfTheSlot = 0;
-
-        buttonSlots[currentNumberOfTheSlot].Arrow.SetActive(true);
     }
 
     public void SetIngameValueAfterCountDown()
@@ -225,7 +220,7 @@ public class Slotmachine : MonoBehaviour
         inGame = true;
     }
 
-    private void CheckForWin()
+    private IEnumerator CheckForJackpot()
     {
         bool win = true;       
 
@@ -234,86 +229,92 @@ public class Slotmachine : MonoBehaviour
             if (rows[i].GetSelectedSlot().Type != WinCombination[i])
             {
                 win = false;
-                break;
+                yield return null;
             }
         }
 
         if (win)
         {
-            Debug.Log("avete vinto");
+            Debug.Log("Jackpot");
 
             AudioManager.Instance.PlayAudioClip(goodAudio);
+
+            //aggiungo monete al jackpot
+
+            totalJackpotCoins += coinForJackpot;
+            numberOfJackpots++;
+
+            canInteract = false;
+            inGame = false;
+
+            AudioManager.Instance.PlayAudioClip(winAudio);
+            jackpotScreen.SetActive(true);
+
+
+            //fai animazione/dialogo di vincita
+            
+            yield return new WaitForSeconds(screenDelay);
+
+            jackpotScreen.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("niente jackpot");
 
             canInteract = false;
             inGame = false;
 
 
-            //fai animazione/dialogo di vincita
-            StartCoroutine(ShowWin());
+            AudioManager.Instance.PlayAudioClip(failAudio);
+            loseScreen.SetActive(true);
+
+
+            yield return new WaitForSeconds(screenDelay);
+
+            loseScreen.SetActive(false);
+
+
+
+
+
+        }
+
+        if (remainingLives <= 0)
+        {
+            ShowResult();
         }
         else
         {
-            Debug.Log("avete perso");
-
-            AudioManager.Instance.PlayAudioClip(failAudio);
-
-            if (remainingLives <= 0)
-            {
-                canInteract = false;
-                inGame = false;
-
-
-                //fai animazione/dialogo perdita
-                StartCoroutine(ShowLose());
-
-
-
-
-                return;
-            }
-
-
+            InitializeNewTrySlotMachineMinigame();
+            inGame = true;
         }
-    }
 
-    private IEnumerator ShowWin()
+        
+    }   
+
+    private void ShowResult()
     {
         _dialogueBox.RemoveAllDialogueEnd();
 
-        yield return new WaitForSeconds(screenDelay);
-
-        AudioManager.Instance.PlayAudioClip(winAudio);
-        winScreen.SetActive(true);
-        yield return new WaitForSeconds(screenTime);
-        winScreen.SetActive(false);
-
-
-        _dialogueBox.SetDialogue(winDialogue);
-        _dialogueBox.AddDialogueEnd(onWinDialogueEnd);
+        if(numberOfJackpots == lives)
+        {
+            _dialogueBox.SetDialogue(allJackpotDialogue);
+        }
+        else if(numberOfJackpots > 0)
+        {
+            _dialogueBox.SetDialogue(slightyWinDialogue);
+        }
+        else
+        {
+            _dialogueBox.SetDialogue(loseDialogue);
+        }
+        
+        _dialogueBox.AddDialogueEnd(onResultDialogueEnd);
 
         dialogueBox.SetActive(true);
         _dialogueBox.StartDialogue();
 
         MakeRankList();
-    }
-
-    private IEnumerator ShowLose()
-    {
-        _dialogueBox.RemoveAllDialogueEnd();
-
-        yield return new WaitForSeconds(screenDelay);
-
-        AudioManager.Instance.PlayAudioClip(loseAudio);
-
-        loseScreen.SetActive(true);
-        yield return new WaitForSeconds(screenTime);
-        loseScreen.SetActive(false);
-
-        _dialogueBox.SetDialogue(loseDialogue);
-        _dialogueBox.AddDialogueEnd(onLoseDialogueEnd);
-
-        dialogueBox.SetActive(true);
-        _dialogueBox.StartDialogue();
     }
 
 
@@ -339,17 +340,20 @@ public class Slotmachine : MonoBehaviour
         if (allStopped)
         {
             canInteract = false;
-            CheckForWin();
+            StartCoroutine(CheckForJackpot());
         }
     }
 
     public IEnumerator RestartSlotMachine()
     {
         loopSlotAudio.Play();
-        
+
+        remainingLives--;
+        slotMachineUI.UpdateRemainingTryText(remainingLives);
+
         foreach (SlotRow row in rows)
         {
-            row.ResetRow();
+            row.StartSlotMachine();
 
             yield return new WaitForSeconds(restartDelay);
         }
@@ -526,6 +530,42 @@ public class Slotmachine : MonoBehaviour
 
             yield return new WaitForSeconds(stabilizationSpeed);
 
+            //check se la colonna è stata bloccata sull'immagine giusta
+            
+            if (rows[currentNumberOfTheSlot].GetSelectedSlot().Type == WinCombination[currentNumberOfTheSlot])
+            {
+                AudioManager.Instance.PlayAudioClip(goodAudio);
+                //TODO:aggiungere ui sulla destra con bottoni e immagini, fai illuminare i bottoni se hai azzeccato l'immagine
+
+
+
+                //aggiunta monete al personaggio
+                switch (randomListOfPlayer[currentNumberOfTheSlot].GetCharacter())
+                {                    
+                    case ePlayerCharacter.Brutus:
+                        totalCoinsBrutus += coinForRightRow;
+                        break;
+                    case ePlayerCharacter.Kaina:
+                        totalCoinsKaina += coinForRightRow;
+                        break;
+                    case ePlayerCharacter.Cassius:
+                        totalCoinsCassius += coinForRightRow;
+                        break;
+                    case ePlayerCharacter.Jude:
+                        totalCoinsJude += coinForRightRow;
+                        break;
+                    default:
+                        Debug.LogError("ePlayerCharacter non trovato");
+                        break;
+                }
+            }
+            else
+            {
+                AudioManager.Instance.PlayAudioClip(failAudio);
+            }
+
+
+            //passo alla prossima colonna
             currentNumberOfTheSlot++;
             
 
@@ -548,9 +588,8 @@ public class Slotmachine : MonoBehaviour
 
         if (canInteract && player == listOfCurrentPlayer[0]) //restarta la slot se tutta ferma
         {
-            canInteract = false;
-            remainingLives--;
-            slotMachineUI.UpdateRemainingTryText(remainingLives);
+            canInteract = false;           
+            
             StartCoroutine(RestartSlotMachine());
 
             //animazione manopola
@@ -565,7 +604,7 @@ public class Slotmachine : MonoBehaviour
 
     public void InputFromPlayer(SlotPlayer player)
     {
-        if (currentNumberOfTheSlot > rows.Count - 1)
+        if (currentNumberOfTheSlot <= -1)
         {
             InputRestartSlot(player);
         }
@@ -626,22 +665,28 @@ public class Slotmachine : MonoBehaviour
 
             if (!yetCompleted)
             {
-                if (i == 0)
+                
+                switch (ranking[i])
                 {
-                    totalCoin += coinForFirstPlayer;
-                    totalKey += keyForFirstPlayer;
-
-                    gainedCoin += coinForFirstPlayer;
-                    gainedKey += keyForFirstPlayer;
-                }
-                else
-                {
-                    totalCoin += coinForEachPlayer;
-                    totalKey += keyForEachPlayer;
-
-                    gainedCoin += coinForEachPlayer;
-                    gainedKey += keyForEachPlayer;
-
+                    case ePlayerCharacter.Brutus:
+                        totalCoin += (totalCoinsBrutus+totalJackpotCoins);
+                        totalKey += keyForEachPlayer;
+                        break;
+                    case ePlayerCharacter.Kaina:
+                        totalCoin += (totalCoinsKaina+totalJackpotCoins);
+                        totalKey += keyForEachPlayer;
+                        break;
+                    case ePlayerCharacter.Jude:
+                        totalCoin += (totalCoinsJude + totalJackpotCoins);
+                        totalKey += keyForEachPlayer;
+                        break;
+                    case ePlayerCharacter.Cassius:
+                        totalCoin += (totalCoinsCassius + totalJackpotCoins);
+                        totalKey += keyForEachPlayer;
+                        break;
+                    default:
+                        Debug.LogError("ePlayerCharacter non trovato");
+                        break;
                 }
 
                 if (saveData != null)

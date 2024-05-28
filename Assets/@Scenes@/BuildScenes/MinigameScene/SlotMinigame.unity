@@ -516,7 +516,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1682351671}
         m_TargetAssemblyTypeName: Slotmachine, Assembly-CSharp
-        m_MethodName: InitializeSlotMachineMinigame
+        m_MethodName: InitializeNewTrySlotMachineMinigame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12672,27 +12672,20 @@ MonoBehaviour:
   failAudio: {fileID: 8300000, guid: 1d5976c16a04a0c46bf6e428d2e7aa54, type: 3}
   stopRowAudio: {fileID: 8300000, guid: a6292fc5e15c46f418139b6d0f6ab830, type: 3}
   loopSlotAudio: {fileID: 1682351673}
-  winScreen: {fileID: 566785458}
+  jackpotScreen: {fileID: 566785458}
   loseScreen: {fileID: 50123362}
   screenTime: 5
   numberOfSlots: 10
   numberWinSlots: 5
   slotDistance: 1.25
   rotationSpeed: 7
+  incrementalVelocity: 1.5
   stabilizationSpeed: 0.5
   restartDelay: 0.5
   screenDelay: 1.5
   currentPlayer: 0
   listOfCurrentPlayer: []
   randomListOfPlayer: []
-  dpsSprite: {fileID: 21300000, guid: dc57e1e65002d124ab69db59a52b8035, type: 3}
-  tankSprite: {fileID: 21300000, guid: 58ad70d560a0f8948bc36ae6160400d6, type: 3}
-  rangedSprite: {fileID: 21300000, guid: 4fc43e5d250af6e4ab467d7272d49321, type: 3}
-  healerSprite: {fileID: 21300000, guid: 2ffe8b557fc173e449bcc66200609219, type: 3}
-  losingSpriteList:
-  - {fileID: 21300000, guid: d1c32bf812daede4da9579c215b6b91a, type: 3}
-  - {fileID: 21300000, guid: 558c3698d56a8b54e83edb9e585fbf83, type: 3}
-  - {fileID: 21300000, guid: 1f8e148f02ad414438b5485b9efdfd80, type: 3}
   dpsButtonSprite: {fileID: 173879387, guid: 7201d4e0fcdb4c44b8c56eb31bd9e406, type: 3}
   tankButtonSprite: {fileID: 1992097947, guid: 694e74d27efcbfa44a9716e8bc4b5b84, type: 3}
   rangedButtonSprite: {fileID: 1251693581, guid: 582d29059f438b74eaddf4bd3d70af6e,
@@ -12724,9 +12717,10 @@ MonoBehaviour:
   inGame: 0
   sceneChanger: {fileID: 1682351672}
   dialogueBox: {fileID: 821413937}
-  winDialogue: {fileID: 11400000, guid: eaeb5550b3556fa499580bbfcee7d15d, type: 2}
+  allJackpotDialogue: {fileID: 11400000, guid: eaeb5550b3556fa499580bbfcee7d15d, type: 2}
+  slightyWinDialogue: {fileID: 11400000, guid: 8070a780d4e0eee4fa33d7ccdb133da0, type: 2}
   loseDialogue: {fileID: 11400000, guid: c612a80fdd0abef43b01b66324d0fd4e, type: 2}
-  onWinDialogueEnd:
+  onResultDialogueEnd:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 333023067}
@@ -12741,25 +12735,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  onLoseDialogueEnd:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 333023067}
-        m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: FirstPlayerOpenMenu
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1782502164}
-          m_ObjectArgumentAssemblyTypeName: MenuInfo, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  coinForEachPlayer: 5
-  coinForFirstPlayer: 5
+  coinForRightRow: 1
+  coinForJackpot: 1
   keyForEachPlayer: 1
-  keyForFirstPlayer: 1
   winScreenHandler: {fileID: 1924280320}
 --- !u!114 &1682351672
 MonoBehaviour:
