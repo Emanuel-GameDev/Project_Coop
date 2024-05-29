@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 public class LodonMove : LodonBaseState
 {
@@ -10,23 +11,24 @@ public class LodonMove : LodonBaseState
 
     UnityAction updateMoveAction;
 
-    bool FCtargetReached = false;
+    bool targetReached = false;
+    Vector3 targetPosition = Vector3.zero;
 
     public override void Enter()
     {
         base.Enter();
+        targetReached = false;
         updateMoveAction = null;
+        targetPosition = Vector3.zero;
         lodonBossCharacter.Agent.isStopped = false;
         lodonBossCharacter.animationMustFollowTarget = false;
         lodonBossCharacter.Animator.SetBool(lodonBossCharacter.MOVING, true);
         SelectMovement();
-
     }
 
     public override void Update()
     {
         updateMoveAction?.Invoke();
-
     }
 
     public override void Exit()
@@ -39,20 +41,44 @@ public class LodonMove : LodonBaseState
         switch (lodonBossCharacter.selectedAttack)
         {
             case LodonState.FuryCharge:
-                FCtargetReached = false;
                 updateMoveAction += FuryChargeMove;
+                break;
+
+            case LodonState.TridentThrowing:
+                TridentThrowingSelectPosition();
+                updateMoveAction += TridentThrowingMove;
                 break;
         }
     }
+    #region Trident Throwing
+    private void TridentThrowingSelectPosition()
+    {
+        List<Transform> positions = lodonBossCharacter.Generator.OuterCenterPositions;
+        targetPosition = positions[Random.Range(0, positions.Count)].position;
+    }
+
+    private void TridentThrowingMove()
+    {
+        if(targetReached) return;
+
+        if (Vector2.Distance(lodonBossCharacter.transform.position, targetPosition) < lodonBossCharacter.TTreachDistance)
+        {
+            targetReached = true;
+            lodonBossCharacter.Agent.isStopped = true;
+            Emerge();
+        }
+
+    }
+    #endregion
 
     #region Fury Charge
     private void FuryChargeMove()
     {
-        if (FCtargetReached) return;
+        if (targetReached) return;
 
         if(Vector2.Distance(lodonBossCharacter.transform.position, lodonBossCharacter.target.position) < lodonBossCharacter.FCtargetReachDistance)
         {
-            FCtargetReached = true;
+            targetReached = true;
             lodonBossCharacter.Agent.isStopped = true;
             Emerge();
         }
@@ -63,6 +89,7 @@ public class LodonMove : LodonBaseState
     }
 
     #endregion
+
     private void Emerge()
     {
         if(Utility.FindNearestObjectWithComponent<LodonPlatform>(lodonBossCharacter.transform.position, lodonBossCharacter.searchRadius, out LodonPlatform platformFounded))
