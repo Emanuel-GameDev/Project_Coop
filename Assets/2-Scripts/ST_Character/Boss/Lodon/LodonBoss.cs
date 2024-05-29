@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class LodonBoss : BossCharacter
@@ -14,22 +12,45 @@ public class LodonBoss : BossCharacter
     public float LongDistancePercentage => shortLongDistanceMoveSelectionPercetage;
 
     [Header("References")]
-    [SerializeField]
-    List<Transform> platformsCenterPositions = new List<Transform>();
-    [SerializeField]
-    List<Transform> waterCenterPositions = new List<Transform>();
-    List<Transform> AllCenterPositions => platformsCenterPositions.Concat(waterCenterPositions).ToList();
+    [SerializeField] PlatformsGenerator generator;
+
+    [Header("Fury Charge Settings")]
+    public float FCtargetReachDistance = 5f;
+    public float searchRadius = 10f;
+
+    [HideInInspector]
+    public LodonState selectedAttack;
+    [HideInInspector]
+    public bool animationMustFollowTarget = false;
+
+    #region Proprieties
+    public Animator Animator => animator;
+    public PlatformsGenerator Generator => generator;
+    #endregion
+
+    public string lastAnimationEnd = string.Empty;
+
+    #region AnimationVariable
+    public readonly string EMERGE = "Emerge";
+    public readonly string FURY_CHARGE = "FuryCharge";
+    public readonly string MOVING = "Moving";
+    #endregion
+
 
     private void Start()
     {
+        if(generator == null)
+        {
+            generator = (PlatformsGenerator)new GameObject("Platform Generator").AddComponent(typeof(PlatformsGenerator));    
+        }
         RegisterStates();
-        stateMachine.SetState(LodonState.Move);
+        stateMachine.SetState(LodonState.TargetAttackSelection);
     }
 
     private void RegisterStates()
     {
         stateMachine.RegisterState(LodonState.Move, new LodonMove(this));
-        stateMachine.RegisterState(LodonState.TargetMoveSelection, new LodonTargetMoveSelection(this));
+        stateMachine.RegisterState(LodonState.TargetAttackSelection, new LodonTargetAttackSelection(this));
         stateMachine.RegisterState(LodonState.TridentThrowing, new LodonTridentThrowing(this));
         stateMachine.RegisterState(LodonState.FuryCharge, new LodonFuryCharge(this));
         stateMachine.RegisterState(LodonState.OpenPlatforms, new LodonOpenPlatforms(this));
@@ -40,7 +61,34 @@ public class LodonBoss : BossCharacter
     private void Update()
     {
         stateMachine.StateUpdate();
+        SetAnimationDirection();
     }
+
+    private void SetAnimationDirection()
+    {
+        Vector2 animationDirection;
+        if (animationMustFollowTarget)
+        {
+            animationDirection = (target.position - transform.position).normalized; 
+        }
+        else
+        {
+            animationDirection = (agent.destination - transform.position).normalized;
+        }
+
+        SetSpriteDirection(animationDirection);
+    }
+
+    public void OnExitAnimation(string animationName)
+    {
+        Debug.Log("End Animation: " + animationName);
+        if (lastAnimationEnd == animationName)
+            return;
+
+        lastAnimationEnd = animationName;
+        stateMachine.CurrentState.EndAnimation();
+    }
+
 }
 
 
@@ -48,7 +96,7 @@ public enum LodonState
 {
     Move,
     Wait,
-    TargetMoveSelection,
+    TargetAttackSelection,
     //Attacks
     TridentThrowing,
     FuryCharge,

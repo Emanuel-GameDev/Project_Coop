@@ -20,6 +20,10 @@ public class SpriteRotation : MonoBehaviour
     private void Awake()
     {
         RotateToCamera();
+        if (!shouldUpdate)
+        {
+            this.enabled = false;
+        }
     }
     private void Update()
     {

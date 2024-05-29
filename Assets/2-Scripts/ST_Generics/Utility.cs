@@ -90,4 +90,45 @@ public static class Utility
         return color;
     }
 
+    public static bool FindNearestObjectWithComponent<T>(Vector3 centerPosition, float searchRadius, out T componentFound) where T : Component
+    {
+        // Ottieni tutti i collider all'interno del raggio di ricerca
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(centerPosition, searchRadius);
+
+        componentFound = null;
+
+        if (hitColliders.Length == 0)
+        {
+            return false;
+        }
+
+        // Variabili per tenere traccia dell'oggetto più vicino
+        T nearestObject = null;
+        float nearestDistance = Mathf.Infinity;
+
+        // Cerca l'oggetto più vicino con il componente desiderato
+        foreach (Collider2D collider in hitColliders)
+        {
+            T component = collider.GetComponent<T>();
+            if (component != null)
+            {
+                float distance = Vector2.Distance(centerPosition, collider.transform.position);
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestObject = component;
+                }
+            }
+        }
+
+        // Output dell'oggetto più vicino
+        if (nearestObject != null)
+        {
+            componentFound = nearestObject;
+            return true;
+        }
+        else
+            return false;
+    }
+
 }
