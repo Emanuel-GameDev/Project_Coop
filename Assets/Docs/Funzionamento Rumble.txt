@@ -1,0 +1,46 @@
+rumble = vibrazione
+
+Il rumble, all'interno del progetto, è gestito dallo script "RumbleManager" che, tramite un singleton, si occupa di far partire una
+vibrazione in un determinato controller.
+
+Si sviluppa attorno al nuovo input system (using UnityEngine.InputSystem) e, alla versione attuale, attorno ad una funzione:
+
+pad.SetMotorSpeeds();
+
+Essa si occupa di impostare la vibrazione ed ha 2 parametri: "lowFrequency" e "highFrequency" che gestiscono rispettivamente il motore
+di sinistra e di destra di un pad.
+
+Nel nostro caso la funzione RumblePulse si occupa di avviare i motori e di far partire una coroutine (StopRumble()) che dovrà, tramite
+la funzione sopracitata, impostare i motori a 0f per spegnerli.
+
+
+Componenti aggiuntivi, temporanei:
+
+dentro il prefab della selezione personaggio è presente uno script chiamato "RumbleController" che rappresenta un modo, temporaneo,
+per far impostare ai designer dei valori, al fine di testare le potenzialità e le caratteristiche del rumble.
+
+
+Cosa migliorare o aggiungere:
+
+- Un modo efficente per aggiungere dei valori serializzati in ogni script
+	(attendere l'aggiornamento del GDD per sapere dove andrà impostato il rumble - 28/05/24)
+
+- Migliorare il pulse, visto che alla versione attuale è una vibrazione lineare che si interrompe dopo un determinato tempo
+
+- Altri tipi di vibrazione, oltre al pulse (Ex. sfalsata, lineare)
+
+- Migliorare l'efficenza del rumble evitando la possibilità di avere delle sovrapposizioni in caso di spam
+	(per come è adesso, in caso di spam, alcune istanze di rumbling vengono annullate comprensibilmente)
+
+
+Note:
+
+- Lo script in questione va a controllare il funzionamento di dispositivi analogici, il che significa che da script non c'è il completo	
+	controllo del funzionamento del pad, queste limitazioni preimpostate e servono ad evitare il danneggiamento eventuale dei dispositivi
+
+
+Conclusione:
+
+Il funzionamento è ancora sotto miglioramento, idee sono ben accette al fine di migliorare l'efficenza per i programmatori e per i designers,
+basta che ci teniamo informati onde evitare problemi di merge o di fraintendimenti, la versione attuale (RumbleController) è di test quindi
+potrà subire cambiamenti.
