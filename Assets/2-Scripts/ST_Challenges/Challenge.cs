@@ -9,8 +9,8 @@ public class Challenge : MonoBehaviour
     [Header("Generics")]
     public LocalizedString challengeName;
     public LocalizedString challengeDescription;
-    public ChallengeName challengeNameEnum;
-
+    public virtual ChallengeName challengeNameEnum { get; }
+    
     [Header("Enemies")]
     [SerializeField] public List<EnemySpawner> enemySpawnPoints;
 
@@ -47,9 +47,9 @@ public class Challenge : MonoBehaviour
     [HideInInspector] public UiChallengeRank challengeRankUI;
     private string destinationSceneName = "ChallengeSceneTest";
 
-    private bool firstStarObtained;
-    private bool secondStarObtained;
-    private bool thirdStarObtained;
+    [HideInInspector] public bool firstStarObtained;
+    [HideInInspector] public bool secondStarObtained;
+    [HideInInspector] public bool thirdStarObtained;
 
     public void ActivateGameobject()
     {
@@ -212,7 +212,7 @@ public enum ChallengeName
     Survive,
     KillAllInTimer,
     KerberosAgain,
-    KillAllNoDash,
+    KillAllNoDefenceAbility,
     KillAllNoDamage,
     killTillDead,
     defendBox

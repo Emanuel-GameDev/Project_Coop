@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class C_Survive : Challenge
 {
+    public override ChallengeName challengeNameEnum { get => ChallengeName.Survive; }
+
     [Header("Timer")]  
     [SerializeField] private float timerChallenge;
 

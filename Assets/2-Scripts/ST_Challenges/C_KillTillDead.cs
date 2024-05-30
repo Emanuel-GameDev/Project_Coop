@@ -6,11 +6,12 @@ using UnityEngine.Localization;
 
 public class C_KillTillDead : Challenge
 {
-
+    public override ChallengeName challengeNameEnum { get => ChallengeName.killTillDead;}
     [Header("Ranks")]
     [SerializeField] int enemiesFirstStar;   
     [SerializeField] int enemiesSecondStar;   
     [SerializeField] int enemiesThirdStar;
+    
     
     private int enemyKilled = 0;
     public List<PlayerCharacter> activePlayers;

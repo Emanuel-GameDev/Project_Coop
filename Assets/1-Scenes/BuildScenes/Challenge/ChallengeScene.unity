@@ -4158,7 +4158,6 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  challengeNameEnum: 0
   enemySpawnPoints:
   - {fileID: 553666770}
   - {fileID: 1262515097}
@@ -4239,6 +4238,9 @@ MonoBehaviour:
   challengeCompleted: 0
   challengeUI: {fileID: 0}
   challengeRankUI: {fileID: 0}
+  firstStarObtained: 0
+  secondStarObtained: 0
+  thirdStarObtained: 0
   timerChallenge: 300
   noDamage: 0
   noDefenceAbility: 0
@@ -5001,7 +5003,6 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  challengeNameEnum: 0
   enemySpawnPoints:
   - {fileID: 2000432604}
   - {fileID: 805978970}
@@ -5082,6 +5083,9 @@ MonoBehaviour:
   challengeCompleted: 0
   challengeUI: {fileID: 0}
   challengeRankUI: {fileID: 0}
+  firstStarObtained: 0
+  secondStarObtained: 0
+  thirdStarObtained: 0
   timerChallenge: 300
   noDamage: 1
   noDefenceAbility: 0
@@ -5953,7 +5957,7 @@ MonoBehaviour:
   OnAllPlayersInteract:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 778082206}
         m_TargetAssemblyTypeName: ChallengeManager, Assembly-CSharp
         m_MethodName: Interact
         m_Mode: 1
@@ -7097,7 +7101,6 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  challengeNameEnum: 0
   enemySpawnPoints:
   - {fileID: 1431266245}
   dialogueOnStart: {fileID: 11400000, guid: 5efa4c7a09dbe464c9b7ac9bdfa3bd89, type: 2}
@@ -7177,6 +7180,9 @@ MonoBehaviour:
   challengeCompleted: 0
   challengeUI: {fileID: 0}
   challengeRankUI: {fileID: 0}
+  firstStarObtained: 0
+  secondStarObtained: 0
+  thirdStarObtained: 0
   timerChallenge: 60
   players: []
   references:
@@ -8803,7 +8809,6 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  challengeNameEnum: 0
   enemySpawnPoints:
   - {fileID: 1736028558}
   - {fileID: 885873802}
@@ -8886,6 +8891,9 @@ MonoBehaviour:
   challengeCompleted: 0
   challengeUI: {fileID: 0}
   challengeRankUI: {fileID: 0}
+  firstStarObtained: 0
+  secondStarObtained: 0
+  thirdStarObtained: 0
   timerChallenge: 120
   noDamage: 0
   noDefenceAbility: 0
@@ -9040,7 +9048,6 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  challengeNameEnum: 0
   enemySpawnPoints:
   - {fileID: 1426356637}
   - {fileID: 1720580342}
@@ -9125,8 +9132,11 @@ MonoBehaviour:
   challengeCompleted: 0
   challengeUI: {fileID: 0}
   challengeRankUI: {fileID: 0}
+  firstStarObtained: 0
+  secondStarObtained: 0
+  thirdStarObtained: 0
   timerChallenge: 60
-  noDamage: 0
+  noDamage: 1
   noDefenceAbility: 0
   activePlayers: []
   references:
@@ -10433,7 +10443,6 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  challengeNameEnum: 5
   enemySpawnPoints: []
   dialogueOnStart: {fileID: 11400000, guid: d34080f862e1bb7428a5eae45ad7d4e3, type: 2}
   onChallengeStart:
@@ -10512,6 +10521,9 @@ MonoBehaviour:
   challengeCompleted: 0
   challengeUI: {fileID: 0}
   challengeRankUI: {fileID: 0}
+  firstStarObtained: 0
+  secondStarObtained: 0
+  thirdStarObtained: 0
   enemiesFirstStar: 15
   enemiesSecondStar: 30
   enemiesThirdStar: 50
@@ -11475,8 +11487,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.702, y: 0.025337083}
   m_AnchorMax: {x: 0.95900005, y: 0.64400005}
-  m_AnchoredPosition: {x: -132.89282, y: 0}
-  m_SizeDelta: {x: 265.7854, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -0.00024414, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1891334106
 MonoBehaviour:
@@ -11487,7 +11499,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1891334104}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
@@ -11495,13 +11507,15 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 3
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 896.9, y: 135.4}
-  m_Spacing: {x: 0, y: 7}
-  m_Constraint: 2
-  m_ConstraintCount: 3
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!4 &2000432603 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1040233302819189754, guid: c8bb8e7eacc003645b9ee626e124d497,

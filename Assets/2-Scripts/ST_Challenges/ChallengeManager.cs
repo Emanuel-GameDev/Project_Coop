@@ -59,7 +59,6 @@ public class ChallengeManager : MonoBehaviour
         else
         {
             _instance = this;
-
         }
     }
     private void Start()
@@ -73,7 +72,7 @@ public class ChallengeManager : MonoBehaviour
             onInteractionAction.AddListener(OnInteraction);
             Shuffle(challengesList);
             savedChallenges = new();
-            for (int i = 0; i < challengesList.Count; i++)
+            for (int i = 0; i <3; i++)
             {
                 //creo Ui sfide
                 GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
