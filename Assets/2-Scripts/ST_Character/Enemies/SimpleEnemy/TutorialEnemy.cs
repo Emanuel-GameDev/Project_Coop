@@ -23,7 +23,7 @@ public class TutorialEnemy : BasicMeleeEnemy
         obstacle.carveOnlyStationary = false;
         obstacle.carving = true;
 
-
+        focus = false;
         idleState = new BasicMeleeEnemyIdleState(this);
         moveState = new TutorialEnemyMovementState(this);
         actionState = new TutorialEnemyAttackState(this);
@@ -84,6 +84,20 @@ public class TutorialEnemy : BasicMeleeEnemy
             base.SetTarget(newTarget);
             stateMachine.SetState(moveState);
         }
+    }
+    public override void SetSpriteDirection(Vector2 direction)
+    {
+        if (direction.y != 0)
+            animator.SetFloat("Y", direction.y);
+
+       
+
+        Vector3 scale = pivot.gameObject.transform.localScale;
+
+        if ((direction.x > 0.5 && scale.x > 0) || (direction.x < -0.5 && scale.x < 0))
+            scale.x *= -1;
+
+        pivot.gameObject.transform.localScale = scale;
     }
 
     IEnumerator Invincibility()

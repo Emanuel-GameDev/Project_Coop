@@ -348,7 +348,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2791117155888583798}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 0
   m_Extents: {x: 0.25, y: 0.65, z: 0.25}
@@ -447,7 +447,7 @@ MonoBehaviour:
   onDeath:
     m_PersistentCalls:
       m_Calls: []
-  onDash:
+  onDefenceAbility:
     m_PersistentCalls:
       m_Calls: []
   onParried:
@@ -482,7 +482,7 @@ MonoBehaviour:
   groundLevel: {fileID: 1495691587368610306}
   parriedTime: 3
   stunTime: 0.5
-  viewRange: 22.21
+  viewRange: 200
   attackRange: 1.5
   changeTargetRange: 10
   attackDelay: 2

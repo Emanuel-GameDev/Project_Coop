@@ -40,7 +40,7 @@ public class BasicEnemy : EnemyCharacter
     NavMeshPath path;
 
     [Header("Pivot")]
-    [SerializeField] Transform pivot;
+    [SerializeField] internal Transform pivot;
 
     public StateMachine<BasicEnemyState> stateMachine { get; } = new();
 
@@ -167,25 +167,6 @@ public class BasicEnemy : EnemyCharacter
         }
     }
 
-    public void GoToPosition(Vector2 pos)
-    {
-        if (!canMove)
-        {
-            rb.velocity = Vector2.zero;
-            return;
-        }
-
-        ActivateAgent();
-
-        if (pos != null)
-        {         
-            //Move((Vector3)pos -transform.position,rb);          
-        }
-        else
-        {
-            rb.velocity = Vector2.zero;
-        }
-    }
 
     protected override void Awake()
     {
@@ -227,7 +208,7 @@ public class BasicEnemy : EnemyCharacter
         AttackRangeTrigger.GetComponent<CircleCollider2D>().radius = attackRange;
         ChangeTargetTrigger.GetComponent<CircleCollider2D>().radius = changeTargetRange;
 
-        
+        move = Vector2.zero;
 
         //if(canGoIdle)
         //stateMachine.SetState(idleState);       
@@ -240,6 +221,36 @@ public class BasicEnemy : EnemyCharacter
     }
 
 
+    public void GoToPosition(Transform pos)
+    {
+        //if (!canMove)
+        //{
+        //    rb.velocity = Vector2.zero;
+        //    return;
+        //}
+        ActivateAgent();
+       
+        if (pos != null)
+        {         
+             SetTarget(pos);
+            //Move((Vector3)pos -transform.position,rb);
+            FollowPath();
+            Debug.Log("one");
+        }
+        else
+        {
+            rb.velocity = Vector2.zero;
+        }
+    }
+
+    //IEnumerator ReachPosition(Transform positionToReach)
+    //{
+        
+    //        FollowPath();
+
+        
+        
+    //}
 
     Vector2 move;
 
@@ -274,29 +285,6 @@ public class BasicEnemy : EnemyCharacter
             rb.velocity = Vector2.zero;
             return;
         }
-
-        //ActivateAgent();
-
-        //if (currentTarget != null)
-        //{
-        //    CalculateContextSteering();
-        //    //if (agent.CalculatePath(target.position, path))
-        //    //{
-        //    //    //    if (path.corners.Length > 1)
-        //    //    //Move(path.corners[1] - path.corners[0], rb);
-        //    //    //else
-        //    //    //    Move(target.position - transform.position, rb);
-
-        //    //}
-        //    //else
-        //    //{
-        //    //    rb.velocity = Vector2.zero;
-        //    //}
-        //}
-        //else
-        //{
-        //    rb.velocity = Vector2.zero;
-        //}
 
 
         if (!isRunning)
@@ -353,10 +341,10 @@ public class BasicEnemy : EnemyCharacter
     internal IEnumerator MovementCountdown(float blockInterval,float moveAllowedTime)
     {
         
-            strafeAllowed = false;
-            yield return new WaitForSeconds(blockInterval);
-            strafeAllowed = true;
-            yield return new WaitForSeconds(moveAllowedTime);
+        strafeAllowed = false;
+        yield return new WaitForSeconds(blockInterval);
+        strafeAllowed = true;
+        yield return new WaitForSeconds(moveAllowedTime);
 
         StartStopMovementCountdownCoroutine(true);
     }
@@ -810,6 +798,7 @@ public class BasicEnemy : EnemyCharacter
 
     public virtual void Move(Vector2 direction, Rigidbody2D rb)
     {
+        if(direction== null) return;
         
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
@@ -834,8 +823,8 @@ public class BasicEnemy : EnemyCharacter
 
 
 
-        float speed = normalMovement ? MoveSpeed : MoveSpeed;
-
+        float speed = normalMovement ? MoveSpeed : MoveSpeed-2;
+        
         rb.velocity = direction * speed;
         
         isMoving = true;
@@ -858,7 +847,7 @@ public class BasicEnemy : EnemyCharacter
         normalMovement = false;
     }
 
-    public void SetSpriteDirection(Vector2 direction)
+    public virtual void SetSpriteDirection(Vector2 direction)
     {
         if (direction.y != 0)
             animator.SetFloat("Y", direction.y);

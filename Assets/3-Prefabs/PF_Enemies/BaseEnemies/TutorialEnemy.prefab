@@ -646,24 +646,12 @@ MonoBehaviour:
   onDeath:
     m_PersistentCalls:
       m_Calls: []
-  onDash:
+  onDefenceAbility:
     m_PersistentCalls:
       m_Calls: []
   onParried:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1231016496115807171}
-        m_TargetAssemblyTypeName: BasicEnemy, Assembly-CSharp
-        m_MethodName: Parry
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   pushAnimationCurve:
     serializedVersion: 2
     m_Curve: []
@@ -681,7 +669,7 @@ MonoBehaviour:
   groundLevel: {fileID: 5835196381590320555}
   parriedTime: 1
   stunTime: 1
-  viewRange: 28.77
+  viewRange: 200
   attackRange: 2
   changeTargetRange: 0.1
   attackDelay: 2
@@ -709,8 +697,8 @@ MonoBehaviour:
   minStrafe: 0.4
   maxStrafe: 0.7
   minStrafeInterval: 2
-  maxStrafeInterval: 2
-  minStrafeTime: 4
+  maxStrafeInterval: 3
+  minStrafeTime: 2
   maxStrafeTime: 4
   inc: 1
   showDirections: 0
@@ -726,7 +714,7 @@ MonoBehaviour:
   obstacleAvoidanceCloseRange: 5
   obstacleAvoidanceFarRange: 1.1
   strenghtMultiplier: 1
-  steeringSpeed: 1
+  steeringSpeed: 15
   showLikedDirections: 0
   showUnlikedDirections: 0
   showCounterAvoid: 0
@@ -826,7 +814,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6177594625496059516}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 0
   m_Extents: {x: 0.42, y: 0.17, z: 0.42}

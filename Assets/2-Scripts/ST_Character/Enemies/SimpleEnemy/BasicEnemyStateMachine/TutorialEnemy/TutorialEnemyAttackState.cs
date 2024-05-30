@@ -15,21 +15,33 @@ public class TutorialEnemyAttackState : BasicMeleeEnemyAttackState
 
         if (!basicEnemy.isActioning)
         {
-            if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() <= 0)
+            if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() == 0)
             {
-                foreach (PlayerCharacter player in basicEnemy.AttackRangeTrigger.GetPlayersDetected())
-                {
-                    if (player == basicEnemy.currentTarget)
-                    {
-                        stateMachine.SetState(meleeEnemy.actionState);
-                        basicEnemy.StartCoroutine(meleeEnemy.Attack());
-                        return;
-                    }
-                }
+                stateMachine.SetState(meleeEnemy.idleState);
             }
+            else
+                meleeEnemy.StartCoroutine(meleeEnemy.Attack());
 
-            stateMachine.SetState(meleeEnemy.moveState);
         }
+
+
+        //if (!basicEnemy.isActioning)
+        //{
+        //    if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() <= 0)
+        //    {
+        //        foreach (PlayerCharacter player in basicEnemy.AttackRangeTrigger.GetPlayersDetected())
+        //        {
+        //            if (player == basicEnemy.currentTarget)
+        //            {
+        //                stateMachine.SetState(meleeEnemy.actionState);
+        //                basicEnemy.StartCoroutine(meleeEnemy.Attack());
+        //                return;
+        //            }
+        //        }
+        //    }
+
+        //    stateMachine.SetState(meleeEnemy.moveState);
+        //}
     }
 
 }
