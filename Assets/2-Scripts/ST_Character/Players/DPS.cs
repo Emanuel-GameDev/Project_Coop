@@ -264,7 +264,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
             Utility.DebugTrace($"EndAttakMustContinue: {mustContinueCombo}, Current State: {currentAttackComboState}");
             alreadyCalled = true;
         }
-        else Debug.Log("Chiamata2");
     }
 
     public void OnAttackAnimationStart()

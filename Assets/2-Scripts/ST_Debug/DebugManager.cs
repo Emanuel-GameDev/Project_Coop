@@ -160,7 +160,7 @@ public class DebugManager : MonoBehaviour
             {
                 foreach (PlayerCharacter character in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
                 {
-                    character.switchCharacterCooldown = 1f;
+                    character.CancelSwitchCooldown();
                 }
             }
         }

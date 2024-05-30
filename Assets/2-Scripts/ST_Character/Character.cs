@@ -68,8 +68,6 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         //Shader
         spriteRendererVisual = GetComponentInChildren<SpriteRotation>().GetComponent<SpriteRenderer>();
         spriteMaterial = spriteRendererVisual.material;
-
-        
     }
 
     public Rigidbody2D GetRigidBody() => rb;
