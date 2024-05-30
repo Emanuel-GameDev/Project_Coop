@@ -37,14 +37,14 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
 
     [SerializeField] protected UnityEvent onHit = new();
     [SerializeField] protected UnityEvent onDeath = new();
-    [SerializeField] protected UnityEvent onDash = new();
+    [SerializeField] protected UnityEvent onDefenceAbility = new();
     [SerializeField] protected UnityEvent onParried = new();
 
 
     public UnityEvent OnDeath { get => onDeath; set => onDeath = value; } 
     public UnityEvent OnHit { get => onHit; set => onHit = value; } 
 
-    public UnityEvent OnDash { get => onDash; set => onDash = value; } 
+    public UnityEvent OnDefenceAbility { get => onDefenceAbility; set => onDefenceAbility = value; } 
 
 
     [SerializeField] private AnimationCurve pushAnimationCurve;

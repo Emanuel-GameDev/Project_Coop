@@ -325,7 +325,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         isDodging = true;
         animator.SetTrigger(DODGESTART);
         PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
-        onDash?.Invoke();
+        onDefenceAbility?.Invoke();
         trailDodgeVFX.gameObject.SetActive(true);
         yield return StartCoroutine(Move(dodgeDirection, rb, dodgeDuration, dodgeDistance * powerUpData.DodgeDistanceIncrease));
 

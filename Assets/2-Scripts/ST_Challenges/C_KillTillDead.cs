@@ -1,19 +1,18 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
 
-public class C_KillAllInTimer : Challenge
+public class C_KillTillDead : Challenge
 {
 
-    [Header("Timer")]
-    [SerializeField] private float timerChallenge;
-
-
-    [Header("Modifiers")]
-    [SerializeField] private bool noDamage;
-    [SerializeField] private bool noDefenceAbility;
-
-    private bool startTimer;
-    private int enemyInt = 0;
+    [Header("Ranks")]
+    [SerializeField] int enemiesFirstStar;   
+    [SerializeField] int enemiesSecondStar;   
+    [SerializeField] int enemiesThirdStar;
+    
+    private int enemyKilled = 0;
     public List<PlayerCharacter> activePlayers;
 
 
@@ -29,18 +28,22 @@ public class C_KillAllInTimer : Challenge
 
         activePlayers = PlayerCharacterPoolManager.Instance.AllPlayerCharacters;
         foreach (PlayerCharacter p in activePlayers)
-        {
-            if (noDamage)
-                p.OnHit.AddListener(OnFailChallenge);
-
-            if (noDefenceAbility)
-                p.OnDefenceAbility.AddListener(OnFailChallenge);
-            
+        {        
+           p.OnDeath.AddListener(CheckChallengeResult);
         }
 
-        
+    }
 
-
+    private void CheckChallengeResult()
+    {
+      if(enemyKilled >= 15)
+        {
+            OnWinChallenge();
+        }
+        else
+        {
+            OnFailChallenge();
+        }
     }
     public override void StartChallenge()
     {
@@ -49,13 +52,13 @@ public class C_KillAllInTimer : Challenge
         {
             s.canSpawn = true;
         }
+        enemyKilled = 0;
+        ChallengeManager.Instance.timerText.text = enemyKilled.ToString();
 
-        startTimer = true;
 
     }
     public override void OnFailChallenge()
-    {
-        startTimer = false;
+    {     
         base.OnFailChallenge();
 
         ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnFailure);
@@ -63,54 +66,28 @@ public class C_KillAllInTimer : Challenge
         ChallengeManager.Instance.dialogueBox.AddDialogueEnd(onChallengeFailReset);
         ChallengeManager.Instance.dialogueBox.StartDialogue();
 
-
-
     }
     public override void OnWinChallenge()
     {
         base.OnWinChallenge();
 
-        startTimer = false;
-
         ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnSuccess);
         ChallengeManager.Instance.dialogueBox.RemoveAllDialogueEnd();
         ChallengeManager.Instance.dialogueBox.StartDialogue();
     }
+
     public override void AddToSpawned(EnemyCharacter enemyCharacter)
     {
-        base.AddToSpawned(enemyCharacter);
-        enemyInt++;
+        base.AddToSpawned(enemyCharacter);       
         enemyCharacter.OnDeath.AddListener(OnEnemyDeath);
 
-    }
-    private void Update()
-    {
-        if (startTimer)
-        {
-            if (timerChallenge > 0)
-            {
-
-                if (enemySpawned && enemyInt == 0)
-                {
-                    OnWinChallenge();
-                }
-
-                timerChallenge -= Time.deltaTime;
-
-            }
-            else
-            {
-                OnFailChallenge();
-            }
-
-            DisplayTimer(timerChallenge);
-
-        }
-    }
-
+    }  
     public override void OnEnemyDeath()
     {
         base.OnEnemyDeath();
-        enemyInt--;
+        enemyKilled++;
+        ChallengeManager.Instance.timerText.text = enemyKilled.ToString();
     }
+
+    
 }

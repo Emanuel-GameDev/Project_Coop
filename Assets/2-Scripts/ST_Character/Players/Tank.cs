@@ -177,6 +177,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         shieldVFXBaseColor = shieldVFX.GetComponentInChildren<MeshRenderer>().material.GetColor("_MainColor");
 
+       //characterController.GetInputHandler().PlayerInput.currentActionMap.FindAction("ExtraAbility").
+        
+
        
     }
 
@@ -328,6 +331,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         if (context.performed && isAttacking == false && canBlock)
         {
+            OnDefenceAbility?.Invoke();
             ResetAllAnimatorTriggers();
             SetCanMove(false, rb);
 
@@ -768,7 +772,14 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     #endregion
     public override void ExtraAbilityInput(InputAction.CallbackContext context) //Tasto est
     {
-     
+
+       
+        //if(context.interaction is HoldInteraction)
+        //{
+        //    HoldInteraction prova = (HoldInteraction)context.interaction;
+        //    prova.duration = chargedAttackTimer;
+        //}
+
         if (context.started && !inAttackAnimation && !inCharge)
         {                     
             chargedAttackReady = false;
