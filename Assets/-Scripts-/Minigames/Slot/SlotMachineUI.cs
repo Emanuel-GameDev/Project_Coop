@@ -1,27 +1,24 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class SlotMachineUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI remainingTryText;
+    [Header("Side UI")]
 
-    //DA RIVEDERE #MODIFICATO
+    public GameObject lightEasyModeGameobject;
+    public GameObject LightMediumModeGameobject;
+    public GameObject LighthardModeGameobject;
 
-    //[SerializeField] private MinigameMenu winScreen;
-    //[SerializeField] private MinigameMenu loseScreen;
+    public List<UnityEngine.UI.Image> winCombinationUIGameObjects;
 
-    public void UpdateRemainingTryText(int value)
-    {
-        remainingTryText.text = value.ToString();
-    }
+    public List<Sprite> charactersButtonsUISprites;
 
-    public void ShowWin()
-    {
-        // winScreen.gameObject.SetActive(true);
-    }
+    public List<UnityEngine.UI.Image> buttonUIGameObjects;
 
-    public void Showlose()
-    {
-        //loseScreen.gameObject.SetActive(true);
-    }
+    public List<UnityEngine.UI.Image> playerUISprite;
+
+    
+
+
 }

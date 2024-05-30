@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.U2D.Animation;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public enum slotType
 {
@@ -25,13 +28,13 @@ public class Slotmachine : MonoBehaviour
     int lives = 3;
     int remainingLives;
     int numberOfJackpots = 0;
-    
+    public bool inGame = false;
+
 
     //Sprite List basato sul type
     [SerializeField] private List<Sprite> spriteDatabase;
     public List<slotType> allSlotType { get; private set; }
     [SerializeField] slotType[] WinCombination;
-    private List<Sprite> WinCombinationSprite;
 
     [Header("Audio base")]
     [SerializeField] AudioClip winAudio;
@@ -90,6 +93,7 @@ public class Slotmachine : MonoBehaviour
 
     [Header("Buttons")]
     [SerializeField] private List<ButtonSlot> buttonSlots = new List<ButtonSlot>();
+    [SerializeField] private List<SpriteRenderer> buttonPlayerSpriteRenderers= new List<SpriteRenderer>();
 
     [Header("Manopola")]
     [SerializeField] private GameObject manopola;
@@ -110,8 +114,12 @@ public class Slotmachine : MonoBehaviour
 
     [SerializeField] private SlotMachineUI slotMachineUI;
 
+    [SerializeField] private List<Sprite> PlayerUISprites;
+
+    
+
     bool canInteract;
-    public bool inGame = false;
+    
 
     [SerializeField] private SceneChanger sceneChanger;
 
@@ -184,10 +192,13 @@ public class Slotmachine : MonoBehaviour
     {
         randomListOfPlayer.Clear();
         
-
+        //initialize win combination
         for (int i = 0; i < rows.Count; i++)
         {
             WinCombination[i] = allSlotType[UnityEngine.Random.Range(0, allSlotType.Count)];
+
+            slotMachineUI.winCombinationUIGameObjects[i].sprite = ChoseSpriteBySlotType(WinCombination[i]);
+
         }
 
         RandomReorder(listOfCurrentPlayer);
@@ -205,7 +216,7 @@ public class Slotmachine : MonoBehaviour
         }
 
         
-        slotMachineUI.UpdateRemainingTryText(remainingLives);
+        //slotMachineUI.UpdateRemainingTryText(remainingLives);
                 
         //fail safe momentaneo
         currentNumberOfTheSlot = -1;
@@ -349,7 +360,23 @@ public class Slotmachine : MonoBehaviour
         loopSlotAudio.Play();
 
         remainingLives--;
-        slotMachineUI.UpdateRemainingTryText(remainingLives);
+
+        slotMachineUI.lightEasyModeGameobject.SetActive(false);
+        slotMachineUI.LightMediumModeGameobject.SetActive(false);
+        slotMachineUI.LighthardModeGameobject.SetActive(false);
+
+        if(remainingLives == lives - 1)
+        {
+            slotMachineUI.lightEasyModeGameobject.SetActive(true);
+        }
+        else if(remainingLives == 0)
+        {
+            slotMachineUI.LighthardModeGameobject.SetActive(true);
+        }
+        else
+        {
+            slotMachineUI.LightMediumModeGameobject.SetActive(true);
+        }
 
         foreach (SlotRow row in rows)
         {
@@ -374,21 +401,25 @@ public class Slotmachine : MonoBehaviour
             case ePlayerCharacter.Brutus:
                 buttonSprite = dpsButtonSprite;
                 libraryButton = dpsSpriteLibrary;
+                slotMachineUI.buttonUIGameObjects[index].sprite= slotMachineUI.charactersButtonsUISprites[0];
                 break;
             case ePlayerCharacter.Kaina:
 
                 buttonSprite = tankButtonSprite;
                 libraryButton = tankSpriteLibrary;
+                slotMachineUI.buttonUIGameObjects[index].sprite = slotMachineUI.charactersButtonsUISprites[1];
                 break;
             case ePlayerCharacter.Cassius:
 
                 buttonSprite = healerButtonSprite;
                 libraryButton = healerSpriteLibrary;
+                slotMachineUI.buttonUIGameObjects[index].sprite = slotMachineUI.charactersButtonsUISprites[3];
                 break;
             case ePlayerCharacter.Jude:
 
                 buttonSprite = rangedButtonSprite;
                 libraryButton = rangedSpriteLibrary;
+                slotMachineUI.buttonUIGameObjects[index].sprite = slotMachineUI.charactersButtonsUISprites[2];
                 break;
             default:
                 Debug.LogError("Personaggio non riconosciuto");
@@ -496,6 +527,16 @@ public class Slotmachine : MonoBehaviour
         for (int i = 0; i < rows.Count; i++)
         {
             rows[i].selectedPlayer = randomListOfPlayer[i];
+
+            for(int x=0;x< randomListOfPlayer.Count;x++)
+            {
+                if (randomListOfPlayer[i] == listOfCurrentPlayer[x])
+                {
+                    slotMachineUI.playerUISprite[i].sprite = PlayerUISprites[x];
+                    buttonPlayerSpriteRenderers[i].sprite = PlayerUISprites[x];
+                    break;
+                }
+            }
         }
     }
 
@@ -528,7 +569,7 @@ public class Slotmachine : MonoBehaviour
 
 
 
-            yield return new WaitForSeconds(stabilizationSpeed);
+            yield return new WaitUntil(()=>rows[currentNumberOfTheSlot].stopped==true);
 
             //check se la colonna è stata bloccata sull'immagine giusta
             
