@@ -1,16 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class Damager : MonoBehaviour
 {
-    [SerializeField] public
-    LayerMask targetLayers;
+    [SerializeField]
+    public LayerMask targetLayers;
 
     public IDamager source;
-    Condition conditionToApply=null;
+    Condition conditionToApply = null;
     bool oneTimeCondition;
 
     [SerializeField]
@@ -18,7 +15,7 @@ public class Damager : MonoBehaviour
 
     //decidere se tenere ConditionToApply
 
-   
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         onTrigger.Invoke(other);
@@ -30,7 +27,7 @@ public class Damager : MonoBehaviour
             {
                 DamageData newData = source.GetDamageData();
 
-                if(newData.condition==null && conditionToApply != null)
+                if (newData.condition == null && conditionToApply != null)
                     newData.condition = conditionToApply;
 
                 damageable.TakeDamage(newData);
@@ -63,7 +60,7 @@ public class Damager : MonoBehaviour
         source = character;
     }
 
-  
+
     public void SetCondition(Condition condition, bool oneTime)
     {
         condition.transform.parent = transform;
@@ -74,5 +71,5 @@ public class Damager : MonoBehaviour
     public void RemoveCondition()
     {
         conditionToApply = null;
-    } 
+    }
 }

@@ -7,12 +7,10 @@ using UnityEngine.Localization.Components;
 public class Challenge : MonoBehaviour
 {
     [Header("Generics")]
-
     public LocalizedString challengeName;
     public LocalizedString challengeDescription;
-    public ChallengeName challengeNameEnum;
-
-
+    public virtual ChallengeName challengeNameEnum { get; }
+    
     [Header("Enemies")]
     [SerializeField] public List<EnemySpawner> enemySpawnPoints;
 
@@ -32,6 +30,12 @@ public class Challenge : MonoBehaviour
     public Dialogue dialogueOnFailure;
     [SerializeField] UnityEvent onChallengeFailEvent;
 
+    [Header("Ranks")]
+    public bool hasRanks;
+    [SerializeField] public LocalizedString firstStarDescription;
+    [SerializeField] public LocalizedString secondStarDescription;
+    [SerializeField] public LocalizedString thirdStarDescription;
+
 
     [HideInInspector] public List<EnemyCharacter> spawnedEnemiesList;
     [HideInInspector] public bool enemySpawned;
@@ -40,7 +44,12 @@ public class Challenge : MonoBehaviour
     [HideInInspector] public bool challengeCompleted;
     [HideInInspector] private bool challengeStarted;
     [HideInInspector] public ChallengeUI challengeUI;
+    [HideInInspector] public UiChallengeRank challengeRankUI;
     private string destinationSceneName = "ChallengeSceneTest";
+
+    [HideInInspector] public bool firstStarObtained;
+    [HideInInspector] public bool secondStarObtained;
+    [HideInInspector] public bool thirdStarObtained;
 
     public void ActivateGameobject()
     {
@@ -51,7 +60,6 @@ public class Challenge : MonoBehaviour
         onChallengeStartAction.AddListener(StartChallenge);
         onChallengeFailReset.AddListener(ResetScene);
     }
-
     public virtual void StartChallenge()
     {
         Debug.Log("SFIDA INIZIATA");
@@ -155,7 +163,6 @@ public class Challenge : MonoBehaviour
     {
         GameManager.Instance.ChangeScene(destinationSceneName);
     }
-
     public void ResetChallenge()
     {
         if (spawnedEnemiesList.Count > 0)
@@ -176,7 +183,6 @@ public class Challenge : MonoBehaviour
         ChallengeManager.Instance.interacted = false;
         //ChallengeManager.Instance.gameObject.GetComponent<SpriteRenderer>().enabled = true;
     }
-
     protected void DisplayTimer(float timeToDisplay)
     {
         if (timeToDisplay < 0)
@@ -190,13 +196,11 @@ public class Challenge : MonoBehaviour
         ChallengeManager.Instance.timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
     }
-
     protected void DisplayChallengeDescription()
     {
         ChallengeManager.Instance.challengeText.GetComponent<LocalizeStringEvent>().StringReference = challengeDescription;
         //ChallengeManager.Instance.challengeText.text = ChallengeManager.Instance.challengeText.GetComponent<LocalizeStringEvent>().StringReference.ToString();
     }
-
     internal void AutoComplete()
     {
         OnWinChallenge();
@@ -208,6 +212,9 @@ public enum ChallengeName
     Survive,
     KillAllInTimer,
     KerberosAgain,
-    KillAllNoDash,
-    KillAllNoDamage
+    KillAllNoDefenceAbility,
+    KillAllNoDamage,
+    killTillDead,
+    defendBox
 }
+

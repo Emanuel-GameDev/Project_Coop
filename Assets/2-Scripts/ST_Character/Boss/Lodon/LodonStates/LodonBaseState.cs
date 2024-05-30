@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class LodonBaseState : State<LodonBaseState>
 {
     protected LodonBoss lodonBossCharacter;
@@ -10,4 +6,6 @@ public class LodonBaseState : State<LodonBaseState>
     {
         this.lodonBossCharacter = lodonBossCharacter;
     }
+
+    virtual public void EndAnimation() { }
 }

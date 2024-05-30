@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization.Components;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ public class ChallengeUI : MonoBehaviour
     [SerializeField] private LocalizeStringEvent challengeName;
     [SerializeField] private Button selectButton;
     [SerializeField] private Image challengeCompletedImage;
+    public  List<UiChallengeRank> uiChallengeRanks;
     public Challenge challengeSelected;
     private bool selected;
 
@@ -29,6 +31,14 @@ public class ChallengeUI : MonoBehaviour
             challengeCompletedImage.gameObject.SetActive(true);
           
             selectButton.enabled = false;
+        }
+    }
+
+    public void ShowRanks(bool value)
+    {
+       foreach (var rank in uiChallengeRanks)
+        {
+            rank.gameObject.SetActive(value);
         }
     }
 

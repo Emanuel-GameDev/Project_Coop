@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -31,7 +30,9 @@ public class ChallengeManager : MonoBehaviour
     [SerializeField] private List<Challenge> challengesList;
     [SerializeField] private MenuInfo menuInfo;
     [SerializeField] private GameObject panel;
+    [SerializeField] private GameObject panelRanks;
     [SerializeField] private GameObject challengeUIPrefab;
+    [SerializeField] private GameObject challengeUIRankPrefab;
     [SerializeField] public List<Challenge> currentSaveChallenges;
     [SerializeField] private GameObject bottoneInutile;
     [SerializeField] private string zoneSettingSaveName = "AllFirstZoneChallengesCompleted";
@@ -46,7 +47,7 @@ public class ChallengeManager : MonoBehaviour
 
 
     [HideInInspector] public Challenge selectedChallenge;
-     public bool interacted;
+    public bool interacted;
     [HideInInspector] public UnityEvent onInteractionAction;
     [SerializeField] private PressInteractable pressInteractable;
     private void Awake()
@@ -58,7 +59,6 @@ public class ChallengeManager : MonoBehaviour
         else
         {
             _instance = this;
-           
         }
     }
     private void Start()
@@ -72,15 +72,32 @@ public class ChallengeManager : MonoBehaviour
             onInteractionAction.AddListener(OnInteraction);
             Shuffle(challengesList);
             savedChallenges = new();
-            for (int i = 0; i < 3; ++i)
+            for (int i = 0; i <3; i++)
             {
+                //creo Ui sfide
                 GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
                 ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();
                 tempUI.challengeSelected = challengesList[i];
                 tempUI.challengeSelected.challengeUI = tempUI;
                 tempUI.SetUpUI();
+
+                if (challengesList[i].hasRanks)
+                {
+                    //creo Ui rank
+                    for (int j = 0; j < 3; j++)
+                    {
+                        GameObject tempRankObj = Instantiate(challengeUIRankPrefab, panelRanks.gameObject.transform);
+                        UiChallengeRank tempRankUI = tempRankObj.GetComponent<UiChallengeRank>();
+                        tempRankUI.challengeSelected = challengesList[i];
+                        tempRankUI.challengeSelected.challengeRankUI = tempRankUI;
+                        tempUI.uiChallengeRanks.Add(tempRankUI);
+                        tempRankUI.SetUpUI(j);
+                        tempRankObj.SetActive(false);
+                    }
+                }
+
                 currentSaveChallenges.Add(tempUI.challengeSelected);
-                savedChallenges.Add(new(tempUI.challengeSelected.challengeNameEnum, false,0));
+                savedChallenges.Add(new(tempUI.challengeSelected.challengeNameEnum, false, 0));
             }
 
             SaveManager.Instance.SaveChallenges(savedChallenges);
@@ -91,12 +108,28 @@ public class ChallengeManager : MonoBehaviour
 
             foreach (ChallengeData c in savedChallenges)
             {
+                
                 GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
                 ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();
                 tempUI.challengeSelected = challengesList.Find(x => x.challengeNameEnum == c.challengeName);
                 tempUI.challengeSelected.challengeUI = tempUI;
                 tempUI.challengeSelected.challengeCompleted = c.completed;
                 tempUI.SetUpUI();
+
+                if (challengesList.Find(x => x.challengeNameEnum == c.challengeName).hasRanks)
+                {
+                    //creo Ui rank
+                    for (int j = 0; j < 3; j++)
+                    {
+                        GameObject tempRankObj = Instantiate(challengeUIRankPrefab, panelRanks.gameObject.transform);
+                        UiChallengeRank tempRankUI = tempRankObj.GetComponent<UiChallengeRank>();
+                        tempRankUI.challengeSelected = challengesList.Find(x => x.challengeNameEnum == c.challengeName);
+                        tempRankUI.challengeSelected.challengeRankUI = tempRankUI;
+                        tempUI.uiChallengeRanks.Add(tempRankUI);
+                        tempRankUI.SetUpUI(j);
+                        tempRankObj.SetActive(false);
+                    }
+                }
                 currentSaveChallenges.Add(tempUI.challengeSelected);
             }
 
@@ -111,7 +144,7 @@ public class ChallengeManager : MonoBehaviour
 
         if (savedChallenges == null)
         {
-            SaveManager.Instance.SaveChallenge(new(challenge, completed,0));
+            SaveManager.Instance.SaveChallenge(new(challenge, completed, 0));
         }
         else
         {
@@ -167,7 +200,7 @@ public class ChallengeManager : MonoBehaviour
     {
         MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetFirstPlayer());
         dialogueBox.RemoveAllDialogueEnd();
-        
+
     }
 
     public void DeactivateInteractable()
