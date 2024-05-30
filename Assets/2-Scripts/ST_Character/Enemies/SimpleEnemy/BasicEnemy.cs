@@ -218,17 +218,17 @@ public class BasicEnemy : EnemyCharacter
         
 
     }
-
+    float moveStrafeIntervall = 3;
+    float moveAllowedTime = 3;
+    Coroutine movementCountDownCoroutine;
     protected virtual void Start()
     {
         viewTrigger.GetComponent<CircleCollider2D>().radius = viewRange;
         AttackRangeTrigger.GetComponent<CircleCollider2D>().radius = attackRange;
         ChangeTargetTrigger.GetComponent<CircleCollider2D>().radius = changeTargetRange;
 
+        
 
-        StartCoroutine(MovementCountdown(
-            UnityEngine.Random.Range(minStrafeInterval,maxStrafeInterval),
-            UnityEngine.Random.Range(minStrafeTime, maxStrafeTime)));
         //if(canGoIdle)
         //stateMachine.SetState(idleState);       
     }
@@ -307,8 +307,6 @@ public class BasicEnemy : EnemyCharacter
             {
                 StartCoroutine(CalculateStrafePathAndSteering());
             }
-
-
         }
        
          move = Vector2.zero;
@@ -320,8 +318,8 @@ public class BasicEnemy : EnemyCharacter
         }
 
         Move(move, rb);
-        //rb.velocity = Vector2.up * moveSpeed;
     }
+
     public bool strafe = false;
     internal bool isRunning = false;
     public float delay = 1;
@@ -336,15 +334,31 @@ public class BasicEnemy : EnemyCharacter
     public float maxStrafeTime = 4;
 
     bool strafeAllowed = true;
+
+    public void StartStopMovementCountdownCoroutine(bool start)
+    {
+        if (start)
+        {
+            movementCountDownCoroutine = StartCoroutine(MovementCountdown(
+                UnityEngine.Random.Range(minStrafeInterval, maxStrafeInterval),
+                UnityEngine.Random.Range(minStrafeTime, maxStrafeTime)));
+        }
+        else 
+        {
+            if(movementCountDownCoroutine != null)
+                StopCoroutine(movementCountDownCoroutine);
+        }
+    }
+
     internal IEnumerator MovementCountdown(float blockInterval,float moveAllowedTime)
     {
-        while(true)
-        {
+        
             strafeAllowed = false;
             yield return new WaitForSeconds(blockInterval);
             strafeAllowed = true;
             yield return new WaitForSeconds(moveAllowedTime);
-        }
+
+        StartStopMovementCountdownCoroutine(true);
     }
 
     internal IEnumerator CalculateStrafePathAndSteering()
@@ -370,9 +384,14 @@ public class BasicEnemy : EnemyCharacter
         yield return new WaitForSeconds(delay);
 
         if (!strafe)
+        {
             StartCoroutine(CalculateChasePathAndSteering());
+        }
         else
+        {
+
             StartCoroutine(CalculateStrafePathAndSteering());
+        }
     }
 
     internal IEnumerator CalculateChasePathAndSteering()
@@ -395,7 +414,9 @@ public class BasicEnemy : EnemyCharacter
         if (!strafe)
             StartCoroutine(CalculateChasePathAndSteering());
         else
+        {
             StartCoroutine(CalculateStrafePathAndSteering());
+        }
 
 
     }
@@ -456,6 +477,8 @@ public class BasicEnemy : EnemyCharacter
         //}
         if (!isRunning)
         {
+            
+
             if (!strafe)
                 StartCoroutine(CalculateChasePathAndSteering());
             else
@@ -500,9 +523,25 @@ public class BasicEnemy : EnemyCharacter
         {
             if (ChangeTargetTrigger.GetPlayersCountInTrigger() > 1)
             {
-                PlayerCharacter[] listCopy = ChangeTargetTrigger.GetPlayersDetected().OrderBy(p=>p.transform.position-groundLevel.transform.position).ToArray();
-                SetTarget(listCopy[0].transform);
+                PlayerCharacter[] listCopy = ChangeTargetTrigger.GetPlayersDetected().ToArray();
 
+                Transform tMin = null;
+                    float minDist = Mathf.Infinity;
+                    Vector3 currentPos = transform.position;
+                foreach (PlayerCharacter p in listCopy)
+                {
+
+                    float dist = Vector3.Distance(p.transform.position, currentPos);
+
+                    if (dist < minDist)
+                    {
+                        tMin = p.transform;
+                        minDist = dist;
+                    }
+                }
+
+
+                SetTarget(tMin);
             }
             else
                 SetTarget(ChangeTargetTrigger.GetPlayersDetected()[0].transform);
@@ -967,7 +1006,7 @@ public class BasicEnemy : EnemyCharacter
     public override void SetTarget(Transform newTarget)
     {
         target = newTarget;
-
+        
         if(newTarget.TryGetComponent<PlayerCharacter>(out PlayerCharacter player))
             currentTarget = player;
     }

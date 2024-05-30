@@ -20,7 +20,7 @@ public class BasicEnemyIdleState : BasicEnemyState
 
         basicEnemy.ActivateObstacle();
 
-
+        basicEnemy.StartStopMovementCountdownCoroutine(false);
     }
 
     public override void Update()

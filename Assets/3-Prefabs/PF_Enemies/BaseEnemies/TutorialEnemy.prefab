@@ -683,7 +683,7 @@ MonoBehaviour:
   stunTime: 1
   viewRange: 28.77
   attackRange: 2
-  changeTargetRange: 6
+  changeTargetRange: 0.1
   attackDelay: 2
   despawnTime: 0.5
   enemyType: 0
@@ -708,6 +708,10 @@ MonoBehaviour:
   delay: 0.1
   minStrafe: 0.4
   maxStrafe: 0.7
+  minStrafeInterval: 2
+  maxStrafeInterval: 2
+  minStrafeTime: 4
+  maxStrafeTime: 4
   inc: 1
   showDirections: 0
   contextSteeringDirectionCount: 8
@@ -722,6 +726,7 @@ MonoBehaviour:
   obstacleAvoidanceCloseRange: 5
   obstacleAvoidanceFarRange: 1.1
   strenghtMultiplier: 1
+  steeringSpeed: 1
   showLikedDirections: 0
   showUnlikedDirections: 0
   showCounterAvoid: 0

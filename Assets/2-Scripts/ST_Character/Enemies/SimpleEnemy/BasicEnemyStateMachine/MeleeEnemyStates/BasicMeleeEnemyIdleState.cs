@@ -18,7 +18,7 @@ public class BasicMeleeEnemyIdleState : BasicMeleeEnemyState
         basicEnemy.canAction = false;
 
         basicEnemy.ActivateObstacle();
-
+        basicEnemy.StartStopMovementCountdownCoroutine(false);
     }
 
     public override void Update()

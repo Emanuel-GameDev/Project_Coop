@@ -17,7 +17,7 @@ public class BasicMeleeEnemyAttackState : BasicMeleeEnemyState
         basicEnemy.canAction = true;
 
 
-
+        basicEnemy.StartStopMovementCountdownCoroutine(false);
         basicEnemy.StartCoroutine(basicEnemy.Attack());
         basicEnemy.ActivateObstacle();
 

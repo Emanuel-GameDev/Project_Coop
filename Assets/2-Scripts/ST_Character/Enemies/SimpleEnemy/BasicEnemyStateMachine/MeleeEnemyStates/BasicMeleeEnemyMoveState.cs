@@ -15,7 +15,7 @@ public class BasicMeleeEnemyMoveState : BasicMeleeEnemyState
         meleeEnemy.canAction = false;
 
         meleeEnemy.GetAnimator().SetBool("isMoving", true);
-
+        meleeEnemy.StartStopMovementCountdownCoroutine(true);
     }
 
     public override void Update()

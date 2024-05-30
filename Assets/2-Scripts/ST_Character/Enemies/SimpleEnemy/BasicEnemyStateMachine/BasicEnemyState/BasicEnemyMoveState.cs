@@ -16,6 +16,7 @@ public class BasicEnemyMoveState : BasicEnemyState
 
         Debug.Log("Bo");
         basicEnemy.GetAnimator().SetBool("isMoving", true);
+        basicEnemy.StartStopMovementCountdownCoroutine(true);
 
     }
 
