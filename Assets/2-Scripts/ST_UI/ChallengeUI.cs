@@ -16,7 +16,8 @@ public class ChallengeUI : MonoBehaviour
 
     public void SetUpUI()
     {
-        if (!challengeSelected.challengeCompleted)
+        //se sfida non completata oppure completata senza tutte con meno di 3 stelle
+        if (!challengeSelected.challengeCompleted || (challengeSelected.challengeCompleted && challengeSelected.rank <=2))
         {
             challengeName.StringReference = challengeSelected.challengeName;
             challegeDescription.StringReference = challengeSelected.challengeDescription;
@@ -24,7 +25,8 @@ public class ChallengeUI : MonoBehaviour
             selectButton.onClick.AddListener(challengeSelected.ActivateGameobject);
             selectButton.onClick.AddListener(challengeSelected.Initiate);
         }
-        else
+        //se sfida completata con tutte e 3 le stelle
+        else if (challengeSelected.challengeCompleted && challengeSelected.rank == 3)
         {
             challengeName.StringReference = challengeSelected.challengeName;
             challegeDescription.StringReference = challengeSelected.challengeDescription;

@@ -14,6 +14,7 @@ public class C_KillTillDead : Challenge
     
     
     private int enemyKilled = 0;
+    private int enemiesSpawned = 0;
     public List<PlayerCharacter> activePlayers;
 
 
@@ -27,8 +28,8 @@ public class C_KillTillDead : Challenge
         ChallengeManager.Instance.dialogueBox.AddDialogueEnd(onChallengeStartAction);
         ChallengeManager.Instance.dialogueBox.StartDialogue();
 
-        activePlayers = PlayerCharacterPoolManager.Instance.AllPlayerCharacters;
-        foreach (PlayerCharacter p in activePlayers)
+       
+        foreach (PlayerCharacter p in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
         {        
            p.OnDeath.AddListener(CheckChallengeResult);
         }
@@ -37,9 +38,10 @@ public class C_KillTillDead : Challenge
 
     private void CheckChallengeResult()
     {
-      if(enemyKilled >= 15)
+      if(enemyKilled >= enemiesFirstStar)
         {
             OnWinChallenge();
+           
         }
         else
         {
@@ -49,6 +51,7 @@ public class C_KillTillDead : Challenge
     public override void StartChallenge()
     {
         base.StartChallenge();
+        PlayerCharacterPoolManager.Instance.showDeathScreen = false;
         foreach (EnemySpawner s in enemySpawnPoints)
         {
             s.canSpawn = true;
@@ -79,7 +82,8 @@ public class C_KillTillDead : Challenge
 
     public override void AddToSpawned(EnemyCharacter enemyCharacter)
     {
-        base.AddToSpawned(enemyCharacter);       
+        base.AddToSpawned(enemyCharacter);
+        enemiesSpawned++;
         enemyCharacter.OnDeath.AddListener(OnEnemyDeath);
 
     }  
@@ -87,8 +91,30 @@ public class C_KillTillDead : Challenge
     {
         base.OnEnemyDeath();
         enemyKilled++;
-        ChallengeManager.Instance.timerText.text = enemyKilled.ToString();
+        CheckStarRating();
+        ChallengeManager.Instance.timerText.text = (enemyKilled.ToString() + "/" + enemiesSpawned.ToString());
     }
 
-    
+   private void CheckStarRating()
+    {
+        if(rank == 0 && enemyKilled >= enemiesFirstStar)
+        {
+            rank++;
+            Debug.LogWarning("FIRST StarObtained");
+        }
+        if (rank == 1 && enemyKilled >= enemiesSecondStar)
+        {
+            rank++;
+            Debug.LogWarning("SECOND StarObtained");
+        }
+        if (rank == 2 && enemyKilled >= enemiesThirdStar)
+        {
+            rank++;
+            Debug.LogWarning("THIRD StarObtained");
+        }
+        if(enemiesSpawned == enemyKilled)
+        {
+            OnWinChallenge();
+        }
+    }
 }

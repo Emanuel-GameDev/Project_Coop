@@ -15,27 +15,45 @@ public class UiChallengeRank : MonoBehaviour
         switch (id)
         {
             case 0:
-                if(challengeSelected.firstStarDescription != null)
+                if (challengeSelected.firstStarDescription != null)
                 {
                     challengeRankDescription.StringReference = challengeSelected.firstStarDescription;
-                }             
+                    if(challengeSelected.rank >= 1)
+                    {
+                        challengeRankCompletedImage.gameObject.SetActive(true);
+                    }
+                }
                 break;
 
             case 1:
                 if (challengeSelected.secondStarDescription != null)
+                {
                     challengeRankDescription.StringReference = challengeSelected.secondStarDescription;
+                    if (challengeSelected.rank >= 2)
+                    {
+                        challengeRankCompletedImage.gameObject.SetActive(true);
+                    }
+                }
+
                 break;
 
             case 2:
                 if (challengeSelected.thirdStarDescription != null)
+                {
                     challengeRankDescription.StringReference = challengeSelected.thirdStarDescription;
+                    if (challengeSelected.rank >= 3)
+                    {
+                        challengeRankCompletedImage.gameObject.SetActive(true);
+                    }
+                }
+
                 break;
 
         }
-        
+
         if (challengeSelected.challengeCompleted)
         {
-            challengeRankCompletedImage.gameObject.SetActive(true);
+            
 
         }
     }

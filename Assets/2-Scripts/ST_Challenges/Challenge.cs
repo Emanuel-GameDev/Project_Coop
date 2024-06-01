@@ -47,9 +47,8 @@ public class Challenge : MonoBehaviour
     [HideInInspector] public UiChallengeRank challengeRankUI;
     private string destinationSceneName = "ChallengeSceneTest";
 
-    [HideInInspector] public bool firstStarObtained;
-    [HideInInspector] public bool secondStarObtained;
-    [HideInInspector] public bool thirdStarObtained;
+    public int rank =0;
+    
 
     public void ActivateGameobject()
     {
@@ -57,6 +56,12 @@ public class Challenge : MonoBehaviour
     }
     public virtual void Initiate()
     {
+        PlayerCharacterPoolManager.Instance.showDeathScreen = true;
+        foreach (PlayerCharacter p in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
+        {
+            p.OnDeath.RemoveAllListeners();
+        }
+
         onChallengeStartAction.AddListener(StartChallenge);
         onChallengeFailReset.AddListener(ResetScene);
     }
@@ -142,6 +147,7 @@ public class Challenge : MonoBehaviour
        
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
         ChallengeManager.Instance.SaveChallengeCompleted(this.challengeNameEnum, challengeCompleted);
+        ChallengeManager.Instance.SaveChallengeRanks(this.challengeNameEnum, rank);
 
         onChallengeSuccessEvent?.Invoke();
 

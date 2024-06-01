@@ -67,6 +67,7 @@ public class ChallengeManager : MonoBehaviour
 
         List<ChallengeData> savedChallenges = SaveManager.Instance.LoadChallenges();
 
+        //Creo Salvataggio
         if (savedChallenges == null)
         {
             onInteractionAction.AddListener(OnInteraction);
@@ -102,6 +103,7 @@ public class ChallengeManager : MonoBehaviour
 
             SaveManager.Instance.SaveChallenges(savedChallenges);
         }
+        //carico Salvataggio
         else
         {
             onInteractionAction.AddListener(OnInteraction);
@@ -153,8 +155,9 @@ public class ChallengeManager : MonoBehaviour
             SaveManager.Instance.SaveChallenge(challengeData);
         }
 
-        bool allChallegesCompleted = true;
 
+        //Controllo tutte sfide completate
+        bool allChallegesCompleted = true;
         foreach (ChallengeData c in savedChallenges)
         {
             if (!c.completed)
@@ -163,8 +166,16 @@ public class ChallengeManager : MonoBehaviour
                 break;
             }
         }
-
         SaveManager.Instance.SaveSetting(zoneSettingSaveName, allChallegesCompleted);
+    }
+    public void SaveChallengeRanks(ChallengeName challenge, int rank)
+    {
+        List<ChallengeData> savedChallenges = SaveManager.Instance.LoadChallenges();
+    
+            ChallengeData challengeData = savedChallenges.Find(x => x.challengeName == challenge);
+            challengeData.rank = rank;
+            SaveManager.Instance.SaveChallenge(challengeData);
+              
     }
     #endregion
 
@@ -181,6 +192,7 @@ public class ChallengeManager : MonoBehaviour
         }
     }
 
+    #region Interaction
     public void Interact()
     {
         if (!interacted)
@@ -194,15 +206,12 @@ public class ChallengeManager : MonoBehaviour
         }
 
     }
-
-
     private void OnInteraction()
     {
         MenuManager.Instance.OpenMenu(menuInfo, CoopManager.Instance.GetFirstPlayer());
         dialogueBox.RemoveAllDialogueEnd();
 
     }
-
     public void DeactivateInteractable()
     {
         if (pressInteractable == null)
@@ -218,4 +227,5 @@ public class ChallengeManager : MonoBehaviour
 
         pressInteractable.gameObject.SetActive(true);
     }
+    #endregion
 }
