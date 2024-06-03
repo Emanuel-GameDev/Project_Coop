@@ -55,6 +55,7 @@ public class LodonMove : LodonBaseState
     {
         List<Transform> positions = lodonBossCharacter.Generator.OuterCenterPositions;
         targetPosition = positions[Random.Range(0, positions.Count)].position;
+        lodonBossCharacter.Agent.SetDestination(targetPosition);
     }
 
     private void TridentThrowingMove()
@@ -65,7 +66,8 @@ public class LodonMove : LodonBaseState
         {
             targetReached = true;
             lodonBossCharacter.Agent.isStopped = true;
-            Emerge();
+            lodonBossCharacter.transform.position = targetPosition;
+            lodonBossCharacter.Animator.SetTrigger(lodonBossCharacter.EMERGE);
         }
 
     }

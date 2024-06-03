@@ -69,14 +69,14 @@ public abstract class PlayerCharacter : Character
 
 
     protected bool isMoving;
-    protected bool isInBossfight;
-    protected bool bossfightPowerUpUnlocked;
+    protected bool isInBossfight = false;
+    protected bool bossfightPowerUpUnlocked = false;
 
     protected bool isRightInputRecently => rightInputTimer>0;
     [SerializeField] protected float recentlyInputTimer = 3f;
     protected float rightInputTimer = 0;
 
-
+    protected BossFightHandler bossFightHandler = null;
     public bool protectedByTank; //DA RIVEDERE 
 
     [Header("Crosshair distance multiplier")]
@@ -156,11 +156,15 @@ public abstract class PlayerCharacter : Character
         {
             damager.SetSource(this);
         }
-        SetIsInBossfight(false);
+        SetIsInBossfight(false, null);
         lastestCharacterSwitch = Time.time;
     }
 
-    public virtual void SetIsInBossfight(bool value) => isInBossfight = value;
+    public virtual void SetIsInBossfight(bool value, BossFightHandler bossFightHandler)
+    {
+        isInBossfight = value;
+        this.bossFightHandler = bossFightHandler;
+    }
     public void SetMaxHP(float value) => maxHp = value;
     public void SetCurrentHP(float value) => CurrentHp = value;
 
@@ -546,7 +550,7 @@ public abstract class PlayerCharacter : Character
         characterController.GetInputHandler().PlayerInput.actions.Enable();
     }
 
-    public virtual void ResetAllAnimatorTriggers()
+    public virtual void ResetAllAnimatorAndTriggers()
     {
         foreach (var param in animator.parameters)
         {
@@ -556,6 +560,10 @@ public abstract class PlayerCharacter : Character
             }
             animator.Play("Idle");
         }
+
+        moveDir = Vector2.zero;
+        isMoving = false;
+        rb.velocity = Vector2.zero;
     }
 
     public void Dismiss()
