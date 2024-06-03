@@ -62,6 +62,7 @@ public class RangedEnemy : BasicEnemy
     public override IEnumerator Attack()
     {
         StopCoroutine(CalculateChasePathAndSteering());
+        StopCoroutine(CalculateRunAwayPathAndSteering());
         isRunning = false;
 
         isActioning = true;
@@ -86,7 +87,7 @@ public class RangedEnemy : BasicEnemy
 
             newProjectile.transform.position = transform.position;
 
-            selectedPlayerInRange = playerInRange[UnityEngine.Random.Range(0, playerInRange.Count)];
+            selectedPlayerInRange = currentTarget;
 
 
 

@@ -95,6 +95,93 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!1 &1641304362388832625
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5673177898055240899}
+  - component: {fileID: 4569914010431795649}
+  - component: {fileID: 7681779227920852998}
+  m_Layer: 7
+  m_Name: ChangeTargetTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5673177898055240899
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641304362388832625}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4631380387903047295}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4569914010431795649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641304362388832625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3defd5cc67813a54399603acd9abfae6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnOnePlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAllPlayerInside:
+    m_PersistentCalls:
+      m_Calls: []
+  playerInsideCount: {fileID: 0}
+--- !u!58 &7681779227920852998
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641304362388832625}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &2482131022746293055
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,6 +532,7 @@ Transform:
   - {fileID: 6459041835760507617}
   - {fileID: 7741761272246220715}
   - {fileID: 2620245216710807918}
+  - {fileID: 5673177898055240899}
   m_Father: {fileID: 1656924804412423486}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6722108840213963120
@@ -678,7 +766,7 @@ MonoBehaviour:
   onDeath:
     m_PersistentCalls:
       m_Calls: []
-  onDash:
+  onDefenceAbility:
     m_PersistentCalls:
       m_Calls: []
   onParried:
@@ -694,15 +782,17 @@ MonoBehaviour:
   maxHp: 2
   damage: 2
   staminaDamage: 20
-  attackSpeed: 3
+  attackSpeed: 1
   moveSpeed: 5
   target: {fileID: 0}
   currentHp: 0
   groundLevel: {fileID: 4631380387903047295}
   parriedTime: 1
+  stunTime: 1
   viewRange: 12
   attackRange: 20
-  attackDelay: 2
+  changeTargetRange: 2
+  attackDelay: 0.5
   despawnTime: 1
   enemyType: 1
   pivot: {fileID: 6199984211406543536}
@@ -714,6 +804,7 @@ MonoBehaviour:
   canAction: 0
   viewTrigger: {fileID: 7216167695588562814}
   AttackRangeTrigger: {fileID: 5865263756969893415}
+  ChangeTargetTrigger: {fileID: 4569914010431795649}
   EscapeTrigger: {fileID: 3980155435287117935}
   CarvingTime: 0.5
   CarvingMoveThreshold: 0.1
@@ -725,6 +816,10 @@ MonoBehaviour:
   delay: 0.2
   minStrafe: 0.2
   maxStrafe: 0.6
+  minStrafeInterval: 2
+  maxStrafeInterval: 2
+  minStrafeTime: 4
+  maxStrafeTime: 4
   inc: 20
   showDirections: 0
   contextSteeringDirectionCount: 8
@@ -732,12 +827,14 @@ MonoBehaviour:
   csChaseLayerMask:
     serializedVersion: 2
     m_Bits: 576
-  obstacleAvoidancePriority: 1
   csAvoidDistance: 5
   csAvoidLayerMask:
     serializedVersion: 2
     m_Bits: 3072
+  obstacleAvoidanceCloseRange: 1
+  obstacleAvoidanceFarRange: 1
   strenghtMultiplier: 1
+  steeringSpeed: 1
   showLikedDirections: 0
   showUnlikedDirections: 0
   showCounterAvoid: 0

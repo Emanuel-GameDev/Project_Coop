@@ -28,7 +28,7 @@ public class BasicRangedEnemyAttackState : BasicRangedEnemyState
         {
             if (rangedEnemy.EscapeTrigger.GetPlayersCountInTrigger() == 0 || rangedEnemy.panicAttack)
             {
-                rangedEnemy.SetActionCoroutine(basicEnemy.StartCoroutine(rangedEnemy.Attack()));
+                rangedEnemy.SetActionCoroutine(rangedEnemy.StartCoroutine(rangedEnemy.Attack()));
             }
             else if (rangedEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() == 0)
             {

@@ -8,6 +8,7 @@ using UnityEngine.AI;
 using UnityEngine.Localization.Settings;
 using UnityEngine.TextCore.Text;
 
+
 public enum EnemyType
 {
     melee,
@@ -264,10 +265,10 @@ public class BasicEnemy : EnemyCharacter
 
         if (!isRunning)
         {
-            if (!strafe)
+            //if (!strafe)
                 StartCoroutine(CalculateRunAwayPathAndSteering());
-            else
-                StartCoroutine(CalculateStrafePathAndSteering());
+            //else
+            //    StartCoroutine(CalculateStrafePathAndSteering());
 
 
         }
@@ -409,7 +410,7 @@ public class BasicEnemy : EnemyCharacter
 
     }
 
-    IEnumerator CalculateRunAwayPathAndSteering()
+    internal IEnumerator CalculateRunAwayPathAndSteering()
     {
         isRunning = true;
 
@@ -625,15 +626,51 @@ public class BasicEnemy : EnemyCharacter
 
 
     }
+    //Coroutine obstacleCheckCoroutine;
+    //List<RaycastHit2D[]> obstacleList;
+    //internal bool obstacleDetectionActive = false;
+    //IEnumerator ObstacleRaycasts(ContextSteeringDirection[] map, float distanceToConsider, LayerMask layerToAvoid)
+    //{
+    //    obstacleList  = new List<RaycastHit2D[]>() ;
+    //    int currentId = 0;
+    //    obstacleDetectionActive = true;
+    //    RaycastHit2D[] obstacleRaycast = new RaycastHit2D[2];
+
+    //    for(int i = 0;i < contextSteeringDirectionCount; i++)
+    //    {
+    //        obstacleList.Add(new RaycastHit2D[2]);
+    //    }
+
+    //    while (true)
+    //    {
+    //        Physics2D.RaycastNonAlloc(groundLevel.position, map[currentId].GetRelativeDirection(groundLevel), obstacleRaycast, distanceToConsider, layerToAvoid);
+           
+    //        //if(obstacleList[currentId]==null)
+    //            obstacleList[currentId] = obstacleRaycast;
+
+    //        yield return null;
+
+    //        currentId++;
+    //        if(currentId >= contextSteeringDirectionCount)
+    //        {
+    //            currentId = 0;
+    //        }
+    //    }
+    //}
 
     public virtual void CalculateContextSteeringAvoidMap(ContextSteeringDirection[] directionsToAvoid,float distanceToConsider,LayerMask layerToAvoid)
     {
+        //if (!obstacleDetectionActive)
+        //    obstacleCheckCoroutine = StartCoroutine(ObstacleRaycasts(directionsToAvoid, distanceToConsider, layerToAvoid));
+
         for (int i = 0; i < contextSteeringDirectionCount; i++)
         {
             directionsToAvoid[i].SetRelativePos(new Vector2(groundLevel.position.x + directionsToAvoid[i].direction.x, groundLevel.position.y + directionsToAvoid[i].direction.y));
             
             RaycastHit2D[] raycast = new RaycastHit2D[2];
-            Physics2D.RaycastNonAlloc(groundLevel.position, directionsToAvoid[i].GetRelativeDirection(groundLevel), raycast, distanceToConsider, layerToAvoid);
+
+            //if(chaseBehaviour[i].directionStrenght>=0)
+                Physics2D.RaycastNonAlloc(groundLevel.position, directionsToAvoid[i].GetRelativeDirection(groundLevel), raycast, distanceToConsider, layerToAvoid);
 
 
             if (raycast[1].collider != null)
@@ -652,6 +689,7 @@ public class BasicEnemy : EnemyCharacter
             else
                 directionsToAvoid[i].SetDirectionStrenght(0);
         }
+        
     }
     
     public virtual void SubSteeringMaps(ContextSteeringDirection[] map, ContextSteeringDirection[] mapToSubtract)
