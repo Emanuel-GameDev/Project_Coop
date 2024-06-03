@@ -265,8 +265,9 @@ public abstract class PlayerCharacter : Character
 
             if (CurrentHp <= 0 )
             {
-                onDeath?.Invoke();
+                
                 Die();
+                onDeath?.Invoke();
             }
 
             lastHitTime = Time.time;

@@ -41,10 +41,9 @@ public class Challenge : MonoBehaviour
     [HideInInspector] public bool enemySpawned;
     [HideInInspector] public UnityEvent onChallengeStartAction;
     [HideInInspector] public UnityEvent onChallengeFailReset;
-    [HideInInspector] public bool challengeCompleted;
+    public bool challengeCompleted;
     [HideInInspector] private bool challengeStarted;
     [HideInInspector] public ChallengeUI challengeUI;
-    [HideInInspector] public UiChallengeRank challengeRankUI;
     private string destinationSceneName = "ChallengeSceneTest";
 
     public int rank =0;
@@ -152,6 +151,7 @@ public class Challenge : MonoBehaviour
         onChallengeSuccessEvent?.Invoke();
 
         challengeUI.SetUpUI();
+        challengeUI.ShowRanks(false);
         ResetChallenge();
         ChallengeManager.Instance.ActivateInteractable();
     }
@@ -215,9 +215,10 @@ public class Challenge : MonoBehaviour
 
 public enum ChallengeName
 {
+    noName,
     Survive,
     KillAllInTimer,
-    KerberosAgain,
+    KerberosBoss,
     KillAllNoDefenceAbility,
     KillAllNoDamage,
     killTillDead,
