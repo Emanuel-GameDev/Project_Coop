@@ -67,6 +67,9 @@ public class RangedEnemy : BasicEnemy
 
         isActioning = true;
 
+        readyToAttack = false;
+
+
         if (panicAttack)
         {
             panicAttack = false;
@@ -108,6 +111,7 @@ public class RangedEnemy : BasicEnemy
         isActioning = false;
 
 
+        readyToAttack = true;
 
 
 

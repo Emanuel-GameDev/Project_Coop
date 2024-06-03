@@ -106,14 +106,13 @@ public class BasicRangedEnemyEscapeState : BasicRangedEnemyState
         //        remainingTry = maxTry;
         //    }
 
-            
-
         //}
 
-        basicEnemy.AwayPath();
+        rangedEnemy.AwayPath();
 
         if (rangedEnemy.EscapeTrigger.GetPlayersCountInTrigger() == 0 || rangedEnemy.panicAttack)
         {
+            
             rangedEnemy.stateMachine.SetState(rangedEnemy.actionState);
         }
 
