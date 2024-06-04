@@ -251,10 +251,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         canCharge = true;
     }
     #endregion
-
-
-
-   
+ 
     public void ResetVariables()
     {
 

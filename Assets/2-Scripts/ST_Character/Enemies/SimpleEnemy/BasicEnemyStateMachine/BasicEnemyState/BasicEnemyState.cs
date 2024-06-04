@@ -5,5 +5,5 @@ using UnityEngine;
 public class BasicEnemyState : State<BasicEnemyState>
 {
     protected BasicEnemy basicEnemy;
-    protected EnemyType enemyType;
+    //protected EnemyType enemyType;
 }

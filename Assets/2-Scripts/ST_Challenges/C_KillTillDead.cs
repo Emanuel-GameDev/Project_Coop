@@ -7,7 +7,7 @@ using UnityEngine.Localization;
 public class C_KillTillDead : Challenge
 {
     public override ChallengeName challengeNameEnum { get => ChallengeName.killTillDead;}
-    [Header("Ranks")]
+    [Header("Ranks Settings")]
     [SerializeField] int enemiesFirstStar;   
     [SerializeField] int enemiesSecondStar;   
     [SerializeField] int enemiesThirdStar;
@@ -27,8 +27,7 @@ public class C_KillTillDead : Challenge
         ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnStart);
         ChallengeManager.Instance.dialogueBox.AddDialogueEnd(onChallengeStartAction);
         ChallengeManager.Instance.dialogueBox.StartDialogue();
-
-       
+    
         foreach (PlayerCharacter p in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
         {        
            p.OnDeath.AddListener(CheckChallengeResult);
@@ -40,14 +39,14 @@ public class C_KillTillDead : Challenge
     {
       if(enemyKilled >= enemiesFirstStar)
         {
-            OnWinChallenge();
-           
+            OnWinChallenge();        
         }
         else
         {
             OnFailChallenge();
         }
     }
+
     public override void StartChallenge()
     {
         base.StartChallenge();
@@ -73,8 +72,14 @@ public class C_KillTillDead : Challenge
     }
     public override void OnWinChallenge()
     {
+        foreach (PlayerCharacter p in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
+        {
+            p.Ress();
+        }
+
         base.OnWinChallenge();
 
+       
         ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnSuccess);
         ChallengeManager.Instance.dialogueBox.RemoveAllDialogueEnd();
         ChallengeManager.Instance.dialogueBox.StartDialogue();
@@ -84,6 +89,8 @@ public class C_KillTillDead : Challenge
     {
         base.AddToSpawned(enemyCharacter);
         enemiesSpawned++;
+        UpdateEnemyCounter();
+
         enemyCharacter.OnDeath.AddListener(OnEnemyDeath);
 
     }  
@@ -92,25 +99,34 @@ public class C_KillTillDead : Challenge
         base.OnEnemyDeath();
         enemyKilled++;
         CheckStarRating();
+        UpdateEnemyCounter();
+    }
+
+    private void UpdateEnemyCounter()
+    {
         ChallengeManager.Instance.timerText.text = (enemyKilled.ToString() + "/" + enemiesSpawned.ToString());
     }
 
-   private void CheckStarRating()
+    public override void CheckStarRating()
     {
         if(rank == 0 && enemyKilled >= enemiesFirstStar)
         {
             rank++;
             Debug.LogWarning("FIRST StarObtained");
+            GiveRewardPopUp(coinsFirstRank, keysFirstRank);
+            
         }
         if (rank == 1 && enemyKilled >= enemiesSecondStar)
         {
             rank++;
             Debug.LogWarning("SECOND StarObtained");
+            GiveRewardPopUp(coinsSecondRank, keysSecondRank);
         }
         if (rank == 2 && enemyKilled >= enemiesThirdStar)
         {
             rank++;
             Debug.LogWarning("THIRD StarObtained");
+            GiveRewardPopUp(coinsThirdRank, keysThirdRank);
         }
         if(enemiesSpawned == enemyKilled)
         {
