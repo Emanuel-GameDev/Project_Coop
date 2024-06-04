@@ -381,7 +381,7 @@ public class LabirintManager : MonoBehaviour
         }
 
         bool yetCompleted = CheckAndSaveYetCompleted();
-         
+
         for (int i = 0; i < ranking.Count; i++)
         {
             int totalCoin = 0;
@@ -427,8 +427,13 @@ public class LabirintManager : MonoBehaviour
             }
 
             Enum.TryParse<Rank>(i.ToString(), out Rank rank);
-            winScreenHandler.SetCharacterValues(ranking[i], rank, gainedCoin, totalCoin, gainedKey, totalKey);
 
+            ePlayerID playerID = ePlayerID.NotSet;
+
+            if (players.Find(x => x.GetCharacter() == ranking[i]) is LabirintPlayer player)
+                playerID = player.GetInputHandler().playerID;
+
+            winScreenHandler.SetCharacterValues(playerID, ranking[i], rank, gainedCoin, totalCoin, gainedKey, totalKey);
         }
 
         SaveManager.Instance.SaveData();
@@ -436,7 +441,7 @@ public class LabirintManager : MonoBehaviour
 
     private bool CheckAndSaveYetCompleted()
     {
-        if(SaveManager.Instance.TryLoadSetting<bool>(SaveDataStrings.PASSEPARTOUT_MINIGAME_COMPLETED, out bool value))
+        if (SaveManager.Instance.TryLoadSetting<bool>(SaveDataStrings.PASSEPARTOUT_MINIGAME_COMPLETED, out bool value))
         {
             return value;
         }

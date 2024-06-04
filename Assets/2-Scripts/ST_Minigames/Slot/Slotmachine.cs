@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.U2D.Animation;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Slotmachine : MonoBehaviour
 {
@@ -615,7 +616,8 @@ public class Slotmachine : MonoBehaviour
             }
 
             Enum.TryParse<Rank>(i.ToString(), out Rank rank);
-            winScreenHandler.SetCharacterValues(ranking[i], rank, gainedCoin, totalCoin, gainedKey, totalKey);
+            ePlayerID playerID = listOfCurrentPlayer.Find(x => x.GetCharacter() == ranking[i]).GetInputHandler().playerID;
+            winScreenHandler.SetCharacterValues(playerID, ranking[i], rank, gainedCoin, totalCoin, gainedKey, totalKey);
 
         }
 
