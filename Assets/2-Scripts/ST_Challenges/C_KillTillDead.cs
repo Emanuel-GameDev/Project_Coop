@@ -46,6 +46,7 @@ public class C_KillTillDead : Challenge
             OnFailChallenge();
         }
     }
+
     public override void StartChallenge()
     {
         base.StartChallenge();
@@ -106,22 +107,26 @@ public class C_KillTillDead : Challenge
         ChallengeManager.Instance.timerText.text = (enemyKilled.ToString() + "/" + enemiesSpawned.ToString());
     }
 
-    private void CheckStarRating()
+    public override void CheckStarRating()
     {
         if(rank == 0 && enemyKilled >= enemiesFirstStar)
         {
             rank++;
             Debug.LogWarning("FIRST StarObtained");
+            GiveRewardPopUp(coinsFirstRank, keysFirstRank);
+            
         }
         if (rank == 1 && enemyKilled >= enemiesSecondStar)
         {
             rank++;
             Debug.LogWarning("SECOND StarObtained");
+            GiveRewardPopUp(coinsSecondRank, keysSecondRank);
         }
         if (rank == 2 && enemyKilled >= enemiesThirdStar)
         {
             rank++;
             Debug.LogWarning("THIRD StarObtained");
+            GiveRewardPopUp(coinsThirdRank, keysThirdRank);
         }
         if(enemiesSpawned == enemyKilled)
         {

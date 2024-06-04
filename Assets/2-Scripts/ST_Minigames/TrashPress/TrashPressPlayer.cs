@@ -38,6 +38,7 @@ public class TrashPressPlayer : InputReceiver
         animator = GetComponentInChildren<Animator>();   
         rb = GetComponentInChildren<Rigidbody2D>();
         pivot = GetComponentInChildren<Pivot>();
+        TrashPressManager.Instance.AddPlayer(this);
     }
 
     public override void SetInputHandler(PlayerInputHandler inputHandler)
@@ -55,6 +56,7 @@ public class TrashPressPlayer : InputReceiver
     {
 
     }
+
     #region Move
     public void Move(Vector2 direction)
     {

@@ -10,7 +10,7 @@ public class Challenge : MonoBehaviour
     public LocalizedString challengeName;
     public LocalizedString challengeDescription;
     public virtual ChallengeName challengeNameEnum { get; }
-    
+
     [Header("Enemies")]
     [SerializeField] public List<EnemySpawner> enemySpawnPoints;
 
@@ -33,26 +33,28 @@ public class Challenge : MonoBehaviour
     [Header("Ranks")]
     public bool hasRanks;
     [SerializeField] public LocalizedString firstStarDescription;
+    [SerializeField] protected int coinsFirstRank;
+    [SerializeField] protected int keysFirstRank;
     [SerializeField] public LocalizedString secondStarDescription;
+    [SerializeField] protected int coinsSecondRank;
+    [SerializeField] protected int keysSecondRank;
     [SerializeField] public LocalizedString thirdStarDescription;
+    [SerializeField] protected int coinsThirdRank;
+    [SerializeField] protected int keysThirdRank;
 
 
     [HideInInspector] public List<EnemyCharacter> spawnedEnemiesList;
     [HideInInspector] public bool enemySpawned;
     [HideInInspector] public UnityEvent onChallengeStartAction;
     [HideInInspector] public UnityEvent onChallengeFailReset;
-    public bool challengeCompleted;
+    [HideInInspector] public bool challengeCompleted;
     [HideInInspector] private bool challengeStarted;
     [HideInInspector] public ChallengeUI challengeUI;
     private string destinationSceneName = "ChallengeSceneTest";
 
-    public int rank =0;
-    
+    [HideInInspector] public int rank = 0;
 
-    public void ActivateGameobject()
-    {
-        gameObject.SetActive(true);
-    }
+    #region gameFuncions 
     public virtual void Initiate()
     {
         PlayerCharacterPoolManager.Instance.showDeathScreen = true;
@@ -92,58 +94,14 @@ public class Challenge : MonoBehaviour
         Debug.Log("HAI VINTO");
         challengeCompleted = true;
 
-       
+
         //RewardPopUP
-        foreach (Transform HPContainer in HPHandler.Instance.HpContainerTransform)
-        {
-                   
-            if (HPContainer.GetComponentInChildren<CharacterHUDContainer>() != null)
-            {
-                
-                RewardContainer rewardContainer = HPContainer.GetComponentInChildren<RewardContainer>();
-
-                if (rewardContainer.right)
-                {
-                    GameObject tempReward = Instantiate(RewardManager.Instance.rightPrefabRewards, rewardContainer.transform);
-                    tempReward.transform.position = rewardContainer.targetPosition.position;
-                    tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, keysOnSuccess);
-                    rewardContainer.rewardPopUp = tempReward;
-                    StartCoroutine(rewardContainer.MoveCooroutine());
-
-                }
-                else
-                {
-                    GameObject tempReward = Instantiate(RewardManager.Instance.leftPrefabRewards, rewardContainer.transform);
-                    tempReward.transform.position = rewardContainer.targetPosition.position;
-                    tempReward.GetComponent<RewardUI>().SetUIValues(coinsOnSuccess, keysOnSuccess);
-                    rewardContainer.rewardPopUp = tempReward;
-                    StartCoroutine(rewardContainer.MoveCooroutine());
-
-                }
-
-
-               
-                SaveManager.Instance.SavePlayersData();
-                
-            }
-
-                    
-        }
-        foreach (PlayerCharacter p in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
-        {
-            p.ExtraData.coin += coinsOnSuccess;
-            p.ExtraData.key += keysOnSuccess;
-            if(p.isDead)
-            {
-                p.Ress();
-            }
-           
-        }
+        GiveRewardPopUp(coinsOnSuccess, keysOnSuccess);
 
         PlayerCharacterPoolManager.Instance.HealAllPlayerFull();
         SaveManager.Instance.SavePlayersData();
 
-       
+
         ChallengeManager.Instance.timerText.gameObject.transform.parent.gameObject.SetActive(false);
         ChallengeManager.Instance.SaveChallengeCompleted(this.challengeNameEnum, challengeCompleted);
         ChallengeManager.Instance.SaveChallengeRanks(this.challengeNameEnum, rank);
@@ -154,16 +112,6 @@ public class Challenge : MonoBehaviour
         challengeUI.ShowRanks(false);
         ResetChallenge();
         ChallengeManager.Instance.ActivateInteractable();
-    }
-    public virtual void AddToSpawned(EnemyCharacter tempEnemy)
-    {
-        TargetManager.Instance.AddEnemy(tempEnemy);
-        spawnedEnemiesList.Add(tempEnemy);
-        enemySpawned = true;
-    }
-    public virtual void OnEnemyDeath()
-    {
-
     }
     public void ResetScene()
     {
@@ -189,6 +137,80 @@ public class Challenge : MonoBehaviour
         ChallengeManager.Instance.interacted = false;
         //ChallengeManager.Instance.gameObject.GetComponent<SpriteRenderer>().enabled = true;
     }
+    internal void AutoComplete()
+    {
+        OnWinChallenge();
+    }
+    #endregion
+
+    public void ActivateGameobject()
+    {
+        gameObject.SetActive(true);
+    }
+    #region enemies
+    public virtual void AddToSpawned(EnemyCharacter tempEnemy)
+    {
+        TargetManager.Instance.AddEnemy(tempEnemy);
+        spawnedEnemiesList.Add(tempEnemy);
+        enemySpawned = true;
+    }
+    public virtual void OnEnemyDeath()
+    {
+
+    }
+    #endregion
+
+    protected void GiveRewardPopUp(int coinsToGive, int keysToGive)
+    {
+        foreach (Transform HPContainer in HPHandler.Instance.HpContainerTransform)
+        {
+
+            if (HPContainer.GetComponentInChildren<CharacterHUDContainer>() != null)
+            {
+
+                RewardContainer rewardContainer = HPContainer.GetComponentInChildren<RewardContainer>();
+
+                if (rewardContainer.right)
+                {
+                    GameObject tempReward = Instantiate(RewardManager.Instance.rightPrefabRewards, rewardContainer.transform);
+                    tempReward.transform.position = rewardContainer.targetPosition.position;
+                    tempReward.GetComponent<RewardUI>().SetUIValues(coinsToGive, keysToGive);
+                    rewardContainer.rewardPopUp = tempReward;
+                    StartCoroutine(rewardContainer.MoveCooroutine());
+
+                }
+                else
+                {
+                    GameObject tempReward = Instantiate(RewardManager.Instance.leftPrefabRewards, rewardContainer.transform);
+                    tempReward.transform.position = rewardContainer.targetPosition.position;
+                    tempReward.GetComponent<RewardUI>().SetUIValues(coinsToGive, keysToGive);
+                    rewardContainer.rewardPopUp = tempReward;
+                    StartCoroutine(rewardContainer.MoveCooroutine());
+
+                }
+
+
+
+                SaveManager.Instance.SavePlayersData();
+
+            }
+
+
+        }
+        foreach (PlayerCharacter p in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
+        {
+            p.ExtraData.coin += coinsOnSuccess;
+            p.ExtraData.key += keysOnSuccess;
+            if (p.isDead)
+            {
+                p.Ress();
+            }
+
+        }
+    }
+   
+    
+    
     protected void DisplayTimer(float timeToDisplay)
     {
         if (timeToDisplay < 0)
@@ -205,11 +227,11 @@ public class Challenge : MonoBehaviour
     protected void DisplayChallengeDescription()
     {
         ChallengeManager.Instance.challengeText.GetComponent<LocalizeStringEvent>().StringReference = challengeDescription;
-        //ChallengeManager.Instance.challengeText.text = ChallengeManager.Instance.challengeText.GetComponent<LocalizeStringEvent>().StringReference.ToString();
     }
-    internal void AutoComplete()
+   
+    public virtual void CheckStarRating()
     {
-        OnWinChallenge();
+
     }
 }
 
