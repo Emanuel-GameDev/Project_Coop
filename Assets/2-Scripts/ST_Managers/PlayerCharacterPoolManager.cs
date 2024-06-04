@@ -44,6 +44,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     [SerializeField]
     private DeathScreen deathScreen;
     private int deadPlayers = 0;
+    public bool showDeathScreen = true;
 
     private void Awake()
     {
@@ -105,7 +106,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         playerCharacter.gameObject.transform.position = spawnPosition;
         playerCharacter.gameObject.SetActive(true);
         playerCharacter.SetSwitchCooldown();
-        playerCharacter.ResetAllAnimatorTriggers();
+        playerCharacter.ResetAllAnimatorAndTriggers();
         freeCharacters.Remove(playerCharacter);
         activeCharacters.Add(playerCharacter);
         //if (newPlayerInputHandler.CurrentReceiver.GetGameObject().GetComponent<PlayerCharacterController>())
@@ -157,6 +158,7 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         if (deadPlayers >= activeCharacters.Count)
         {
             deadPlayers = 0;
+            if(showDeathScreen)
             ActivateDeathScreen();
         }
 

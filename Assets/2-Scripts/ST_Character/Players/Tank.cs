@@ -177,6 +177,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         shieldVFXBaseColor = shieldVFX.GetComponentInChildren<MeshRenderer>().material.GetColor("_MainColor");
 
+       //characterController.GetInputHandler().PlayerInput.currentActionMap.FindAction("ExtraAbility").
+        
+
        
     }
 
@@ -328,7 +331,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     {
         if (context.performed && isAttacking == false && canBlock)
         {
-            ResetAllAnimatorTriggers();
+            OnDefenceAbility?.Invoke();
+            ResetAllAnimatorAndTriggers();
             SetCanMove(false, rb);
 
             if (isBlocking != true)
@@ -382,7 +386,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         else if (context.canceled && isBlocking == true)
         {
-            ResetAllAnimatorTriggers();
+            ResetAllAnimatorAndTriggers();
             SetCanMove(true, rb);
 
             currentBlockZone = blockZone.none;
@@ -768,7 +772,14 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     #endregion
     public override void ExtraAbilityInput(InputAction.CallbackContext context) //Tasto est
     {
-     
+
+       
+        //if(context.interaction is HoldInteraction)
+        //{
+        //    HoldInteraction prova = (HoldInteraction)context.interaction;
+        //    prova.duration = chargedAttackTimer;
+        //}
+
         if (context.started && !inAttackAnimation && !inCharge)
         {                     
             chargedAttackReady = false;
@@ -853,9 +864,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     #endregion
 
 
-    public override void ResetAllAnimatorTriggers()
+    public override void ResetAllAnimatorAndTriggers()
     {
-        base.ResetAllAnimatorTriggers();
+        base.ResetAllAnimatorAndTriggers();
         ResetVariables();
         ResetVariables();
     }

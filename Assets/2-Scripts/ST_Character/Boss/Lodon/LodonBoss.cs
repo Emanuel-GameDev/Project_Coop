@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 public class LodonBoss : BossCharacter
@@ -13,27 +14,40 @@ public class LodonBoss : BossCharacter
 
     [Header("References")]
     [SerializeField] PlatformsGenerator generator;
+    [SerializeField] Transform tridentPivot;
+    [SerializeField] Damager damager;
 
     [Header("Fury Charge Settings")]
+    public int FCDamage = 10;
+    public int FCStaminaDamage = 10;
     public float FCtargetReachDistance = 5f;
     public float searchRadius = 10f;
+
+    [Header("Trident Throwing Settings")]
+    public int TTDamage = 10;
+    public int TTStaminaDamage = 10;
+    public float TTreachDistance = 0.1f;
+    public float tridentVelocity = 50f;
+    public LodonTrident Trident { get; private set; }
 
     [HideInInspector]
     public LodonState selectedAttack;
     [HideInInspector]
     public bool animationMustFollowTarget = false;
+    [HideInInspector]
+    public string lastAnimationEnd = string.Empty;
+
 
     #region Proprieties
     public Animator Animator => animator;
     public PlatformsGenerator Generator => generator;
     #endregion
 
-    public string lastAnimationEnd = string.Empty;
-
     #region AnimationVariable
     public readonly string EMERGE = "Emerge";
     public readonly string FURY_CHARGE = "FuryCharge";
     public readonly string MOVING = "Moving";
+    public readonly string TRIDENT_THROWING = "Throw";
     #endregion
 
 
@@ -64,6 +78,21 @@ public class LodonBoss : BossCharacter
         SetAnimationDirection();
     }
 
+    protected override void InitialSetup()
+    {
+        base.InitialSetup();
+        Trident = GetComponentInChildren<LodonTrident>();
+        if (Trident != null)
+        {
+            Trident.Inizialize(this);
+        }
+        else 
+            Debug.LogError("TridentMissing");
+        if (damager == null)
+            pivot.GetComponentInChildren<Damager>();
+        damager.source = this;
+    }
+
     private void SetAnimationDirection()
     {
         Vector2 animationDirection;
@@ -87,6 +116,35 @@ public class LodonBoss : BossCharacter
 
         lastAnimationEnd = animationName;
         stateMachine.CurrentState.EndAnimation();
+    }
+
+    public void ThrowTrident()
+    {
+        Trident.Throw(target.position, tridentPivot.position, tridentVelocity);
+    }
+    public void ReturnTrident()
+    {
+        if (stateMachine.CurrentState.GetType() == typeof(LodonTridentThrowing))
+        {
+            ((LodonTridentThrowing)stateMachine.CurrentState).tridentReturned = true;
+        }
+    }
+
+    public override DamageData GetDamageData()
+    {
+        if (stateMachine.CurrentState.GetType() == typeof(LodonTridentThrowing))
+        {
+            DamageData damageData = new(TTDamage, TTStaminaDamage, this, true);
+            return damageData;
+        }
+
+        if (stateMachine.CurrentState.GetType() == typeof(LodonTridentThrowing))
+        {
+            DamageData damageData = new(FCDamage, FCStaminaDamage, this, true);
+            return damageData;
+        }
+
+        return base.GetDamageData();
     }
 
 }

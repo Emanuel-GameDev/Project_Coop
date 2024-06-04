@@ -3,20 +3,27 @@ using UnityEngine;
 
 public class C_KillAllInTimer : Challenge
 {
-
+    public override ChallengeName challengeNameEnum { get => noDamage ? ChallengeName.KillAllNoDamage : noDefenceAbility? ChallengeName.KillAllNoDefenceAbility: ChallengeName.KillAllInTimer; }
     [Header("Timer")]
     [SerializeField] private float timerChallenge;
 
 
     [Header("Modifiers")]
     [SerializeField] private bool noDamage;
-    [SerializeField] private bool noDash;
+    [SerializeField] private bool noDefenceAbility;
 
     private bool startTimer;
     private int enemyInt = 0;
     public List<PlayerCharacter> activePlayers;
 
+    public void OnValidate()
+    {
+        if(noDamage)
+            noDefenceAbility = false;
 
+         if(noDefenceAbility)
+            noDamage = false;
+    }
 
     public override void Initiate()
     {
@@ -33,8 +40,8 @@ public class C_KillAllInTimer : Challenge
             if (noDamage)
                 p.OnHit.AddListener(OnFailChallenge);
 
-            if (noDash)
-                p.OnDash.AddListener(OnFailChallenge);
+            if (noDefenceAbility)
+                p.OnDefenceAbility.AddListener(OnFailChallenge);            
         }
 
         
