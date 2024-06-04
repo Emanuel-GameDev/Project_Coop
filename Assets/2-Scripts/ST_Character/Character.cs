@@ -39,6 +39,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     [SerializeField] protected UnityEvent onDeath = new();
     [SerializeField] protected UnityEvent onDefenceAbility = new();
     [SerializeField] protected UnityEvent onParried = new();
+   
 
 
     public UnityEvent OnDeath { get => onDeath; set => onDeath = value; } 

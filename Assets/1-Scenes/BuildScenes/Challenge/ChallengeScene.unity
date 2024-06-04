@@ -3993,6 +3993,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6db5a513569324a449c46c0a8515ef73, type: 3}
+--- !u!114 &532283478 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5570275187271777841, guid: c8bb8e7eacc003645b9ee626e124d497,
+    type: 3}
+  m_PrefabInstance: {fileID: 96388601}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a5258a28faf3444cb1ee0b829e6be58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &553666769 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1040233302819189754, guid: c8bb8e7eacc003645b9ee626e124d497,
@@ -4106,7 +4118,7 @@ GameObject:
   - component: {fileID: 573585575}
   - component: {fileID: 573585576}
   m_Layer: 0
-  m_Name: ChallengeKillAllInTimerNoDash
+  m_Name: ChallengeKillAllInTimerNoDefenceAbility
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4209,6 +4221,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsFirstRank: 0
+  keysFirstRank: 0
   secondStarDescription:
     m_TableReference:
       m_TableCollectionName: 
@@ -4218,6 +4232,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsSecondRank: 0
+  keysSecondRank: 0
   thirdStarDescription:
     m_TableReference:
       m_TableCollectionName: 
@@ -4227,6 +4243,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsThirdRank: 0
+  keysThirdRank: 0
   spawnedEnemiesList: []
   enemySpawned: 0
   onChallengeStartAction:
@@ -4237,13 +4255,10 @@ MonoBehaviour:
       m_Calls: []
   challengeCompleted: 0
   challengeUI: {fileID: 0}
-  challengeRankUI: {fileID: 0}
-  firstStarObtained: 0
-  secondStarObtained: 0
-  thirdStarObtained: 0
+  rank: 0
   timerChallenge: 300
   noDamage: 0
-  noDefenceAbility: 0
+  noDefenceAbility: 1
   activePlayers: []
   references:
     version: 2
@@ -5054,6 +5069,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsFirstRank: 0
+  keysFirstRank: 0
   secondStarDescription:
     m_TableReference:
       m_TableCollectionName: 
@@ -5063,6 +5080,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsSecondRank: 0
+  keysSecondRank: 0
   thirdStarDescription:
     m_TableReference:
       m_TableCollectionName: 
@@ -5072,6 +5091,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsThirdRank: 0
+  keysThirdRank: 0
   spawnedEnemiesList: []
   enemySpawned: 0
   onChallengeStartAction:
@@ -5082,10 +5103,7 @@ MonoBehaviour:
       m_Calls: []
   challengeCompleted: 0
   challengeUI: {fileID: 0}
-  challengeRankUI: {fileID: 0}
-  firstStarObtained: 0
-  secondStarObtained: 0
-  thirdStarObtained: 0
+  rank: 0
   timerChallenge: 300
   noDamage: 1
   noDefenceAbility: 0
@@ -5149,7 +5167,7 @@ MonoBehaviour:
   challengesList:
   - {fileID: 1560025931}
   - {fileID: 1772541184}
-  - {fileID: 1453646568}
+  - {fileID: 1453646570}
   menuInfo: {fileID: 1015782527}
   panel: {fileID: 975717868}
   panelRanks: {fileID: 1891334104}
@@ -6407,6 +6425,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1081706520}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1081706522 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5570275187271777841, guid: c8bb8e7eacc003645b9ee626e124d497,
+    type: 3}
+  m_PrefabInstance: {fileID: 1081706520}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a5258a28faf3444cb1ee0b829e6be58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1101396664
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7151,6 +7181,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsFirstRank: 0
+  keysFirstRank: 0
   secondStarDescription:
     m_TableReference:
       m_TableCollectionName: 
@@ -7160,6 +7192,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsSecondRank: 0
+  keysSecondRank: 0
   thirdStarDescription:
     m_TableReference:
       m_TableCollectionName: 
@@ -7169,6 +7203,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsThirdRank: 0
+  keysThirdRank: 0
   spawnedEnemiesList: []
   enemySpawned: 0
   onChallengeStartAction:
@@ -7179,10 +7215,7 @@ MonoBehaviour:
       m_Calls: []
   challengeCompleted: 0
   challengeUI: {fileID: 0}
-  challengeRankUI: {fileID: 0}
-  firstStarObtained: 0
-  secondStarObtained: 0
-  thirdStarObtained: 0
+  rank: 0
   timerChallenge: 60
   players: []
   references:
@@ -7854,6 +7887,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1283041861 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5570275187271777841, guid: c8bb8e7eacc003645b9ee626e124d497,
+    type: 3}
+  m_PrefabInstance: {fileID: 1051874115}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a5258a28faf3444cb1ee0b829e6be58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1297981446
 GameObject:
   m_ObjectHideFlags: 0
@@ -8750,6 +8795,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a5258a28faf3444cb1ee0b829e6be58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1434889834 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5570275187271777841, guid: c8bb8e7eacc003645b9ee626e124d497,
+    type: 3}
+  m_PrefabInstance: {fileID: 376514764}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a5258a28faf3444cb1ee0b829e6be58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1440181397 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4417724778947997134, guid: 311af3ca8db8e2c4ca2ba0761b5bffae,
@@ -8771,7 +8828,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1453646569}
-  - component: {fileID: 1453646568}
+  - component: {fileID: 1453646570}
   m_Layer: 0
   m_Name: ChallengeKerberos
   m_TagString: Untagged
@@ -8779,7 +8836,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1453646568
+--- !u!4 &1453646569
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453646567}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2088489277}
+  m_Father: {fileID: 1832766001}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1453646570
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8788,7 +8861,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1453646567}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1da8802a57ba1fa4a941b5fcf4c62b3a, type: 3}
+  m_Script: {fileID: 11500000, guid: 7da6e88a4fff34749a13fb5e298b492e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   challengeName:
@@ -8832,7 +8905,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: challengeFaceWin
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
   coinsOnSuccess: 3
   keysOnSuccess: 2
@@ -8862,6 +8935,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsFirstRank: 0
+  keysFirstRank: 0
   secondStarDescription:
     m_TableReference:
       m_TableCollectionName: 
@@ -8871,6 +8946,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsSecondRank: 0
+  keysSecondRank: 0
   thirdStarDescription:
     m_TableReference:
       m_TableCollectionName: 
@@ -8880,6 +8957,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsThirdRank: 0
+  keysThirdRank: 0
   spawnedEnemiesList: []
   enemySpawned: 0
   onChallengeStartAction:
@@ -8890,33 +8969,15 @@ MonoBehaviour:
       m_Calls: []
   challengeCompleted: 0
   challengeUI: {fileID: 0}
-  challengeRankUI: {fileID: 0}
-  firstStarObtained: 0
-  secondStarObtained: 0
-  thirdStarObtained: 0
+  rank: 0
   timerChallenge: 120
   noDamage: 0
   noDefenceAbility: 0
   activePlayers: []
+  challengeEnumName: 3
   references:
     version: 2
     RefIds: []
---- !u!4 &1453646569
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1453646567}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2088489277}
-  m_Father: {fileID: 1832766001}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1532117559
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9093,34 +9154,40 @@ MonoBehaviour:
           m_StringArgument: challengeFaceDefeat
           m_BoolArgument: 0
         m_CallState: 2
-  hasRanks: 1
+  hasRanks: 0
   firstStarDescription:
     m_TableReference:
-      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+      m_TableCollectionName: 
     m_TableEntryReference:
-      m_KeyId: 39375509072318464
+      m_KeyId: 0
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsFirstRank: 0
+  keysFirstRank: 0
   secondStarDescription:
     m_TableReference:
-      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+      m_TableCollectionName: 
     m_TableEntryReference:
-      m_KeyId: 39725816432234496
+      m_KeyId: 0
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsSecondRank: 0
+  keysSecondRank: 0
   thirdStarDescription:
     m_TableReference:
-      m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
+      m_TableCollectionName: 
     m_TableEntryReference:
-      m_KeyId: 39375524066955264
+      m_KeyId: 0
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsThirdRank: 0
+  keysThirdRank: 0
   spawnedEnemiesList: []
   enemySpawned: 0
   onChallengeStartAction:
@@ -9131,12 +9198,9 @@ MonoBehaviour:
       m_Calls: []
   challengeCompleted: 0
   challengeUI: {fileID: 0}
-  challengeRankUI: {fileID: 0}
-  firstStarObtained: 0
-  secondStarObtained: 0
-  thirdStarObtained: 0
+  rank: 0
   timerChallenge: 60
-  noDamage: 1
+  noDamage: 0
   noDefenceAbility: 0
   activePlayers: []
   references:
@@ -10443,7 +10507,11 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  enemySpawnPoints: []
+  enemySpawnPoints:
+  - {fileID: 1434889834}
+  - {fileID: 1283041861}
+  - {fileID: 532283478}
+  - {fileID: 1081706522}
   dialogueOnStart: {fileID: 11400000, guid: d34080f862e1bb7428a5eae45ad7d4e3, type: 2}
   onChallengeStart:
     m_PersistentCalls:
@@ -10492,24 +10560,30 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsFirstRank: 0
+  keysFirstRank: 0
   secondStarDescription:
     m_TableReference:
       m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
     m_TableEntryReference:
-      m_KeyId: 39725816432234496
+      m_KeyId: 40538724183511040
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsSecondRank: 0
+  keysSecondRank: 0
   thirdStarDescription:
     m_TableReference:
       m_TableCollectionName: GUID:d5d4b37980b359345aa1d2e0cc3417ad
     m_TableEntryReference:
-      m_KeyId: 39725816432234496
+      m_KeyId: 40538727811584000
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  coinsThirdRank: 0
+  keysThirdRank: 0
   spawnedEnemiesList: []
   enemySpawned: 0
   onChallengeStartAction:
@@ -10520,13 +10594,10 @@ MonoBehaviour:
       m_Calls: []
   challengeCompleted: 0
   challengeUI: {fileID: 0}
-  challengeRankUI: {fileID: 0}
-  firstStarObtained: 0
-  secondStarObtained: 0
-  thirdStarObtained: 0
-  enemiesFirstStar: 15
-  enemiesSecondStar: 30
-  enemiesThirdStar: 50
+  rank: 0
+  enemiesFirstStar: 3
+  enemiesSecondStar: 6
+  enemiesThirdStar: 9
   activePlayers: []
   references:
     version: 2
