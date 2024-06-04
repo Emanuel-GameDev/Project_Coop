@@ -57,6 +57,7 @@ public class ProjectilePool : MonoBehaviour
         Projectile newProjectile = Instantiate(projectilePrefab);
         newProjectile.gameObject.SetActive(false);
         _projectilePool.Push(newProjectile);
+        newProjectile.transform.parent = transform;
     }
 
     public Projectile GetProjectile()
@@ -68,6 +69,7 @@ public class ProjectilePool : MonoBehaviour
 
         Projectile projectile = _projectilePool.Pop();
         projectile.gameObject.SetActive(true);
+        projectile.transform.parent = null;
 
         return projectile;
     }
@@ -76,6 +78,7 @@ public class ProjectilePool : MonoBehaviour
     {
         _projectilePool.Push(projectile);
         projectile.gameObject.SetActive(false);
+        projectile.transform.parent = transform;
     }
 
     

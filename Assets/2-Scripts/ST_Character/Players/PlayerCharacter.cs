@@ -562,4 +562,9 @@ public abstract class PlayerCharacter : Character
     {
         PlayerCharacterPoolManager.Instance.ReturnCharacter(this);
     }
+
+    public void CancelSwitchCooldown()
+    {
+        lastestCharacterSwitch = SwitchCharacterCooldown;
+    }
 }

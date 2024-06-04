@@ -71,7 +71,7 @@ public class ChallengeManager : MonoBehaviour
         {
             onInteractionAction.AddListener(OnInteraction);
             Shuffle(challengesList);
-
+            savedChallenges = new();
             for (int i = 0; i < 3; ++i)
             {
                 GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);

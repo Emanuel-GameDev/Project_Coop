@@ -206,7 +206,8 @@ public class Challenge : MonoBehaviour
 public enum ChallengeName
 {
     Survive,
-    KillThemAll,
     KillAllInTimer,
-    KerberosAgain
+    KerberosAgain,
+    KillAllNoDash,
+    KillAllNoDamage
 }

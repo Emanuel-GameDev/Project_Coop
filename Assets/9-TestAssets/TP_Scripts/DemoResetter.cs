@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SviluppartyResetter : MonoBehaviour
+public class DemoResetter : MonoBehaviour
 {
     private void Start()
     {
