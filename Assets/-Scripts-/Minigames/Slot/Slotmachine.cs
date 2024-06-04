@@ -368,14 +368,17 @@ public class Slotmachine : MonoBehaviour
         if(remainingLives == lives - 1)
         {
             slotMachineUI.lightEasyModeGameobject.SetActive(true);
+            slotMachineUI.SetTextDifficulty("Easy");
         }
         else if(remainingLives == 0)
         {
             slotMachineUI.LighthardModeGameobject.SetActive(true);
+            slotMachineUI.SetTextDifficulty("Hard");
         }
         else
         {
             slotMachineUI.LightMediumModeGameobject.SetActive(true);
+            slotMachineUI.SetTextDifficulty("Medium");
         }
 
         foreach (SlotRow row in rows)
