@@ -133,6 +133,13 @@ public class PlayerCharacterPoolManager : MonoBehaviour
         return searchedCharacter;
     }
 
+    public ePlayerCharacter GetActiveRandomCharacter()
+    {
+        ePlayerCharacter searchedCharacter = ActivePlayerCharacters[Random.Range(0, ActivePlayerCharacters.Count)].Character;
+
+        return searchedCharacter;
+    }
+
     public PlayerCharacter GetCharacter(ePlayerCharacter targetCharacter, Transform position)
     {
         return GetCharacter(targetCharacter, position.position);

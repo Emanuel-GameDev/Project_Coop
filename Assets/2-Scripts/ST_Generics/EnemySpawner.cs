@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -56,6 +57,7 @@ public class EnemySpawner : MonoBehaviour
                 //tempEnemy.stateMachine.SetState(tempEnemy.entryState);
                 //tempEnemy.GoToPosition(spawnDestination);
 
+                tempEnemy.SetTarget(PlayerCharacterPoolManager.Instance.ActivePlayerCharacters[Random.Range(0, PlayerCharacterPoolManager.Instance.ActivePlayerCharacters.Count)].transform);
             }
 
             tempObject.TryGetComponent<BossCharacter>(out BossCharacter tempBossCharacter);
