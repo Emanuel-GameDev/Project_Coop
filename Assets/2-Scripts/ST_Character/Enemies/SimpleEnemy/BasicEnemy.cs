@@ -843,7 +843,7 @@ public class BasicEnemy : EnemyCharacter
 
 
 
-        float speed = normalMovement ? MoveSpeed : MoveSpeed-2;
+        float speed = normalMovement ? MoveSpeed : MoveSpeed;
         
         rb.velocity = direction * speed;
         

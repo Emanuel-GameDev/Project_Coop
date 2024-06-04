@@ -46,7 +46,11 @@ public class EnemySpawner : MonoBehaviour
         challengeParent.enemySpawned = true;
         for (int i = 0; i < enemiesForWave; i++)
         {            
-            GameObject tempObject = Instantiate(enemiesPrefab[Random.Range(0, enemiesPrefab.Count)], transform.position, Quaternion.identity,challengeParent.gameObject.transform);
+            GameObject tempObject = Instantiate(enemiesPrefab[Random.Range(0, enemiesPrefab.Count)], new Vector3(
+                    Random.Range(transform.position.x - 1, transform.position.x + 1),
+                    Random.Range(transform.position.y - 1, transform.position.y + 1),
+                    0), Quaternion.identity,challengeParent.gameObject.transform);
+
             tempObject.TryGetComponent<BasicEnemy>(out BasicEnemy tempEnemy);
             if (tempEnemy != null)
             {
