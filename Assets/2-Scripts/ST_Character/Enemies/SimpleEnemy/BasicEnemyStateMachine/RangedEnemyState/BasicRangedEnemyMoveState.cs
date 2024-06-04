@@ -12,12 +12,12 @@ public class BasicRangedEnemyMoveState : BasicRangedEnemyState
     public override void Enter()
     {
         //base.Enter();
+        
+        rangedEnemy.canMove = true;
+        rangedEnemy.canAction = false;
 
-        basicEnemy.canMove = true;
-        basicEnemy.canAction = false;
-
-        basicEnemy.ActivateAgent();
-        basicEnemy.GetAnimator().SetBool("isMoving", true);
+        rangedEnemy.ActivateAgent();
+        rangedEnemy.GetAnimator().SetBool("isMoving", true);
 
     }
 
@@ -25,13 +25,18 @@ public class BasicRangedEnemyMoveState : BasicRangedEnemyState
     {
         base.Update();
 
-        if (basicEnemy.viewTrigger.GetPlayersCountInTrigger() > 0)
+        if (rangedEnemy.EscapeTrigger.GetPlayersCountInTrigger() > 0)
         {
-            if (basicEnemy.target == null)
-                basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
+            stateMachine.SetState(rangedEnemy.escapeState);
+        }
+        else if (rangedEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() > 0)
+        {
+            //if (rangedEnemy.target == null)
+            //    rangedEnemy.SetTarget(rangedEnemy.viewTrigger.GetPlayersDetected()[0].transform);
 
             stateMachine.SetState(rangedEnemy.actionState);
         }
+
         rangedEnemy.FollowPath();
     }
 

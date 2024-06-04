@@ -49,10 +49,6 @@ public class BasicMeleeEnemy : BasicEnemy
 
         isActioning = true;
 
-        //if (panicAttack)
-        //{
-        //    panicAttack = false;
-        //}
 
         ActivateObstacle();
         readyToAttack = false;

@@ -254,7 +254,8 @@ public class BasicEnemy : EnemyCharacter
     //}
 
     Vector2 move;
-
+     internal Coroutine fleeCoroutine;
+    internal bool flee = false;
     public virtual void AwayPath()
     {
         if (!canMove)
@@ -263,10 +264,10 @@ public class BasicEnemy : EnemyCharacter
             return;
         }
 
-        if (!isRunning)
+        if (!flee)
         {
             //if (!strafe)
-                StartCoroutine(CalculateRunAwayPathAndSteering());
+            fleeCoroutine = StartCoroutine(CalculateRunAwayPathAndSteering());
             //else
             //    StartCoroutine(CalculateStrafePathAndSteering());
 
@@ -274,6 +275,7 @@ public class BasicEnemy : EnemyCharacter
         }
 
         move = Vector2.zero;
+        finalDirection.Normalize();
         move = (finalDirection/**(finalStrenght*inc)*/)/* + targetDirection*/;
 
         Move(move, rb);
@@ -299,7 +301,7 @@ public class BasicEnemy : EnemyCharacter
         }
        
          move = Vector2.zero;
-         move = (finalDirection/**(finalStrenght*inc)*/)/* + targetDirection*/;
+         move = (finalDirection.normalized/**(finalStrenght*inc)*/)/* + targetDirection*/;
 
         if(strafe && !strafeAllowed)
         {
@@ -413,7 +415,7 @@ public class BasicEnemy : EnemyCharacter
     internal IEnumerator CalculateRunAwayPathAndSteering()
     {
         isRunning = true;
-
+        flee = true;
         CalculateTargetDirection();
 
         CalculateContextSteeringInterestMap(chaseBehaviour,0,1);
@@ -429,7 +431,8 @@ public class BasicEnemy : EnemyCharacter
 
 
         yield return new WaitForSeconds(delay);
-        StartCoroutine(CalculateRunAwayPathAndSteering());
+        //fleeCoroutine = StartCoroutine(CalculateRunAwayPathAndSteering());
+        flee = false;
     }
 
 
@@ -442,28 +445,7 @@ public class BasicEnemy : EnemyCharacter
             return;
         }
 
-        //ActivateAgent();
-
-        //if (pos != null)
-        //{
-        //    if (agent.CalculatePath(pos, path))
-        //    {
-
-        //        //if (path.corners.Length > 1)
-        //           // Move(path.corners[1] - path.corners[0], rb);
-        //        //else
-        //        //    Move((Vector3)pos - transform.position, rb);
-
-        //    }
-        //    else
-        //    {
-        //        rb.velocity = Vector2.zero;
-        //    }
-        //}
-        //else
-        //{
-        //    rb.velocity = Vector2.zero;
-        //}
+        
         if (!isRunning)
         {
             
@@ -477,7 +459,7 @@ public class BasicEnemy : EnemyCharacter
         }
 
         move = Vector2.zero;
-        move = (finalDirection/**(finalStrenght*inc)*/)/* + targetDirection*/;
+        move = (finalDirection.normalized/**(finalStrenght*inc)*/)/* + targetDirection*/;
 
         Move(move, rb);
 
@@ -890,7 +872,7 @@ public class BasicEnemy : EnemyCharacter
         if (direction.y != 0)
             animator.SetFloat("Y", direction.y);
 
-        if(rb.velocity!= Vector2.zero)
+        if(rb.velocity != Vector2.zero)
         {
             float dot = Vector2.Dot(direction, rb.velocity);
 
@@ -1059,6 +1041,11 @@ public class BasicEnemy : EnemyCharacter
     public void SetActionCoroutine(Coroutine coroutine) 
     {
         actionCourotine=coroutine;
+    }
+
+    public void ResetVelocity()
+    {
+        rb.velocity = Vector3.zero;
     }
 
 

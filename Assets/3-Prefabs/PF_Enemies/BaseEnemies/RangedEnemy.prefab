@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 5673177898055240899}
   - component: {fileID: 4569914010431795649}
   - component: {fileID: 7681779227920852998}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: ChangeTargetTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,11 +159,11 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
+    m_Bits: 3583
+  m_LayerOverridePriority: 1
   m_ForceSendLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -172,11 +172,11 @@ CircleCollider2D:
     m_Bits: 4294967295
   m_ContactCaptureLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 512
   m_CallbackLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
+    m_Bits: 512
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -193,7 +193,7 @@ GameObject:
   - component: {fileID: 7741761272246220715}
   - component: {fileID: 5865263756969893415}
   - component: {fileID: 5824581510585159210}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: AttackRangeTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,11 +246,11 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
+    m_Bits: 3583
+  m_LayerOverridePriority: 1
   m_ForceSendLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -259,11 +259,11 @@ CircleCollider2D:
     m_Bits: 4294967295
   m_ContactCaptureLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 512
   m_CallbackLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
+    m_Bits: 512
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 2620245216710807918}
   - component: {fileID: 3980155435287117935}
   - component: {fileID: 809646731302532818}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: EscapeRangeTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -333,11 +333,11 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
+    m_Bits: 3583
+  m_LayerOverridePriority: 1
   m_ForceSendLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -346,11 +346,11 @@ CircleCollider2D:
     m_Bits: 4294967295
   m_ContactCaptureLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 512
   m_CallbackLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
+    m_Bits: 512
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -509,7 +509,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4631380387903047295}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: GroundLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -535,60 +535,6 @@ Transform:
   - {fileID: 5673177898055240899}
   m_Father: {fileID: 1656924804412423486}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6722108840213963120
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4048570722855273471}
-  - component: {fileID: 7929612492073833507}
-  m_Layer: 7
-  m_Name: Agent
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &4048570722855273471
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6722108840213963120}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1656924804412423486}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!195 &7929612492073833507
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6722108840213963120}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.72
-  m_Speed: 0
-  m_Acceleration: 0
-  avoidancePriority: 50
-  m_AngularSpeed: 0
-  m_StoppingDistance: 0.3
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2.29
-  m_BaseOffset: 1.1
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &6996375698876550137
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,7 +546,7 @@ GameObject:
   - component: {fileID: 6459041835760507617}
   - component: {fileID: 7216167695588562814}
   - component: {fileID: 59260226593194542}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: ViewTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -653,11 +599,11 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
+    m_Bits: 3583
+  m_LayerOverridePriority: 1
   m_ForceSendLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -666,11 +612,11 @@ CircleCollider2D:
     m_Bits: 4294967295
   m_ContactCaptureLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 512
   m_CallbackLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
+    m_Bits: 512
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -714,7 +660,6 @@ Transform:
   m_Children:
   - {fileID: 6199984211406543536}
   - {fileID: 4631380387903047295}
-  - {fileID: 4048570722855273471}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1817876141876311186
@@ -782,16 +727,16 @@ MonoBehaviour:
   maxHp: 2
   damage: 2
   staminaDamage: 20
-  attackSpeed: 1
+  attackSpeed: 2
   moveSpeed: 5
   target: {fileID: 0}
   currentHp: 0
   groundLevel: {fileID: 4631380387903047295}
   parriedTime: 1
   stunTime: 1
-  viewRange: 12
-  attackRange: 20
-  changeTargetRange: 2
+  viewRange: 20.03
+  attackRange: 13.3
+  changeTargetRange: 13.2
   attackDelay: 0.5
   despawnTime: 1
   enemyType: 1
@@ -823,26 +768,26 @@ MonoBehaviour:
   inc: 20
   showDirections: 0
   contextSteeringDirectionCount: 8
-  csChaseDistance: 3
+  csChaseDistance: 5
   csChaseLayerMask:
     serializedVersion: 2
     m_Bits: 576
-  csAvoidDistance: 5
+  csAvoidDistance: 8
   csAvoidLayerMask:
     serializedVersion: 2
     m_Bits: 3072
-  obstacleAvoidanceCloseRange: 1
-  obstacleAvoidanceFarRange: 1
+  obstacleAvoidanceCloseRange: 5
+  obstacleAvoidanceFarRange: 1.5
   strenghtMultiplier: 1
-  steeringSpeed: 1
+  steeringSpeed: 20
   showLikedDirections: 0
   showUnlikedDirections: 0
   showCounterAvoid: 0
   showFinalDirections: 0
   showBestDirections: 0
   showMoveDirections: 0
-  escapeRange: 8
-  numberOfConsecutiveShoot: 3
+  escapeRange: 10
+  numberOfConsecutiveShoot: 2
   projectileSpeed: 30
   projectileRange: 30
   searchRadious: 6
@@ -886,7 +831,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4

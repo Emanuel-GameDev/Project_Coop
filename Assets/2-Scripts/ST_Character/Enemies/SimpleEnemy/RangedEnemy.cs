@@ -59,8 +59,81 @@ public class RangedEnemy : BasicEnemy
 
     }
 
+    public override void Move(Vector2 direction, Rigidbody2D rb)
+    {
+        if (direction == null) return;
+        
+
+        if (!direction.normalized.Equals(direction))
+            direction = direction.normalized;
+
+        //fix momentaneo
+        if (direction == Vector2.up || direction == -Vector2.up)
+            direction = Quaternion.Euler(0, 0, 1) * direction;
+
+
+        if (direction == Vector2.zero)
+        {
+            GetAnimator().SetBool("isMoving", false);
+        }
+        else
+        {
+            animator.SetBool("isMoving", isMoving);
+
+            if (!GetAnimator().GetBool("isMoving"))
+                GetAnimator().SetBool("isMoving", true);
+        }
+
+
+
+
+        float speed = MoveSpeed;
+
+        rb.velocity = direction * speed;
+
+        isMoving = true;
+
+        //if (targetDirection != Vector2.zero)
+        //lastNonZeroDirection = targetDirection;
+
+        if (flee)
+        {
+            SetSpriteDirection(direction);
+        }
+        else
+            SetSpriteDirection(targetDirection-new Vector2(groundLevel.position.x, groundLevel.position.y));
+
+        //animator.SetBool("isMoving", isMoving);
+    }
+
+    public override void SetSpriteDirection(Vector2 direction)
+    {
+        if (direction.y != 0)
+            animator.SetFloat("Y", direction.y);
+
+        //if (rb.velocity != Vector2.zero)
+        //{
+        //    float dot = Vector2.Dot(direction, rb.velocity);
+
+        //    if (dot >= 0)
+        //        animator.SetFloat("X", -1f);
+        //    else
+        //        animator.SetFloat("X", 1f);
+        //}
+        
+        Vector3 scale = pivot.gameObject.transform.localScale;
+
+        if ((direction.x > 0.5 && scale.x > 0) || (direction.x < -0.5 && scale.x < 0))
+            scale.x *= -1;
+
+        pivot.gameObject.transform.localScale = scale;
+    }
+    
     public override IEnumerator Attack()
     {
+
+        
+
         StopCoroutine(CalculateChasePathAndSteering());
         StopCoroutine(CalculateRunAwayPathAndSteering());
         isRunning = false;
@@ -83,7 +156,6 @@ public class RangedEnemy : BasicEnemy
         for (int i = 0; i < numberOfConsecutiveShoot; i++)
         {
 
-
             animator.SetTrigger("Attack");
 
             Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
@@ -95,6 +167,8 @@ public class RangedEnemy : BasicEnemy
 
 
             Vector2 direction = selectedPlayerInRange.transform.position - transform.position;
+
+            SetSpriteDirection(direction);
 
             newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1, damage, gameObject.layer);
             yield return new WaitForSeconds(attackDelay);
