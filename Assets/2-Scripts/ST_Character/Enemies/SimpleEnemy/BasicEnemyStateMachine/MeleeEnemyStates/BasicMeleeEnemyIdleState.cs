@@ -23,11 +23,8 @@ public class BasicMeleeEnemyIdleState : BasicMeleeEnemyState
 
     public override void Update()
     {
-        if (basicEnemy.viewTrigger.GetPlayersCountInTrigger() > 0 && basicEnemy.canSee)
+        if (meleeEnemy.currentTarget != null && basicEnemy.canSee)
         {
-            if (basicEnemy.target == null)
-                basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
-
             stateMachine.SetState(meleeEnemy.moveState);
         }
     }
