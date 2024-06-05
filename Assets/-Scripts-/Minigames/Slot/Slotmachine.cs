@@ -199,6 +199,10 @@ public class Slotmachine : MonoBehaviour
 
             slotMachineUI.winCombinationUIGameObjects[i].sprite = ChoseSpriteBySlotType(WinCombination[i]);
 
+            Material m = new Material(slotMachineUI.buttonUIGameObjects[i].material);
+            slotMachineUI.buttonUIGameObjects[i].material = m;
+            m.SetFloat("_IsGlowing", (int)0);
+
         }
 
         RandomReorder(listOfCurrentPlayer);
@@ -581,6 +585,9 @@ public class Slotmachine : MonoBehaviour
                 AudioManager.Instance.PlayAudioClip(goodAudio);
                 //TODO:aggiungere ui sulla destra con bottoni e immagini, fai illuminare i bottoni se hai azzeccato l'immagine
 
+                
+                slotMachineUI.buttonUIGameObjects[currentNumberOfTheSlot].material.SetFloat("_IsGlowing", (int)1);
+               
 
 
                 //aggiunta monete al personaggio
