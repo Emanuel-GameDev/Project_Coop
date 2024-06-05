@@ -33,7 +33,7 @@ public class TrashPressManager : MonoBehaviour
 
     [Header("Press Settings")]
     [SerializeField] List<GameObject> pressSpawnPoints;
-    [SerializeField] List<Press> pressPrefabs;
+    [SerializeField] Press pressPrefab;
     [SerializeField] float pressTimerAttackPreview;
     [SerializeField] float pressTimerBetweenAttacks;
     [SerializeField] float pressSpeed;
@@ -147,7 +147,9 @@ public class TrashPressManager : MonoBehaviour
 
     public void StartMinigame()
     {
+        Debug.Log("InizioMinigame");
         currentGamePhase = GamePhase.PressPhase;
+        StartCoroutine(PressGameplay());
     }
     #endregion
 
@@ -155,7 +157,7 @@ public class TrashPressManager : MonoBehaviour
 
     IEnumerator PressGameplay()
     {
-        InvokeRepeating(nameof(SpawnPress), pressTimerBetweenAttacks, pressPhaseDuration - 1);
+        InvokeRepeating(nameof(SpawnPress), 0.2f, pressTimerBetweenAttacks);
         yield return new WaitForSeconds(pressPhaseDuration);
         StartCoroutine(TrashGameplay());
 
@@ -178,29 +180,39 @@ public class TrashPressManager : MonoBehaviour
 
         int randomInt = Random.Range(0, 2);
         int randomInt2;
+        Press press1 = null;
+        Press press2 = null;
 
         //spawn 1 press
-        if (randomInt == 0)
-        {
-            randomInt = Random.Range(0, 2);
-            pressPrefabs[randomInt].Activate(pressSpeed * (deadPlayerCounter > 0 ? deadPlayerCounter + 1 : 1) * pressSpeedIncreaseMultyOnPlayerDeath,pressTimerAttackPreview);
 
-        }
+        randomInt = Random.Range(0, 3);
+        press1 = Instantiate(pressPrefab, pressSpawnPoints[randomInt].transform);
+        press1.transform.localPosition = Vector3.zero;
+       
+
+
         //spawn 2 Press
-        else
+        if (Random.Range(0, 2) == 1)
         {
-            randomInt = Random.Range(0, 2);
-            pressPrefabs[randomInt].Activate(pressSpeed * (deadPlayerCounter > 0 ? deadPlayerCounter + 1 : 1) * pressSpeedIncreaseMultyOnPlayerDeath, pressTimerAttackPreview);
             do
             {
-                randomInt2 = Random.Range(0, 2);
+                randomInt2 = Random.Range(0, 3);
             }
             while (randomInt2 == randomInt);
 
-            pressPrefabs[randomInt2].Activate(pressSpeed * (deadPlayerCounter > 0 ? deadPlayerCounter + 1 : 1) * pressSpeedIncreaseMultyOnPlayerDeath, pressTimerAttackPreview);
+            press2 = Instantiate(pressPrefab, pressSpawnPoints[randomInt2].transform);
+            press2.transform.localPosition = Vector3.zero;
+
         }
 
+        //Inizio Movimento Piattaforme
+        StartCoroutine(press1.Activate(pressSpeed * (deadPlayerCounter > 0 ? deadPlayerCounter + 1 : 1) * pressSpeedIncreaseMultyOnPlayerDeath, pressTimerAttackPreview));
+
+        if (press2 != null)
+            StartCoroutine(press2.Activate(pressSpeed * (deadPlayerCounter > 0 ? deadPlayerCounter + 1 : 1) * pressSpeedIncreaseMultyOnPlayerDeath, pressTimerAttackPreview));
+
     }
+
     private void SpawnTrash()
     {
 
