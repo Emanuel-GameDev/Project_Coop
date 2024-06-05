@@ -1510,7 +1510,7 @@ GameObject:
   - component: {fileID: 256069390}
   - component: {fileID: 256069389}
   - component: {fileID: 256069388}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Platform (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7134,7 +7134,8 @@ GameObject:
   - component: {fileID: 1093317059}
   - component: {fileID: 1093317058}
   - component: {fileID: 1093317057}
-  m_Layer: 0
+  - component: {fileID: 1093317060}
+  m_Layer: 10
   m_Name: floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7171,7 +7172,7 @@ BoxCollider2D:
     serializedVersion: 2
     m_Bits: 4294967295
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
@@ -7254,6 +7255,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!251 &1093317060
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093317056}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &1135927392
 GameObject:
   m_ObjectHideFlags: 0
@@ -10517,7 +10537,7 @@ GameObject:
   - component: {fileID: 1601328224}
   - component: {fileID: 1601328223}
   - component: {fileID: 1601328222}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Platform (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12144,7 +12164,7 @@ GameObject:
   - component: {fileID: 1880810846}
   - component: {fileID: 1880810845}
   - component: {fileID: 1880810844}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Platform (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12295,7 +12315,7 @@ GameObject:
   - component: {fileID: 1882971476}
   - component: {fileID: 1882971475}
   - component: {fileID: 1882971474}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Platform (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14047,7 +14067,7 @@ GameObject:
   - component: {fileID: 2019904225}
   - component: {fileID: 2019904224}
   - component: {fileID: 2019904223}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}

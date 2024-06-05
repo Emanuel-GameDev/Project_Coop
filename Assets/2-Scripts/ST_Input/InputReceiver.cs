@@ -127,6 +127,10 @@ public abstract class InputReceiver : MonoBehaviour
 
     }
 
+    public virtual void MoveAnalog(InputAction.CallbackContext context)
+    {
+
+    }
     #endregion
 
     #region UI

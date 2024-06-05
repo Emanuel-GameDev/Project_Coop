@@ -19,6 +19,7 @@ public class Press : MonoBehaviour
     private float previewTimer;
     private bool startedPreviw;
     private bool startedMove;
+    private bool startedReturn;
     private float tempTimer = 0;
 
     public IEnumerator Activate(float speed, float previewTimer)
@@ -78,7 +79,21 @@ public class Press : MonoBehaviour
             if((Vector3.Distance(rightPress.transform.position,rightEndingPos.transform.position) <0.1f) && 
                     (Vector3.Distance(leftPress.transform.position, leftEndingPos.transform.position) < 0.1f))
             {
-                Debug.Log("ARRIVATOOOO");
+                startedReturn = true;
+                startedMove = false;
+               
+
+            }
+        }
+        else if(startedReturn)
+        {
+            rightPress.transform.position = Vector3.Lerp(rightPress.transform.position, rightStartingPos.transform.position, (speed * Time.deltaTime));
+            leftPress.transform.position = Vector3.Lerp(leftPress.transform.position, leftStartingPos.transform.position, (speed * Time.deltaTime));
+
+            if ((Vector3.Distance(rightPress.transform.position, rightStartingPos.transform.position) < 0.1f) &&
+                    (Vector3.Distance(leftPress.transform.position, leftStartingPos.transform.position) < 0.1f))
+            {
+                Destroy(gameObject);
             }
         }
     }
