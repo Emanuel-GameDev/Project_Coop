@@ -33,31 +33,30 @@ public class TrashPressManager : MonoBehaviour
 
     [Header("Press Settings")]
     [SerializeField] List<GameObject> pressSpawnPoints;
-    [SerializeField] List<Press> pressPrefabs;
+    [SerializeField] Press pressPrefab;
     [SerializeField] float pressTimerAttackPreview;
     [SerializeField] float pressTimerBetweenAttacks;
     [SerializeField] float pressSpeed;
     [SerializeField] float pressSpeedIncreaseMultyOnPlayerDeath;
-
+    
     [Header("TrashRain Settings")]
     [SerializeField] List<GameObject> trashSpawnPoints;
+    [SerializeField] Trash trashPrefab;
     [SerializeField] float minTrashFallSpeed;
     [SerializeField] float maxTrashFallSpeed;
     [SerializeField] float trashTimerBetweenAttacks;
-
+    
     [Header("Player Settings")]
     [SerializeField] List<GameObject> playerSpawnPoints;
     [SerializeField] GameObject playerPrefab;
-    List<TrashPressPlayer> players = new();
-
+    
     [Header("Dialogue Settings")]
     [SerializeField] private GameObject dialogueBox;
     [SerializeField] private Dialogue winDialogue;
     [SerializeField] private UnityEvent onWinDialogueEnd;
     [SerializeField] private Dialogue loseDialogue;
     [SerializeField] private UnityEvent onLoseDialogueEnd;
-    private DialogueBox _dialogueBox;
-
+   
     [Header("Rewards Settings")]
     [SerializeField] private int coinForEachPlayer;
     [SerializeField] private int coinForFirstPlayer;
@@ -79,13 +78,17 @@ public class TrashPressManager : MonoBehaviour
     private SceneChanger sceneChanger;
     private int deadPlayerCounter = 0;
 
-    private enum GamePhase
-    {
-        PressPhase,
-        TrashPhase,
-        PressTrashPhase
-    }
-    private GamePhase currentGamePhase;
+  
+    public bool canSpawnPress = true;
+    public bool canSpawnTrash = true;
+    public bool canChangePhase = true;
+    private DialogueBox _dialogueBox;
+    private List<GameObject> trashSpawnPointsCopy = new();
+    List<TrashPressPlayer> players = new();
+
+
+
+
 
 
 
@@ -112,7 +115,14 @@ public class TrashPressManager : MonoBehaviour
     {
         StartCoroutine(WaitForPlayers());
         sceneChanger = GetComponent<SceneChanger>();
-        currentGamePhase = GamePhase.PressPhase;
+        
+        foreach (GameObject spawn in trashSpawnPoints)
+        {
+            trashSpawnPointsCopy.Add(spawn);
+        }
+
+        canSpawnPress = true;
+        canSpawnTrash = true;
 
     }
 
@@ -144,10 +154,10 @@ public class TrashPressManager : MonoBehaviour
             player.gameObject.SetActive(true);
         }
     }
-
     public void StartMinigame()
     {
-        currentGamePhase = GamePhase.PressPhase;
+        Debug.Log("InizioMinigame");
+        StartCoroutine(PressGameplay());
     }
     #endregion
 
@@ -155,19 +165,54 @@ public class TrashPressManager : MonoBehaviour
 
     IEnumerator PressGameplay()
     {
-        InvokeRepeating(nameof(SpawnPress), pressTimerBetweenAttacks, pressPhaseDuration - 1);
-        yield return new WaitForSeconds(pressPhaseDuration);
+        float tempTimer = 0f;
+
+        while (tempTimer < pressPhaseDuration)
+        {
+            // Chiama la funzione
+            SpawnPress();
+
+            // Aspetta un intervallo di tempo (per esempio, 1 secondo)
+            yield return new WaitForSeconds(1f);
+
+            // Incrementa il timer
+            tempTimer += 1f;
+
+            
+        }
+        // Attendi fino a quando canChangePhase è true
+        while (!canChangePhase)
+        {
+            yield return null; // Aspetta il prossimo frame
+        }
+
         StartCoroutine(TrashGameplay());
 
     }
     IEnumerator TrashGameplay()
     {
-        yield return new WaitForSeconds(trashPhaseDuration);
+        StopCoroutine(PressGameplay());
+
+        float tempTimer = 0f;
+
+        while (tempTimer < pressPhaseDuration)
+        {
+            // Chiama la funzione
+            Invoke(nameof(SpawnTrash), trashTimerBetweenAttacks);
+
+            // Aspetta un intervallo di tempo (per esempio, 1 secondo)
+            yield return new WaitForSeconds(1f);
+
+            // Incrementa il timer
+            tempTimer += 1f;
+        }
+
         StartCoroutine(PressTrashGameplay());
 
     }
     IEnumerator PressTrashGameplay()
     {
+        StopCoroutine(TrashGameplay());
         yield return new WaitForSeconds(pressTrashPhaseDuration);
 
     }
@@ -175,34 +220,73 @@ public class TrashPressManager : MonoBehaviour
 
     private void SpawnPress()
     {
-
-        int randomInt = Random.Range(0, 2);
-        int randomInt2;
-
-        //spawn 1 press
-        if (randomInt == 0)
+        if (canSpawnPress)
         {
-            randomInt = Random.Range(0, 2);
-            pressPrefabs[randomInt].Activate(pressSpeed * (deadPlayerCounter > 0 ? deadPlayerCounter + 1 : 1) * pressSpeedIncreaseMultyOnPlayerDeath,pressTimerAttackPreview);
+            canSpawnPress = false;
+            canChangePhase = false;
 
-        }
-        //spawn 2 Press
-        else
-        {
-            randomInt = Random.Range(0, 2);
-            pressPrefabs[randomInt].Activate(pressSpeed * (deadPlayerCounter > 0 ? deadPlayerCounter + 1 : 1) * pressSpeedIncreaseMultyOnPlayerDeath, pressTimerAttackPreview);
-            do
+            int randomInt = Random.Range(0, 2);
+            int randomInt2;
+            Press press1 = null;
+            Press press2 = null;
+
+            //spawn 1 press
+
+            randomInt = Random.Range(0, 3);
+            press1 = Instantiate(pressPrefab, pressSpawnPoints[randomInt].transform);
+            press1.transform.localPosition = Vector3.zero;
+
+
+
+            //spawn 2 Press
+            if (Random.Range(0, 2) == 1)
             {
-                randomInt2 = Random.Range(0, 2);
-            }
-            while (randomInt2 == randomInt);
+                do
+                {
+                    randomInt2 = Random.Range(0, 3);
+                }
+                while (randomInt2 == randomInt);
 
-            pressPrefabs[randomInt2].Activate(pressSpeed * (deadPlayerCounter > 0 ? deadPlayerCounter + 1 : 1) * pressSpeedIncreaseMultyOnPlayerDeath, pressTimerAttackPreview);
+                press2 = Instantiate(pressPrefab, pressSpawnPoints[randomInt2].transform);
+                press2.transform.localPosition = Vector3.zero;
+
+            }
+
+            //Inizio Movimento Piattaforme
+            StartCoroutine(press1.Activate(pressSpeed * (deadPlayerCounter > 0 ? deadPlayerCounter + 1 : 1) * pressSpeedIncreaseMultyOnPlayerDeath, pressTimerAttackPreview));
+
+            if (press2 != null)
+                StartCoroutine(press2.Activate(pressSpeed * (deadPlayerCounter > 0 ? deadPlayerCounter + 1 : 1) * pressSpeedIncreaseMultyOnPlayerDeath, pressTimerAttackPreview));
+
         }
 
     }
+
     private void SpawnTrash()
     {
+        if (trashSpawnPointsCopy.Count > 0)
+        {
+            int randomInt = Random.Range(0, trashSpawnPoints.Count);
+            Trash spawnedTrash = Instantiate(trashPrefab, trashSpawnPointsCopy[randomInt].transform);
+            spawnedTrash.Drop(Random.Range(minTrashFallSpeed, maxTrashFallSpeed));
+            trashSpawnPointsCopy.RemoveAt(randomInt);
+        }
+        else
+        {
+            trashSpawnPointsCopy.Clear();
+            foreach (GameObject spawn in trashSpawnPoints)
+            {
+                trashSpawnPointsCopy.Add(spawn);
+            }
+
+            int randomInt = Random.Range(0, trashSpawnPointsCopy.Count);
+            Trash spawnedTrash = Instantiate(trashPrefab, trashSpawnPointsCopy[randomInt].transform);
+            spawnedTrash.Drop(Random.Range(minTrashFallSpeed, maxTrashFallSpeed));
+            trashSpawnPointsCopy.RemoveAt(randomInt);
+
+
+        }
+
 
     }
     #endregion
@@ -214,5 +298,7 @@ public class TrashPressManager : MonoBehaviour
     {
         players.Add(trashPressPlayer);
     }
+
+
     #endregion
 }

@@ -188,6 +188,7 @@ public class PlayerInputHandler : MonoBehaviour
     #region Minigame
 
     public void MoveMinigameInput(InputAction.CallbackContext context) => CurrentReceiver.MoveMinigameInput(context);
+    public void MoveAnalog(InputAction.CallbackContext context) => CurrentReceiver.MoveAnalog(context);
 
     public void ButtonEast(InputAction.CallbackContext context) => CurrentReceiver.ButtonEast(context);
 
