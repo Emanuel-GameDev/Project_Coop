@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BasicRangedEnemyEscapeState : BasicEnemyState
+public class BasicRangedEnemyEscapeState : BasicRangedEnemyState
 {
     int maxTry=10;
     int remainingTry;
@@ -13,9 +13,8 @@ public class BasicRangedEnemyEscapeState : BasicEnemyState
 
     Vector2 pos;
 
-    public BasicRangedEnemyEscapeState(BasicEnemy basicEnemy)
+    public BasicRangedEnemyEscapeState(RangedEnemy basicEnemy): base(basicEnemy)
     {
-        this.basicEnemy = basicEnemy;
         
     }
 
@@ -41,82 +40,126 @@ public class BasicRangedEnemyEscapeState : BasicEnemyState
 
         currentTime-=Time.deltaTime;
 
-        Debug.Log(" sto cercando");
+        Debug.Log("sto cercando");
 
         //TODO scappo dal tizio
 
-        if (basicEnemy.EscapeTrigger.GetPlayersCountInTrigger() == 0 ) 
+        //if (basicEnemy.EscapeTrigger.GetPlayersCountInTrigger() == 0 ) 
+        //{
+        //    if(basicEnemy.Agent.remainingDistance <= basicEnemy.Agent.stoppingDistance)
+        //    {
+        //        stateMachine.SetState(rangedEnemy.actionState);
+        //    }
+
+        //}
+        //else 
+        //{
+        //    if(basicEnemy.Agent.remainingDistance <= basicEnemy.Agent.stoppingDistance) 
+        //    {
+        //        List<PlayerCharacter> players;
+
+        //        players = new List<PlayerCharacter>(basicEnemy.EscapeTrigger.GetPlayersDetected());
+
+        //        PlayerCharacter target = players[0];
+
+        //        for(int i=0; i < players.Count; i++)
+        //        {
+        //            if( Mathf.Abs((basicEnemy.transform.position-target.transform.position).magnitude) >= Mathf.Abs((basicEnemy.transform.position - players[i].transform.position).magnitude)) 
+        //            {
+        //                target = players[i];
+        //            }
+        //        }
+
+
+        //        Vector2 randomPos;
+
+        //        NavMeshHit hit;
+
+        //        Vector2 deltaVector=basicEnemy.transform.position- target.transform.position;
+
+        //        Vector2 xDirectionRand= new Vector2(deltaVector.x>0 ? 0 : -1, deltaVector.x > 0? 1 : 0);
+        //        Vector2 yDirectionRand = new Vector2(deltaVector.y > 0 ? 0 : -1, deltaVector.y > 0 ? 1 : 0);
+
+        //        do
+        //        {
+
+        //            Vector2 randomVect = new Vector2(UnityEngine.Random.Range(xDirectionRand.x, xDirectionRand.y), UnityEngine.Random.Range(yDirectionRand.x, yDirectionRand.y));
+        //            randomPos = basicEnemy.transform.position +  ((Vector3)randomVect *  rangedEnemy.searchRadious);
+        //            pos = new Vector2(randomPos.x,randomPos.y);
+
+        //            remainingTry--;
+
+        //            //finire
+
+
+        //        }
+        //        while (!NavMesh.SamplePosition(pos,out hit,rangedEnemy.searchRadious,basicEnemy.Agent.areaMask) && remainingTry>=0);
+
+        //        basicEnemy.Agent.SetDestination(pos);
+
+        //        if(currentTime <= 0 || remainingTry<=0)
+        //        {
+        //            rangedEnemy.panicAttack = true;
+        //            stateMachine.SetState(rangedEnemy.actionState);
+        //        }
+
+        //        remainingTry = maxTry;
+        //    }
+
+        //}
+        rangedEnemy.AwayPath();
+
+        Vector2 randomPos;
+
+        NavMeshHit hit;
+
+        Vector2 deltaVector = rangedEnemy.transform.position - rangedEnemy.target.transform.position;
+
+        Vector2 xDirectionRand = new Vector2(deltaVector.x > 0 ? 0 : -1, deltaVector.x > 0 ? 1 : 0);
+        Vector2 yDirectionRand = new Vector2(deltaVector.y > 0 ? 0 : -1, deltaVector.y > 0 ? 1 : 0);
+
+        do
         {
-            if(basicEnemy.Agent.remainingDistance <= basicEnemy.Agent.stoppingDistance)
-            {
-                stateMachine.SetState(basicEnemy.actionState);
-            }
-            
+
+            Vector2 randomVect = new Vector2(UnityEngine.Random.Range(xDirectionRand.x, xDirectionRand.y), UnityEngine.Random.Range(yDirectionRand.x, yDirectionRand.y));
+            randomPos = basicEnemy.transform.position + ((Vector3)randomVect * rangedEnemy.searchRadious);
+            pos = new Vector2(randomPos.x, randomPos.y);
+
+            remainingTry--;
+
+            //finire
+
+
         }
-        else 
+        while (!NavMesh.SamplePosition(pos, out hit, rangedEnemy.searchRadious, basicEnemy.Agent.areaMask) && remainingTry >= 0);
+
+        basicEnemy.Agent.SetDestination(pos);
+
+        if (currentTime <= 0 || remainingTry <= 0)
         {
-            if(basicEnemy.Agent.remainingDistance <= basicEnemy.Agent.stoppingDistance) 
-            {
-                List<PlayerCharacter> players;
-
-                players = new List<PlayerCharacter>(basicEnemy.EscapeTrigger.GetPlayersDetected());
-
-                PlayerCharacter target = players[0];
-
-                for(int i=0; i < players.Count; i++)
-                {
-                    if( Mathf.Abs((basicEnemy.transform.position-target.transform.position).magnitude) >= Mathf.Abs((basicEnemy.transform.position - players[i].transform.position).magnitude)) 
-                    {
-                        target = players[i];
-                    }
-                }
-
-
-                Vector2 randomPos;
-                
-                NavMeshHit hit;
-
-                Vector2 deltaVector=basicEnemy.transform.position- target.transform.position;
-
-                Vector2 xDirectionRand= new Vector2(deltaVector.x>0 ? 0 : -1, deltaVector.x > 0? 1 : 0);
-                Vector2 yDirectionRand = new Vector2(deltaVector.y > 0 ? 0 : -1, deltaVector.y > 0 ? 1 : 0);
-
-                do
-                {
-                    
-                    Vector2 randomVect = new Vector2(UnityEngine.Random.Range(xDirectionRand.x, xDirectionRand.y), UnityEngine.Random.Range(yDirectionRand.x, yDirectionRand.y));
-                    randomPos = basicEnemy.transform.position +  ((Vector3)randomVect * basicEnemy.searchRadious);;
-                    pos = new Vector2(randomPos.x,randomPos.y);
-
-                    remainingTry--;
-
-                    //finire
-
-                    
-                }
-                while (!NavMesh.SamplePosition(pos,out hit,basicEnemy.searchRadious,basicEnemy.Agent.areaMask) && remainingTry>=0);
-
-                basicEnemy.Agent.SetDestination(pos);
-
-                if(currentTime <= 0 || remainingTry<=0)
-                {
-                    basicEnemy.panicAttack = true;
-                    stateMachine.SetState(basicEnemy.actionState);
-                }
-
-                remainingTry = maxTry;
-            }
-
-            
-
+            rangedEnemy.panicAttack = true;
+            stateMachine.SetState(rangedEnemy.actionState);
         }
 
-        basicEnemy.FollowPosition(pos);
+        remainingTry = maxTry;
+    
+
+    
+
+        if (rangedEnemy.EscapeTrigger.GetPlayersCountInTrigger() == 0 || rangedEnemy.panicAttack)
+        {
+            
+            rangedEnemy.stateMachine.SetState(rangedEnemy.actionState);
+        }
+
     }
+
+
 
     public override void Exit()
     {
         base.Exit();
+        
         basicEnemy.Agent.isStopped=true;
         basicEnemy.GetAnimator().SetBool("isMoving", false);
     }

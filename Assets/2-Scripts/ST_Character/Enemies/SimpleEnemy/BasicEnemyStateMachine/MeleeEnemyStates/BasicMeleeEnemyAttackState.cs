@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicMeleeEnemyAttackState : BasicEnemyActionState
+public class BasicMeleeEnemyAttackState : BasicMeleeEnemyState
 {
-    public BasicMeleeEnemyAttackState(BasicEnemy basicEnemy) : base(basicEnemy)
+    public BasicMeleeEnemyAttackState(BasicMeleeEnemy basicEnemy) : base(basicEnemy)
     {
     }
 
@@ -13,6 +13,11 @@ public class BasicMeleeEnemyAttackState : BasicEnemyActionState
     {
         base.Enter();
 
+        basicEnemy.canMove = false;
+        basicEnemy.canAction = true;
+
+
+        basicEnemy.StartStopMovementCountdownCoroutine(false);
         basicEnemy.StartCoroutine(basicEnemy.Attack());
         basicEnemy.ActivateObstacle();
 
@@ -22,15 +27,15 @@ public class BasicMeleeEnemyAttackState : BasicEnemyActionState
     {
         base.Update();
 
-
+        
         if (!basicEnemy.isActioning)
         {
             if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() == 0)
             {
-                stateMachine.SetState(basicEnemy.moveState);
+                stateMachine.SetState(meleeEnemy.idleState);
             }
             else
-                basicEnemy.StartCoroutine(basicEnemy.Attack());
+                meleeEnemy.StartCoroutine(meleeEnemy.Attack());
 
         }
 

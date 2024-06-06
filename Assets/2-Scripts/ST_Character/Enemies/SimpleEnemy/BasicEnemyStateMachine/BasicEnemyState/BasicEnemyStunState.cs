@@ -15,9 +15,8 @@ public class BasicEnemyStunState : BasicEnemyState
     {
         base.Enter();
 
-        stunTime = 1f;
+        stunTime = basicEnemy.stunTime;
 
-        Debug.Log(stunTime);
 
         basicEnemy.canSee = false;
         basicEnemy.canAction = false;
@@ -37,17 +36,16 @@ public class BasicEnemyStunState : BasicEnemyState
 
         stunTime -= Time.deltaTime ;
 
-        //Debug.Log(stunTime);
         if(stunTime <= 0f)
         {
-            
-            stateMachine.SetState(basicEnemy.idleState);
+            basicEnemy.SetIdleState();
         }
        
     }
 
     public override void Exit()
     {
+        basicEnemy.GetAnimator().SetTrigger("DamageEnded");
         base.Exit();
     }
 }

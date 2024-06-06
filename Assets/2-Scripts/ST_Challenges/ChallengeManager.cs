@@ -73,27 +73,19 @@ public class ChallengeManager : MonoBehaviour
             onInteractionAction.AddListener(OnInteraction);
             Shuffle(challengesList);
             savedChallenges = new();
+
+            //creo Ui challenge
             for (int i = 0; i <3; i++)
             {
-                //creo Ui sfide
-                GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
-                ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();
-                tempUI.challengeSelected = challengesList[i];
-                tempUI.challengeSelected.challengeUI = tempUI;
-                tempUI.SetUpUI();
-
+                ChallengeUI tempUI = CreateChallengeUI(challengesList[i]);
+               
+                //creo Ui rank
                 if (challengesList[i].hasRanks)
                 {
-                    //creo Ui rank
+                    
                     for (int j = 0; j < 3; j++)
                     {
-                        GameObject tempRankObj = Instantiate(challengeUIRankPrefab, panelRanks.gameObject.transform);
-                        UiChallengeRank tempRankUI = tempRankObj.GetComponent<UiChallengeRank>();
-                        tempRankUI.challengeSelected = challengesList[i];
-                        tempRankUI.challengeSelected.challengeRankUI = tempRankUI;
-                        tempUI.uiChallengeRanks.Add(tempRankUI);
-                        tempRankUI.SetUpUI(j);
-                        tempRankObj.SetActive(false);
+                        CreateChallengeRankUI(challengesList[i], tempUI, j);
                     }
                 }
 
@@ -103,40 +95,60 @@ public class ChallengeManager : MonoBehaviour
 
             SaveManager.Instance.SaveChallenges(savedChallenges);
         }
+
         //carico Salvataggio
         else
         {
             onInteractionAction.AddListener(OnInteraction);
 
+            //creo Ui challenge
             foreach (ChallengeData c in savedChallenges)
             {
                 
-                GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
-                ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();
-                tempUI.challengeSelected = challengesList.Find(x => x.challengeNameEnum == c.challengeName);
-                tempUI.challengeSelected.challengeUI = tempUI;
+                ChallengeUI tempUI = CreateChallengeUI(challengesList.Find(x => x.challengeNameEnum == c.challengeName));
                 tempUI.challengeSelected.challengeCompleted = c.completed;
-                tempUI.SetUpUI();
+               
 
-                if (challengesList.Find(x => x.challengeNameEnum == c.challengeName).hasRanks)
-                {
-                    //creo Ui rank
+
+                //creo Ui rank
+                if (tempUI.challengeSelected.hasRanks)
+                {                
                     for (int j = 0; j < 3; j++)
                     {
-                        GameObject tempRankObj = Instantiate(challengeUIRankPrefab, panelRanks.gameObject.transform);
-                        UiChallengeRank tempRankUI = tempRankObj.GetComponent<UiChallengeRank>();
-                        tempRankUI.challengeSelected = challengesList.Find(x => x.challengeNameEnum == c.challengeName);
-                        tempRankUI.challengeSelected.challengeRankUI = tempRankUI;
-                        tempUI.uiChallengeRanks.Add(tempRankUI);
+                        UiChallengeRank tempRankUI = CreateChallengeRankUI(tempUI.challengeSelected, tempUI, j);
+                        tempRankUI.challengeSelected.rank = c.rank;
                         tempRankUI.SetUpUI(j);
-                        tempRankObj.SetActive(false);
+
                     }
                 }
+
+                tempUI.SetUpUI();
                 currentSaveChallenges.Add(tempUI.challengeSelected);
             }
 
         }
 
+    }
+
+    private ChallengeUI CreateChallengeUI(Challenge challengeToSelect)
+    {
+        GameObject tempObj = Instantiate(challengeUIPrefab, panel.gameObject.transform);
+        ChallengeUI tempUI = tempObj.GetComponent<ChallengeUI>();
+        tempUI.challengeSelected = challengeToSelect;
+        tempUI.challengeSelected.challengeUI = tempUI;
+        tempUI.SetUpUI();
+        return tempUI;
+    }
+
+    private UiChallengeRank CreateChallengeRankUI(Challenge challengeToSelect, ChallengeUI tempUI, int j)
+    {
+        GameObject tempRankObj = Instantiate(challengeUIRankPrefab, panelRanks.gameObject.transform);
+        UiChallengeRank tempRankUI = tempRankObj.GetComponent<UiChallengeRank>();
+        tempRankUI.challengeSelected = challengeToSelect; 
+        tempUI.uiChallengeRanks.Add(tempRankUI);
+        tempRankUI.SetUpUI(j);
+        tempRankObj.SetActive(false);
+        return tempRankUI;
     }
 
     #region saving

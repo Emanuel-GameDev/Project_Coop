@@ -10,8 +10,7 @@ public class UiChallengeRank : MonoBehaviour
 
     public void SetUpUI(int id)
     {
-        Debug.LogWarning(challengeSelected.ToString());
-        Debug.LogWarning(challengeSelected.firstStarDescription);
+        
         switch (id)
         {
             case 0:
@@ -51,11 +50,6 @@ public class UiChallengeRank : MonoBehaviour
 
         }
 
-        if (challengeSelected.challengeCompleted)
-        {
-            
-
-        }
     }
 
 
