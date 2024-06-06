@@ -6,12 +6,15 @@ public class TrashPressPlayer : InputReceiver
 {
 
     [Header("Variables")]
-    [SerializeField] private int playerHp = 3;
+    [SerializeField] private int maxHp = 3;
     [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] private float inAirSpeed = 5f;
     [SerializeField] private LayerMask targetLayer;
 
     [Header("Jump")]
     [SerializeField] float jumpForce;
+    [SerializeField] float fallAcceleration = 1.5f;
+
 
     [Header("Push")]
     [SerializeField] float pushRange;
@@ -19,7 +22,7 @@ public class TrashPressPlayer : InputReceiver
     [SerializeField] int pushCooldown;
 
 
-
+    int currentHp;
     Vector2 moveDir;
     Vector2 lastNonZeroDirection;
     SpriteRenderer spriteRenderer;
@@ -29,8 +32,19 @@ public class TrashPressPlayer : InputReceiver
     Pivot pivot;
     bool isMoving;
     bool canPush = true;
+    private float speed;
 
-
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.GetComponent<Trash>() != null)
+        {
+            TakeDamage();
+        }
+        if (collision.GetComponentInParent<Press>() != null)
+        {
+            TakeDamage();
+        }
+    }
 
     private void Start()
     {
@@ -38,7 +52,13 @@ public class TrashPressPlayer : InputReceiver
     }
     private void Update()
     {
-        Move(moveDir);
+        Move(moveDir, speed);
+        if (!IsGrounded() && rb.velocity.y < 0)
+        {
+            rb.velocity += Vector2.down * fallAcceleration * Time.deltaTime;
+            Debug.Log("Player is falling faster");
+
+        }
     }
     private void InitialSetup()
     {
@@ -48,8 +68,9 @@ public class TrashPressPlayer : InputReceiver
         pivot = GetComponentInChildren<Pivot>();
         groundChecker = GetComponentInChildren<GroundChecker>();
         TrashPressManager.Instance.AddPlayer(this);
+        currentHp = maxHp;
+        speed = moveSpeed;
     }
-
     public override void SetInputHandler(PlayerInputHandler inputHandler)
     {
         base.SetInputHandler(inputHandler);
@@ -60,20 +81,43 @@ public class TrashPressPlayer : InputReceiver
         }
     }
 
+
+    #region Damage
+    private void TakeDamage()
+    {
+        currentHp--;
+        if (currentHp <= 0)
+        {
+            currentHp = 0;
+            Destroy(this.gameObject);
+            TrashPressManager.Instance.deadPlayerCounter++;
+        }
+    }
+    #endregion
+
     #region Actions
     public void Jump()
-    {      
+    {
+        rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
     private bool IsGrounded()
     {
+        if(groundChecker.isGrounded)
+        {
+            speed = moveSpeed;
+        }
+        else
+        {
+            speed = inAirSpeed;
+        }
         return groundChecker.isGrounded;
     }
 
     #region Move
-    public void Move(Vector2 direction)
+    public void Move(Vector2 direction, float horizontalSpeed)
     {
-        rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
+        rb.velocity = new Vector2(direction.x * horizontalSpeed, rb.velocity.y);
         isMoving = rb.velocity.x > 0.2f;
 
         SetSpriteDirection(lastNonZeroDirection);
@@ -123,8 +167,6 @@ public class TrashPressPlayer : InputReceiver
         canPush = true;
     }
     #endregion
-
-
 
     #region Input
     public override void MoveAnalog(InputAction.CallbackContext context)
