@@ -18,7 +18,11 @@ public class GroundChecker : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        isGrounded = false;
+        if (Utility.IsInLayerMask(collision.gameObject, platformLayerMask))
+        {
+            isGrounded = false;
+        }
+        
     }
 
 

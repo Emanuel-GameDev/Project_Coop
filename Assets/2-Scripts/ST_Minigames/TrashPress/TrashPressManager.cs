@@ -32,23 +32,24 @@ public class TrashPressManager : MonoBehaviour
     [SerializeField] int pressTrashPhaseDuration = 30;
 
     [Header("Press Settings")]
-    [SerializeField] List<GameObject> pressSpawnPoints;
     [SerializeField] Press pressPrefab;
+    [SerializeField] List<GameObject> pressSpawnPoints;
+   
     [SerializeField] float pressTimerAttackPreview;
-    [SerializeField] float pressTimerBetweenAttacks;
     [SerializeField] float pressSpeed;
     [SerializeField] float pressSpeedIncreaseMultyOnPlayerDeath;
     
     [Header("TrashRain Settings")]
-    [SerializeField] List<GameObject> trashSpawnPoints;
     [SerializeField] Trash trashPrefab;
+    [SerializeField] List<GameObject> trashSpawnPoints;   
     [SerializeField] float minTrashFallSpeed;
     [SerializeField] float maxTrashFallSpeed;
     [SerializeField] float trashTimerBetweenAttacks;
     
     [Header("Player Settings")]
-    [SerializeField] List<GameObject> playerSpawnPoints;
     [SerializeField] GameObject playerPrefab;
+    [SerializeField] List<GameObject> playerSpawnPoints;
+   
     
     [Header("Dialogue Settings")]
     [SerializeField] private GameObject dialogueBox;
@@ -76,12 +77,13 @@ public class TrashPressManager : MonoBehaviour
     [SerializeField] private AudioClip loseClip;
 
     private SceneChanger sceneChanger;
-    private int deadPlayerCounter = 0;
+    public int deadPlayerCounter = 0;
 
   
-    public bool canSpawnPress = true;
-    public bool canSpawnTrash = true;
-    public bool canChangePhase = true;
+    [HideInInspector] public bool canSpawnPress = true;
+    [HideInInspector] public bool canSpawnTrash = true;
+    [HideInInspector] public bool canChangePhase = true;
+    private int idTrashSpawner;
     private DialogueBox _dialogueBox;
     private List<GameObject> trashSpawnPointsCopy = new();
     List<TrashPressPlayer> players = new();
@@ -122,7 +124,7 @@ public class TrashPressManager : MonoBehaviour
         }
 
         canSpawnPress = true;
-        canSpawnTrash = true;
+        canSpawnTrash = false;
 
     }
 
@@ -185,7 +187,8 @@ public class TrashPressManager : MonoBehaviour
         {
             yield return null; // Aspetta il prossimo frame
         }
-
+        canSpawnTrash = true;
+        canSpawnPress = true;
         StartCoroutine(TrashGameplay());
 
     }
@@ -194,17 +197,15 @@ public class TrashPressManager : MonoBehaviour
         StopCoroutine(PressGameplay());
 
         float tempTimer = 0f;
+        idTrashSpawner = 0;
+        trashSpawnPointsCopy = Utility.Shuffle(trashSpawnPointsCopy);
 
-        while (tempTimer < pressPhaseDuration)
+        while (tempTimer < trashPhaseDuration)
         {
-            // Chiama la funzione
-            Invoke(nameof(SpawnTrash), trashTimerBetweenAttacks);
-
-            // Aspetta un intervallo di tempo (per esempio, 1 secondo)
-            yield return new WaitForSeconds(1f);
-
-            // Incrementa il timer
-            tempTimer += 1f;
+           
+            SpawnTrash();       
+            yield return new WaitForSeconds(trashTimerBetweenAttacks);          
+            tempTimer += trashTimerBetweenAttacks;
         }
 
         StartCoroutine(PressTrashGameplay());
@@ -213,7 +214,19 @@ public class TrashPressManager : MonoBehaviour
     IEnumerator PressTrashGameplay()
     {
         StopCoroutine(TrashGameplay());
+        float tempTimer = 0f;
+        idTrashSpawner = 0;
+        trashSpawnPointsCopy = Utility.Shuffle(trashSpawnPointsCopy);
+
+        while (tempTimer < pressTrashPhaseDuration)
+        {
+            SpawnPress();
+            SpawnTrash();
+            yield return new WaitForSeconds(trashTimerBetweenAttacks);
+            tempTimer += trashTimerBetweenAttacks;
+        }
         yield return new WaitForSeconds(pressTrashPhaseDuration);
+        StopCoroutine(PressTrashGameplay());
 
     }
 
@@ -264,27 +277,22 @@ public class TrashPressManager : MonoBehaviour
 
     private void SpawnTrash()
     {
-        if (trashSpawnPointsCopy.Count > 0)
-        {
-            int randomInt = Random.Range(0, trashSpawnPoints.Count);
-            Trash spawnedTrash = Instantiate(trashPrefab, trashSpawnPointsCopy[randomInt].transform);
+       
+        if (idTrashSpawner <= trashSpawnPointsCopy.Count-1)
+        {          
+            Trash spawnedTrash = Instantiate(trashPrefab, trashSpawnPointsCopy[idTrashSpawner].transform);
+            spawnedTrash.transform.localPosition = Vector3.zero;
             spawnedTrash.Drop(Random.Range(minTrashFallSpeed, maxTrashFallSpeed));
-            trashSpawnPointsCopy.RemoveAt(randomInt);
+            idTrashSpawner++;
         }
         else
         {
-            trashSpawnPointsCopy.Clear();
-            foreach (GameObject spawn in trashSpawnPoints)
-            {
-                trashSpawnPointsCopy.Add(spawn);
-            }
-
-            int randomInt = Random.Range(0, trashSpawnPointsCopy.Count);
-            Trash spawnedTrash = Instantiate(trashPrefab, trashSpawnPointsCopy[randomInt].transform);
+            trashSpawnPointsCopy = Utility.Shuffle(trashSpawnPointsCopy);
+            idTrashSpawner = 0;
+            Trash spawnedTrash = Instantiate(trashPrefab, trashSpawnPointsCopy[idTrashSpawner].transform);
+            spawnedTrash.transform.localPosition = Vector3.zero;
             spawnedTrash.Drop(Random.Range(minTrashFallSpeed, maxTrashFallSpeed));
-            trashSpawnPointsCopy.RemoveAt(randomInt);
-
-
+            idTrashSpawner++;
         }
 
 

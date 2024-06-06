@@ -2536,19 +2536,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c436976e5ce323b4d88e135d96ec972c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pressPhaseDuration: 10
-  trashPhaseDuration: 30
+  pressPhaseDuration: 20
+  trashPhaseDuration: 20
   pressTrashPhaseDuration: 30
+  pressPrefab: {fileID: 6837999601180832324, guid: 636485f93934c0e46940282c6b4c3ebe,
+    type: 3}
   pressSpawnPoints:
   - {fileID: 1863168390}
   - {fileID: 1141508395}
   - {fileID: 850986830}
-  pressPrefab: {fileID: 6837999601180832324, guid: 636485f93934c0e46940282c6b4c3ebe,
-    type: 3}
-  pressTimerAttackPreview: 5
-  pressTimerBetweenAttacks: 6
-  pressSpeed: 5
+  pressTimerAttackPreview: 2
+  pressSpeed: 10
   pressSpeedIncreaseMultyOnPlayerDeath: 1
+  trashPrefab: {fileID: 1393381756189856610, guid: 4055ee816a7d68f43a16e302695402fe,
+    type: 3}
   trashSpawnPoints:
   - {fileID: 483421494}
   - {fileID: 1632370826}
@@ -2559,17 +2560,15 @@ MonoBehaviour:
   - {fileID: 1707155760}
   - {fileID: 1732394463}
   - {fileID: 1930768839}
-  trashPrefab: {fileID: 1393381756189856610, guid: 4055ee816a7d68f43a16e302695402fe,
-    type: 3}
   minTrashFallSpeed: 3
   maxTrashFallSpeed: 7
-  trashTimerBetweenAttacks: 1
+  trashTimerBetweenAttacks: 0.5
+  playerPrefab: {fileID: 0}
   playerSpawnPoints:
   - {fileID: 1409216655}
   - {fileID: 1304353250}
   - {fileID: 1377351498}
   - {fileID: 1397859834}
-  playerPrefab: {fileID: 0}
   dialogueBox: {fileID: 681799255}
   winDialogue: {fileID: 0}
   onWinDialogueEnd:
@@ -2591,6 +2590,7 @@ MonoBehaviour:
   attenuationVolume: 0.5
   victoryClip: {fileID: 0}
   loseClip: {fileID: 0}
+  deadPlayerCounter: 0
   canSpawnPress: 1
   canSpawnTrash: 1
   canChangePhase: 1

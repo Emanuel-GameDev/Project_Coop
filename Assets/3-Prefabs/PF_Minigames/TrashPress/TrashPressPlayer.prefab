@@ -154,12 +154,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d4b1021ff439e848981fda1c1f3e5d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHp: 3
+  maxHp: 30
   moveSpeed: 10
+  inAirSpeed: 7
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
-  jumpForce: 150
+  jumpForce: 500
+  fallAcceleration: 35
   pushRange: 10
   pushForce: 100
   pushCooldown: 2
