@@ -62,8 +62,7 @@ public class TrashPressPlayer : InputReceiver
 
     #region Actions
     public void Jump()
-    {
-        Debug.LogWarning("SALTO");
+    {      
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
     private bool IsGrounded()

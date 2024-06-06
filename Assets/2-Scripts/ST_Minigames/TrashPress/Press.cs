@@ -21,6 +21,7 @@ public class Press : MonoBehaviour
     private bool startedMove;
     private bool startedReturn;
     private float tempTimer = 0;
+    
 
     public IEnumerator Activate(float speed, float previewTimer)
     {
@@ -93,7 +94,10 @@ public class Press : MonoBehaviour
             if ((Vector3.Distance(rightPress.transform.position, rightStartingPos.transform.position) < 0.1f) &&
                     (Vector3.Distance(leftPress.transform.position, leftStartingPos.transform.position) < 0.1f))
             {
+                TrashPressManager.Instance.canSpawnPress = true;
+                TrashPressManager.Instance.canChangePhase = true;
                 Destroy(gameObject);
+                
             }
         }
     }

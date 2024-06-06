@@ -2536,7 +2536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c436976e5ce323b4d88e135d96ec972c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pressPhaseDuration: 30
+  pressPhaseDuration: 10
   trashPhaseDuration: 30
   pressTrashPhaseDuration: 30
   pressSpawnPoints:
@@ -2546,13 +2546,24 @@ MonoBehaviour:
   pressPrefab: {fileID: 6837999601180832324, guid: 636485f93934c0e46940282c6b4c3ebe,
     type: 3}
   pressTimerAttackPreview: 5
-  pressTimerBetweenAttacks: 8
+  pressTimerBetweenAttacks: 6
   pressSpeed: 5
   pressSpeedIncreaseMultyOnPlayerDeath: 1
-  trashSpawnPoints: []
-  minTrashFallSpeed: 0
-  maxTrashFallSpeed: 0
-  trashTimerBetweenAttacks: 0
+  trashSpawnPoints:
+  - {fileID: 483421494}
+  - {fileID: 1632370826}
+  - {fileID: 1247524565}
+  - {fileID: 645913483}
+  - {fileID: 1344645269}
+  - {fileID: 182725383}
+  - {fileID: 1707155760}
+  - {fileID: 1732394463}
+  - {fileID: 1930768839}
+  trashPrefab: {fileID: 1393381756189856610, guid: 4055ee816a7d68f43a16e302695402fe,
+    type: 3}
+  minTrashFallSpeed: 3
+  maxTrashFallSpeed: 7
+  trashTimerBetweenAttacks: 1
   playerSpawnPoints:
   - {fileID: 1409216655}
   - {fileID: 1304353250}
@@ -2580,6 +2591,9 @@ MonoBehaviour:
   attenuationVolume: 0.5
   victoryClip: {fileID: 0}
   loseClip: {fileID: 0}
+  canSpawnPress: 1
+  canSpawnTrash: 1
+  canChangePhase: 1
 --- !u!114 &393231902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7135,6 +7149,7 @@ GameObject:
   - component: {fileID: 1093317058}
   - component: {fileID: 1093317057}
   - component: {fileID: 1093317060}
+  - component: {fileID: 1093317061}
   m_Layer: 10
   m_Name: floor
   m_TagString: Untagged
@@ -7274,6 +7289,18 @@ PlatformEffector2D:
   m_UseSideFriction: 0
   m_UseSideBounce: 0
   m_SideArc: 1
+--- !u!114 &1093317061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093317056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd5056f6278d99a4e80e03d57d9c2f2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1135927392
 GameObject:
   m_ObjectHideFlags: 0
@@ -7576,7 +7603,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1152081573}
   m_Layer: 0
-  m_Name: -SpawnPoints-
+  m_Name: -PlayerSpawnPoints-
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
