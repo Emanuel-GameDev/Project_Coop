@@ -53,6 +53,7 @@ public static class SaveDataStrings
     //Minigames
     public const string PASSEPARTOUT_MINIGAME_COMPLETED = "PassepartoutMinigameCompleted";
     public const string FOOLSLOT_MINIGAME_COMPLETED = "FoolSlotMinigameCompleted";
+    public const string TRASHPRESS_MINIGAME_COMPLETED = "TrashPressMinigameCompleted";
 
 }
 

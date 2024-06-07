@@ -22,6 +22,7 @@ public class TrashPressPlayer : InputReceiver
     [SerializeField] int pushCooldown;
 
 
+    public float surviveTime;
     int currentHp;
     Vector2 moveDir;
     Vector2 lastNonZeroDirection;
@@ -32,6 +33,7 @@ public class TrashPressPlayer : InputReceiver
     Pivot pivot;
     bool isMoving;
     bool canPush = true;
+    private bool isDead;
     private float speed;
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -59,6 +61,10 @@ public class TrashPressPlayer : InputReceiver
             rb.velocity += Vector2.down * fallAcceleration * Time.deltaTime;
             
         }
+        if(!isDead)
+        {
+            surviveTime += Time.deltaTime;
+        }
     }
     private void InitialSetup()
     {
@@ -70,6 +76,7 @@ public class TrashPressPlayer : InputReceiver
         TrashPressManager.Instance.AddPlayer(this);
         currentHp = maxHp;
         speed = moveSpeed;
+        surviveTime = 0;
     }
     public override void SetInputHandler(PlayerInputHandler inputHandler)
     {

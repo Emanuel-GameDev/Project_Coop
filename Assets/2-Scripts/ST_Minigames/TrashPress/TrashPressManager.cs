@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -88,6 +89,7 @@ public class TrashPressManager : MonoBehaviour
     private DialogueBox _dialogueBox;
     private List<GameObject> trashSpawnPointsCopy = new();
     List<TrashPressPlayer> players = new();
+    private TrashPressUi trashPressUI;
 
 
 
@@ -126,6 +128,7 @@ public class TrashPressManager : MonoBehaviour
 
         canSpawnPress = true;
         canSpawnTrash = false;
+        deadPlayerCounter = 0;
 
     }
 
@@ -134,6 +137,11 @@ public class TrashPressManager : MonoBehaviour
     public void StartPlay()
     {
         SetPlayers(playerSpawnPoints);
+        //SetUpUI
+
+        trashPressUI.gameObject.SetActive(true);
+        trashPressUI.SetAllPlayer(CoopManager.Instance.GetActiveHandlers());
+
     }
     public void ExitMinigame()
     {
@@ -150,7 +158,7 @@ public class TrashPressManager : MonoBehaviour
     {
         foreach (TrashPressPlayer player in players)
         {
-            int randomIndex = Random.Range(0, positions.Count);
+            int randomIndex = UnityEngine.Random.Range(0, positions.Count);
             Vector3 spawnPosition = positions[randomIndex].transform.position;
             positions.RemoveAt(randomIndex);
             player.transform.position = spawnPosition;
@@ -167,42 +175,74 @@ public class TrashPressManager : MonoBehaviour
         deadPlayerCounter++;
         if (deadPlayerCounter >= players.Count)
         {
-            //EndGame(false);
+            EndGame(false);
         }
 
     }
-    //private void EndGame(bool playerWin)
-    //{
-    //    labirintUI.gameObject.SetActive(false);
-    //    StartCoroutine(EndgameTimer(playerWin));
+    private void EndGame(bool playerWin)
+    {
+        trashPressUI.gameObject.SetActive(false);
+        StartCoroutine(EndgameTimer(playerWin));
 
-    //    if (playerWin)
-    //    {
-    //        AudioManager.Instance.PlayAudioClip(victoryClip);
-    //        StartCoroutine(AttenuateManinTheme(victoryClip.length));
-    //    }
-    //    else
-    //    {
-    //        AudioManager.Instance.PlayAudioClip(loseClip);
-    //        StartCoroutine(AttenuateManinTheme(loseClip.length));
-    //    }
+        if (playerWin)
+        {
+            AudioManager.Instance.PlayAudioClip(victoryClip);
+            StartCoroutine(AttenuateManinTheme(victoryClip.length));
+        }
+        else
+        {
+            AudioManager.Instance.PlayAudioClip(loseClip);
+            StartCoroutine(AttenuateManinTheme(loseClip.length));
+        }
 
-    //    foreach (GameObject obj in objectsForTheGame)
-    //    {
-    //        obj.SetActive(false);
-    //    }
+        MakeRankList();
+    }
+    IEnumerator EndgameTimer(bool playerWin)
+    {
+        _dialogueBox.RemoveAllDialogueEnd();
 
-    //    MakeRankList();
-    //}
+        if (playerWin)
+        {
+            victoryScreen.SetActive(true);
+            yield return new WaitForSeconds(victoryLoseScreenTime);
+            victoryScreen.SetActive(false);
+
+            _dialogueBox.SetDialogue(winDialogue);
+            _dialogueBox.AddDialogueEnd(onWinDialogueEnd);
+        }
+        else
+        {
+            loseScreen.SetActive(true);
+            yield return new WaitForSeconds(victoryLoseScreenTime);
+            loseScreen.SetActive(false);
+
+            _dialogueBox.SetDialogue(loseDialogue);
+            _dialogueBox.AddDialogueEnd(onLoseDialogueEnd);
+        }
+
+        dialogueBox.SetActive(true);
+        _dialogueBox.StartDialogue();
+    }
+    IEnumerator AttenuateManinTheme(float duration)
+    {
+        mainThemeSource.volume = attenuationVolume;
+        yield return new WaitForSeconds(duration);
+        mainThemeSource.volume = 1f;
+    }
+    public void SetTrashPressUI(TrashPressUi UI)
+    {
+        trashPressUI = UI;
+    }
+    
     #endregion
 
     #region GameFlow
 
     IEnumerator PressGameplay()
     {
-        float tempTimer = 0f;
+        float tempTimer = pressPhaseDuration;
 
-        while (tempTimer < pressPhaseDuration)
+        while (tempTimer >= 0)
         {
             // Chiama la funzione
             SpawnPress();
@@ -211,9 +251,8 @@ public class TrashPressManager : MonoBehaviour
             yield return new WaitForSeconds(1f);
 
             // Incrementa il timer
-            tempTimer += 1f;
-
-            
+            tempTimer -= 1f;
+            trashPressUI.UpdatePhaseTimer(tempTimer);
         }
         // Attendi fino a quando canChangePhase è true
         while (!canChangePhase)
@@ -229,16 +268,16 @@ public class TrashPressManager : MonoBehaviour
     {
         StopCoroutine(PressGameplay());
 
-        float tempTimer = 0f;
+        float tempTimer = trashPhaseDuration;
         idTrashSpawner = 0;
         trashSpawnPointsCopy = Utility.Shuffle(trashSpawnPointsCopy);
 
-        while (tempTimer < trashPhaseDuration)
-        {
-           
+        while (tempTimer >= 0)
+        {          
             SpawnTrash();       
             yield return new WaitForSeconds(trashTimerBetweenAttacks);          
-            tempTimer += trashTimerBetweenAttacks;
+            tempTimer -= trashTimerBetweenAttacks;
+            trashPressUI.UpdatePhaseTimer(tempTimer);
         }
 
         StartCoroutine(PressTrashGameplay());
@@ -247,7 +286,7 @@ public class TrashPressManager : MonoBehaviour
     IEnumerator PressTrashGameplay()
     {
         StopCoroutine(TrashGameplay());
-        float tempTimer = 0f;
+        float tempTimer = pressTrashPhaseDuration;
         idTrashSpawner = 0;
         trashSpawnPointsCopy = Utility.Shuffle(trashSpawnPointsCopy);
 
@@ -255,8 +294,8 @@ public class TrashPressManager : MonoBehaviour
         {
             SpawnPress();
             SpawnTrash();
-            yield return new WaitForSeconds(trashTimerBetweenAttacks);
-            tempTimer += trashTimerBetweenAttacks;
+            yield return new WaitForSeconds(1);
+            tempTimer -= 1;
         }
         yield return new WaitForSeconds(pressTrashPhaseDuration);
         StopCoroutine(PressTrashGameplay());
@@ -271,25 +310,25 @@ public class TrashPressManager : MonoBehaviour
             canSpawnPress = false;
             canChangePhase = false;
 
-            int randomInt = Random.Range(0, 2);
+            int randomInt = UnityEngine.Random.Range(0, 2);
             int randomInt2;
             Press press1 = null;
             Press press2 = null;
 
             //spawn 1 press
 
-            randomInt = Random.Range(0, 3);
+            randomInt = UnityEngine.Random.Range(0, 3);
             press1 = Instantiate(pressPrefab, pressSpawnPoints[randomInt].transform);
             press1.transform.localPosition = Vector3.zero;
 
 
 
             //spawn 2 Press
-            if (Random.Range(0, 2) == 1)
+            if (UnityEngine.Random.Range(0, 2) == 1)
             {
                 do
                 {
-                    randomInt2 = Random.Range(0, 3);
+                    randomInt2 = UnityEngine.Random.Range(0, 3);
                 }
                 while (randomInt2 == randomInt);
 
@@ -312,15 +351,20 @@ public class TrashPressManager : MonoBehaviour
         yield return new WaitForSeconds(pressTimerBetweenAttacks);
         canSpawnPress = true;
     }
+    public IEnumerator SetCanSpawnTrash()
+    {
+        yield return new WaitForSeconds(trashTimerBetweenAttacks);
+        canSpawnTrash = true;
+    }
 
     private void SpawnTrash()
     {
-       
+        canSpawnTrash = false;
         if (idTrashSpawner <= trashSpawnPointsCopy.Count-1)
         {          
             Trash spawnedTrash = Instantiate(trashPrefab, trashSpawnPointsCopy[idTrashSpawner].transform);
             spawnedTrash.transform.localPosition = Vector3.zero;
-            spawnedTrash.Drop(Random.Range(minTrashFallSpeed, maxTrashFallSpeed));
+            spawnedTrash.Drop(UnityEngine.Random.Range(minTrashFallSpeed, maxTrashFallSpeed));
             idTrashSpawner++;
         }
         else
@@ -329,9 +373,11 @@ public class TrashPressManager : MonoBehaviour
             idTrashSpawner = 0;
             Trash spawnedTrash = Instantiate(trashPrefab, trashSpawnPointsCopy[idTrashSpawner].transform);
             spawnedTrash.transform.localPosition = Vector3.zero;
-            spawnedTrash.Drop(Random.Range(minTrashFallSpeed, maxTrashFallSpeed));
+            spawnedTrash.Drop(UnityEngine.Random.Range(minTrashFallSpeed, maxTrashFallSpeed));
             idTrashSpawner++;
         }
+        StartCoroutine(SetCanSpawnTrash());
+
 
 
     }
@@ -343,6 +389,105 @@ public class TrashPressManager : MonoBehaviour
     public void AddPlayer(TrashPressPlayer trashPressPlayer)
     {
         players.Add(trashPressPlayer);
+    }
+    private void MakeRankList()
+    {
+        List<TrashPressPlayer> winOrder = new();
+
+        foreach (TrashPressPlayer player in players)
+        {
+            winOrder.Add(player);
+        }
+
+        winOrder.Sort((x, y) => y.surviveTime.CompareTo(x.surviveTime));
+
+        List<ePlayerCharacter> ranking = new();
+
+        foreach (TrashPressPlayer player in winOrder)
+        {
+            ranking.Add(player.GetCharacter());
+        }
+
+        foreach (ePlayerCharacter c in Enum.GetValues(typeof(ePlayerCharacter)))
+        {
+            if (c != ePlayerCharacter.EmptyCharacter)
+            {
+                if (!ranking.Contains(c))
+                {
+                    ranking.Add(c);
+                }
+            }
+        }
+
+        bool yetCompleted = CheckAndSaveYetCompleted();
+
+        for (int i = 0; i < ranking.Count; i++)
+        {
+            int totalCoin = 0;
+            int totalKey = 0;
+            int gainedCoin = 0;
+            int gainedKey = 0;
+
+            CharacterSaveData saveData = SaveManager.Instance.GetPlayerSaveData(ranking[i]);
+
+            if (saveData != null)
+            {
+                totalCoin = saveData.extraData.coin;
+                totalKey = saveData.extraData.key;
+            }
+
+            Debug.Log(yetCompleted);
+
+            if (!yetCompleted)
+            {
+                if (i == 0)
+                {
+                    totalCoin += coinForFirstPlayer;
+                    totalKey += keyForFirstPlayer;
+
+                    gainedCoin += coinForFirstPlayer;
+                    gainedKey += keyForFirstPlayer;
+                }
+                else
+                {
+                    totalCoin += coinForEachPlayer;
+                    totalKey += keyForEachPlayer;
+
+                    gainedCoin += coinForEachPlayer;
+                    gainedKey += keyForEachPlayer;
+
+                }
+
+                if (saveData != null)
+                {
+                    saveData.extraData.coin = totalCoin;
+                    saveData.extraData.key = totalKey;
+                }
+            }
+
+            Enum.TryParse<Rank>(i.ToString(), out Rank rank);
+
+            ePlayerID playerID = ePlayerID.NotSet;
+
+            if (players.Find(x => x.GetCharacter() == ranking[i]) is TrashPressPlayer player)
+                playerID = player.GetInputHandler().playerID;
+
+            winScreenHandler.SetCharacterValues(playerID, ranking[i], rank, gainedCoin, totalCoin, gainedKey, totalKey);
+        }
+
+        SaveManager.Instance.SaveData();
+    }
+    private bool CheckAndSaveYetCompleted()
+    {
+        if (SaveManager.Instance.TryLoadSetting<bool>(SaveDataStrings.TRASHPRESS_MINIGAME_COMPLETED, out bool value))
+        {
+            return value;
+        }
+        else
+        {
+            SaveManager.Instance.SaveSetting(SaveDataStrings.TRASHPRESS_MINIGAME_COMPLETED, true);
+            return false;
+        }
     }
 
 
