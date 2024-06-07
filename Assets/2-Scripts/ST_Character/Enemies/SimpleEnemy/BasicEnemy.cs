@@ -104,8 +104,6 @@ public class BasicEnemy : EnemyCharacter
 
         if(GetComponent<NavMeshAgent>() != null)
              agent = GetComponent<NavMeshAgent>();
-
-        currentHp = maxHp;
     }
 
     public void GoToPosition(Vector2 pos)
