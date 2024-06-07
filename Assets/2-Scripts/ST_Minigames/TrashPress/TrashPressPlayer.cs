@@ -55,9 +55,9 @@ public class TrashPressPlayer : InputReceiver
         Move(moveDir, speed);
         if (!IsGrounded() && rb.velocity.y < 0)
         {
+            //fall faster
             rb.velocity += Vector2.down * fallAcceleration * Time.deltaTime;
-            Debug.Log("Player is falling faster");
-
+            
         }
     }
     private void InitialSetup()
@@ -99,7 +99,7 @@ public class TrashPressPlayer : InputReceiver
     public void Jump()
     {
         rb.velocity = new Vector2(rb.velocity.x, 0);
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        rb.AddForce(Vector2.up * jumpForce,ForceMode2D.Impulse);
     }
     private bool IsGrounded()
     {

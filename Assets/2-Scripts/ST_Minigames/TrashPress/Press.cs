@@ -94,7 +94,7 @@ public class Press : MonoBehaviour
             if ((Vector3.Distance(rightPress.transform.position, rightStartingPos.transform.position) < 0.1f) &&
                     (Vector3.Distance(leftPress.transform.position, leftStartingPos.transform.position) < 0.1f))
             {
-                TrashPressManager.Instance.canSpawnPress = true;
+                TrashPressManager.Instance.StartCoroutine(TrashPressManager.Instance.SetCanSpawnPress());
                 TrashPressManager.Instance.canChangePhase = true;
                 Destroy(gameObject);
                 

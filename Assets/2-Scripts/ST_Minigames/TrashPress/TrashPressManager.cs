@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 
 
 public class TrashPressManager : MonoBehaviour
@@ -34,7 +35,7 @@ public class TrashPressManager : MonoBehaviour
     [Header("Press Settings")]
     [SerializeField] Press pressPrefab;
     [SerializeField] List<GameObject> pressSpawnPoints;
-   
+    [SerializeField] float pressTimerBetweenAttacks;
     [SerializeField] float pressTimerAttackPreview;
     [SerializeField] float pressSpeed;
     [SerializeField] float pressSpeedIncreaseMultyOnPlayerDeath;
@@ -161,6 +162,38 @@ public class TrashPressManager : MonoBehaviour
         Debug.Log("InizioMinigame");
         StartCoroutine(PressGameplay());
     }
+    public void PlayerDead()
+    {
+        deadPlayerCounter++;
+        if (deadPlayerCounter >= players.Count)
+        {
+            //EndGame(false);
+        }
+
+    }
+    //private void EndGame(bool playerWin)
+    //{
+    //    labirintUI.gameObject.SetActive(false);
+    //    StartCoroutine(EndgameTimer(playerWin));
+
+    //    if (playerWin)
+    //    {
+    //        AudioManager.Instance.PlayAudioClip(victoryClip);
+    //        StartCoroutine(AttenuateManinTheme(victoryClip.length));
+    //    }
+    //    else
+    //    {
+    //        AudioManager.Instance.PlayAudioClip(loseClip);
+    //        StartCoroutine(AttenuateManinTheme(loseClip.length));
+    //    }
+
+    //    foreach (GameObject obj in objectsForTheGame)
+    //    {
+    //        obj.SetActive(false);
+    //    }
+
+    //    MakeRankList();
+    //}
     #endregion
 
     #region GameFlow
@@ -273,6 +306,11 @@ public class TrashPressManager : MonoBehaviour
 
         }
 
+    }
+    public IEnumerator SetCanSpawnPress()
+    {
+        yield return new WaitForSeconds(pressTimerBetweenAttacks);
+        canSpawnPress = true;
     }
 
     private void SpawnTrash()
