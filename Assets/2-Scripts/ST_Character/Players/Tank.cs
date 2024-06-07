@@ -329,7 +329,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         if (context.performed && isAttacking == false && canBlock)
         {
             OnDefenceAbility?.Invoke();
-            ResetAllAnimatorTriggers();
+            ResetAllAnimatorAndTriggers();
             SetCanMove(false, rb);
 
             if (isBlocking != true)
@@ -383,7 +383,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         else if (context.canceled && isBlocking == true)
         {
-            ResetAllAnimatorTriggers();
+            ResetAllAnimatorAndTriggers();
             SetCanMove(true, rb);
 
             currentBlockZone = blockZone.none;
@@ -861,9 +861,9 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     #endregion
 
 
-    public override void ResetAllAnimatorTriggers()
+    public override void ResetAllAnimatorAndTriggers()
     {
-        base.ResetAllAnimatorTriggers();
+        base.ResetAllAnimatorAndTriggers();
         ResetVariables();
         ResetVariables();
     }

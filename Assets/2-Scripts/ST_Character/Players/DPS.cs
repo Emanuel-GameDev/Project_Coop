@@ -47,8 +47,8 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     float dashAttackSlashDamageMultiplier = 1.5f;
    
     [Header("Boss Power Up")]
-    [SerializeField, Tooltip("Totale dei danni da fare al boss per sbloccare il potenziamento.")]
-    float bossPowerUpTotalDamageToUnlock = 1000f;
+    [SerializeField, Tooltip("Percentuale dei danni da fare al boss per sbloccare il potenziamento."), Range(0, 1)]
+    float bossPowerUpPercentageDamageToUnlock = 0.4f;
     [SerializeField, Tooltip("Danno extra in % per colpo conferito dal potenziamento del boss."), Range(0, 1)]
     float bossPowerUpExtraDamagePerHit = 0.02f;
     [SerializeField, Tooltip("Limite massimo in % del danno extra conferito dal potenziamento del boss."), Range(0, 1)]
@@ -74,8 +74,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     [SerializeField] 
     float balonDuration = 0.5f;
    
-    
-
     private float ExtraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
 
     private float ExtraDamage()
@@ -97,6 +95,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private float dashAttackStartTime;
     private float dashAttackDamageMultiplier;
     private float currentBossfightTotalDamageDone = 0;
+    private float currentBossDamageToReach = float.MaxValue;
     private Vector3 startPosition;
 
     private int consecutiveHitsCount;
@@ -193,6 +192,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         perfectTimingEnabled = false;
         invicibilityVFX.SetActive(false);
         invicibilityBaloon.SetActive(false);
+        trailDodgeVFX.gameObject.SetActive(false);
     }
 
 
@@ -524,9 +524,9 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         damager.RemoveFunctionFromOnTrigger(DeflectProjectile);
     }
 
-    public override void ResetAllAnimatorTriggers()
+    public override void ResetAllAnimatorAndTriggers()
     {
-        base.ResetAllAnimatorTriggers();
+        base.ResetAllAnimatorAndTriggers();
         ResetVariables();
     }
 
@@ -573,9 +573,30 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     private void TotalDamageUpdate(float damage)
     {
-        currentBossfightTotalDamageDone += damage;
-        if (currentBossfightTotalDamageDone > bossPowerUpTotalDamageToUnlock)
-            bossfightPowerUpUnlocked = true;
+        if(isInBossfight && bossFightHandler != null)
+        {
+            currentBossfightTotalDamageDone += damage;
+            if (currentBossfightTotalDamageDone > currentBossDamageToReach)
+                bossfightPowerUpUnlocked = true;
+        }
+    }
+
+    public override void SetIsInBossfight(bool value, BossFightHandler bossFightHandler)
+    {
+        base.SetIsInBossfight(value, bossFightHandler);
+        currentBossfightTotalDamageDone = 0;
+        if (value)
+        {
+            if(bossFightHandler != null && bossFightHandler.BossCharacter != null)
+                currentBossDamageToReach = bossFightHandler.BossCharacter.MaxHp * bossPowerUpPercentageDamageToUnlock;
+            else
+            {
+                currentBossDamageToReach = MaxHp;
+                Debug.LogWarning("BOSS NOT FOUND!");
+            }
+        }
+        else
+            currentBossDamageToReach = float.MaxValue;
     }
 
     public void SetPerfectTimingHandler(PerfectTimingHandler handler) => perfectTimingHandler = handler;

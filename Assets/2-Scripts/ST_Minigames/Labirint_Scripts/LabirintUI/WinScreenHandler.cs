@@ -1,16 +1,10 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization;
 
 public class WinScreenHandler : MonoBehaviour
 {
-    [SerializeField]
-    private LocalizedString firstPlaceString;
-    [SerializeField]
-    private LocalizedString secondPlaceString;
-    [SerializeField]
-    private LocalizedString thirdPlaceString;
-    [SerializeField]
-    private LocalizedString fourthPlaceString;
     [SerializeField]
     private WinScreenCharacterReferences firstPlaceReferences;
     [SerializeField]
@@ -19,40 +13,60 @@ public class WinScreenHandler : MonoBehaviour
     private WinScreenCharacterReferences thirdPlaceReferences;
     [SerializeField]
     private WinScreenCharacterReferences fourthPlaceReferences;
+    [SerializeField]
+    private List<PlaceData> placeData = new();
 
-    public void SetCharacterValues(ePlayerCharacter character, Rank rank, int earnedCoin, int totalCoin, int earnedkey, int totalKey)
+    public void SetCharacterValues(ePlayerID playerID, ePlayerCharacter character, Rank rank, int earnedCoin, int totalCoin, int earnedkey, int totalKey)
     {
         WinScreenCharacterReferences characterRef = null;
 
-        LocalizedString stringRef = null;
+        PlaceData dataRef = GetPlaceData(rank);
         switch (rank)
         {
             case Rank.First:
-                stringRef = firstPlaceString;
                 characterRef = firstPlaceReferences;
                 break;
             case Rank.Second:
-                stringRef = secondPlaceString;
                 characterRef = secondPlaceReferences;
                 break;
             case Rank.Third:
-                stringRef = thirdPlaceString;
                 characterRef = thirdPlaceReferences;
                 break;
             case Rank.Fourth:
-                stringRef = fourthPlaceString;
                 characterRef = fourthPlaceReferences;
                 break;
         }
 
-        if (stringRef != null)
+        if (dataRef != null)
         {
-            characterRef.SetValues(stringRef, character, earnedCoin, totalCoin, earnedkey, totalKey);
+            characterRef.SetValues(dataRef.placeString, dataRef.medalImage, character, playerID, earnedCoin, totalCoin, earnedkey, totalKey);
         }
 
 
     }
+
+    private PlaceData GetPlaceData(Rank rank)
+    {
+        foreach (PlaceData data in placeData)
+        {
+            if (data.rank == rank)
+            {
+                return data;
+            }
+        }
+        return null;
+    }
 }
+
+[Serializable]
+public class PlaceData
+{
+    public Rank rank;
+    public LocalizedString placeString;
+    public Sprite medalImage;
+
+}
+
 
 public enum Rank
 {

@@ -24,9 +24,10 @@ public class LodonTargetAttackSelection : LodonBaseState
     public void SelectAttack()
     {
         //TODO: Implement attack selection
-        
-        lodonBossCharacter.selectedAttack = LodonState.FuryCharge;
-        lodonBossCharacter.selectedAttack = LodonState.TridentThrowing;
+        if(Random.Range(0f, 1f) < 0.5f)
+            lodonBossCharacter.selectedAttack = LodonState.FuryCharge;
+        else
+            lodonBossCharacter.selectedAttack = LodonState.TridentThrowing;
     }
 
 }
