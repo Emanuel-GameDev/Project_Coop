@@ -5,9 +5,14 @@ using UnityEngine;
 public class RangedEnemy : BasicEnemy
 {
     [Header("Variabili ranged")]
+    [SerializeField] public Detector EscapeTrigger;
+    [Tooltip("Distanza da mantenere dal bersaglio")]
     [SerializeField] public float escapeRange = 0f;
+    [Tooltip("Numero di colpi consecutivi in ogni attacco")]
     [SerializeField] int numberOfConsecutiveShoot;
+    [Tooltip("Velocità dei proiettili")]
     [SerializeField] float projectileSpeed;
+    [Tooltip("Range dei proiettili")]
     [SerializeField] float projectileRange;
     public float searchRadious = 3f;
     [HideInInspector] public bool panicAttack = false;
@@ -24,10 +29,6 @@ public class RangedEnemy : BasicEnemy
     protected override void Awake()
     {
         base.Awake();
-
-        obstacle.enabled = false;
-        obstacle.carveOnlyStationary = false;
-        obstacle.carving = true;
 
 
         idleState = new BasicRangedEnemyIdleState(this);
@@ -145,7 +146,6 @@ public class RangedEnemy : BasicEnemy
             panicAttack = false;
         }
 
-        ActivateObstacle();
 
 
         playerInRange = new List<PlayerCharacter>(AttackRangeTrigger.GetPlayersDetected());

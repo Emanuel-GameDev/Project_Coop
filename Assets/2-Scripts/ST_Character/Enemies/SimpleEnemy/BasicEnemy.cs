@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -17,21 +18,26 @@ public enum EnemyType
 
 public class BasicEnemy : EnemyCharacter
 {
-
-
-    [Tooltip("Serve per gli effetti visivi dell' editor")]
+    [Tooltip("Punto sul terreno sotto l'entità")]
     public Transform groundLevel;
 
     [Header("Variabili generali")]
+    [Tooltip("Tempo impiegato per riprendersi dal parry")]
     [SerializeField] public float parriedTime = 1;
+    [Tooltip("Tempo impiegato per riprendersi dopo aver ricevuto un colpo")]
     [SerializeField] public float stunTime = 1;
 
 
     [Header("Variabili di base")]
+    [Tooltip("Distanza massima a cui l'entità può vedere il suo bersaglio")]
     [SerializeField] public float viewRange = 2f;
+    [Tooltip("Distanza massima a cui l'entità attacca il suo bersaglio")]
     [SerializeField] public float attackRange = 1;
+    [Tooltip("Distanza massima a cui l'entità può cambiare il suo bersaglio")]
     [SerializeField] public float changeTargetRange = 2f;
+    [Tooltip("Tempo fra un attacco e l'altro")]
     [SerializeField] internal float attackDelay = 1;
+    [Tooltip("Tempo impiegato dall'entità per despawnare dopo che gli hp sono scesi a 0")]
     [SerializeField] public float despawnTime = 1;
 
     [SerializeField] internal EnemyType enemyType;
@@ -45,79 +51,95 @@ public class BasicEnemy : EnemyCharacter
 
     public StateMachine<BasicEnemyState> stateMachine { get; } = new();
 
-    //di prova
-    //[SerializeField] Transform tryTarget;
-
-    //[SerializeField] public float closeRange = 1;
 
     internal Coroutine actionCourotine;
 
     Vector2 lastNonZeroDirection;
 
 
+    internal BasicEnemyDeathState deathState;
+    internal BasicEnemyStunState stunState;
+    internal BasicEnemyParriedState parriedState;
 
-    //[HideInInspector] public BasicEnemyIdleState idleState;
-    //[HideInInspector] public BasicEnemyMoveState moveState;
-    //[HideInInspector] public BasicEnemyActionState actionState;
-    [HideInInspector] public BasicEnemyDeathState deathState;
-    [HideInInspector] public BasicEnemyStunState stunState;
-    [HideInInspector] public BasicEnemyParriedState parriedState;
-    //[HideInInspector] public BasicRangedEnemyEscapeState escapeState;
+    internal bool AIActive = true;
 
-    [HideInInspector] public bool AIActive = true;
+    internal bool isMoving;
+    internal bool isActioning = false;
 
-    [HideInInspector] public bool isMoving;
-    [HideInInspector] public bool isActioning = false;
-
-    [HideInInspector] public bool canSee = true;
-    [HideInInspector] public bool canMove = false;
-    [HideInInspector] public bool canAction = false;
+    internal bool canSee = true;
+    internal bool canMove = false;
+    internal bool canAction = false;
 
     [Header("Detectors")]
-    [SerializeField] public Detector viewTrigger;
-    [SerializeField] public Detector AttackRangeTrigger;
-    [SerializeField] public Detector ChangeTargetTrigger;
-    [SerializeField] public Detector EscapeTrigger;
+    [SerializeField] internal Detector viewTrigger;
+    [SerializeField] internal Detector AttackRangeTrigger;
+    [SerializeField] internal Detector ChangeTargetTrigger;
+   
 
     [Header("navMesh carving value")]
     [SerializeField] float CarvingTime = 0.5f;
     [SerializeField] float CarvingMoveThreshold = 0.1f;
 
 
-    [HideInInspector] public NavMeshObstacle obstacle;
-    [HideInInspector] public PlayerCharacter currentTarget;
+    //[HideInInspector] public NavMeshObstacle obstacle;
+    [HideInInspector] internal PlayerCharacter currentTarget;
 
     //CONTROLLARE
-    [HideInInspector] public BasicEnemyEntryState entryState;
-    [HideInInspector] public Vector2 entryDestination;
-    [HideInInspector] public bool canGoIdle = true;
+    //[HideInInspector] public BasicEnemyEntryState entryState;
+    //[HideInInspector] public Vector2 entryDestination;
+    [HideInInspector] internal bool canGoIdle = true;
 
 
-    [Header("Context steering")]
-    Coroutine movementCountDownCoroutine;
+    [Header("Context steering values")]
+    [Header("General")]
 
-    Vector2 move;
+    //directions
+    [Tooltip("Numero di direzioni da controllare, un numero troppo basso potrebbe risultare in un comportamento inaspettato, un numero troppo alto peggiora le prestazioni del gioco, è consigliabile un numero fra 8 e 16")]
+    [SerializeField] int contextSteeringDirectionCount = 8;
 
-    internal Coroutine fleeCoroutine;
-    internal bool flee = false;
-
-    internal bool isRunning = false;
-    [SerializeField] float repathInterval = 1;
-
-    public float strenghtMultiplier = 1;
+    [Tooltip("Velocità con cui l'entità cambia direzione, se si aumenta la velocità di movimento è consigliabile aumentare anche questo valore")]
     [SerializeField] float steeringSpeed = 1;
 
-    //strafe
-    public bool strafe = false;
-    [SerializeField] float minStrafe = 0;
-    [SerializeField] float maxStrafe = 1;
+    [Tooltip("Intervallo di tempo in secondi fra un calcolo della direzione e l'altro, un numero basso migliora il movimento ma peggiora le prestazioni, meglio non scendere sotto un valore di 0.1")]
+    [SerializeField] float repathInterval = 1;
 
+    //target
+    [Tooltip("Layer del bersaglio")]
+    [SerializeField] LayerMask targetLayer;
+
+    [Header("Strafe")]
+    //strafe
+    [Tooltip("La distanza a cui l'entità cambia comportamento")]
+    [SerializeField] float targetDistanceToStrafe = 5;
+
+    [Tooltip("Valore minimo per il movimento laterale")]
+    [SerializeField,Range(-1,1)] float minStrafe=0;
+    [Tooltip("Valore massimo per il movimento laterale")]
+    [SerializeField,Range(-1,1)] float maxStrafe=1;
+
+    [Tooltip("Tempo minimo di riposo fra un movimento e l'altro")]
     [SerializeField] float minStrafeInterval = 2;
+    [Tooltip("Tempo massimo di riposo fra un movimento e l'altro")]
     [SerializeField] float maxStrafeInterval = 2;
 
+    [Tooltip("Tempo minimo di movimento prima di riposarsi")]
     [SerializeField] float minStrafeTime = 4;
+    [Tooltip("Tempo massimo di movimento prima di riposarsi")]
     [SerializeField] float maxStrafeTime = 4;
 
+    [Header("Avoid")]
+    //avoidance
+    [Tooltip("I layer degli ostacoli")]
+    [SerializeField] LayerMask csAvoidLayerMask;
+    [Tooltip("La distanza a cui l'entità considera gli ostacoli")]
+    [SerializeField] float csAvoidDistance = 5;
+
+    [Tooltip("Forza con cui l'entità cerca di evitare gli ostacoli quando è vicino al bersaglio")]
+    [SerializeField] float obstacleAvoidanceCloseRange = 1;
+    [Tooltip("Forza con cui l'entità cerca di evitare gli ostacoli quando è lontano dal bersaglio")]
+    [SerializeField] float obstacleAvoidanceFarRange = 1;
+
+    bool strafing = false;
     bool strafeAllowed = true;
 
     float moveStrafeIntervall = 3;
@@ -128,37 +150,32 @@ public class BasicEnemy : EnemyCharacter
     internal ContextSteeringDirection[] avoidBehaviour;
     internal ContextSteeringDirection[] finalBehaviour;
 
-    //directions
-    [SerializeField] int contextSteeringDirectionCount = 8;
     internal Vector2 targetDirection;
     internal Vector2 finalDirection;
     internal Vector2 lastFinalDirection;
     internal float finalStrenght;
 
-    //follow
-    [SerializeField] float csChaseDistance = 5;
-    [SerializeField] LayerMask csChaseLayerMask;
-
-    //avoidance
-    [SerializeField] float csAvoidDistance = 5;
-    [SerializeField] LayerMask csAvoidLayerMask;
-    [SerializeField] float obstacleAvoidanceCloseRange = 1;
-    [SerializeField] float obstacleAvoidanceFarRange = 1;
-
     float obstacleAvoidancePriority = 1;
 
+    Vector2 move;
+    Coroutine movementCountDownCoroutine;
+
+
+    internal Coroutine fleeCoroutine;
+    internal bool flee = false;
+    internal bool isRunning = false;
 
 
     //bool gizmo
-    public bool showDirections = false;
+    [SerializeField] bool showDirections = false;
 
-    public bool showLikedDirections = false;
-    public bool showUnlikedDirections = false;
-    public bool showCounterAvoid = false;
-    public bool showFinalDirections = false;
+    bool showLikedDirections = false;
+    bool showUnlikedDirections = false;
+    bool showCounterAvoid = false;
+    bool showFinalDirections = false;
 
-    public bool showBestDirections = false;
-    public bool showMoveDirections = false;
+    bool showBestDirections = false;
+    bool showMoveDirections = false;
 
 
 
@@ -199,11 +216,6 @@ public class BasicEnemy : EnemyCharacter
     protected override void InitialSetup()
     {
         base.InitialSetup();
-        animator = GetComponent<Animator>();
-
-        if(GetComponent<NavMeshAgent>() != null)
-             agent = GetComponent<NavMeshAgent>();
-
 
         chaseBehaviour = new ContextSteeringDirection[contextSteeringDirectionCount];
         avoidBehaviour = new ContextSteeringDirection[contextSteeringDirectionCount];
@@ -241,11 +253,11 @@ public class BasicEnemy : EnemyCharacter
     {
         base.Awake();
 
-        obstacle = GetComponent<NavMeshObstacle>();
+        //obstacle = GetComponent<NavMeshObstacle>();
 
-        obstacle.enabled = false;
-        obstacle.carveOnlyStationary = false;
-        obstacle.carving = true;
+        //obstacle.enabled = false;
+        //obstacle.carveOnlyStationary = false;
+        //obstacle.carving = true;
 
         stunState = new BasicEnemyStunState(this);
         parriedState = new BasicEnemyParriedState(this);
@@ -333,7 +345,7 @@ public class BasicEnemy : EnemyCharacter
 
         if (!isRunning)
         {
-            if(!strafe)
+            if(!strafing)
                 StartCoroutine(CalculateChasePathAndSteering());
             else
             {
@@ -344,7 +356,7 @@ public class BasicEnemy : EnemyCharacter
          move = Vector2.zero;
          move = (finalDirection.normalized/**(finalStrenght*inc)*/)/* + targetDirection*/;
 
-        if(strafe && !strafeAllowed)
+        if(strafing && !strafeAllowed)
         {
             move = Vector2.zero;
         }
@@ -402,7 +414,7 @@ public class BasicEnemy : EnemyCharacter
 
         yield return new WaitForSeconds(repathInterval);
 
-        strafe = false;
+        strafing = false;
         isRunning = false;
 
         //if (!strafe)
@@ -431,7 +443,7 @@ public class BasicEnemy : EnemyCharacter
         CalculateFinalDirection();
 
         yield return new WaitForSeconds(repathInterval);
-        strafe = false;
+        strafing = false;
         isRunning = false;
         //if (!strafe)
         //    StartCoroutine(CalculateChasePathAndSteering());
@@ -479,7 +491,7 @@ public class BasicEnemy : EnemyCharacter
         
         if (!isRunning)
         {
-            if (!strafe)
+            if (!strafing)
                 StartCoroutine(CalculateChasePathAndSteering());
             else
                 StartCoroutine(CalculateStrafePathAndSteering());
@@ -550,7 +562,7 @@ public class BasicEnemy : EnemyCharacter
         if (currentTarget != null)
         {
             RaycastHit2D[] raycast = new RaycastHit2D[1];
-            Physics2D.RaycastNonAlloc(groundLevel.position, (currentTarget.transform.position - groundLevel.position), raycast, csChaseDistance, csChaseLayerMask);
+            Physics2D.RaycastNonAlloc(groundLevel.position, (currentTarget.transform.position - groundLevel.position), raycast, targetDistanceToStrafe, targetLayer);
 
 
             if (raycast[0].collider != null)
@@ -558,17 +570,17 @@ public class BasicEnemy : EnemyCharacter
                 if (raycast[0].distance < attackRange + 3)
                 {
                     obstacleAvoidancePriority = obstacleAvoidanceCloseRange;
-                    strafe = true;
+                    strafing = true;
                 }
                 else
                 {
-                    strafe = false;
+                    strafing = false;
                     obstacleAvoidancePriority = obstacleAvoidanceFarRange;
                 }
             }
             else
             {
-                strafe = false;
+                strafing = false;
                 obstacleAvoidancePriority = obstacleAvoidanceFarRange;
             }
         }
@@ -678,12 +690,12 @@ public class BasicEnemy : EnemyCharacter
 
                 if (i < half)
                 {
-                    strenght = (MathF.Abs(mapCopy[i].directionStrenght) + mapCopy[i + half].directionStrenght) * strenghtMultiplier;
+                    strenght = (MathF.Abs(mapCopy[i].directionStrenght) + mapCopy[i + half].directionStrenght) /** avoidStrenghtMultiplier*/;
                     mapToInvert[i + half].SetDirectionStrenght(strenght);
                 }
                 else
                 {
-                    strenght = (MathF.Abs(mapCopy[i].directionStrenght) + mapCopy[i - half].directionStrenght) * strenghtMultiplier;
+                    strenght = (MathF.Abs(mapCopy[i].directionStrenght) + mapCopy[i - half].directionStrenght) /** avoidStrenghtMultiplier*/;
                     mapToInvert[i - half].SetDirectionStrenght(strenght);
                 }
             }
@@ -875,8 +887,6 @@ public class BasicEnemy : EnemyCharacter
         //    panicAttack = false;
         //}
 
-        ActivateObstacle();
-
 
         animator.SetTrigger("Attack");
         yield return new WaitForSeconds(attackDelay);
@@ -985,15 +995,10 @@ public class BasicEnemy : EnemyCharacter
    
     public void ActivateAgent()
     {
-        obstacle.enabled = false;
         Agent.enabled = true;
     }
 
-    public void ActivateObstacle()
-    {
-        Agent.enabled = true;
-        obstacle.enabled = false;
-    }
+    
 
     public void Despawn()
     {

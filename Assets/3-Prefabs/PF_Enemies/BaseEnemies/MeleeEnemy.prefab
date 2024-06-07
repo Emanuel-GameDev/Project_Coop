@@ -437,6 +437,7 @@ MonoBehaviour:
   staminaDamage: 5
   attackSpeed: 1
   moveSpeed: 4
+  extraHPPercentage: 0
   target: {fileID: 0}
   currentHp: 0
   groundLevel: {fileID: 1495691587368610306}
@@ -465,35 +466,27 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   entryDestination: {x: 0, y: 0}
   canGoIdle: 1
+  contextSteeringDirectionCount: 8
+  steeringSpeed: 20
   repathInterval: 1
-  strafe: 0
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 576
+  targetDistanceToStrafe: 5
   minStrafe: 0.4
   maxStrafe: 0.7
   minStrafeInterval: 0.5
   maxStrafeInterval: 3
   minStrafeTime: 4
   maxStrafeTime: 8
-  contextSteeringDirectionCount: 8
-  csChaseDistance: 5
-  csChaseLayerMask:
-    serializedVersion: 2
-    m_Bits: 576
-  csAvoidDistance: 5
   csAvoidLayerMask:
     serializedVersion: 2
     m_Bits: 3072
+  csAvoidDistance: 5
   obstacleAvoidanceCloseRange: 4
   obstacleAvoidanceFarRange: 2
   showDirections: 0
-  showLikedDirections: 0
-  showUnlikedDirections: 0
-  showCounterAvoid: 0
-  showFinalDirections: 0
-  showBestDirections: 0
-  showMoveDirections: 0
   inc: 1
-  strenghtMultiplier: 1
-  steeringSpeed: 20
 --- !u!195 &5662952163184238644
 NavMeshAgent:
   m_ObjectHideFlags: 0

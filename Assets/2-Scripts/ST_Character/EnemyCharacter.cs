@@ -24,7 +24,7 @@ public class EnemyCharacter : Character
     public Transform target;
 
 
-    public virtual float MaxHp => maxHp * (1 + Mathf.Max(0, CoopManager.Instance.PlayerCount - 1) * extraHPPercentage) + powerUpData.MaxHpIncrease;
+    public virtual float MaxHp => maxHp /** (1 + Mathf.Max(0, CoopManager.Instance.PlayerCount - 1) * extraHPPercentage)*/ + powerUpData.MaxHpIncrease;
     public float MoveSpeed => moveSpeed;
     public float Damage => damage;
     public float StaminaDamage => staminaDamage;

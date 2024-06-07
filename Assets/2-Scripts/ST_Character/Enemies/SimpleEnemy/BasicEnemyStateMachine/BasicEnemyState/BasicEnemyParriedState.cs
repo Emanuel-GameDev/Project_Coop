@@ -28,7 +28,6 @@ public class BasicEnemyParriedState : BasicEnemyState
 
         basicEnemy.GetRigidBody().velocity = Vector3.zero;
 
-        basicEnemy.ActivateObstacle();
     }
 
     public override void Update()

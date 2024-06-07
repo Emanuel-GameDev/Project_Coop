@@ -12,10 +12,6 @@ public class BasicMeleeEnemy : BasicEnemy
     {
         base.Awake();
 
-        obstacle.enabled = false;
-        obstacle.carveOnlyStationary = false;
-        obstacle.carving = true;
-
         //agent = GetComponentInChildren<NavMeshAgent>(true);
 
         
@@ -50,7 +46,6 @@ public class BasicMeleeEnemy : BasicEnemy
         isActioning = true;
 
 
-        ActivateObstacle();
         readyToAttack = false;
 
         animator.SetTrigger("Attack");

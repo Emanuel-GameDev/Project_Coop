@@ -19,7 +19,6 @@ public class BasicMeleeEnemyAttackState : BasicMeleeEnemyState
 
         basicEnemy.StartStopMovementCountdownCoroutine(false);
         basicEnemy.StartCoroutine(basicEnemy.Attack());
-        basicEnemy.ActivateObstacle();
 
     }
 
