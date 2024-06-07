@@ -91,8 +91,16 @@ public class PlayerCharacterPoolManager : MonoBehaviour
 
             ReturnCharacter(playerCharacter);
 
+            if (CoopManager.Instance.PlayerCount <= 1)
+                SetCommonHP(playerCharacter, searchedCharacter);
+
             TargetManager.Instance.ChangeTarget(playerCharacter, searchedCharacter);
         }
+    }
+
+    private void SetCommonHP(PlayerCharacter oldCharacter, PlayerCharacter newCharacter)
+    {
+        newCharacter.SetCurrentHP(oldCharacter.CurrentHp * newCharacter.MaxHp / oldCharacter.MaxHp);
     }
 
     private void ActivateCharacter(PlayerCharacter playerCharacter, Transform spawnPosition)

@@ -204,7 +204,6 @@ public class BasicEnemy : EnemyCharacter
         if(GetComponent<NavMeshAgent>() != null)
              agent = GetComponent<NavMeshAgent>();
 
-        currentHp = maxHp;
 
         chaseBehaviour = new ContextSteeringDirection[contextSteeringDirectionCount];
         avoidBehaviour = new ContextSteeringDirection[contextSteeringDirectionCount];
