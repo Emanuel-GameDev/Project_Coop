@@ -677,25 +677,14 @@ MonoBehaviour:
   despawnTime: 0.5
   enemyType: 0
   pivot: {fileID: 3949199778491864970}
-  AIActive: 1
-  isMoving: 0
-  isActioning: 0
-  canSee: 1
-  canMove: 0
-  canAction: 0
   viewTrigger: {fileID: 101089604340345966}
   AttackRangeTrigger: {fileID: 4776647277062844424}
   ChangeTargetTrigger: {fileID: 2327515375311524763}
-  EscapeTrigger: {fileID: 0}
   CarvingTime: 0.1
   CarvingMoveThreshold: 0.1
-  obstacle: {fileID: 0}
-  currentTarget: {fileID: 0}
-  entryDestination: {x: 0, y: 0}
-  canGoIdle: 1
   contextSteeringDirectionCount: 8
-  steeringSpeed: 15
-  repathInterval: 1
+  steeringSpeed: 20
+  repathInterval: 0.2
   targetLayer:
     serializedVersion: 2
     m_Bits: 576
@@ -785,7 +774,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6177594625496059516}
-  m_Enabled: 0
+  m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.46
   m_Speed: 0

@@ -541,6 +541,7 @@ public class BasicEnemy : EnemyCharacter
         Vector2 agentDir = Vector2.zero;
         
 
+
         if (currentTarget != null && agent.isActiveAndEnabled)
         {
             if (agent.CalculatePath(target.position, path))
