@@ -905,11 +905,6 @@ public class BasicEnemy : EnemyCharacter
         stateMachine.SetState(parriedState);
     }
 
-    //public void Parry()
-    //{
-    //    //SetHitMaterialColor(_OnParryColor);
-    //    stateMachine.SetState(parriedState);
-    //}
 
 
     public override void TargetSelection()
@@ -917,17 +912,7 @@ public class BasicEnemy : EnemyCharacter
         base.TargetSelection();
     }
 
-    //public void SetTarget(Transform newTarget)
-    //{
-    //    target = newTarget;
-
-    //    isActioning = true;
-
-    //    animator.SetTrigger("Attack");
-
-    //    yield return new WaitForSeconds(attackSpeed);
-    //    isActioning = false;
-    //}
+    
 
     public override void TakeDamage(DamageData data)
     {
@@ -972,15 +957,6 @@ public class BasicEnemy : EnemyCharacter
 
     }
 
-
-
-    //public void DamagedAnimationEndedEvent()
-    //{
-    //    animator.SetTrigger("DamageEnded");
-
-    //    //per ora da problemi
-    //    //stateMachine.SetState(moveState);
-    //}
 
 
 

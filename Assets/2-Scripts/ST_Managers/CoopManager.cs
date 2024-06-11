@@ -38,7 +38,7 @@ public class CoopManager : MonoBehaviour
 
     private InputMap actualInputMap;
     public InputMap ActualInputMap => actualInputMap;
-    public int PlayerCount => playerInputHandlers.Count;
+    public int PlayerCount => playerInputHandlers != null ? playerInputHandlers.Count : 0;
 
     public List<ePlayerCharacter> ActiveEPlayerCharacters
     {
