@@ -22,13 +22,15 @@ public class BasicMeleeEnemyIdleState : BasicMeleeEnemyState
 
     public override void Update()
     {
-        //if (meleeEnemy.viewTrigger.GetPlayersCountInTrigger() > 0 && basicEnemy.canSee)
-        //{
-            if (basicEnemy.target != null)
-                //basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
+        if (meleeEnemy.viewTrigger.GetPlayersCountInTrigger() > 0 && basicEnemy.canSee)
+        {
+            if (basicEnemy.target == null)
+            {
+                basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
+            }
 
             stateMachine.SetState(meleeEnemy.moveState);
-        //}
+        }
     }
 
     public override void Exit()
