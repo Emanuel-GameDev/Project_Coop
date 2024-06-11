@@ -31,9 +31,14 @@ public class SmashMinigameManager : MonoBehaviour
     internal List<SmashPlayer> listOfCurrentPlayer;
 
     [Header("Settings")]
+    [SerializeField] int startCountdown = 3;
     [SerializeField] int timeToSmash = 5;
+    [SerializeField] float startingSpeedForResults = 1;
+    [SerializeField] float timeForResults = 5;
+    [SerializeField] float speedFalloff = 1;
 
     [SerializeField] TextMeshProUGUI timerText;
+    [SerializeField] TextMeshProUGUI startCountdownText;
 
 
     [Header("Dialogue Settings")]
@@ -79,13 +84,14 @@ public class SmashMinigameManager : MonoBehaviour
         //StartCoroutine(WaitForPlayers());
 
         //StartPlay();
+        startCountdownText.gameObject.SetActive(false);
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            StartPlay();
+            StartCoroutine(StartCountdown(startCountdown));
         }
     }
 
@@ -103,17 +109,76 @@ public class SmashMinigameManager : MonoBehaviour
     }
     private void StopPlay()
     {
+        StartCoroutine(EndGameCount());
+    }
+
+    IEnumerator EndGameCount()
+    {
         foreach (SmashPlayer player in listOfCurrentPlayer)
         {
             player.canCount = false;
-            Debug.Log(player.smashCount);
+
+            player.countText.gameObject.SetActive(true);
+            player.countText.text = "0";
         }
 
+        int currentNumber = 0;
+
+        listOfCurrentPlayer.Sort();
+
+        float speed = 0;
+        int biggest = listOfCurrentPlayer[listOfCurrentPlayer.Count - 1].smashCount;
+        float incrementPerSecond = biggest / timeForResults;
+
+        float speedDecrement = timeForResults / incrementPerSecond;
+
+        speed = startingSpeedForResults;
+
+        while (listOfCurrentPlayer.TrueForAll(p=>p.smashCount>=currentNumber))
+        {
+            yield return new WaitForSeconds((1/incrementPerSecond) * /*Time.deltaTime * */speed);
+
+            currentNumber++;
+            speedDecrement = timeForResults / speed;
+            speed = speedDecrement;
+
+            foreach (SmashPlayer player in listOfCurrentPlayer)
+            {
+                if (player.smashCount >= currentNumber)
+                {
+                    player.countText.gameObject.SetActive(true);
+                    player.countText.text = currentNumber.ToString();
+
+                }
+            }
+
+        }
+
+        Debug.Log("Fine");
+
+    }
+
+    IEnumerator StartCountdown(int seconds)
+    {
+        int counter = seconds;
+        startCountdownText.gameObject.SetActive(true);
+        startCountdownText.text = counter.ToString();
+
+        while (counter > 0)
+        {
+            yield return new WaitForSeconds(1);
+            counter--;
+            startCountdownText.text = counter.ToString();
+        }
+
+        startCountdownText.gameObject.SetActive(false);
+        StartPlay();
     }
 
     IEnumerator TimerMinigame(int seconds)
     {
         int counter = seconds;
+        timerText.gameObject.SetActive(true);
         timerText.text = counter.ToString(); 
 
         while (counter > 0)
@@ -123,6 +188,7 @@ public class SmashMinigameManager : MonoBehaviour
             timerText.text = counter.ToString();
         }
 
+        timerText.gameObject.SetActive(true);
         StopPlay();
         // DoStuff();
     }

@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class SmashPlayer : InputReceiver
 {
-    [SerializeField] SmashMinigameManager SMManager;
+    SmashMinigameManager SMManager;
+
+    [SerializeField] internal TextMeshProUGUI countText;
+
     internal int smashCount = 0;
     internal bool canCount = false;
 
@@ -19,6 +23,7 @@ public class SmashPlayer : InputReceiver
 
     private void Start()
     {
+        
         ResetCounter();
     }
 
@@ -59,6 +64,9 @@ public class SmashPlayer : InputReceiver
 
     public void ResetCounter()
     {
+
+        countText.text = "0";
+        countText.gameObject.SetActive(false);
         smashCount = 0;
         canCount = false;
     }
