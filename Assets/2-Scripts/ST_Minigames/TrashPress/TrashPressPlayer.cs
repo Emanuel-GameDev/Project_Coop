@@ -1,28 +1,52 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.U2D.Animation;
 
 public class TrashPressPlayer : InputReceiver
 {
-     
-    [SerializeField] int playerHp = 3;
-    [SerializeField] float jumpForce;
-    [SerializeField] float pushForce;
+
+    [Header("Variables")]
+    [SerializeField] private int maxHp = 3;
     [SerializeField] private float moveSpeed = 10f;
-    
+    [SerializeField] private float inAirSpeed = 5f;
+    [SerializeField] private LayerMask targetLayer;
+
+    [Header("Jump")]
+    [SerializeField] float jumpForce;
+    [SerializeField] float fallAcceleration = 1.5f;
 
 
-    private SpriteRenderer spriteRenderer;
-    private Animator animator;
+    [Header("Push")]
+    [SerializeField] float pushRange;
+    [SerializeField] float pushForce;
+    [SerializeField] int pushCooldown;
+
+
+    public float surviveTime;
+    int currentHp;
     Vector2 moveDir;
-    Rigidbody2D rb;
-    bool isMoving;
     Vector2 lastNonZeroDirection;
+    SpriteRenderer spriteRenderer;
+    Animator animator;
+    GroundChecker groundChecker;
+    Rigidbody2D rb;
     Pivot pivot;
+    bool isMoving;
+    bool canPush = true;
+    private bool isDead;
+    private float speed;
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.GetComponent<Trash>() != null)
+        {
+            TakeDamage();
+        }
+        if (collision.GetComponentInParent<Press>() != null)
+        {
+            TakeDamage();
+        }
+    }
 
     private void Start()
     {
@@ -30,17 +54,30 @@ public class TrashPressPlayer : InputReceiver
     }
     private void Update()
     {
-        
+        Move(moveDir, speed);
+        if (!IsGrounded() && rb.velocity.y < 0)
+        {
+            //fall faster
+            rb.velocity += Vector2.down * fallAcceleration * Time.deltaTime;
+            
+        }
+        if(!isDead)
+        {
+            surviveTime += Time.deltaTime;
+        }
     }
     private void InitialSetup()
-    {    
+    {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        animator = GetComponentInChildren<Animator>();   
+        animator = GetComponentInChildren<Animator>();
         rb = GetComponentInChildren<Rigidbody2D>();
         pivot = GetComponentInChildren<Pivot>();
+        groundChecker = GetComponentInChildren<GroundChecker>();
         TrashPressManager.Instance.AddPlayer(this);
+        currentHp = maxHp;
+        speed = moveSpeed;
+        surviveTime = 0;
     }
-
     public override void SetInputHandler(PlayerInputHandler inputHandler)
     {
         base.SetInputHandler(inputHandler);
@@ -51,26 +88,50 @@ public class TrashPressPlayer : InputReceiver
         }
     }
 
+
+    #region Damage
+    private void TakeDamage()
+    {
+        currentHp--;
+        if (currentHp <= 0)
+        {
+            currentHp = 0;
+            Destroy(this.gameObject);
+            TrashPressManager.Instance.deadPlayerCounter++;
+        }
+    }
+    #endregion
+
     #region Actions
     public void Jump()
     {
-
+        rb.velocity = new Vector2(rb.velocity.x, 0);
+        rb.AddForce(Vector2.up * jumpForce,ForceMode2D.Impulse);
+    }
+    private bool IsGrounded()
+    {
+        if(groundChecker.isGrounded)
+        {
+            speed = moveSpeed;
+        }
+        else
+        {
+            speed = inAirSpeed;
+        }
+        return groundChecker.isGrounded;
     }
 
     #region Move
-    public void Move(Vector2 direction)
+    public void Move(Vector2 direction, float horizontalSpeed)
     {
-        if (!direction.normalized.Equals(direction))
-            direction = direction.normalized;
-
-        rb.velocity = direction * moveSpeed;
-        isMoving = rb.velocity.magnitude > 0.2f;
+        rb.velocity = new Vector2(direction.x * horizontalSpeed, rb.velocity.y);
+        isMoving = rb.velocity.x > 0.2f;
 
         SetSpriteDirection(lastNonZeroDirection);
     }
     public void SetSpriteDirection(Vector2 direction)
     {
-       
+
         Vector3 scale = pivot.gameObject.transform.localScale;
         if ((direction.x > 0.5 && scale.x > 0) || (direction.x < -0.5 && scale.x < 0))
             scale.x *= -1;
@@ -78,31 +139,60 @@ public class TrashPressPlayer : InputReceiver
         pivot.gameObject.transform.localScale = scale;
     }
     #endregion
+
     public void PushPlayers()
     {
+        Debug.LogWarning("SPINGO");
+        canPush = false;
 
+        Collider2D[] objectsInRange = Physics2D.OverlapCircleAll(transform.position, pushRange, targetLayer);
+
+        foreach (Collider2D col in objectsInRange)
+        {
+            Rigidbody2D rb = col.GetComponent<Rigidbody2D>();
+            if (rb != this.rb)
+            {
+                if (rb != null)
+                {
+                    // Calculate direction from the force field center to the object
+                    Vector3 direction = col.transform.position - transform.position;
+
+                    // Apply the push force
+                    rb.AddForce(direction.normalized * pushForce, ForceMode2D.Impulse);
+                }
+            }
+        }
+
+
+        StartCoroutine(PushCooldown());
+
+
+    }
+    private IEnumerator PushCooldown()
+    {
+        yield return new WaitForSeconds(pushCooldown);
+        canPush = true;
     }
     #endregion
 
-  
-
     #region Input
-    public override void MoveMinigameInput(InputAction.CallbackContext context)
+    public override void MoveAnalog(InputAction.CallbackContext context)
     {
         moveDir = context.ReadValue<Vector2>();
-        moveDir.y = 0;
-       
+        if (moveDir != Vector2.zero)
+            lastNonZeroDirection = moveDir;
+
     }
     public override void ButtonSouth(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && IsGrounded())
         {
             Jump();
         }
     }
     public override void ButtonWeast(InputAction.CallbackContext context)
     {
-        if(context.performed)
+        if (context.performed && canPush)
         {
             PushPlayers();
         }
@@ -112,7 +202,6 @@ public class TrashPressPlayer : InputReceiver
         if (context.performed && MenuManager.Instance.ActualMenu == null)
             MenuManager.Instance.OpenPauseMenu(playerInputHandler);
     }
-
     public override void OptionInput(InputAction.CallbackContext context)
     {
         if (context.performed && MenuManager.Instance.ActualMenu == null)

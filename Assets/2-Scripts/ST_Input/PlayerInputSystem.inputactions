@@ -741,6 +741,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "MoveAnalog",
+                    "type": "Value",
+                    "id": "68bbd70a-36d5-4192-96af-623be40e3e66",
+                    "expectedControlType": "",
+                    "processors": "AxisDeadzone",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -988,6 +997,17 @@
                 },
                 {
                     "name": "",
+                    "id": "da6f0041-1671-468c-8085-e57f2f3c413f",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "ButtonSouth",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "60732c09-4fa0-4ee0-bf33-2a978ab2787c",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
@@ -1051,6 +1071,116 @@
                     "action": "Dialogue",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "875f71fb-f09c-4dd4-a676-fe4c62b70c15",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "MoveAnalog",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "WASD",
+                    "id": "d11645ff-a5d3-46ed-b309-fd7ad4dd2644",
+                    "path": "Dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveAnalog",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "281cd97c-2f82-4ffe-ad20-39d2f68d2b4d",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "MoveAnalog",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "up",
+                    "id": "7d2ac62e-b5ea-45f4-b85a-aa3f82e76190",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "MoveAnalog",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "04e970d6-9e1a-49af-a5f2-5be7da6b025b",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "MoveAnalog",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "3708bef8-4c93-4eff-abb6-1d6dbee39a79",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "MoveAnalog",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "fc2ff1fe-ab5c-410c-87e6-724870999091",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "MoveAnalog",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "6bcd551a-32a0-4cc4-b380-279b31354d53",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "MoveAnalog",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "9c4d5b6d-030f-4189-a035-193037dd2b7f",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "MoveAnalog",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "4bc908e8-c56b-43f0-9092-29752e4ff23d",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "MoveAnalog",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },
