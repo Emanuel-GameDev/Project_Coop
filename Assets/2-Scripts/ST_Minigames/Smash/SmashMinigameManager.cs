@@ -130,17 +130,17 @@ public class SmashMinigameManager : MonoBehaviour
         int biggest = listOfCurrentPlayer[listOfCurrentPlayer.Count - 1].smashCount;
         float incrementPerSecond = biggest / timeForResults;
 
-        float speedDecrement = timeForResults / incrementPerSecond;
+        //float speedDecrement = timeForResults / incrementPerSecond;
 
-        speed = startingSpeedForResults;
+        speed = timeForResults / incrementPerSecond;
 
         while (listOfCurrentPlayer.TrueForAll(p=>p.smashCount>=currentNumber))
         {
-            yield return new WaitForSeconds((1/incrementPerSecond) * /*Time.deltaTime * */speed);
+            yield return new WaitForSeconds((1/incrementPerSecond) * speed);
 
             currentNumber++;
-            speedDecrement = timeForResults / speed;
-            speed = speedDecrement;
+            //speedDecrement = timeForResults / speed;
+            speed *= (1 / incrementPerSecond) / speed;
 
             foreach (SmashPlayer player in listOfCurrentPlayer)
             {
