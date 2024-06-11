@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -31,6 +32,9 @@ public class SmashMinigameManager : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] int timeToSmash = 5;
+
+    [SerializeField] TextMeshProUGUI timerText;
+
 
     [Header("Dialogue Settings")]
     [SerializeField]
@@ -74,7 +78,7 @@ public class SmashMinigameManager : MonoBehaviour
     {
         //StartCoroutine(WaitForPlayers());
 
-        StartPlay();
+        //StartPlay();
     }
 
     private void Update()
@@ -110,10 +114,13 @@ public class SmashMinigameManager : MonoBehaviour
     IEnumerator TimerMinigame(int seconds)
     {
         int counter = seconds;
+        timerText.text = counter.ToString(); 
+
         while (counter > 0)
         {
             yield return new WaitForSeconds(1);
             counter--;
+            timerText.text = counter.ToString();
         }
 
         StopPlay();
