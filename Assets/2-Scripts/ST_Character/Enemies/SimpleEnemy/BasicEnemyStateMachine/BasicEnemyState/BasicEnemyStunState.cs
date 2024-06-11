@@ -17,7 +17,6 @@ public class BasicEnemyStunState : BasicEnemyState
 
         stunTime = basicEnemy.stunTime;
 
-
         basicEnemy.canSee = false;
         basicEnemy.canAction = false;
         basicEnemy.canMove = false;
