@@ -12,7 +12,7 @@ public class SmashPlayer : InputReceiver
 
     private void Awake()
     {
-        SMManager = FindAnyObjectByType<SmashMinigameManager>();
+        SMManager = SmashMinigameManager.Instance;
         SMManager.listOfCurrentPlayer.Add(this);
 
     }

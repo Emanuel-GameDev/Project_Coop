@@ -90,6 +90,7 @@ public class SmashMinigameManager : MonoBehaviour
     {
         foreach (SmashPlayer player in listOfCurrentPlayer)
         {
+            player.ResetCounter();
             player.canCount = true;
             Debug.Log("Start");
         }
