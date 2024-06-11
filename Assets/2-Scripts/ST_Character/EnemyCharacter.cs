@@ -37,6 +37,7 @@ public class EnemyCharacter : Character
     protected override void InitialSetup()
     {
         base.InitialSetup();
+        powerUpData = new PowerUpData();
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         currentHp = MaxHp;

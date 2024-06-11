@@ -55,7 +55,6 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     protected virtual void Awake()
     {
         InitialSetup();
-
     }
 
     //Tutto ciò che va fatto nello ad inizio

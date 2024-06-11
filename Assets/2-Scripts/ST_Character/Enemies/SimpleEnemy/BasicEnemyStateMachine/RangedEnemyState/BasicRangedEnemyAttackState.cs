@@ -20,7 +20,6 @@ public class BasicRangedEnemyAttackState : BasicRangedEnemyState
 
         rangedEnemy.ResetVelocity();
 
-        rangedEnemy.ActivateObstacle();
 
     }
 

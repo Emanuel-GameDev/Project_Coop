@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.InputSystem;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.Localization.Settings;
+using UnityEngine.TextCore.Text;
 
 
 public enum EnemyType
@@ -15,80 +18,165 @@ public enum EnemyType
 
 public class BasicEnemy : EnemyCharacter
 {
-
-
-    [Tooltip("Serve per gli effetti visivi dell' editor")]
+    [Tooltip("Punto sul terreno sotto l'entità")]
     public Transform groundLevel;
 
     [Header("Variabili generali")]
+    [Tooltip("Tempo impiegato per riprendersi dal parry")]
     [SerializeField] public float parriedTime = 1;
+    [Tooltip("Tempo impiegato per riprendersi dopo aver ricevuto un colpo")]
     [SerializeField] public float stunTime = 1;
 
 
     [Header("Variabili di base")]
+    [Tooltip("Distanza massima a cui l'entità può vedere il suo bersaglio")]
     [SerializeField] public float viewRange = 2f;
+    [Tooltip("Distanza massima a cui l'entità attacca il suo bersaglio")]
     [SerializeField] public float attackRange = 1;
+    [Tooltip("Distanza massima a cui l'entità può cambiare il suo bersaglio")]
     [SerializeField] public float changeTargetRange = 2f;
+    [Tooltip("Tempo fra un attacco e l'altro")]
     [SerializeField] internal float attackDelay = 1;
+    [Tooltip("Tempo impiegato dall'entità per despawnare dopo che gli hp sono scesi a 0")]
     [SerializeField] public float despawnTime = 1;
 
     [SerializeField] internal EnemyType enemyType;
-    internal bool readyToAttack = false;
+    internal bool readyToAttack = false; 
+    
 
-
-    UnityEngine.AI.NavMeshPath path;
+    NavMeshPath path;
 
     [Header("Pivot")]
     [SerializeField] internal Transform pivot;
 
     public StateMachine<BasicEnemyState> stateMachine { get; } = new();
 
-    //di prova
-    //[SerializeField] Transform tryTarget;
-
-    //[SerializeField] public float closeRange = 1;
 
     internal Coroutine actionCourotine;
 
     Vector2 lastNonZeroDirection;
 
 
+    internal BasicEnemyDeathState deathState;
+    internal BasicEnemyStunState stunState;
+    internal BasicEnemyParriedState parriedState;
 
-    //[HideInInspector] public BasicEnemyIdleState idleState;
-    //[HideInInspector] public BasicEnemyMoveState moveState;
-    //[HideInInspector] public BasicEnemyActionState actionState;
-    [HideInInspector] public BasicEnemyDeathState deathState;
-    [HideInInspector] public BasicEnemyStunState stunState;
-    [HideInInspector] public BasicEnemyParriedState parriedState;
-    //[HideInInspector] public BasicRangedEnemyEscapeState escapeState;
+    internal bool AIActive = true;
 
-    [HideInInspector] public bool AIActive = true;
+    internal bool isMoving;
+    internal bool isActioning = false;
 
-    [HideInInspector] public bool isMoving;
-    [HideInInspector] public bool isActioning = false;
-
-    [HideInInspector] public bool canSee = true;
-    [HideInInspector] public bool canMove = false;
-    [HideInInspector] public bool canAction = false;
+    internal bool canSee = true;
+    internal bool canMove = false;
+    internal bool canAction = false;
 
     [Header("Detectors")]
-    [SerializeField] public Detector viewTrigger;
-    [SerializeField] public Detector AttackRangeTrigger;
-    [SerializeField] public Detector ChangeTargetTrigger;
-    [SerializeField] public Detector EscapeTrigger;
+    [SerializeField] internal Detector viewTrigger;
+    [SerializeField] internal Detector AttackRangeTrigger;
+    [SerializeField] internal Detector ChangeTargetTrigger;
+   
 
     [Header("navMesh carving value")]
     [SerializeField] float CarvingTime = 0.5f;
     [SerializeField] float CarvingMoveThreshold = 0.1f;
 
 
-    [HideInInspector] public UnityEngine.AI.NavMeshObstacle obstacle;
-    [HideInInspector] public PlayerCharacter currentTarget;
+    //[HideInInspector] public NavMeshObstacle obstacle;
+    [HideInInspector] internal PlayerCharacter currentTarget;
 
     //CONTROLLARE
-    [HideInInspector] public BasicEnemyEntryState entryState;
-    [HideInInspector] public Vector2 entryDestination;
-    [HideInInspector] public bool canGoIdle = true;
+    //[HideInInspector] public BasicEnemyEntryState entryState;
+    //[HideInInspector] public Vector2 entryDestination;
+    [HideInInspector] internal bool canGoIdle = true;
+
+
+    [Header("Context steering values")]
+    [Header("General")]
+
+    //directions
+    [Tooltip("Numero di direzioni da controllare, un numero troppo basso potrebbe risultare in un comportamento inaspettato, un numero troppo alto peggiora le prestazioni del gioco, è consigliabile un numero fra 8 e 16")]
+    [SerializeField] int contextSteeringDirectionCount = 8;
+
+    [Tooltip("Velocità con cui l'entità cambia direzione, se si aumenta la velocità di movimento è consigliabile aumentare anche questo valore")]
+    [SerializeField] float steeringSpeed = 1;
+
+    [Tooltip("Intervallo di tempo in secondi fra un calcolo della direzione e l'altro, un numero basso migliora il movimento ma peggiora le prestazioni, meglio non scendere sotto un valore di 0.1")]
+    [SerializeField] float repathInterval = 1;
+
+    //target
+    [Tooltip("Layer del bersaglio")]
+    [SerializeField] LayerMask targetLayer;
+
+    [Header("Strafe")]
+    //strafe
+    [Tooltip("La distanza a cui l'entità cambia comportamento")]
+    [SerializeField] float targetDistanceToStrafe = 5;
+
+    [Tooltip("Valore minimo per il movimento laterale")]
+    [SerializeField,Range(-1,1)] float minStrafe=0;
+    [Tooltip("Valore massimo per il movimento laterale")]
+    [SerializeField,Range(-1,1)] float maxStrafe=1;
+
+    [Tooltip("Tempo minimo di riposo fra un movimento e l'altro")]
+    [SerializeField] float minStrafeInterval = 2;
+    [Tooltip("Tempo massimo di riposo fra un movimento e l'altro")]
+    [SerializeField] float maxStrafeInterval = 2;
+
+    [Tooltip("Tempo minimo di movimento prima di riposarsi")]
+    [SerializeField] float minStrafeTime = 4;
+    [Tooltip("Tempo massimo di movimento prima di riposarsi")]
+    [SerializeField] float maxStrafeTime = 4;
+
+    [Header("Avoid")]
+    //avoidance
+    [Tooltip("I layer degli ostacoli")]
+    [SerializeField] LayerMask csAvoidLayerMask;
+    [Tooltip("La distanza a cui l'entità considera gli ostacoli")]
+    [SerializeField] float csAvoidDistance = 5;
+
+    [Tooltip("Forza con cui l'entità cerca di evitare gli ostacoli quando è vicino al bersaglio")]
+    [SerializeField] float obstacleAvoidanceCloseRange = 1;
+    [Tooltip("Forza con cui l'entità cerca di evitare gli ostacoli quando è lontano dal bersaglio")]
+    [SerializeField] float obstacleAvoidanceFarRange = 1;
+
+    bool strafing = false;
+    bool strafeAllowed = true;
+
+    float moveStrafeIntervall = 3;
+    float moveAllowedTime = 3;
+
+    //maps
+    internal ContextSteeringDirection[] chaseBehaviour;
+    internal ContextSteeringDirection[] avoidBehaviour;
+    internal ContextSteeringDirection[] finalBehaviour;
+
+    internal Vector2 targetDirection;
+    internal Vector2 finalDirection;
+    internal Vector2 lastFinalDirection;
+    internal float finalStrenght;
+
+    float obstacleAvoidancePriority = 1;
+
+    Vector2 move;
+    Coroutine movementCountDownCoroutine;
+
+
+    internal Coroutine fleeCoroutine;
+    internal bool flee = false;
+    internal bool isRunning = false;
+
+
+    //bool gizmo
+    [SerializeField] bool showDirections = false;
+
+    bool showLikedDirections = false;
+    bool showUnlikedDirections = false;
+    bool showCounterAvoid = false;
+    bool showFinalDirections = false;
+
+    bool showBestDirections = false;
+    bool showMoveDirections = false;
+
 
 
     public struct ContextSteeringDirection
@@ -128,10 +216,6 @@ public class BasicEnemy : EnemyCharacter
     protected override void InitialSetup()
     {
         base.InitialSetup();
-        animator = GetComponent<Animator>();
-
-        if (GetComponent<UnityEngine.AI.NavMeshAgent>() != null)
-            agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
 
         chaseBehaviour = new ContextSteeringDirection[contextSteeringDirectionCount];
         avoidBehaviour = new ContextSteeringDirection[contextSteeringDirectionCount];
@@ -150,17 +234,17 @@ public class BasicEnemy : EnemyCharacter
 
             float vertical = MathF.Sin((float)radians);
             float horizontal = MathF.Cos((float)radians);
-
+            
 
             Vector2 dir = new Vector2(horizontal, vertical);
-
+            
             Vector2 localDir = groundLevel.InverseTransformDirection(dir);
             chaseBehaviour[i].SetDirection(localDir);
             avoidBehaviour[i].SetDirection(localDir);
             finalBehaviour[i].SetDirection(localDir);
 
 
-
+            
         }
     }
 
@@ -169,36 +253,20 @@ public class BasicEnemy : EnemyCharacter
     {
         base.Awake();
 
-        obstacle = GetComponent<UnityEngine.AI.NavMeshObstacle>();
-
-        obstacle.enabled = false;
-        obstacle.carveOnlyStationary = false;
-        obstacle.carving = true;
-
-
-        //idleState = new BasicEnemyIdleState(this);
-        //moveState = new BasicEnemyMoveState(this);
-        //actionState = new BasicEnemyActionState(this);
-        //entryState = new BasicEnemyEntryState(this);
-
-        stunState = new BasicEnemyStunState(this);
-        parriedState = new BasicEnemyParriedState(this);
-        deathState = new BasicEnemyDeathState(this);
-
-        path = new UnityEngine.AI.NavMeshPath();
-
-
+        //obstacle = GetComponent<NavMeshObstacle>();
 
         //obstacle.enabled = false;
         //obstacle.carveOnlyStationary = false;
         //obstacle.carving = true;
 
+        stunState = new BasicEnemyStunState(this);
+        parriedState = new BasicEnemyParriedState(this);
+        deathState = new BasicEnemyDeathState(this);
 
-
+        path = new NavMeshPath();
     }
-    float moveStrafeIntervall = 3;
-    float moveAllowedTime = 3;
-    Coroutine movementCountDownCoroutine;
+
+
     protected virtual void Start()
     {
         viewTrigger.GetComponent<CircleCollider2D>().radius = viewRange;
@@ -218,40 +286,34 @@ public class BasicEnemy : EnemyCharacter
     }
 
 
-    public void GoToPosition(Transform pos)
-    {
-        //if (!canMove)
-        //{
-        //    rb.velocity = Vector2.zero;
-        //    return;
-        //}
-        ActivateAgent();
-
-        if (pos != null)
-        {
-            SetTarget(pos);
-            //Move((Vector3)pos -transform.position,rb);
-            FollowPath();
-            Debug.Log("one");
-        }
-        else
-        {
-            rb.velocity = Vector2.zero;
-        }
-    }
+    //public void GoToPosition(Transform pos)
+    //{
+    //    //if (!canMove)
+    //    //{
+    //    //    rb.velocity = Vector2.zero;
+    //    //    return;
+    //    //}
+    //    ActivateAgent();
+       
+    //    if (pos != null)
+    //    {         
+    //         SetTarget(pos);
+    //        //Move((Vector3)pos -transform.position,rb);
+    //        FollowPath();
+    //        Debug.Log("one");
+    //    }
+    //    else
+    //    {
+    //        rb.velocity = Vector2.zero;
+    //    }
+    //}
 
     //IEnumerator ReachPosition(Transform positionToReach)
     //{
-
     //        FollowPath();
-
-
-
     //}
 
-    Vector2 move;
-    internal Coroutine fleeCoroutine;
-    internal bool flee = false;
+   
     public virtual void AwayPath()
     {
         if (!canMove)
@@ -262,12 +324,7 @@ public class BasicEnemy : EnemyCharacter
 
         if (!flee)
         {
-            //if (!strafe)
             fleeCoroutine = StartCoroutine(CalculateRunAwayPathAndSteering());
-            //else
-            //    StartCoroutine(CalculateStrafePathAndSteering());
-
-
         }
 
         move = Vector2.zero;
@@ -275,7 +332,7 @@ public class BasicEnemy : EnemyCharacter
         move = (finalDirection/**(finalStrenght*inc)*/)/* + targetDirection*/;
 
         Move(move, rb);
-
+       
     }
     public virtual void FollowPath()
     {
@@ -288,18 +345,18 @@ public class BasicEnemy : EnemyCharacter
 
         if (!isRunning)
         {
-            if (!strafe)
+            if(!strafing)
                 StartCoroutine(CalculateChasePathAndSteering());
             else
             {
                 StartCoroutine(CalculateStrafePathAndSteering());
             }
         }
+       
+         move = Vector2.zero;
+         move = (finalDirection.normalized/**(finalStrenght*inc)*/)/* + targetDirection*/;
 
-        move = Vector2.zero;
-        move = (finalDirection.normalized/**(finalStrenght*inc)*/)/* + targetDirection*/;
-
-        if (strafe && !strafeAllowed)
+        if(strafing && !strafeAllowed)
         {
             move = Vector2.zero;
         }
@@ -307,20 +364,7 @@ public class BasicEnemy : EnemyCharacter
         Move(move, rb);
     }
 
-    public bool strafe = false;
-    internal bool isRunning = false;
-    public float delay = 1;
-
-    public float minStrafe = 0;
-    public float maxStrafe = 1;
-
-    public float minStrafeInterval = 2;
-    public float maxStrafeInterval = 2;
-
-    public float minStrafeTime = 4;
-    public float maxStrafeTime = 4;
-
-    bool strafeAllowed = true;
+   
 
     public void StartStopMovementCountdownCoroutine(bool start)
     {
@@ -330,16 +374,16 @@ public class BasicEnemy : EnemyCharacter
                 UnityEngine.Random.Range(minStrafeInterval, maxStrafeInterval),
                 UnityEngine.Random.Range(minStrafeTime, maxStrafeTime)));
         }
-        else
+        else 
         {
-            if (movementCountDownCoroutine != null)
+            if(movementCountDownCoroutine != null)
                 StopCoroutine(movementCountDownCoroutine);
         }
     }
 
-    internal IEnumerator MovementCountdown(float blockInterval, float moveAllowedTime)
+    internal IEnumerator MovementCountdown(float blockInterval,float moveAllowedTime)
     {
-
+        
         strafeAllowed = false;
         yield return new WaitForSeconds(blockInterval);
         strafeAllowed = true;
@@ -354,7 +398,7 @@ public class BasicEnemy : EnemyCharacter
         CalculateTargetDirection();
         CalculateTargetDistance();
 
-        CalculateContextSteeringInterestMap(chaseBehaviour, minStrafe, maxStrafe);
+        CalculateContextSteeringInterestMap(chaseBehaviour,minStrafe, maxStrafe);
 
         CalculateContextSteeringAvoidMap(avoidBehaviour, csAvoidDistance, csAvoidLayerMask);
 
@@ -366,19 +410,21 @@ public class BasicEnemy : EnemyCharacter
 
         CalculateFinalDirection();
 
+        
 
+        yield return new WaitForSeconds(repathInterval);
 
-        yield return new WaitForSeconds(delay);
+        strafing = false;
+        isRunning = false;
 
-        if (!strafe)
-        {
-            StartCoroutine(CalculateChasePathAndSteering());
-        }
-        else
-        {
-
-            StartCoroutine(CalculateStrafePathAndSteering());
-        }
+        //if (!strafe)
+        //{
+        //    StartCoroutine(CalculateChasePathAndSteering());
+        //}
+        //else
+        //{
+        //    StartCoroutine(CalculateStrafePathAndSteering());
+        //}
     }
 
     internal IEnumerator CalculateChasePathAndSteering()
@@ -396,14 +442,15 @@ public class BasicEnemy : EnemyCharacter
 
         CalculateFinalDirection();
 
-        yield return new WaitForSeconds(delay);
-
-        if (!strafe)
-            StartCoroutine(CalculateChasePathAndSteering());
-        else
-        {
-            StartCoroutine(CalculateStrafePathAndSteering());
-        }
+        yield return new WaitForSeconds(repathInterval);
+        strafing = false;
+        isRunning = false;
+        //if (!strafe)
+        //    StartCoroutine(CalculateChasePathAndSteering());
+        //else
+        //{
+        //    StartCoroutine(CalculateStrafePathAndSteering());
+        //}
 
 
     }
@@ -414,19 +461,19 @@ public class BasicEnemy : EnemyCharacter
         flee = true;
         CalculateTargetDirection();
 
-        CalculateContextSteeringInterestMap(chaseBehaviour, 0, 1);
+        CalculateContextSteeringInterestMap(chaseBehaviour,0,1);
         InvertDirectionsContextSteeringMap(chaseBehaviour);
 
         CalculateContextSteeringAvoidMap(avoidBehaviour, csAvoidDistance, csAvoidLayerMask);
 
-        SubSteeringMaps(chaseBehaviour, avoidBehaviour);
+        SubSteeringMaps(chaseBehaviour,avoidBehaviour);
 
         InvertNegativeStrenghtContextSteeringMap(finalBehaviour);
 
         CalculateFinalDirection();
 
 
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(repathInterval);
         //fleeCoroutine = StartCoroutine(CalculateRunAwayPathAndSteering());
         flee = false;
     }
@@ -441,16 +488,13 @@ public class BasicEnemy : EnemyCharacter
             return;
         }
 
-
+        
         if (!isRunning)
         {
-
-
-            if (!strafe)
+            if (!strafing)
                 StartCoroutine(CalculateChasePathAndSteering());
             else
                 StartCoroutine(CalculateStrafePathAndSteering());
-
 
         }
 
@@ -463,27 +507,7 @@ public class BasicEnemy : EnemyCharacter
 
     #region cs
 
-    public bool showDirections = false;
-    public int contextSteeringDirectionCount = 8;
-
-    internal ContextSteeringDirection[] chaseBehaviour;
-    internal ContextSteeringDirection[] avoidBehaviour;
-    internal ContextSteeringDirection[] finalBehaviour;
-
-    internal Vector2 targetDirection;
-    internal Vector2 finalDirection;
-    internal Vector2 lastFinalDirection;
-    internal float finalStrenght;
-
-    public float csChaseDistance = 5;
-    public LayerMask csChaseLayerMask;
-
-    public float csAvoidDistance = 5;
-    public LayerMask csAvoidLayerMask;
-    public float obstacleAvoidanceCloseRange = 1;
-    public float obstacleAvoidanceFarRange = 1;
-    float obstacleAvoidancePriority = 1;
-
+    
     public virtual void CalculateTargetDirection()
     {
         if (ChangeTargetTrigger.GetPlayersCountInTrigger() > 0)
@@ -493,8 +517,8 @@ public class BasicEnemy : EnemyCharacter
                 PlayerCharacter[] listCopy = ChangeTargetTrigger.GetPlayersDetected().ToArray();
 
                 Transform tMin = null;
-                float minDist = Mathf.Infinity;
-                Vector3 currentPos = transform.position;
+                    float minDist = Mathf.Infinity;
+                    Vector3 currentPos = transform.position;
                 foreach (PlayerCharacter p in listCopy)
                 {
 
@@ -515,6 +539,8 @@ public class BasicEnemy : EnemyCharacter
         }
 
         Vector2 agentDir = Vector2.zero;
+        
+
 
         if (currentTarget != null && agent.isActiveAndEnabled)
         {
@@ -531,12 +557,13 @@ public class BasicEnemy : EnemyCharacter
 
         targetDirection = agentDir;
     }
+
     public virtual void CalculateTargetDistance()
     {
         if (currentTarget != null)
         {
             RaycastHit2D[] raycast = new RaycastHit2D[1];
-            Physics2D.RaycastNonAlloc(groundLevel.position, (currentTarget.transform.position - groundLevel.position), raycast, csChaseDistance, csChaseLayerMask);
+            Physics2D.RaycastNonAlloc(groundLevel.position, (currentTarget.transform.position - groundLevel.position), raycast, targetDistanceToStrafe, targetLayer);
 
 
             if (raycast[0].collider != null)
@@ -544,23 +571,23 @@ public class BasicEnemy : EnemyCharacter
                 if (raycast[0].distance < attackRange + 3)
                 {
                     obstacleAvoidancePriority = obstacleAvoidanceCloseRange;
-                    strafe = true;
+                    strafing = true;
                 }
                 else
                 {
-                    strafe = false;
+                    strafing = false;
                     obstacleAvoidancePriority = obstacleAvoidanceFarRange;
                 }
             }
             else
             {
-                strafe = false;
+                strafing = false;
                 obstacleAvoidancePriority = obstacleAvoidanceFarRange;
             }
         }
     }
 
-    public virtual void CalculateContextSteeringInterestMap(ContextSteeringDirection[] likedDirections, float minDotSearched, float maxDotSearched)
+    public virtual void CalculateContextSteeringInterestMap(ContextSteeringDirection[] likedDirections,float minDotSearched, float maxDotSearched)
     {
         if (target == null)
         {
@@ -572,9 +599,9 @@ public class BasicEnemy : EnemyCharacter
         {
             likedDirections[i].SetRelativePos(new Vector2(groundLevel.position.x + likedDirections[i].direction.x, groundLevel.position.y + likedDirections[i].direction.y));
 
-            Vector2 localDir = new Vector2(groundLevel.position.x + targetDirection.x, groundLevel.position.y + targetDirection.y);
+            Vector2 localDir = new Vector2(groundLevel.position.x + targetDirection.x, groundLevel.position.y + targetDirection.y); 
 
-            float currentDot = Vector2.Dot(new Vector2(localDir.x - groundLevel.position.x, localDir.y - groundLevel.position.y).normalized, likedDirections[i].GetRelativeDirection(groundLevel).normalized);
+            float currentDot = Vector2.Dot(new Vector2(localDir.x-groundLevel.position.x, localDir.y - groundLevel.position.y).normalized, likedDirections[i].GetRelativeDirection(groundLevel).normalized);
 
 
             if (currentDot >= minDotSearched && currentDot <= maxDotSearched)
@@ -585,70 +612,22 @@ public class BasicEnemy : EnemyCharacter
             else
                 likedDirections[i].SetDirectionStrenght(0);
 
-            //forse non serve
-            //if (indexToSubstitute < 0)
-            //{
-            //    indexToSubstitute = i;
-            //    bestDot = currentDot;
-            //}
-            //else
-            //{
-            //    if (bestDot < currentDot)
-            //    {
-            //        indexToSubstitute = i;
-            //        bestDot = currentDot;
-            //    }
-            //}
+            
         }
-
-
-
     }
-    //Coroutine obstacleCheckCoroutine;
-    //List<RaycastHit2D[]> obstacleList;
-    //internal bool obstacleDetectionActive = false;
-    //IEnumerator ObstacleRaycasts(ContextSteeringDirection[] map, float distanceToConsider, LayerMask layerToAvoid)
-    //{
-    //    obstacleList  = new List<RaycastHit2D[]>() ;
-    //    int currentId = 0;
-    //    obstacleDetectionActive = true;
-    //    RaycastHit2D[] obstacleRaycast = new RaycastHit2D[2];
+    
 
-    //    for(int i = 0;i < contextSteeringDirectionCount; i++)
-    //    {
-    //        obstacleList.Add(new RaycastHit2D[2]);
-    //    }
-
-    //    while (true)
-    //    {
-    //        Physics2D.RaycastNonAlloc(groundLevel.position, map[currentId].GetRelativeDirection(groundLevel), obstacleRaycast, distanceToConsider, layerToAvoid);
-
-    //        //if(obstacleList[currentId]==null)
-    //            obstacleList[currentId] = obstacleRaycast;
-
-    //        yield return null;
-
-    //        currentId++;
-    //        if(currentId >= contextSteeringDirectionCount)
-    //        {
-    //            currentId = 0;
-    //        }
-    //    }
-    //}
-
-    public virtual void CalculateContextSteeringAvoidMap(ContextSteeringDirection[] directionsToAvoid, float distanceToConsider, LayerMask layerToAvoid)
+    public virtual void CalculateContextSteeringAvoidMap(ContextSteeringDirection[] directionsToAvoid,float distanceToConsider,LayerMask layerToAvoid)
     {
-        //if (!obstacleDetectionActive)
-        //    obstacleCheckCoroutine = StartCoroutine(ObstacleRaycasts(directionsToAvoid, distanceToConsider, layerToAvoid));
-
+       
         for (int i = 0; i < contextSteeringDirectionCount; i++)
         {
             directionsToAvoid[i].SetRelativePos(new Vector2(groundLevel.position.x + directionsToAvoid[i].direction.x, groundLevel.position.y + directionsToAvoid[i].direction.y));
-
+            
             RaycastHit2D[] raycast = new RaycastHit2D[2];
 
             //if(chaseBehaviour[i].directionStrenght>=0)
-            Physics2D.RaycastNonAlloc(groundLevel.position, directionsToAvoid[i].GetRelativeDirection(groundLevel), raycast, distanceToConsider, layerToAvoid);
+                Physics2D.RaycastNonAlloc(groundLevel.position, directionsToAvoid[i].GetRelativeDirection(groundLevel), raycast, distanceToConsider, layerToAvoid);
 
 
             if (raycast[1].collider != null)
@@ -662,14 +641,14 @@ public class BasicEnemy : EnemyCharacter
                 }
                 else
                     directionsToAvoid[i].SetDirectionStrenght(-per * obstacleAvoidancePriority);
-
+                
             }
             else
                 directionsToAvoid[i].SetDirectionStrenght(0);
         }
-
+        
     }
-
+    
     public virtual void SubSteeringMaps(ContextSteeringDirection[] map, ContextSteeringDirection[] mapToSubtract)
     {
         for (int i = 0; i < contextSteeringDirectionCount; i++)
@@ -696,7 +675,7 @@ public class BasicEnemy : EnemyCharacter
         }
     }
 
-    public float strenghtMultiplier = 1;
+    
     public virtual void InvertNegativeStrenghtContextSteeringMap(ContextSteeringDirection[] mapToInvert)
     {
         ContextSteeringDirection[] mapCopy = new ContextSteeringDirection[contextSteeringDirectionCount];
@@ -712,12 +691,12 @@ public class BasicEnemy : EnemyCharacter
 
                 if (i < half)
                 {
-                    strenght = (MathF.Abs(mapCopy[i].directionStrenght) + mapCopy[i + half].directionStrenght) * strenghtMultiplier;
+                    strenght = (MathF.Abs(mapCopy[i].directionStrenght) + mapCopy[i + half].directionStrenght) /** avoidStrenghtMultiplier*/;
                     mapToInvert[i + half].SetDirectionStrenght(strenght);
                 }
                 else
                 {
-                    strenght = (MathF.Abs(mapCopy[i].directionStrenght) + mapCopy[i - half].directionStrenght) * strenghtMultiplier;
+                    strenght = (MathF.Abs(mapCopy[i].directionStrenght) + mapCopy[i - half].directionStrenght) /** avoidStrenghtMultiplier*/;
                     mapToInvert[i - half].SetDirectionStrenght(strenght);
                 }
             }
@@ -737,20 +716,20 @@ public class BasicEnemy : EnemyCharacter
             //if (mapCopy[i].directionStrenght < 0)
             //{
 
-            if (i < half)
-            {
-                strenght = mapCopy[i].directionStrenght;
-                mapToInvert[i + half].SetDirectionStrenght(strenght);
-            }
-            else
-            {
-                strenght = mapCopy[i].directionStrenght;
-                mapToInvert[i - half].SetDirectionStrenght(strenght);
-            }
+                if (i < half)
+                {
+                    strenght = mapCopy[i].directionStrenght;
+                    mapToInvert[i + half].SetDirectionStrenght(strenght);
+                }
+                else
+                {
+                    strenght = mapCopy[i].directionStrenght;
+                    mapToInvert[i - half].SetDirectionStrenght(strenght);
+                }
             //}
         }
     }
-
+    
     public virtual void CalculateFinalDirection()
     {
 
@@ -761,7 +740,7 @@ public class BasicEnemy : EnemyCharacter
 
         Vector2 vec = Vector2.zero;
         int bestId = 0;
-        float currentBest = 0;
+        float currentBest=0;
 
         // best
         for (int i = 0; i < contextSteeringDirectionCount; i++)
@@ -790,7 +769,7 @@ public class BasicEnemy : EnemyCharacter
                 avarangeStrenght += finalBehaviour[i].directionStrenght;
             }
         }
-        finalDirection = avarenge;
+        finalDirection = avarenge ;
         finalStrenght = avarangeStrenght / div;
 
         bool allow = false;
@@ -801,21 +780,21 @@ public class BasicEnemy : EnemyCharacter
 
         if (currentDot < 0f)
             finalDirection = finalDirection + finalBehaviour[bestId].GetRelativeDirection(groundLevel);
-
-        if (lastFinalDirection != Vector2.zero)
+        
+        if( lastFinalDirection != Vector2.zero)
         {
-            finalDirection += (lastFinalDirection / (steeringSpeed / 10));
+            finalDirection += (lastFinalDirection/(steeringSpeed/10));
         }
 
         lastFinalDirection = finalDirection;
     }
-    public float steeringSpeed = 1;
+    
     #endregion
 
     public virtual void Move(Vector2 direction, Rigidbody2D rb)
     {
-        if (direction == null) return;
-
+        if(direction== null) return;
+        
         if (!direction.normalized.Equals(direction))
             direction = direction.normalized;
 
@@ -840,9 +819,9 @@ public class BasicEnemy : EnemyCharacter
 
 
         float speed = normalMovement ? MoveSpeed : MoveSpeed;
-
+        
         rb.velocity = direction * speed;
-
+        
         isMoving = true;
 
         if (targetDirection != Vector2.zero)
@@ -868,11 +847,11 @@ public class BasicEnemy : EnemyCharacter
         if (direction.y != 0)
             animator.SetFloat("Y", direction.y);
 
-        if (rb.velocity != Vector2.zero)
+        if(rb.velocity != Vector2.zero)
         {
             float dot = Vector2.Dot(direction, rb.velocity);
 
-            if (dot >= 0)
+            if(dot>=0)
                 animator.SetFloat("X", 1f);
             else
                 animator.SetFloat("X", -1f);
@@ -882,7 +861,7 @@ public class BasicEnemy : EnemyCharacter
 
         if ((direction.x > 0.5 && scale.x > 0) || (direction.x < -0.5 && scale.x < 0))
             scale.x *= -1;
-
+        
         pivot.gameObject.transform.localScale = scale;
     }
 
@@ -909,31 +888,24 @@ public class BasicEnemy : EnemyCharacter
         //    panicAttack = false;
         //}
 
-        ActivateObstacle();
-
 
         animator.SetTrigger("Attack");
         yield return new WaitForSeconds(attackDelay);
         isActioning = false;
-
+        
 
     }
-
-
-
+        
+        
+    
 
     public override void OnParryNotify(Character whoParried)
     {
         base.OnParryNotify(whoParried);
-
+        
         stateMachine.SetState(parriedState);
     }
 
-    //public void Parry()
-    //{
-    //    //SetHitMaterialColor(_OnParryColor);
-    //    stateMachine.SetState(parriedState);
-    //}
 
 
     public override void TargetSelection()
@@ -941,17 +913,7 @@ public class BasicEnemy : EnemyCharacter
         base.TargetSelection();
     }
 
-    //public void SetTarget(Transform newTarget)
-    //{
-    //    target = newTarget;
-
-    //    isActioning = true;
-
-    //    animator.SetTrigger("Attack");
-
-    //    yield return new WaitForSeconds(attackSpeed);
-    //    isActioning = false;
-    //}
+    
 
     public override void TakeDamage(DamageData data)
     {
@@ -961,7 +923,7 @@ public class BasicEnemy : EnemyCharacter
             if (currentHp <= 0)
             {
                 isDead = true;
-
+                
                 stateMachine.SetState(deathState);
             }
             else
@@ -988,7 +950,7 @@ public class BasicEnemy : EnemyCharacter
                 stateMachine.SetState(stunState);
             }
         }
-
+       
     }
 
     public virtual void SetIdleState()
@@ -998,45 +960,31 @@ public class BasicEnemy : EnemyCharacter
 
 
 
-    //public void DamagedAnimationEndedEvent()
-    //{
-    //    animator.SetTrigger("DamageEnded");
-
-    //    //per ora da problemi
-    //    //stateMachine.SetState(moveState);
-    //}
-
-
 
     public override void SetTarget(Transform newTarget)
     {
         target = newTarget;
-
-        if (newTarget.TryGetComponent<PlayerCharacter>(out PlayerCharacter player))
+        
+        if(newTarget.TryGetComponent<PlayerCharacter>(out PlayerCharacter player))
             currentTarget = player;
     }
 
-
+   
     public void ActivateAgent()
     {
-        obstacle.enabled = false;
         Agent.enabled = true;
     }
 
-    public void ActivateObstacle()
-    {
-        Agent.enabled = true;
-        obstacle.enabled = false;
-    }
+    
 
     public void Despawn()
     {
         Destroy(gameObject);
     }
 
-    public void SetActionCoroutine(Coroutine coroutine)
+    public void SetActionCoroutine(Coroutine coroutine) 
     {
-        actionCourotine = coroutine;
+        actionCourotine=coroutine;
     }
 
     public void ResetVelocity()
@@ -1044,14 +992,6 @@ public class BasicEnemy : EnemyCharacter
         rb.velocity = Vector3.zero;
     }
 
-
-    public bool showLikedDirections = false;
-    public bool showUnlikedDirections = false;
-    public bool showCounterAvoid = false;
-    public bool showFinalDirections = false;
-
-    public bool showBestDirections = false;
-    public bool showMoveDirections = false;
 
     private void OnDrawGizmos()
     {
@@ -1070,11 +1010,11 @@ public class BasicEnemy : EnemyCharacter
 
             for (int i = 0; i < contextSteeringDirectionCount; i++)
             {
-                if (showLikedDirections)
+                if(showLikedDirections)
                 {
                     Gizmos.color = Color.green;
                     Gizmos.DrawLine(groundLevel.position, new Vector2(
-                        groundLevel.position.x + (chaseBehaviour[i].direction.x * chaseBehaviour[i].directionStrenght),
+                        groundLevel.position.x + (chaseBehaviour[i].direction.x * chaseBehaviour[i].directionStrenght), 
                         groundLevel.position.y + (chaseBehaviour[i].direction.y * chaseBehaviour[i].directionStrenght)));
 
 
@@ -1113,16 +1053,16 @@ public class BasicEnemy : EnemyCharacter
             {
                 Gizmos.color = Color.cyan;
                 Gizmos.DrawLine(groundLevel.position, new Vector2(
-                            groundLevel.position.x + (move.x * (finalStrenght * inc)),
-                            groundLevel.position.y + (move.y * (finalStrenght * inc))));
+                            groundLevel.position.x + (move.x * (finalStrenght*inc)),
+                            groundLevel.position.y + (move.y * (finalStrenght*inc))));
 
             }
             if (showMoveDirections)
             {
                 Gizmos.color = Color.blue;
                 Gizmos.DrawLine(groundLevel.position, new Vector2(
-                            groundLevel.position.x + (finalDirection.x * finalStrenght),
-                            groundLevel.position.y + (finalDirection.y * finalStrenght)));
+                        groundLevel.position.x + (finalDirection.x*finalStrenght),
+                        groundLevel.position.y + (finalDirection.y*finalStrenght)));
 
             }
 

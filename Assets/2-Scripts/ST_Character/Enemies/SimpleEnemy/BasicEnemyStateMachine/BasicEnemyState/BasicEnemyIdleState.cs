@@ -18,8 +18,6 @@ public class BasicEnemyIdleState : BasicEnemyState
         basicEnemy.canMove = false;
         basicEnemy.canAction = false;
 
-        basicEnemy.ActivateObstacle();
-
         basicEnemy.StartStopMovementCountdownCoroutine(false);
     }
 

@@ -12,9 +12,6 @@ public class BasicRangedEnemyIdleState : BasicRangedEnemyState
         basicEnemy.canMove = false;
         basicEnemy.canAction = false;
 
-        basicEnemy.ActivateObstacle();
-
-
     }
 
     public override void Update()

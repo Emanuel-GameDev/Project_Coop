@@ -19,15 +19,10 @@ public class TutorialEnemy : BasicMeleeEnemy
     {
         base.Awake();
 
-        obstacle.enabled = false;
-        obstacle.carveOnlyStationary = false;
-        obstacle.carving = true;
-
         focus = false;
         idleState = new BasicMeleeEnemyIdleState(this);
         moveState = new TutorialEnemyMovementState(this);
         actionState = new TutorialEnemyAttackState(this);
-       // entryState = new BasicEnemyEntryState(this);
     }
 
     public override void TakeDamage(DamageData data)
@@ -61,7 +56,6 @@ public class TutorialEnemy : BasicMeleeEnemy
         //    panicAttack = false;
         //}
 
-        ActivateObstacle();
         readyToAttack = false;
 
         animator.SetTrigger("Attack");
