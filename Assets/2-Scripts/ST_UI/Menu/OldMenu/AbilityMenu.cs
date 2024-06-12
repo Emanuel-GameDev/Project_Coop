@@ -5,7 +5,7 @@ using UnityEngine;
 public class AbilityMenu : MonoBehaviour, IVisualizationChanger
 {
     [SerializeField] 
-    List<AbilityMenuButton> abilityButtons;
+    List<UIAbilityTentButton> abilityButtons;
 
     [SerializeField]
     VisualizationChangerHandler visualizationChangerHandler;
@@ -13,16 +13,16 @@ public class AbilityMenu : MonoBehaviour, IVisualizationChanger
     private void Awake()
     {
         abilityButtons = new();
-        abilityButtons = GetComponentsInChildren<AbilityMenuButton>().ToList<AbilityMenuButton>();
+        abilityButtons = GetComponentsInChildren<UIAbilityTentButton>().ToList<UIAbilityTentButton>();
 
-        foreach (AbilityMenuButton button in abilityButtons)
+        foreach (UIAbilityTentButton button in abilityButtons)
             button.AbilityMenu = this;
         
     }
 
     public void CloseAll()
     {
-        foreach (AbilityMenuButton button in abilityButtons)
+        foreach (UIAbilityTentButton button in abilityButtons)
         {
             button.Deactivate();
         }

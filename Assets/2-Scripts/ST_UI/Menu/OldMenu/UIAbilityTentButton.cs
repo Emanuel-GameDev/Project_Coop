@@ -1,12 +1,17 @@
 using UnityEngine;
+using UnityEngine.Localization.Components;
 
-public class AbilityMenuButton : MonoBehaviour
+public class UIAbilityTentButton : MonoBehaviour
 {
     public AbilityMenu AbilityMenu {  get; set; }
     [SerializeField]
     private GameObject openedButtonObject;
     [SerializeField]
     private GameObject closedButtonObject;
+
+    [Line]
+    public LocalizeStringEvent AbilityName;
+    public LocalizeStringEvent AbilityDescription;
     
     private void Awake()
     {

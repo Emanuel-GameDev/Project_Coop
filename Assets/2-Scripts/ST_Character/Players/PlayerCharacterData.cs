@@ -12,10 +12,6 @@ public class PlayerCharacterData : ScriptableObject
     [SerializeField]
     private GameObject characterPrefab;
     [SerializeField]
-    private Sprite fullBodyArt;
-    [SerializeField]
-    private Sprite hudSprite;
-    [SerializeField]
     private Sprite dialogueSprite;
     [SerializeField]
     private SpriteLibraryAsset pixelAnimations;
@@ -31,6 +27,12 @@ public class PlayerCharacterData : ScriptableObject
     private Sprite hpContainerSpriteLeft;
     [SerializeField]
     private Sprite hpContainerSpriteRight;
+
+    [Header("Menu UI")]
+    [SerializeField]
+    private Sprite fullBodyArt;
+    [SerializeField]
+    private Sprite menuNameFlag;
 
     [Header("Character Texts")]
     [SerializeField]
@@ -55,6 +57,8 @@ public class PlayerCharacterData : ScriptableObject
     private LocalizedString abilityDescription5;
     [SerializeField]
     private LocalizedString characterBiography;
+    [SerializeField]
+    private LocalizedString uniquePowerUpName;
     
 
 
@@ -62,7 +66,7 @@ public class PlayerCharacterData : ScriptableObject
     public Color CharacterColor => characterColor;
     public GameObject CharacterPrefab => characterPrefab;
     public Sprite FullBodyArt => fullBodyArt;  
-    public Sprite HudSprite => hudSprite;
+    public Sprite MenuNameFlag => menuNameFlag;
     public Sprite DialogueSprite => dialogueSprite;
     public SpriteLibraryAsset PixelAnimations => pixelAnimations;
     public Sprite PixelFaceSprite => pixelFaceSprite;
@@ -84,6 +88,7 @@ public class PlayerCharacterData : ScriptableObject
     public LocalizedString AbilityDescription4 => abilityDescription4;
     public LocalizedString AbilityDescription5 => abilityDescription5;
     public LocalizedString CharacterBiography => characterBiography;
+    public LocalizedString UniquePowerUpName => uniquePowerUpName;
     #endregion
 
 
