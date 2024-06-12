@@ -219,7 +219,19 @@ MonoBehaviour:
   m_FormatArguments: []
   m_UpdateString:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7422580138204911091}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   references:
     version: 2
     RefIds: []
@@ -1073,9 +1085,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8fa66066adfc934e924c685560bad1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactableDescription:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   interactables:
   - {fileID: 6704845719185485513}
   - {fileID: 5504268482498411465}
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &7892450003485969916
 MonoBehaviour:
   m_ObjectHideFlags: 0

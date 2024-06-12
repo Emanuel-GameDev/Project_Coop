@@ -74,8 +74,10 @@ public class MenuSettingManager : MonoBehaviour
 
     public void ChangeActiveSetter(InteractableSetter setter)
     {
-        if (lastActiveSetter != null)
+        if (lastActiveSetter != null && lastActiveSetter != setter)
+        {
             lastActiveSetter.DisableInteract();
+        }
         else
             DisableAllSetters();
 

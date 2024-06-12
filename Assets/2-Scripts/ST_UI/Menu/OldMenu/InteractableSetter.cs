@@ -15,12 +15,13 @@ public class InteractableSetter : MonoBehaviour
 
     public void EnableInteract()
     {
-        foreach (Selectable selectable in interactables) selectable.interactable = true;
         if (MenuSettingManager != null)
             MenuSettingManager.ChangeActiveSetter(this);
 
         if (interactableDescription != null)
             MenuSettingManager.SetDescription(interactableDescription);
+
+        foreach (Selectable selectable in interactables) selectable.interactable = true;
     }
 
     public void DisableInteract()
