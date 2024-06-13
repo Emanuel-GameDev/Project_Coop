@@ -2198,7 +2198,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.14999999
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 4a1022a84e6bfe44492c0ad643515cf6, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 7c3a223e468677e4982c32abe74fffc8, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &307221578
 Transform:
@@ -5608,7 +5608,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &566038580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12110,8 +12110,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 2.1629496, y: -0.9855499, z: 0}
-    m_Extent: {x: 23.794651, y: 20.80955, z: 0}
+    m_Center: {x: 2.1636496, y: -0.9861994, z: 0}
+    m_Extent: {x: 23.79485, y: 20.8098, z: 0}
   m_PointLightInnerAngle: 120.90883
   m_PointLightOuterAngle: 120.90883
   m_PointLightInnerRadius: 0.78
@@ -16343,6 +16343,16 @@ PrefabInstance:
         type: 3}
       propertyPath: attackSpeed
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1231016496115807171, guid: c6eb9bb9c7366d44ab782f9dfa950955,
+        type: 3}
+      propertyPath: csAvoidDistance
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1231016496115807171, guid: c6eb9bb9c7366d44ab782f9dfa950955,
+        type: 3}
+      propertyPath: obstacleAvoidanceCloseRange
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2926466183222958110, guid: c6eb9bb9c7366d44ab782f9dfa950955,
         type: 3}

@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+
+
 using UnityEngine;
 
-public class BasicRangedEnemyAttackState : BasicEnemyActionState
+public class BasicRangedEnemyAttackState : BasicRangedEnemyState
 {
 
-    public BasicRangedEnemyAttackState(BasicEnemy basicEnemy) : base(basicEnemy)
+    public BasicRangedEnemyAttackState(RangedEnemy basicEnemy) : base(basicEnemy)
     {
     }
 
@@ -14,6 +14,12 @@ public class BasicRangedEnemyAttackState : BasicEnemyActionState
         base.Enter();
 
         //basicEnemy.StartCoroutine(basicEnemy.Attack());
+
+        rangedEnemy.canMove = false;
+        rangedEnemy.canAction = true;
+
+        rangedEnemy.ResetVelocity();
+
 
     }
 
@@ -24,22 +30,23 @@ public class BasicRangedEnemyAttackState : BasicEnemyActionState
 
         if (!basicEnemy.isActioning)
         {
-            if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() == 0)
+            if(rangedEnemy.EscapeTrigger.GetPlayersCountInTrigger() > 0 && !rangedEnemy.panicAttack)
             {
+                stateMachine.SetState(rangedEnemy.escapeState);
+            }
+            else if (rangedEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() > 0 || rangedEnemy.panicAttack)
+            {
+                rangedEnemy.SetActionCoroutine(rangedEnemy.StartCoroutine(rangedEnemy.Attack()));
+            }
+            else if (rangedEnemy.currentTarget != null)
+            {
+                stateMachine.SetState(rangedEnemy.moveState);
+            }
+            else
+            {
+                stateMachine.SetState(rangedEnemy.idleState);
+            }
 
-                stateMachine.SetState(basicEnemy.moveState);
-
-            }
-            else if(basicEnemy.EscapeTrigger.GetPlayersCountInTrigger()==0 || basicEnemy.panicAttack)
-            {
-                basicEnemy.SetActionCoroutine(basicEnemy.StartCoroutine(basicEnemy.Attack()));
-                
-            }
-            else 
-            {
-                stateMachine.SetState(basicEnemy.escapeState);
-            }
-                
 
         }
 

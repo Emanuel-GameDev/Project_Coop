@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -45,17 +46,22 @@ public class EnemySpawner : MonoBehaviour
         challengeParent.enemySpawned = true;
         for (int i = 0; i < enemiesForWave; i++)
         {            
-            GameObject tempObject = Instantiate(enemiesPrefab[Random.Range(0, enemiesPrefab.Count)], transform.position, Quaternion.identity,challengeParent.gameObject.transform);
+            GameObject tempObject = Instantiate(enemiesPrefab[Random.Range(0, enemiesPrefab.Count)], new Vector3(
+                    Random.Range(transform.position.x - 1, transform.position.x + 1),
+                    Random.Range(transform.position.y - 1, transform.position.y + 1),
+                    0), Quaternion.identity,challengeParent.gameObject.transform);
+
             tempObject.TryGetComponent<BasicEnemy>(out BasicEnemy tempEnemy);
             if (tempEnemy != null)
             {
                 challengeParent.AddToSpawned(tempEnemy);                
                 Vector2 randomSpawnDestination = new Vector2(Random.Range(spawnDestination.position.x - destinationRange, spawnDestination.position.x + destinationRange), Random.Range(spawnDestination.position.y - destinationRange, spawnDestination.position.y + destinationRange));
-                tempEnemy.entryDestination = randomSpawnDestination;
-                tempEnemy.canGoIdle = false;
-                tempEnemy.stateMachine.SetState(tempEnemy.entryState);
+                //tempEnemy.entryDestination = randomSpawnDestination;
+                //tempEnemy.canGoIdle = false;
+                //tempEnemy.stateMachine.SetState(tempEnemy.entryState);
+                //tempEnemy.GoToPosition(spawnDestination);
 
-
+                tempEnemy.SetTarget(PlayerCharacterPoolManager.Instance.ActivePlayerCharacters[Random.Range(0, PlayerCharacterPoolManager.Instance.ActivePlayerCharacters.Count)].transform);
             }
 
             tempObject.TryGetComponent<BossCharacter>(out BossCharacter tempBossCharacter);

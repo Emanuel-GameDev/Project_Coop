@@ -2,31 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicMeleeEnemyMoveState : BasicEnemyMoveState
+public class BasicMeleeEnemyMoveState : BasicMeleeEnemyState
 {
-    public BasicMeleeEnemyMoveState(BasicEnemy basicEnemy) : base(basicEnemy)
+    public BasicMeleeEnemyMoveState(BasicMeleeEnemy basicEnemy) : base(basicEnemy)
     {
     }
 
     public override void Enter()
     {
-        base.Enter();
+
+        meleeEnemy.canMove = true;
+        meleeEnemy.canAction = false;
+
+        meleeEnemy.GetAnimator().SetBool("isMoving", true);
+        meleeEnemy.StartStopMovementCountdownCoroutine(true);
     }
 
     public override void Update()
     {
         base.Update();
-
-        if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() > 0)
+        
+        if (meleeEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() > 0)
         {
-            basicEnemy.SetTarget(basicEnemy.AttackRangeTrigger.GetPlayersDetected()[0].transform);
-            stateMachine.SetState(basicEnemy.actionState);
+            meleeEnemy.SetTarget(meleeEnemy.AttackRangeTrigger.GetPlayersDetected()[0].transform);
+            stateMachine.SetState(meleeEnemy.actionState);
         }
-        basicEnemy.FollowPath();
+        meleeEnemy.FollowPath();
     }
 
     public override void Exit()
     {
         base.Exit();
+
+        meleeEnemy.GetAnimator().SetBool("isMoving", false);
     }
 }

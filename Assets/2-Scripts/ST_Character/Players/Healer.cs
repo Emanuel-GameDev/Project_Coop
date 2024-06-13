@@ -403,13 +403,13 @@ public class Healer : PlayerCharacter
     //ExtraAbility: piazza mina di cura
     public override void ExtraAbilityInput(InputAction.CallbackContext context)
     {
-
         if (blockInput)
             return;
+       
 
         if (instantiatedHealMine == null)
         {
-            if (upgradeStatus[AbilityUpgrade.Ability3] && context.performed)
+            if (true && context.started)
             {
                 if (mineAbilityTimer < mineAbilityCooldown)
                     return;
@@ -422,17 +422,20 @@ public class Healer : PlayerCharacter
                 mineAbilityTimer = 0;
                 mineInReach = false;
             }
+                Debug.Log("Reached1");
         }
         else
         {
-            if (mineInReach && context.performed)
+            if (mineInReach && context.started)
             {
                 Destroy(instantiatedHealMine);
                 instantiatedHealMine = null;
                 mineInReach = false;
                 SetMineIcon(false, null);
                 mineAbilityTimer = mineAbilityCooldown;
+
             }
+                Debug.Log("Reached2");
         }
     }
 
@@ -471,10 +474,10 @@ public class Healer : PlayerCharacter
 
     public void SetMineIcon(bool state, Sprite spriteIcon)
     {
-        gameObjectMineIcon.SetActive(state);
+        //gameObjectMineIcon.SetActive(state);
 
-        if (spriteIcon != null)
-            gameObjectMineIcon.GetComponent<SpriteRenderer>().sprite = spriteIcon;
+        //if (spriteIcon != null)
+        //    gameObjectMineIcon.GetComponent<SpriteRenderer>().sprite = spriteIcon;
     }
 
     IEnumerator InputReactivationDelay(float delay)

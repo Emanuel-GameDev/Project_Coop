@@ -17,7 +17,7 @@ public class BasicEnemyActionState : BasicEnemyState
         basicEnemy.canAction = true;
 
 
-        basicEnemy.ActivateObstacle();
+        basicEnemy.StartStopMovementCountdownCoroutine(false);
     }
     
     public override void Update()

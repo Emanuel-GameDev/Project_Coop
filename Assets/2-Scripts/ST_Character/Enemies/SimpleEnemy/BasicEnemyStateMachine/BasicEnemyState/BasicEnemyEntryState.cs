@@ -24,12 +24,12 @@ public class BasicEnemyEntryState : BasicEnemyState
     {
         base.Update();
 
-        basicEnemy.GoToPosition(basicEnemy.entryDestination);
-        if(Vector2.Distance(basicEnemy.transform.position,basicEnemy.entryDestination) <= 0.2)
-        {
-            basicEnemy.GetRigidBody().velocity = Vector2.zero;
-            basicEnemy.stateMachine.SetState(basicEnemy.idleState);
-        }
+        //basicEnemy.GoToPosition(basicEnemy.entryDestination);
+        //if(Vector2.Distance(basicEnemy.transform.position,basicEnemy.entryDestination) <= 0.2)
+        //{
+        //    basicEnemy.GetRigidBody().velocity = Vector2.zero;
+        //    basicEnemy.SetIdleState();
+        //}
         
     }
 

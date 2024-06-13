@@ -91,8 +91,16 @@ public class PlayerCharacterPoolManager : MonoBehaviour
 
             ReturnCharacter(playerCharacter);
 
+            if (CoopManager.Instance.PlayerCount <= 1)
+                SetCommonHP(playerCharacter, searchedCharacter);
+
             TargetManager.Instance.ChangeTarget(playerCharacter, searchedCharacter);
         }
+    }
+
+    private void SetCommonHP(PlayerCharacter oldCharacter, PlayerCharacter newCharacter)
+    {
+        newCharacter.SetCurrentHP(oldCharacter.CurrentHp * newCharacter.MaxHp / oldCharacter.MaxHp);
     }
 
     private void ActivateCharacter(PlayerCharacter playerCharacter, Transform spawnPosition)
@@ -129,6 +137,13 @@ public class PlayerCharacterPoolManager : MonoBehaviour
     public ePlayerCharacter GetFreeRandomCharacter()
     {
         ePlayerCharacter searchedCharacter = freeCharacters[Random.Range(0, freeCharacters.Count)].Character;
+
+        return searchedCharacter;
+    }
+
+    public ePlayerCharacter GetActiveRandomCharacter()
+    {
+        ePlayerCharacter searchedCharacter = ActivePlayerCharacters[Random.Range(0, ActivePlayerCharacters.Count)].Character;
 
         return searchedCharacter;
     }

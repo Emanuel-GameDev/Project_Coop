@@ -14,6 +14,9 @@ public class EnemyCharacter : Character
     protected float attackSpeed;
     [SerializeField, Tooltip("La velocità di movimento del nemico.")]
     protected float moveSpeed;
+    [SerializeField, Min(0), Tooltip("La percentuale di HP extra che ha il nemico per ogni player aggiuntivo dopo il primo")]
+    protected float extraHPPercentage;
+
 
     protected Animator animator;
     protected NavMeshAgent agent;
@@ -21,22 +24,23 @@ public class EnemyCharacter : Character
     public Transform target;
 
 
-    public virtual float MaxHp => maxHp + powerUpData.MaxHpIncrease;
+    public virtual float MaxHp => maxHp * (1 + Mathf.Max(0, CoopManager.Instance.PlayerCount - 1) * extraHPPercentage) + powerUpData.MaxHpIncrease;
     public float MoveSpeed => moveSpeed;
     public float Damage => damage;
     public float StaminaDamage => staminaDamage;
     public NavMeshAgent Agent => agent;
     public Transform Target => target;
 
-    [HideInInspector]
+    //[HideInInspector]
     public float currentHp;
 
     protected override void InitialSetup()
     {
         base.InitialSetup();
+        powerUpData = new PowerUpData();
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        currentHp = maxHp;
+        currentHp = MaxHp;
 
         if(agent != null)
         {
