@@ -770,13 +770,6 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     public override void ExtraAbilityInput(InputAction.CallbackContext context) //Tasto est
     {
 
-       
-        //if(context.interaction is HoldInteraction)
-        //{
-        //    HoldInteraction prova = (HoldInteraction)context.interaction;
-        //    prova.duration = chargedAttackTimer;
-        //}
-
         if (context.started && !inAttackAnimation && !inCharge)
         {                     
             chargedAttackReady = false;
@@ -786,6 +779,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         {      
                 chargedAttackReady = true;          
                 chargedAttackVFX.gameObject.SetActive(true);
+            Debug.Log("PAlle");
             
         }
         

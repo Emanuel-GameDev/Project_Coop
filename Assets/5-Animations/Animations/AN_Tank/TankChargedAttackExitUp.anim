@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TankChargeUp
+  m_Name: TankChargedAttackExitUp
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,17 +21,17 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 21300000, guid: 7551ccba659765d41831af71bc7b1119, type: 3}
-    - time: 0.083333336
-      value: {fileID: 21300000, guid: edadba53603c92d45809259f5b07d645, type: 3}
+      value: {fileID: 21300000, guid: 7cd507e11fa73c94f8e0d2c48ba46c2f, type: 3}
     - time: 0.16666667
-      value: {fileID: 21300000, guid: 25f6ca1b4ab8b644eb7ade081e5dd1fc, type: 3}
-    - time: 0.25
-      value: {fileID: 21300000, guid: ce73dbe966413894493fa9274adeef1c, type: 3}
+      value: {fileID: 21300000, guid: af6767e15e2c0cc47aad3a119838d53c, type: 3}
     - time: 0.33333334
-      value: {fileID: 21300000, guid: 4589468188782ba40bd7bd27a4bf07d4, type: 3}
-    - time: 0.41666666
-      value: {fileID: 21300000, guid: efb46c0da98c3f44f947c971a386ff01, type: 3}
+      value: {fileID: 21300000, guid: 8fc243ac9612bce45b6c747155758e56, type: 3}
+    - time: 0.5
+      value: {fileID: 21300000, guid: b982ee99b6ac3fd49b485c0117d499db, type: 3}
+    - time: 0.6666667
+      value: {fileID: 21300000, guid: 256e83b8464a9be4eaa62c3df86ed72a, type: 3}
+    - time: 0.8333333
+      value: {fileID: 21300000, guid: 6f2e5a1cf24562f4cb92fd4d755d2511, type: 3}
     attribute: m_Sprite
     path: Pivot/Visual
     classID: 212
@@ -54,18 +54,18 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 7551ccba659765d41831af71bc7b1119, type: 3}
-    - {fileID: 21300000, guid: edadba53603c92d45809259f5b07d645, type: 3}
-    - {fileID: 21300000, guid: 25f6ca1b4ab8b644eb7ade081e5dd1fc, type: 3}
-    - {fileID: 21300000, guid: ce73dbe966413894493fa9274adeef1c, type: 3}
-    - {fileID: 21300000, guid: 4589468188782ba40bd7bd27a4bf07d4, type: 3}
-    - {fileID: 21300000, guid: efb46c0da98c3f44f947c971a386ff01, type: 3}
+    - {fileID: 21300000, guid: 7cd507e11fa73c94f8e0d2c48ba46c2f, type: 3}
+    - {fileID: 21300000, guid: af6767e15e2c0cc47aad3a119838d53c, type: 3}
+    - {fileID: 21300000, guid: 8fc243ac9612bce45b6c747155758e56, type: 3}
+    - {fileID: 21300000, guid: b982ee99b6ac3fd49b485c0117d499db, type: 3}
+    - {fileID: 21300000, guid: 256e83b8464a9be4eaa62c3df86ed72a, type: 3}
+    - {fileID: 21300000, guid: 6f2e5a1cf24562f4cb92fd4d755d2511, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.43333334
+    m_StopTime: 0.84999996
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -84,4 +84,11 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.5
+    functionName: ChargedAttackAreaDamage
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
