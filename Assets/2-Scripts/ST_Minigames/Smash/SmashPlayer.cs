@@ -1,29 +1,37 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
+using UnityEditor.U2D.Animation;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class SmashPlayer : InputReceiver
 {
     SmashMinigameManager SMManager;
-
+    [SerializeField] internal Animator animator;
     [SerializeField] internal TextMeshProUGUI countText;
 
     internal int smashCount = 0;
     internal bool canCount = false;
 
+    
+
     private void Awake()
     {
         SMManager = SmashMinigameManager.Instance;
+        transform.SetParent(SMManager.spawnPoints.transform);
+
         SMManager.listOfCurrentPlayer.Add(this);
 
+
+        if (character == ePlayerCharacter.EmptyCharacter)
+            character = ePlayerCharacter.Brutus;
     }
 
     private void Start()
     {
-        
+        animator.runtimeAnimatorController = GameManager.Instance.GetCharacterData(character).SmashMinigameAnimator;
         ResetCounter();
     }
 
@@ -70,4 +78,6 @@ public class SmashPlayer : InputReceiver
         smashCount = 0;
         canCount = false;
     }
+
+   
 }

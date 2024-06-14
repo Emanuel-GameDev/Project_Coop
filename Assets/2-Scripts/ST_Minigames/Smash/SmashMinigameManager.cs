@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -31,13 +32,15 @@ public class SmashMinigameManager : MonoBehaviour
     internal List<SmashPlayer> listOfCurrentPlayer;
 
     [Header("Settings")]
+    [SerializeField] internal GameObject spawnPoints;
     [SerializeField] int startCountdown = 3;
     [SerializeField] int timeToSmash = 5;
-    [SerializeField] float startingSpeedForResults = 1;
+
     [SerializeField] float timeForResults = 5;
-    [SerializeField] float speedFalloff = 1;
+    [SerializeField] AnimationCurve speedFalloffCurve;
 
     [SerializeField] TextMeshProUGUI timerText;
+    [SerializeField] TextMeshProUGUI smashText;
     [SerializeField] TextMeshProUGUI startCountdownText;
 
 
@@ -85,6 +88,8 @@ public class SmashMinigameManager : MonoBehaviour
 
         //StartPlay();
         startCountdownText.gameObject.SetActive(false);
+        smashText.gameObject.SetActive(false);
+        timerText.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -103,6 +108,7 @@ public class SmashMinigameManager : MonoBehaviour
             player.ResetCounter();
             player.canCount = true;
             Debug.Log("Start");
+            player.animator.SetTrigger("Charge");
         }
 
         StartCoroutine(TimerMinigame(timeToSmash));
@@ -120,27 +126,29 @@ public class SmashMinigameManager : MonoBehaviour
 
             player.countText.gameObject.SetActive(true);
             player.countText.text = "0";
+
+            player.animator.SetTrigger("Hit");
         }
 
-        int currentNumber = 0;
 
-        listOfCurrentPlayer.Sort();
+        listOfCurrentPlayer.OrderBy(p=>p.smashCount);
 
-        float speed = 0;
-        int biggest = listOfCurrentPlayer[listOfCurrentPlayer.Count - 1].smashCount;
+        float biggest = listOfCurrentPlayer[0].smashCount;
+
+        float refreshSpeed = (biggest / 100) * timeForResults;
+
         float incrementPerSecond = biggest / timeForResults;
 
-        //float speedDecrement = timeForResults / incrementPerSecond;
 
-        speed = timeForResults / incrementPerSecond;
+        float curveIndex = 0;
+        float currentNumber = 0;
 
-        while (listOfCurrentPlayer.TrueForAll(p=>p.smashCount>=currentNumber))
+        while (!listOfCurrentPlayer.TrueForAll(p=>p.smashCount<currentNumber))
         {
-            yield return new WaitForSeconds((1/incrementPerSecond) * speed);
-
+            yield return new WaitForSeconds((1/incrementPerSecond) * (speedFalloffCurve.Evaluate(curveIndex)));
+            
             currentNumber++;
-            //speedDecrement = timeForResults / speed;
-            speed *= (1 / incrementPerSecond) / speed;
+            curveIndex = currentNumber /biggest;
 
             foreach (SmashPlayer player in listOfCurrentPlayer)
             {
@@ -149,6 +157,10 @@ public class SmashMinigameManager : MonoBehaviour
                     player.countText.gameObject.SetActive(true);
                     player.countText.text = currentNumber.ToString();
 
+                    if(player.smashCount == currentNumber)
+                    {
+                        player.countText.color = Color.yellow;
+                    }
                 }
             }
 
@@ -178,7 +190,10 @@ public class SmashMinigameManager : MonoBehaviour
     IEnumerator TimerMinigame(int seconds)
     {
         int counter = seconds;
+
         timerText.gameObject.SetActive(true);
+        smashText.gameObject.SetActive(true);
+
         timerText.text = counter.ToString(); 
 
         while (counter > 0)
@@ -188,7 +203,8 @@ public class SmashMinigameManager : MonoBehaviour
             timerText.text = counter.ToString();
         }
 
-        timerText.gameObject.SetActive(true);
+        timerText.gameObject.SetActive(false);
+        smashText.gameObject.SetActive(false);
         StopPlay();
         // DoStuff();
     }
