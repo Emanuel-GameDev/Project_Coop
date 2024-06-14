@@ -74,11 +74,11 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     [SerializeField] 
     float balonDuration = 0.5f;
    
-    private float ExtraSpeed => immortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
+    private float ExtraSpeed => ImmortalitySpeedUpUnlocked && isInvulnerable ? invulnerabilitySpeedUp : 0;
 
     private float ExtraDamage()
     {
-        float perfectDodgeDamage = perfectDodgeExtraDamageUnlocked && Time.time < lastPerfectDodgeTime + perfectDodgeExtraDamageDuration ? perfectDodgeExtraDamage : 0;
+        float perfectDodgeDamage = PerfectDodgeExtraDamageUnlocked && Time.time < lastPerfectDodgeTime + perfectDodgeExtraDamageDuration ? perfectDodgeExtraDamage : 0;
         float bossPowerUpDamage = bossfightPowerUpUnlocked ? MathF.Min(bossPowerUpExtraDamagePerHit * (consecutiveHitsCount > 1 ? consecutiveHitsCount - 1 : 0), bossPowerUpExtraDamageCap) : 0;
 
         Debug.Log($"ExtraDamage Multi TOT: {perfectDodgeDamage + bossPowerUpDamage + 1}, dodge: {perfectDodgeDamage}, boss: {bossPowerUpDamage}");
@@ -102,7 +102,8 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     private bool mustContinueCombo = false;
     private bool alreadyCalled = false;
-    private bool canUseUniqueAbility = true;
+    private bool uniqueAbilityAvaiable = true;
+    private bool uniqueAbilityIsInAnimation = false;
 
     private AttackComboState currentAttackComboState;
     private AttackComboState NextAttackComboState
@@ -114,24 +115,25 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
                 AttackComboState.NotAttaking => AttackComboState.Attack1,
                 AttackComboState.Attack1 => AttackComboState.Attack2,
                 AttackComboState.Attack2 => AttackComboState.Attack3,
-                AttackComboState.Attack3 => unlimitedComboUnlocked ? AttackComboState.Attack1 : AttackComboState.NotAttaking,
+                AttackComboState.Attack3 => UnlimitedComboUnlocked ? AttackComboState.Attack1 : AttackComboState.NotAttaking,
                 _ => AttackComboState.NotAttaking
             };
         }
     }
 
-    private bool dashAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
-    private bool unlimitedComboUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
-    private bool projectileDeflectionUnlocked => upgradeStatus[AbilityUpgrade.Ability3];
-    private bool immortalitySpeedUpUnlocked => upgradeStatus[AbilityUpgrade.Ability4];
-    private bool perfectDodgeExtraDamageUnlocked => upgradeStatus[AbilityUpgrade.Ability5];
+    private bool DashAttackUnlocked => upgradeStatus[AbilityUpgrade.Ability1];
+    private bool UnlimitedComboUnlocked => upgradeStatus[AbilityUpgrade.Ability2];
+    private bool ProjectileDeflectionUnlocked => upgradeStatus[AbilityUpgrade.Ability3];
+    private bool ImmortalitySpeedUpUnlocked => upgradeStatus[AbilityUpgrade.Ability4];
+    private bool PerfectDodgeExtraDamageUnlocked => upgradeStatus[AbilityUpgrade.Ability5];
 
     private bool isInvulnerable;
     private bool isDodging;
     private bool isDashingAttack;
     private bool isDashingAttackStarted;
     private bool perfectTimingEnabled;
-    private bool canMove => !isDodging && !IsAttacking && !isDashingAttack;
+    private bool CanMove => !isDodging && !IsAttacking && !isDashingAttack && !uniqueAbilityIsInAnimation;
+    private bool CanUseUniqueAbility => CanMove && uniqueAbilityAvaiable;
 
     private bool IsAttacking
     {
@@ -153,13 +155,13 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private static string DODGESTART = "DodgeStart";
     private static string DODGEEND = "DodgeEnd";
     private static string HIT = "Hit";
-    //private static string UNIQUE_ABILITY = "UniqueAbility";
     private static string STARTDASHATTACK = "StartDashAttack";
     private static string MOVEDASHATTACK = "MoveDashAttack";
     private static string ENDDASHATTACK = "EndDashAttack";
     private static string DEATH = "Death";
     private static string ISMOVING = "IsMoving";
     private static string RESS = "Ress";
+    private static string BERSERKER = "Berserker";
     #endregion
 
     public override float AttackSpeed => base.AttackSpeed + ExtraSpeed;
@@ -181,7 +183,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         lastDodgeTime = -dodgeCooldown;
         lastAttackTime = -timeBetweenCombo;
-        canUseUniqueAbility = true;
+        uniqueAbilityAvaiable = true;
         lastDashAttackTime = -dashAttackCooldown;
         consecutiveHitsCount = 0;
         isInvulnerable = false;
@@ -214,7 +216,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
                 StartCombo();
             }
 
-            Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {unlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n MustContinueCombo: {mustContinueCombo},  CurrentComboState: {currentAttackComboState}, NextComboState: {NextAttackComboState}");
+            Utility.DebugTrace($"Attacking: {IsAttacking}, AbiliyUpgrade2: {UnlimitedComboUnlocked}, CooldownEnded: {Time.time > lastAttackTime + timeBetweenCombo} \n MustContinueCombo: {mustContinueCombo},  CurrentComboState: {currentAttackComboState}, NextComboState: {NextAttackComboState}");
         }
     }
 
@@ -277,7 +279,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         lastAttackTime = Time.time;
     }
 
-    private bool CanStartCombo() => (unlimitedComboUnlocked || (canMove && Time.time > lastAttackTime + timeBetweenCombo && currentAttackComboState == AttackComboState.NotAttaking)); // && currentComboState != 1;
+    private bool CanStartCombo() => (UnlimitedComboUnlocked || (CanMove && Time.time > lastAttackTime + timeBetweenCombo && currentAttackComboState == AttackComboState.NotAttaking));
     
     private void ResetAttack()
     {
@@ -359,16 +361,21 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (context.performed)
         {
-            Utility.DebugTrace($"Executed: {!isInvulnerable && canUseUniqueAbility}");
-            if (!isInvulnerable && canUseUniqueAbility)
+            Utility.DebugTrace($"Executed: {!isInvulnerable && CanUseUniqueAbility}");
+            if (!isInvulnerable && CanUseUniqueAbility)
             {
-                canUseUniqueAbility = false;
+                uniqueAbilityAvaiable = false;
                 base.UniqueAbilityInput(context);
                 StartCoroutine(UseUniqueAbilityCoroutine());
                 StartCoroutine(BaloonDuration());
+                animator.SetTrigger(BERSERKER);
+                uniqueAbilityIsInAnimation = true;
+                rb.velocity = Vector3.zero;
             }
         }
     }
+
+    public void UniqueAnimationEndend() => uniqueAbilityIsInAnimation = false;
 
     //temp
     private IEnumerator BaloonDuration()
@@ -393,7 +400,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
         yield return new WaitForSeconds(UniqueAbilityCooldown - invulnerabilityDuration);
         uniqueAbilityUses++;
-        canUseUniqueAbility = true;
+        uniqueAbilityAvaiable = true;
     }
     #endregion
 
@@ -402,7 +409,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     public override void ExtraAbilityInput(InputAction.CallbackContext context)
     {
 
-        if (context.performed && dashAttackUnlocked && canMove && (Time.time - lastDashAttackTime > dashAttackCooldown))
+        if (context.performed && DashAttackUnlocked && CanMove && (Time.time - lastDashAttackTime > dashAttackCooldown))
         {
             Utility.DebugTrace("Performed");
             isDashingAttack = true;
@@ -412,7 +419,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
             chargeHandler.StartCharging(dashAttackStartTime);
         }
 
-        if (context.canceled && dashAttackUnlocked && isDashingAttack && !isDashingAttackStarted)
+        if (context.canceled && DashAttackUnlocked && isDashingAttack && !isDashingAttackStarted)
         {
             isDashingAttackStarted = true;
             Utility.DebugTrace("Canceled");
@@ -452,7 +459,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     public override void Move(Vector2 direction)
     {
-        if (canMove)
+        if (CanMove)
         {
             base.Move(direction);
         }
@@ -499,7 +506,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     public override void LockUpgrade(AbilityUpgrade abilityUpgrade)
     {
         base.LockUpgrade(abilityUpgrade);
-        if (abilityUpgrade == AbilityUpgrade.Ability3 && projectileDeflectionUnlocked)
+        if (abilityUpgrade == AbilityUpgrade.Ability3 && ProjectileDeflectionUnlocked)
             RemoveDeflect();
     }
 
