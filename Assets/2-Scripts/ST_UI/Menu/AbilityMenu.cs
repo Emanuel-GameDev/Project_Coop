@@ -14,10 +14,6 @@ public class AbilityMenu : MonoBehaviour, IVisualizationChanger
     {
         abilityButtons = new();
         abilityButtons = GetComponentsInChildren<AbilityMenuButton>().ToList<AbilityMenuButton>();
-
-        foreach (AbilityMenuButton button in abilityButtons)
-            button.AbilityMenu = this;
-        
     }
 
     public void CloseAll()
