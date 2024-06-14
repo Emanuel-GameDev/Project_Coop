@@ -7,8 +7,8 @@ public class SubTabInfo : MonoBehaviour
     public GameObject SubTabRoot => subTabRoot;
 
     [SerializeField]
-    private UITopBarButton connectedButton;
-    public UITopBarButton ConnectedButton => connectedButton;
+    private TabSelection connectedButton;
+    public TabSelection ConnectedButton => connectedButton;
 
     [SerializeField]
     private GameObject defaultFirstObjectSelected;

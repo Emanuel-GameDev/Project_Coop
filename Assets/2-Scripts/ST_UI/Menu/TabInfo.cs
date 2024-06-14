@@ -21,8 +21,8 @@ public class TabInfo : MonoBehaviour
     }
 
     [SerializeField]
-    private UITopBarButton connectedButton;
-    public UITopBarButton ConnectedButton => connectedButton;
+    private TabSelection connectedButton;
+    public TabSelection ConnectedButton => connectedButton;
 
     [SerializeField]
     private GameObject defaultFirstObjectSelected;
