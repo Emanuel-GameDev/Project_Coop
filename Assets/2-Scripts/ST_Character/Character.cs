@@ -27,8 +27,8 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     [SerializeField] protected List<Collider2D> colliders ;
     protected List<Condition> conditions;
 
-    private bool canInteract;
-    private IInteractable activeInteractable;
+    protected bool canInteract;
+    protected IInteractable activeInteractable;
 
     [HideInInspector]
     public float damageReceivedMultiplier = 1;
@@ -108,7 +108,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     #endregion
 
     #region InteractionSystem
-    protected void Interact(InputAction.CallbackContext context)
+    protected virtual void Interact(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
@@ -152,7 +152,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         canInteract = true;
     }
 
-    public void DisableInteraction(IInteractable interactable)
+    public virtual void DisableInteraction(IInteractable interactable)
     {
         activeInteractable = interactable;
         canInteract = false;
