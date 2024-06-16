@@ -155,6 +155,12 @@ public class PlayerInputHandler : MonoBehaviour
     /// <param name="duration"></param>
     public void RumblePulse(RumbleData data)
     {
+        if (activeRumbleData != null)
+        {
+            if (data.priority < activeRumbleData.priority)
+                return;
+        }
+
         Gamepad pad = null;
 
         if (PlayerInput.devices[0] is Gamepad)
