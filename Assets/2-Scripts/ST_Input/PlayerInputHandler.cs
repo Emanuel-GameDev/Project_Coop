@@ -179,13 +179,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     private IEnumerator StopRumble(RumbleData data, Gamepad pad)
     {
-        float elapsedTime = 0f;
-
-        while (elapsedTime < data.duration)
-        {
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
+        yield return new WaitForSeconds(data.duration);
        
         if (activeRumbleData == null || data == activeRumbleData)
         {
