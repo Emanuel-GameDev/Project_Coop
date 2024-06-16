@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RumbleController : MonoBehaviour
+[Serializable]
+public class RumbleData : MonoBehaviour
 {
     [Range(0f, 1f)]
     public float lowFreqency;
@@ -11,4 +13,9 @@ public class RumbleController : MonoBehaviour
     public float highFreqency;
 
     public float duration;
+
+    public int priority = 0;
+
+    public string rumbleName = "";
+
 }

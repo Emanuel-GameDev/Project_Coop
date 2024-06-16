@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -36,6 +37,7 @@ public class PlayerInputHandler : MonoBehaviour
         }
         private set { _currentReceiver = value; }
     }
+
 
     private void Awake()
     {
@@ -136,6 +138,56 @@ public class PlayerInputHandler : MonoBehaviour
     {
         CoopManager.Instance.OnDeviceRegained(playerInput);
     }
+    #endregion
+
+    #region Rumble
+
+    // Variables
+    private RumbleData activeRumbleData;
+
+    /// <summary>
+    /// Imposta la velocità dei motori di un controller: "lowFreq" controlla il motore SX mentre "highFreq" quello DX,
+    /// "duration" rappresenta la durata della vibrazione, "pad" se omesso viene impostato a Gamepad.current 
+    /// </summary>
+    /// <param name="lowFreq"></param>
+    /// <param name="highFreq"></param>
+    /// <param name="pad"></param>
+    /// <param name="duration"></param>
+    public void RumblePulse(RumbleData data)
+    {
+        Gamepad pad = null;
+
+        if (PlayerInput.devices[0] is Gamepad)
+        {
+            pad = (Gamepad)PlayerInput.devices[0];
+        }
+        else
+            return;
+
+        pad.SetMotorSpeeds(data.lowFreqency, data.highFreqency);
+
+        StartCoroutine(StopRumble(data, pad));
+
+        activeRumbleData = data;
+    }
+
+    private IEnumerator StopRumble(RumbleData data, Gamepad pad)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < data.duration)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+       
+        if (activeRumbleData == null || data == activeRumbleData)
+        {
+            pad.SetMotorSpeeds(0f, 0f);
+            activeRumbleData = null;
+        }
+    }
+
     #endregion
 
     // La lista di tutti gli input di tutte le possibili mappe 

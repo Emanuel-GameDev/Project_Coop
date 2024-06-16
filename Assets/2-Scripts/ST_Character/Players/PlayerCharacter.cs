@@ -536,6 +536,19 @@ public abstract class PlayerCharacter : Character
 
     #endregion
 
+    #region Rumble
+
+    public void RumblePad(string rumbleName)
+    {
+        RumbleData dataFound = GetRumbleData(rumbleName);
+
+        if (dataFound == null) return;
+
+        characterController.GetInputHandler().RumblePulse(dataFound);
+    }
+
+    #endregion
+
     public override void DisableOtherActions()
     {
         base.DisableOtherActions();

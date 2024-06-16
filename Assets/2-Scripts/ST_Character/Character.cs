@@ -51,6 +51,14 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     [SerializeField] private AnimationCurve pushAnimationCurve;
     [SerializeField] protected SoundsDatabase soundsDatabase;
 
+    #region RumbleVars
+
+    [Header("Rumble Data")]
+    [SerializeField]
+    List<RumbleData> rumbleData;
+
+    #endregion
+
     //Lo uso per chimare tutte le funzioni iniziali
     protected virtual void Awake()
     {
@@ -90,6 +98,37 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         }
     }
 
+    #region Rumble
+
+    public void RumbleAllPads(string rumbleName)
+    {
+        RumbleData dataFound = GetRumbleData(rumbleName);
+
+        if (dataFound == null) return;
+
+        foreach (PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
+        {
+            handler.RumblePulse(dataFound);
+        }
+    }
+
+    protected RumbleData GetRumbleData(string rumbleName)
+    {
+        RumbleData result = null;
+
+        foreach (RumbleData data in rumbleData)
+        {
+            if (data.rumbleName == rumbleName)
+            {
+                result = data;
+                return result;
+            }
+        }
+
+        return result;
+    }
+
+    #endregion
 
     #region PowerUp & Conditions
     public abstract void AddPowerUp(PowerUp powerUp);
