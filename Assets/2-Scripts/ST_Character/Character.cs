@@ -54,7 +54,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     #region RumbleVars
 
     [Header("Rumble Data")]
-    [SerializeField]
+    [SerializeField, ReorderableList]
     List<RumbleData> rumbleData;
 
     #endregion

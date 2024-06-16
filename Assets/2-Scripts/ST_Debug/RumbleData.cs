@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class RumbleData : MonoBehaviour
+public class RumbleData
 {
     [Range(0f, 1f)]
     public float lowFreqency;
