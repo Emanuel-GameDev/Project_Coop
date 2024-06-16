@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
@@ -30,6 +31,7 @@ public static class Utility
         return (targetMask & layerbit) != 0;
     }
 
+  
     public static void DebugTrace()
     {
         // Ottieni il nome dello script e della funzione
@@ -57,6 +59,20 @@ public static class Utility
         conditionGO.name = typeof(T).Name;
         T newCondition = conditionGO.AddComponent<T>();
         return newCondition;
+    }
+
+    public static List<T> Shuffle<T>(List<T> list) 
+    {
+        int count = list.Count;
+        int last = count - 1;
+        for (int i = 0; i < last; ++i)
+        {
+            int r = UnityEngine.Random.Range(i, count);
+            T tmp = list[i];
+            list[i] = list[r];
+            list[r] = tmp;
+        }
+        return list;
     }
 
     public static Vector2 ZtoY(Vector3 vector)

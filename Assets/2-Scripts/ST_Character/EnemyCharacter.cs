@@ -37,6 +37,7 @@ public class EnemyCharacter : Character
     protected override void InitialSetup()
     {
         base.InitialSetup();
+        powerUpData = new PowerUpData();
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         currentHp = MaxHp;
@@ -126,14 +127,13 @@ public class EnemyCharacter : Character
         }
 
 
-        if (target == null)
+        if (target == null && alivePlayers.Count >0)
         {
             target = alivePlayers[0].transform;
 
         }
 
-        Debug.Log(target.gameObject.name);
-
+        if(target !=null)
         SetTarget(target);
     }
 

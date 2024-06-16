@@ -9,23 +9,20 @@ public class TutorialEnemy : BasicMeleeEnemy
     [HideInInspector] public event Action OnHitAction;
     [SerializeField] float invincibilitySeconds = 0.2f;
     [HideInInspector] public bool focus = false;
+
+
+    [HideInInspector] public TutorialEnemyMovementState moveState;
+    [HideInInspector] public TutorialEnemyAttackState actionState;
+
     bool invincible=false;
     protected override void Awake()
     {
         base.Awake();
 
-        obstacle.enabled = false;
-        obstacle.carveOnlyStationary = false;
-        obstacle.carving = true;
-
-
-        idleState = new BasicEnemyIdleState(this);
+        focus = false;
+        idleState = new BasicMeleeEnemyIdleState(this);
         moveState = new TutorialEnemyMovementState(this);
         actionState = new TutorialEnemyAttackState(this);
-        stunState = new BasicEnemyStunState(this);
-        parriedState = new BasicEnemyParriedState(this);
-        deathState = new BasicEnemyDeathState(this);
-        entryState = new BasicEnemyEntryState(this);
     }
 
     public override void TakeDamage(DamageData data)
@@ -33,7 +30,7 @@ public class TutorialEnemy : BasicMeleeEnemy
         if (!invincible)
         {
             base.TakeDamage(data);
-            //stateMachine.SetState(stunState);
+            stateMachine.SetState(stunState);
             OnHitAction?.Invoke();
             if(data.dealer is Projectile)
             {
@@ -47,6 +44,33 @@ public class TutorialEnemy : BasicMeleeEnemy
 
     }
 
+    public override IEnumerator Attack()
+    {
+        StopCoroutine(CalculateChasePathAndSteering());
+        isRunning = false;
+
+        isActioning = true;
+
+        //if (panicAttack)
+        //{
+        //    panicAttack = false;
+        //}
+
+        readyToAttack = false;
+
+        animator.SetTrigger("Attack");
+        yield return new WaitForSeconds(attackDelay);
+        isActioning = false;
+        readyToAttack = true;
+
+    }
+
+    public override void SetIdleState()
+    {
+        base.SetIdleState();
+        stateMachine.SetState(idleState);
+    }
+
     public override void SetTarget(Transform newTarget)
     {
         if (!focus)
@@ -54,6 +78,20 @@ public class TutorialEnemy : BasicMeleeEnemy
             base.SetTarget(newTarget);
             stateMachine.SetState(moveState);
         }
+    }
+    public override void SetSpriteDirection(Vector2 direction)
+    {
+        if (direction.y != 0)
+            animator.SetFloat("Y", direction.y);
+
+       
+
+        Vector3 scale = pivot.gameObject.transform.localScale;
+
+        if ((direction.x > 0.5 && scale.x > 0) || (direction.x < -0.5 && scale.x < 0))
+            scale.x *= -1;
+
+        pivot.gameObject.transform.localScale = scale;
     }
 
     IEnumerator Invincibility()

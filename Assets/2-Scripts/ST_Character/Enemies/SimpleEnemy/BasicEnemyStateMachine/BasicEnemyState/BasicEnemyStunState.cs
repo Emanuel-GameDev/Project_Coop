@@ -15,9 +15,7 @@ public class BasicEnemyStunState : BasicEnemyState
     {
         base.Enter();
 
-        stunTime = 1f;
-
-        Debug.Log(stunTime);
+        stunTime = basicEnemy.stunTime;
 
         basicEnemy.canSee = false;
         basicEnemy.canAction = false;
@@ -28,7 +26,6 @@ public class BasicEnemyStunState : BasicEnemyState
 
         basicEnemy.GetRigidBody().velocity = Vector3.zero;
 
-        basicEnemy.ActivateObstacle();
     }
 
     public override void Update()
@@ -37,17 +34,16 @@ public class BasicEnemyStunState : BasicEnemyState
 
         stunTime -= Time.deltaTime ;
 
-        //Debug.Log(stunTime);
         if(stunTime <= 0f)
         {
-            
-            stateMachine.SetState(basicEnemy.idleState);
+            basicEnemy.SetIdleState();
         }
        
     }
 
     public override void Exit()
     {
+        basicEnemy.GetAnimator().SetTrigger("DamageEnded");
         base.Exit();
     }
 }

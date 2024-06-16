@@ -2,16 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicRangedEnemyMoveState : BasicEnemyMoveState
+public class BasicRangedEnemyMoveState : BasicRangedEnemyState
 {
-    public BasicRangedEnemyMoveState(BasicEnemy basicEnemy) : base(basicEnemy)
+    public BasicRangedEnemyMoveState(RangedEnemy basicEnemy) : base(basicEnemy)
     {
 
     }
 
     public override void Enter()
     {
-        base.Enter();
+        //base.Enter();
+        
+        rangedEnemy.canMove = true;
+        rangedEnemy.canAction = false;
+
+        rangedEnemy.ActivateAgent();
+        rangedEnemy.GetAnimator().SetBool("isMoving", true);
 
     }
 
@@ -19,18 +25,24 @@ public class BasicRangedEnemyMoveState : BasicEnemyMoveState
     {
         base.Update();
 
-        if (basicEnemy.viewTrigger.GetPlayersCountInTrigger() > 0)
+        if (rangedEnemy.EscapeTrigger.GetPlayersCountInTrigger() > 0)
         {
-            if (basicEnemy.target == null)
-                basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
-
-            stateMachine.SetState(basicEnemy.actionState);
+            stateMachine.SetState(rangedEnemy.escapeState);
         }
-        basicEnemy.FollowPath();
+        else if (rangedEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() > 0)
+        {
+            //if (rangedEnemy.target == null)
+            //    rangedEnemy.SetTarget(rangedEnemy.viewTrigger.GetPlayersDetected()[0].transform);
+
+            stateMachine.SetState(rangedEnemy.actionState);
+        }
+
+        rangedEnemy.FollowPath();
     }
 
     public override void Exit()
     {
         base.Exit();
+        basicEnemy.GetAnimator().SetBool("isMoving", false);
     }
 }

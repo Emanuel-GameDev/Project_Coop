@@ -15,12 +15,16 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     float timeCheckAttackType = 0.2f;
     [SerializeField, Tooltip("Tempo minimo attacco caricato per essere eseguito")]
     float chargedAttackTimer = 2.5f;
-    [SerializeField, Tooltip("danno ad area intorno al player")]
-    float chargedAttackDamage = 50f;
+    [SerializeField, Tooltip("danno diretto di attacco caricato")]
+    float chargedAttackDirectDamage = 50f;
     [SerializeField, Tooltip("Range danno ad area intorno al player")]
     float chargedAttackRadius = 5f;
-    [SerializeField, Tooltip("Sprite del segnale visivo se attacco caricato pronto")]
-    GameObject chargedAttackSprite;
+    [SerializeField, Tooltip("danno ad area intorno al player")]
+    float chargedAttackAreaDamage = 50f;
+    [SerializeField, Tooltip("prefab onda urto")]
+    GameObject crashPrefab;
+    [SerializeField, Tooltip("punto origine onda urto da impostare in animazione")]
+    Transform crashSpawnPosition;
 
     [Header("ChargeAttack")]
     [SerializeField, Tooltip("timer tra una carica e un altra per non spammare")]
@@ -46,7 +50,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     float blockMoveSpeed = 0.1f;
 
 
-    public enum blockZone
+   [HideInInspector] public enum blockZone
     {
         none,
         nordEst,
@@ -71,12 +75,8 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     [SerializeField, Tooltip("Numero attacchi da parare perfettamente per ottenimento potenziamento bossfight")]
     int attacksToBlockForUpgrade = 10;
-    [SerializeField, Tooltip("Cooldown attacco potenziamento bossfight")]
-    float cooldownExtraAbility;
-    [SerializeField, Tooltip("Durata stun attacco potenziamento boss fight")]
-    float chargedAttackStunDuration = 5;
     [SerializeField, Tooltip("aggiunta in secondi alla durata dello stun")]
-    float additionalStunDuration = 5;
+    float stunDurationOnAggro = 5;
 
     [Header("VFX")]
     [SerializeField] GameObject shieldVFX;
@@ -123,6 +123,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
    
     private bool isChargingAttack = false;
     private bool canBlock = true;
+    private bool canAttack = true;
     private bool canCharge = true;
     private bool inAttackAnimation = false;
     private bool inCharge = false;
@@ -190,7 +191,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
        
         if (stunned) return;
 
-        if (context.performed)
+        if (context.performed && canAttack)
         {
             //Carica
             if (chargeUnlocked && canCharge && isBlocking)
@@ -251,16 +252,14 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         canCharge = true;
     }
     #endregion
-
-
-
-   
+ 
     public void ResetVariables()
     {
 
         SetHyperArmor(false);
         isBlocking = false;
         canBlock = true;
+        canAttack = true;
         shieldVFX.gameObject.SetActive(false);
         chargedAttackVFX.gameObject.SetActive(false);
         isAttacking = false;
@@ -333,7 +332,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         {
             OnDefenceAbility?.Invoke();
             ResetAllAnimatorAndTriggers();
-            SetCanMove(false, rb);
+            //SetCanMove(false, rb);
 
             if (isBlocking != true)
             {
@@ -696,12 +695,23 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                     AggroCondition aggroCondition = Utility.InstantiateCondition<AggroCondition>();
                     aggroCondition.SetVariable(this, aggroDuration);
 
-
-                    hittedDama.TakeDamage(new DamageData(0, this, aggroCondition));
+                    if(r.transform.gameObject.GetComponent<BossCharacter>() && maximizedStunUnlocked)
+                    {
+                        StunCondition stunCondition = Utility.InstantiateCondition<StunCondition>();
+                        stunCondition.SetVariable(stunDurationOnAggro);
+                        hittedDama.TakeDamage(new DamageData(0, this, stunCondition));
+                        hittedDama.TakeDamage(new DamageData(0, this, aggroCondition));
+                    }
+                    else
+                    {
+                        hittedDama.TakeDamage(new DamageData(0, this, aggroCondition));
+                    }
+                   
 
                 }
             }
         }
+
         //Incremento statistiche difesa e stamina
         statBoosted = true;
         damageReceivedMultiplier = healthDamageReductionMulty;
@@ -732,56 +742,29 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
        animator.SetTrigger("ChargedAttackEnd");
         chargedAttackReady = false;
         chargedAttackVFX.gameObject.SetActive(false);
+        canAttack = true;
+        canBlock = true;
 
-        
+
     }
     //Rivedere e mettere onda urto
     public void ChargedAttackAreaDamage()
-    {
-        if (bossfightPowerUpUnlocked)
-        {
-            damager.SetCondition(Utility.InstantiateCondition<StunCondition>(), true);
-            float stunDamageDuration = maximizedStunUnlocked ? (chargedAttackStunDuration + additionalStunDuration) : chargedAttackStunDuration;
-          
-        }
-        RaycastHit[] hitted = Physics.SphereCastAll(transform.position, chargedAttackRadius, Vector3.up, chargedAttackRadius);
-        if (hitted != null)
-        {
-            foreach (RaycastHit r in hitted)
-            {
-                if (Utility.IsInLayerMask(r.transform.gameObject, LayerMask.GetMask("Enemy")))
-                {
-                    IDamageable hittedDama = r.transform.gameObject.GetComponent<IDamageable>();
-                    hittedDama.TakeDamage(new DamageData(chargedAttackDamage, this, null));
-                    Debug.Log(r.transform.gameObject.name + " colpito con " + chargedAttackDamage + " damage di attacco ad area");
-
-                }
-            }
-
-           
-
-        }
+    {      
+        GameObject instantiatedWave = Instantiate(crashPrefab, crashSpawnPosition.position, Quaternion.identity);
+        
+        instantiatedWave.GetComponentInChildren<CrashWave>().SetVariables(chargedAttackAreaDamage, 0, this);
+        
     }
-    public void InstantiateCrashWave()
-    {        
-            //GameObject instantiatedWave = Instantiate(crashwaveObject, crashwaveTransform.position, Quaternion.identity, transform);
-            //instantiatedWave.GetComponentInChildren<CrashWave>().SetVariables(crashWaveDamage, crashWaveStaminaDamage, this);
-              
-    }
-
+   
     #endregion
     public override void ExtraAbilityInput(InputAction.CallbackContext context) //Tasto est
     {
 
-       
-        //if(context.interaction is HoldInteraction)
-        //{
-        //    HoldInteraction prova = (HoldInteraction)context.interaction;
-        //    prova.duration = chargedAttackTimer;
-        //}
-
         if (context.started && !inAttackAnimation && !inCharge)
-        {                     
+        {
+            canBlock = false;
+            canAttack = false;
+            isChargingAttack = true;
             chargedAttackReady = false;
             animator.SetTrigger("ChargedAttack");
         }
@@ -789,17 +772,19 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         {      
                 chargedAttackReady = true;          
                 chargedAttackVFX.gameObject.SetActive(true);
+            Debug.LogWarning("PAlle");
             
         }
         
             
         if (context.canceled && !inAttackAnimation)
         {
-            
+            isChargingAttack = false;
             if (chargedAttackReady)
             {
                 SetCanMove(false, rb);
                 EndChargedAttack();
+                
             }
             else
             {
@@ -826,8 +811,13 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         }
         else
         {
+            if (isChargingAttack)
+            {
+                moveSpeed = blockMoveSpeed;
+                base.Move(direction);
+            }
 
-            if (!isBlocking)
+            else if (!isBlocking)
             {
                 if (canMove)
                 {
@@ -839,13 +829,14 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
                 animator.SetBool("IsMoving", isMoving);
             }
-            else
+            else if(isBlocking)
             {
                 moveSpeed = blockMoveSpeed;
                 base.Move(direction);
                 SetBlockZone(lastNonZeroDirection.y);
 
             }
+            
         }
 
     }

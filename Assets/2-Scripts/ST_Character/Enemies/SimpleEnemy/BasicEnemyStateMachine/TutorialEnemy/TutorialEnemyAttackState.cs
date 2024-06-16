@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class TutorialEnemyAttackState : BasicMeleeEnemyAttackState
 {
-    public TutorialEnemyAttackState(BasicEnemy basicEnemy) : base(basicEnemy)
+
+    public TutorialEnemyAttackState(TutorialEnemy basicEnemy) : base(basicEnemy)
     {
     }
 
@@ -14,23 +15,33 @@ public class TutorialEnemyAttackState : BasicMeleeEnemyAttackState
 
         if (!basicEnemy.isActioning)
         {
-            if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() <= 0)
+            if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() == 0)
             {
-
-                foreach (PlayerCharacter player in basicEnemy.AttackRangeTrigger.GetPlayersDetected())
-                {
-                    if (player == basicEnemy.currentTarget)
-                    {
-                        //stateMachine.SetState(basicEnemy.actionState);
-                        basicEnemy.StartCoroutine(basicEnemy.Attack());
-                        return;
-                    }
-                }
+                stateMachine.SetState(meleeEnemy.idleState);
             }
-
-            stateMachine.SetState(basicEnemy.moveState);
+            else
+                meleeEnemy.StartCoroutine(meleeEnemy.Attack());
 
         }
+
+
+        //if (!basicEnemy.isActioning)
+        //{
+        //    if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() <= 0)
+        //    {
+        //        foreach (PlayerCharacter player in basicEnemy.AttackRangeTrigger.GetPlayersDetected())
+        //        {
+        //            if (player == basicEnemy.currentTarget)
+        //            {
+        //                stateMachine.SetState(meleeEnemy.actionState);
+        //                basicEnemy.StartCoroutine(meleeEnemy.Attack());
+        //                return;
+        //            }
+        //        }
+        //    }
+
+        //    stateMachine.SetState(meleeEnemy.moveState);
+        //}
     }
 
 }

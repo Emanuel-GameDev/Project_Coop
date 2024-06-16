@@ -23,11 +23,11 @@ public class BasicEnemyParriedState : BasicEnemyState
         basicEnemy.canMove = false;
         basicEnemy.isActioning = false;
 
-        basicEnemy.GetAnimator().SetTrigger("Parried");
+        //mettere Parried al posto di damaged se le animazioni di stun e danno sono diverse
+        basicEnemy.GetAnimator().SetTrigger("Damaged");
 
         basicEnemy.GetRigidBody().velocity = Vector3.zero;
 
-        basicEnemy.ActivateObstacle();
     }
 
     public override void Update()
@@ -38,14 +38,14 @@ public class BasicEnemyParriedState : BasicEnemyState
 
         if (stunTime <= 0f)
         {
-
-            stateMachine.SetState(basicEnemy.idleState);
+            basicEnemy.SetIdleState();
         }
 
     }
 
     public override void Exit()
     {
+        basicEnemy.GetAnimator().SetTrigger("DamageEnded");
         basicEnemy.GetAnimator().SetTrigger("ParryEnded");
         base.Exit();
     }

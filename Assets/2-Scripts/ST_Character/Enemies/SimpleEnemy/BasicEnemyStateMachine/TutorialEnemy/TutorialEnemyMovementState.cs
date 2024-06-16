@@ -5,23 +5,23 @@ using UnityEngine;
 public class TutorialEnemyMovementState : BasicMeleeEnemyMoveState
 {
 
-    public TutorialEnemyMovementState(BasicEnemy basicEnemy) : base(basicEnemy)
+    public TutorialEnemyMovementState(TutorialEnemy basicEnemy) : base(basicEnemy)
     {
     }
 
     public override void Update()
     {
 
-        if (basicEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() > 0 )
+        if (meleeEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() > 0 )
         {
-            foreach (PlayerCharacter player in basicEnemy.AttackRangeTrigger.GetPlayersDetected())
+            foreach (PlayerCharacter player in meleeEnemy.AttackRangeTrigger.GetPlayersDetected())
             {
-                if(player == basicEnemy.currentTarget)
-                    stateMachine.SetState(basicEnemy.actionState);
+                if (player == meleeEnemy.currentTarget)
+                    stateMachine.SetState(meleeEnemy.actionState);
             }
 
         }
-        basicEnemy.FollowPath();
+        meleeEnemy.FollowPath();
     }
 
 

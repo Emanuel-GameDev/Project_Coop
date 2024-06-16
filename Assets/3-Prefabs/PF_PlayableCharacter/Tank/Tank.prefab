@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 28993225159450299}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.94, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -905,7 +905,7 @@ GameObject:
   - component: {fileID: 9068013905245930763}
   - component: {fileID: 4253467473740823511}
   - component: {fileID: 1616401854955390967}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: PlayerBlocker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1016,7 +1016,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8600001, y: 0.8600001, z: 0.8600001}
+  m_LocalScale: {x: 0.08, y: 0.08, z: 0.08}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 819106858709200208}
@@ -1470,6 +1470,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &5706386576762126908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4890020199279784987}
+  m_Layer: 6
+  m_Name: CrashSpawnPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4890020199279784987
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5706386576762126908}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3092766138524625209}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5763330479945256150
 GameObject:
   m_ObjectHideFlags: 0
@@ -1661,7 +1692,7 @@ MonoBehaviour:
   onDeath:
     m_PersistentCalls:
       m_Calls: []
-  onDash:
+  onDefenceAbility:
     m_PersistentCalls:
       m_Calls: []
   onParried:
@@ -1710,9 +1741,12 @@ MonoBehaviour:
   crosshairDistance: 6
   timeCheckAttackType: 0.2
   chargedAttackTimer: 2.5
-  chargedAttackDamage: 50
+  chargedAttackDirectDamage: 50
   chargedAttackRadius: 5
-  chargedAttackSprite: {fileID: 6584751586460598899}
+  chargedAttackAreaDamage: 50
+  crashPrefab: {fileID: 7920591660957696306, guid: 5590056f81779c749b7d0fd3466625fd,
+    type: 3}
+  crashSpawnPosition: {fileID: 4890020199279784987}
   chargeCooldownTimer: 5
   chargeSpeed: 20
   chargeDuration: 3
@@ -1727,9 +1761,7 @@ MonoBehaviour:
   HealthDamageReduction: 50
   StaminaDamageReduction: 0
   attacksToBlockForUpgrade: 10
-  cooldownExtraAbility: 0
-  chargedAttackStunDuration: 5
-  additionalStunDuration: 5
+  stunDurationOnAggro: 5
   shieldVFX: {fileID: 2378909330986876465}
   chargedAttackVFX: {fileID: 3853030557984777652}
   shieldVFXGoodColor: {r: 4, g: 0, b: 2.3378906, a: 0}
@@ -1907,6 +1939,7 @@ Transform:
   - {fileID: 2105873087886467633}
   - {fileID: 4314544807008938450}
   - {fileID: 4718014052248646187}
+  - {fileID: 4890020199279784987}
   m_Father: {fileID: 413376642743336375}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &43161592474016108
@@ -2323,7 +2356,7 @@ PrefabInstance:
     - target: {fileID: 4995741070570863987, guid: 70a60da48383a9b40be5133af4a8c45d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 1.31
       objectReference: {fileID: 0}
     - target: {fileID: 4995741070570863987, guid: 70a60da48383a9b40be5133af4a8c45d,
         type: 3}

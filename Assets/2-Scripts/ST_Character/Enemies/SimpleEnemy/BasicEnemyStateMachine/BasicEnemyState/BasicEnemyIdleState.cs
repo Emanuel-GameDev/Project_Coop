@@ -18,21 +18,19 @@ public class BasicEnemyIdleState : BasicEnemyState
         basicEnemy.canMove = false;
         basicEnemy.canAction = false;
 
-        basicEnemy.ActivateObstacle();
-
-
+        basicEnemy.StartStopMovementCountdownCoroutine(false);
     }
 
     public override void Update()
     {
         base.Update();
-        
+
         if (basicEnemy.viewTrigger.GetPlayersCountInTrigger() > 0 && basicEnemy.canSee)
         {
-            if(basicEnemy.target == null)
+            if (basicEnemy.target == null)
                 basicEnemy.SetTarget(basicEnemy.viewTrigger.GetPlayersDetected()[0].transform);
 
-            stateMachine.SetState(basicEnemy.moveState);
+            //stateMachine.SetState(basicEnemy.moveState);
         }
     }
 

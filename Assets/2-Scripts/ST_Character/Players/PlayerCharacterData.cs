@@ -19,6 +19,8 @@ public class PlayerCharacterData : ScriptableObject
     [SerializeField]
     private SpriteLibraryAsset pixelAnimations;
     [SerializeField]
+    private SpriteLibraryAsset trashPressAnimations;
+    [SerializeField]
     private Sprite pixelFaceSprite;
     [SerializeField]
     private Sprite pixelBackgroundSprite;
@@ -43,6 +45,7 @@ public class PlayerCharacterData : ScriptableObject
     public Sprite HudSprite => hudSprite;
     public Sprite DialogueSprite => dialogueSprite;
     public SpriteLibraryAsset PixelAnimations => pixelAnimations;
+    public SpriteLibraryAsset TrashPressAnimations => trashPressAnimations;
     public Sprite PixelFaceSprite => pixelFaceSprite;
     public Sprite PixelBackgroundSprite => pixelBackgroundSprite;
     public Sprite UniqueAbilitySprite => uniqueAbilitySprite;
