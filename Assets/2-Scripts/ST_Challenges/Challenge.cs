@@ -50,7 +50,7 @@ public class Challenge : MonoBehaviour
     [HideInInspector] public bool challengeCompleted;
     [HideInInspector] private bool challengeStarted;
     [HideInInspector] public ChallengeUI challengeUI;
-    private string destinationSceneName = "ChallengeSceneTest";
+    private string destinationSceneName = "ChallengeScene";
 
     [HideInInspector] public int rank = 0;
 

@@ -38,7 +38,7 @@ public abstract class PlayerCharacter : Character
 
     protected float lastestCharacterSwitch;
     protected float currentHp;
-    protected float uniqueAbilityUses = 0 ;
+    protected float uniqueAbilityUses = 0;
     protected float lastHitTime;
 
     #endregion
@@ -72,7 +72,7 @@ public abstract class PlayerCharacter : Character
     protected bool isInBossfight = false;
     protected bool bossfightPowerUpUnlocked = false;
 
-    protected bool isRightInputRecently => rightInputTimer>0;
+    protected bool isRightInputRecently => rightInputTimer > 0;
     [SerializeField] protected float recentlyInputTimer = 3f;
     protected float rightInputTimer = 0;
 
@@ -81,7 +81,7 @@ public abstract class PlayerCharacter : Character
 
     [Header("Crosshair distance multiplier")]
 
-    [SerializeField] float crosshairDistance=6f;
+    [SerializeField] float crosshairDistance = 6f;
 
     #endregion
 
@@ -89,14 +89,14 @@ public abstract class PlayerCharacter : Character
     public ePlayerCharacter Character => character;
 
     public virtual float MaxHp => Mathf.RoundToInt(maxHp * powerUpData.MaxHpIncrease);
-    public virtual float CurrentHp 
+    public virtual float CurrentHp
     {
-        get {  return Mathf.RoundToInt(currentHp); }
-        set 
-        { 
+        get { return Mathf.RoundToInt(currentHp); }
+        set
+        {
             currentHp = value;
 
-            if(currentHp<0)
+            if (currentHp < 0)
                 currentHp = 0;
 
             if (currentHp > MaxHp)
@@ -169,8 +169,8 @@ public abstract class PlayerCharacter : Character
     public void SetCurrentHP(float value) => CurrentHp = value;
 
     public PlayerInputHandler GetInputHandler()
-    { 
-        if(characterController != null)
+    {
+        if (characterController != null)
             return characterController.GetInputHandler();
         else
             return null;
@@ -183,7 +183,7 @@ public abstract class PlayerCharacter : Character
     {
         Move(moveDir);
     }
-    
+
 
     public virtual void Move(Vector2 direction)
     {
@@ -256,7 +256,8 @@ public abstract class PlayerCharacter : Character
             SetHitMaterialColor(_OnHitColor);
 
             OnHit?.Invoke();
-            StartCoroutine(PushCharacter(data.dealer.dealerTransform.transform.position, onHitPushForce, onHitPushTimer));
+            if (data.dealer != null)
+                StartCoroutine(PushCharacter(data.dealer.dealerTransform.transform.position, onHitPushForce, onHitPushTimer));
 
             if (protectedByTank && data.blockedByTank)
             {
@@ -267,7 +268,7 @@ public abstract class PlayerCharacter : Character
                 PubSub.Instance.Notify(EMessageType.characterDamaged, this);
             }
 
-            if (CurrentHp <= 0 )
+            if (CurrentHp <= 0)
             {
                 
                 Die();
@@ -285,8 +286,8 @@ public abstract class PlayerCharacter : Character
         characterController.GetInputHandler().PlayerInput.actions.FindAction("Option").Enable();
         ressInteracter.gameObject.SetActive(true);
         isDead = true;
-        
-        foreach(Collider2D coll in colliders)
+
+        foreach (Collider2D coll in colliders)
         {
             coll.enabled = false;
         }
@@ -304,9 +305,9 @@ public abstract class PlayerCharacter : Character
         {
             coll.enabled = true;
         }
-        TakeHeal(new DamageData(MathF.Floor( MaxHp/2), this));
+        TakeHeal(new DamageData(MathF.Floor(MaxHp / 2), this));
         ressInteracter.gameObject.SetActive(false);
-        PlayerCharacterPoolManager.Instance.PlayerIsRessed();   
+        PlayerCharacterPoolManager.Instance.PlayerIsRessed();
     }
 
 
@@ -345,7 +346,7 @@ public abstract class PlayerCharacter : Character
             lookDir = context.ReadValue<Vector2>();
             rightInputTimer = recentlyInputTimer;
         }
-            
+
     }
 
     public void LookInputMouse(InputAction.CallbackContext context)
@@ -371,16 +372,16 @@ public abstract class PlayerCharacter : Character
 
     public Vector2 ReadLookdirCrosshair(Vector2 shootSource)
     {
-        if(lookDir.magnitude <= 1)
+        if (lookDir.magnitude <= 1)
         {
             lookDir.Normalize();
             lookDir *= crosshairDistance;
         }
 
-        
-        
-        
-        return (lookDir+shootSource);
+
+
+
+        return (lookDir + shootSource);
     }
 
     public Vector2 ReadLook(InputAction.CallbackContext context)
@@ -469,7 +470,7 @@ public abstract class PlayerCharacter : Character
 
     public virtual void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-        HPHandler.Instance.NotifyUseAbility(this,UniqueAbilityCooldown);
+        HPHandler.Instance.NotifyUseAbility(this, UniqueAbilityCooldown);
     }
 
     public virtual void ExtraAbilityInput(InputAction.CallbackContext context)
@@ -482,7 +483,7 @@ public abstract class PlayerCharacter : Character
         moveDir = context.ReadValue<Vector2>();
         if (moveDir != Vector2.zero)
             lastNonZeroDirection = moveDir;
-        
+
     }
 
     public void InteractInput(InputAction.CallbackContext context)
@@ -509,7 +510,7 @@ public abstract class PlayerCharacter : Character
         saveData.extraData = extraData;
         foreach (AbilityUpgrade au in Enum.GetValues(typeof(AbilityUpgrade)))
         {
-            if(upgradeStatus[au])
+            if (upgradeStatus[au])
                 saveData.unlockedAbility.Add(au);
         }
 
@@ -518,7 +519,7 @@ public abstract class PlayerCharacter : Character
 
     public void LoadSaveData(CharacterSaveData saveData)
     {
-        if(saveData == null || saveData.characterName != character)
+        if (saveData == null || saveData.characterName != character)
             return;
         Debug.Log("load");
         foreach (PowerUp pu in saveData.powerUps)
@@ -531,6 +532,19 @@ public abstract class PlayerCharacter : Character
         {
             upgradeStatus[au] = true;
         }
+    }
+
+    #endregion
+
+    #region Rumble
+
+    public void RumblePad(string rumbleName)
+    {
+        RumbleData dataFound = GetRumbleData(rumbleName);
+
+        if (dataFound == null) return;
+
+        characterController.GetInputHandler().RumblePulse(dataFound);
     }
 
     #endregion

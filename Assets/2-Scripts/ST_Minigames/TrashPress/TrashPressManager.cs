@@ -277,7 +277,7 @@ public class TrashPressManager : MonoBehaviour
             SpawnTrash();       
             yield return new WaitForSeconds(trashTimerBetweenAttacks);          
             tempTimer -= trashTimerBetweenAttacks;
-            trashPressUI.UpdatePhaseTimer(tempTimer);
+            trashPressUI.UpdatePhaseTimer((int)tempTimer);
         }
 
         StartCoroutine(PressTrashGameplay());
@@ -356,7 +356,6 @@ public class TrashPressManager : MonoBehaviour
         yield return new WaitForSeconds(trashTimerBetweenAttacks);
         canSpawnTrash = true;
     }
-
     private void SpawnTrash()
     {
         canSpawnTrash = false;
