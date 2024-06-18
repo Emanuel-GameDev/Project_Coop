@@ -174,6 +174,11 @@ public class PlayerInputHandler : MonoBehaviour
 
         if(!data.isEndless)
             StartCoroutine(StopRumble(data));
+        else
+        {
+            data.duration = 60f;
+            StartCoroutine(StopRumble(data));
+        }    
 
         activeRumbleData = data;
     }
