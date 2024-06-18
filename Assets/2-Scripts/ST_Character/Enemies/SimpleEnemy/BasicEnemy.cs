@@ -912,8 +912,8 @@ public class BasicEnemy : EnemyCharacter
     {
         base.TargetSelection();
     }
-    [SerializeField] float forceDuration =0.1f;
-    [SerializeField] float pushForce=15;
+    [SerializeField] float forceDuration =0.05f;
+    [SerializeField] float pushForce=30;
 
 
     public override void TakeDamage(DamageData data)
@@ -972,7 +972,7 @@ public class BasicEnemy : EnemyCharacter
 
 
         agent.velocity = new Vector3(transform.position.x - pusherPosition.x,
-                        transform.position.y - pusherPosition.y, 0) * pushForce;
+                        transform.position.y - pusherPosition.y, 0).normalized * pushForce;
 
         yield return new WaitForSeconds(pushDuration);
         agent.velocity = Vector3.zero;
