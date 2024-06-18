@@ -38,6 +38,14 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     [SerializeField, Tooltip("numero di spari con sparo multiplo")]
     float numberProjectile = 3;
 
+    [Header("Variabili Aim Assist")]
+    [SerializeField, Tooltip("Detector")]
+    Detector AimAssistDetector;
+    [SerializeField, Tooltip("Raggio massimo per agganciamento")]
+    float aimAssistArea = 30f;
+
+    bool aimAssist;
+
     [Header("Abilità unica")]
 
     [SerializeField, Tooltip("tempo necessario per colpo potenziato")]

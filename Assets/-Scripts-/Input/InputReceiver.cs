@@ -100,6 +100,11 @@ public abstract class InputReceiver : MonoBehaviour
     {
 
     }
+
+    public virtual void LockTargetInput(InputAction.CallbackContext context)
+    {
+
+    }
     #endregion
 
     #region Minigame

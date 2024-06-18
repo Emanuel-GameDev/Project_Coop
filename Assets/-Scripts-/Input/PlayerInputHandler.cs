@@ -179,6 +179,8 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void MouseLookInput(InputAction.CallbackContext context) => CurrentReceiver.MouseLookInput(context);
 
+    public void LockTargetInput(InputAction.CallbackContext context) => CurrentReceiver.LockTargetInput(context);
+
 
     #endregion
 
