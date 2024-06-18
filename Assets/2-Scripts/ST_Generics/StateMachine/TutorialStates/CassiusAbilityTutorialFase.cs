@@ -31,7 +31,7 @@ public class CassiusAbilityTutorialFase : TutorialFase
         tutorialManager.objectiveNumbersGroup.SetActive(true);
         tutorialManager.objectiveNumberToReach.text = "1";
         tutorialManager.objectiveNumberReached.text = "0";
-        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.healer);
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.healer, null, null);
 
         tutorialManager.DeactivateAllPlayerInputs();
 

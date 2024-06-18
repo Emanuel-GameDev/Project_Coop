@@ -35,7 +35,7 @@ public class HealTutorialState : TutorialFase
 
         DamageData damageData = new DamageData(1, null);
 
-        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.healer);
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.healer, null, null);
 
 
         PubSub.Instance.RegisterFunction(EMessageType.characterHealed, CharacterHealed);

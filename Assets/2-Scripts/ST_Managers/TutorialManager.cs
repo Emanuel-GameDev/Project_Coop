@@ -70,7 +70,11 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] MenuInfo startTutorialMenu;
     [SerializeField] MenuInfo continueTutorialMenu;
 
-    public Image currentTutorialFaseImage;
+    [SerializeField] internal Sprite defaultImage;
+    [SerializeField] internal Image currentTutorialCharacterImage1;
+    [SerializeField] internal Image currentTutorialCharacterImage2;
+    [SerializeField] internal Image currentTutorialCharacterImage3;
+
 
     [Serializable]
     public class Fase
@@ -137,6 +141,7 @@ public class TutorialManager : MonoBehaviour
         tutorialEnemy.gameObject.SetActive(false);
         lilith.gameObject.SetActive(true);
 
+        currentFaseObjective.gameObject.SetActive(false);
 
         skipSlider.gameObject.SetActive(false);
 
@@ -164,10 +169,41 @@ public class TutorialManager : MonoBehaviour
 
     }
 
-    public void ChangeAndActivateCurrentCharacterImage(PlayerCharacter character)
+    public void ChangeAndActivateCurrentCharacterImage(PlayerCharacter character1, PlayerCharacter character2, PlayerCharacter character3)
     {
-        currentTutorialFaseImage.sprite = GameManager.Instance.GetCharacterData(character.Character).DialogueSprite;
-        currentTutorialFaseImage.gameObject.SetActive(true);
+        currentFaseObjective.gameObject.SetActive(true);
+
+        if (character1 != null)
+        {
+            currentTutorialCharacterImage1.sprite = GameManager.Instance.GetCharacterData(character1.Character).NotificationSprite;
+            currentTutorialCharacterImage1.gameObject.SetActive(true);
+        }
+        else
+            currentTutorialCharacterImage1.gameObject.SetActive(false);
+
+        if (character2 != null)
+        {
+            currentTutorialCharacterImage2.sprite = GameManager.Instance.GetCharacterData(character2.Character).NotificationSprite;
+            currentTutorialCharacterImage2.gameObject.SetActive(true);
+        }
+        else
+            currentTutorialCharacterImage2.gameObject.SetActive(false);
+
+        if (character3 != null)
+        {
+            currentTutorialCharacterImage3.sprite = GameManager.Instance.GetCharacterData(character3.Character).NotificationSprite;
+            currentTutorialCharacterImage3.gameObject.SetActive(true);
+        }
+        else
+            currentTutorialCharacterImage3.gameObject.SetActive(false);
+
+        if(character1 == null && character2 == null && character3 == null)
+        {
+            currentTutorialCharacterImage1.sprite = defaultImage;
+            currentTutorialCharacterImage1.gameObject.SetActive(true);
+        }
+
+
     }
 
     private void DisableSkipSlider(InputAction.CallbackContext context)
