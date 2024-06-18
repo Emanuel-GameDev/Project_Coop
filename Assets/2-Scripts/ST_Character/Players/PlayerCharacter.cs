@@ -547,6 +547,15 @@ public abstract class PlayerCharacter : Character
         characterController.GetInputHandler().RumblePulse(dataFound);
     }
 
+    public void StopRumblePad(string rumbleName)
+    {
+        RumbleData dataFound = GetRumbleData(rumbleName);
+
+        if (dataFound == null) return;
+
+        characterController.GetInputHandler().RumbleStop(dataFound);
+    }
+
     #endregion
 
     public override void DisableOtherActions()
