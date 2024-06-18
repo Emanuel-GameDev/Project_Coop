@@ -30,8 +30,9 @@ public class MovementTutorialState : TutorialFase
         tutorialManager.currentFaseObjective.SetActive(true);
         tutorialManager.objectiveNumbersGroup.SetActive(false);
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
-        tutorialManager.currentTutorialFaseImage.gameObject.SetActive(false);
         tutorialManager.DeactivateAllPlayerInputs();
+
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(null, null, null);
 
         tutorialManager.dialogueBox.OnDialogueEnded += StartFaseTimer;
         tutorialManager.DeactivateEnemyAI();

@@ -34,6 +34,7 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.objectiveNumberToReach.text = faseData.timesToDodge.ToString();
 
 
+
         tutorialManager.blockFaseChange = true;
         currentCharacterIndex = -1;
 
@@ -41,6 +42,7 @@ public class DodgeTutorialState : TutorialFase
         charactersPreTutorialDialogue = new Dialogue[2] { faseData.dpsDodgeDialogue, faseData.rangedDodgeDialogue };
         //charactersPerfectTutorialDialogue = new Dialogue[2] { faseData.dpsPerfectDodgeDialogue, faseData.rangedPerfectDodgeDialogue };
 
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.dps, tutorialManager.ranged,null);
 
         tutorialManager.DeactivateAllPlayerInputs();
 
@@ -172,7 +174,7 @@ public class DodgeTutorialState : TutorialFase
         tutorialManager.ResetStartingCharacterAssosiacion();
 
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetPlayerCharacter(currentFaseCharacters[currentCharacterIndex]);
-        tutorialManager.ChangeAndActivateCurrentCharacterImage(currentFaseCharacters[currentCharacterIndex]);
+        
         tutorialManager.DeactivateAllPlayerInputs();
 
         foreach (PlayerInputHandler ih in CoopManager.Instance.GetActiveHandlers())

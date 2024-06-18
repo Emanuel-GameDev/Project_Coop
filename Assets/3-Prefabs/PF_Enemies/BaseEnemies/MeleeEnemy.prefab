@@ -404,6 +404,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _walkDustParticles: {fileID: 0}
+  _hitParticlesObject: {fileID: 0}
   fadeSpeedOnHit: 2
   _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   stunned: 0
@@ -432,7 +433,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   soundsDatabase: {fileID: 0}
-  maxHp: 55
+  rumbleData: []
+  maxHp: 30
   damage: 5
   staminaDamage: 5
   attackSpeed: 1
@@ -443,7 +445,7 @@ MonoBehaviour:
   groundLevel: {fileID: 1495691587368610306}
   parriedTime: 3
   stunTime: 0.5
-  viewRange: 13.96
+  viewRange: 16
   attackRange: 1.5
   changeTargetRange: 10
   attackDelay: 2
@@ -472,10 +474,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 3072
   csAvoidDistance: 2
-  obstacleAvoidanceCloseRange: 2
-  obstacleAvoidanceFarRange: 2
+  obstacleAvoidanceCloseRange: 4
+  obstacleAvoidanceFarRange: 4
   showDirections: 0
   inc: 1
+  forceDuration: 0.05
+  pushForce: 30
 --- !u!195 &5662952163184238644
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -791,6 +795,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2de632904a0ecf48920e0fa6a2dcd65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HitVFX: {fileID: 6003591138353366379, guid: 8a2335f309a06d5478f364063dd80006, type: 3}
   targetLayers:
     serializedVersion: 2
     m_Bits: 64

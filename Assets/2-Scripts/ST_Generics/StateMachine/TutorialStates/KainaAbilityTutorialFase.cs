@@ -28,7 +28,7 @@ public class KainaAbilityTutorialFase : TutorialFase
         tutorialManager.objectiveNumberToReach.text = "1";
         tutorialManager.objectiveNumberReached.text = "0";
 
-        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.tank);
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.tank,null,null);
 
         tutorialManager.DeactivateAllPlayerInputs();
 

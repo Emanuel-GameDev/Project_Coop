@@ -1546,6 +1546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2de632904a0ecf48920e0fa6a2dcd65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HitVFX: {fileID: 6003591138353366379, guid: 8a2335f309a06d5478f364063dd80006, type: 3}
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
@@ -1675,6 +1676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _walkDustParticles: {fileID: 6131186109790520247}
+  _hitParticlesObject: {fileID: 0}
   fadeSpeedOnHit: 2
   _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   stunned: 0
@@ -1755,10 +1757,10 @@ MonoBehaviour:
     duration: 0.2
     priority: 2
   - rumbleName: ChargeAttack
-    lowFreqency: 0.028
-    highFreqency: 0.029
+    lowFreqency: 0.163
+    highFreqency: 0.164
     isEndless: 1
-    duration: 0.1
+    duration: 0.2
     priority: 2
   character: 2
   maxHp: 250
@@ -1807,34 +1809,7 @@ MonoBehaviour:
   shieldVFXParryColor: {r: 4, g: 4, b: 4, a: 0}
   onBlock:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7402305790619443405}
-        m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: RumblePad
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Attack1
-          m_BoolArgument: 0
-        m_CallState: 2
-  onPerfectBlock:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7402305790619443405}
-        m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
-        m_MethodName: RumblePad
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: AttackFinal
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!95 &2671203252233228587
 Animator:
   serializedVersion: 5
