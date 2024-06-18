@@ -12,7 +12,7 @@ public class RumbleData
     [Range(0f, 1f)]
     public float highFreqency;
 
-    public bool hasDuration = true;
+    public bool isEndless = true;
 
     [Min(0f)]
     public float duration;
