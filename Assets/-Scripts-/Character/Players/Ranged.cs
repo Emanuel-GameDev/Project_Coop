@@ -44,7 +44,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     [SerializeField, Tooltip("Raggio massimo per agganciamento")]
     float aimAssistArea = 30f;
 
-    bool aimAssist;
+    [SerializeField] bool aimAssist;
 
     [Header("Abilità unica")]
 
@@ -351,6 +351,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
         isAttacking = false;
     }
+
+    
 
 
 
@@ -712,6 +714,17 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         yield return new WaitForSeconds(time);
         if (perfectTimingEnabled)
             PerfectTimeEnded();
+    }
+
+    public override void LockTargetInput(InputAction.CallbackContext context)
+    {
+        Debug.Log("R3 premuto");
+
+        if (context.performed)
+        {
+            aimAssist = !aimAssist;
+        }
+        
     }
 }
 

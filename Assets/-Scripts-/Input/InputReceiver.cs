@@ -105,6 +105,8 @@ public abstract class InputReceiver : MonoBehaviour
     {
 
     }
+
+    
     #endregion
 
     #region Minigame
