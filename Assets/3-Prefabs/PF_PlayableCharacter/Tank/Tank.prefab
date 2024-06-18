@@ -1688,7 +1688,19 @@ MonoBehaviour:
   damageReceivedMultiplier: 1
   onHit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7402305790619443405}
+        m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
+        m_MethodName: RumblePad
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: HitPlayer
+          m_BoolArgument: 0
+        m_CallState: 2
   onDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -1723,6 +1735,31 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   soundsDatabase: {fileID: 11400000, guid: 4866e9b05330207409bf533d1f08123f, type: 2}
+  rumbleData:
+  - rumbleName: Attack1
+    lowFreqency: 0.142
+    highFreqency: 0.144
+    isEndless: 0
+    duration: 0.1
+    priority: 1
+  - rumbleName: AttackFinal
+    lowFreqency: 0.181
+    highFreqency: 0.134
+    isEndless: 0
+    duration: 0.3
+    priority: 1
+  - rumbleName: HitPlayer
+    lowFreqency: 0.49
+    highFreqency: 0.529
+    isEndless: 0
+    duration: 0.2
+    priority: 2
+  - rumbleName: ChargeAttack
+    lowFreqency: 0.163
+    highFreqency: 0.164
+    isEndless: 1
+    duration: 0.2
+    priority: 2
   character: 2
   maxHp: 250
   damage: 15
@@ -1755,7 +1792,7 @@ MonoBehaviour:
   perfectBlockDamage: 10
   blockAngle: 360
   perfectBlockTimeWindow: 0.7
-  blockMoveSpeed: 0.001
+  blockMoveSpeed: 0.00001
   aggroRange: 100
   aggroDuration: 10
   HealthDamageReduction: 50
