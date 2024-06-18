@@ -952,21 +952,24 @@ MonoBehaviour:
     m_RotationOrder: 4
   soundsDatabase: {fileID: 11400000, guid: e88a79708070e6d489b40b45ab610210, type: 2}
   rumbleData:
-  - lowFreqency: 0.142
+  - rumbleName: Attack1
+    lowFreqency: 0.142
     highFreqency: 0.144
+    isEndless: 0
     duration: 0.1
     priority: 1
-    rumbleName: Attack1
-  - lowFreqency: 0.181
+  - rumbleName: Heal
+    lowFreqency: 0.181
     highFreqency: 0.134
+    isEndless: 0
     duration: 0.3
     priority: 1
-    rumbleName: Heal
-  - lowFreqency: 0.49
+  - rumbleName: HitPlayer
+    lowFreqency: 0.49
     highFreqency: 0.529
+    isEndless: 0
     duration: 0.2
     priority: 2
-    rumbleName: HitPlayer
   character: 3
   maxHp: 120
   damage: 5
