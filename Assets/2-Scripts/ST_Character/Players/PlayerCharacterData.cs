@@ -17,6 +17,8 @@ public class PlayerCharacterData : ScriptableObject
     [SerializeField]
     private Sprite dialogueSprite;
     [SerializeField]
+    private Sprite notificationSprite;
+    [SerializeField]
     private SpriteLibraryAsset pixelAnimations;
     [SerializeField]
     private SpriteLibraryAsset trashPressAnimations;
@@ -51,6 +53,7 @@ public class PlayerCharacterData : ScriptableObject
     public Sprite PixelBackgroundSprite => pixelBackgroundSprite;
     public Sprite UniqueAbilitySprite => uniqueAbilitySprite;
     public Sprite NotificationBackground => notificationBackground;
+    public Sprite NotificationSprite => notificationSprite;
 
     public Sprite HpContainerLeft => hpContainerSpriteLeft;
     public Sprite HpContainerRight => hpContainerSpriteRight;

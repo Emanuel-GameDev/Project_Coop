@@ -9,6 +9,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
   
     [Header("General VFX")]
     [SerializeField] protected ParticleSystem _walkDustParticles;
+    [SerializeField] protected GameObject _hitParticlesObject;
     [SerializeField] private float fadeSpeedOnHit = 2f;
     [SerializeField] protected Color _OnHitColor = Color.red;
 
@@ -81,13 +82,13 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
     public Rigidbody2D GetRigidBody() => rb;
 
 
-    public IEnumerator PushCharacter(Vector3 pusherPosizion, float pushStrenght, float pushDuration)
+    public virtual IEnumerator PushCharacter(Vector3 pusherPosition, float pushStrenght, float pushDuration)
     {
         float timer = 0;
         float interpolationRatio;
         Vector3 startPosition = rb.transform.position;
 
-        Vector3 pushDirection = (startPosition - pusherPosizion).normalized;
+        Vector3 pushDirection = (startPosition - pusherPosition).normalized;
 
         while (timer < pushDuration)
         {
@@ -252,6 +253,8 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
             yield return new WaitForEndOfFrame();
         }
     }
+
+  
 
 
 

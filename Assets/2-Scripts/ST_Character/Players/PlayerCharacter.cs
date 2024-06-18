@@ -270,7 +270,7 @@ public abstract class PlayerCharacter : Character
 
             if (CurrentHp <= 0)
             {
-                
+
                 Die();
                 onDeath?.Invoke();
             }

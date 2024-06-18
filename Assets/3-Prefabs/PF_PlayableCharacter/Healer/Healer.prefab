@@ -891,6 +891,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _walkDustParticles: {fileID: 3611517289115023779}
+  _hitParticlesObject: {fileID: 6003591138353366379, guid: 8a2335f309a06d5478f364063dd80006,
+    type: 3}
   fadeSpeedOnHit: 2
   _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   stunned: 0
@@ -952,21 +954,24 @@ MonoBehaviour:
     m_RotationOrder: 4
   soundsDatabase: {fileID: 11400000, guid: e88a79708070e6d489b40b45ab610210, type: 2}
   rumbleData:
-  - lowFreqency: 0.142
+  - rumbleName: Attack1
+    lowFreqency: 0.142
     highFreqency: 0.144
+    isEndless: 0
     duration: 0.1
     priority: 1
-    rumbleName: Attack1
-  - lowFreqency: 0.181
+  - rumbleName: Heal
+    lowFreqency: 0.181
     highFreqency: 0.134
+    isEndless: 0
     duration: 0.3
     priority: 1
-    rumbleName: Heal
-  - lowFreqency: 0.49
+  - rumbleName: HitPlayer
+    lowFreqency: 0.49
     highFreqency: 0.529
+    isEndless: 0
     duration: 0.2
     priority: 2
-    rumbleName: HitPlayer
   character: 3
   maxHp: 120
   damage: 5
@@ -1198,6 +1203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2de632904a0ecf48920e0fa6a2dcd65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HitVFX: {fileID: 6003591138353366379, guid: 8a2335f309a06d5478f364063dd80006, type: 3}
   targetLayers:
     serializedVersion: 2
     m_Bits: 128

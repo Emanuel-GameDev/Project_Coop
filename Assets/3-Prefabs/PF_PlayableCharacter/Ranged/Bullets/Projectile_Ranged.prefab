@@ -4881,7 +4881,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1822292781
-  m_SortingLayer: 4
+  m_SortingLayer: 6
   m_SortingOrder: -1
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -4965,6 +4965,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b845019a0fe63ab4b9d0ef2b41e5a0cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectileType: 0
   travelDirection: {x: 0, y: 0}
   projectileSpeed: 0
   rangeRemaining: 1
@@ -4992,6 +4993,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2de632904a0ecf48920e0fa6a2dcd65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HitVFX: {fileID: 6003591138353366379, guid: 8a2335f309a06d5478f364063dd80006, type: 3}
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
@@ -5099,7 +5101,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1822292781
-  m_SortingLayer: 4
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847,
     type: 3}
@@ -5185,7 +5187,7 @@ TrailRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1822292781
-  m_SortingLayer: 4
+  m_SortingLayer: 6
   m_SortingOrder: -1
   m_Time: 0.2
   m_PreviewTimeScale: 1

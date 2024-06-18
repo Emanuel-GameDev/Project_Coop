@@ -32,6 +32,8 @@ public class AttackTutorialState : TutorialFase
         tutorialManager.objectiveText.text = faseData.faseObjectiveBrutus.GetLocalizedString();
         tutorialManager.objectiveNumbersGroup.SetActive(true);
 
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(null,null,null);
+
         tutorialManager.blockFaseChange = true;
 
         currentCharacterIndex = -1;
@@ -110,7 +112,7 @@ public class AttackTutorialState : TutorialFase
         tutorialManager.ResetStartingCharacterAssosiacion();
 
         tutorialManager.inputBindings[currentFaseCharacters[currentCharacterIndex]].SetPlayerCharacter(currentFaseCharacters[currentCharacterIndex]);
-        tutorialManager.ChangeAndActivateCurrentCharacterImage(currentFaseCharacters[currentCharacterIndex]);
+     
         tutorialManager.dialogueBox.OnDialogueEnded += StartSubFase;
         tutorialManager.PlayDialogue(charactersPreTutorialDialogue[currentCharacterIndex]);
 

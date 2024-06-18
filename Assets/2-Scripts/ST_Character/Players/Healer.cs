@@ -129,7 +129,6 @@ public class Healer : PlayerCharacter
         //else Debug.Log("no");
 
         emissionModule = _walkDustParticles.emission;
-
     }
 
 
@@ -342,6 +341,8 @@ public class Healer : PlayerCharacter
             bossAbilityChargeTimer = 0;
         }
     }
+
+    
 
     public void PlaySmallHealParticles()
     {

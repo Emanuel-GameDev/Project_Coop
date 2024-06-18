@@ -33,7 +33,7 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.objectiveNumbersGroup.SetActive(true);
         tutorialManager.objectiveNumberReached.text = guardExecuted.ToString();
         tutorialManager.objectiveNumberToReach.text = faseData.timesToBlock.ToString();
-        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.tank);
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.tank, null, null);
 
         PubSub.Instance.RegisterFunction(EMessageType.guardExecuted, UpdateCounter);
         PubSub.Instance.RegisterFunction(EMessageType.perfectGuardExecuted, UpdateCounter);

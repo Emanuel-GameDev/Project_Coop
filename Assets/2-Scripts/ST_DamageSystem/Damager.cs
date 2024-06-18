@@ -3,6 +3,8 @@ using UnityEngine.Events;
 
 public class Damager : MonoBehaviour
 {
+    [SerializeField] GameObject HitVFX;
+
     [SerializeField]
     public LayerMask targetLayers;
 
@@ -12,6 +14,8 @@ public class Damager : MonoBehaviour
 
     [SerializeField]
     UnityEvent<Collider2D> onTrigger = new();
+
+    
 
     //decidere se tenere ConditionToApply
 
@@ -34,6 +38,17 @@ public class Damager : MonoBehaviour
 
                 if (oneTimeCondition)
                     conditionToApply = null;
+
+                if(HitVFX != null)
+                {
+                    //Collider2D[] contacts = new Collider2D[1];
+                    //other.GetContacts(contacts);
+
+                    //if (contacts[0]!=null)
+                    //{
+                        GameManager.Instance.SpawnVFXObject(HitVFX, other.ClosestPoint(transform.position));
+                   // }
+                }
             }
         }
     }

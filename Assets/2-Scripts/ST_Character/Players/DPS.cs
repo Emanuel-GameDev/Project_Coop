@@ -413,7 +413,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     public override void ExtraAbilityInput(InputAction.CallbackContext context)
     {
 
-        if (context.performed && DashAttackUnlocked && CanMove && (Time.time - lastDashAttackTime > dashAttackCooldown))
+        if (context.started && DashAttackUnlocked && CanMove && (Time.time - lastDashAttackTime > dashAttackCooldown))
         {
             Utility.DebugTrace("Performed");
             isDashingAttack = true;
