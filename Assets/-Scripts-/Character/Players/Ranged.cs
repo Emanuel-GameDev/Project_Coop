@@ -421,12 +421,12 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         if(isDodging)
         {
             //se potenziamento sbloccato => damage
-            if (dodgeDamageUnlocked)
+            if (dodgeDamageUnlocked && data.dealer.dealerTransform.gameObject.TryGetComponent(out Character dealer))
             {
-               
+                dealer.TakeDamage(new DamageData(Damage * dodgeDamageMultiplier, this));
             }
 
-            //se c'è il boss + potenziamento sbloccato => tp
+            //TODO:se c'è il boss + potenziamento sbloccato => tp
             PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
         }
         else
