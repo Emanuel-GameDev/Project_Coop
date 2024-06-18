@@ -718,13 +718,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
     public override void LockTargetInput(InputAction.CallbackContext context)
     {
-        Debug.Log("R3 premuto");
 
-        if (context.performed)
-        {
-            aimAssist = !aimAssist;
-        }
-        
+        Debug.Log("Premuto R3");
     }
 }
 
