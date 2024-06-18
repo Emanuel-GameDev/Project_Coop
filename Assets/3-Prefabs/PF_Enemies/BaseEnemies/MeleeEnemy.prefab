@@ -404,6 +404,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _walkDustParticles: {fileID: 0}
+  _hitParticlesObject: {fileID: 0}
   fadeSpeedOnHit: 2
   _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   stunned: 0
@@ -477,6 +478,8 @@ MonoBehaviour:
   obstacleAvoidanceFarRange: 4
   showDirections: 0
   inc: 1
+  forceDuration: 0.05
+  pushForce: 10
 --- !u!195 &5662952163184238644
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -792,6 +795,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2de632904a0ecf48920e0fa6a2dcd65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HitVFX: {fileID: 0}
   targetLayers:
     serializedVersion: 2
     m_Bits: 64

@@ -1546,6 +1546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2de632904a0ecf48920e0fa6a2dcd65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HitVFX: {fileID: 6003591138353366379, guid: 8a2335f309a06d5478f364063dd80006, type: 3}
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
@@ -1675,6 +1676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _walkDustParticles: {fileID: 6131186109790520247}
+  _hitParticlesObject: {fileID: 0}
   fadeSpeedOnHit: 2
   _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   stunned: 0
@@ -1805,6 +1807,9 @@ MonoBehaviour:
   shieldVFXDamagedColor: {r: 3.7785237, g: 3.185038, b: 0, a: 0}
   shieldVFXCriticalColor: {r: 4, g: 0.37696332, b: 0, a: 0}
   shieldVFXParryColor: {r: 4, g: 4, b: 4, a: 0}
+  onBlock:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!95 &2671203252233228587
 Animator:
   serializedVersion: 5

@@ -912,8 +912,9 @@ public class BasicEnemy : EnemyCharacter
     {
         base.TargetSelection();
     }
+    [SerializeField] float forceDuration =0.1f;
+    [SerializeField] float pushForce=15;
 
-    
 
     public override void TakeDamage(DamageData data)
     {
@@ -930,9 +931,23 @@ public class BasicEnemy : EnemyCharacter
             {
                 Character dealer = data.dealer as Character;
 
+                if (actionCourotine != null)
+                {
+                    StopCoroutine(actionCourotine);
+                    actionCourotine = null;
+                }
+
+                stateMachine.SetState(stunState);
+
+
+
                 if (dealer != null)
                 {
                     SetTarget(dealer.dealerTransform);
+
+
+                    StartCoroutine(PushCharacter(dealer.transform.position, pushForce, forceDuration));
+                    Debug.Log(dealer.transform.position);
                 }
 
                 //if (stateMachine.CurrentState.ToString() == stunState.ToString())
@@ -941,16 +956,27 @@ public class BasicEnemy : EnemyCharacter
                 //    return;
                 //}
 
-                if (actionCourotine != null)
-                {
-                    StopCoroutine(actionCourotine);
-                    actionCourotine = null;
-                }
 
-                stateMachine.SetState(stunState);
             }
         }
        
+    }
+
+    public override IEnumerator PushCharacter(Vector3 pusherPosition, float pushStrenght, float pushDuration)
+    {
+        float timer = 0;
+        float interpolationRatio;
+        Vector3 startPosition = rb.transform.position;
+
+        Vector3 pushDirection = startPosition - pusherPosition;
+
+
+        agent.velocity = new Vector3(transform.position.x - pusherPosition.x,
+                        transform.position.y - pusherPosition.y, 0) * pushForce;
+
+        yield return new WaitForSeconds(pushDuration);
+        agent.velocity = Vector3.zero;
+
     }
 
     public virtual void SetIdleState()

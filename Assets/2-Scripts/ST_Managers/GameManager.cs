@@ -84,6 +84,13 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    public GameObject SpawnVFXObject(GameObject vfx, Vector3 position)
+    {
+        GameObject instantiatedVFX = Instantiate(vfx, position, Quaternion.identity);
+        Destroy(instantiatedVFX,1 );
+        return instantiatedVFX;
+    }
+
     #region Scene Management
 
 
