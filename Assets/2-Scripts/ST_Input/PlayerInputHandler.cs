@@ -172,7 +172,7 @@ public class PlayerInputHandler : MonoBehaviour
         
         gamepad.SetMotorSpeeds(data.lowFreqency, data.highFreqency);
 
-        if(data.hasDuration)
+        if(!data.isEndless)
             StartCoroutine(StopRumble(data));
 
         activeRumbleData = data;
