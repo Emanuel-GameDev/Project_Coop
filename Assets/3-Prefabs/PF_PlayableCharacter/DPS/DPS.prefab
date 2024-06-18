@@ -1354,7 +1354,19 @@ MonoBehaviour:
   damageReceivedMultiplier: 1
   onHit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7349943595437100007}
+        m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
+        m_MethodName: RumblePad
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: HitPlayer
+          m_BoolArgument: 0
+        m_CallState: 2
   onDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -1390,11 +1402,21 @@ MonoBehaviour:
     m_RotationOrder: 4
   soundsDatabase: {fileID: 11400000, guid: 307ea7df80d6e32418352ec0cdbf21c4, type: 2}
   rumbleData:
-  - lowFreqency: 0.325
-    highFreqency: 0.609
-    duration: 4
+  - lowFreqency: 0.142
+    highFreqency: 0.144
+    duration: 0.1
     priority: 1
-    rumbleName: Cacca
+    rumbleName: Attack1
+  - lowFreqency: 0.181
+    highFreqency: 0.134
+    duration: 0.3
+    priority: 1
+    rumbleName: AttackFinal
+  - lowFreqency: 0.49
+    highFreqency: 0.529
+    duration: 0.2
+    priority: 2
+    rumbleName: HitPlayer
   character: 1
   maxHp: 180
   damage: 8
