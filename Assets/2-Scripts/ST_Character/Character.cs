@@ -128,6 +128,18 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
         return result;
     }
 
+    public void StopAllRumblePads(string rumbleName)
+    {
+        RumbleData dataFound = GetRumbleData(rumbleName);
+
+        if (dataFound == null) return;
+
+        foreach (PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
+        {
+            handler.RumbleStop(dataFound);
+        }
+    }
+
     #endregion
 
     #region PowerUp & Conditions
