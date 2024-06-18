@@ -450,6 +450,11 @@ public abstract class PlayerCharacter : Character
 
     }
 
+    public virtual void LockTargetInput(InputAction.CallbackContext context)
+    {
+
+    }
+
     public void MoveInput(InputAction.CallbackContext context)
     {
         moveDir = context.ReadValue<Vector2>();
