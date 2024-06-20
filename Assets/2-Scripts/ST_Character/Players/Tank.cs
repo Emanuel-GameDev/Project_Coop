@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 
@@ -94,6 +95,11 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     [ColorUsage(true, true)]
     [SerializeField] Color shieldVFXParryColor;
     private Color shieldVFXBaseColor;
+
+    [SerializeField]
+    private UnityEvent onBlock;
+    [SerializeField]
+    private UnityEvent onPerfectBlock;
 
 
     //private bool doubleAttack => upgradeStatus[AbilityUpgrade.Ability1];
@@ -602,7 +608,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                     StopCoroutine(ShieldCoroutine);
 
                 }
-
+                onPerfectBlock?.Invoke();
                 ShieldCoroutine = StartCoroutine(PerfectBlockVFX());
             }
             else
@@ -612,7 +618,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
                     StopCoroutine(ShieldCoroutine);
 
                 }
-
+                onBlock?.Invoke();
                 ShieldCoroutine = StartCoroutine(BlockVFX());
 
             }

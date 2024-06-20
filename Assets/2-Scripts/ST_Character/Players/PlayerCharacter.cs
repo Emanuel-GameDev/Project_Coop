@@ -270,7 +270,7 @@ public abstract class PlayerCharacter : Character
 
             if (CurrentHp <= 0)
             {
-                
+
                 Die();
                 onDeath?.Invoke();
             }
@@ -545,6 +545,15 @@ public abstract class PlayerCharacter : Character
         if (dataFound == null) return;
 
         characterController.GetInputHandler().RumblePulse(dataFound);
+    }
+
+    public void StopRumblePad(string rumbleName)
+    {
+        RumbleData dataFound = GetRumbleData(rumbleName);
+
+        if (dataFound == null) return;
+
+        characterController.GetInputHandler().RumbleStop(dataFound);
     }
 
     #endregion

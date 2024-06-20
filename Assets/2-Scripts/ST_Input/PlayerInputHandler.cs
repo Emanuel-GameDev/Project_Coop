@@ -23,6 +23,8 @@ public class PlayerInputHandler : MonoBehaviour
     private InputMap previousInputMap = InputMap.EmptyMap;
     private InputMap currentInputMap = InputMap.EmptyMap;
 
+    private Gamepad gamepad = null;
+
     public InputReceiver _currentReceiver;
     public InputReceiver CurrentReceiver
     {
@@ -43,12 +45,16 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (playerInput == null)
             playerInput = GetComponent<PlayerInput>();
+
+        if (PlayerInput.devices[0] is Gamepad gamepad)
+            this.gamepad = gamepad;
+        
     }
 
     public void SetReceiver(InputReceiver newReceiver)
     {
         CurrentReceiver = newReceiver;
-        if(!GameManager.Instance.IsLoading)
+        if (!GameManager.Instance.IsLoading)
             SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
         CurrentReceiver.SetInputHandler(this);
         if (currentCharacter != ePlayerCharacter.EmptyCharacter)
@@ -146,7 +152,7 @@ public class PlayerInputHandler : MonoBehaviour
     private RumbleData activeRumbleData;
 
     /// <summary>
-    /// Imposta la velocità dei motori di un controller: "lowFreq" controlla il motore SX mentre "highFreq" quello DX,
+    /// Imposta la velocitï¿½ dei motori di un controller: "lowFreq" controlla il motore SX mentre "highFreq" quello DX,
     /// "duration" rappresenta la durata della vibrazione, "pad" se omesso viene impostato a Gamepad.current 
     /// </summary>
     /// <param name="lowFreq"></param>
@@ -155,29 +161,41 @@ public class PlayerInputHandler : MonoBehaviour
     /// <param name="duration"></param>
     public void RumblePulse(RumbleData data)
     {
+        if (gamepad == null)
+            return;
+
         if (activeRumbleData != null)
         {
             if (data.priority < activeRumbleData.priority)
                 return;
         }
+        
+        gamepad.SetMotorSpeeds(data.lowFreqency, data.highFreqency);
 
-        Gamepad pad = null;
-
-        if (PlayerInput.devices[0] is Gamepad)
-        {
-            pad = (Gamepad)PlayerInput.devices[0];
-        }
+        if(!data.isEndless)
+            StartCoroutine(StopRumble(data));
         else
-            return;
-
-        pad.SetMotorSpeeds(data.lowFreqency, data.highFreqency);
-
-        StartCoroutine(StopRumble(data, pad));
+        {
+            data.duration = 60f;
+            StartCoroutine(StopRumble(data));
+        }    
 
         activeRumbleData = data;
     }
 
-    private IEnumerator StopRumble(RumbleData data, Gamepad pad)
+    public void RumbleStop(RumbleData data)
+    {
+        if (gamepad == null)
+            return;
+
+        if (activeRumbleData == null || data == activeRumbleData)
+        {
+            gamepad.SetMotorSpeeds(0f, 0f);
+            activeRumbleData = null;
+        }
+    }
+
+    private IEnumerator StopRumble(RumbleData data)
     {
         yield return new WaitForSeconds(data.duration);
        
@@ -275,7 +293,7 @@ public class PlayerInputHandler : MonoBehaviour
     public virtual void SubNextInput(InputAction.CallbackContext context) => CurrentReceiver.SubNextInput(context);
 
     public virtual void SubPreviousInput(InputAction.CallbackContext context) => CurrentReceiver.SubPreviousInput(context);
-    
+
     public virtual void ChangeVisualizationInput(InputAction.CallbackContext context) => CurrentReceiver.ChangeVisualizationInput(context);
 
     #endregion

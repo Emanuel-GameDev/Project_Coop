@@ -34,7 +34,8 @@ public class PlayerCharacterData : ScriptableObject
     private Sprite hpContainerSpriteLeft;
     [SerializeField]
     private Sprite hpContainerSpriteRight;
-
+    [SerializeField]
+    private RuntimeAnimatorController smashMinigameAnimator;
 
 
 
@@ -53,5 +54,7 @@ public class PlayerCharacterData : ScriptableObject
 
     public Sprite HpContainerLeft => hpContainerSpriteLeft;
     public Sprite HpContainerRight => hpContainerSpriteRight;
+
+    public RuntimeAnimatorController SmashMinigameAnimator => smashMinigameAnimator;
 
 }
