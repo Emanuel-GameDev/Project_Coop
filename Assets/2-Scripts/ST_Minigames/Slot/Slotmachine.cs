@@ -748,7 +748,10 @@ public class Slotmachine : MonoBehaviour
             }
 
             Enum.TryParse<Rank>(i.ToString(), out Rank rank);
-            winScreenHandler.SetCharacterValues(ranking[i], rank, gainedCoin, totalCoin, gainedKey, totalKey);
+           
+            //DA RIVEDERE
+            ePlayerID playerID = ePlayerID.NotSet;
+            winScreenHandler.SetCharacterValues(playerID,ranking[i], rank, gainedCoin, totalCoin, gainedKey, totalKey);
 
         }
 
@@ -759,17 +762,15 @@ public class Slotmachine : MonoBehaviour
 
     private bool CheckAndSaveYetCompleted()
     {
-        SceneSetting sceneSetting = SaveManager.Instance.GetSceneSetting(SceneSaveSettings.SlotMachine);
-        if (sceneSetting == null)
-            sceneSetting = new SceneSetting(SceneSaveSettings.SlotMachine);
-        if (!sceneSetting.GetBoolValue(SaveDataStrings.COMPLETED))
+        if (SaveManager.Instance.TryLoadSetting<bool>(SaveDataStrings.FOOLSLOT_MINIGAME_COMPLETED, out bool value))
         {
-            sceneSetting.AddBoolValue(SaveDataStrings.COMPLETED, true);
-            SaveManager.Instance.SaveSceneData(sceneSetting);
-            return false;
+            return value;
         }
         else
-            return true;
+        {
+            SaveManager.Instance.SaveSetting(SaveDataStrings.FOOLSLOT_MINIGAME_COMPLETED, true);
+            return false;
+        }
     }
 
 
