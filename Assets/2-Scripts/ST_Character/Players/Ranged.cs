@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 using UnityEngine.UIElements;
 
 public class Ranged : PlayerCharacter, IPerfectTimeReceiver
@@ -37,6 +39,23 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     float consecutiveFireTimer = 0.3f;
     [SerializeField, Tooltip("numero di spari con sparo multiplo")]
     float numberProjectile = 3;
+
+    [Header("Variabili Aim Assist")]
+    [SerializeField, Tooltip("Detector")]
+    Detector AimAssistDetector;
+    [SerializeField, Tooltip("Raggio massimo per agganciamento")]
+    float aimAssistArea = 30f;
+    [SerializeField, Tooltip("tempo necessario per ricalcolare i target in area")]
+    [Min(0.1f)]
+    float recalculateTargetsInAreaDelay=0.1f;
+
+    float aimAssistTimePassedFromLastRecalculate = 0;
+
+    bool aimAssist;
+    [SerializeField] Character aimAssistTarget;
+    List<EnemyCharacter> enemiesInRange;
+
+
 
     [Header("Abilità unica")]
 
@@ -131,6 +150,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         base.Inizialize();
         nearbyLandmine = new List<LandMine>();
         landMineInInventory = maxNumberLandMine;
+        aimAssistArea = projectileRange;
+        AimAssistDetector.GetComponent<CircleCollider2D>().radius = aimAssistArea;
         //perfectTimingHandler=GetComponentInChildren<PerfectTimingHandler>(true);
         //perfectTimingHandler.gameObject.SetActive(false);
         emissionModule= _walkDustParticles.emission;
@@ -161,7 +182,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
     private void FixedUpdate()
     {
-        if (!isRightInputRecently)
+        if (!isRightInputRecently && !aimAssist)
         {
             if(alphaCrosshair> 0)
             {
@@ -345,6 +366,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         isAttacking = false;
     }
 
+    
+
 
 
     #endregion
@@ -422,12 +445,12 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         if(isDodging)
         {
             //se potenziamento sbloccato => damage
-            if (dodgeDamageUnlocked)
+            if (dodgeDamageUnlocked && data.dealer.dealerTransform.gameObject.TryGetComponent(out Character dealer))
             {
-               
+                dealer.TakeDamage(new DamageData(Damage * dodgeDamageMultiplier, this));
             }
 
-            //se c'è il boss + potenziamento sbloccato => tp
+            //TODO:se c'è il boss + potenziamento sbloccato => tp
             PubSub.Instance.Notify(EMessageType.perfectDodgeExecuted, this);
         }
         else
@@ -437,6 +460,37 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
         _perfectTimingHandler.gameObject.SetActive(false);
         Debug.Log($"PerfectDodge: {isDodging}");
+    }
+
+    public void SetPerfectTimingHandler(PerfectTimingHandler handler)
+    {
+        _perfectTimingHandler = handler;
+    }
+
+    public void PerfectTimeStarted(IDamager damager)
+    {
+        if (!isDodging)
+        {
+            _perfectTimingHandler.ActivateAlert();
+            perfectTimingEnabled = true;
+        }
+
+        Debug.Log(!isDodging);
+        StartCoroutine(DisablePerfectTimeAfter(perfectDodgeDuration));
+    }
+
+    public void PerfectTimeEnded()
+    {
+        _perfectTimingHandler.DeactivateAlert();
+        perfectTimingEnabled = false;
+        Utility.DebugTrace("Perfect Time Ended");
+    }
+
+    protected IEnumerator DisablePerfectTimeAfter(float time)
+    {
+        yield return new WaitForSeconds(time);
+        if (perfectTimingEnabled)
+            PerfectTimeEnded();
     }
 
     #endregion
@@ -655,6 +709,18 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             dodgeTimer -= Time.deltaTime;
         }
 
+        //aim assist
+
+        if (aimAssist)
+        {
+            aimAssistTimePassedFromLastRecalculate-=Time.deltaTime;
+
+            if (aimAssistTimePassedFromLastRecalculate <= 0)
+            {
+                RecalculateTargetsInRange();
+            }
+        }
+
         
         
 
@@ -663,20 +729,14 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
     private void UpdateCrosshair(Vector2 position)
     {
-        rangedCrossair.transform.position=new Vector2 (position.x,position.y);    
+        rangedCrossair.transform.position= aimAssist ? new Vector2(aimAssistTarget.transform.position.x, aimAssistTarget.transform.position.y) : new Vector2 (position.x,position.y);    
     }
 
 
 
     private void SetShootDirection()
-    {
-        //Vector2 dummyTargetAimPosition = (Vector2)transform.position + lookDir;
-        
-        //ShootDirection = (dummyTargetAimPosition-(Vector2)(shootingPoint.transform.position)).normalized;
-
+    {       
         ShootDirection=(rangedCrossair.transform.position- shootingPoint.transform.position).normalized;
-
-
     }
 
     //aggiungi death override
@@ -687,35 +747,125 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         animator.SetTrigger("Ress");
     }
 
-    public void SetPerfectTimingHandler(PerfectTimingHandler handler)
-    {
-        _perfectTimingHandler = handler;
-    }
 
-    public void PerfectTimeStarted(IDamager damager)
+
+    public override void LockTargetInput(InputAction.CallbackContext context)
     {
-        if (!isDodging)
+        if (context.performed)
         {
-            _perfectTimingHandler.ActivateAlert();
-            perfectTimingEnabled = true;
+            aimAssist = !aimAssist;
+
+            if (aimAssist)
+            {
+                Debug.Log("mira assistita attiva");
+
+                if (AimAssistDetector.GetEnemiesDetected().Count > 0)
+                {
+                    enemiesInRange = AimAssistDetector.GetEnemiesDetected();
+                    enemiesInRange.Sort((x, y) => { return (this.transform.position - x.transform.position).sqrMagnitude.CompareTo((this.transform.position - y.transform.position).sqrMagnitude); });
+                    aimAssistTarget = enemiesInRange[0];
+                }
+                else
+                {
+                    Debug.Log("nessun nemico vicino");
+                    aimAssist=false;
+                    
+                }
+            }
+            else
+            {
+                Debug.Log("mira assistita disattivata");
+                aimAssistTarget = null;
+                enemiesInRange.Clear();
+            }
         }
-
-        Debug.Log(!isDodging);
-        StartCoroutine(DisablePerfectTimeAfter(perfectDodgeDuration));
+        
     }
 
-    public void PerfectTimeEnded()
+    public override void ChangeTartgetInput(InputAction.CallbackContext context)
     {
-        _perfectTimingHandler.DeactivateAlert();
-        perfectTimingEnabled = false;
-        Utility.DebugTrace("Perfect Time Ended");
+        if(aimAssist && context.performed)
+        {
+            Vector2 inputDirection=context.ReadValue<Vector2>();
+
+            Debug.Log($"vettore di cambio: {inputDirection}");
+
+            //guardo i valori sulla y
+
+            if(inputDirection.y > 0)
+            {
+                //mi muovo sul character subito dopo piu lontano del target di adesso
+
+                for (int i = 0;i<enemiesInRange.Count;i++)
+                {
+                    if (enemiesInRange[i] == aimAssistTarget)
+                    {
+                        if(i+1>enemiesInRange.Count-1)
+                        {
+                            aimAssistTarget = enemiesInRange[0];
+                        }
+                        else
+                        {
+                            aimAssistTarget = enemiesInRange[i+1];
+                        }
+
+                        break;
+                    }
+                }               
+
+            }
+            else
+            {
+                //mi muovo sul character subito dopo piu vicino del target di adesso
+                for (int i = 0; i < enemiesInRange.Count; i++)
+                {
+                    if (enemiesInRange[i] == aimAssistTarget)
+                    {
+                        if (i - 1 < 0)
+                        {
+                            aimAssistTarget = enemiesInRange[enemiesInRange.Count-1];
+                        }
+                        else
+                        {
+                            aimAssistTarget = enemiesInRange[i - 1];
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
     }
 
-    protected IEnumerator DisablePerfectTimeAfter(float time)
+    private void RecalculateTargetsInRange()
     {
-        yield return new WaitForSeconds(time);
-        if (perfectTimingEnabled)
-            PerfectTimeEnded();
+        aimAssistTimePassedFromLastRecalculate = recalculateTargetsInAreaDelay;
+
+        //check se il target non è piu disponibile
+        if (!AimAssistDetector.GetEnemiesDetected().Contains(aimAssistTarget))
+        { 
+            //se è possibile, il nuovo target è quello piu vicino a me
+            if(AimAssistDetector.GetEnemiesDetected().Count >0)
+            {
+                enemiesInRange = AimAssistDetector.GetEnemiesDetected();
+                enemiesInRange.Sort((x, y) => { return (this.transform.position - x.transform.position).sqrMagnitude.CompareTo((this.transform.position - y.transform.position).sqrMagnitude); });
+                aimAssistTarget = enemiesInRange[0];
+            }
+            else
+            {
+                Debug.Log("Nessun nemico vicino");
+                aimAssistTarget = null;
+                enemiesInRange.Clear();
+                aimAssist= false;
+            }
+        }
+        else
+        {
+            //aggiorno comunque la lista
+            enemiesInRange = AimAssistDetector.GetEnemiesDetected();
+            enemiesInRange.Sort((x, y) => { return (this.transform.position - x.transform.position).sqrMagnitude.CompareTo((this.transform.position - y.transform.position).sqrMagnitude); });
+        }
+            
     }
 }
 
