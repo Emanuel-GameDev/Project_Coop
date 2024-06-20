@@ -78,6 +78,9 @@ public class Healer : PlayerCharacter
     [SerializeField] AudioClip attackSound;
     [SerializeField] AudioClip bombSound;
 
+    [Header("VFX")]
+    [SerializeField] GameObject BombVFX;
+
     //CapsuleCollider2D smallHealAreaCollider;
 
     List<PlayerCharacter> playerInArea;
@@ -321,6 +324,11 @@ public class Healer : PlayerCharacter
             defenceButtonPressed = false;
             bossAbilityChargeTimer = 0;
         }
+    }
+
+    public void SpawnBombVFX()
+    {
+        Instantiate(BombVFX,transform.position, Quaternion.identity);
     }
 
     public void HealCharactersInRange()
