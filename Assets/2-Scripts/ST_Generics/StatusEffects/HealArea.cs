@@ -61,7 +61,13 @@ public class HealArea : MonoBehaviour
 
         countdown = 1 / tikPerSecond;
         transform.localScale = new Vector3(radius, radius, radius);
-        gameObject.GetComponentInChildren<ParticleSystem>().startSize = radius * 2;
+
+        foreach(ParticleSystem particles in gameObject.GetComponentsInChildren<ParticleSystem>())
+        {
+            particles.startSize *= (radius * 2);
+
+        }
+
         DOTTimer = countdown;
     }
 
