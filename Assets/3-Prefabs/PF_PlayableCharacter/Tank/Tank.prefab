@@ -1676,8 +1676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _walkDustParticles: {fileID: 6131186109790520247}
-  _healParticlesObject: {fileID: 3706988499886782405, guid: 116ba857f4a3f5543a12901bbc6ebc3f,
-    type: 3}
+  _hitParticlesObject: {fileID: 0}
   fadeSpeedOnHit: 2
   _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   stunned: 0
@@ -1810,10 +1809,34 @@ MonoBehaviour:
   shieldVFXParryColor: {r: 4, g: 4, b: 4, a: 0}
   onBlock:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7402305790619443405}
+        m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
+        m_MethodName: RumblePad
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Attack1
+          m_BoolArgument: 0
+        m_CallState: 2
   onPerfectBlock:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7402305790619443405}
+        m_TargetAssemblyTypeName: PlayerCharacter, Assembly-CSharp
+        m_MethodName: RumblePad
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: AttackFinal
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &2671203252233228587
 Animator:
   serializedVersion: 5
@@ -1943,7 +1966,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 8.96, y: 8.96}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
