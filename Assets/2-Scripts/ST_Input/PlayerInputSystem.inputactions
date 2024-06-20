@@ -166,6 +166,24 @@
                     "processors": "",
                     "interactions": "Hold(duration=3)",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "LockTarget",
+                    "type": "Button",
+                    "id": "13e21ec7-a137-4ad1-bb96-59860d547170",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ChangeTarget",
+                    "type": "PassThrough",
+                    "id": "7548ab60-1117-44ad-a069-db6a2090dfa7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -661,6 +679,50 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Join",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ada5bf24-9b34-4d70-a943-8f9c3132d307",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "LockTarget",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "671f59f8-ea49-4745-a0f7-8afd2e09ffed",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "LockTarget",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5156be82-bc2c-4da7-95de-2686ef424e1c",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "Press(pressPoint=0.9)",
+                    "processors": "StickDeadzone(min=0.5),NormalizeVector2",
+                    "groups": "Gamepad",
+                    "action": "ChangeTarget",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cae8fb7c-a0e8-45d7-9408-0725e3f6e752",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "Press(pressPoint=0.9)",
+                    "processors": "NormalizeVector2",
+                    "groups": "Keyboard",
+                    "action": "ChangeTarget",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

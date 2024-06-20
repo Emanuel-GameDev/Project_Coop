@@ -2,16 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum slotType
-{
-    Player,
-    OtherCharacter       //con gli altri si perde
-}
+
 
 public class Slot : MonoBehaviour
 {
     [SerializeField] private Sprite sprite;
     [SerializeField] private slotType slotType;
+
+   
 
    
 
@@ -26,6 +24,7 @@ public class Slot : MonoBehaviour
     {
         get => slotType;
         set => slotType = value;
+       
     }
 
 
@@ -38,6 +37,7 @@ public class Slot : MonoBehaviour
     private void Start()
     {
         gameObject.AddComponent<SpriteRenderer>().sprite=sprite;
+        
 
         GetComponent<SpriteRenderer>().maskInteraction= SpriteMaskInteraction.VisibleInsideMask;
     }
