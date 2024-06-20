@@ -770,6 +770,61 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         
     }
 
+    public override void ChangeTartgetInput(InputAction.CallbackContext context)
+    {
+        if(aimAssist && context.performed)
+        {
+            Vector2 inputDirection=context.ReadValue<Vector2>();
+
+            Debug.Log($"vettore di cambio: {inputDirection}");
+
+            //guardo i valori sulla y
+
+            if(inputDirection.y > 0)
+            {
+                //mi muovo sul character subito dopo piu lontano del target di adesso
+
+                for (int i = 0;i<enemiesInRange.Count;i++)
+                {
+                    if (enemiesInRange[i] == aimAssistTarget)
+                    {
+                        if(i+1>enemiesInRange.Count-1)
+                        {
+                            aimAssistTarget = enemiesInRange[0];
+                        }
+                        else
+                        {
+                            aimAssistTarget = enemiesInRange[i+1];
+                        }
+
+                        break;
+                    }
+                }               
+
+            }
+            else
+            {
+                //mi muovo sul character subito dopo piu vicino del target di adesso
+                for (int i = 0; i < enemiesInRange.Count; i++)
+                {
+                    if (enemiesInRange[i] == aimAssistTarget)
+                    {
+                        if (i - 1 < 0)
+                        {
+                            aimAssistTarget = enemiesInRange[enemiesInRange.Count-1];
+                        }
+                        else
+                        {
+                            aimAssistTarget = enemiesInRange[i - 1];
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     private void RecalculateTargetsInRange()
     {
         aimAssistTimePassedFromLastRecalculate = recalculateTargetsInAreaDelay;
@@ -791,6 +846,12 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
                 enemiesInRange.Clear();
                 aimAssist= false;
             }
+        }
+        else
+        {
+            //aggiorno comunque la lista
+            enemiesInRange = AimAssistDetector.GetEnemiesDetected();
+            enemiesInRange.Sort((x, y) => { return (this.transform.position - x.transform.position).sqrMagnitude.CompareTo((this.transform.position - y.transform.position).sqrMagnitude); });
         }
             
     }

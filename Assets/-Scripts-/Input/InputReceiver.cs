@@ -106,6 +106,11 @@ public abstract class InputReceiver : MonoBehaviour
 
     }
 
+    public virtual void ChangeTargetInput(InputAction.CallbackContext context)
+    {
+
+    }
+
     
     #endregion
 

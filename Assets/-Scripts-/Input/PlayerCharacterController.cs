@@ -144,6 +144,12 @@ public class PlayerCharacterController : InputReceiver
             actualPlayerCharacter.LockTargetInput(context);
     }
 
+    public override void ChangeTargetInput(InputAction.CallbackContext context)
+    {
+        if (actualPlayerCharacter != null)
+            actualPlayerCharacter.ChangeTartgetInput(context);
+    }
+
     #region UI
     public override void Cancel(InputAction.CallbackContext context)
     {

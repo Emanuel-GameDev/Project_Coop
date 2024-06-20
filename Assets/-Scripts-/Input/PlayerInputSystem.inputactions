@@ -175,6 +175,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ChangeTarget",
+                    "type": "PassThrough",
+                    "id": "7548ab60-1117-44ad-a069-db6a2090dfa7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -692,6 +701,28 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "LockTarget",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5156be82-bc2c-4da7-95de-2686ef424e1c",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "Press(pressPoint=0.9)",
+                    "processors": "StickDeadzone(min=0.5),NormalizeVector2",
+                    "groups": "Gamepad",
+                    "action": "ChangeTarget",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cae8fb7c-a0e8-45d7-9408-0725e3f6e752",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "Press(pressPoint=0.9)",
+                    "processors": "NormalizeVector2",
+                    "groups": "Keyboard",
+                    "action": "ChangeTarget",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
