@@ -30,7 +30,8 @@ Transform:
   m_LocalPosition: {x: 0, y: -0.889, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1976878705842112882}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!198 &8502523279692359993
@@ -223,7 +224,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.11501394, g: 0.6698113, b: 0.0031594948, a: 0.6392157}
+      maxColor: {r: 0.11501394, g: 0.6698113, b: 0.0031594948, a: 0}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -1367,8 +1368,8 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 0}
-        key1: {r: 1, g: 1, b: 1, a: 1}
-        key2: {r: 0, g: 0, b: 0, a: 1}
+        key1: {r: 1, g: 1, b: 1, a: 0}
+        key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
@@ -1383,8 +1384,8 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 26985
-        atime2: 37972
+        atime1: 23708
+        atime2: 37201
         atime3: 65535
         atime4: 0
         atime5: 0
@@ -4888,3 +4889,78 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 2
+--- !u!1001 &4726257898093967928
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6479125207060307987}
+    m_Modifications:
+    - target: {fileID: 6555062040103662410, guid: e43bfde210ca0964ba8fae1e80b1a67c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555062040103662410, guid: e43bfde210ca0964ba8fae1e80b1a67c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555062040103662410, guid: e43bfde210ca0964ba8fae1e80b1a67c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555062040103662410, guid: e43bfde210ca0964ba8fae1e80b1a67c,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555062040103662410, guid: e43bfde210ca0964ba8fae1e80b1a67c,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555062040103662410, guid: e43bfde210ca0964ba8fae1e80b1a67c,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555062040103662410, guid: e43bfde210ca0964ba8fae1e80b1a67c,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555062040103662410, guid: e43bfde210ca0964ba8fae1e80b1a67c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555062040103662410, guid: e43bfde210ca0964ba8fae1e80b1a67c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555062040103662410, guid: e43bfde210ca0964ba8fae1e80b1a67c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6675738660298062676, guid: e43bfde210ca0964ba8fae1e80b1a67c,
+        type: 3}
+      propertyPath: m_Name
+      value: VFX_HealExplosion_ParticlesBurst
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 3795294019120165373, guid: e43bfde210ca0964ba8fae1e80b1a67c, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e43bfde210ca0964ba8fae1e80b1a67c, type: 3}
+--- !u!4 &1976878705842112882 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6555062040103662410, guid: e43bfde210ca0964ba8fae1e80b1a67c,
+    type: 3}
+  m_PrefabInstance: {fileID: 4726257898093967928}
+  m_PrefabAsset: {fileID: 0}
