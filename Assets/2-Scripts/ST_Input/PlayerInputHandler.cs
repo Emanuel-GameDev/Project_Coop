@@ -201,7 +201,7 @@ public class PlayerInputHandler : MonoBehaviour
        
         if (activeRumbleData == null || data == activeRumbleData)
         {
-            pad.SetMotorSpeeds(0f, 0f);
+            gamepad.SetMotorSpeeds(0f, 0f);
             activeRumbleData = null;
         }
     }
