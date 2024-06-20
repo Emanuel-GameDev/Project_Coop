@@ -152,7 +152,7 @@ public class PlayerInputHandler : MonoBehaviour
     private RumbleData activeRumbleData;
 
     /// <summary>
-    /// Imposta la velocità dei motori di un controller: "lowFreq" controlla il motore SX mentre "highFreq" quello DX,
+    /// Imposta la velocitï¿½ dei motori di un controller: "lowFreq" controlla il motore SX mentre "highFreq" quello DX,
     /// "duration" rappresenta la durata della vibrazione, "pad" se omesso viene impostato a Gamepad.current 
     /// </summary>
     /// <param name="lowFreq"></param>
@@ -174,6 +174,11 @@ public class PlayerInputHandler : MonoBehaviour
 
         if(!data.isEndless)
             StartCoroutine(StopRumble(data));
+        else
+        {
+            data.duration = 60f;
+            StartCoroutine(StopRumble(data));
+        }    
 
         activeRumbleData = data;
     }
@@ -192,15 +197,13 @@ public class PlayerInputHandler : MonoBehaviour
 
     private IEnumerator StopRumble(RumbleData data)
     {
-        float elapsedTime = 0f;
-
-        while (elapsedTime < data.duration)
+        yield return new WaitForSeconds(data.duration);
+       
+        if (activeRumbleData == null || data == activeRumbleData)
         {
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            pad.SetMotorSpeeds(0f, 0f);
+            activeRumbleData = null;
         }
-
-        RumbleStop(data);
     }
 
     #endregion
