@@ -98,6 +98,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     [SerializeField]
     private UnityEvent onBlock;
+    [SerializeField]
     private UnityEvent onPerfectBlock;
 
 
