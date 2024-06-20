@@ -106,6 +106,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
     [Header("VFX")]
     [SerializeField] TrailRenderer trailDodgeVFX;
+    [SerializeField] GameObject ChargingVFX;
     [SerializeField] GameObject ChargedVFX;
     ParticleSystem.EmissionModule emissionModule;
 
@@ -626,7 +627,10 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         {
             empowerStartTimer += Time.deltaTime;
 
-            
+            if (!ChargingVFX.activeSelf)
+            {
+                ChargingVFX.SetActive(true);
+            }
 
             if (empowerStartTimer > empowerFireChargeTime - empowerCoolDownDecrease)
             {  
@@ -635,6 +639,13 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
                 {
                     ChargedVFX.SetActive(true);
                 }
+            }
+        }
+        else
+        {
+            if (ChargingVFX.activeSelf)
+            {
+                ChargingVFX.SetActive(false);
             }
         }
 

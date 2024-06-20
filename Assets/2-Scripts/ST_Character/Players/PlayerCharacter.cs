@@ -315,6 +315,9 @@ public abstract class PlayerCharacter : Character
     {
         if (!isDead)
         {
+            if(_healParticlesObject != null)
+                Instantiate(_healParticlesObject, transform.position,Quaternion.identity,transform);
+
             if (data.condition != null)
                 RemoveFromConditions(data.condition);
 

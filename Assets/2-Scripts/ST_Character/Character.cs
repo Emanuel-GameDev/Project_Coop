@@ -9,7 +9,7 @@ public abstract class Character : MonoBehaviour, IDamageable, IDamager, IInterac
   
     [Header("General VFX")]
     [SerializeField] protected ParticleSystem _walkDustParticles;
-    [SerializeField] protected GameObject _hitParticlesObject;
+    [SerializeField] protected GameObject _healParticlesObject;
     [SerializeField] private float fadeSpeedOnHit = 2f;
     [SerializeField] protected Color _OnHitColor = Color.red;
 

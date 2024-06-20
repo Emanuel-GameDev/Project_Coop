@@ -309,29 +309,10 @@ public class Healer : PlayerCharacter
             {
                 if (smallHealTimer >= singleHealCooldown)
                 {
-                    
+
                     animator.SetTrigger("CastSmallHeal");
                     StartCoroutine(InputReactivationDelay(animator.GetCurrentAnimatorClipInfo(0).Length));
-                    TakeHeal(new DamageData(smallHeal, null));
-
-                    foreach (PlayerCharacter pc in smallHealTrigger.GetPlayersDetected())
-                    {
-                        pc.TakeHeal(new DamageData(smallHeal, null));
-                        PubSub.Instance.Notify(EMessageType.characterHealed, pc);
-                    }
-
-                    if (canHealEnemies)
-                    {
-                        foreach(EnemyCharacter enemyCharacter in smallHealTrigger.GetEnemiesDetected())
-                        {
-                            if(enemyCharacter.gameObject.GetComponent<TutorialEnemy>() != null)
-                            {
-                                PubSub.Instance.Notify(EMessageType.characterHealed, enemyCharacter.gameObject.GetComponent<TutorialEnemy>());
-                            }
-                        }
-
-                    }
-
+                   
 
                     smallHealTimer = 0;
                 }
@@ -342,7 +323,29 @@ public class Healer : PlayerCharacter
         }
     }
 
-    
+    public void HealCharactersInRange()
+    {
+        TakeHeal(new DamageData(smallHeal, null));
+
+        foreach (PlayerCharacter pc in smallHealTrigger.GetPlayersDetected())
+        {
+            pc.TakeHeal(new DamageData(smallHeal, null));
+            PubSub.Instance.Notify(EMessageType.characterHealed, pc);
+        }
+
+        if (canHealEnemies)
+        {
+            foreach (EnemyCharacter enemyCharacter in smallHealTrigger.GetEnemiesDetected())
+            {
+                if (enemyCharacter.gameObject.GetComponent<TutorialEnemy>() != null)
+                {
+                    PubSub.Instance.Notify(EMessageType.characterHealed, enemyCharacter.gameObject.GetComponent<TutorialEnemy>());
+                }
+            }
+
+        }
+    }
+
 
     public void PlaySmallHealParticles()
     {
