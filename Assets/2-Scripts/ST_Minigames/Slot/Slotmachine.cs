@@ -8,6 +8,7 @@ using UnityEngine.Events;
 using UnityEngine.U2D.Animation;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public enum slotType
 {
@@ -677,34 +678,34 @@ public class Slotmachine : MonoBehaviour
 
 
 
+        List<ePlayerCharacter> allCharactersList = new();
         List<ePlayerCharacter> ranking = new();
 
         foreach (SlotPlayer player in winOrder)
         {
-            ranking.Add(player.GetCharacter());
+            allCharactersList.Add(player.GetCharacter());
         }
 
         foreach (ePlayerCharacter c in Enum.GetValues(typeof(ePlayerCharacter)))
         {
             if (c != ePlayerCharacter.EmptyCharacter)
             {
-                if (!ranking.Contains(c))
+                if (!allCharactersList.Contains(c))
                 {
-                    ranking.Add(c);
+                    allCharactersList.Add(c);
                 }
             }
         }
 
         bool yetCompleted = CheckAndSaveYetCompleted();
 
-        for (int i = 0; i < ranking.Count; i++)
+        for (int i = 0; i < allCharactersList.Count; i++)
         {
             int totalCoin = 0;
             int totalKey = 0;
             int gainedCoin = 0;
-            int gainedKey = 0;
 
-            CharacterSaveData saveData = SaveManager.Instance.GetPlayerSaveData(ranking[i]);
+            CharacterSaveData saveData = SaveManager.Instance.GetPlayerSaveData(allCharactersList[i]);
 
             if (saveData != null)
             {
@@ -717,28 +718,36 @@ public class Slotmachine : MonoBehaviour
             if (!yetCompleted)
             {
                 
-                switch (ranking[i])
+                switch (allCharactersList[i])
                 {
                     case ePlayerCharacter.Brutus:
-                        totalCoin += (totalCoinsBrutus+totalJackpotCoins);
+                        gainedCoin = totalCoinsBrutus + totalJackpotCoins;
+                        totalCoin += gainedCoin;
                         totalKey += keyForEachPlayer;
+                        
                         break;
                     case ePlayerCharacter.Kaina:
-                        totalCoin += (totalCoinsKaina+totalJackpotCoins);
+                        gainedCoin = totalCoinsKaina + totalJackpotCoins;
+                        totalCoin += gainedCoin;
                         totalKey += keyForEachPlayer;
                         break;
                     case ePlayerCharacter.Jude:
-                        totalCoin += (totalCoinsJude + totalJackpotCoins);
+                        gainedCoin= totalCoinsJude + totalJackpotCoins;
+                        totalCoin += gainedCoin;
                         totalKey += keyForEachPlayer;
                         break;
                     case ePlayerCharacter.Cassius:
-                        totalCoin += (totalCoinsCassius + totalJackpotCoins);
+                        gainedCoin = totalCoinsCassius + totalJackpotCoins;
+                        totalCoin += gainedCoin;
                         totalKey += keyForEachPlayer;
                         break;
                     default:
                         Debug.LogError("ePlayerCharacter non trovato");
                         break;
                 }
+
+                ranking.Add(allCharactersList[i]);
+                
 
                 if (saveData != null)
                 {
@@ -747,11 +756,23 @@ public class Slotmachine : MonoBehaviour
                 }
             }
 
-            Enum.TryParse<Rank>(i.ToString(), out Rank rank);
            
+
+
+                Enum.TryParse<Rank>(i.ToString(), out Rank rank);
+
             //DA RIVEDERE
             ePlayerID playerID = ePlayerID.NotSet;
-            winScreenHandler.SetCharacterValues(playerID,ranking[i], rank, gainedCoin, totalCoin, gainedKey, totalKey);
+
+            if (listOfCurrentPlayer.Find(x => x.GetCharacter() == allCharactersList[i]) is SlotPlayer player)
+                playerID = player.GetInputHandler().playerID;
+            winScreenHandler.SetCharacterValues(playerID,allCharactersList[i], rank, gainedCoin, totalCoin, keyForEachPlayer, totalKey);
+
+        }
+
+        // riordino la classifica guardando quante monete ho preso
+        for (int i = 0; i < allCharactersList.Count; i++)
+        {
 
         }
 
