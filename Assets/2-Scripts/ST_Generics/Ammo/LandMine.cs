@@ -10,9 +10,12 @@ public class LandMine : MonoBehaviour, IDamager
 
     public Transform dealerTransform => transform;
 
+    Animator animator;
+
     private void Awake()
     {
         pickable=GetComponentInChildren<Pickable>();
+        animator=GetComponent<Animator>();
     }
 
     private void Update()
@@ -23,7 +26,7 @@ public class LandMine : MonoBehaviour, IDamager
     public void Initialize(Character owner, float radius, float damage, LayerMask layer)
     {
         this.owner = owner;
-        GetComponent<SphereCollider>().radius = radius;
+        GetComponent<CircleCollider2D>().radius = radius;
         this.landMineDamage = damage;
         gameObject.layer = layer;
 
@@ -60,29 +63,36 @@ public class LandMine : MonoBehaviour, IDamager
     }*/
 
     private void OnTriggerEnter2D(Collider2D other)
-    {
-        Ranged sniper = other.gameObject.GetComponentInChildren<Ranged>();       
-
+    {             
         if (other.gameObject.GetComponent<Character>() != null && other.gameObject.layer != gameObject.layer)
         {
             if (other.gameObject.layer != gameObject.layer)
             {
                 //other.gameObject.GetComponent<Character>().TakeDamage(new DamageData(landMineDamage,this));
-                if (owner != null)
-                {
 
-                    if (sniper != null)
-                    {
-                        sniper.nearbyLandmine.Remove(this);
+                Debug.Log(other);
+                animator.SetTrigger("Explosion");
 
-                        sniper.StartLandmineGeneration();
-                    }
-                }
+                
 
-                Destroy(gameObject);
+                
             }
         }
 
+    }
+
+    public void DestroyLandmine()
+    {
+        if (owner != null)
+        {
+            if (owner.GetComponentInChildren<Ranged>() != null)
+            {
+                owner.GetComponentInChildren<Ranged>().nearbyLandmine.Remove(this);
+                owner.GetComponentInChildren<Ranged>().StartLandmineGeneration();
+            }
+        }
+        
+        Destroy(gameObject);
     }
 
 
