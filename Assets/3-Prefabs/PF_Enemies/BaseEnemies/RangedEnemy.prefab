@@ -430,7 +430,7 @@ SpriteRenderer:
   m_SortingLayerID: 1726692205
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 023d44cfe30bcf74e8a2fd279a58a5a5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3d683f02430a45b41a377c6d77fc04cc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -696,6 +696,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _walkDustParticles: {fileID: 0}
+  _healParticlesObject: {fileID: 0}
   fadeSpeedOnHit: 2
   _OnHitColor: {r: 1, g: 0, b: 0, a: 1}
   stunned: 0
@@ -724,6 +725,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   soundsDatabase: {fileID: 0}
+  rumbleData: []
   maxHp: 2
   damage: 2
   staminaDamage: 20
@@ -768,6 +770,8 @@ MonoBehaviour:
   obstacleAvoidanceFarRange: 1.5
   showDirections: 0
   inc: 20
+  forceDuration: 0.05
+  pushForce: 30
   EscapeTrigger: {fileID: 3980155435287117935}
   escapeRange: 10
   numberOfConsecutiveShoot: 2
