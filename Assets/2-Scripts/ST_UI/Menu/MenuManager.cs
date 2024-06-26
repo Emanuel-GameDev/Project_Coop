@@ -265,6 +265,9 @@ public class MenuManager : MonoBehaviour
 
     public void CloseMenu()
     {
+        if (actualMenu == null)
+            return;
+
         actualMenu.gameObject.SetActive(false);
         if (actualMenu.HaveTabs)
             actualMenu.CloseAllTab();
@@ -284,7 +287,6 @@ public class MenuManager : MonoBehaviour
             if (hpHandler != null)
                 hpHandler.gameObject.SetActive(true);
         }
-
     }
 
     private void ClearMenuEntries()

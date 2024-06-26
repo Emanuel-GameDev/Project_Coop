@@ -101,7 +101,25 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   soundsDatabase: {fileID: 11400000, guid: da71bb63de25b474983291d1d664c65d, type: 2}
-  rumbleData: []
+  rumbleData:
+  - rumbleName: AttackSniper
+    lowFreqency: 0.241
+    highFreqency: 0.242
+    isEndless: 0
+    duration: 0.1
+    priority: 0
+  - rumbleName: Attack1
+    lowFreqency: 0.081
+    highFreqency: 0.087
+    isEndless: 0
+    duration: 0.1
+    priority: 0
+  - rumbleName: ChargeSniper
+    lowFreqency: 0.081
+    highFreqency: 0.087
+    isEndless: 1
+    duration: 0.1
+    priority: 0
   character: 4
   maxHp: 150
   damage: 10
