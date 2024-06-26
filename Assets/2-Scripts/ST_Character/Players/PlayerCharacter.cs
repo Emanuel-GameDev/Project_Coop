@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -35,11 +36,13 @@ public abstract class PlayerCharacter : Character
     [SerializeField]
     protected float onHitPushForce = 1;
 
-
     protected float lastestCharacterSwitch;
     protected float currentHp;
-    protected float uniqueAbilityUses = 0;
     protected float lastHitTime;
+
+    protected float uniqueAbilityRemainingCooldown = 0;
+    protected float uniqueAbilityUses = 0;
+    protected bool uniqueAbilityMustIncreaseUses = false;
 
     #endregion
 
@@ -66,7 +69,6 @@ public abstract class PlayerCharacter : Character
     protected Vector2 lookDir;
     protected Vector2 moveDir;
     protected Vector2 lastNonZeroDirection;
-
 
     protected bool isMoving;
     protected bool isInBossfight = false;
@@ -117,6 +119,8 @@ public abstract class PlayerCharacter : Character
 
     protected bool CanSwitch => !isDead && Time.time - lastestCharacterSwitch > switchCharacterCooldown;
     protected bool IsHitInvulnerable => Time.time - lastHitTime < invulnerabilityTime;
+    public bool UniqueAbilityAvaiable => UniqueAbilityRemainingCooldown <= 0;
+    public float UniqueAbilityRemainingCooldown => uniqueAbilityRemainingCooldown;
 
     #endregion
 
@@ -182,6 +186,7 @@ public abstract class PlayerCharacter : Character
     protected virtual void Update()
     {
         Move(moveDir);
+        UniqueAbilityCooldownTimer();
     }
 
 
@@ -339,6 +344,30 @@ public abstract class PlayerCharacter : Character
 
     #endregion
 
+    #region UniqueAbilityCooldown
+
+    protected void UniqueAbilityUsed()
+    {
+        uniqueAbilityRemainingCooldown = UniqueAbilityCooldown;
+        uniqueAbilityMustIncreaseUses = true;
+    }
+
+    protected void UniqueAbilityCooldownTimer()
+    {
+        if (!UniqueAbilityAvaiable)
+        {
+            uniqueAbilityRemainingCooldown -= Time.deltaTime;
+            Utility.DebugTrace("Unique Ability Cooldown: " + uniqueAbilityRemainingCooldown);
+        }
+        else if (uniqueAbilityMustIncreaseUses)
+        {
+            uniqueAbilityUses++;
+            uniqueAbilityMustIncreaseUses = false;
+        }
+            
+    }
+    #endregion
+
     #region Input
 
     #region Look
@@ -473,7 +502,7 @@ public abstract class PlayerCharacter : Character
 
     public virtual void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-        HPHandler.Instance.NotifyUseAbility(this, UniqueAbilityCooldown);
+       
     }
 
     public virtual void ExtraAbilityInput(InputAction.CallbackContext context)

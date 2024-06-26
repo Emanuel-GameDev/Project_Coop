@@ -34,7 +34,8 @@ public class DebugManager : MonoBehaviour
         "[O] Apre la cartella dei salvataggi. \n" +
         "[L e K] Rispettivamente Salva e Carica il gioco. \n" +
         "[V] Carica la scena scritta in Loasd Scene Name. \n" +
-        "[G] Completa la Challenge attuale (solo in ChallengeScene). \n";
+        "[G] Completa la Challenge attuale (solo in ChallengeScene). \n" +
+        "[T] Setta il Timescale al valore impostato. \n";
 
     [SerializeField] GameObject BossGameobject;
 

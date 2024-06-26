@@ -102,7 +102,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
 
     private bool mustContinueCombo = false;
     private bool alreadyCalled = false;
-    private bool uniqueAbilityAvaiable = true;
     private bool uniqueAbilityIsInAnimation = false;
 
     private AttackComboState currentAttackComboState;
@@ -135,7 +134,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     private bool perfectTimingEnabled;
 
     private bool CanMove => !isDodging && !IsAttacking && !isDashingAttack && !uniqueAbilityIsInAnimation && !isRessing;
-    private bool CanUseUniqueAbility => CanMove && uniqueAbilityAvaiable;
+    private bool CanUseUniqueAbility => CanMove && UniqueAbilityAvaiable;
 
     private bool IsAttacking
     {
@@ -186,7 +185,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         lastDodgeTime = -dodgeCooldown;
         lastAttackTime = -timeBetweenCombo;
-        uniqueAbilityAvaiable = true;
         lastDashAttackTime = -dashAttackCooldown;
         consecutiveHitsCount = 0;
         isInvulnerable = false;
@@ -368,8 +366,8 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
             Utility.DebugTrace($"Executed: {!isInvulnerable && CanUseUniqueAbility}");
             if (!isInvulnerable && CanUseUniqueAbility)
             {
-                uniqueAbilityAvaiable = false;
                 base.UniqueAbilityInput(context);
+                UniqueAbilityUsed();
                 StartCoroutine(UseUniqueAbilityCoroutine());
                 StartCoroutine(BaloonDuration());
                 animator.SetTrigger(BERSERKER);
@@ -401,10 +399,6 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         isInvulnerable = false;
         PubSub.Instance.Notify(EMessageType.uniqueAbilityExpired, this);
         invicibilityVFX.SetActive(false);
-
-        yield return new WaitForSeconds(UniqueAbilityCooldown - invulnerabilityDuration);
-        uniqueAbilityUses++;
-        uniqueAbilityAvaiable = true;
     }
     #endregion
 
