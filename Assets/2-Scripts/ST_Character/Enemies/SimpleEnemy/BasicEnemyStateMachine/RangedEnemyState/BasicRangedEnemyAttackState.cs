@@ -27,6 +27,7 @@ public class BasicRangedEnemyAttackState : BasicRangedEnemyState
     {
         base.Update();
 
+        rangedEnemy.SetSpriteDirection(rangedEnemy.target.position-rangedEnemy.transform.position);
 
         if (!basicEnemy.isActioning)
         {

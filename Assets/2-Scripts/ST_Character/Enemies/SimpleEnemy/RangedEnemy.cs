@@ -15,6 +15,8 @@ public class RangedEnemy : BasicEnemy
     [Tooltip("Range dei proiettili")]
     [SerializeField] float projectileRange;
     public float searchRadious = 3f;
+
+    [SerializeField] Transform projectileSpawnPoint;
     [HideInInspector] public bool panicAttack = false;
 
     [HideInInspector] public BasicRangedEnemyIdleState idleState;
@@ -154,20 +156,7 @@ public class RangedEnemy : BasicEnemy
         {
 
             animator.SetTrigger("Attack");
-
-            Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
-
-            newProjectile.transform.position = transform.position;
-
-            selectedPlayerInRange = currentTarget;
-
-
-
-            Vector2 direction = selectedPlayerInRange.transform.position - transform.position;
-
-            SetSpriteDirection(direction);
-
-            newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1, damage, gameObject.layer);
+            
             yield return new WaitForSeconds(attackDelay);
 
 
@@ -189,5 +178,21 @@ public class RangedEnemy : BasicEnemy
 
     }
 
+    public void Shoot()
+    {
+        Projectile newProjectile = ProjectilePool.Instance.GetProjectile();
+
+        newProjectile.transform.position = projectileSpawnPoint.position;
+
+        selectedPlayerInRange = currentTarget;
+
+
+
+        Vector2 direction = selectedPlayerInRange.transform.position - transform.position;
+
+        SetSpriteDirection(direction);
+
+        newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1, damage, gameObject.layer);
+    }
 }
 

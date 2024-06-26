@@ -64,6 +64,8 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     [SerializeField]
     TrailRenderer trailDodgeVFX;
     [SerializeField]
+    GameObject DodgeTrailVFX;
+    [SerializeField]
     GameObject invicibilityVFX;
     [SerializeField, Tooltip("Gli eventi da chiamare in caso di schivata perfetta")]
     UnityEvent onPerfectDodgeExecuted = new();
@@ -199,6 +201,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         invicibilityVFX.SetActive(false);
         invicibilityBaloon.SetActive(false);
         trailDodgeVFX.gameObject.SetActive(false);
+        DodgeTrailVFX.SetActive(false);
     }
 
 
@@ -332,11 +335,16 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
         onDefenceAbility?.Invoke();
         trailDodgeVFX.gameObject.SetActive(true);
+
+        DodgeTrailVFX.transform.rotation = Quaternion.FromToRotation(Vector3.down, dodgeDirection);
+        DodgeTrailVFX.SetActive(true);
+
         yield return StartCoroutine(Move(dodgeDirection, rb, dodgeDuration, dodgeDistance * powerUpData.DodgeDistanceIncrease));
 
         isDodging = false;
         animator.SetTrigger(DODGEEND);
         trailDodgeVFX.gameObject.SetActive(false);
+        DodgeTrailVFX.SetActive(false);
     }
 
     private IEnumerator Move(Vector2 direction, Rigidbody2D rb, float duration, float distance)
