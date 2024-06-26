@@ -125,8 +125,10 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
     [Header("VFX")]
     [SerializeField] TrailRenderer trailDodgeVFX;
+    [SerializeField] GameObject DodgeTrailVFX;
     [SerializeField] GameObject ChargingVFX;
     [SerializeField] GameObject ChargedVFX;
+
     ParticleSystem.EmissionModule emissionModule;
 
 
@@ -409,8 +411,10 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
             //disable/abilitate VFX
             ChargedVFX.SetActive(false);
-            trailDodgeVFX.gameObject.SetActive(true);
+            //trailDodgeVFX.gameObject.SetActive(true);
 
+            DodgeTrailVFX.transform.rotation = Quaternion.FromToRotation(Vector3.down, direction);
+            DodgeTrailVFX.SetActive(true);
 
             //animazione
             animator.SetTrigger("Dodge");
@@ -429,6 +433,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             isDodging = false;
 
             trailDodgeVFX.gameObject.SetActive(false);
+            DodgeTrailVFX.SetActive(false);
 
             dodgeTimer = dodgeCoolDown;
 
