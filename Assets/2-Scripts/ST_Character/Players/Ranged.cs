@@ -499,23 +499,26 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     #region ExtraAbility
     public override void ExtraAbilityInput(InputAction.CallbackContext context) //E
     {
+        Debug.Log("Ho premuto e ganzo");
 
-        if (context.performed)
+        if (context.started)
         {
-            Debug.Log("Ho premuto e, ganzo");
+           
 
             if (landMineUnlocked)
             {
-                if (nearbyLandmine.Count<=0)
+                if (nearbyLandmine.Count<=0 )
                 {
-                    //animazione droppaggio mina
+                    if (landMineInInventory > 0)
+                    {
+                        //animazione droppaggio mina
 
-                    //animator.settrigger("Droplandmine"); => da aggiungere
+                        //animator.settrigger("Droplandmine"); => da aggiungere
+                        animator.SetTrigger("DropLandmine");
 
-                    //momentaneo
-                    CreateLandMine();
-                    //
-
+                        isAttacking= true;
+                    }
+                    
                     
                 }
                 else
@@ -524,6 +527,10 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
                     nearbyLandmine[nearbyLandmine.Count - 1].PickUpLandmine();
                 }
                 
+            }
+            else
+            {
+                Debug.Log("Non ancora sbloccata");
             }
         }
        
@@ -543,6 +550,9 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
             landMineInInventory--;
 
             Debug.Log("lascio mina");
+
+            //è stata messa a true prima di iniziare l'animazione, da tenere sotto d'occhio
+            isAttacking = false;
         }
         else
         {
