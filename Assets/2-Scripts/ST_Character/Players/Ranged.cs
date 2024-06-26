@@ -411,7 +411,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
             //disable/abilitate VFX
             ChargedVFX.SetActive(false);
-            //trailDodgeVFX.gameObject.SetActive(true);
+            trailDodgeVFX.gameObject.SetActive(true);
 
             DodgeTrailVFX.transform.rotation = Quaternion.FromToRotation(Vector3.down, direction);
             DodgeTrailVFX.SetActive(true);

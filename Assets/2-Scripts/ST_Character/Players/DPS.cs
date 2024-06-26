@@ -334,7 +334,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
         animator.SetTrigger(DODGESTART);
         PubSub.Instance.Notify(EMessageType.dodgeExecuted, this);
         onDefenceAbility?.Invoke();
-        //trailDodgeVFX.gameObject.SetActive(true);
+        trailDodgeVFX.gameObject.SetActive(true);
 
         DodgeTrailVFX.transform.rotation = Quaternion.FromToRotation(Vector3.down, dodgeDirection);
         DodgeTrailVFX.SetActive(true);
