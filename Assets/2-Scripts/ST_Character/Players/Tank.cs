@@ -1,9 +1,7 @@
 using System.Collections;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
 
 
 //Unique = tasto nord,Q = Urlo
@@ -123,7 +121,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
     private bool isPerfectBlock = false;
 
     private bool canPerfectBlock = false;
-    private bool uniqueAbilityReady = true;
+    //private bool UniqueAbilityAvaiable = true;
     private bool statBoosted = false;
     private bool canProtectOther = false;
    
@@ -667,13 +665,13 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
     public override void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-        if (context.performed && uniqueAbilityReady && !inAttackAnimation && !inCharge)
+        if (context.performed && UniqueAbilityAvaiable && !inAttackAnimation && !inCharge && !isChargingAttack)
         {
             chargedAttackVFX.gameObject.SetActive(true);
-            SetCanMove(false, rb);
-            uniqueAbilityReady = false;
+            SetCanMove(false, rb);         
             base.UniqueAbilityInput(context);
-            Invoke(nameof(StartCooldownUniqueAbility), UniqueAbilityCooldown);
+            //Invoke(nameof(StartCooldownUniqueAbility), UniqueAbilityCooldown);
+            UniqueAbilityUsed();
             animator.SetTrigger("UniqueAbility");
             Debug.Log("UniqueAbility Used");
         }
@@ -725,12 +723,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
 
         PubSub.Instance.Notify(EMessageType.uniqueAbilityActivated, this);
     }
-    private void StartCooldownUniqueAbility()
-    {
-        uniqueAbilityReady = true;
-        uniqueAbilityUses++;
-        Debug.Log("abilita unica pronta");
-    }
+ 
     private void SetStatToNormal()
     {
         statBoosted = false;
