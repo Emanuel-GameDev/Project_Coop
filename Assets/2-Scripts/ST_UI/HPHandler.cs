@@ -44,7 +44,6 @@ public class HPHandler : MonoBehaviour
 
         PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, UpdateContainer);
         PubSub.Instance.RegisterFunction(EMessageType.characterActivated, AddContainer);
-        //PubSub.Instance.RegisterFunction(EMessageType.characterSwitched, SetCharacter);
     }
 
     public void AddContainer(object obj)
@@ -122,25 +121,11 @@ public class HPHandler : MonoBehaviour
                 hpContainer.referredPlayerID = (ePlayerID)id + 1;
             }
 
-            SetHpContainerValue(hpContainer, player);
+            hpContainer.SetUpContainer(player);
 
             id++;
         }
 
-    }
-
-    public void NotifyUseAbility(PlayerCharacter player, float cooldown)
-    {
-        //momentaneo/da rivedere
-        foreach (CharacterHUDContainer cont in gameObject.GetComponentsInChildren<CharacterHUDContainer>())
-        {
-            if (cont.referredCharacter == player)
-            {
-            //    containersAssociations[cont.referredPlayerID].UpdateHp(cont.referredCharacter.CurrentHp);
-                cont.SetAbilityTimer(cooldown);
-                break;
-            }
-        }
     }
 
     public void SetCharacter(object obj)
@@ -152,21 +137,10 @@ public class HPHandler : MonoBehaviour
             if (containersAssociations.TryGetValue(playerCharacter.GetInputHandler().playerID, out CharacterHUDContainer hpContainer))
             {
                 Debug.Log("set charcater");
-                SetHpContainerValue(hpContainer, playerCharacter);
+                hpContainer.SetUpContainer(playerCharacter);
             }
         }
     }
-
-    private void SetHpContainerValue(CharacterHUDContainer hpContainer, PlayerCharacter player)
-    {
-        hpContainer.referredCharacter = player;
-        hpContainer.SetCharacterContainer(GetSpriteContainerFromCharacter(player, hpContainer.right));
-        hpContainer.SetUpHp();
-        hpContainer.UpdateHp(player.CurrentHp);
-        hpContainer.SetUpAbility(player.UniqueAbilityCooldown);
-        hpContainer.StartSwitchCooldown(player.SwitchCharacterCooldown);
-    }
-
 
     public void UpdateContainer(object obj)
     {
@@ -183,19 +157,7 @@ public class HPHandler : MonoBehaviour
         }
     }
 
-    private Sprite GetSpriteContainerFromCharacter(PlayerCharacter character, bool right)
-    {
-        if (right)
-        {
-            return GameManager.Instance.GetCharacterData(character.Character).HpContainerRight;
-        }
-        else
-        {
-            return GameManager.Instance.GetCharacterData(character.Character).HpContainerLeft;
-        }
-
-
-    }
+    
 
     public void UpdateAllContainers()
     {

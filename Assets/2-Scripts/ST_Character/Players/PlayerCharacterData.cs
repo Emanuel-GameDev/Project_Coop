@@ -12,8 +12,7 @@ public class PlayerCharacterData : ScriptableObject
     private GameObject characterPrefab;
     [SerializeField]
     private Sprite fullBodyArt;
-    [SerializeField]
-    private Sprite hudSprite;
+    
     [SerializeField]
     private Sprite dialogueSprite;
     [SerializeField]
@@ -32,10 +31,6 @@ public class PlayerCharacterData : ScriptableObject
     private Sprite uniqueAbilitySprite;
     [SerializeField]
     private Sprite notificationBackground;
-    [SerializeField] 
-    private Sprite hpContainerSpriteLeft;
-    [SerializeField]
-    private Sprite hpContainerSpriteRight;
     [SerializeField]
     private RuntimeAnimatorController smashMinigameAnimator;
     [SerializeField]
@@ -47,13 +42,37 @@ public class PlayerCharacterData : ScriptableObject
     [SerializeField]
     private Sprite p4Sprite;
 
-
+    [Header("Combat HUD")]
+    [SerializeField]
+    private Sprite hpContainerBackgroundLeft;
+    [SerializeField]
+    private Sprite hpContainerBackgroundRight;
+    [SerializeField]
+    private Sprite hudNormalFaceLeft;
+    [SerializeField]
+    private Sprite hudNormalFaceRight;
+    [SerializeField]
+    private Sprite hudHappyFaceLeft;
+    [SerializeField]
+    private Sprite hudHappyFaceRight;
+    [SerializeField]
+    private Sprite hudHitFaceLeft;
+    [SerializeField]
+    private Sprite hudHitFaceRight;
+    [SerializeField]
+    private Sprite hudDeathFaceLeft;
+    [SerializeField]
+    private Sprite hudDeathFaceRight;
+    [SerializeField]
+    private Sprite hudAbilityReadyLeft;
+    [SerializeField]
+    private Sprite hudAbilityReadyRight;
 
     public ePlayerCharacter Character => character;
     public Color CharacterColor => characterColor;
     public GameObject CharacterPrefab => characterPrefab;
     public Sprite FullBodyArt => fullBodyArt;  
-    public Sprite HudSprite => hudSprite;
+    
     public Sprite DialogueSprite => dialogueSprite;
     public SpriteLibraryAsset PixelAnimations => pixelAnimations;
     public SpriteLibraryAsset TrashPressAnimations => trashPressAnimations;
@@ -63,8 +82,22 @@ public class PlayerCharacterData : ScriptableObject
     public Sprite NotificationBackground => notificationBackground;
     public Sprite NotificationSprite => notificationSprite;
 
-    public Sprite HpContainerLeft => hpContainerSpriteLeft;
-    public Sprite HpContainerRight => hpContainerSpriteRight;
+    #region CombatHUD
+
+    public Sprite HpContainerLeft => hpContainerBackgroundLeft;
+    public Sprite HpContainerRight => hpContainerBackgroundRight;
+    public Sprite NormalFaceLeft => hudNormalFaceLeft;
+    public Sprite NormalFaceRight => hudNormalFaceRight;
+    public Sprite HappyFaceLeft => hudHappyFaceLeft;
+    public Sprite HappyFaceRight => hudHappyFaceRight;
+    public Sprite HitFaceLeft => hudHitFaceLeft;
+    public Sprite HitFaceRight => hudHitFaceRight;
+    public Sprite DeathFaceLeft => hudDeathFaceLeft;
+    public Sprite DeathFaceRight => hudDeathFaceRight;
+    public Sprite AbilityReadyLeft => hudAbilityReadyLeft;
+    public Sprite AbilityReadyRight => hudAbilityReadyRight;
+
+    #endregion
 
     public RuntimeAnimatorController SmashMinigameAnimator => smashMinigameAnimator;
 

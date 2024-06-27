@@ -506,10 +506,9 @@ public class Slotmachine : MonoBehaviour
         while (notRandomPlayers.Count > 0);
 
         int index = 0;
-
-
-
-        do
+        
+        //c'era un do while
+        while (randomListOfPlayer.Count < 4)
         {
             ePlayerCharacter characterRemainingType = characterEnum[UnityEngine.Random.Range(0, characterEnum.Count)];
 
@@ -530,7 +529,6 @@ public class Slotmachine : MonoBehaviour
             index++;
             indexRow++;
         }
-        while (randomListOfPlayer.Count < 4);
 
         for (int i = 0; i < rows.Count; i++)
         {

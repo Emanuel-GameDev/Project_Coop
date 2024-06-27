@@ -10,7 +10,7 @@ public class Pickable : MonoBehaviour
     public UnityEvent OnEnter;
     public UnityEvent OnExit;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         Character target= other.GetComponent<Character>();
 
@@ -25,7 +25,7 @@ public class Pickable : MonoBehaviour
         
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit2D(Collider2D other)
     {
         Character target= other.GetComponent<Character>();
 
