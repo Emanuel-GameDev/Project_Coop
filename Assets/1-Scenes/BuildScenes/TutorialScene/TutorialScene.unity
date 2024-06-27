@@ -6364,7 +6364,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &566038580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13985,8 +13985,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 2.1637993, y: -0.9857998, z: 0}
-    m_Extent: {x: 23.7948, y: 20.8101, z: 0}
+    m_Center: {x: 2.1638002, y: -0.9864006, z: 0}
+    m_Extent: {x: 23.793999, y: 20.8099, z: 0}
   m_PointLightInnerAngle: 120.90883
   m_PointLightOuterAngle: 120.90883
   m_PointLightInnerRadius: 0.78
@@ -19353,8 +19353,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1231016496115807171, guid: c6eb9bb9c7366d44ab782f9dfa950955,
         type: 3}
+      propertyPath: maxStrafeTime
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1231016496115807171, guid: c6eb9bb9c7366d44ab782f9dfa950955,
+        type: 3}
+      propertyPath: minStrafeTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1231016496115807171, guid: c6eb9bb9c7366d44ab782f9dfa950955,
+        type: 3}
       propertyPath: csAvoidDistance
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1231016496115807171, guid: c6eb9bb9c7366d44ab782f9dfa950955,
+        type: 3}
+      propertyPath: maxStrafeInterval
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1231016496115807171, guid: c6eb9bb9c7366d44ab782f9dfa950955,
+        type: 3}
+      propertyPath: minStrafeInterval
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1231016496115807171, guid: c6eb9bb9c7366d44ab782f9dfa950955,
+        type: 3}
+      propertyPath: targetDistanceToStrafe
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1231016496115807171, guid: c6eb9bb9c7366d44ab782f9dfa950955,
         type: 3}
