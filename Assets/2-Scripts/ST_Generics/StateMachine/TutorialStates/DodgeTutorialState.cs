@@ -42,6 +42,8 @@ public class DodgeTutorialState : TutorialFase
         charactersPreTutorialDialogue = new Dialogue[2] { faseData.dpsDodgeDialogue, faseData.rangedDodgeDialogue };
         //charactersPerfectTutorialDialogue = new Dialogue[2] { faseData.dpsPerfectDodgeDialogue, faseData.rangedPerfectDodgeDialogue };
 
+        tutorialManager.ResetPlayerReminders(currentFaseCharacters);
+
         tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.dps, tutorialManager.ranged,null);
 
         tutorialManager.DeactivateAllPlayerInputs();

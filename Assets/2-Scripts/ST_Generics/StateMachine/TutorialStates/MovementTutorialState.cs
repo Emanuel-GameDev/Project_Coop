@@ -53,6 +53,8 @@ public class MovementTutorialState : TutorialFase
         foreach(PlayerInputHandler ih in tutorialManager.inputHandlers)
         {
             ih.GetComponent<PlayerInput>().actions.Enable();
+
+            
         }
 
         tutorialManager.dialogueBox.OnDialogueEnded -= StartFaseTimer;

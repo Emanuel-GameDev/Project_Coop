@@ -742,4 +742,50 @@ public class TutorialManager : MonoBehaviour
     {
         tutorialEnemy.AIActive = true;
     }
+
+    public void SetCharacterPlayerReminder(Image imageToSet,PlayerCharacter character)
+    {
+        if (inputBindings[character].GetInputHandler().playerID== ePlayerID.Player1)
+            imageToSet.sprite = GameManager.Instance.GetCharacterData(character.Character).P1Sprite;
+        else if (inputBindings[character].GetInputHandler().playerID == ePlayerID.Player2)
+            imageToSet.sprite = GameManager.Instance.GetCharacterData(character.Character).P2Sprite;
+        else if (inputBindings[character].GetInputHandler().playerID == ePlayerID.Player3)
+            imageToSet.sprite = GameManager.Instance.GetCharacterData(character.Character).P3Sprite;
+        else if (inputBindings[character].GetInputHandler().playerID == ePlayerID.Player4)
+            imageToSet.sprite = GameManager.Instance.GetCharacterData(character.Character).P4Sprite;
+    }
+
+    public void ResetPlayerReminders(PlayerCharacter[] playersToReset)
+    {
+
+        dpsPlayerTutorialReminderElement.gameObject.SetActive(false);
+        healerPlayerTutorialReminderElement.gameObject.SetActive(false);
+        rangedPlayerTutorialReminderElement.gameObject.SetActive(false);
+        tankPlayerTutorialReminderElement.gameObject.SetActive(false);
+
+
+        foreach (PlayerCharacter character in playersToReset)
+        {
+            if (character is DPS)
+            {
+                dpsPlayerTutorialReminderElement.gameObject.SetActive(true);
+                SetCharacterPlayerReminder(dpsPlayerTutorialReminderImage, character);
+            }
+            else if (character is Healer)
+            {
+                healerPlayerTutorialReminderElement.gameObject.SetActive(true);
+                SetCharacterPlayerReminder(healerPlayerTutorialReminderImage, character);
+            }
+            else if (character is Ranged)
+            {
+                rangedPlayerTutorialReminderElement.gameObject.SetActive(true);
+                SetCharacterPlayerReminder(rangedPlayerTutorialReminderImage, character);
+            }
+            else if (character is Tank)
+            {
+                tankPlayerTutorialReminderElement.gameObject.SetActive(true);
+                SetCharacterPlayerReminder(tankPlayerTutorialReminderImage, character);
+            }
+        }
+    }
 }

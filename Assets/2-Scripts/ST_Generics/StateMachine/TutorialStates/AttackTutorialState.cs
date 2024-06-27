@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 
 public class AttackTutorialState : TutorialFase
 {
@@ -32,7 +33,7 @@ public class AttackTutorialState : TutorialFase
         tutorialManager.objectiveText.text = faseData.faseObjectiveBrutus.GetLocalizedString();
         tutorialManager.objectiveNumbersGroup.SetActive(true);
 
-        tutorialManager.ChangeAndActivateCurrentCharacterImage(null,null,null);
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(null, null, null);
 
         tutorialManager.blockFaseChange = true;
 
@@ -40,7 +41,8 @@ public class AttackTutorialState : TutorialFase
 
         currentFaseCharacters = new PlayerCharacter[4] { tutorialManager.dps, tutorialManager.tank, tutorialManager.ranged, tutorialManager.healer };
         charactersPreTutorialDialogue = new Dialogue[4] { faseData.dpsDialogue, faseData.tankDialogue, faseData.rangedDialogue, faseData.healerDialogue };
-
+        
+        tutorialManager.ResetPlayerReminders(currentFaseCharacters);
 
         tutorialManager.DeactivateAllPlayerInputs();
 
@@ -48,7 +50,7 @@ public class AttackTutorialState : TutorialFase
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
     }
 
-
+    
 
 
     public override void Update()
