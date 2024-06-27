@@ -70,10 +70,21 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] MenuInfo startTutorialMenu;
     [SerializeField] MenuInfo continueTutorialMenu;
 
+
+    [Header("HUD info")]
     [SerializeField] internal Sprite defaultImage;
     [SerializeField] internal Image currentTutorialCharacterImage1;
     [SerializeField] internal Image currentTutorialCharacterImage2;
     [SerializeField] internal Image currentTutorialCharacterImage3;
+
+    [SerializeField] internal LayoutElement dpsPlayerTutorialReminderElement;
+    [SerializeField] internal Image dpsPlayerTutorialReminderImage;
+    [SerializeField] internal LayoutElement healerPlayerTutorialReminderElement;
+    [SerializeField] internal Image healerPlayerTutorialReminderImage;
+    [SerializeField] internal LayoutElement rangedPlayerTutorialReminderElement;
+    [SerializeField] internal Image rangedPlayerTutorialReminderImage;
+    [SerializeField] internal LayoutElement tankPlayerTutorialReminderElement;
+    [SerializeField] internal Image tankPlayerTutorialReminderImage;
 
 
     [Serializable]

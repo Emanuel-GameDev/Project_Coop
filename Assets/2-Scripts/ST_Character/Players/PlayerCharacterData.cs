@@ -33,6 +33,14 @@ public class PlayerCharacterData : ScriptableObject
     private Sprite notificationBackground;
     [SerializeField]
     private RuntimeAnimatorController smashMinigameAnimator;
+    [SerializeField]
+    private Sprite p1Sprite;
+    [SerializeField]
+    private Sprite p2Sprite;
+    [SerializeField]
+    private Sprite p3Sprite;
+    [SerializeField]
+    private Sprite p4Sprite;
 
     [Header("Combat HUD")]
     [SerializeField]
@@ -92,5 +100,10 @@ public class PlayerCharacterData : ScriptableObject
     #endregion
 
     public RuntimeAnimatorController SmashMinigameAnimator => smashMinigameAnimator;
+
+    public Sprite P1Sprite => p1Sprite;
+    public Sprite P2Sprite => p2Sprite;
+    public Sprite P3Sprite => p3Sprite;
+    public Sprite P4Sprite => p4Sprite;
 
 }
