@@ -180,7 +180,12 @@ public class Projectile : MonoBehaviour, IDamager
             }
         }
 
-        DismissProjectile();
+        //il proiettile potenziato trapassa i nemici
+        if (projectileType != EProjectileType.empoweredProjectile)
+        {
+            DismissProjectile();
+        }
+        
 
         return new DamageData(boostedProjectileDamage,this);
     }
