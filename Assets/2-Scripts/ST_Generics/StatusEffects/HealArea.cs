@@ -64,7 +64,7 @@ public class HealArea : MonoBehaviour
 
         foreach(ParticleSystem particles in gameObject.GetComponentsInChildren<ParticleSystem>())
         {
-            particles.startSize *= (radius * 2);
+            particles.transform.localScale *= (radius );
 
         }
 
