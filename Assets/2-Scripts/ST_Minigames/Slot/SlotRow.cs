@@ -12,6 +12,9 @@ public class SlotRow : MonoBehaviour
      int numberWinSlots;
      float slotDistance = 0.25f;
      slotType winType;
+     
+     //necessario per lo spartimento dei gettoni in base al personaggio e non al player
+     public ePlayerCharacter characterSlotOwner { get; private set; }
 
     //inserire giocatore scelto
      public SlotPlayer selectedPlayer;
@@ -69,7 +72,7 @@ public class SlotRow : MonoBehaviour
         stopped = false;
     }
 
-    public void SetRow(int slotNumber, int winNumber, float distance, slotType winType,float rotationSpeed,float stabilizationSpeed)
+    public void SetRow(int slotNumber, int winNumber, float distance, slotType winType,float rotationSpeed,float stabilizationSpeed,ePlayerCharacter owner)
     {
         numberOfSlots = slotNumber;
         numberWinSlots = winNumber;
@@ -78,6 +81,7 @@ public class SlotRow : MonoBehaviour
         this.winType = winType;
         this.rotationSpeed = rotationSpeed;
         stabilitationTime = stabilizationSpeed;
+        characterSlotOwner = owner;
         
     }
 

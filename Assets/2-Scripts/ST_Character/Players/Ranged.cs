@@ -335,7 +335,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         AudioManager.Instance.PlayRandomAudioClip(soundsDatabase.attackSounds);
         newProjectile.transform.position = shootingPoint.transform.position;
 
-        newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer);
+        newProjectile.Inizialize(direction, projectileRange, projectileSpeed, 1,Damage,gameObject.layer,EProjectileType.normalProjectile);
 
         //TODO inserire if se in presenza di boss, per ora c'è per provare
         newProjectile.AddIncrementalDamage();

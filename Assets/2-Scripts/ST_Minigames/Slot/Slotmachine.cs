@@ -434,7 +434,7 @@ public class Slotmachine : MonoBehaviour
                 break;
         }
 
-        rows[index].SetRow(numberOfSlots, numberWinSlots, slotDistance, WinCombination[index], rotationSpeed, stabilizationSpeed);
+        rows[index].SetRow(numberOfSlots, numberWinSlots, slotDistance, WinCombination[index], rotationSpeed, stabilizationSpeed,characterEnum);
         buttonSlots[index].InitializeButton(buttonSprite, libraryButton);
     }
 
@@ -582,15 +582,15 @@ public class Slotmachine : MonoBehaviour
             if (rows[currentNumberOfTheSlot].GetSelectedSlot().Type == WinCombination[currentNumberOfTheSlot])
             {
                 AudioManager.Instance.PlayAudioClip(goodAudio);
-                //TODO:aggiungere ui sulla destra con bottoni e immagini, fai illuminare i bottoni se hai azzeccato l'immagine
+                //fai illuminare i bottoni se hai azzeccato l'immagine
 
                 
                 slotMachineUI.buttonUIGameObjects[currentNumberOfTheSlot].material.SetFloat("_IsGlowing", (int)1);
                
 
 
-                //aggiunta monete al personaggio
-                switch (randomListOfPlayer[currentNumberOfTheSlot].GetCharacter())
+                //aggiunta monete al personaggio  // TODO: da riguardare per classifica
+                switch (rows[currentNumberOfTheSlot].characterSlotOwner)
                 {                    
                     case ePlayerCharacter.Brutus:
                         totalCoinsBrutus += coinForRightRow;
@@ -677,7 +677,7 @@ public class Slotmachine : MonoBehaviour
 
 
         List<ePlayerCharacter> allCharactersList = new();
-        List<ePlayerCharacter> ranking = new();
+        Dictionary<ePlayerCharacter, int> playersCoinsObtained=new Dictionary<ePlayerCharacter, int>();
 
         foreach (SlotPlayer player in winOrder)
         {
@@ -744,7 +744,7 @@ public class Slotmachine : MonoBehaviour
                         break;
                 }
 
-                ranking.Add(allCharactersList[i]);
+                playersCoinsObtained.Add(allCharactersList[i],gainedCoin);
                 
 
                 if (saveData != null)
@@ -757,22 +757,36 @@ public class Slotmachine : MonoBehaviour
            
 
 
-                Enum.TryParse<Rank>(i.ToString(), out Rank rank);
+           
+
+        }
+
+
+        // riordino la classifica guardando quante monete ho preso
+        var sortedDictionary = playersCoinsObtained.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+
+        int x = 0;
+
+        foreach(KeyValuePair<ePlayerCharacter, int> pair in sortedDictionary)
+        {
+
+            CharacterSaveData saveData = SaveManager.Instance.GetPlayerSaveData(pair.Key);
+
+            Enum.TryParse<Rank>(x.ToString(), out Rank rank);
 
             //DA RIVEDERE
             ePlayerID playerID = ePlayerID.NotSet;
 
-            if (listOfCurrentPlayer.Find(x => x.GetCharacter() == allCharactersList[i]) is SlotPlayer player)
+            if (listOfCurrentPlayer.Find(x => x.GetCharacter() == pair.Key) is SlotPlayer player)
                 playerID = player.GetInputHandler().playerID;
-            winScreenHandler.SetCharacterValues(playerID,allCharactersList[i], rank, gainedCoin, totalCoin, keyForEachPlayer, totalKey);
+            winScreenHandler.SetCharacterValues(playerID, pair.Key, rank, pair.Value, saveData.extraData.coin, keyForEachPlayer,saveData.extraData.coin);
 
+            x++;
         }
 
-        // riordino la classifica guardando quante monete ho preso
-        for (int i = 0; i < allCharactersList.Count; i++)
-        {
+        
 
-        }
+           
 
         SaveManager.Instance.SaveData();
 

@@ -53,6 +53,7 @@ public class Projectile : MonoBehaviour, IDamager
     {
         projectileSize = transform.lossyScale;
         damager = GetComponent<Damager>();
+        projectileType = EProjectileType.normalProjectile;
 
     }
 
@@ -84,6 +85,8 @@ public class Projectile : MonoBehaviour, IDamager
         gameObject.layer = layer;
 
         transform.right = (Vector3)travelDirection - transform.position;
+
+        
         
 
         //momentaneo
@@ -180,7 +183,12 @@ public class Projectile : MonoBehaviour, IDamager
             }
         }
 
-        DismissProjectile();
+        //il proiettile potenziato trapassa i nemici
+        if (projectileType != EProjectileType.empoweredProjectile)
+        {
+            DismissProjectile();
+        }
+        
 
         return new DamageData(boostedProjectileDamage,this);
     }
