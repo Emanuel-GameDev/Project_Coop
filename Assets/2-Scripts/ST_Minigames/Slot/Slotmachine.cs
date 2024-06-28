@@ -434,7 +434,7 @@ public class Slotmachine : MonoBehaviour
                 break;
         }
 
-        rows[index].SetRow(numberOfSlots, numberWinSlots, slotDistance, WinCombination[index], rotationSpeed, stabilizationSpeed);
+        rows[index].SetRow(numberOfSlots, numberWinSlots, slotDistance, WinCombination[index], rotationSpeed, stabilizationSpeed,characterEnum);
         buttonSlots[index].InitializeButton(buttonSprite, libraryButton);
     }
 
@@ -582,7 +582,7 @@ public class Slotmachine : MonoBehaviour
             if (rows[currentNumberOfTheSlot].GetSelectedSlot().Type == WinCombination[currentNumberOfTheSlot])
             {
                 AudioManager.Instance.PlayAudioClip(goodAudio);
-                //TODO:aggiungere ui sulla destra con bottoni e immagini, fai illuminare i bottoni se hai azzeccato l'immagine
+                //fai illuminare i bottoni se hai azzeccato l'immagine
 
                 
                 slotMachineUI.buttonUIGameObjects[currentNumberOfTheSlot].material.SetFloat("_IsGlowing", (int)1);
@@ -590,7 +590,7 @@ public class Slotmachine : MonoBehaviour
 
 
                 //aggiunta monete al personaggio  // TODO: da riguardare per classifica
-                switch (randomListOfPlayer[currentNumberOfTheSlot].GetCharacter())
+                switch (rows[currentNumberOfTheSlot].characterSlotOwner)
                 {                    
                     case ePlayerCharacter.Brutus:
                         totalCoinsBrutus += coinForRightRow;
