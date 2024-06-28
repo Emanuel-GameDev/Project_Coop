@@ -8,7 +8,6 @@ using UnityEngine.Events;
 using UnityEngine.U2D.Animation;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public enum slotType
 {
