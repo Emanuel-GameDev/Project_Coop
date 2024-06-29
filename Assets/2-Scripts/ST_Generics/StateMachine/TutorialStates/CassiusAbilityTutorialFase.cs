@@ -28,12 +28,15 @@ public class CassiusAbilityTutorialFase : TutorialFase
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
-        tutorialManager.objectiveNumbersGroup.SetActive(true);
         tutorialManager.objectiveNumberToReach.text = "1";
         tutorialManager.objectiveNumberReached.text = "0";
-        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.healer, null, null);
+       
 
         tutorialManager.DeactivateAllPlayerInputs();
+
+        tutorialManager.ResetStartingCharacterAssosiacion();
+        tutorialManager.ResetPlayerReminders(new PlayerCharacter[1] { tutorialManager.healer });
+
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
@@ -69,7 +72,6 @@ public class CassiusAbilityTutorialFase : TutorialFase
     {
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
 
-        tutorialManager.ResetStartingCharacterAssosiacion();
 
         tutorialManager.inputBindings[tutorialManager.healer].SetPlayerCharacter(tutorialManager.healer);
 
@@ -83,7 +85,7 @@ public class CassiusAbilityTutorialFase : TutorialFase
         tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
         //tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
-
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.healer, null, null);
     }
 
 
@@ -98,6 +100,8 @@ public class CassiusAbilityTutorialFase : TutorialFase
     public override void Exit()
     {
         base.Exit();
+
+        tutorialManager.currentFaseObjective.gameObject.SetActive(false);
 
         tutorialManager.healer.RemovePowerUp(tutorialManager.powerUpDebug);
 

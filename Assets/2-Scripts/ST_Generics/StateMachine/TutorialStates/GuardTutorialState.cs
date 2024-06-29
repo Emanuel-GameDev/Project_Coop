@@ -30,7 +30,6 @@ public class GuardTutorialState : TutorialFase
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
-        tutorialManager.objectiveNumbersGroup.SetActive(true);
         tutorialManager.objectiveNumberReached.text = guardExecuted.ToString();
         tutorialManager.objectiveNumberToReach.text = faseData.timesToBlock.ToString();
         tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.tank, null, null);
@@ -40,13 +39,15 @@ public class GuardTutorialState : TutorialFase
 
         tutorialManager.DeactivateAllPlayerInputs();
 
+       
+
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
 
         tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
 
-
+        tutorialManager.ResetPlayerReminders(new PlayerCharacter[1] { tutorialManager.tank });
     }
 
 
@@ -71,6 +72,9 @@ public class GuardTutorialState : TutorialFase
 
         tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
+
+       
+
     }
 
     private void UpdateCounter(object obj)
@@ -140,6 +144,9 @@ public class GuardTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
+
+        tutorialManager.currentFaseObjective.gameObject.SetActive(false);
+
         PubSub.Instance.UnregisterFunction(EMessageType.perfectGuardExecuted, UpdateCounter);
         PubSub.Instance.UnregisterFunction(EMessageType.guardExecuted, UpdateCounter);
         tutorialManager.EndCurrentFase();

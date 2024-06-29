@@ -30,7 +30,6 @@ public class DodgeTutorialState : TutorialFase
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
-        tutorialManager.objectiveNumbersGroup.SetActive(true);
         tutorialManager.objectiveNumberToReach.text = faseData.timesToDodge.ToString();
 
 
@@ -44,9 +43,11 @@ public class DodgeTutorialState : TutorialFase
 
         tutorialManager.ResetPlayerReminders(currentFaseCharacters);
 
-        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.dps, tutorialManager.ranged,null);
 
         tutorialManager.DeactivateAllPlayerInputs();
+
+        tutorialManager.ResetPlayerReminders(new PlayerCharacter[2] { tutorialManager.dps, tutorialManager.ranged });
+
 
 
         //characterChange = true;
@@ -139,6 +140,8 @@ public class DodgeTutorialState : TutorialFase
 
             if (currentCharacterIndex < currentFaseCharacters.Length - 1)
             {
+                tutorialManager.currentFaseObjective.gameObject.SetActive(false);
+
                 dodgeCount = 0;
                 tutorialManager.objectiveNumberReached.text = dodgeCount.ToString();
                 //sottofase successiva
@@ -248,9 +251,11 @@ public class DodgeTutorialState : TutorialFase
 
         tutorialManager.ActivateEnemyAI();
         tutorialManager.tutorialEnemy.focus = false;
+
         tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
         tutorialManager.tutorialEnemy.focus = true;
 
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.dps, tutorialManager.ranged, null);
     }
 
    
@@ -264,6 +269,8 @@ public class DodgeTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
+
+        tutorialManager.currentFaseObjective.gameObject.SetActive(false);
         tutorialManager.EndCurrentFase();
         PubSub.Instance.UnregisterFunction(EMessageType.dodgeExecuted, UpdateDodgeCounter);
     }

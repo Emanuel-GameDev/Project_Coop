@@ -12,6 +12,10 @@ public class TutorialEnemyMovementState : BasicMeleeEnemyMoveState
     public override void Update()
     {
 
+        base.Update();
+
+       
+
         if (meleeEnemy.AttackRangeTrigger.GetPlayersCountInTrigger() > 0 )
         {
             foreach (PlayerCharacter player in meleeEnemy.AttackRangeTrigger.GetPlayersDetected())

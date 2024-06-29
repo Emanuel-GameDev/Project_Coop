@@ -11,8 +11,8 @@ public class TutorialEnemy : BasicMeleeEnemy
     [HideInInspector] public bool focus = false;
 
 
-    [HideInInspector] public TutorialEnemyMovementState moveState;
-    [HideInInspector] public TutorialEnemyAttackState actionState;
+    [HideInInspector] public new TutorialEnemyMovementState moveState;
+    [HideInInspector] public new TutorialEnemyAttackState actionState;
 
     bool invincible=false;
     protected override void Awake()
@@ -76,7 +76,7 @@ public class TutorialEnemy : BasicMeleeEnemy
         if (!focus)
         {
             base.SetTarget(newTarget);
-            stateMachine.SetState(moveState);
+            //stateMachine.SetState(moveState);
         }
     }
     public override void SetSpriteDirection(Vector2 direction)

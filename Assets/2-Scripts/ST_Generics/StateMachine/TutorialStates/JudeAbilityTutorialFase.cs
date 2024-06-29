@@ -24,13 +24,15 @@ public class JudeAbilityTutorialFase : TutorialFase
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
-        tutorialManager.objectiveNumbersGroup.SetActive(true);
         tutorialManager.objectiveNumberToReach.text = "1";
         tutorialManager.objectiveNumberReached.text = "0";
 
         tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.ranged, null, null);
 
         tutorialManager.DeactivateAllPlayerInputs();
+
+
+        tutorialManager.ResetPlayerReminders(new PlayerCharacter[1] { tutorialManager.ranged });
 
         tutorialManager.dialogueBox.OnDialogueEnded += WaitAfterDialogue;
         tutorialManager.PlayDialogue(faseData.faseStartDialogue);
@@ -75,6 +77,8 @@ public class JudeAbilityTutorialFase : TutorialFase
         //tutorialManager.inputBindings[tutorialManager.ranged].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
         //tutorialManager.inputBindings[tutorialManager.ranged].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("Look").Enable();
         //tutorialManager.inputBindings[tutorialManager.ranged].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("LookMouse").Enable();
+
+       
     }
 
 
@@ -89,6 +93,9 @@ public class JudeAbilityTutorialFase : TutorialFase
     public override void Exit()
     {
         base.Exit();
+
+        tutorialManager.currentFaseObjective.gameObject.SetActive(false);
+
         tutorialManager.ranged.RemovePowerUp(tutorialManager.powerUpDebug);
 
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;

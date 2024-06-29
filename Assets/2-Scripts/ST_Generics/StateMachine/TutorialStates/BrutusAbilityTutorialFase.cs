@@ -29,11 +29,12 @@ public class BrutusAbilityTutorialFase : TutorialFase
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
-        tutorialManager.objectiveNumbersGroup.SetActive(true);
 
-        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.dps, null, null);
+        
 
         tutorialManager.ResetStartingCharacterAssosiacion();
+
+        tutorialManager.ResetPlayerReminders(new PlayerCharacter[1] { tutorialManager.dps});
 
 
         tutorialManager.DeactivateAllPlayerInputs();
@@ -116,6 +117,8 @@ public class BrutusAbilityTutorialFase : TutorialFase
         tutorialManager.tutorialEnemy.focus = true;
 
         tutorialManager.ActivateEnemyAI();
+
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.dps, null, null);
     }
 
 
@@ -130,6 +133,8 @@ public class BrutusAbilityTutorialFase : TutorialFase
     public override void Exit()
     {
         base.Exit();
+
+        tutorialManager.currentFaseObjective.gameObject.SetActive(false);
 
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
         tutorialManager.DeactivateAllPlayerInputs();
