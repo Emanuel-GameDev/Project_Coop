@@ -34,6 +34,7 @@ public class C_KillAllInTimer : Challenge
 
         ChallengeManager.Instance.dialogueBox.gameObject.SetActive(true);
         ChallengeManager.Instance.dialogueBox.SetDialogue(dialogueOnStart);
+        ChallengeManager.Instance.dialogueBox.RemoveAllDialogueEnd();
         ChallengeManager.Instance.dialogueBox.AddDialogueEnd(onChallengeStartAction);
         ChallengeManager.Instance.dialogueBox.StartDialogue();
 

@@ -520,12 +520,11 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (Utility.IsInLayerMask(collider.gameObject.layer, projectileLayer))
         {
-            if (TryGetComponent(out Projectile projectile))
+            if (collider.gameObject.TryGetComponent(out Projectile projectile))
             {
                 projectile.ReflectProjectile(this.gameObject, 1);
             }
         }
-
     }
     private void AddDeflect()
     {

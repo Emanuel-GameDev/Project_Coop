@@ -129,6 +129,8 @@ public class DialogueBox : MonoBehaviour
         //}
 
         //skipDictionary.Clear();
+        timer = 0;
+
         gameObject.SetActive(false);
     }
 
@@ -277,6 +279,8 @@ public class DialogueBox : MonoBehaviour
 
     IEnumerator TypeLine()
     {
+        Utility.DebugTrace("CHi Cazzo lo fa partire?");
+        
         if (audioSource.clip != null)
             audioSource.Play();
 
