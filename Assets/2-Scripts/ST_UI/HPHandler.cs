@@ -152,6 +152,9 @@ public class HPHandler : MonoBehaviour
             //        break;
             //    }
             //}
+            if (playerCharacter.GetInputHandler() == null)
+                return;
+
             if (containersAssociations.TryGetValue(playerCharacter.GetInputHandler().playerID, out CharacterHUDContainer hpContainer))
             {
                 hpContainer.UpdateHp(playerCharacter.CurrentHp);
