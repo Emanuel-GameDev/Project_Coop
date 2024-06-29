@@ -10,6 +10,7 @@ public class Projectile : MonoBehaviour, IDamager
 {
     public EProjectileType projectileType = EProjectileType.normalProjectile;
 
+
     [Header("Proiettile statistiche base")]
     [SerializeField] private Vector2 travelDirection;
     [SerializeField] private float projectileSpeed;
@@ -21,6 +22,7 @@ public class Projectile : MonoBehaviour, IDamager
 
     //valore utilizzare unicamente nel reflect per tenere conto della grandezza di base
     private float sizeMultiplier;
+
 
     [Header("Proprietà danno incrementale")]
     [SerializeField] bool incrementalDamage;
@@ -49,12 +51,15 @@ public class Projectile : MonoBehaviour, IDamager
 
     public Transform dealerTransform => transform;
 
+    [SerializeField] TrailRenderer trailRenderer;
+
     private void Awake()
     {
         projectileSize = transform.lossyScale;
         damager = GetComponent<Damager>();
         projectileType = EProjectileType.normalProjectile;
-
+        
+        
     }
 
     private void Start()
@@ -63,12 +68,15 @@ public class Projectile : MonoBehaviour, IDamager
         //transform.LookAt(travelDirection);
         transform.position = new Vector3(transform.position.x, transform.position.y, -1);
         
+        
     }
 
     public void Inizialize(Vector2 direction, float range, float speed, float sizeMultiplier, float damage, LayerMask layer, EProjectileType type)
     {
         projectileType = type;
         Inizialize(direction, range, speed, sizeMultiplier, damage, layer);
+
+        
     }
     public void Inizialize(Vector2 direction, float range, float speed, float sizeMultiplier,float damage,LayerMask layer)
     {
@@ -86,8 +94,10 @@ public class Projectile : MonoBehaviour, IDamager
 
         transform.right = (Vector3)travelDirection - transform.position;
 
-        
-        
+        trailRenderer.Clear();
+
+
+
 
         //momentaneo
         transform.position=new Vector3(transform.position.x,transform.position.y, -1);
@@ -138,9 +148,7 @@ public class Projectile : MonoBehaviour, IDamager
     public void DismissProjectile()
     {
         incrementalDamage = false;
-        ProjectilePool.Instance.ReturnProjectile(this);
-
-        
+        ProjectilePool.Instance.ReturnProjectile(this);       
     }
 
     private void ProjectileFlyDirection()
