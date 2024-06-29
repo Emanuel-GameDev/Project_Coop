@@ -29,7 +29,6 @@ public class HealTutorialState : TutorialFase
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
-        tutorialManager.objectiveNumbersGroup.SetActive(true);
 
         //playerHealed = new List<PlayerCharacter> { tutorialManager.dps, tutorialManager.ranged, tutorialManager.tank };
 
@@ -37,6 +36,7 @@ public class HealTutorialState : TutorialFase
 
         tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.healer, null, null);
 
+       
 
         PubSub.Instance.RegisterFunction(EMessageType.characterHealed, CharacterHealed);
 
@@ -74,6 +74,8 @@ public class HealTutorialState : TutorialFase
         tutorialManager.inputBindings[tutorialManager.healer].GetInputHandler().GetComponent<PlayerInput>().actions.Enable();
 
         dialoguePlaying = false;
+
+        tutorialManager.ResetPlayerReminders(new PlayerCharacter[1] { tutorialManager.healer });
     }
 
     private void CharacterHealed(object obj)
@@ -173,6 +175,9 @@ public class HealTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
+
+        tutorialManager.currentFaseObjective.gameObject.SetActive(false);
+
         tutorialManager.healer.GetComponent<Healer>().canHealEnemies = false;
 
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;

@@ -28,18 +28,22 @@ public class MovementTutorialState : TutorialFase
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.currentFaseObjective.SetActive(true);
-        tutorialManager.objectiveNumbersGroup.SetActive(false);
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
         tutorialManager.DeactivateAllPlayerInputs();
 
-        tutorialManager.ChangeAndActivateCurrentCharacterImage(null, null, null);
-
-        tutorialManager.dialogueBox.OnDialogueEnded += StartFaseTimer;
-        tutorialManager.DeactivateEnemyAI();
-
-        tutorialManager.PlayDialogue(tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData.faseStartDialogue);
+        tutorialManager.objectiveNumberGroup.SetActive(false);
+        tutorialManager.currentFaseObjective.gameObject.SetActive(false);
 
         tutorialManager.ResetStartingCharacterAssosiacion();
+        tutorialManager.ResetPlayerReminders(new PlayerCharacter[4] {  tutorialManager.dps, tutorialManager.tank, tutorialManager.ranged, tutorialManager.healer } );
+
+        tutorialManager.DeactivateEnemyAI();
+
+        tutorialManager.dialogueBox.OnDialogueEnded += StartFaseTimer;
+        tutorialManager.PlayDialogue(tutorialManager.standardFases[tutorialManager.standardFaseCount].faseData.faseStartDialogue);
+
+
+       
     }
 
     
@@ -53,11 +57,11 @@ public class MovementTutorialState : TutorialFase
         foreach(PlayerInputHandler ih in tutorialManager.inputHandlers)
         {
             ih.GetComponent<PlayerInput>().actions.Enable();
-
-            
         }
 
         tutorialManager.dialogueBox.OnDialogueEnded -= StartFaseTimer;
+
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(null, null, null);
     }
 
 
@@ -84,6 +88,8 @@ public class MovementTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
+
+        tutorialManager.currentFaseObjective.gameObject.SetActive(false);
 
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
 

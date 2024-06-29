@@ -31,9 +31,8 @@ public class AttackTutorialState : TutorialFase
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjectiveBrutus.GetLocalizedString();
-        tutorialManager.objectiveNumbersGroup.SetActive(true);
+        tutorialManager.objectiveNumberGroup.SetActive(true);
 
-        tutorialManager.ChangeAndActivateCurrentCharacterImage(null, null, null);
 
         tutorialManager.blockFaseChange = true;
 
@@ -74,6 +73,7 @@ public class AttackTutorialState : TutorialFase
             if (currentCharacterIndex < currentFaseCharacters.Length-1)
             {
                 //sottofase successiva
+                tutorialManager.currentFaseObjective.gameObject.SetActive(false);
                 tutorialManager.Fade();
                 SetupNextCharacter();
             }
@@ -92,6 +92,8 @@ public class AttackTutorialState : TutorialFase
     public override void Exit()
     {
         base.Exit();
+
+        tutorialManager.currentFaseObjective.gameObject.SetActive(false);
 
         tutorialManager.dialogueBox.OnDialogueEnded += tutorialManager.EndCurrentFase;
 
@@ -146,7 +148,7 @@ public class AttackTutorialState : TutorialFase
 
         tutorialManager.tutorialEnemy.OnHitAction += EnemyHitted;
 
-
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(null, null, null);
     }
 
 
