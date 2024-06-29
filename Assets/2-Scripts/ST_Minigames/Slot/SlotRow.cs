@@ -113,7 +113,7 @@ public class SlotRow : MonoBehaviour
 
                 winGenerate++;
             }
-            else if(typeindex<remainingSlotType.Count-1)
+            else if(typeindex<remainingSlotType.Count)
             {
                 slot.GetComponent<Slot>().Type = remainingSlotType[typeindex];
                 slot.GetComponent<Slot>().Sprite = mainMachine.ChoseSpriteBySlotType(remainingSlotType[typeindex]);
