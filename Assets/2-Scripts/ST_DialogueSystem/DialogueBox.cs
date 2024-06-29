@@ -75,20 +75,22 @@ public class DialogueBox : MonoBehaviour
 
     private void EndDialogue()
     {
-        foreach (Transform t in HPHandler.Instance.HpContainerTransform)
-        {
-            foreach (Image i in t.gameObject.GetComponentsInChildren<Image>())
-            {
-                i.color = new Color(1, 1, 1, 1);
-            }
+        //foreach (Transform t in HPHandler.Instance.HpContainerTransform)
+        //{
+        //    foreach (Image i in t.gameObject.GetComponentsInChildren<Image>())
+        //    {
+        //        i.color = new Color(1, 1, 1, 1);
+        //    }
 
 
-            foreach(TextMeshProUGUI text in t.gameObject.GetComponentsInChildren<TextMeshProUGUI>())
-            {
-                text.color = new Color(1, 1, 1, 1);
-            }
+        //    foreach(TextMeshProUGUI text in t.gameObject.GetComponentsInChildren<TextMeshProUGUI>())
+        //    {
+        //        text.color = new Color(1, 1, 1, 1);
+        //    }
 
-        }
+        //}
+
+        HPHandler.Instance.SetHudVisible(true);
 
 
         foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
@@ -234,18 +236,20 @@ public class DialogueBox : MonoBehaviour
         //skipDictionary.Clear();
         skipSlider.gameObject.SetActive(false);
 
-        foreach(Transform t in HPHandler.Instance.HpContainerTransform)
-        {
-            foreach(Image i in t.gameObject.GetComponentsInChildren<Image>())
-            {
-                i.color = new Color(1, 1, 1, 0);
-            }
+        //foreach(Transform t in HPHandler.Instance.HpContainerTransform)
+        //{
+        //    foreach(Image i in t.gameObject.GetComponentsInChildren<Image>())
+        //    {
+        //        i.color = new Color(1, 1, 1, 0);
+        //    }
 
-            foreach (TextMeshProUGUI text in t.gameObject.GetComponentsInChildren<TextMeshProUGUI>())
-            {
-                text.color = new Color(1, 1, 1, 0);
-            }
-        }
+        //    foreach (TextMeshProUGUI text in t.gameObject.GetComponentsInChildren<TextMeshProUGUI>())
+        //    {
+        //        text.color = new Color(1, 1, 1, 0);
+        //    }
+        //}
+
+        HPHandler.Instance.SetHudVisible(false);
         
 
 

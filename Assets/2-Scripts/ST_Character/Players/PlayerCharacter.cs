@@ -357,7 +357,7 @@ public abstract class PlayerCharacter : Character
         if (!UniqueAbilityAvaiable)
         {
             uniqueAbilityRemainingCooldown -= Time.deltaTime;
-            Debug.Log(Character + " Unique Ability Cooldown: " + uniqueAbilityRemainingCooldown);
+            //Debug.Log(Character + " Unique Ability Cooldown: " + uniqueAbilityRemainingCooldown);
         }
         else if (uniqueAbilityMustIncreaseUses)
         {
