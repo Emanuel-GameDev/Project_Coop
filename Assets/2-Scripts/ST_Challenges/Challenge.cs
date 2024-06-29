@@ -66,8 +66,6 @@ public class Challenge : MonoBehaviour
         onChallengeStartAction.AddListener(StartChallenge);
         onChallengeFailReset.AddListener(ResetScene);
 
-        Debug.Log("SFIDA INIZIATAMA DEL DIO PORCOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-
     }
     public virtual void StartChallenge()
     {
