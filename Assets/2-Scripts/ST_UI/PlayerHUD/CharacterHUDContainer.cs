@@ -26,6 +26,7 @@ public class CharacterHUDContainer : MonoBehaviour
     [SerializeField] Image abilityReadyImage;
     [SerializeField] GameObject abilityReady;
     [SerializeField] private Slider abilitySlider;
+    [SerializeField] Animation readyAnimation;
 
     //private float uniqueAbilityCooldown;
     //private float uniqueAbilityCooldownRemainingTime;
@@ -62,9 +63,9 @@ public class CharacterHUDContainer : MonoBehaviour
         }
         else if (!uniqueAbilityReadyAnimationExecuted)
         {
-            //Fai anmazione
             uniqueAbilityReadyAnimationExecuted = true;
             abilityReady.SetActive(true);
+            readyAnimation?.Play();
         }
 
     }
