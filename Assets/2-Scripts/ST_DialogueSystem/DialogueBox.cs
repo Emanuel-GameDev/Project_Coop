@@ -273,14 +273,16 @@ public class DialogueBox : MonoBehaviour
         gameObject.SetActive(true);
         dialogueLineIndex = 0;
         SetUpNextLine();
+        if(typeCoroutine != null)
+        {
+            StopCoroutine(typeCoroutine);
+        }
         typeCoroutine = StartCoroutine(TypeLine());
     }
 
 
     IEnumerator TypeLine()
     {
-        Utility.DebugTrace("CHi Cazzo lo fa partire?");
-        
         if (audioSource.clip != null)
             audioSource.Play();
 
