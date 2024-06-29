@@ -75,6 +75,22 @@ public class DialogueBox : MonoBehaviour
 
     private void EndDialogue()
     {
+        foreach (Transform t in HPHandler.Instance.HpContainerTransform)
+        {
+            foreach (Image i in t.gameObject.GetComponentsInChildren<Image>())
+            {
+                i.color = new Color(1, 1, 1, 1);
+            }
+
+
+            foreach(TextMeshProUGUI text in t.gameObject.GetComponentsInChildren<TextMeshProUGUI>())
+            {
+                text.color = new Color(1, 1, 1, 1);
+            }
+
+        }
+
+
         foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
             handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Enable();
@@ -217,6 +233,21 @@ public class DialogueBox : MonoBehaviour
 
         //skipDictionary.Clear();
         skipSlider.gameObject.SetActive(false);
+
+        foreach(Transform t in HPHandler.Instance.HpContainerTransform)
+        {
+            foreach(Image i in t.gameObject.GetComponentsInChildren<Image>())
+            {
+                i.color = new Color(1, 1, 1, 0);
+            }
+
+            foreach (TextMeshProUGUI text in t.gameObject.GetComponentsInChildren<TextMeshProUGUI>())
+            {
+                text.color = new Color(1, 1, 1, 0);
+            }
+        }
+        
+
 
         foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
         {
