@@ -500,7 +500,7 @@ public class TutorialManager : MonoBehaviour
 
     public void PlayFinalePartOne()
     {
-        currentFaseObjective.gameObject.SetActive(false);
+        
 
         blockFaseChange = true;
         finale = true;
@@ -517,6 +517,12 @@ public class TutorialManager : MonoBehaviour
         dialogueBox.OnDialogueEnded -= Fade;
 
         ResetStartingCharacterAssosiacion();
+
+        dpsPlayerTutorialReminderElement.gameObject.SetActive(false);
+        healerPlayerTutorialReminderElement.gameObject.SetActive(false);
+        rangedPlayerTutorialReminderElement.gameObject.SetActive(false);
+        tankPlayerTutorialReminderElement.gameObject.SetActive(false);
+
 
         foreach (PlayerCharacter pc in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
         {

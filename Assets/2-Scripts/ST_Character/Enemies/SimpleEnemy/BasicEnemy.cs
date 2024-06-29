@@ -169,13 +169,13 @@ public class BasicEnemy : EnemyCharacter
     //bool gizmo
     [SerializeField] bool showDirections = false;
 
-    bool showLikedDirections = false;
-    bool showUnlikedDirections = false;
-    bool showCounterAvoid = false;
-    bool showFinalDirections = false;
+    bool showLikedDirections = true;
+    bool showUnlikedDirections = true;
+    bool showCounterAvoid = true;
+    bool showFinalDirections = true;
 
-    bool showBestDirections = false;
-    bool showMoveDirections = false;
+    bool showBestDirections = true;
+    bool showMoveDirections = true;
 
 
 
@@ -993,6 +993,7 @@ public class BasicEnemy : EnemyCharacter
         
         if(newTarget.TryGetComponent<PlayerCharacter>(out PlayerCharacter player))
             currentTarget = player;
+
     }
 
    

@@ -52,6 +52,8 @@ public class HealTutorialState : TutorialFase
         tutorialManager.objectiveNumberReached.text = numberOfPlayerHealed.ToString();
         tutorialManager.objectiveNumberToReach.text = "3";
 
+        tutorialManager.ResetPlayerReminders(new PlayerCharacter[1] { tutorialManager.healer });
+
     }
     bool dialoguePlaying = false;
     private void WaitAfterDialogue()
@@ -75,7 +77,7 @@ public class HealTutorialState : TutorialFase
 
         dialoguePlaying = false;
 
-        tutorialManager.ResetPlayerReminders(new PlayerCharacter[1] { tutorialManager.healer });
+       
     }
 
     private void CharacterHealed(object obj)

@@ -251,6 +251,7 @@ public class DodgeTutorialState : TutorialFase
 
         tutorialManager.ActivateEnemyAI();
         tutorialManager.tutorialEnemy.focus = false;
+
         tutorialManager.tutorialEnemy.SetTarget(currentFaseCharacters[currentCharacterIndex].transform);
         tutorialManager.tutorialEnemy.focus = true;
 

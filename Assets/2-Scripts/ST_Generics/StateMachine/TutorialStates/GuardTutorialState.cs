@@ -47,7 +47,7 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
 
-
+        tutorialManager.ResetPlayerReminders(new PlayerCharacter[1] { tutorialManager.tank });
     }
 
 
@@ -73,7 +73,7 @@ public class GuardTutorialState : TutorialFase
         tutorialManager.tutorialEnemy.focus = false;
         tutorialManager.tutorialEnemy.SetTarget(tutorialManager.tank.transform);
 
-        tutorialManager.ResetPlayerReminders(new PlayerCharacter[1] { tutorialManager.tank });
+       
 
     }
 
