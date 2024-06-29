@@ -200,7 +200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 153a21fe3c628a5438c3551f300ad69e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fa40d1a9df0e3004e928577deb50b2e2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -607,8 +607,8 @@ RectTransform:
   - {fileID: 4666075028962173357}
   m_Father: {fileID: 4455541783617338070}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.365, y: 0.7}
-  m_AnchorMax: {x: 0.5, y: 0.93}
+  m_AnchorMin: {x: 0.165, y: 0.725}
+  m_AnchorMax: {x: 0.3, y: 0.955}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -849,7 +849,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 30a030d64aaaa084c950423a94148778, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bba527d6b51dee645b7a0480e3e468da, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -924,7 +924,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 003718277bc5b9a49ad16402478e4e46, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5fa9a9ab66ef3274fa654d016387fbfe, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1213,7 +1213,7 @@ GameObject:
   - component: {fileID: 2838445091597860117}
   - component: {fileID: 3365944404850402565}
   m_Layer: 0
-  m_Name: SkipButtonSlider
+  m_Name: SwitchSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1235,8 +1235,8 @@ RectTransform:
   - {fileID: 3213053254092670275}
   m_Father: {fileID: 4455541783617338070}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.14, y: -0.05}
-  m_AnchorMax: {x: 0.29, y: 0.2}
+  m_AnchorMin: {x: 0.7, y: -0.05}
+  m_AnchorMax: {x: 0.85, y: 0.2}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1390,14 +1390,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5911623852093095957}
-  m_LocalRotation: {x: 0, y: 0, z: -0.04797821, w: 0.9988484}
+  m_LocalRotation: {x: 0, y: 0, z: -0.11320323, w: 0.9935719}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7687616654367650051}
   m_Father: {fileID: 8542630215655595357}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -5.5}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -13}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -1828,7 +1828,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: fdcab395321bbbb45a66a3aec0ff65e6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 87f4039a35ea55f4eafc0fa0f6bed4ac, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1882,8 +1882,8 @@ RectTransform:
   - {fileID: 8643857183050280027}
   m_Father: {fileID: 6542210607484128286}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.490015, y: 0.6976567}
-  m_AnchorMax: {x: 0.8173208, y: 0.9144996}
+  m_AnchorMin: {x: 0.2677239, y: 0.612439}
+  m_AnchorMax: {x: 0.5954361, y: 0.82935655}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1934,6 +1934,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9076102023754784185}
   - component: {fileID: 8141337362433426833}
+  - component: {fileID: 3951198950418192074}
   m_Layer: 5
   m_Name: HPContainerRight
   m_TagString: Untagged
@@ -1981,15 +1982,32 @@ MonoBehaviour:
   maxHP: {fileID: 4451798850717413708}
   currentHP: {fileID: 8326059784602816716}
   hpBar: {fileID: 3689330216333419077}
-  right: 0
+  right: 1
   abilityImage: {fileID: 8505546351959823154}
   abilityReadyImage: {fileID: 5187378165933661435}
   abilityReady: {fileID: 3592426849331370793}
   abilitySlider: {fileID: 2890459175606266032}
+  readyAnimation: {fileID: 3951198950418192074}
   effectsStartingPoint: {fileID: 0}
   effectsPoolPoint: {fileID: 0}
   fillDirection: {x: 0, y: 0}
   switchSlider: {fileID: 3365944404850402565}
+--- !u!111 &3951198950418192074
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8817235688118446885}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 63285d73c512b8f409ca7dbfe2dc82a4, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 63285d73c512b8f409ca7dbfe2dc82a4, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &8896839661837306294
 GameObject:
   m_ObjectHideFlags: 0
@@ -2159,8 +2177,8 @@ RectTransform:
   - {fileID: 1892985147600916268}
   m_Father: {fileID: 4455541783617338070}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.42, y: 0.18}
-  m_AnchorMax: {x: 0.82, y: 0.32}
+  m_AnchorMin: {x: 0.185, y: 0.18}
+  m_AnchorMax: {x: 0.585, y: 0.32}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
