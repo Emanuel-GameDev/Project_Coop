@@ -13,7 +13,7 @@ public class CharacterHUDContainer : MonoBehaviour
 
 
     [Header("HP & Background")]
-    [SerializeField] Image characterHUDbackground;
+    [SerializeField] Image characterHUDBackground;
     [SerializeField] Image characterHUDFace;
     [SerializeField] Image playerIdImage;
     [SerializeField] TMP_Text maxHP;
@@ -80,13 +80,13 @@ public class CharacterHUDContainer : MonoBehaviour
 
         if (right)
         {
-            characterHUDbackground.sprite = data.HpContainerRight;
+            characterHUDBackground.sprite = data.HpContainerRight;
             characterHUDFace.sprite = data.NormalFaceRight;
             abilityReadyImage.sprite = data.AbilityReadyRight;
         }
         else
         {
-            characterHUDbackground.sprite = data.HpContainerLeft;
+            characterHUDBackground.sprite = data.HpContainerLeft;
             characterHUDFace.sprite = data.NormalFaceLeft;
             abilityReadyImage.sprite = data.AbilityReadyLeft;
         }
