@@ -64,8 +64,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
     [SerializeField, Tooltip("tempo ridotto caricamento con potenziamento")]
     float chargeTimeReduction = 0.5f;
     float empowerStartTimer = 0; //timer da caricare
-    float empowerCoolDownTimer = 0;
-    bool canUseUniqueAbility => empowerCoolDownTimer <= 0;
+    //float empowerCoolDownTimer = 0;
+    //bool canUseUniqueAbility => empowerCoolDownTimer <= 0;
     [SerializeField, Tooltip("Aumento gittata per colpo potenziato")]
     float empowerAdditionalRange = 15f;
     [SerializeField, Tooltip("moltiplicatore danno per colpo potenziato")]
@@ -158,13 +158,6 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         //perfectTimingHandler.gameObject.SetActive(false);
         emissionModule= _walkDustParticles.emission;
     }
-
-
-    private void Start()
-    {
-        
-    }
-
 
     protected override void Update()
     {
@@ -590,7 +583,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
 
         if (context.performed)
         {
-            if (!canUseUniqueAbility)
+            if (/*!canUseUniqueAbility*/ !UniqueAbilityAvaiable)
             {
                 Debug.Log("In ricarica...(abilità unica)");
 
@@ -613,7 +606,7 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         else if (context.canceled)
         {
 
-            if (canUseUniqueAbility && isAttacking)
+            if (/*canUseUniqueAbility*/ UniqueAbilityAvaiable && isAttacking)
             {
                 float endTimer = Time.time;
 
@@ -633,7 +626,8 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
                     EmpowerFireProjectile(ShootDirection);
                     
                     base.UniqueAbilityInput(context);
-                    empowerCoolDownTimer = UniqueAbilityCooldown;
+                    //empowerCoolDownTimer = UniqueAbilityCooldown;
+                    UniqueAbilityUsed();
 
                     Debug.Log("colpo potenziato");
 
@@ -687,10 +681,10 @@ public class Ranged : PlayerCharacter, IPerfectTimeReceiver
         }
 
         //abilità unica (colpo caricato)
-        if (empowerCoolDownTimer > 0)
-        {
-            empowerCoolDownTimer -= Time.deltaTime;
-        }
+        //if (empowerCoolDownTimer > 0)
+        //{
+        //    empowerCoolDownTimer -= Time.deltaTime;
+        //}
 
         if (isCharging)
         {

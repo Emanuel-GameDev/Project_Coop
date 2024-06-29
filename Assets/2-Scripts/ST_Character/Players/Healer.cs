@@ -86,13 +86,13 @@ public class Healer : PlayerCharacter
     List<PlayerCharacter> playerInArea;
     Dictionary<PlayerCharacter,GameObject> healIcons;
 
-    private float lastAttackTime;
-    private float lastUniqueAbilityUseTime;
+    //private float lastAttackTime;
+    //private float lastUniqueAbilityUseTime;
     private int bossPowerUpHitCount;
 
     float bossAbilityChargeTimer = 0;
     float bossAbilityCharge = 3;
-    float uniqueAbilityTimer;
+    //float uniqueAbilityTimer;
     float mineAbilityTimer;
     float smallHealTimer;
 
@@ -215,7 +215,7 @@ public class Healer : PlayerCharacter
 
     private void Start()
     {
-        uniqueAbilityTimer = UniqueAbilityCooldown;
+        //uniqueAbilityTimer = UniqueAbilityCooldown;
         mineAbilityTimer = mineAbilityCooldown;
         smallHealTimer = singleHealCooldown;
     }
@@ -223,12 +223,14 @@ public class Healer : PlayerCharacter
     bool blockInput = false;
     protected override void Update()
     {
-        Move(moveDir);
+        base.Update();
+        
+        //Move(moveDir);
 
-        if (uniqueAbilityTimer < UniqueAbilityCooldown)
-        {
-            uniqueAbilityTimer += Time.deltaTime;
-        }
+        //if (uniqueAbilityTimer < UniqueAbilityCooldown)
+        //{
+        //    uniqueAbilityTimer += Time.deltaTime;
+        //}
 
         if (mineAbilityTimer < mineAbilityCooldown)
         {
@@ -366,7 +368,7 @@ public class Healer : PlayerCharacter
         if (blockInput)
             return;
 
-        if (uniqueAbilityTimer < UniqueAbilityCooldown || !context.performed)
+        if (/*uniqueAbilityTimer < UniqueAbilityCooldown */  !UniqueAbilityAvaiable || !context.performed)
             return;
 
         
@@ -374,8 +376,8 @@ public class Healer : PlayerCharacter
         animator.SetTrigger("CastHealArea");
         StartCoroutine(InputReactivationDelay(animator.GetCurrentAnimatorClipInfo(0).Length));
         base.UniqueAbilityInput(context);
-
-        uniqueAbilityTimer = 0;
+        UniqueAbilityUsed();
+        //uniqueAbilityTimer = 0;
     }
 
     public void SpawnHealArea()
