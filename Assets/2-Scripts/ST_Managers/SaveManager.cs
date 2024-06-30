@@ -64,7 +64,7 @@ public class SaveManager : MonoBehaviour
         //File.WriteAllText(filePath, encryptSave);
         File.WriteAllText(filePath, json);
 
-        Debug.Log("Dati salvati con successo!");
+        //Debug.Log("Dati salvati con successo!");
     }
 
     public void SavePlayersData()
@@ -150,7 +150,7 @@ public class SaveManager : MonoBehaviour
             //saveData = JsonUtility.FromJson<SaveData>(decryptedJson);
             saveData = JsonUtility.FromJson<SaveData>(json);
 
-            Debug.Log("Dati caricati con successo!");
+            //Debug.Log("Dati caricati con successo!");
 
             if (saveData == null)
             {

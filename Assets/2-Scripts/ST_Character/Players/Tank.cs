@@ -176,7 +176,7 @@ public class Tank : PlayerCharacter, IPerfectTimeReceiver
         staminaDamageReductionMulty = (1 - (StaminaDamageReduction / 100));
         healthDamageReductionMulty = (1 - HealthDamageReduction / 100);
 
-        Debug.Log(powerUpData.UniqueAbilityCooldownDecrease);
+        //Debug.Log(powerUpData.UniqueAbilityCooldownDecrease);
 
         emissionModule = _walkDustParticles.emission;
 
