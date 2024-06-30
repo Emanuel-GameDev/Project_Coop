@@ -6,11 +6,19 @@ public class DialogueTrigger : MonoBehaviour
     [SerializeField] private DialogueBox dialogueBox;
     [SerializeField] private Dialogue dialogueOnTrigger;
     [SerializeField] UnityEvent onDialogueEndEvent;
+    [SerializeField] bool MustBeSaved = true;
     private bool alreadyTriggered = true;
     [SerializeField] string dialogueTriggerSaveName = "TriggerDialogue";
 
     private void Start()
     {
+        if (!MustBeSaved)
+        {
+            alreadyTriggered = false;
+            GetComponent<Collider2D>().enabled = true;
+            return;
+        }
+           
         SaveManager.Instance.LoadData();
         bool alreadyTriggeredSave = SaveManager.Instance.LoadSetting<bool>(dialogueTriggerSaveName);
 
@@ -32,7 +40,8 @@ public class DialogueTrigger : MonoBehaviour
         {
             alreadyTriggered = true;
             SetDialogue();
-            SaveManager.Instance.SaveSetting(dialogueTriggerSaveName, alreadyTriggered);
+            if(MustBeSaved)
+                SaveManager.Instance.SaveSetting(dialogueTriggerSaveName, alreadyTriggered);
         }
     }
 
