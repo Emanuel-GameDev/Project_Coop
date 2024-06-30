@@ -14,6 +14,8 @@ public class HPHandler : MonoBehaviour
     public float ExpressionDuration => expressionDuration;
     int id = 0;
 
+    bool HUDIsVisible = true;
+
     private static HPHandler _instance;
     public static HPHandler Instance
     {
@@ -76,6 +78,14 @@ public class HPHandler : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
 
+        bool hiddenHUD = false;
+
+        if(!HUDIsVisible)
+        {
+            hiddenHUD = true;
+            SetHudVisible(true);
+        }
+
         if (player.characterController != null)
         {
             if (containersAssociations.ContainsKey(player.GetInputHandler().playerID))
@@ -126,6 +136,11 @@ public class HPHandler : MonoBehaviour
             id++;
         }
 
+        if(hiddenHUD)
+        {
+            SetHudVisible(false);
+        }
+
     }
 
     public void SetCharacter(object obj)
@@ -173,6 +188,7 @@ public class HPHandler : MonoBehaviour
 
     public void SetHudVisible(bool value)
     {
+        HUDIsVisible= value;
         foreach(Transform transform in HpContainerTransform)
         {
             transform.gameObject.SetActive(value);
