@@ -111,13 +111,14 @@ public abstract class PlayerCharacter : Character
     public virtual float UniqueAbilityCooldown => (uniqueAbilityCooldown + (uniqueAbilityCooldownIncreaseAtUse * uniqueAbilityUses)) / powerUpData.UniqueAbilityCooldownDecrease;
     public float DamageReceivedMultiplier => damageReceivedMultiplier;
     public float SwitchCharacterCooldown => switchCharacterCooldown;
+    public  float LastestCharacterSwitch => lastestCharacterSwitch;
     public virtual ExtraData ExtraData => extraData;
     public virtual PowerUpData PowerUpData => powerUpData;
 
     public Vector2 MoveDirection => moveDir;
     public Vector2 LastDirection => lastNonZeroDirection;
 
-    protected bool CanSwitch => !isDead && Time.time - lastestCharacterSwitch > switchCharacterCooldown;
+    public bool CanSwitch => !isDead && Time.time - lastestCharacterSwitch > switchCharacterCooldown;
     protected bool IsHitInvulnerable => Time.time - lastHitTime < invulnerabilityTime;
     public bool UniqueAbilityAvaiable => UniqueAbilityRemainingCooldown <= 0;
     public float UniqueAbilityRemainingCooldown => uniqueAbilityRemainingCooldown;
@@ -161,7 +162,7 @@ public abstract class PlayerCharacter : Character
             damager.SetSource(this);
         }
         SetIsInBossfight(false, null);
-        lastestCharacterSwitch = Time.time;
+        CancelSwitchCooldown();
     }
 
     public virtual void SetIsInBossfight(bool value, BossFightHandler bossFightHandler)
@@ -639,6 +640,6 @@ public abstract class PlayerCharacter : Character
 
     public void CancelSwitchCooldown()
     {
-        lastestCharacterSwitch = SwitchCharacterCooldown;
+        lastestCharacterSwitch = - SwitchCharacterCooldown;
     }
 }

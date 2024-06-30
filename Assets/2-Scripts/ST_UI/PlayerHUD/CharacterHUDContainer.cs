@@ -45,10 +45,14 @@ public class CharacterHUDContainer : MonoBehaviour
     float ExpressionDuration => HPHandler.Instance.ExpressionDuration;
     bool deathStatus = false;
 
-
     private void Update()
     {
         UniqueAbilityCooldownUpdate();
+    }
+
+    private void OnEnable()
+    {
+        CheckCharacterSwitchCooldown();
     }
 
     private void UniqueAbilityCooldownUpdate()
@@ -131,7 +135,16 @@ public class CharacterHUDContainer : MonoBehaviour
 
     #endregion
 
-    internal void StartSwitchCooldown()
+    private void CheckCharacterSwitchCooldown()
+    {
+        if (referredCharacter == null)
+            return;
+
+        if (Time.time - referredCharacter.LastestCharacterSwitch < referredCharacter.SwitchCharacterCooldown)
+            StartCoroutine(DisplaySwitchCooldown(referredCharacter.SwitchCharacterCooldown, true));
+    }
+
+    private void StartSwitchCooldown()
     {
         float cooldown = referredCharacter.SwitchCharacterCooldown;
         switchSlider.gameObject.SetActive(true);
@@ -139,15 +152,21 @@ public class CharacterHUDContainer : MonoBehaviour
         StartCoroutine(DisplaySwitchCooldown(cooldown));
     }
 
-    private IEnumerator DisplaySwitchCooldown(float duration)
+    private IEnumerator DisplaySwitchCooldown(float duration, bool isRunning = false)
     {
-        float elapsedTime = duration;
+        float remainingTime = duration;
         float progress = 1f;
+
+        if (isRunning)
+        {
+            remainingTime = referredCharacter.SwitchCharacterCooldown - (Time.time - referredCharacter.LastestCharacterSwitch);
+            progress = remainingTime / duration;
+        }
 
         while (progress >= 0f)
         {
-            elapsedTime -= Time.deltaTime;
-            progress = elapsedTime / duration;
+            remainingTime -= Time.deltaTime;
+            progress = remainingTime / duration;
 
             switchSlider.value = Mathf.Clamp01(progress);
 
@@ -179,8 +198,15 @@ public class CharacterHUDContainer : MonoBehaviour
     public void MakeFacialExpression(Expression expression, float expressionDuration)
     {
         MakeFacialExpression(expression);
-        Invoke(nameof(MakeDefaultFacialExpresison), expressionDuration);
+        StartCoroutine(MakeFacialExpressionAfterTime(Expression.Neutral, expressionDuration));
     }
+
+    IEnumerator MakeFacialExpressionAfterTime(Expression expression, float expressionDuration)
+    {
+        yield return new WaitForSeconds(expressionDuration);
+        MakeFacialExpression(expression);
+    }
+
 
     public void MakeFacialExpression(Expression expression)
     {
