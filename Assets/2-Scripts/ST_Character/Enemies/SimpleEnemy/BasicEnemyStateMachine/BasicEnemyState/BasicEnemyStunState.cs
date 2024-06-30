@@ -36,6 +36,7 @@ public class BasicEnemyStunState : BasicEnemyState
 
         if(stunTime <= 0f)
         {
+            Debug.Log("Ended");
             basicEnemy.SetIdleState();
         }
        
