@@ -122,19 +122,28 @@ public class PlayerInputHandler : MonoBehaviour
         {
             SetActionMap(SceneInputReceiverManager.Instance.GetSceneActionMap());
         }
-
-
-        Debug.Log(playerInput.currentActionMap);
     }
     #endregion
 
     #region PlayerInput
     public void SetActionMap(InputMap map)
     {
+        if (currentInputMap != map)
+            previousInputMap = currentInputMap;
+
         playerInput.SwitchCurrentActionMap(map.ToString());
         currentInputMap = map;
-    }
 
+        Debug.Log(playerInput.currentActionMap);
+    }
+    public void SetPreviousActionMap()
+    {
+        if (currentInputMap == previousInputMap)
+            return;
+
+        playerInput.SwitchCurrentActionMap(previousInputMap.ToString());
+        currentInputMap = previousInputMap;
+    }
     public void OnDeviceLost(PlayerInput playerInput)
     {
         CoopManager.Instance.OnDeviceLost(playerInput);
@@ -275,7 +284,6 @@ public class PlayerInputHandler : MonoBehaviour
     public void ButtonSouth(InputAction.CallbackContext context) => CurrentReceiver.ButtonSouth(context);
     #endregion
 
-
     #region UI
 
     public virtual void Navigate(InputAction.CallbackContext context) => CurrentReceiver.Navigate(context);
@@ -302,6 +310,12 @@ public class PlayerInputHandler : MonoBehaviour
 
     public virtual void ChangeVisualizationInput(InputAction.CallbackContext context) => CurrentReceiver.ChangeVisualizationInput(context);
 
+    #endregion
+
+    #region Dialogue
+    public void DialogueButton(InputAction.CallbackContext context) => CurrentReceiver.DialogueButton(context);
+
+   
     #endregion
 
     #endregion

@@ -92,16 +92,22 @@ public class DialogueBox : MonoBehaviour
 
         HPHandler.Instance.SetHudVisible(true);
 
-
-        foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
+        foreach(PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
         {
-            handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Enable();
-            InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
-            //InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
-            action.Disable();
-            action.performed -= NextLineInput;
-            action.canceled -= NextLineInputCancelled;
+            handler.SetPreviousActionMap();
+            handler.CurrentReceiver.activeDialogueBox = null;
         }
+
+
+        //foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
+        //{
+        //    handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Enable();
+        //    InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
+        //    //InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
+        //    action.Disable();
+        //    action.performed -= NextLineInput;
+        //    action.canceled -= NextLineInputCancelled;
+        //}
 
         //controllare
         if (OnDialogueEnd.Count > 0)
@@ -252,28 +258,32 @@ public class DialogueBox : MonoBehaviour
         //}
 
         HPHandler.Instance.SetHudVisible(false);
-        
 
-
-        foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
+        foreach (PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
         {
-            handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Disable();
-            // handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Menu").Enable();
-            // handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Option").Enable();
-            InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
-
-            action.Enable();
-            action.performed += NextLineInput;
-            action.canceled += NextLineInputCancelled;
-
-            //skipDictionary.Add(action, false);
+            handler.SetActionMap(InputMap.Dialogue);
+            handler.CurrentReceiver.activeDialogueBox = this;
         }
+
+        //foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
+        //{
+        //    handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Disable();
+        //    // handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Menu").Enable();
+        //    // handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Option").Enable();
+        //    InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
+
+        //    action.Enable();
+        //    action.performed += NextLineInput;
+        //    action.canceled += NextLineInputCancelled;
+
+        //    //skipDictionary.Add(action, false);
+        //}
 
 
         gameObject.SetActive(true);
         dialogueLineIndex = 0;
         SetUpNextLine();
-        if(typeCoroutine != null)
+        if (typeCoroutine != null)
         {
             StopCoroutine(typeCoroutine);
         }
@@ -336,14 +346,14 @@ public class DialogueBox : MonoBehaviour
 
     }
 
-    private void NextLineInputCancelled(InputAction.CallbackContext context)
+    public void NextLineInputCancelled(InputAction.CallbackContext context)
     {
         //skipDictionary[context.action] = false;
         StopSkip();
     }
 
     bool startSkip = false;
-    private void NextLineInput(InputAction.CallbackContext obj)
+    public void NextLineInput(InputAction.CallbackContext obj)
     {
         if (timer < 0.1)
             return;

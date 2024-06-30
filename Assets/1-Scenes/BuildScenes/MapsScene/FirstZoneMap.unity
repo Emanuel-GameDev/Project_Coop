@@ -1961,8 +1961,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -2.7810497, y: 7.9670506, z: 0}
-    m_Extent: {x: 7.19615, y: 26.04165, z: 0}
+    m_Center: {x: -2.7816, y: 7.9671507, z: 0}
+    m_Extent: {x: 7.1959, y: 26.041649, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -2561,8 +2561,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.90795004, y: -5.00585, z: 0}
-    m_Extent: {x: 3.2371502, y: 12.24275, z: 0}
+    m_Center: {x: -0.90830004, y: -5.0056505, z: 0}
+    m_Extent: {x: 3.2367, y: 12.24335, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -3248,6 +3248,7 @@ MonoBehaviour:
   showNotification: 0
   disableInteracterActions: 0
   isOnePlayerInteractable: 1
+  interactionMustDisabledAfterInteraction: 1
   OnOnePlayerInteract:
     m_PersistentCalls:
       m_Calls:
@@ -3404,6 +3405,30 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1783378296}
         m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
+        m_MethodName: RemoveAllDialogueEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1783378296}
+        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
+        m_MethodName: AddDialogueEnd
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1783378296}
+        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
         m_MethodName: StartDialogue
         m_Mode: 1
         m_Arguments:
@@ -3441,6 +3466,30 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1783378296}
+        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
+        m_MethodName: RemoveAllDialogueEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1783378296}
+        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
+        m_MethodName: AddDialogueEnd
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1783378296}
         m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
@@ -3517,6 +3566,21 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+  eventToAddAtTheEndOfNormalDialogue:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 767476306}
+        m_TargetAssemblyTypeName: PressInteractable, Assembly-CSharp
+        m_MethodName: SetIsInteractable
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
   eventToAddAtTheEndOfLastDialogue:
     m_PersistentCalls:
@@ -4982,8 +5046,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.69974995, y: -0.09759998, z: 0}
-    m_Extent: {x: 3.22595, y: 2.0209, z: 0}
+    m_Center: {x: 0.69990003, y: -0.09729993, z: 0}
+    m_Extent: {x: 3.225, y: 2.0212998, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0.96
@@ -5610,6 +5674,7 @@ MonoBehaviour:
   showNotification: 1
   disableInteracterActions: 1
   isOnePlayerInteractable: 0
+  interactionMustDisabledAfterInteraction: 0
   OnOnePlayerInteract:
     m_PersistentCalls:
       m_Calls: []
@@ -8567,6 +8632,7 @@ MonoBehaviour:
   showNotification: 1
   disableInteracterActions: 1
   isOnePlayerInteractable: 0
+  interactionMustDisabledAfterInteraction: 0
   OnOnePlayerInteract:
     m_PersistentCalls:
       m_Calls: []
