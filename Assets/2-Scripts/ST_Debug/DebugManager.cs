@@ -35,11 +35,12 @@ public class DebugManager : MonoBehaviour
         "[L e K] Rispettivamente Salva e Carica il gioco. \n" +
         "[V] Carica la scena scritta in Loasd Scene Name. \n" +
         "[G] Completa la Challenge attuale (solo in ChallengeScene). \n" +
-        "[T] Setta il Timescale al valore impostato. \n";
+        "[T] Setta il Timescale al valore impostato. \n" +
+        "[Z] Resetta la cooldown di switch di tutti i personaggi attivi. \n";
 
     [SerializeField] GameObject BossGameobject;
 
-    [SerializeField, TextArea(5, 100)]
+    [SerializeField, TextArea(5, 1000)]
     private string istructions = text;
 
     private void Update()
@@ -164,6 +165,12 @@ public class DebugManager : MonoBehaviour
                     character.CancelSwitchCooldown();
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                ResetAllCharacterSwitchCooldown();
+            }
+
         }
     }
 
@@ -213,6 +220,14 @@ public class DebugManager : MonoBehaviour
         Debug.Log("CallLoad");
         SaveManager.Instance.LoadData();
         SaveManager.Instance.LoadAllPlayersData();
+    }
+
+    private void ResetAllCharacterSwitchCooldown()
+    {
+        foreach (PlayerCharacter character in PlayerCharacterPoolManager.Instance.ActivePlayerCharacters)
+        {
+            character.CancelSwitchCooldown();
+        }
     }
 
 }

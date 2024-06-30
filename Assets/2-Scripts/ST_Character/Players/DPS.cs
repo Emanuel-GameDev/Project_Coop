@@ -169,7 +169,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     #endregion
 
     public override float AttackSpeed => base.AttackSpeed + ExtraSpeed;
-    public override float MoveSpeed => base.MoveSpeed + ExtraSpeed;
+    public override float MoveSpeed => base.MoveSpeed + (base.MoveSpeed * ExtraSpeed);
     public override float Damage => base.Damage * ExtraDamage();
 
     public override void Inizialize()
