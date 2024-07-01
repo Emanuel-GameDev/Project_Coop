@@ -182,9 +182,7 @@ public class Slotmachine : MonoBehaviour
 
     private void Start()
     {
-
-
-        StartCoroutine(WaitForPlayers());
+        StartCoroutine(Utility.WaitForLoadingDone(StartDialogueWaitForPlayers));
         remainingLives = lives;
     }
 
@@ -807,12 +805,13 @@ public class Slotmachine : MonoBehaviour
 
 
 
-    IEnumerator WaitForPlayers()
+    private void StartDialogueWaitForPlayers()
     {
-        yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
-        //dialogueObject.SetActive(true);
-        //DA RIVEDERE #MODIFICATO
+        StartCoroutine(Utility.WaitForPlayers(StartDialogue));
+    }
 
+    private void StartDialogue()
+    {
         dialogueBox.SetActive(true);
         _dialogueBox.StartDialogue();
     }

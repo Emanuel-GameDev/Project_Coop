@@ -159,8 +159,8 @@ public class GameManager : MonoBehaviour
         Utility.DebugTrace($"End Load Time: {Time.time}");
         if (Time.time - loadTime < fakeLoadSceenTime)
             yield return new WaitForSeconds(fakeLoadSceenTime - (Time.time - loadTime));
-        loadScreen.SetActive(false);
         CoopManager.Instance.EnableAllInput();
+        loadScreen.SetActive(false);
         Utility.DebugTrace($"Total Load Time: {Time.time - loadTime}");
     }
 

@@ -92,9 +92,37 @@ public static class Utility
         return Vector2.Distance(first, second);
     }
 
-    public static IEnumerator WaitForPlayers(Action functionToCall)
+    public static IEnumerator WaitForPlayers(Action functionToCall, bool waitNextFrame = false)
     {
         yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
+        if(waitNextFrame )
+            yield return new WaitForEndOfFrame();
+        functionToCall();
+    }
+
+    public static IEnumerator WaitForPlayers(Action functionToCall, float extraWaitTime)
+    {
+        yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
+        yield return new WaitForSeconds(extraWaitTime);
+        functionToCall();
+    }
+    public static IEnumerator WaitForLoadingDone(Action functionToCall)
+    {
+        yield return new WaitUntil(() => !GameManager.Instance.IsLoading);
+        functionToCall();
+    }
+    public static IEnumerator WaitForLoadingDone(Action functionToCall, bool waitNextFrame = false)
+    {
+        yield return new WaitUntil(() => !GameManager.Instance.IsLoading);
+        if (waitNextFrame)
+            yield return new WaitForEndOfFrame();
+        functionToCall();
+    }
+
+    public static IEnumerator WaitForLoadingDone(Action functionToCall, float extraWaitTime)
+    {
+        yield return new WaitUntil(() => !GameManager.Instance.IsLoading);
+        yield return new WaitForSeconds(extraWaitTime);
         functionToCall();
     }
 
