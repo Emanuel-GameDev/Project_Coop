@@ -196,7 +196,7 @@ public class SouvenirShopTable : MonoBehaviour
 
     public void GoToPreviousEntry()
     {
-        if ((entryID - 1) > 0)
+        if ((entryID - 1) >= 0)
             SetCurrentEntry(entries[entryID - 1]);
         else
             SetCurrentEntry(entries[entries.Length - 1]);
