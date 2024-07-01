@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class CharacterHUDContainer : MonoBehaviour
@@ -26,6 +25,7 @@ public class CharacterHUDContainer : MonoBehaviour
     [SerializeField] Image abilityReadyImage;
     [SerializeField] GameObject abilityReady;
     [SerializeField] private Slider abilitySlider;
+    [SerializeField] Image abilityFillImage;
     [SerializeField] Animation readyAnimation;
 
     //private float uniqueAbilityCooldown;
@@ -42,9 +42,17 @@ public class CharacterHUDContainer : MonoBehaviour
     [Header("SwitchingCooldown")]
     [SerializeField] private Slider switchSlider;
 
+    float ExpressionDuration => HPHandler.Instance.ExpressionDuration;
+    bool deathStatus = false;
+
     private void Update()
     {
         UniqueAbilityCooldownUpdate();
+    }
+
+    private void OnEnable()
+    {
+        CheckCharacterSwitchCooldown();
     }
 
     private void UniqueAbilityCooldownUpdate()
@@ -59,7 +67,7 @@ public class CharacterHUDContainer : MonoBehaviour
                 uniqueAbilityReadyAnimationExecuted = false;
                 abilityReady.SetActive(false);
             }
-               
+
         }
         else if (!uniqueAbilityReadyAnimationExecuted)
         {
@@ -74,9 +82,10 @@ public class CharacterHUDContainer : MonoBehaviour
     {
         PlayerCharacterData data = GameManager.Instance.GetCharacterData(referredCharacter.Character);
 
-        if(data == null) return;
+        if (data == null) return;
 
         abilityImage.sprite = data.UniqueAbilitySprite;
+        abilityFillImage.color = data.CharacterColor;
 
         if (right)
         {
@@ -103,13 +112,39 @@ public class CharacterHUDContainer : MonoBehaviour
 
     public void UpdateHp(float newHp)
     {
+        if (newHp <= 0)
+        {
+            SetPlayerDead();
+        }
+        else if (int.TryParse(currentHP.text, out int oldHp))
+        {
+            if (deathStatus)
+            {
+                SetPlayerAlive();
+            }
+            
+            if (newHp < oldHp)
+                MakeFacialExpression(Expression.Hurt, ExpressionDuration);
+            else
+                MakeFacialExpression(Expression.Happy, ExpressionDuration);
+        }
+
         currentHP.text = newHp.ToString();
         hpBar.SetValue(newHp);
     }
 
     #endregion
 
-    internal void StartSwitchCooldown()
+    private void CheckCharacterSwitchCooldown()
+    {
+        if (referredCharacter == null)
+            return;
+
+        if (Time.time - referredCharacter.LastestCharacterSwitch < referredCharacter.SwitchCharacterCooldown)
+            StartCoroutine(DisplaySwitchCooldown(referredCharacter.SwitchCharacterCooldown, true));
+    }
+
+    private void StartSwitchCooldown()
     {
         float cooldown = referredCharacter.SwitchCharacterCooldown;
         switchSlider.gameObject.SetActive(true);
@@ -117,15 +152,21 @@ public class CharacterHUDContainer : MonoBehaviour
         StartCoroutine(DisplaySwitchCooldown(cooldown));
     }
 
-    private IEnumerator DisplaySwitchCooldown(float duration)
+    private IEnumerator DisplaySwitchCooldown(float duration, bool isRunning = false)
     {
-        float elapsedTime = duration;
+        float remainingTime = duration;
         float progress = 1f;
+
+        if (isRunning)
+        {
+            remainingTime = referredCharacter.SwitchCharacterCooldown - (Time.time - referredCharacter.LastestCharacterSwitch);
+            progress = remainingTime / duration;
+        }
 
         while (progress >= 0f)
         {
-            elapsedTime -= Time.deltaTime;
-            progress = elapsedTime / duration;
+            remainingTime -= Time.deltaTime;
+            progress = remainingTime / duration;
 
             switchSlider.value = Mathf.Clamp01(progress);
 
@@ -153,4 +194,84 @@ public class CharacterHUDContainer : MonoBehaviour
         StartSwitchCooldown();
         abilitySlider.value = 1f;
     }
+
+    public void MakeFacialExpression(Expression expression, float expressionDuration)
+    {
+        MakeFacialExpression(expression);
+        StartCoroutine(MakeFacialExpressionAfterTime(Expression.Neutral, expressionDuration));
+    }
+
+    IEnumerator MakeFacialExpressionAfterTime(Expression expression, float expressionDuration)
+    {
+        yield return new WaitForSeconds(expressionDuration);
+        MakeFacialExpression(expression);
+    }
+
+
+    public void MakeFacialExpression(Expression expression)
+    {
+        PlayerCharacterData data = GameManager.Instance.GetCharacterData(referredCharacter.Character);
+
+        Sprite sprite = null;
+        switch (expression)
+        {
+            case Expression.Neutral:
+                if (right)
+                    sprite = data.NormalFaceRight;
+                else
+                    sprite = data.NormalFaceLeft;
+                break;
+            case Expression.Happy:
+                if (right)
+                    sprite = data.HappyFaceRight;
+                else
+                    sprite = data.HappyFaceLeft;
+                break;
+            case Expression.Hurt:
+                if (right)
+                    sprite = data.HitFaceRight;
+                else
+                    sprite = data.HitFaceLeft;
+                break;
+            case Expression.Death:
+                if (right)
+                    sprite = data.DeathFaceRight;
+                else
+                    sprite = data.DeathFaceLeft;
+                break;
+        }
+
+        if (sprite != null)
+            characterHUDFace.sprite = sprite;
+
+    }
+
+    public void MakeDefaultFacialExpresison()
+    {
+        MakeFacialExpression(Expression.Neutral);
+    }
+
+    private void SetPlayerDead()
+    {
+        MakeFacialExpression(Expression.Death);
+        deathStatus = true;
+        //OtherThings
+    }
+
+    private void SetPlayerAlive()
+    {
+        deathStatus = false;
+        MakeDefaultFacialExpresison();
+        //OtherThings
+    }
+
+
+}
+
+public enum Expression
+{
+    Neutral,
+    Happy,
+    Hurt,
+    Death
 }

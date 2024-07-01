@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,6 +16,8 @@ public class PressInteractable : MonoBehaviour, IInteractable
     private bool disableInteracterActions = true;
     [SerializeField]
     private bool isOnePlayerInteractable = false;
+    [SerializeField]
+    private bool interactionMustDisabledAfterInteraction = false;
 
     [SerializeField] UnityEvent<IInteracter> OnOnePlayerInteract;
     [SerializeField] UnityEvent<IInteracter> OnOnePlayerCancelInteract;
@@ -23,6 +26,8 @@ public class PressInteractable : MonoBehaviour, IInteractable
     List<IInteracter> interacters = new List<IInteracter>();
 
     private int triggerCount;
+
+    bool interactionDisabled = false;
 
     private void Start()
     {
@@ -70,6 +75,9 @@ public class PressInteractable : MonoBehaviour, IInteractable
 
     public void Interact(IInteracter interacter)
     {
+        if(interactionDisabled)
+            return;
+        
         if (isOnePlayerInteractable)
         {
             OnOnePlayerInteract?.Invoke(interacter);
@@ -100,6 +108,8 @@ public class PressInteractable : MonoBehaviour, IInteractable
             }
         }
 
+        if (interactionMustDisabledAfterInteraction)
+            interactionDisabled = true;
     }
 
     public void CancelAllInteraction()
@@ -151,4 +161,30 @@ public class PressInteractable : MonoBehaviour, IInteractable
     {
 
     }
+
+    public void SetIsInteractable(bool value)
+    {
+        interactionDisabled = !value;
+    }
+
+    public void SetIsInteractableAfter(bool value, float time)
+    {
+        StartCoroutine(SetIsInteractableAfterTime(value, time));
+    }
+
+    public void EnableInteractableAfter(float time)
+    {
+        StartCoroutine(SetIsInteractableAfterTime(true, time));
+    }
+    public void DisableInteractableAfter(float time)
+    {
+        StartCoroutine(SetIsInteractableAfterTime(false, time));
+    }
+
+    IEnumerator SetIsInteractableAfterTime(bool value, float time)
+    {
+        yield return new WaitForSeconds(time);
+        SetIsInteractable(value);
+    }
+
 }

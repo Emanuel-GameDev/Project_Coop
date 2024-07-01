@@ -4,13 +4,16 @@ using UnityEngine.Events;
 public class DemoEndDumpy : MonoBehaviour
 {
     [SerializeField]
-    UnityEvent onFirstInteract;
+    UnityEvent<UnityEvent> onFirstInteract;
 
     [SerializeField]
-    UnityEvent onNormalInteract;
+    UnityEvent<UnityEvent> onNormalInteract;
 
     [SerializeField]
     UnityEvent<UnityEvent> onLastInteract;
+
+    [SerializeField]
+    UnityEvent eventToAddAtTheEndOfNormalDialogue;
 
     [SerializeField]
     UnityEvent eventToAddAtTheEndOfLastDialogue;
@@ -29,14 +32,14 @@ public class DemoEndDumpy : MonoBehaviour
 
     private void FirstInteract()
     {
-        onFirstInteract.Invoke();
+        onFirstInteract.Invoke(eventToAddAtTheEndOfNormalDialogue);
         interacted = true;
         SaveManager.Instance.SaveSetting(DEMO_END_DUMPY_INTERACTED, interacted);
     }
 
     private void NormalInteract()
     {
-        onNormalInteract.Invoke();
+        onNormalInteract.Invoke(eventToAddAtTheEndOfNormalDialogue);
     }
 
     private void LastInteract()

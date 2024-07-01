@@ -35,7 +35,7 @@ public class TutorialManager : MonoBehaviour
     [Header("Notification")]
     [SerializeField] public GameObject currentFaseObjective;
     [SerializeField] public TextMeshProUGUI objectiveText;
-    [SerializeField] public GameObject objectiveNumbersGroup;
+    [SerializeField] public GameObject objectiveNumberGroup;
     [SerializeField] public TextMeshProUGUI objectiveNumberReached;
     [SerializeField] public TextMeshProUGUI objectiveNumberToReach;
 
@@ -146,9 +146,9 @@ public class TutorialManager : MonoBehaviour
     {
         exit.SetActive(true);
         objectiveText.enabled = false;
-        objectiveNumbersGroup.SetActive(false);
-        currentFaseObjective.SetActive(false);
 
+        currentFaseObjective.SetActive(false);
+        objectiveNumberGroup.SetActive(false);
         tutorialEnemy.gameObject.SetActive(false);
         lilith.gameObject.SetActive(true);
 
@@ -165,6 +165,8 @@ public class TutorialManager : MonoBehaviour
             inputHandler.GetComponent<PlayerInput>().actions.FindAction("SkipCutscene").canceled += DisableSkipSlider;
         }
 
+
+        SetUpCharacters();
         if (playIntro)
         {
             introScreen.SetActive(true);
@@ -280,7 +282,7 @@ public class TutorialManager : MonoBehaviour
 
         musicaTutorial.Play();
 
-        SetUpCharacters();
+        
         //DeactivateAllPlayerInputs();
 
         ResetScene();
@@ -498,12 +500,13 @@ public class TutorialManager : MonoBehaviour
 
     public void PlayFinalePartOne()
     {
+        
+
         blockFaseChange = true;
         finale = true;
         dialogueBox.OnDialogueEnded += Fade;
 
         currentFaseObjective.SetActive(false);
-        objectiveNumbersGroup.SetActive(false);
         objectiveText.enabled = false;
 
         PlayDialogue(endingDialogueOne);
@@ -514,6 +517,12 @@ public class TutorialManager : MonoBehaviour
         dialogueBox.OnDialogueEnded -= Fade;
 
         ResetStartingCharacterAssosiacion();
+
+        dpsPlayerTutorialReminderElement.gameObject.SetActive(false);
+        healerPlayerTutorialReminderElement.gameObject.SetActive(false);
+        rangedPlayerTutorialReminderElement.gameObject.SetActive(false);
+        tankPlayerTutorialReminderElement.gameObject.SetActive(false);
+
 
         foreach (PlayerCharacter pc in PlayerCharacterPoolManager.Instance.AllPlayerCharacters)
         {

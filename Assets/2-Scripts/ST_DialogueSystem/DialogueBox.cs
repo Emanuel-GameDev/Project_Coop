@@ -75,31 +75,39 @@ public class DialogueBox : MonoBehaviour
 
     private void EndDialogue()
     {
-        foreach (Transform t in HPHandler.Instance.HpContainerTransform)
+        //foreach (Transform t in HPHandler.Instance.HpContainerTransform)
+        //{
+        //    foreach (Image i in t.gameObject.GetComponentsInChildren<Image>())
+        //    {
+        //        i.color = new Color(1, 1, 1, 1);
+        //    }
+
+
+        //    foreach(TextMeshProUGUI text in t.gameObject.GetComponentsInChildren<TextMeshProUGUI>())
+        //    {
+        //        text.color = new Color(1, 1, 1, 1);
+        //    }
+
+        //}
+
+        HPHandler.Instance.SetHudVisible(true);
+
+        foreach(PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
         {
-            foreach (Image i in t.gameObject.GetComponentsInChildren<Image>())
-            {
-                i.color = new Color(1, 1, 1, 1);
-            }
-
-
-            foreach(TextMeshProUGUI text in t.gameObject.GetComponentsInChildren<TextMeshProUGUI>())
-            {
-                text.color = new Color(1, 1, 1, 1);
-            }
-
+            handler.SetPreviousActionMap();
+            handler.CurrentReceiver.activeDialogueBox = null;
         }
 
 
-        foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
-        {
-            handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Enable();
-            InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
-            //InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
-            action.Disable();
-            action.performed -= NextLineInput;
-            action.canceled -= NextLineInputCancelled;
-        }
+        //foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
+        //{
+        //    handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Enable();
+        //    InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
+        //    //InputAction action = handler.GetComponent<PlayerInput>().actions.FindAction("Dialogue");
+        //    action.Disable();
+        //    action.performed -= NextLineInput;
+        //    action.canceled -= NextLineInputCancelled;
+        //}
 
         //controllare
         if (OnDialogueEnd.Count > 0)
@@ -127,6 +135,8 @@ public class DialogueBox : MonoBehaviour
         //}
 
         //skipDictionary.Clear();
+        timer = 0;
+
         gameObject.SetActive(false);
     }
 
@@ -234,39 +244,49 @@ public class DialogueBox : MonoBehaviour
         //skipDictionary.Clear();
         skipSlider.gameObject.SetActive(false);
 
-        foreach(Transform t in HPHandler.Instance.HpContainerTransform)
+        //foreach(Transform t in HPHandler.Instance.HpContainerTransform)
+        //{
+        //    foreach(Image i in t.gameObject.GetComponentsInChildren<Image>())
+        //    {
+        //        i.color = new Color(1, 1, 1, 0);
+        //    }
+
+        //    foreach (TextMeshProUGUI text in t.gameObject.GetComponentsInChildren<TextMeshProUGUI>())
+        //    {
+        //        text.color = new Color(1, 1, 1, 0);
+        //    }
+        //}
+
+        HPHandler.Instance.SetHudVisible(false);
+
+        foreach (PlayerInputHandler handler in CoopManager.Instance.GetActiveHandlers())
         {
-            foreach(Image i in t.gameObject.GetComponentsInChildren<Image>())
-            {
-                i.color = new Color(1, 1, 1, 0);
-            }
-
-            foreach (TextMeshProUGUI text in t.gameObject.GetComponentsInChildren<TextMeshProUGUI>())
-            {
-                text.color = new Color(1, 1, 1, 0);
-            }
+            handler.SetActionMap(InputMap.Dialogue);
+            handler.CurrentReceiver.activeDialogueBox = this;
         }
-        
 
+        //foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
+        //{
+        //    handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Disable();
+        //    // handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Menu").Enable();
+        //    // handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Option").Enable();
+        //    InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
 
-        foreach (PlayerInputHandler handler in GameManager.Instance.CoopManager.GetComponentsInChildren<PlayerInputHandler>())
-        {
-            handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").Disable();
-            // handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Menu").Enable();
-            // handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Option").Enable();
-            InputAction action = handler.GetComponent<PlayerInput>().actions.FindActionMap("Player").FindAction("Dialogue");
+        //    action.Enable();
+        //    action.performed += NextLineInput;
+        //    action.canceled += NextLineInputCancelled;
 
-            action.Enable();
-            action.performed += NextLineInput;
-            action.canceled += NextLineInputCancelled;
-
-            //skipDictionary.Add(action, false);
-        }
+        //    //skipDictionary.Add(action, false);
+        //}
 
 
         gameObject.SetActive(true);
         dialogueLineIndex = 0;
         SetUpNextLine();
+        if (typeCoroutine != null)
+        {
+            StopCoroutine(typeCoroutine);
+        }
         typeCoroutine = StartCoroutine(TypeLine());
     }
 
@@ -326,14 +346,14 @@ public class DialogueBox : MonoBehaviour
 
     }
 
-    private void NextLineInputCancelled(InputAction.CallbackContext context)
+    public void NextLineInputCancelled(InputAction.CallbackContext context)
     {
         //skipDictionary[context.action] = false;
         StopSkip();
     }
 
     bool startSkip = false;
-    private void NextLineInput(InputAction.CallbackContext obj)
+    public void NextLineInput(InputAction.CallbackContext obj)
     {
         if (timer < 0.1)
             return;

@@ -106,6 +106,12 @@ public class RangedEnemy : BasicEnemy
         //animator.SetBool("isMoving", isMoving);
     }
 
+    public override void SetIdleState()
+    {
+        base.SetIdleState();
+        stateMachine.SetState(idleState);
+    }
+
     public override void SetSpriteDirection(Vector2 direction)
     {
         if (direction.y != 0)

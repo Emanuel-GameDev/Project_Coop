@@ -1961,8 +1961,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -2.7801998, y: 7.967351, z: 0}
-    m_Extent: {x: 7.1955996, y: 26.041752, z: 0}
+    m_Center: {x: -2.7809498, y: 7.967449, z: 0}
+    m_Extent: {x: 7.19495, y: 26.04155, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -2561,8 +2561,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.9082501, y: -5.00485, z: 0}
-    m_Extent: {x: 3.23685, y: 12.24305, z: 0}
+    m_Center: {x: -0.90849996, y: -5.00515, z: 0}
+    m_Extent: {x: 3.2368, y: 12.24305, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -3248,6 +3248,7 @@ MonoBehaviour:
   showNotification: 0
   disableInteracterActions: 0
   isOnePlayerInteractable: 1
+  interactionMustDisabledAfterInteraction: 1
   OnOnePlayerInteract:
     m_PersistentCalls:
       m_Calls:
@@ -3404,6 +3405,30 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1783378296}
         m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
+        m_MethodName: RemoveAllDialogueEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1783378296}
+        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
+        m_MethodName: AddDialogueEnd
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1783378296}
+        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
         m_MethodName: StartDialogue
         m_Mode: 1
         m_Arguments:
@@ -3441,6 +3466,30 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1783378296}
+        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
+        m_MethodName: RemoveAllDialogueEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1783378296}
+        m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
+        m_MethodName: AddDialogueEnd
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1783378296}
         m_TargetAssemblyTypeName: DialogueBox, Assembly-CSharp
@@ -3517,6 +3566,21 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+  eventToAddAtTheEndOfNormalDialogue:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 767476306}
+        m_TargetAssemblyTypeName: PressInteractable, Assembly-CSharp
+        m_MethodName: EnableInteractableAfter
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0.001
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
   eventToAddAtTheEndOfLastDialogue:
     m_PersistentCalls:
@@ -4982,8 +5046,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.70005, y: -0.09800005, z: 0}
-    m_Extent: {x: 3.2249498, y: 2.0209, z: 0}
+    m_Center: {x: 0.6997, y: -0.097849965, z: 0}
+    m_Extent: {x: 3.2252002, y: 2.02075, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0.96
@@ -5012,7 +5076,7 @@ Transform:
   m_GameObject: {fileID: 1166767143}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.34, y: 20.2, z: 0}
+  m_LocalPosition: {x: 8.96, y: 20.93, z: 0}
   m_LocalScale: {x: 1.1592892, y: 1.1592892, z: 1.1592892}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5425,7 +5489,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1209139233
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5610,6 +5674,7 @@ MonoBehaviour:
   showNotification: 1
   disableInteracterActions: 1
   isOnePlayerInteractable: 0
+  interactionMustDisabledAfterInteraction: 0
   OnOnePlayerInteract:
     m_PersistentCalls:
       m_Calls: []
@@ -8567,6 +8632,7 @@ MonoBehaviour:
   showNotification: 1
   disableInteracterActions: 1
   isOnePlayerInteractable: 0
+  interactionMustDisabledAfterInteraction: 0
   OnOnePlayerInteract:
     m_PersistentCalls:
       m_Calls: []
@@ -12312,7 +12378,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1918016000
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -13415,7 +13481,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugMode: 1
   timescale: 1
-  targetCharacter: 1
+  targetCharacter: 3
   powerUpToGive_7: {fileID: 0}
   powerUpToGive_8: {fileID: 0}
   powerUpToGive_9: {fileID: 0}
@@ -13680,7 +13746,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &2057116930
 SpriteRenderer:
   m_ObjectHideFlags: 0

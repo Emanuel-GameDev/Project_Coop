@@ -133,7 +133,7 @@ public class LabirintManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(WaitForPlayers());
+        StartCoroutine(Utility.WaitForLoadingDone(StartDialogueWaitForPlayers));
         sceneChanger = GetComponent<SceneChanger>();
     }
 
@@ -243,9 +243,13 @@ public class LabirintManager : MonoBehaviour
             sceneChanger.ChangeScene();
     }
 
-    IEnumerator WaitForPlayers()
+    private void StartDialogueWaitForPlayers()
     {
-        yield return new WaitUntil(() => CoopManager.Instance.GetActiveHandlers() != null && CoopManager.Instance.GetActiveHandlers().Count > 0);
+        StartCoroutine(Utility.WaitForPlayers(StartDialogue));
+    }
+
+    private void StartDialogue()
+    {
         dialogueBox.SetActive(true);
         _dialogueBox.StartDialogue();
     }
@@ -397,7 +401,7 @@ public class LabirintManager : MonoBehaviour
                 totalKey = saveData.extraData.key;
             }
 
-            Debug.Log(yetCompleted);
+            //Debug.Log(yetCompleted);
 
             if (!yetCompleted)
             {

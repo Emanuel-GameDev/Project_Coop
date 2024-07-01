@@ -6,13 +6,15 @@ public class HPHandler : MonoBehaviour
 {
     [SerializeField] GameObject HPContainerLeft;
     [SerializeField] GameObject HPContainerRight;
-
+    [SerializeField] float expressionDuration = 0.5f;
     [SerializeField] public Transform[] HpContainerTransform = new Transform[4];
 
-    Dictionary<ePlayerID, CharacterHUDContainer> containersAssociations;
-    bool dictionaryCreated = false;
-
+    Dictionary<ePlayerID, CharacterHUDContainer> containersAssociations = new();
+    //bool dictionaryCreated = false;
+    public float ExpressionDuration => expressionDuration;
     int id = 0;
+
+    bool HUDIsVisible = true;
 
     private static HPHandler _instance;
     public static HPHandler Instance
@@ -36,11 +38,11 @@ public class HPHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        if (!dictionaryCreated)
-        {
-            containersAssociations = new Dictionary<ePlayerID, CharacterHUDContainer>();
-            dictionaryCreated = true;
-        }
+        //if (!dictionaryCreated)
+        //{
+        //    containersAssociations = new Dictionary<ePlayerID, CharacterHUDContainer>();
+        //    dictionaryCreated = true;
+        //}
 
         PubSub.Instance.RegisterFunction(EMessageType.characterDamaged, UpdateContainer);
         PubSub.Instance.RegisterFunction(EMessageType.characterActivated, AddContainer);
@@ -75,6 +77,14 @@ public class HPHandler : MonoBehaviour
     IEnumerator Wait(PlayerCharacter player)
     {
         yield return new WaitForSeconds(0.1f);
+
+        bool hiddenHUD = false;
+
+        if(!HUDIsVisible)
+        {
+            hiddenHUD = true;
+            SetHudVisible(true);
+        }
 
         if (player.characterController != null)
         {
@@ -111,7 +121,7 @@ public class HPHandler : MonoBehaviour
 
                 containersAssociations.Add(player.GetInputHandler().playerID, hpContainer);
 
-                Debug.Log(player.GetInputHandler().playerID);
+                //Debug.Log(player.GetInputHandler().playerID);
 
                 hpContainer.referredPlayerID = player.GetInputHandler().playerID;
             }
@@ -126,17 +136,20 @@ public class HPHandler : MonoBehaviour
             id++;
         }
 
+        if(hiddenHUD)
+        {
+            SetHudVisible(false);
+        }
+
     }
 
     public void SetCharacter(object obj)
     {
-        if (obj is PlayerCharacter)
+        if (obj is PlayerCharacter playerCharacter)
         {
-            PlayerCharacter playerCharacter = (PlayerCharacter)obj;
-
             if (containersAssociations.TryGetValue(playerCharacter.GetInputHandler().playerID, out CharacterHUDContainer hpContainer))
             {
-                Debug.Log("set charcater");
+                //Debug.Log("set charcater");
                 hpContainer.SetUpContainer(playerCharacter);
             }
         }
@@ -146,18 +159,24 @@ public class HPHandler : MonoBehaviour
     {
         if (obj is PlayerCharacter playerCharacter)
         {
-            foreach (CharacterHUDContainer cont in gameObject.GetComponentsInChildren<CharacterHUDContainer>())
+            //foreach (CharacterHUDContainer cont in gameObject.GetComponentsInChildren<CharacterHUDContainer>())
+            //{
+            //    if (cont.referredCharacter == playerCharacter)
+            //    {
+            //        containersAssociations[cont.referredPlayerID].UpdateHp(cont.referredCharacter.CurrentHp);
+            //        break;
+            //    }
+            //}
+            if (playerCharacter.GetInputHandler() == null)
+                return;
+
+            if (containersAssociations.TryGetValue(playerCharacter.GetInputHandler().playerID, out CharacterHUDContainer hpContainer))
             {
-                if (cont.referredCharacter == playerCharacter)
-                {
-                    containersAssociations[cont.referredPlayerID].UpdateHp(cont.referredCharacter.CurrentHp);
-                    break;
-                }
+                hpContainer.UpdateHp(playerCharacter.CurrentHp);
             }
+
         }
     }
-
-    
 
     public void UpdateAllContainers()
     {
@@ -167,4 +186,14 @@ public class HPHandler : MonoBehaviour
         }
     }
 
+    public void SetHudVisible(bool value)
+    {
+        HUDIsVisible= value;
+        foreach(Transform transform in HpContainerTransform)
+        {
+            transform.gameObject.SetActive(value);
+        }
+    }
+
 }
+

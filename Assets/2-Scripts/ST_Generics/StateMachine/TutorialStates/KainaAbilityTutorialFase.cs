@@ -24,11 +24,13 @@ public class KainaAbilityTutorialFase : TutorialFase
 
         tutorialManager.objectiveText.enabled = true;
         tutorialManager.objectiveText.text = faseData.faseObjective.GetLocalizedString();
-        tutorialManager.objectiveNumbersGroup.SetActive(true);
         tutorialManager.objectiveNumberToReach.text = "1";
         tutorialManager.objectiveNumberReached.text = "0";
 
-        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.tank,null,null);
+        
+
+        tutorialManager.ResetPlayerReminders(new PlayerCharacter[1] { tutorialManager.tank });
+
 
         tutorialManager.DeactivateAllPlayerInputs();
 
@@ -61,6 +63,8 @@ public class KainaAbilityTutorialFase : TutorialFase
 
         //tutorialManager.inputBindings[tutorialManager.tank].GetInputHandler().GetComponent<PlayerInput>().actions.FindAction("UniqueAbility").Enable();
         tutorialManager.ActivateEnemyAI();
+
+        tutorialManager.ChangeAndActivateCurrentCharacterImage(tutorialManager.tank, null, null);
     }
 
     private void StartEndFaseCountdown(object obj)
@@ -83,6 +87,8 @@ public class KainaAbilityTutorialFase : TutorialFase
     public override void Exit()
     {
         base.Exit();
+
+        tutorialManager.currentFaseObjective.gameObject.SetActive(false);
 
         tutorialManager.tank.RemovePowerUp(tutorialManager.powerUpDebug);
 

@@ -169,7 +169,7 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     #endregion
 
     public override float AttackSpeed => base.AttackSpeed + ExtraSpeed;
-    public override float MoveSpeed => base.MoveSpeed + ExtraSpeed;
+    public override float MoveSpeed => base.MoveSpeed + (base.MoveSpeed * ExtraSpeed);
     public override float Damage => base.Damage * ExtraDamage();
 
     public override void Inizialize()
@@ -520,12 +520,11 @@ public class DPS : PlayerCharacter, IPerfectTimeReceiver
     {
         if (Utility.IsInLayerMask(collider.gameObject.layer, projectileLayer))
         {
-            if (TryGetComponent(out Projectile projectile))
+            if (collider.gameObject.TryGetComponent(out Projectile projectile))
             {
                 projectile.ReflectProjectile(this.gameObject, 1);
             }
         }
-
     }
     private void AddDeflect()
     {

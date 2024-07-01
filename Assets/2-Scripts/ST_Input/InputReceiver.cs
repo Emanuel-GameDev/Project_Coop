@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,7 +5,7 @@ public abstract class InputReceiver : MonoBehaviour
 {
     protected ePlayerCharacter character;
     protected PlayerInputHandler playerInputHandler;
-    
+
     public virtual GameObject GetGameObject() => gameObject;
 
     public virtual void SetCharacter(ePlayerCharacter character) => this.character = character;
@@ -19,8 +18,10 @@ public abstract class InputReceiver : MonoBehaviour
 
     public virtual void Dismiss()
     {
-       
+
     }
+
+    public DialogueBox activeDialogueBox;
 
     // Lista di tutti gli input di tutte le possibili mappe 
     #region MapInput
@@ -28,37 +29,37 @@ public abstract class InputReceiver : MonoBehaviour
     #region Player
     public virtual void MoveInput(InputAction.CallbackContext context)
     {
-       
+
     }
 
     public virtual void LookInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public virtual void AttackInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public virtual void DefenseInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public virtual void UniqueAbilityInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public virtual void ExtraAbilityInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public virtual void InteractInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public virtual void CancelInteractInput(InputAction.CallbackContext context)
@@ -68,32 +69,32 @@ public abstract class InputReceiver : MonoBehaviour
 
     public virtual void SwitchUpInput(InputAction.CallbackContext context)
     {
-       
+
     }
 
     public virtual void SwitchRightInput(InputAction.CallbackContext context)
     {
-       
+
     }
 
     public virtual void SwitchDownInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public virtual void SwitchLeftInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public virtual void MenuInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public virtual void OptionInput(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public virtual void MouseLookInput(InputAction.CallbackContext context)
@@ -111,13 +112,13 @@ public abstract class InputReceiver : MonoBehaviour
 
     }
 
-    
+
     #endregion
 
     #region Minigame
     public virtual void MoveMinigameInput(InputAction.CallbackContext context)
     {
-        
+
     }
     public virtual void ButtonEast(InputAction.CallbackContext context)
     {
@@ -170,6 +171,19 @@ public abstract class InputReceiver : MonoBehaviour
     public virtual void SubPreviousInput(InputAction.CallbackContext context) { }
 
     public virtual void ChangeVisualizationInput(InputAction.CallbackContext context) { }
+    #endregion
+
+    #region Dialogue
+    public virtual void DialogueButton(InputAction.CallbackContext context)
+    {
+        if (activeDialogueBox != null)
+        {
+            if(context.performed)
+                activeDialogueBox.NextLineInput(context);
+            if(context.canceled)
+                activeDialogueBox.NextLineInputCancelled(context);
+        }
+    }
     #endregion
 
     #endregion
