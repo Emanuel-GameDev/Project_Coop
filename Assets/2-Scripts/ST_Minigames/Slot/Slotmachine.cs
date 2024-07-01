@@ -98,6 +98,7 @@ public class Slotmachine : MonoBehaviour
     [Header("Manopola")]
     [SerializeField] private GameObject manopola;
     [SerializeField] private AudioClip giramentoManopolaAudio;
+    [SerializeField] private GameObject manopolaButton;
 
 
     //List<Sprite> playerSprites;
@@ -115,6 +116,8 @@ public class Slotmachine : MonoBehaviour
     [SerializeField] private SlotMachineUI slotMachineUI;
 
     [SerializeField] private List<Sprite> PlayerUISprites;
+
+
 
     
 
@@ -189,7 +192,9 @@ public class Slotmachine : MonoBehaviour
     public void InitializeNewTrySlotMachineMinigame()
     {
         randomListOfPlayer.Clear();
-        
+
+        manopolaButton.gameObject.SetActive(true);
+
         //initialize win combination
         for (int i = 0; i < rows.Count; i++)
         {
@@ -226,6 +231,8 @@ public class Slotmachine : MonoBehaviour
        
 
         canInteract = true;
+
+        
     }
 
     public void SetIngameValueAfterCountDown()
@@ -359,6 +366,8 @@ public class Slotmachine : MonoBehaviour
 
     public IEnumerator RestartSlotMachine()
     {
+        manopolaButton.gameObject.SetActive(false);
+
         loopSlotAudio.Play();
 
         remainingLives--;
