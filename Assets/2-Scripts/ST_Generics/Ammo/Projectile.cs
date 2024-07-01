@@ -206,6 +206,7 @@ public class Projectile : MonoBehaviour, IDamager
         Projectile reflectedProjectile = ProjectilePool.Instance.GetProjectile();
 
         reflectedProjectile.transform.position = transform.position;
+        
 
         reflectedProjectile.Inizialize(-travelDirection,maxRange,projectileSpeed,sizeMultiplier,baseProjectileDamage*reflectionMultiplier,reflectionOwner.layer);
 
