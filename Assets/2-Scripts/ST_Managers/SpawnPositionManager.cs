@@ -41,8 +41,6 @@ public class SpawnPositionManager : MonoBehaviour
 
     internal SpawnPositionData GetFreePos()
     {
-        Utility.DebugTrace("Chiamata");
-        
         string sceneName = SceneManager.GetActiveScene().name;
 
         SpawnPositionEntrance entrance = null;

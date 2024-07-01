@@ -121,7 +121,7 @@ public class HPHandler : MonoBehaviour
 
                 containersAssociations.Add(player.GetInputHandler().playerID, hpContainer);
 
-                Debug.Log(player.GetInputHandler().playerID);
+                //Debug.Log(player.GetInputHandler().playerID);
 
                 hpContainer.referredPlayerID = player.GetInputHandler().playerID;
             }

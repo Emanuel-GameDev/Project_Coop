@@ -22,7 +22,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     private InputMap previousInputMap = InputMap.EmptyMap;
     private InputMap currentInputMap = InputMap.EmptyMap;
-
+    public InputMap CurrentInputMap => currentInputMap;
     private Gamepad gamepad = null;
 
     public InputReceiver _currentReceiver;
