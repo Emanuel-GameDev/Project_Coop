@@ -108,10 +108,14 @@ public class AttackTutorialState : TutorialFase
 
     private void SetupNextCharacter()
     {
+
         tutorialManager.dialogueBox.OnDialogueEnded -= WaitAfterDialogue;
         tutorialManager.DeactivateAllPlayerInputs();
 
         currentCharacterIndex++;
+
+        if(currentFaseCharacters[currentCharacterIndex] is Ranged)
+        tutorialManager.ResetPlayerReminders(new PlayerCharacter[1]{tutorialManager.ranged});
 
         tutorialManager.ResetStartingCharacterAssosiacion();
 
