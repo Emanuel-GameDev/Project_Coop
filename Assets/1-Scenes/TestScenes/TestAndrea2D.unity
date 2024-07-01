@@ -18369,7 +18369,7 @@ MonoBehaviour:
   m_Follow: {fileID: 1774293288}
   m_Lens:
     FieldOfView: 60.000004
-    OrthographicSize: 10.11
+    OrthographicSize: 14.14
     NearClipPlane: 0
     FarClipPlane: 1000
     Dutch: 0
@@ -41579,6 +41579,7 @@ MonoBehaviour:
   showNotification: 1
   disableInteracterActions: 1
   isOnePlayerInteractable: 0
+  interactionMustDisabledAfterInteraction: 0
   OnOnePlayerInteract:
     m_PersistentCalls:
       m_Calls: []
@@ -63966,7 +63967,7 @@ Camera:
   far clip plane: 1000
   field of view: 60.000004
   orthographic: 1
-  orthographic size: 10.11
+  orthographic size: 14.14
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -64511,6 +64512,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9146783216949467380, guid: baa41d8040b59774e87c10cd084a41aa,
+        type: 3}
+      propertyPath: maxHp
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
