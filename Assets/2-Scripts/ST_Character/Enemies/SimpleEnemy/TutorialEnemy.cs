@@ -121,7 +121,10 @@ public class TutorialEnemy : BasicMeleeEnemy
 
     public  void StopIdleSound()
     {
-        if (soundsDatabase != null)
+        if (idleAudioSource == null)
+            return;
+
+        if (soundsDatabase != null && gameObject.activeSelf)
         {
             idleAudioSource.Stop();
             StartCoroutine(AudioManager.Instance.ReturnAudioSourceToPool(idleAudioSource, 0.01f));
@@ -138,7 +141,10 @@ public class TutorialEnemy : BasicMeleeEnemy
 
     public void StopWalkSound()
     {
-        if (soundsDatabase != null)
+        if (walkAudioSource == null)
+            return;
+
+        if (soundsDatabase != null && gameObject.activeSelf)
         {
             walkAudioSource.Stop();
             StartCoroutine(AudioManager.Instance.ReturnAudioSourceToPool(walkAudioSource, 0.01f));
