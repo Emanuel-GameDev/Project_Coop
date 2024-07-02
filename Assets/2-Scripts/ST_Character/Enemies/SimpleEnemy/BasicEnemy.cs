@@ -964,8 +964,7 @@ public class BasicEnemy : EnemyCharacter
 
     public override IEnumerator PushCharacter(Vector3 pusherPosition, float pushStrenght, float pushDuration)
     {
-        float timer = 0;
-        float interpolationRatio;
+        
         Vector3 startPosition = rb.transform.position;
 
         Vector3 pushDirection = startPosition - pusherPosition;
@@ -1101,27 +1100,36 @@ public class BasicEnemy : EnemyCharacter
 
     }
 
-    public void PlayAttackSound()
+    public virtual void PlayAttackSound()
     {
         if (soundsDatabase != null)
         {
-            AudioManager.Instance.PlayAudioClip(soundsDatabase.attackSounds[UnityEngine.Random.Range(0, soundsDatabase.attackSounds.Count-1)], transform);
+            AudioManager.Instance.PlayAudioClip(soundsDatabase.attackSounds[UnityEngine.Random.Range(0, soundsDatabase.attackSounds.Count-1)], transform, soundsDatabase.attackSoundsVolume);
         }
     }
 
-    public void PlayDeathSound()
+    public virtual void PlayDeathSound()
     {
         if (soundsDatabase != null)
         {
-            AudioManager.Instance.PlayAudioClip(soundsDatabase.deathSounds[UnityEngine.Random.Range(0, soundsDatabase.deathSounds.Count - 1)], transform);
+            AudioManager.Instance.PlayAudioClip(soundsDatabase.deathSounds[UnityEngine.Random.Range(0, soundsDatabase.deathSounds.Count - 1)], transform, soundsDatabase.deathSoundsVolume);
         }
     }
 
-    public void PlayWalkSound()
+    public virtual void PlayWalkSound()
+    {
+
+        if (soundsDatabase != null)
+        {
+            AudioManager.Instance.PlayAudioClip(soundsDatabase.walkSounds[UnityEngine.Random.Range(0, soundsDatabase.walkSounds.Count - 1)], transform, soundsDatabase.walkSoundsVolume);
+        }
+    }
+
+    public virtual void PlayHitSound()
     {
         if (soundsDatabase != null)
         {
-            AudioManager.Instance.PlayAudioClip(soundsDatabase.walkSounds[UnityEngine.Random.Range(0, soundsDatabase.walkSounds.Count - 1)], transform);
+            AudioManager.Instance.PlayAudioClip(soundsDatabase.hitSounds[UnityEngine.Random.Range(0, soundsDatabase.hitSounds.Count - 1)], transform, soundsDatabase.hitSoundsVolume);
         }
     }
 

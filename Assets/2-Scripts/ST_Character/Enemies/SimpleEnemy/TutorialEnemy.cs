@@ -10,17 +10,21 @@ public class TutorialEnemy : BasicMeleeEnemy
     [SerializeField] float invincibilitySeconds = 0.2f;
     [HideInInspector] public bool focus = false;
 
-
+    [HideInInspector] public new TutorialEnemyIdleState idleState;
     [HideInInspector] public new TutorialEnemyMovementState moveState;
     [HideInInspector] public new TutorialEnemyAttackState actionState;
 
     bool invincible=false;
+
+    AudioSource idleAudioSource;
+    AudioSource walkAudioSource;
+
     protected override void Awake()
     {
         base.Awake();
 
         focus = false;
-        idleState = new BasicMeleeEnemyIdleState(this);
+        idleState = new TutorialEnemyIdleState(this);
         moveState = new TutorialEnemyMovementState(this);
         actionState = new TutorialEnemyAttackState(this);
     }
@@ -37,7 +41,9 @@ public class TutorialEnemy : BasicMeleeEnemy
                 Projectile projectile = (Projectile) data.dealer;
                 PubSub.Instance.Notify(EMessageType.characterDamaged, projectile);
             }
-            
+
+            PlayHitSound();
+
             StartCoroutine(Invincibility());
 
         }
@@ -103,5 +109,39 @@ public class TutorialEnemy : BasicMeleeEnemy
     public override void OnParryNotify(Character whoParried)
     {
         base.OnParryNotify(whoParried);
+    }
+    
+    public  void PlayIdleSound()
+    {
+        if (soundsDatabase != null)
+        {
+            idleAudioSource = AudioManager.Instance.PlayLoopAudioClip(soundsDatabase.specialEffectsSounds[0], transform, soundsDatabase.specialEffectsSoundsVolume);
+        }
+    }
+
+    public  void StopIdleSound()
+    {
+        if (soundsDatabase != null)
+        {
+            idleAudioSource.Stop();
+            StartCoroutine(AudioManager.Instance.ReturnAudioSourceToPool(idleAudioSource, 0.01f));
+        }
+    }
+
+    public override void PlayWalkSound()
+    {
+        if (soundsDatabase != null)
+        {
+            walkAudioSource = AudioManager.Instance.PlayLoopAudioClip(soundsDatabase.walkSounds[0], transform,soundsDatabase.walkSoundsVolume);
+        }
+    }
+
+    public void StopWalkSound()
+    {
+        if (soundsDatabase != null)
+        {
+            walkAudioSource.Stop();
+            StartCoroutine(AudioManager.Instance.ReturnAudioSourceToPool(walkAudioSource, 0.01f));
+        }
     }
 }
