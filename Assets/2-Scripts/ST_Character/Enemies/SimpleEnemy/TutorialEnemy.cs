@@ -42,7 +42,7 @@ public class TutorialEnemy : BasicMeleeEnemy
                 PubSub.Instance.Notify(EMessageType.characterDamaged, projectile);
             }
 
-            PlayHitSound();
+            
 
             StartCoroutine(Invincibility());
 
