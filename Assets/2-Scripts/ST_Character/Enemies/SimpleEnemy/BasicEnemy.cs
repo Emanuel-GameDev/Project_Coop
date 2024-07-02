@@ -1101,4 +1101,28 @@ public class BasicEnemy : EnemyCharacter
 
     }
 
+    public void PlayAttackSound()
+    {
+        if (soundsDatabase != null)
+        {
+            AudioManager.Instance.PlayAudioClip(soundsDatabase.attackSounds[UnityEngine.Random.Range(0, soundsDatabase.attackSounds.Count-1)], transform);
+        }
+    }
+
+    public void PlayDeathSound()
+    {
+        if (soundsDatabase != null)
+        {
+            AudioManager.Instance.PlayAudioClip(soundsDatabase.deathSounds[UnityEngine.Random.Range(0, soundsDatabase.deathSounds.Count - 1)], transform);
+        }
+    }
+
+    public void PlayWalkSound()
+    {
+        if (soundsDatabase != null)
+        {
+            AudioManager.Instance.PlayAudioClip(soundsDatabase.walkSounds[UnityEngine.Random.Range(0, soundsDatabase.walkSounds.Count - 1)], transform);
+        }
+    }
+
 }
