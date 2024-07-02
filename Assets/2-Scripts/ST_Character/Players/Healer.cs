@@ -423,7 +423,7 @@ public class Healer : PlayerCharacter
 
         if (instantiatedHealMine == null)
         {
-            if (true && context.started)
+            if (upgradeStatus[AbilityUpgrade.Ability3] && context.started)
             {
                 if (mineAbilityTimer < mineAbilityCooldown)
                     return;
@@ -436,7 +436,7 @@ public class Healer : PlayerCharacter
                 mineAbilityTimer = 0;
                 mineInReach = false;
             }
-                Debug.Log("Reached1");
+                
         }
         else
         {

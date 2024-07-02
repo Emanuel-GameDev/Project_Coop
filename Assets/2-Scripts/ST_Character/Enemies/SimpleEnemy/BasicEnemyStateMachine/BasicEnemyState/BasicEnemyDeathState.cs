@@ -24,6 +24,8 @@ public class BasicEnemyDeathState : BasicEnemyState
         basicEnemy.GetAnimator().SetTrigger("Dead");
         basicEnemy.GetRigidBody().velocity = Vector3.zero;
         
+        
+
         foreach(Collider2D collider in basicEnemy.GetComponentsInChildren<Collider2D>())
         {
             collider.enabled = false;

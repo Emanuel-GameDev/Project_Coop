@@ -98,12 +98,37 @@ public class AudioManager : MonoBehaviour
             audioSource.gameObject.SetActive(true);
             audioSource.transform.SetParent(null);
         }
-
+        audioSource.loop = false;
         audioSource.clip = clip;
         audioSource.volume = volume;
         audioSource.Play();
         float clipLength = audioSource.clip.length;
         StartCoroutine(ReturnAudioSourceToPool(audioSource, clipLength));
+
+        return audioSource;
+    }
+
+    public AudioSource PlayLoopAudioClip(AudioClip clip, Transform spawnPoint, float volume)
+    {
+        if (clip == null) return null;
+
+        AudioSource audioSource;
+
+        if (audioSourcesPool.Count <= 0)
+        {
+            audioSource = Instantiate(audioSourcePrefab, spawnPoint.position, Quaternion.identity);
+        }
+        else
+        {
+            audioSource = audioSourcesPool.Pop();
+            audioSource.transform.position = spawnPoint.position;
+            audioSource.gameObject.SetActive(true);
+            audioSource.transform.SetParent(null);
+        }
+        audioSource.loop = true;
+        audioSource.clip = clip;
+        audioSource.volume = volume;
+        audioSource.Play();
 
         return audioSource;
     }
@@ -124,7 +149,9 @@ public class AudioManager : MonoBehaviour
         PlayAudioClip(clips[rand], spawnPoint, volume);
     }
 
-    private IEnumerator ReturnAudioSourceToPool(AudioSource audioSource, float clipLenght)
+   
+
+    public IEnumerator ReturnAudioSourceToPool(AudioSource audioSource, float clipLenght)
     {
         yield return new WaitForSeconds(clipLenght);
 
